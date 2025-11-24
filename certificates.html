@@ -51,15 +51,9 @@
             border-radius: 4px;
         }
 
-        .pdf-icon {
-            width: 80px;
-            height: 80px;
-            color: #e74c3c;
-        }
-
-        .btn-icon {
-            width: 16px;
-            height: 16px;
+        .pdf-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
         }
 
         .pdf-badge {
@@ -275,9 +269,8 @@
                 justify-content: center;
             }
 
-            .pdf-icon {
-                width: 60px;
-                height: 60px;
+            .pdf-emoji {
+                font-size: 3rem;
             }
         }
     </style>
@@ -399,25 +392,6 @@
             initializeSearch();
             updateStatistics();
         });
-
-        // SVG иконки
-        const pdfIconSVG = `
-            <svg class="pdf-icon" viewBox="0 0 384 512" fill="#e74c3c">
-                <path d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48zm250.2-143.7c-12.2-12-47-8.7-64.4-6.5-17.2-10.5-28.7-25-36.8-46.3 3.9-16.1 10.1-40.6 5.4-56-4.2-26.2-37.8-23.6-42.6-5.9-4.4 16.1-.4 38.5 7 67.1-10 23.9-24.9 56-35.4 74.4-20 10.3-47 26.2-51 46.2-3.3 15.8 26 55.2 76.1-31.2 22.4-7.4 46.8-16.5 68.4-20.1 18.9 10.2 41 17 55.8 17 25.5 0 28-28.2 17.5-38.7zm-198.1 77.8c5.1-13.7 24.5-29.5 30.4-35-19 30.3-30.4 35.7-30.4 35zm81.6-190.6c7.4 0 6.7 32.1 1.8 40.8-4.4-13.9-4.3-40.8-1.8-40.8zm-24.4 136.6c9.7-16.9 18-37 24.7-54.7 8.3-15.1 20.8-28.9 30.9-30.9 7.1 15.8 2 73.3 12.1 73.3 5.4 0 9.5-17.8 12.2-42.3 13.4-4.2 26-7.4 38.3-9.9-5.5 15.8-19.4 47.2-35.7 69-23 10.7-42.2 5.5-61.6-4.5z"/>
-            </svg>
-        `;
-
-        const downloadIconSVG = `
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-            </svg>
-        `;
-
-        const expandIconSVG = `
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M16 6l-1.41 1.41L17.17 11H8v2h9.17l-2.58 2.59L16 18l5-5z"/>
-            </svg>
-        `;
 
         // Real certificates data with your actual PDF files
         const certificatesData = [
@@ -640,7 +614,7 @@
             
             if (certificate.type === 'pdf') {
                 preview.innerHTML = `
-                    ${pdfIconSVG}
+                    <div class="pdf-emoji">📄</div>
                     <div class="pdf-badge">PDF</div>
                 `;
             } else {
@@ -682,19 +656,16 @@
             if (certificate.type === 'pdf') {
                 actions.innerHTML = `
                     <button class="certificate-btn danger" onclick="openPdf('${certificate.file}')">
-                        ${pdfIconSVG}
-                        Открыть PDF
+                        📂 Открыть PDF
                     </button>
                     <button class="certificate-btn secondary" onclick="downloadPdf('${certificate.file}', '${certificate.title}')">
-                        ${downloadIconSVG}
-                        Скачать
+                        ⬇️ Скачать
                     </button>
                 `;
             } else {
                 actions.innerHTML = `
                     <button class="certificate-btn primary" onclick="viewCertificate('${certificate.file}', '${certificate.title}')">
-                        ${expandIconSVG}
-                        Просмотр
+                        👁️ Просмотр
                     </button>
                 `;
             }
