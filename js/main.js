@@ -1,8 +1,8 @@
 // js/main.js
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Сайт Панибратского Дмитрия загружен');
+    console.log('Dmitry Panibratsky portfolio loaded');
 
-    // Плавная прокрутка для навигации
+    // Smooth scrolling for navigation
     const navLinks = document.querySelectorAll('a[href^="#"]');
     
     navLinks.forEach(link => {
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Анимация появления элементов при скролле
+    // Intersection Observer for animations
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, observerOptions);
 
-    // Применяем анимацию к карточкам экспертиз
+    // Animate expertise cards
     const expertiseCards = document.querySelectorAll('.expertise-card');
     expertiseCards.forEach((card, index) => {
         card.style.opacity = '0';
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(card);
     });
 
-    // Подсветка активного пункта меню при скролле
+    // Active navigation highlighting
     const sections = document.querySelectorAll('section[id]');
     
     function highlightNav() {
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', highlightNav);
 });
 
-// Обработка ошибок загрузки ресурсов
+// Error handling
 window.addEventListener('error', function(e) {
-    console.error('Ошибка загрузки ресурса:', e);
+    console.error('Resource loading error:', e);
 });
