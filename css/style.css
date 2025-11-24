@@ -99,48 +99,6 @@ body {
   object-fit: cover;
 }
 
-/* Quick Access Styles */
-.quick-access {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin: 40px 0;
-}
-
-.access-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  padding: 30px 20px;
-  border-radius: var(--border-radius);
-  text-decoration: none;
-  color: inherit;
-  text-align: center;
-  border: 2px solid transparent;
-  transition: var(--transition);
-  box-shadow: var(--shadow);
-}
-
-.access-card:hover {
-  border-color: var(--primary-color);
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-hover);
-}
-
-.access-icon {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-.access-card h3 {
-  color: var(--primary-color);
-  margin-bottom: 10px;
-  font-size: 1.3rem;
-}
-
-.access-card p {
-  color: var(--text-light);
-  font-size: 0.95rem;
-}
-
 /* Navigation */
 .navigation {
   background: white;
@@ -173,6 +131,11 @@ body {
   background: rgba(44, 90, 160, 0.1);
 }
 
+.nav-links a.active {
+  color: var(--primary-color);
+  background: rgba(44, 90, 160, 0.1);
+}
+
 .nav-links a::after {
   content: '';
   position: absolute;
@@ -185,7 +148,8 @@ body {
   transform: translateX(-50%);
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links a.active::after {
   width: 80%;
 }
 
@@ -210,6 +174,87 @@ body {
   text-align: center;
 }
 
+/* Page Header Styles */
+.page-header {
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.back-to-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary-color);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+  margin-bottom: 2rem;
+}
+
+.back-to-main:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* Tools Grid Styles */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.tool-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+  text-align: center;
+}
+
+.tool-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.tool-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.tool-card h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.tool-card p {
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+}
+
+.tool-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary-color);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.tool-link:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .header-content {
@@ -227,12 +272,12 @@ body {
     gap: 1rem;
   }
   
-  .quick-access {
-    grid-template-columns: 1fr;
-  }
-  
   .header h1 {
     font-size: 2rem;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -248,9 +293,5 @@ body {
   .nav-links a {
     padding: 0.5rem 0.8rem;
     font-size: 0.9rem;
-  }
-  
-  .access-card {
-    padding: 20px 15px;
   }
 }
