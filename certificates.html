@@ -4,43 +4,380 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сертификаты - Дмитрий Панибратский</title>
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .certificate-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .certificate-preview {
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        .certificate-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .pdf-icon {
+            font-size: 4rem;
+            color: #e74c3c;
+        }
+
+        .pdf-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .certificate-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .certificate-meta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .certificate-description {
+            color: var(--text-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .certificate-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .skill-tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .certificate-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .certificate-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .certificate-btn.primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .certificate-btn.secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .certificate-btn.danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .certificate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .certificate-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .certificate-btn.secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .certificate-btn.danger:hover {
+            background: #c0392b;
+        }
+
+        /* Filter Styles */
+        .certificate-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Statistics */
+        .certificates-stats {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--border-radius);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Search */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .certificates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .certificate-filters {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .certificate-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .certificate-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="header-text">
-                    <h1>Дмитрий Панибратский</h1>
-                    <p class="header-subtitle">Сертификаты и квалификация</p>
+                <div class="header-photos">
+                    <!-- Левое фото -->
+                    <div class="header-photo-left">
+                        <div class="photo-left-container">
+                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность">
+                        </div>
+                    </div>
+                    
+                    <!-- Центральный текст -->
+                    <div class="header-text-center">
+                        <h1>Дмитрий Панибратский</h1>
+                        <p class="header-subtitle">Сертификаты и квалификация</p>
+                    </div>
+                    
+                    <!-- Правое фото -->
+                    <div class="header-photo-right">
+                        <div class="photo-right-container">
+                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- Navigation -->
     <nav class="navigation">
         <div class="container">
             <ul class="nav-links">
                 <li><a href="index.html">Главная</a></li>
+                <li><a href="index.html#about">Профиль</a></li>
+                <li><a href="index.html#expertise">Экспертиза</a></li>
+                <li><a href="index.html#projects">Проекты</a></li>
                 <li><a href="tools.html">Инструменты</a></li>
                 <li><a href="certificates.html" class="active">Сертификаты</a></li>
                 <li><a href="wiki.html">Wiki</a></li>
+                <li><a href="index.html#contact">Контакты</a></li>
             </ul>
         </div>
     </nav>
 
     <main class="container">
+        <!-- Page Header -->
         <div class="page-header">
-            <a href="index.html" class="back-to-main">На главную</a>
-            <h1>🎓 Сертификаты и квалификация</h1>
-            <p>Страница в разработке</p>
+            <h1>🎓 Профессиональные сертификаты</h1>
+            <p>Подтвержденная квалификация в области управления цепями поставок, логистики и цифровой трансформации</p>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Поиск сертификатов...">
+        </div>
+
+        <!-- Statistics -->
+        <div class="certificates-stats">
+            <h3>Статистика сертификатов</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-certificates">0</div>
+                    <div class="stat-label">Всего сертификатов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="current-year">0</div>
+                    <div class="stat-label">Получено в 2024</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="pdf-count">0</div>
+                    <div class="stat-label">PDF документов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">13+</div>
+                    <div class="stat-label">Лет непрерывного обучения</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="certificate-filters">
+            <button class="filter-btn active" data-filter="all">Все сертификаты</button>
+            <button class="filter-btn" data-filter="scm">SCM & Логистика</button>
+            <button class="filter-btn" data-filter="management">Управление</button>
+            <button class="filter-btn" data-filter="digital">Цифровая трансформация</button>
+            <button class="filter-btn" data-filter="analytics">Аналитика & AI</button>
+            <button class="filter-btn" data-filter="pdf">Только PDF</button>
+        </div>
+
+        <!-- Certificates Grid -->
+        <div class="certificates-grid" id="certificatesContainer">
+            <!-- Сертификаты будут загружены через JavaScript -->
         </div>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский</p>
+            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/certificates.js"></script>
 </body>
 </html>
