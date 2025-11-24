@@ -1,99 +1,83 @@
-// Main JavaScript functionality
-
-// Initialize when DOM is loaded
+// js/main.js
 document.addEventListener('DOMContentLoaded', function() {
-    initializeNavigation();
-    initializeActiveNav();
-    initializeSmoothScrolling();
-});
+    console.log('Сайт Панибратского Дмитрия загружен');
 
-// Smooth scrolling for navigation links
-function initializeNavigation() {
+    // Плавная прокрутка для навигации
     const navLinks = document.querySelectorAll('a[href^="#"]');
     
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
             
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+                const headerHeight = document.querySelector('.header').offsetHeight;
+                const targetPosition = targetElement.offsetTop - headerHeight - 20;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
                 });
             }
         });
     });
-}
 
-// Set active navigation item
-function initializeActiveNav() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const navLinks = document.querySelectorAll('.nav-links a');
+    // Анимация появления элементов при скролле
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Применяем анимацию к карточкам экспертиз
+    const expertiseCards = document.querySelectorAll('.expertise-card');
+    expertiseCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = `opacity 0.6s ease ${index * 0.2}s, transform 0.6s ease ${index * 0.2}s`;
+        observer.observe(card);
+    });
+
+    // Подсветка активного пункта меню при скролле
+    const sections = document.querySelectorAll('section[id]');
     
-    navLinks.forEach(link => {
-        const linkHref = link.getAttribute('href');
+    function highlightNav() {
+        const scrollY = window.pageYOffset;
         
-        // For main page - handle section clicks
-        if (currentPage === 'index.html' && linkHref.startsWith('#')) {
-            link.addEventListener('click', function() {
-                navLinks.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        }
-        
-        // For other pages - mark current page as active
-        if (linkHref === currentPage || (currentPage === 'index.html' && linkHref.startsWith('#'))) {
-            link.classList.add('active');
-        }
-    });
-
-    // Set first nav item as active on main page load
-    if (currentPage === 'index.html' && navLinks.length > 0) {
-        const firstNavItem = document.querySelector('.nav-links a[href^="#"]');
-        if (firstNavItem && !document.querySelector('.nav-links a.active')) {
-            firstNavItem.classList.add('active');
-        }
-    }
-}
-
-// Smooth scrolling for same-page links
-function initializeSmoothScrolling() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-}
-
-// Handle scroll to update active nav item
-window.addEventListener('scroll', function() {
-    if (window.location.pathname.split('/').pop() === 'index.html') {
-        const sections = document.querySelectorAll('section[id]');
-        const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-        
-        let current = '';
         sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (window.scrollY >= sectionTop - 100) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
+            const sectionHeight = section.offsetHeight;
+            const sectionTop = section.offsetTop - 100;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                const navLink = document.querySelector(`.nav-list a[href="#${sectionId}"]`);
+                if (navLink) {
+                    navLink.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                }
+            } else {
+                const navLink = document.querySelector(`.nav-list a[href="#${sectionId}"]`);
+                if (navLink) {
+                    navLink.style.backgroundColor = 'transparent';
+                }
             }
         });
     }
+
+    window.addEventListener('scroll', highlightNav);
+});
+
+// Обработка ошибок загрузки ресурсов
+window.addEventListener('error', function(e) {
+    console.error('Ошибка загрузки ресурса:', e);
 });
