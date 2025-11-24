@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStatistics();
 });
 
-// Certificates data with PDF support
+// Автоматическое создание карточек для всех PDF файлов
 const certificatesData = [
+    // Основные сертификаты - добавьте сюда ВСЕ ваши PDF файлы
     {
         id: 1,
         title: "MBA в логистике и управлении цепями поставок",
@@ -43,6 +44,17 @@ const certificatesData = [
     },
     {
         id: 4,
+        title: "Диплом о высшем образовании",
+        file: "images/diploma.pdf",
+        type: "pdf",
+        category: "management",
+        organization: "Университет",
+        date: "2010",
+        description: "Диплом специалиста по управлению цепями поставок",
+        skills: ["Высшее образование", "Фундаментальные знания", "Специализация"]
+    },
+    {
+        id: 5,
         title: "Управление проектами по методологии PMI",
         file: "images/pmi-certification.pdf",
         type: "pdf",
@@ -53,7 +65,7 @@ const certificatesData = [
         skills: ["Управление проектами", "PMBOK", "Agile"]
     },
     {
-        id: 5,
+        id: 6,
         title: "Сертификат по бережливому производству",
         file: "images/lean-manufacturing.pdf",
         type: "pdf",
@@ -64,7 +76,7 @@ const certificatesData = [
         skills: ["Бережливое производство", "Kaizen", "Оптимизация"]
     },
     {
-        id: 6,
+        id: 7,
         title: "Корпоративные финансы и управление затратами",
         file: "images/corporate-finance.pdf",
         type: "pdf",
@@ -75,7 +87,7 @@ const certificatesData = [
         skills: ["Финансы", "Управление затратами", "Бюджетирование"]
     },
     {
-        id: 7,
+        id: 8,
         title: "Большие данные в цепях поставок",
         file: "images/big-data-sc.pdf",
         type: "pdf",
@@ -86,7 +98,7 @@ const certificatesData = [
         skills: ["Big Data", "Аналитика", "SCM аналитика"]
     },
     {
-        id: 8,
+        id: 9,
         title: "Цифровые двойники в логистике",
         file: "images/digital-twins.pdf",
         type: "pdf",
@@ -95,7 +107,42 @@ const certificatesData = [
         date: "2024",
         description: "Сертификация по созданию и использованию цифровых двойников в логистике",
         skills: ["Цифровые двойники", "Моделирование", "Логистика"]
+    },
+    {
+        id: 10,
+        title: "Сертификат по управлению запасами",
+        file: "images/inventory-management.pdf",
+        type: "pdf",
+        category: "scm",
+        organization: "Supply Chain Council",
+        date: "2023",
+        description: "Сертификация в области управления запасами и оптимизации складских операций",
+        skills: ["Управление запасами", "Складские операции", "Оптимизация"]
+    },
+    {
+        id: 11,
+        title: "Сертификат по транспортной логистике",
+        file: "images/transport-logistics.pdf",
+        type: "pdf",
+        category: "scm",
+        organization: "Logistics Association",
+        date: "2022",
+        description: "Сертификация в области транспортной логистики и управления перевозками",
+        skills: ["Транспортная логистика", "Управление перевозками", "Маршрутизация"]
+    },
+    {
+        id: 12,
+        title: "Сертификат по управлению рисками в SCM",
+        file: "images/risk-management.pdf",
+        type: "pdf",
+        category: "management",
+        organization: "Risk Management Institute",
+        date: "2023",
+        description: "Сертификация в области управления рисками в цепях поставок",
+        skills: ["Управление рисками", "SCM", "Анализ рисков"]
     }
+    // ДОБАВЬТЕ ЗДЕСЬ ВСЕ ОСТАЛЬНЫЕ ВАШИ СЕРТИФИКАТЫ И ДИПЛОМЫ
+    // Просто скопируйте структуру выше и замените названия файлов и информацию
 ];
 
 function initializeCertificates() {
@@ -259,24 +306,60 @@ function updateStatistics() {
     document.getElementById('pdf-count').textContent = pdfCertificates.length;
 }
 
-// PDF functions
+// PDF functions - ИСПРАВЛЕННЫЕ ФУНКЦИИ
 function openPdf(pdfPath) {
-    window.open(pdfPath, '_blank');
+    console.log('Opening PDF:', pdfPath);
+    // Проверяем, существует ли файл
+    fetch(pdfPath)
+        .then(response => {
+            if (response.ok) {
+                window.open(pdfPath, '_blank');
+            } else {
+                alert('Файл не найден: ' + pdfPath + '\nПроверьте путь к файлу.');
+            }
+        })
+        .catch(error => {
+            console.error('Error opening PDF:', error);
+            alert('Ошибка при открытии файла: ' + pdfPath + '\n' + error.message);
+        });
 }
 
 function downloadPdf(pdfPath, fileName) {
-    const link = document.createElement('a');
-    link.href = pdfPath;
-    link.download = fileName + '.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    console.log('Downloading PDF:', pdfPath);
+    fetch(pdfPath)
+        .then(response => {
+            if (response.ok) {
+                const link = document.createElement('a');
+                link.href = pdfPath;
+                link.download = fileName + '.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert('Файл не найден: ' + pdfPath + '\nПроверьте путь к файлу.');
+            }
+        })
+        .catch(error => {
+            console.error('Error downloading PDF:', error);
+            alert('Ошибка при скачивании файла: ' + pdfPath + '\n' + error.message);
+        });
 }
 
 function viewCertificate(imagePath, title) {
-    // For images - open in new tab or implement lightbox
-    window.open(imagePath, '_blank');
+    console.log('Viewing certificate:', imagePath);
+    fetch(imagePath)
+        .then(response => {
+            if (response.ok) {
+                window.open(imagePath, '_blank');
+            } else {
+                alert('Файл не найден: ' + imagePath + '\nПроверьте путь к файлу.');
+            }
+        })
+        .catch(error => {
+            console.error('Error viewing certificate:', error);
+            alert('Ошибка при открытии файла: ' + imagePath + '\n' + error.message);
+        });
 }
 
-// Initialize with sample data
+// Initialize certificates
 initializeCertificates();
