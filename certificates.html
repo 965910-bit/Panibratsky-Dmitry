@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сертификаты - Дмитрий Панибратский</title>
     
-    <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -18,18 +17,18 @@
         }
 
         .certificate-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
+            background: white;
+            border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e5e9;
+            transition: all 0.3s ease;
             text-align: center;
         }
 
         .certificate-card:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .certificate-preview {
@@ -42,13 +41,6 @@
             justify-content: center;
             background: #f8f9fa;
             position: relative;
-        }
-
-        .certificate-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 4px;
         }
 
         .pdf-emoji {
@@ -69,19 +61,19 @@
         }
 
         .certificate-info h3 {
-            color: var(--primary-color);
+            color: #2c5aa0;
             margin-bottom: 0.5rem;
             font-size: 1.2rem;
         }
 
         .certificate-meta {
-            color: var(--text-light);
+            color: #666;
             font-size: 0.9rem;
             margin-bottom: 1rem;
         }
 
         .certificate-description {
-            color: var(--text-color);
+            color: #333;
             font-size: 0.95rem;
             line-height: 1.5;
             margin-bottom: 1rem;
@@ -96,7 +88,7 @@
         }
 
         .skill-tag {
-            background: var(--primary-color);
+            background: #2c5aa0;
             color: white;
             padding: 0.3rem 0.8rem;
             border-radius: 15px;
@@ -120,20 +112,9 @@
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9rem;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
-        }
-
-        .certificate-btn.primary {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .certificate-btn.secondary {
-            background: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
         }
 
         .certificate-btn.danger {
@@ -141,24 +122,25 @@
             color: white;
         }
 
+        .certificate-btn.secondary {
+            background: transparent;
+            color: #2c5aa0;
+            border: 1px solid #2c5aa0;
+        }
+
         .certificate-btn:hover {
             transform: translateY(-2px);
-        }
-
-        .certificate-btn.primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .certificate-btn.secondary:hover {
-            background: var(--primary-color);
-            color: white;
         }
 
         .certificate-btn.danger:hover {
             background: #c0392b;
         }
 
-        /* Filter Styles */
+        .certificate-btn.secondary:hover {
+            background: #2c5aa0;
+            color: white;
+        }
+
         .certificate-filters {
             display: flex;
             justify-content: center;
@@ -169,28 +151,27 @@
 
         .filter-btn {
             padding: 0.8rem 1.5rem;
-            border: 2px solid var(--primary-color);
+            border: 2px solid #2c5aa0;
             background: transparent;
-            color: var(--primary-color);
+            color: #2c5aa0;
             border-radius: 25px;
             cursor: pointer;
             font-weight: 500;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
 
         .filter-btn.active,
         .filter-btn:hover {
-            background: var(--primary-color);
+            background: #2c5aa0;
             color: white;
         }
 
-        /* Statistics */
         .certificates-stats {
             text-align: center;
             margin: 2rem 0;
             padding: 1.5rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: var(--border-radius);
+            border-radius: 12px;
             color: white;
         }
 
@@ -216,7 +197,6 @@
             opacity: 0.9;
         }
 
-        /* Search */
         .search-container {
             max-width: 500px;
             margin: 0 auto 2rem;
@@ -225,15 +205,15 @@
         .search-input {
             width: 100%;
             padding: 1rem;
-            border: 2px solid var(--border-color);
+            border: 2px solid #e1e5e9;
             border-radius: 25px;
             font-size: 1rem;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: #2c5aa0;
             box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
         }
 
@@ -276,28 +256,24 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
                 <div class="header-photos">
-                    <!-- Левое фото -->
                     <div class="header-photo-left">
                         <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность">
+                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский">
                         </div>
                     </div>
                     
-                    <!-- Центральный текст -->
                     <div class="header-text-center">
                         <h1>Дмитрий Панибратский</h1>
                         <p class="header-subtitle">Сертификаты и квалификация</p>
                     </div>
                     
-                    <!-- Правое фото -->
                     <div class="header-photo-right">
                         <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок">
+                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский">
                         </div>
                     </div>
                 </div>
@@ -305,7 +281,6 @@
         </div>
     </header>
 
-    <!-- Navigation -->
     <nav class="navigation">
         <div class="container">
             <ul class="nav-links">
@@ -322,18 +297,15 @@
     </nav>
 
     <main class="container">
-        <!-- Page Header -->
         <div class="page-header">
             <h1>🎓 Профессиональные сертификаты</h1>
             <p>Подтвержденная квалификация в области управления цепями поставок, логистики и цифровой трансформации</p>
         </div>
 
-        <!-- Search -->
         <div class="search-container">
             <input type="text" class="search-input" id="searchInput" placeholder="🔍 Поиск сертификатов...">
         </div>
 
-        <!-- Statistics -->
         <div class="certificates-stats">
             <h3>Статистика сертификатов</h3>
             <div class="stats-grid">
@@ -356,7 +328,6 @@
             </div>
         </div>
 
-        <!-- Filters -->
         <div class="certificate-filters">
             <button class="filter-btn active" data-filter="all">Все сертификаты</button>
             <button class="filter-btn" data-filter="scm">SCM & Логистика</button>
@@ -366,34 +337,24 @@
             <button class="filter-btn" data-filter="pdf">Только PDF</button>
         </div>
 
-        <!-- Certificates Grid -->
         <div class="certificates-grid" id="certificatesContainer">
-            <!-- Сертификаты будут загружены через JavaScript -->
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script src="js/main.js"></script>
-    
-    <!-- Встроенный JavaScript для сертификатов -->
     <script>
-        // Certificates data and functionality
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Certificates page loaded');
             initializeCertificates();
             initializeFilters();
             initializeSearch();
             updateStatistics();
         });
 
-        // Real certificates data with your actual PDF files
         const certificatesData = [
             {
                 id: 1,
@@ -586,10 +547,7 @@
 
         function initializeCertificates() {
             const container = document.getElementById('certificatesContainer');
-            if (!container) {
-                console.error('Container not found');
-                return;
-            }
+            if (!container) return;
             
             container.innerHTML = '';
             
@@ -597,8 +555,6 @@
                 const certificateCard = createCertificateCard(certificate);
                 container.appendChild(certificateCard);
             });
-            
-            console.log('Certificates initialized:', certificatesData.length);
         }
 
         function createCertificateCard(certificate) {
@@ -608,7 +564,6 @@
             card.setAttribute('data-type', certificate.type);
             card.setAttribute('data-title', certificate.title.toLowerCase());
             
-            // Preview section
             const preview = document.createElement('div');
             preview.className = 'certificate-preview';
             
@@ -617,11 +572,8 @@
                     <div class="pdf-emoji">📄</div>
                     <div class="pdf-badge">PDF</div>
                 `;
-            } else {
-                preview.innerHTML = `<img src="${certificate.file}" alt="${certificate.title}" loading="lazy">`;
             }
             
-            // Info section
             const info = document.createElement('div');
             info.className = 'certificate-info';
             
@@ -639,7 +591,6 @@
             description.className = 'certificate-description';
             description.textContent = certificate.description;
             
-            // Skills section
             const skills = document.createElement('div');
             skills.className = 'certificate-skills';
             certificate.skills.forEach(skill => {
@@ -649,7 +600,6 @@
                 skills.appendChild(skillTag);
             });
             
-            // Actions section
             const actions = document.createElement('div');
             actions.className = 'certificate-actions';
             
@@ -662,15 +612,8 @@
                         ⬇️ Скачать
                     </button>
                 `;
-            } else {
-                actions.innerHTML = `
-                    <button class="certificate-btn primary" onclick="viewCertificate('${certificate.file}', '${certificate.title}')">
-                        👁️ Просмотр
-                    </button>
-                `;
             }
             
-            // Assemble card
             info.appendChild(title);
             info.appendChild(meta);
             info.appendChild(description);
@@ -688,9 +631,7 @@
             
             filterButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Remove active class from all buttons
                     filterButtons.forEach(btn => btn.classList.remove('active'));
-                    // Add active class to clicked button
                     this.classList.add('active');
                     
                     const filter = this.getAttribute('data-filter');
@@ -710,14 +651,12 @@
                 
                 let shouldShow = true;
                 
-                // Apply category filter
                 if (filter !== 'all' && filter !== 'pdf') {
                     shouldShow = category === filter;
                 } else if (filter === 'pdf') {
                     shouldShow = type === 'pdf';
                 }
                 
-                // Apply search filter
                 if (shouldShow && searchTerm) {
                     shouldShow = title.includes(searchTerm);
                 }
@@ -749,62 +688,19 @@
             document.getElementById('pdf-count').textContent = pdfCertificates.length;
         }
 
-        // PDF functions
         function openPdf(pdfPath) {
-            console.log('Opening PDF:', pdfPath);
-            // Проверяем, существует ли файл
-            fetch(pdfPath)
-                .then(response => {
-                    if (response.ok) {
-                        window.open(pdfPath, '_blank');
-                    } else {
-                        alert('Файл не найден: ' + pdfPath + '\nПроверьте путь к файлу.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error opening PDF:', error);
-                    alert('Ошибка при открытии файла: ' + pdfPath + '\n' + error.message);
-                });
+            window.open(pdfPath, '_blank');
         }
 
         function downloadPdf(pdfPath, fileName) {
-            console.log('Downloading PDF:', pdfPath);
-            fetch(pdfPath)
-                .then(response => {
-                    if (response.ok) {
-                        const link = document.createElement('a');
-                        link.href = pdfPath;
-                        link.download = fileName + '.pdf';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    } else {
-                        alert('Файл не найден: ' + pdfPath + '\nПроверьте путь к файлу.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error downloading PDF:', error);
-                    alert('Ошибка при скачивании файла: ' + pdfPath + '\n' + error.message);
-                });
+            const link = document.createElement('a');
+            link.href = pdfPath;
+            link.download = fileName + '.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
-        function viewCertificate(imagePath, title) {
-            console.log('Viewing certificate:', imagePath);
-            fetch(imagePath)
-                .then(response => {
-                    if (response.ok) {
-                        window.open(imagePath, '_blank');
-                    } else {
-                        alert('Файл не найден: ' + imagePath + '\nПроверьте путь к файлу.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error viewing certificate:', error);
-                    alert('Ошибка при открытии файла: ' + imagePath + '\n' + error.message);
-                });
-        }
-
-        // Initialize certificates
         initializeCertificates();
     </script>
 </body>
