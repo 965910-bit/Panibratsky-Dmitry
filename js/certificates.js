@@ -1,175 +1,282 @@
-// Certificates page functionality
+// Certificates data and functionality
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCertificates();
+    initializeFilters();
+    initializeSearch();
+    updateStatistics();
+});
 
-class CertificatesManager {
-    constructor() {
-        this.certificates = [];
-        this.categories = [];
-        this.filteredCertificates = [];
-        this.currentFilter = 'all';
-        this.searchTerm = '';
-        
-        this.initialize();
+// Certificates data with PDF support
+const certificatesData = [
+    {
+        id: 1,
+        title: "MBA в логистике и управлении цепями поставок",
+        file: "images/mba-logistics.pdf",
+        type: "pdf",
+        category: "scm",
+        organization: "Российская академия народного хозяйства",
+        date: "2023",
+        description: "Магистр делового администрирования со специализацией в логистике и SCM",
+        skills: ["Стратегическое управление", "Цепочка поставок", "Логистика"]
+    },
+    {
+        id: 2,
+        title: "Сертифицированный специалист по цифровой трансформации",
+        file: "images/digital-transformation.pdf",
+        type: "pdf",
+        category: "digital",
+        organization: "Digital Transformation Institute",
+        date: "2024",
+        description: "Сертификация в области цифровой трансформации бизнес-процессов",
+        skills: ["Цифровизация", "Бизнес-процессы", "Инновации"]
+    },
+    {
+        id: 3,
+        title: "AI и машинное обучение в бизнесе",
+        file: "images/ai-business.pdf",
+        type: "pdf",
+        category: "analytics",
+        organization: "Data Science Academy",
+        date: "2023",
+        description: "Применение искусственного интеллекта и ML для оптимизации бизнес-процессов",
+        skills: ["Машинное обучение", "AI", "Аналитика данных"]
+    },
+    {
+        id: 4,
+        title: "Управление проектами по методологии PMI",
+        file: "images/pmi-certification.pdf",
+        type: "pdf",
+        category: "management",
+        organization: "Project Management Institute",
+        date: "2022",
+        description: "Сертификация по управлению проектами согласно стандартам PMI",
+        skills: ["Управление проектами", "PMBOK", "Agile"]
+    },
+    {
+        id: 5,
+        title: "Сертификат по бережливому производству",
+        file: "images/lean-manufacturing.pdf",
+        type: "pdf",
+        category: "scm",
+        organization: "Lean Six Sigma Institute",
+        date: "2023",
+        description: "Сертификация в области бережливого производства и оптимизации процессов",
+        skills: ["Бережливое производство", "Kaizen", "Оптимизация"]
+    },
+    {
+        id: 6,
+        title: "Корпоративные финансы и управление затратами",
+        file: "images/corporate-finance.pdf",
+        type: "pdf",
+        category: "management",
+        organization: "Financial Management Association",
+        date: "2022",
+        description: "Сертификация в области корпоративных финансов и управления затратами",
+        skills: ["Финансы", "Управление затратами", "Бюджетирование"]
+    },
+    {
+        id: 7,
+        title: "Большие данные в цепях поставок",
+        file: "images/big-data-sc.pdf",
+        type: "pdf",
+        category: "analytics",
+        organization: "Big Data Analytics Council",
+        date: "2024",
+        description: "Сертификация по применению больших данных в управлении цепями поставок",
+        skills: ["Big Data", "Аналитика", "SCM аналитика"]
+    },
+    {
+        id: 8,
+        title: "Цифровые двойники в логистике",
+        file: "images/digital-twins.pdf",
+        type: "pdf",
+        category: "digital",
+        organization: "Digital Innovation Lab",
+        date: "2024",
+        description: "Сертификация по созданию и использованию цифровых двойников в логистике",
+        skills: ["Цифровые двойники", "Моделирование", "Логистика"]
     }
+];
 
-    async initialize() {
-        await this.loadData();
-        this.renderFilters();
-        this.renderCertificates();
-        this.setupEventListeners();
-    }
-
-    async loadData() {
-        try {
-            const data = await fetch('/data/certificates.json');
-            if (!data.ok) throw new Error('Failed to load certificates data');
-            
-            const jsonData = await data.json();
-            this.certificates = jsonData.certificates || [];
-            this.categories = jsonData.categories || [];
-            
-        } catch (error) {
-            console.error('Error loading certificates:', error);
-            this.showError('Ошибка загрузки данных сертификатов');
-        }
-    }
-
-    renderFilters() {
-        const filtersContainer = document.getElementById('certificate-filters');
-        if (!filtersContainer) return;
-
-        filtersContainer.innerHTML = `
-            <button class="filter-btn active" data-filter="all">Все</button>
-            ${this.categories.map(category => `
-                <button class="filter-btn" data-filter="${category.id}">${category.name}</button>
-            `).join('')}
-        `;
-    }
-
-    renderCertificates() {
-        const container = document.getElementById('certificates-container');
-        if (!container) return;
-
-        this.filterCertificates();
-
-        if (this.filteredCertificates.length === 0) {
-            container.innerHTML = `
-                <div class="error">
-                    <i class="fas fa-search"></i>
-                    <p>Сертификаты не найдены</p>
-                    <p>Попробуйте изменить параметры поиска или фильтрации</p>
-                </div>
-            `;
-            return;
-        }
-
-        container.innerHTML = this.filteredCertificates.map(certificate => `
-            <div class="certificate-card ${certificate.importance === 'high' ? 'diploma-card' : ''}">
-                <div class="certificate-icon">
-                    ${this.getCertificateIcon(certificate.category)}
-                </div>
-                <h3>${certificate.title}</h3>
-                <div class="certificate-date">
-                    <i class="far fa-calendar"></i>
-                    ${this.formatDate(certificate.date)}
-                </div>
-                <div class="certificate-institution">
-                    ${certificate.institution}
-                </div>
-                ${certificate.description ? `
-                    <p class="certificate-description">${certificate.description}</p>
-                ` : ''}
-                ${certificate.skills && certificate.skills.length > 0 ? `
-                    <div class="certificate-skills">
-                        ${certificate.skills.map(skill => `
-                            <span class="skill-tag">${skill}</span>
-                        `).join('')}
-                    </div>
-                ` : ''}
-                <a href="${certificate.file}" target="_blank" class="certificate-btn ${certificate.importance === 'high' ? 'diploma-btn' : ''}">
-                    <i class="far fa-file-pdf"></i>
-                    PDF сертификат
-                </a>
-            </div>
-        `).join('');
-    }
-
-    filterCertificates() {
-        this.filteredCertificates = this.certificates.filter(certificate => {
-            // Apply category filter
-            const categoryMatch = this.currentFilter === 'all' || certificate.category === this.currentFilter;
-            
-            // Apply search filter
-            const searchMatch = !this.searchTerm || 
-                certificate.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                certificate.skills.some(skill => skill.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-                certificate.institution.toLowerCase().includes(this.searchTerm.toLowerCase());
-            
-            return categoryMatch && searchMatch;
-        });
-
-        // Sort by importance and date
-        this.filteredCertificates.sort((a, b) => {
-            if (a.importance === 'high' && b.importance !== 'high') return -1;
-            if (a.importance !== 'high' && b.importance === 'high') return 1;
-            return new Date(b.date) - new Date(a.date);
-        });
-    }
-
-    getCertificateIcon(categoryId) {
-        const icons = {
-            'main': '🏆',
-            'time-management': '⏱️',
-            'management': '💼'
-        };
-        return icons[categoryId] || '📄';
-    }
-
-    formatDate(dateString) {
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        return new Date(dateString).toLocaleDateString('ru-RU', options);
-    }
-
-    setupEventListeners() {
-        // Filter buttons
-        document.getElementById('certificate-filters')?.addEventListener('click', (e) => {
-            if (e.target.classList.contains('filter-btn')) {
-                const filter = e.target.dataset.filter;
-                this.setFilter(filter);
-            }
-        });
-
-        // Search input
-        document.getElementById('certificate-search')?.addEventListener('input', (e) => {
-            this.searchTerm = e.target.value;
-            this.renderCertificates();
-        });
-    }
-
-    setFilter(filter) {
-        this.currentFilter = filter;
-        
-        // Update active button
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.filter === filter);
-        });
-        
-        this.renderCertificates();
-    }
-
-    showError(message) {
-        const container = document.getElementById('certificates-container');
-        if (container) {
-            container.innerHTML = `
-                <div class="error">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>${message}</p>
-                </div>
-            `;
-        }
-    }
+function initializeCertificates() {
+    const container = document.getElementById('certificatesContainer');
+    container.innerHTML = '';
+    
+    certificatesData.forEach(certificate => {
+        const certificateCard = createCertificateCard(certificate);
+        container.appendChild(certificateCard);
+    });
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new CertificatesManager();
-});
+function createCertificateCard(certificate) {
+    const card = document.createElement('div');
+    card.className = 'certificate-card';
+    card.setAttribute('data-category', certificate.category);
+    card.setAttribute('data-type', certificate.type);
+    card.setAttribute('data-title', certificate.title.toLowerCase());
+    
+    // Preview section
+    const preview = document.createElement('div');
+    preview.className = 'certificate-preview';
+    
+    if (certificate.type === 'pdf') {
+        preview.innerHTML = `
+            <i class="fas fa-file-pdf pdf-icon"></i>
+            <div class="pdf-badge">PDF</div>
+        `;
+    } else {
+        preview.innerHTML = `<img src="${certificate.file}" alt="${certificate.title}" loading="lazy">`;
+    }
+    
+    // Info section
+    const info = document.createElement('div');
+    info.className = 'certificate-info';
+    
+    const title = document.createElement('h3');
+    title.textContent = certificate.title;
+    
+    const meta = document.createElement('div');
+    meta.className = 'certificate-meta';
+    meta.innerHTML = `
+        <div><strong>Организация:</strong> ${certificate.organization}</div>
+        <div><strong>Дата получения:</strong> ${certificate.date}</div>
+    `;
+    
+    const description = document.createElement('div');
+    description.className = 'certificate-description';
+    description.textContent = certificate.description;
+    
+    // Skills section
+    const skills = document.createElement('div');
+    skills.className = 'certificate-skills';
+    certificate.skills.forEach(skill => {
+        const skillTag = document.createElement('span');
+        skillTag.className = 'skill-tag';
+        skillTag.textContent = skill;
+        skills.appendChild(skillTag);
+    });
+    
+    // Actions section
+    const actions = document.createElement('div');
+    actions.className = 'certificate-actions';
+    
+    if (certificate.type === 'pdf') {
+        actions.innerHTML = `
+            <button class="certificate-btn danger" onclick="openPdf('${certificate.file}')">
+                <i class="fas fa-file-pdf"></i>
+                Открыть PDF
+            </button>
+            <button class="certificate-btn secondary" onclick="downloadPdf('${certificate.file}', '${certificate.title}')">
+                <i class="fas fa-download"></i>
+                Скачать
+            </button>
+        `;
+    } else {
+        actions.innerHTML = `
+            <button class="certificate-btn primary" onclick="viewCertificate('${certificate.file}', '${certificate.title}')">
+                <i class="fas fa-expand"></i>
+                Просмотр
+            </button>
+        `;
+    }
+    
+    // Assemble card
+    info.appendChild(title);
+    info.appendChild(meta);
+    info.appendChild(description);
+    info.appendChild(skills);
+    info.appendChild(actions);
+    
+    card.appendChild(preview);
+    card.appendChild(info);
+    
+    return card;
+}
+
+function initializeFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            filterCertificates(filter);
+        });
+    });
+}
+
+function filterCertificates(filter) {
+    const certificates = document.querySelectorAll('.certificate-card');
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
+    certificates.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const type = card.getAttribute('data-type');
+        const title = card.getAttribute('data-title');
+        
+        let shouldShow = true;
+        
+        // Apply category filter
+        if (filter !== 'all' && filter !== 'pdf') {
+            shouldShow = category === filter;
+        } else if (filter === 'pdf') {
+            shouldShow = type === 'pdf';
+        }
+        
+        // Apply search filter
+        if (shouldShow && searchTerm) {
+            shouldShow = title.includes(searchTerm);
+        }
+        
+        card.style.display = shouldShow ? 'block' : 'none';
+    });
+    
+    updateStatistics();
+}
+
+function initializeSearch() {
+    const searchInput = document.getElementById('searchInput');
+    
+    searchInput.addEventListener('input', function() {
+        const activeFilter = document.querySelector('.filter-btn.active');
+        const filter = activeFilter ? activeFilter.getAttribute('data-filter') : 'all';
+        filterCertificates(filter);
+    });
+}
+
+function updateStatistics() {
+    const visibleCertificates = document.querySelectorAll('.certificate-card[style="display: block"]');
+    const totalCertificates = document.querySelectorAll('.certificate-card');
+    const pdfCertificates = certificatesData.filter(cert => cert.type === 'pdf');
+    const currentYearCertificates = certificatesData.filter(cert => cert.date === '2024');
+    
+    document.getElementById('total-certificates').textContent = totalCertificates.length;
+    document.getElementById('current-year').textContent = currentYearCertificates.length;
+    document.getElementById('pdf-count').textContent = pdfCertificates.length;
+}
+
+// PDF functions
+function openPdf(pdfPath) {
+    window.open(pdfPath, '_blank');
+}
+
+function downloadPdf(pdfPath, fileName) {
+    const link = document.createElement('a');
+    link.href = pdfPath;
+    link.download = fileName + '.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function viewCertificate(imagePath, title) {
+    // For images - open in new tab or implement lightbox
+    window.open(imagePath, '_blank');
+}
+
+// Initialize with sample data
+initializeCertificates();
