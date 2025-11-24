@@ -246,6 +246,41 @@
             text-align: center;
         }
 
+        /* Two Photos Header */
+        .header-photos {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-photo-left,
+        .header-photo-right {
+            flex-shrink: 0;
+        }
+
+        .photo-left-container,
+        .photo-right-container {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: var(--shadow);
+        }
+
+        .photo-left-container img,
+        .photo-right-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-text-center {
+            flex: 1;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .about-grid {
                 grid-template-columns: 1fr;
@@ -259,6 +294,21 @@
             .project-image {
                 height: 250px;
             }
+
+            .header-photos {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-text-center {
+                order: -1;
+            }
+
+            .photo-left-container,
+            .photo-right-container {
+                width: 120px;
+                height: 120px;
+            }
         }
     </style>
 </head>
@@ -267,21 +317,32 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="header-text">
-                    <h1>Дмитрий Панибратский</h1>
-                    <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
-                    
-                    <div class="contact-badges">
-                        <span class="badge">Управление SCM</span>
-                        <span class="badge">Цифровая трансформация</span>
-                        <span class="badge">AI & Аналитика</span>
-                        <span class="badge">Оптимизация процессов</span>
+                <div class="header-photos">
+                    <!-- Левое фото -->
+                    <div class="header-photo-left">
+                        <div class="photo-left-container">
+                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность">
+                        </div>
                     </div>
-                </div>
-                
-                <div class="header-photo">
-                    <div class="photo-container">
-                        <img src="images/photo.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок">
+                    
+                    <!-- Центральный текст -->
+                    <div class="header-text-center">
+                        <h1>Дмитрий Панибратский</h1>
+                        <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
+                        
+                        <div class="contact-badges">
+                            <span class="badge">Управление SCM</span>
+                            <span class="badge">Цифровая трансформация</span>
+                            <span class="badge">AI & Аналитика</span>
+                            <span class="badge">Оптимизация процессов</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Правое фото -->
+                    <div class="header-photo-right">
+                        <div class="photo-right-container">
+                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок">
+                        </div>
                     </div>
                 </div>
             </div>
