@@ -44,13 +44,43 @@ body {
 
 .header-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 40px;
 }
 
-.header-text {
+.header-photos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.header-photo-left,
+.header-photo-right {
+  flex-shrink: 0;
+}
+
+.photo-left-container,
+.photo-right-container {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: var(--shadow);
+}
+
+.photo-left-container img,
+.photo-right-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-text-center {
   flex: 1;
+  text-align: center;
 }
 
 .header h1 {
@@ -70,6 +100,7 @@ body {
   gap: 10px;
   margin: 20px 0;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .badge {
@@ -78,25 +109,6 @@ body {
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
-}
-
-.header-photo {
-  flex-shrink: 0;
-}
-
-.photo-container {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid white;
-  box-shadow: var(--shadow);
-}
-
-.photo-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* Navigation */
@@ -257,14 +269,23 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .header-content {
+  .header-photos {
     flex-direction: column;
-    text-align: center;
+    gap: 1rem;
   }
-  
-  .photo-container {
-    width: 150px;
-    height: 150px;
+
+  .header-text-center {
+    order: -1;
+  }
+
+  .photo-left-container,
+  .photo-right-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
   }
   
   .nav-links {
@@ -272,10 +293,6 @@ body {
     gap: 1rem;
   }
   
-  .header h1 {
-    font-size: 2rem;
-  }
-
   .tools-grid {
     grid-template-columns: 1fr;
   }
@@ -293,5 +310,18 @@ body {
   .nav-links a {
     padding: 0.5rem 0.8rem;
     font-size: 0.9rem;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+  }
+
+  .header-subtitle {
+    font-size: 1rem;
+  }
+
+  .badge {
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 }
