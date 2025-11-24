@@ -4,9 +4,172 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCM Калькуляторы - Дмитрий Панибратский</title>
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .page-header {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .back-to-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #2c5aa0;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-to-main:hover {
+            background: #1e3d72;
+            transform: translateY(-2px);
+        }
+
+        .calculators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .calculator-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e5e9;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .calculator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .calculator-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #2c5aa0;
+        }
+
+        .calculator-card h3 {
+            color: #2c5aa0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .calculator-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .calculator-form {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2c5aa0;
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .calculate-btn:hover {
+            background: #1e3d72;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #2c5aa0;
+            display: none;
+        }
+
+        .result h4 {
+            margin: 0 0 0.5rem 0;
+            color: #2c5aa0;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e3d72;
+        }
+
+        .coming-soon {
+            text-align: center;
+            padding: 3rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px dashed #e1e5e9;
+        }
+
+        .coming-soon .calculator-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .calculators-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculator-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -21,7 +184,7 @@
                     <!-- Центральный текст -->
                     <div class="header-text-center">
                         <h1>Дмитрий Панибратский</h1>
-                        <p class="header-subtitle">SCM Калькуляторы</p>
+                        <p class="header-subtitle">SCM Калькуляторы и инструменты</p>
                     </div>
                     
                     <!-- Правое фото -->
@@ -35,29 +198,194 @@
         </div>
     </header>
 
+    <!-- Navigation -->
     <nav class="navigation">
         <div class="container">
             <ul class="nav-links">
                 <li><a href="index.html">Главная</a></li>
+                <li><a href="index.html#about">Профиль</a></li>
+                <li><a href="index.html#expertise">Экспертиза</a></li>
+                <li><a href="index.html#projects">Проекты</a></li>
                 <li><a href="tools.html">Инструменты</a></li>
                 <li><a href="certificates.html">Сертификаты</a></li>
                 <li><a href="wiki.html">Wiki</a></li>
+                <li><a href="index.html#contact">Контакты</a></li>
             </ul>
         </div>
     </nav>
 
     <main class="container">
+        <!-- Page Header -->
         <div class="page-header">
-            <a href="index.html" class="back-to-main">На главную</a>
-            <h1>📊 SCM Калькуляторы</h1>
-            <p>Страница в разработке</p>
+            <a href="tools.html" class="back-to-main">
+                <i class="fas fa-arrow-left"></i>
+                Назад к инструментам
+            </a>
+            <h1><i class="fas fa-calculator"></i> SCM Калькуляторы</h1>
+            <p>Практические калькуляторы для анализа и оптимизации цепей поставок</p>
+        </div>
+
+        <!-- Calculators Grid -->
+        <div class="calculators-grid">
+            <!-- Калькулятор ROI -->
+            <div class="calculator-card">
+                <div class="calculator-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Калькулятор ROI</h3>
+                <p>Расчет возврата на инвестиции для проектов оптимизации SCM</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="investment">Инвестиции (руб):</label>
+                        <input type="number" id="investment" placeholder="1000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="netProfit">Чистая прибыль (руб/год):</label>
+                        <input type="number" id="netProfit" placeholder="300000">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateROI()">
+                        <i class="fas fa-calculator"></i> Рассчитать ROI
+                    </button>
+                    
+                    <div class="result" id="roiResult">
+                        <h4>Результат:</h4>
+                        <div class="result-value" id="roiValue">0%</div>
+                        <p>ROI показывает эффективность инвестиций</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Калькулятор оборачиваемости запасов -->
+            <div class="calculator-card">
+                <div class="calculator-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <h3>Оборачиваемость запасов</h3>
+                <p>Расчет коэффициента оборачиваемости товарных запасов</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="sales">Себестоимость продаж (руб):</label>
+                        <input type="number" id="sales" placeholder="5000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="averageInventory">Средний запас (руб):</label>
+                        <input type="number" id="averageInventory" placeholder="1000000">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateInventoryTurnover()">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    
+                    <div class="result" id="inventoryResult">
+                        <h4>Результат:</h4>
+                        <div class="result-value" id="inventoryValue">0</div>
+                        <p>Оборотов в год</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Калькулятор уровня обслуживания -->
+            <div class="calculator-card">
+                <div class="calculator-icon">
+                    <i class="fas fa-truck-loading"></i>
+                </div>
+                <h3>Уровень обслуживания</h3>
+                <p>Расчет уровня сервиса по выполнению заказов</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="totalOrders">Всего заказов:</label>
+                        <input type="number" id="totalOrders" placeholder="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="fulfilledOrders">Выполнено заказов:</label>
+                        <input type="number" id="fulfilledOrders" placeholder="950">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateServiceLevel()">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    
+                    <div class="result" id="serviceResult">
+                        <h4>Результат:</h4>
+                        <div class="result-value" id="serviceValue">0%</div>
+                        <p>Уровень обслуживания</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Запланированные калькуляторы -->
+            <div class="calculator-card coming-soon">
+                <div class="calculator-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3>Дополнительные калькуляторы</h3>
+                <p>Скоро появятся новые инструменты для расчета:</p>
+                <ul style="text-align: left; color: #666; margin-top: 1rem;">
+                    <li>NPV (Чистая приведенная стоимость)</li>
+                    <li>Точка безубыточности</li>
+                    <li>Экономичный размер заказа</li>
+                    <li>Производительность склада</li>
+                    <li>Транспортные расходы</li>
+                </ul>
+            </div>
         </div>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский</p>
+            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
+
+    <script>
+        // Калькулятор ROI
+        function calculateROI() {
+            const investment = parseFloat(document.getElementById('investment').value) || 0;
+            const netProfit = parseFloat(document.getElementById('netProfit').value) || 0;
+            
+            if (investment > 0 && netProfit > 0) {
+                const roi = (netProfit / investment) * 100;
+                document.getElementById('roiValue').textContent = roi.toFixed(1) + '%';
+                document.getElementById('roiResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения');
+            }
+        }
+
+        // Калькулятор оборачиваемости запасов
+        function calculateInventoryTurnover() {
+            const sales = parseFloat(document.getElementById('sales').value) || 0;
+            const averageInventory = parseFloat(document.getElementById('averageInventory').value) || 0;
+            
+            if (sales > 0 && averageInventory > 0) {
+                const turnover = sales / averageInventory;
+                document.getElementById('inventoryValue').textContent = turnover.toFixed(1);
+                document.getElementById('inventoryResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения');
+            }
+        }
+
+        // Калькулятор уровня обслуживания
+        function calculateServiceLevel() {
+            const totalOrders = parseFloat(document.getElementById('totalOrders').value) || 0;
+            const fulfilledOrders = parseFloat(document.getElementById('fulfilledOrders').value) || 0;
+            
+            if (totalOrders > 0 && fulfilledOrders >= 0) {
+                const serviceLevel = (fulfilledOrders / totalOrders) * 100;
+                document.getElementById('serviceValue').textContent = serviceLevel.toFixed(1) + '%';
+                document.getElementById('serviceResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения');
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Можно добавить дополнительную инициализацию при необходимости
+        });
+    </script>
 </body>
 </html>
