@@ -3,161 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сертификаты - Дмитрий Панибратский</title>
+    <title>Сертификаты и квалификация - Дмитрий Панибратский</title>
     
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Стили -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
 
     <style>
-        .certificates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .certificate-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e1e5e9;
-            transition: all 0.3s ease;
+        .page-header {
             text-align: center;
+            margin: 3rem 0;
         }
 
-        .certificate-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .certificate-preview {
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8f9fa;
-            position: relative;
-        }
-
-        .pdf-emoji {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .pdf-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #e74c3c;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .certificate-info h3 {
-            color: #2c5aa0;
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-        }
-
-        .certificate-meta {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .certificate-description {
-            color: #333;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-        }
-
-        .certificate-skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-
-        .skill-tag {
-            background: #2c5aa0;
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .certificate-actions {
-            margin-top: 1rem;
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-        }
-
-        .certificate-btn {
+        .back-to-main {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .certificate-btn.danger {
-            background: #e74c3c;
+            background: #2c5aa0;
             color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
         }
 
-        .certificate-btn.secondary {
-            background: transparent;
-            color: #2c5aa0;
-            border: 1px solid #2c5aa0;
-        }
-
-        .certificate-btn:hover {
+        .back-to-main:hover {
+            background: #1e3d72;
             transform: translateY(-2px);
         }
 
-        .certificate-btn.danger:hover {
-            background: #c0392b;
+        /* Statistics */
+        .certificate-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
         }
 
-        .certificate-btn.secondary:hover {
-            background: #2c5aa0;
-            color: white;
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid #e1e5e9;
         }
 
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c5aa0;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Filters */
         .certificate-filters {
             display: flex;
-            justify-content: center;
             gap: 1rem;
-            margin: 2rem 0;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .filter-btn {
-            padding: 0.8rem 1.5rem;
+            padding: 0.7rem 1.5rem;
             border: 2px solid #2c5aa0;
-            background: transparent;
+            background: white;
             color: #2c5aa0;
             border-radius: 25px;
             cursor: pointer;
-            font-weight: 500;
             transition: all 0.3s ease;
+            font-weight: 600;
         }
 
         .filter-btn.active,
@@ -166,96 +90,160 @@
             color: white;
         }
 
-        .certificates-stats {
-            text-align: center;
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            color: white;
+        /* Search */
+        .search-box {
+            max-width: 400px;
+            margin: 0 auto 3rem;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .search-container {
-            max-width: 500px;
-            margin: 0 auto 2rem;
-        }
-
-        .search-input {
+        .search-box input {
             width: 100%;
             padding: 1rem;
             border: 2px solid #e1e5e9;
-            border-radius: 25px;
+            border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
 
-        .search-input:focus {
-            outline: none;
+        .search-box input:focus {
             border-color: #2c5aa0;
+            outline: none;
             box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
         }
 
-        @media (max-width: 768px) {
-            .certificates-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Documents Grid */
+        .documents-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
 
+        .document-category {
+            margin-bottom: 2rem;
+        }
+
+        .document-category h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        .documents-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .document-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e5e9;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .doc-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #2c5aa0;
+        }
+
+        .document-card h4 {
+            color: #2c5aa0;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .doc-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-institution, .doc-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .doc-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: #2c5aa0;
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: auto;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .doc-btn:hover {
+            background: #1e3d72;
+            transform: translateY(-2px);
+        }
+
+        .diploma-card {
+            border: 2px solid #ffd700;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+        }
+
+        .diploma-btn {
+            background: #ffd700;
+            color: #333;
+        }
+
+        .diploma-btn:hover {
+            background: #e6c200;
+        }
+
+        @media (max-width: 768px) {
             .certificate-filters {
                 gap: 0.5rem;
             }
-
+            
             .filter-btn {
-                padding: 0.6rem 1rem;
+                padding: 0.5rem 1rem;
                 font-size: 0.9rem;
             }
-
-            .stats-grid {
+            
+            .documents-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .certificate-stats {
                 grid-template-columns: repeat(2, 1fr);
             }
+        }
 
-            .stat-number {
-                font-size: 2rem;
-            }
-
-            .certificate-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .certificate-btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .pdf-emoji {
-                font-size: 3rem;
+        @media (max-width: 480px) {
+            .certificate-stats {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -281,6 +269,7 @@
         </div>
     </header>
 
+    <!-- Navigation -->
     <nav class="navigation">
         <div class="container">
             <ul class="nav-links">
@@ -297,47 +286,256 @@
     </nav>
 
     <main class="container">
+        <!-- Page Header -->
         <div class="page-header">
-            <h1>🎓 Профессиональные сертификаты</h1>
-            <p>Подтвержденная квалификация в области управления цепями поставок, логистики и цифровой трансформации</p>
+            <a href="index.html" class="back-to-main">
+                <i class="fas fa-arrow-left"></i>
+                На главную
+            </a>
+            <h1><i class="fas fa-graduation-cap"></i> Сертификаты и квалификация</h1>
+            <p>Документы, подтверждающие профессиональную квалификацию и пройденное обучение</p>
         </div>
 
-        <div class="search-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Поиск сертификатов...">
-        </div>
-
-        <div class="certificates-stats">
-            <h3>Статистика сертификатов</h3>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number" id="total-certificates">0</div>
-                    <div class="stat-label">Всего сертификатов</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="current-year">0</div>
-                    <div class="stat-label">Получено в 2024</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="pdf-count">0</div>
-                    <div class="stat-label">PDF документов</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">13+</div>
-                    <div class="stat-label">Лет непрерывного обучения</div>
-                </div>
+        <!-- Statistics -->
+        <div class="certificate-stats">
+            <div class="stat-card">
+                <span class="stat-number">17</span>
+                <span class="stat-label">Сертификатов</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">4</span>
+                <span class="stat-label">Категорий</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">2023-2024</span>
+                <span class="stat-label">Период обучения</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Доступны онлайн</span>
             </div>
         </div>
 
-        <div class="certificate-filters">
-            <button class="filter-btn active" data-filter="all">Все сертификаты</button>
-            <button class="filter-btn" data-filter="scm">SCM & Логистика</button>
-            <button class="filter-btn" data-filter="management">Управление</button>
-            <button class="filter-btn" data-filter="digital">Цифровая трансформация</button>
-            <button class="filter-btn" data-filter="analytics">Аналитика & AI</button>
-            <button class="filter-btn" data-filter="pdf">Только PDF</button>
+        <!-- Search -->
+        <div class="search-box">
+            <input type="text" id="certificate-search" placeholder="Поиск по сертификатам...">
         </div>
 
-        <div class="certificates-grid" id="certificatesContainer">
+        <!-- Filters -->
+        <div class="certificate-filters">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="management">Управление</button>
+            <button class="filter-btn" data-filter="time-management">Тайм-менеджмент</button>
+            <button class="filter-btn" data-filter="analytics">Аналитика</button>
+        </div>
+
+        <!-- Documents Grid -->
+        <div class="documents-grid">
+            <!-- Основные документы -->
+            <div class="document-category" data-category="management">
+                <h3><i class="fas fa-users"></i> Управление и менеджмент</h3>
+                <div class="documents-row">
+                    <div class="document-card diploma-card">
+                        <div class="doc-icon"><i class="fas fa-trophy"></i></div>
+                        <h4>Диплом коммерческого директора</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-institution">Профессиональная переподготовка</p>
+                        <p class="doc-description">Диплом о профессиональной переподготовке по специальности Коммерческий директор</p>
+                        <a href="images/diplom-commercial-director.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn diploma-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+                    
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-chart-line"></i></div>
+                        <h4>45 татуировок менеджера</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Практические принципы эффективного управления</p>
+                        <a href="images/batyrev-45-tattoos.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-user-check"></i></div>
+                        <h4>7 навыков высокоэффективных людей</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Классика управления временем и личной эффективности</p>
+                        <a href="images/7-habits-effective-people.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-rocket"></i></div>
+                        <h4>7 законов развития</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Фундаментальные законы личностного и профессионального роста</p>
+                        <a href="images/7-laws-development.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-building"></i></div>
+                        <h4>13 столпов Adizes</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Методология управления организационными изменениями</p>
+                        <a href="images/adizes-13-pillars.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-sync-alt"></i></div>
+                        <h4>Корпоративный жизненный цикл</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Теория жизненных циклов организаций</p>
+                        <a href="images/corporate-lifecycle.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-hands-helping"></i></div>
+                        <h4>Принцип кураторства</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Методология наставничества и развития персонала</p>
+                        <a href="images/curatorship-principle.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-handshake"></i></div>
+                        <h4>Гарвардские переговоры</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Методология Гарвардской школы переговоров</p>
+                        <a href="images/harvard-negotiations.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-laptop-code"></i></div>
+                        <h4>Менеджмент 21 века</h4>
+                        <p class="doc-date">2024</p>
+                        <p class="doc-description">Современные подходы к управлению в цифровую эпоху</p>
+                        <a href="images/management-21-century.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h4>Менеджмент спецназа</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Принципы управления из практики специальных подразделений</p>
+                        <a href="images/management-special-forces.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <h4>Практика продаж</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Практические методики и техники продаж</p>
+                        <a href="images/sales-practice.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-search"></i></div>
+                        <h4>Поиск призвания</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Методики поиска профессионального призвания и самореализации</p>
+                        <a href="images/vocation-finding.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Тайм-менеджмент -->
+            <div class="document-category" data-category="time-management">
+                <h3><i class="fas fa-clock"></i> Тайм-менеджмент</h3>
+                <div class="documents-row">
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-chart-bar"></i></div>
+                        <h4>Аудит тайм-менеджмента</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Методика аудита и анализа системы управления временем</p>
+                        <a href="images/time-management%20audit.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+                    
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-sort-amount-down"></i></div>
+                        <h4>Приоритизация в тайм-менеджменте</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Системы расстановки приоритетов и фокусировки</p>
+                        <a href="images/time-management-prioritization.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-user-friends"></i></div>
+                        <h4>Делегирование в тайм-менеджменте</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Эффективные методики делегирования задач</p>
+                        <a href="images/time-management-delegation.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-tasks"></i></div>
+                        <h4>Исполнение в тайм-менеджменте</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Методики эффективного исполнения задач и проектов</p>
+                        <a href="images/time-management-execution.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Аналитика -->
+            <div class="document-category" data-category="analytics">
+                <h3><i class="fas fa-chart-line"></i> Аналитика</h3>
+                <div class="documents-row">
+                    <div class="document-card">
+                        <div class="doc-icon"><i class="fas fa-tools"></i></div>
+                        <h4>Инструменты McKinsey</h4>
+                        <p class="doc-date">2023</p>
+                        <p class="doc-description">Аналитические инструменты и фреймворки консалтинговой компании</p>
+                        <a href="images/mckinsey-tools.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF сертификат
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -348,357 +546,45 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeCertificates();
-            initializeFilters();
-            initializeSearch();
-            updateStatistics();
-        });
-
-        const certificatesData = [
-            {
-                id: 1,
-                title: "7 навыков высокоэффективных людей",
-                file: "images/7-habits-effective-people.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "FranklinCovey",
-                date: "2023",
-                description: "Классика управления временем и личной эффективности",
-                skills: ["Тайм-менеджмент", "Личная эффективность", "Привычки"]
-            },
-            {
-                id: 2,
-                title: "7 законов развития",
-                file: "images/7-laws-development.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-школа",
-                date: "2023",
-                description: "Фундаментальные законы личностного и профессионального роста",
-                skills: ["Развитие", "Личностный рост", "Профессионализм"]
-            },
-            {
-                id: 3,
-                title: "13 столпов Adizes",
-                file: "images/adizes-13-pillars.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Adizes Institute",
-                date: "2023",
-                description: "Методология управления организационными изменениями",
-                skills: ["Управление изменениями", "Организационное развитие", "Менеджмент"]
-            },
-            {
-                id: 4,
-                title: "45 татуировок менеджера",
-                file: "images/batyrev-45-tattoos.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-практика",
-                date: "2023",
-                description: "Практические принципы эффективного управления",
-                skills: ["Управление командой", "Лидерство", "Практический менеджмент"]
-            },
-            {
-                id: 5,
-                title: "Корпоративный жизненный цикл",
-                file: "images/corporate-lifecycle.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Adizes Institute",
-                date: "2023",
-                description: "Теория жизненных циклов организаций",
-                skills: ["Организационное развитие", "Стратегия", "Управление"]
-            },
-            {
-                id: 6,
-                title: "Принцип кураторства",
-                file: "images/curatorship-principle.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-школа",
-                date: "2023",
-                description: "Методология наставничества и развития персонала",
-                skills: ["Наставничество", "Развитие персонала", "HR"]
-            },
-            {
-                id: 7,
-                title: "Диплом коммерческого директора",
-                file: "images/diplom-commercial-director.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Профессиональная переподготовка",
-                date: "2023",
-                description: "Диплом о профессиональной переподготовке по специальности Коммерческий директор",
-                skills: ["Коммерция", "Управление", "Стратегия"]
-            },
-            {
-                id: 8,
-                title: "Гарвардские переговоры",
-                file: "images/harvard-negotiations.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Harvard Business School",
-                date: "2023",
-                description: "Методология Гарвардской школы переговоров",
-                skills: ["Переговоры", "Коммуникации", "Психология"]
-            },
-            {
-                id: 9,
-                title: "Менеджмент 21 века",
-                file: "images/management-21-century.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-школа",
-                date: "2024",
-                description: "Современные подходы к управлению в цифровую эпоху",
-                skills: ["Современный менеджмент", "Инновации", "Цифровая трансформация"]
-            },
-            {
-                id: 10,
-                title: "Менеджмент спецназа",
-                file: "images/management-special-forces.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-практика",
-                date: "2023",
-                description: "Принципы управления из практики специальных подразделений",
-                skills: ["Лидерство", "Оперативное управление", "Командообразование"]
-            },
-            {
-                id: 11,
-                title: "Инструменты McKinsey",
-                file: "images/mckinsey-tools.pdf",
-                type: "pdf",
-                category: "analytics",
-                organization: "McKinsey & Company",
-                date: "2023",
-                description: "Аналитические инструменты и фреймворки консалтинговой компании",
-                skills: ["Аналитика", "Фреймворки", "Бизнес-анализ"]
-            },
-            {
-                id: 12,
-                title: "Практика продаж",
-                file: "images/sales-practice.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-школа",
-                date: "2023",
-                description: "Практические методики и техники продаж",
-                skills: ["Продажи", "Коммерция", "Переговоры"]
-            },
-            {
-                id: 13,
-                title: "Аудит тайм-менеджмента",
-                file: "images/time-management%20audit.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-практика",
-                date: "2023",
-                description: "Методика аудита и анализа системы управления временем",
-                skills: ["Тайм-менеджмент", "Аудит", "Эффективность"]
-            },
-            {
-                id: 14,
-                title: "Делегирование в тайм-менеджменте",
-                file: "images/time-management-delegation.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-практика",
-                date: "2023",
-                description: "Эффективные методики делегирования задач",
-                skills: ["Делегирование", "Тайм-менеджмент", "Управление командой"]
-            },
-            {
-                id: 15,
-                title: "Исполнение в тайм-менеджменте",
-                file: "images/time-management-execution.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-практика",
-                date: "2023",
-                description: "Методики эффективного исполнения задач и проектов",
-                skills: ["Исполнение", "Проекты", "Тайм-менеджмент"]
-            },
-            {
-                id: 16,
-                title: "Приоритизация в тайм-менеджменте",
-                file: "images/time-management-prioritization.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Бизнес-практика",
-                date: "2023",
-                description: "Системы расстановки приоритетов и фокусировки",
-                skills: ["Приоритизация", "Фокусировка", "Тайм-менеджмент"]
-            },
-            {
-                id: 17,
-                title: "Поиск призвания",
-                file: "images/vocation-finding.pdf",
-                type: "pdf",
-                category: "management",
-                organization: "Карьерный консалтинг",
-                date: "2023",
-                description: "Методики поиска профессионального призвания и самореализации",
-                skills: ["Карьера", "Самореализация", "Личностный рост"]
-            }
-        ];
-
-        function initializeCertificates() {
-            const container = document.getElementById('certificatesContainer');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            certificatesData.forEach(certificate => {
-                const certificateCard = createCertificateCard(certificate);
-                container.appendChild(certificateCard);
-            });
-        }
-
-        function createCertificateCard(certificate) {
-            const card = document.createElement('div');
-            card.className = 'certificate-card';
-            card.setAttribute('data-category', certificate.category);
-            card.setAttribute('data-type', certificate.type);
-            card.setAttribute('data-title', certificate.title.toLowerCase());
-            
-            const preview = document.createElement('div');
-            preview.className = 'certificate-preview';
-            
-            if (certificate.type === 'pdf') {
-                preview.innerHTML = `
-                    <div class="pdf-emoji">📄</div>
-                    <div class="pdf-badge">PDF</div>
-                `;
-            }
-            
-            const info = document.createElement('div');
-            info.className = 'certificate-info';
-            
-            const title = document.createElement('h3');
-            title.textContent = certificate.title;
-            
-            const meta = document.createElement('div');
-            meta.className = 'certificate-meta';
-            meta.innerHTML = `
-                <div><strong>Организация:</strong> ${certificate.organization}</div>
-                <div><strong>Дата получения:</strong> ${certificate.date}</div>
-            `;
-            
-            const description = document.createElement('div');
-            description.className = 'certificate-description';
-            description.textContent = certificate.description;
-            
-            const skills = document.createElement('div');
-            skills.className = 'certificate-skills';
-            certificate.skills.forEach(skill => {
-                const skillTag = document.createElement('span');
-                skillTag.className = 'skill-tag';
-                skillTag.textContent = skill;
-                skills.appendChild(skillTag);
-            });
-            
-            const actions = document.createElement('div');
-            actions.className = 'certificate-actions';
-            
-            if (certificate.type === 'pdf') {
-                actions.innerHTML = `
-                    <button class="certificate-btn danger" onclick="openPdf('${certificate.file}')">
-                        📂 Открыть PDF
-                    </button>
-                    <button class="certificate-btn secondary" onclick="downloadPdf('${certificate.file}', '${certificate.title}')">
-                        ⬇️ Скачать
-                    </button>
-                `;
-            }
-            
-            info.appendChild(title);
-            info.appendChild(meta);
-            info.appendChild(description);
-            info.appendChild(skills);
-            info.appendChild(actions);
-            
-            card.appendChild(preview);
-            card.appendChild(info);
-            
-            return card;
-        }
-
-        function initializeFilters() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const filter = this.getAttribute('data-filter');
-                    filterCertificates(filter);
+        // Фильтрация сертификатов
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const certificateCategories = document.querySelectorAll('.document-category');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Обновляем активную кнопку
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Показываем/скрываем категории
+                certificateCategories.forEach(category => {
+                    if (filter === 'all' || category.getAttribute('data-category') === filter) {
+                        category.style.display = 'block';
+                    } else {
+                        category.style.display = 'none';
+                    }
                 });
             });
-        }
-
-        function filterCertificates(filter) {
-            const certificates = document.querySelectorAll('.certificate-card');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            certificates.forEach(card => {
-                const category = card.getAttribute('data-category');
-                const type = card.getAttribute('data-type');
-                const title = card.getAttribute('data-title');
-                
-                let shouldShow = true;
-                
-                if (filter !== 'all' && filter !== 'pdf') {
-                    shouldShow = category === filter;
-                } else if (filter === 'pdf') {
-                    shouldShow = type === 'pdf';
-                }
-                
-                if (shouldShow && searchTerm) {
-                    shouldShow = title.includes(searchTerm);
-                }
-                
-                card.style.display = shouldShow ? 'block' : 'none';
-            });
-            
-            updateStatistics();
-        }
-
-        function initializeSearch() {
-            const searchInput = document.getElementById('searchInput');
-            
+        });
+        
+        // Поиск по сертификатам
+        const searchInput = document.querySelector('#certificate-search');
+        if (searchInput) {
             searchInput.addEventListener('input', function() {
-                const activeFilter = document.querySelector('.filter-btn.active');
-                const filter = activeFilter ? activeFilter.getAttribute('data-filter') : 'all';
-                filterCertificates(filter);
+                const searchTerm = this.value.toLowerCase();
+                const documentCards = document.querySelectorAll('.document-card');
+                
+                documentCards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
             });
-        }
-
-        function updateStatistics() {
-            const visibleCertificates = document.querySelectorAll('.certificate-card[style="display: block"]');
-            const totalCertificates = document.querySelectorAll('.certificate-card');
-            const pdfCertificates = certificatesData.filter(cert => cert.type === 'pdf');
-            const currentYearCertificates = certificatesData.filter(cert => cert.date === '2024');
-            
-            document.getElementById('total-certificates').textContent = totalCertificates.length;
-            document.getElementById('current-year').textContent = currentYearCertificates.length;
-            document.getElementById('pdf-count').textContent = pdfCertificates.length;
-        }
-
-        function openPdf(pdfPath) {
-            window.open(pdfPath, '_blank');
-        }
-
-        function downloadPdf(pdfPath, fileName) {
-            const link = document.createElement('a');
-            link.href = pdfPath;
-            link.download = fileName + '.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
     </script>
 </body>
