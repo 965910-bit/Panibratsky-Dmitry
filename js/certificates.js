@@ -1,158 +1,218 @@
 // Certificates data and functionality
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Certificates page loaded');
     initializeCertificates();
     initializeFilters();
     initializeSearch();
     updateStatistics();
 });
 
-// Автоматическое создание карточек для всех PDF файлов
+// Real certificates data with your actual PDF files
 const certificatesData = [
-    // Основные сертификаты - добавьте сюда ВСЕ ваши PDF файлы
     {
         id: 1,
-        title: "MBA в логистике и управлении цепями поставок",
-        file: "images/mba-logistics.pdf",
+        title: "7 навыков высокоэффективных людей",
+        file: "images/7-habits-effective-people.pdf",
         type: "pdf",
-        category: "scm",
-        organization: "Российская академия народного хозяйства",
+        category: "management",
+        organization: "FranklinCovey",
         date: "2023",
-        description: "Магистр делового администрирования со специализацией в логистике и SCM",
-        skills: ["Стратегическое управление", "Цепочка поставок", "Логистика"]
+        description: "Классика управления временем и личной эффективности",
+        skills: ["Тайм-менеджмент", "Личная эффективность", "Привычки"]
     },
     {
         id: 2,
-        title: "Сертифицированный специалист по цифровой трансформации",
-        file: "images/digital-transformation.pdf",
+        title: "7 законов развития",
+        file: "images/7-laws-development.pdf",
         type: "pdf",
-        category: "digital",
-        organization: "Digital Transformation Institute",
-        date: "2024",
-        description: "Сертификация в области цифровой трансформации бизнес-процессов",
-        skills: ["Цифровизация", "Бизнес-процессы", "Инновации"]
+        category: "management",
+        organization: "Бизнес-школа",
+        date: "2023",
+        description: "Фундаментальные законы личностного и профессионального роста",
+        skills: ["Развитие", "Личностный рост", "Профессионализм"]
     },
     {
         id: 3,
-        title: "AI и машинное обучение в бизнесе",
-        file: "images/ai-business.pdf",
+        title: "13 столпов Adizes",
+        file: "images/adizes-13-pillars.pdf",
         type: "pdf",
-        category: "analytics",
-        organization: "Data Science Academy",
+        category: "management",
+        organization: "Adizes Institute",
         date: "2023",
-        description: "Применение искусственного интеллекта и ML для оптимизации бизнес-процессов",
-        skills: ["Машинное обучение", "AI", "Аналитика данных"]
+        description: "Методология управления организационными изменениями",
+        skills: ["Управление изменениями", "Организационное развитие", "Менеджмент"]
     },
     {
         id: 4,
-        title: "Диплом о высшем образовании",
-        file: "images/diploma.pdf",
+        title: "45 татуировок менеджера",
+        file: "images/batyrev-45-tattoos.pdf",
         type: "pdf",
         category: "management",
-        organization: "Университет",
-        date: "2010",
-        description: "Диплом специалиста по управлению цепями поставок",
-        skills: ["Высшее образование", "Фундаментальные знания", "Специализация"]
+        organization: "Бизнес-практика",
+        date: "2023",
+        description: "Практические принципы эффективного управления",
+        skills: ["Управление командой", "Лидерство", "Практический менеджмент"]
     },
     {
         id: 5,
-        title: "Управление проектами по методологии PMI",
-        file: "images/pmi-certification.pdf",
+        title: "Корпоративный жизненный цикл",
+        file: "images/corporate-lifecycle.pdf",
         type: "pdf",
         category: "management",
-        organization: "Project Management Institute",
-        date: "2022",
-        description: "Сертификация по управлению проектами согласно стандартам PMI",
-        skills: ["Управление проектами", "PMBOK", "Agile"]
+        organization: "Adizes Institute",
+        date: "2023",
+        description: "Теория жизненных циклов организаций",
+        skills: ["Организационное развитие", "Стратегия", "Управление"]
     },
     {
         id: 6,
-        title: "Сертификат по бережливому производству",
-        file: "images/lean-manufacturing.pdf",
+        title: "Принцип кураторства",
+        file: "images/curatorship-principle.pdf",
         type: "pdf",
-        category: "scm",
-        organization: "Lean Six Sigma Institute",
+        category: "management",
+        organization: "Бизнес-школа",
         date: "2023",
-        description: "Сертификация в области бережливого производства и оптимизации процессов",
-        skills: ["Бережливое производство", "Kaizen", "Оптимизация"]
+        description: "Методология наставничества и развития персонала",
+        skills: ["Наставничество", "Развитие персонала", "HR"]
     },
     {
         id: 7,
-        title: "Корпоративные финансы и управление затратами",
-        file: "images/corporate-finance.pdf",
+        title: "Диплом коммерческого директора",
+        file: "images/diplom-commercial-director.pdf",
         type: "pdf",
         category: "management",
-        organization: "Financial Management Association",
-        date: "2022",
-        description: "Сертификация в области корпоративных финансов и управления затратами",
-        skills: ["Финансы", "Управление затратами", "Бюджетирование"]
+        organization: "Профессиональная переподготовка",
+        date: "2023",
+        description: "Диплом о профессиональной переподготовке по специальности Коммерческий директор",
+        skills: ["Коммерция", "Управление", "Стратегия"]
     },
     {
         id: 8,
-        title: "Большие данные в цепях поставок",
-        file: "images/big-data-sc.pdf",
+        title: "Гарвардские переговоры",
+        file: "images/harvard-negotiations.pdf",
         type: "pdf",
-        category: "analytics",
-        organization: "Big Data Analytics Council",
-        date: "2024",
-        description: "Сертификация по применению больших данных в управлении цепями поставок",
-        skills: ["Big Data", "Аналитика", "SCM аналитика"]
+        category: "management",
+        organization: "Harvard Business School",
+        date: "2023",
+        description: "Методология Гарвардской школы переговоров",
+        skills: ["Переговоры", "Коммуникации", "Психология"]
     },
     {
         id: 9,
-        title: "Цифровые двойники в логистике",
-        file: "images/digital-twins.pdf",
+        title: "Менеджмент 21 века",
+        file: "images/management-21-century.pdf",
         type: "pdf",
-        category: "digital",
-        organization: "Digital Innovation Lab",
+        category: "management",
+        organization: "Бизнес-школа",
         date: "2024",
-        description: "Сертификация по созданию и использованию цифровых двойников в логистике",
-        skills: ["Цифровые двойники", "Моделирование", "Логистика"]
+        description: "Современные подходы к управлению в цифровую эпоху",
+        skills: ["Современный менеджмент", "Инновации", "Цифровая трансформация"]
     },
     {
         id: 10,
-        title: "Сертификат по управлению запасами",
-        file: "images/inventory-management.pdf",
+        title: "Менеджмент спецназа",
+        file: "images/management-special-forces.pdf",
         type: "pdf",
-        category: "scm",
-        organization: "Supply Chain Council",
+        category: "management",
+        organization: "Бизнес-практика",
         date: "2023",
-        description: "Сертификация в области управления запасами и оптимизации складских операций",
-        skills: ["Управление запасами", "Складские операции", "Оптимизация"]
+        description: "Принципы управления из практики специальных подразделений",
+        skills: ["Лидерство", "Оперативное управление", "Командообразование"]
     },
     {
         id: 11,
-        title: "Сертификат по транспортной логистике",
-        file: "images/transport-logistics.pdf",
+        title: "Инструменты McKinsey",
+        file: "images/mckinsey-tools.pdf",
         type: "pdf",
-        category: "scm",
-        organization: "Logistics Association",
-        date: "2022",
-        description: "Сертификация в области транспортной логистики и управления перевозками",
-        skills: ["Транспортная логистика", "Управление перевозками", "Маршрутизация"]
+        category: "analytics",
+        organization: "McKinsey & Company",
+        date: "2023",
+        description: "Аналитические инструменты и фреймворки консалтинговой компании",
+        skills: ["Аналитика", "Фреймворки", "Бизнес-анализ"]
     },
     {
         id: 12,
-        title: "Сертификат по управлению рисками в SCM",
-        file: "images/risk-management.pdf",
+        title: "Практика продаж",
+        file: "images/sales-practice.pdf",
         type: "pdf",
         category: "management",
-        organization: "Risk Management Institute",
+        organization: "Бизнес-школа",
         date: "2023",
-        description: "Сертификация в области управления рисками в цепях поставок",
-        skills: ["Управление рисками", "SCM", "Анализ рисков"]
+        description: "Практические методики и техники продаж",
+        skills: ["Продажи", "Коммерция", "Переговоры"]
+    },
+    {
+        id: 13,
+        title: "Аудит тайм-менеджмента",
+        file: "images/time-management%20audit.pdf",
+        type: "pdf",
+        category: "management",
+        organization: "Бизнес-практика",
+        date: "2023",
+        description: "Методика аудита и анализа системы управления временем",
+        skills: ["Тайм-менеджмент", "Аудит", "Эффективность"]
+    },
+    {
+        id: 14,
+        title: "Делегирование в тайм-менеджменте",
+        file: "images/time-management-delegation.pdf",
+        type: "pdf",
+        category: "management",
+        organization: "Бизнес-практика",
+        date: "2023",
+        description: "Эффективные методики делегирования задач",
+        skills: ["Делегирование", "Тайм-менеджмент", "Управление командой"]
+    },
+    {
+        id: 15,
+        title: "Исполнение в тайм-менеджменте",
+        file: "images/time-management-execution.pdf",
+        type: "pdf",
+        category: "management",
+        organization: "Бизнес-практика",
+        date: "2023",
+        description: "Методики эффективного исполнения задач и проектов",
+        skills: ["Исполнение", "Проекты", "Тайм-менеджмент"]
+    },
+    {
+        id: 16,
+        title: "Приоритизация в тайм-менеджменте",
+        file: "images/time-management-prioritization.pdf",
+        type: "pdf",
+        category: "management",
+        organization: "Бизнес-практика",
+        date: "2023",
+        description: "Системы расстановки приоритетов и фокусировки",
+        skills: ["Приоритизация", "Фокусировка", "Тайм-менеджмент"]
+    },
+    {
+        id: 17,
+        title: "Поиск призвания",
+        file: "images/vocation-finding.pdf",
+        type: "pdf",
+        category: "management",
+        organization: "Карьерный консалтинг",
+        date: "2023",
+        description: "Методики поиска профессионального призвания и самореализации",
+        skills: ["Карьера", "Самореализация", "Личностный рост"]
     }
-    // ДОБАВЬТЕ ЗДЕСЬ ВСЕ ОСТАЛЬНЫЕ ВАШИ СЕРТИФИКАТЫ И ДИПЛОМЫ
-    // Просто скопируйте структуру выше и замените названия файлов и информацию
 ];
 
 function initializeCertificates() {
     const container = document.getElementById('certificatesContainer');
+    if (!container) {
+        console.error('Container not found');
+        return;
+    }
+    
     container.innerHTML = '';
     
     certificatesData.forEach(certificate => {
         const certificateCard = createCertificateCard(certificate);
         container.appendChild(certificateCard);
     });
+    
+    console.log('Certificates initialized:', certificatesData.length);
 }
 
 function createCertificateCard(certificate) {
@@ -306,7 +366,7 @@ function updateStatistics() {
     document.getElementById('pdf-count').textContent = pdfCertificates.length;
 }
 
-// PDF functions - ИСПРАВЛЕННЫЕ ФУНКЦИИ
+// PDF functions
 function openPdf(pdfPath) {
     console.log('Opening PDF:', pdfPath);
     // Проверяем, существует ли файл
