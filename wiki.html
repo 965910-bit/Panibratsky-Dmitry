@@ -1,1 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCM Wiki - Дмитрий Панибратский</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <style>
+        .page-header {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .back-to-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-bottom: 2rem;
+        }
+
+        .back-to-main:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Wiki Navigation */
+        .wiki-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .wiki-nav-btn {
+            padding: 0.7rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            background: white;
+            color: var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .wiki-nav-btn.active,
+        .wiki-nav-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Wiki Content */
+        .wiki-content {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+            min-height: 400px;
+        }
+
+        .wiki-article {
+            display: none;
+        }
+
+        .wiki-article.active {
+            display: block;
+        }
+
+        .wiki-article h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .wiki-article h3 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .wiki-article p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .wiki-article ul, .wiki-article ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .wiki-article li {
+            margin-bottom: 0.5rem;
+        }
+
+        .article-meta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--background-color);
+            border-radius: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .error {
+            text-align: center;
+            padding: 2rem;
+            color: #e74c3c;
+            background: #ffeaea;
+            border-radius: var(--border-radius);
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>Дмитрий Панибратский</h1>
+                    <p class="header-subtitle">SCM Wiki</p>
+                </div>
+                <div class="header-photo">
+                    <div class="photo-container">
+                        <img src="/images/photo.jpg" alt="Дмитрий Панибратский">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/index.html">Главная</a></li>
+                <li><a href="/index.html#about">Профиль</a></li>
+                <li><a href="/tools.html">Инструменты</a></li>
+                <li><a href="/certificates.html">Сертификаты</a></li>
+                <li><a href="/wiki.html" class="active">Wiki</a></li>
+                <li><a href="/index.html#contact">Контакты</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <a href="/index.html" class="back-to-main">
+                <i class="fas fa-arrow-left"></i>
+                На главную
+            </a>
+            <h1>📚 SCM Wiki</h1>
+            <p>База знаний по управлению цепями поставок</p>
+        </div>
+
+        <!-- Wiki Navigation -->
+        <div class="wiki-nav" id="wiki-nav">
+            <!-- Navigation will be loaded by JavaScript -->
+        </div>
+
+        <!-- Wiki Content -->
+        <div class="wiki-content" id="wiki-content">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                Загрузка статей...
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/js/main.js"></script>
+    <script src="/js/wiki.js"></script>
+</body>
+</html>
