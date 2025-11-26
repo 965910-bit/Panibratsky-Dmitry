@@ -4,186 +4,577 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Опыт работы - Дмитрий Панибратский</title>
-    
-    <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        .experience-intro {
+        /* Основные стили страницы опыта */
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary-color: #7c3aed;
+            --accent-color: #06b6d4;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .experience-hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 4rem 0;
             text-align: center;
-            max-width: 800px;
-            margin: 0 auto 3rem;
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-
-        .experience-timeline {
+            margin-bottom: 3rem;
             position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
+            overflow: hidden;
         }
 
-        .experience-timeline::before {
+        .experience-hero::before {
             content: '';
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100%;
-            background: var(--primary-color);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.05)"><polygon points="0,0 1000,50 0,100"/></svg>');
+            background-size: cover;
         }
 
-        .timeline-item {
-            display: flex;
-            justify-content: flex-end;
-            padding-right: 30px;
+        .experience-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
             position: relative;
-            margin: 2rem 0;
-            width: 50%;
+            z-index: 2;
         }
 
-        .timeline-item:nth-child(even) {
-            align-self: flex-end;
-            justify-content: flex-start;
-            padding-left: 30px;
-            padding-right: 0;
-            left: 50%;
+        .experience-hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
-        .timeline-content {
-            background: var(--card-bg);
+        /* Временная шкала карьеры */
+        .career-timeline {
+            max-width: 1000px;
+            margin: 4rem auto;
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            width: 100%;
             position: relative;
+        }
+
+        .career-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 4rem;
+        }
+
+        .career-progress::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .milestone {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--primary-color);
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .timeline-content:hover {
-            transform: translateY(-3px);
+        .milestone:hover {
+            transform: scale(1.5);
+            background: var(--primary-color);
+        }
+
+        .milestone::after {
+            content: attr(data-year);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 600;
+            color: var(--primary-color);
+            white-space: nowrap;
+        }
+
+        .milestone::before {
+            content: attr(data-achievement);
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        /* Карточки опыта */
+        .experience-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .experience-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .experience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+        }
+
+        .experience-card:hover {
+            transform: translateY(-8px);
             box-shadow: var(--shadow-hover);
         }
 
-        .timeline-content::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            right: -10px;
-            width: 20px;
-            height: 20px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: var(--shadow);
+        .company-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .timeline-item:nth-child(even) .timeline-content::before {
-            right: auto;
-            left: -10px;
-        }
-
-        .timeline-period {
-            background: var(--primary-color);
+        .company-header .logo {
+            font-size: 2.5rem;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: inline-block;
+            flex-shrink: 0;
         }
 
-        .timeline-company {
-            font-size: 1.3rem;
+        .company-info h3 {
+            font-size: 1.6rem;
             font-weight: 700;
-            color: var(--text-color);
+            color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
 
-        .timeline-position {
+        .period {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .position {
             font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* KPI Dashboard */
+        .kpi-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .kpi-item {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .kpi-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Блоки достижений */
+        .achievement-section, .business-impact, .expansion-map, .financial-results {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .achievement-section h4, .business-impact h4, .expansion-map h4, .financial-results h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
             color: var(--primary-color);
             margin-bottom: 1rem;
-            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .timeline-description {
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            color: var(--text-light);
-        }
-
-        .timeline-achievements {
-            margin-bottom: 1.5rem;
-        }
-
-        .timeline-achievements h4 {
-            color: var(--primary-color);
-            margin-bottom: 0.8rem;
-            font-size: 1rem;
-        }
-
-        .timeline-achievements ul {
+        .achievement-section ul {
             list-style: none;
             padding: 0;
         }
 
-        .timeline-achievements li {
-            padding: 0.3rem 0;
+        .achievement-section li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: flex-start;
             gap: 0.5rem;
         }
 
-        .timeline-achievements li:before {
-            content: "✓";
-            color: var(--primary-color);
-            font-weight: bold;
+        .achievement-section li:last-child {
+            border-bottom: none;
         }
 
-        .timeline-skills {
+        .achievement-section li::before {
+            content: '✓';
+            color: var(--primary-color);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Бизнес-эффект */
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .impact-item {
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-weight: 500;
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
             gap: 0.5rem;
+        }
+
+        /* Карта расширения */
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
             margin-top: 1rem;
         }
 
-        .skill-tag {
-            background: var(--primary-light);
-            color: var(--primary-dark);
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 500;
+        .city-card {
+            padding: 1rem;
+            text-align: center;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
+        .city-card.new {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .city-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .city-role {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .scale-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .scale-item {
+            text-align: center;
+        }
+
+        .scale-number {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .scale-text {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* Финансовые результаты */
+        .finance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric {
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        .metric.positive {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        }
+
+        .metric.negative {
+            background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+        }
+
+        .metric.team {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-desc {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .startup-achievement {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        .startup-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Формула успеха */
+        .success-formula {
+            max-width: 1000px;
+            margin: 6rem auto 4rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-formula::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.05)"><polygon points="0,100 1000,0 1000,100"/></svg>');
+            background-size: cover;
+        }
+
+        .success-formula h2 {
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .formula-elements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .formula-item {
+            padding: 2rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .formula-item:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .formula-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .formula-item h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .formula-item p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        /* Адаптивность */
         @media (max-width: 768px) {
-            .experience-timeline::before {
-                left: 20px;
+            .experience-hero h1 {
+                font-size: 2rem;
             }
-
-            .timeline-item {
-                width: 100%;
-                padding-left: 50px;
-                padding-right: 0;
+            
+            .experience-hero p {
+                font-size: 1rem;
             }
-
-            .timeline-item:nth-child(even) {
-                left: 0;
-                padding-left: 50px;
+            
+            .career-progress {
+                flex-direction: column;
+                height: 400px;
             }
-
-            .timeline-content::before {
-                left: -40px;
-                right: auto;
+            
+            .career-progress::before {
+                width: 3px;
+                height: 100%;
+                left: 50%;
+                transform: translateX(-50%);
             }
+            
+            .milestone::after {
+                top: -25px;
+                left: 30px;
+            }
+            
+            .milestone::before {
+                bottom: -25px;
+                left: 30px;
+            }
+            
+            .company-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .kpi-dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .scale-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .success-formula {
+                padding: 2rem 1rem;
+            }
+            
+            .success-formula h2 {
+                font-size: 1.8rem;
+            }
+            
+            .formula-elements {
+                grid-template-columns: 1fr;
+            }
+        }
 
-            .timeline-item:nth-child(even) .timeline-content::before {
-                left: -40px;
+        @media (max-width: 480px) {
+            .experience-hero {
+                padding: 3rem 0;
+            }
+            
+            .experience-hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            .kpi-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .impact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cities-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -234,167 +625,197 @@
                 <li><a href="experience.html" class="active">Опыт</a></li>
                 <li><a href="projects.html">Проекты</a></li>
                 <li><a href="tools.html">Инструменты</a></li>
-                <li><a href="calculators.html">Калькуляторы</a></li>
                 <li><a href="certificates.html">Сертификаты</a></li>
                 <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="index.html#contact">Контакты</a></li>
+                <li><a href="#contact">Контакты</a></li>
             </ul>
         </div>
     </nav>
 
+    <!-- Experience Hero Section -->
+    <section class="experience-hero">
+        <div class="container">
+            <h1>Профессиональный опыт</h1>
+            <p>13+ лет в управлении цепями поставок и цифровой трансформации бизнеса</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
     <main class="container">
-        <!-- Experience Section -->
-        <section id="experience" class="section">
-            <h2>Профессиональный опыт</h2>
-            
-            <div class="experience-intro">
-                <p>13 лет прогрессивного опыта в управлении цепями поставок и цифровой трансформации бизнеса. От операционного управления до стратегического развития SCM-систем международных компаний.</p>
+        <!-- Временная шкала -->
+        <section class="career-timeline">
+            <div class="career-progress">
+                <div class="milestone" data-year="2012" data-achievement="Начало карьеры"></div>
+                <div class="milestone" data-year="2014" data-achievement="Рост оборота +30%"></div>
+                <div class="milestone" data-year="2018" data-achievement="Запуск филиалов"></div>
+                <div class="milestone" data-year="2020" data-achievement="ТОП-2 в стране"></div>
+                <div class="milestone" data-year="2023" data-achievement="CSat 95%"></div>
+                <div class="milestone" data-year="2025" data-achievement="AI в логистике"></div>
+            </div>
+        </section>
+
+        <!-- Карточки опыта -->
+        <section class="experience-grid">
+            <!-- ЛЕРУА МЕРЛЕН -->
+            <div class="experience-card">
+                <div class="company-header">
+                    <div class="logo">🛒</div>
+                    <div class="company-info">
+                        <h3>ЛЕРУА МЕРЛЕН</h3>
+                        <p class="period">Март 2020 — Ноябрь 2025 · 5 лет 8 месяцев</p>
+                        <p class="position">Менеджер цепи поставок магазина</p>
+                    </div>
+                </div>
+                
+                <!-- Блок KPI -->
+                <div class="kpi-dashboard">
+                    <div class="kpi-item">
+                        <div class="kpi-value">100</div>
+                        <div class="kpi-label">человек в команде</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">87K</div>
+                        <div class="kpi-label">SKU на складе</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">-10%</div>
+                        <div class="kpi-label">транспортные расходы</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">#2</div>
+                        <div class="kpi-label">в стране по продуктивности</div>
+                    </div>
+                </div>
+
+                <!-- Достижения -->
+                <div class="achievement-section">
+                    <h4><i class="fas fa-rocket"></i> Ключевые достижения:</h4>
+                    <ul>
+                        <li><strong>Внедрение ИИ для прогнозирования спроса</strong> - сокращение излишков склада на 15%</li>
+                        <li><strong>Цифровизация логистических процессов</strong> - визуализация и оптимизация потоков</li>
+                        <li><strong>Система мониторинга заказов в реальном времени</strong> - повышение точности остатков на 8%</li>
+                    </ul>
+                </div>
+
+                <!-- Бизнес-влияние -->
+                <div class="business-impact">
+                    <h4><i class="fas fa-chart-line"></i> Бизнес-эффект:</h4>
+                    <div class="impact-grid">
+                        <div class="impact-item"><i class="fas fa-arrow-up"></i> Рост продуктивности с 2.1 до 5.1</div>
+                        <div class="impact-item"><i class="fas fa-trophy"></i> Вход в ТОП-10 по CSat</div>
+                        <div class="impact-item"><i class="fas fa-bolt"></i> Равномерность поставок: 70% → 91%</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="experience-timeline">
-                <!-- Опыт 1 -->
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <span class="timeline-period">2021 - настоящее время</span>
-                        <h3 class="timeline-company">ГК "Эталон"</h3>
-                        <div class="timeline-position">Коммерческий директор / CDO</div>
-                        <p class="timeline-description">Руководство коммерческой деятельностью и цифровой трансформацией бизнеса. Разработка и внедрение стратегии развития цепей поставок строительных материалов.</p>
-                        
-                        <div class="timeline-achievements">
-                            <h4>Ключевые достижения:</h4>
-                            <ul>
-                                <li>Организация системы управления цепями поставок с нуля</li>
-                                <li>Внедрение ERP-системы для управления закупками и запасами</li>
-                                <li>Оптимизация логистических процессов, снижение затрат на 28%</li>
-                                <li>Разработка системы KPI для мониторинга эффективности SCM</li>
-                                <li>Цифровизация процессов закупок и управления поставщиками</li>
-                            </ul>
+            <!-- ГРИНЛАЙТ -->
+            <div class="experience-card">
+                <div class="company-header">
+                    <div class="logo">🚗</div>
+                    <div class="company-info">
+                        <h3>ООО «ГРИНЛАЙТ» (Rossko)</h3>
+                        <p class="period">Май 2018 — Декабрь 2019 · 1 год 8 месяцев</p>
+                        <p class="position">Начальник склада | Архитектор региональной экспансии</p>
+                    </div>
+                </div>
+
+                <div class="expansion-map">
+                    <h4><i class="fas fa-map-marked-alt"></i> География масштабирования:</h4>
+                    <div class="cities-grid">
+                        <div class="city-card">
+                            <div class="city-name">Сургут</div>
+                            <div class="city-role">Хаб</div>
                         </div>
-                        
-                        <div class="timeline-skills">
-                            <span class="skill-tag">Стратегическое управление</span>
-                            <span class="skill-tag">Цифровая трансформация</span>
-                            <span class="skill-tag">ERP внедрение</span>
-                            <span class="skill-tag">Управление закупками</span>
-                            <span class="skill-tag">Логистическая оптимизация</span>
+                        <div class="city-card new">
+                            <div class="city-name">Ноябрьск</div>
+                            <div class="city-role">Новый филиал</div>
+                        </div>
+                        <div class="city-card new">
+                            <div class="city-name">Ханты-Мансийск</div>
+                            <div class="city-role">Новый филиал</div>
+                        </div>
+                        <div class="city-card new">
+                            <div class="city-name">Нижневартовск</div>
+                            <div class="city-role">Новый филиал</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Опыт 2 -->
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <span class="timeline-period">2018 - 2021</span>
-                        <h3 class="timeline-company">X5 Retail Group</h3>
-                        <div class="timeline-position">Руководитель управления цепями поставок</div>
-                        <p class="timeline-description">Управление end-to-end цепями поставок для сети розничных магазинов. Оптимизация процессов планирования, закупок, логистики и управления запасами.</p>
-                        
-                        <div class="timeline-achievements">
-                            <h4>Ключевые достижения:</h4>
-                            <ul>
-                                <li>Управление 87,000+ SKU с оборачиваемостью 98.5%</li>
-                                <li>Внедрение системы предиктивной аналитики для прогнозирования спроса</li>
-                                <li>Снижение логистических издержек на 23% через оптимизацию маршрутов</li>
-                                <li>Автоматизация процессов отчетности и мониторинга KPI</li>
-                                <li>Разработка и внедрение системы управления поставщиками (SRM)</li>
-                            </ul>
+                <div class="scale-stats">
+                    <div class="scale-item">
+                        <div class="scale-number">3</div>
+                        <div class="scale-text">новых города за 1 год</div>
+                    </div>
+                    <div class="scale-item">
+                        <div class="scale-number">24</div>
+                        <div class="scale-text">человека в управлении</div>
+                    </div>
+                    <div class="scale-item">
+                        <div class="scale-number">20K</div>
+                        <div class="scale-text">SKU под контролем</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- АВТО-ПРИТЯЖЕНИЕ -->
+            <div class="experience-card">
+                <div class="company-header">
+                    <div class="logo">🏆</div>
+                    <div class="company-info">
+                        <h3>АВТО-ПРИТЯЖЕНИЕ | ЮЛСАН | ЮГРАПРОМСЕРВИС</h3>
+                        <p class="period">Октябрь 2014 — Май 2018 · 3 года 8 месяцев</p>
+                        <p class="position">Директор филиала | Основатель операционной модели</p>
+                    </div>
+                </div>
+
+                <div class="financial-results">
+                    <h4><i class="fas fa-chart-bar"></i> Финансовые результаты:</h4>
+                    <div class="finance-metrics">
+                        <div class="metric positive">
+                            <div class="metric-value">+30%</div>
+                            <div class="metric-desc">Рост оборота за 2016 год</div>
                         </div>
-                        
-                        <div class="timeline-skills">
-                            <span class="skill-tag">Управление запасами</span>
-                            <span class="skill-tag">Предиктивная аналитика</span>
-                            <span class="skill-tag">SRM системы</span>
-                            <span class="skill-tag">KPI разработка</span>
-                            <span class="skill-tag">Процессная оптимизация</span>
+                        <div class="metric negative">
+                            <div class="metric-value">-10%</div>
+                            <div class="metric-desc">Снижение затрат за 2016 год</div>
+                        </div>
+                        <div class="metric team">
+                            <div class="metric-value">15</div>
+                            <div class="metric-desc">Человек в команде</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Опыт 3 -->
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <span class="timeline-period">2015 - 2018</span>
-                        <h3 class="timeline-company">Леруа Мерлен Восток</h3>
-                        <div class="timeline-position">Менеджер по развитию цепей поставок</div>
-                        <p class="timeline-description">Развитие и оптимизация региональной сети поставок. Внедрение лучших практик управления запасами и логистическими процессами.</p>
-                        
-                        <div class="timeline-achievements">
-                            <h4>Ключевые достижения:</h4>
-                            <ul>
-                                <li>Оптимизация региональной дистрибьюции, сокращение сроков доставки на 35%</li>
-                                <li>Внедрение системы кросс-докинга, повышение эффективности склада на 42%</li>
-                                <li>Разработка модели управления сезонными запасами</li>
-                                <li>Автоматизация процессов инвентаризации и учета</li>
-                                <li>Обучение и развитие команды из 15+ специалистов</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="timeline-skills">
-                            <span class="skill-tag">Дистрибьюция</span>
-                            <span class="skill-tag">Кросс-докинг</span>
-                            <span class="skill-tag">Управление командой</span>
-                            <span class="skill-tag">Автоматизация процессов</span>
-                            <span class="skill-tag">Региональная логистика</span>
-                        </div>
-                    </div>
+                <div class="startup-achievement">
+                    <div class="startup-badge">СТАРТАП С НУЛЯ</div>
+                    <p>Построил филиал с чистого листа до прибыльной единицы</p>
                 </div>
+            </div>
+        </section>
 
-                <!-- Опыт 4 -->
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <span class="timeline-period">2012 - 2015</span>
-                        <h3 class="timeline-company">Метро Кэш энд Керри</h3>
-                        <div class="timeline-position">Специалист по логистике и управлению запасами</div>
-                        <p class="timeline-description">Операционное управление логистическими процессами и запасами. Анализ и оптимизация складских операций.</p>
-                        
-                        <div class="timeline-achievements">
-                            <h4>Ключевые достижения:</h4>
-                            <ul>
-                                <li>Внедрение системы ABC-XYZ анализа для управления запасами</li>
-                                <li>Снижение уровня страховых запасов на 18% без потери уровня сервиса</li>
-                                <li>Оптимизация зонирования склада, повышение производительности на 25%</li>
-                                <li>Разработка и внедрение системы мониторинга SLA поставщиков</li>
-                                <li>Автоматизация процессов приемки и отгрузки товара</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="timeline-skills">
-                            <span class="skill-tag">ABC-XYZ анализ</span>
-                            <span class="skill-tag">Управление запасами</span>
-                            <span class="skill-tag">Складская логистика</span>
-                            <span class="skill-tag">SLA мониторинг</span>
-                            <span class="skill-tag">Операционная эффективность</span>
-                        </div>
-                    </div>
+        <!-- Формула успеха -->
+        <section class="success-formula">
+            <h2>Моя формула эффективной логистики</h2>
+            <div class="formula-elements">
+                <div class="formula-item">
+                    <div class="formula-icon">🤖</div>
+                    <h3>AI + Data</h3>
+                    <p>Искусственный интеллект для точного прогнозирования спроса и оптимизации запасов</p>
                 </div>
-
-                <!-- Опыт 5 -->
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <span class="timeline-period">2010 - 2012</span>
-                        <h3 class="timeline-company">Проктер энд Гэмбл</h3>
-                        <div class="timeline-position">Аналитик цепей поставок</div>
-                        <p class="timeline-description">Анализ данных цепей поставок, поддержка процессов планирования и оптимизации. Участие в проектах по улучшению операционной эффективности.</p>
-                        
-                        <div class="timeline-achievements">
-                            <h4>Ключевые достижения:</h4>
-                            <ul>
-                                <li>Разработка дашбордов для мониторинга KPI цепей поставок</li>
-                                <li>Анализ данных для оптимизации уровней запасов</li>
-                                <li>Участие во внедрении системы планирования потребностей</li>
-                                <li>Автоматизация отчетности по операционным метрикам</li>
-                                <li>Проведение бенчмаркинга лучших практик индустрии</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="timeline-skills">
-                            <span class="skill-tag">Аналитика данных</span>
-                            <span class="skill-tag">KPI мониторинг</span>
-                            <span class="skill-tag">Бизнес-анализ</span>
-                            <span class="skill-tag">Дашборды</span>
-                            <span class="skill-tag">Бенчмаркинг</span>
-                        </div>
-                    </div>
+                <div class="formula-item">
+                    <div class="formula-icon">📊</div>
+                    <h3>KPI + Metrics</h3>
+                    <p>Измерение каждого процесса для постоянного улучшения и повышения эффективности</p>
+                </div>
+                <div class="formula-item">
+                    <div class="formula-icon">🚀</div>
+                    <h3>Scale + Speed</h3>
+                    <p>Масштабирование успешных практик на новые рынки с сохранением скорости реакции</p>
+                </div>
+                <div class="formula-item">
+                    <div class="formula-icon">💡</div>
+                    <h3>Innovation + Impact</h3>
+                    <p>Внедрение технологий, которые напрямую влияют на прибыль и клиентский опыт</p>
                 </div>
             </div>
         </section>
@@ -402,14 +823,14 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <p>&copy; 2025 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
 
     <!-- JavaScript -->
     <script>
+        // Анимация появления элементов при скролле
         document.addEventListener('DOMContentLoaded', function() {
-            // Анимация появления элементов при скролле
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -424,36 +845,77 @@
                 });
             }, observerOptions);
 
-            // Наблюдаем за элементами таймлайна
-            const timelineItems = document.querySelectorAll('.timeline-content');
-            timelineItems.forEach(element => {
-                element.style.opacity = '0';
-                element.style.transform = 'translateY(20px)';
-                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(element);
+            // Наблюдаем за карточками опыта
+            const experienceCards = document.querySelectorAll('.experience-card');
+            experienceCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Наблюдаем за элементами формулы успеха
+            const formulaItems = document.querySelectorAll('.formula-item');
+            formulaItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(item);
+            });
+
+            // Анимация KPI при наведении
+            const kpiItems = document.querySelectorAll('.kpi-item');
+            kpiItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.05)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Интерактивные вехи временной шкалы
+            const milestones = document.querySelectorAll('.milestone');
+            milestones.forEach(milestone => {
+                milestone.addEventListener('click', function() {
+                    // Можно добавить функционал для показа деталей по году
+                    const year = this.getAttribute('data-year');
+                    const achievement = this.getAttribute('data-achievement');
+                    console.log(`Год: ${year}, Достижение: ${achievement}`);
+                });
             });
 
             // Плавная прокрутка для навигации
             const anchorLinks = document.querySelectorAll('a[href^="#"]');
-            
             anchorLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    if (this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
                         
-                        const targetId = this.getAttribute('href');
-                        const targetElement = document.querySelector(targetId);
-                        
-                        if (targetElement) {
-                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-                            
-                            window.scrollTo({
-                                top: offsetTop,
-                                behavior: 'smooth'
-                            });
-                        }
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
                     }
                 });
+            });
+
+            // Плавное появление изображений
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+                
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.3s ease';
             });
         });
     </script>
