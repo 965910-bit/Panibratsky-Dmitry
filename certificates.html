@@ -8,86 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #dbeafe;
-            --secondary-color: #7c3aed;
-            --accent-color: #06b6d4;
-            --text-color: #1e293b;
-            --text-light: #64748b;
-            --bg-light: #f8fafc;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-        .certificates-hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 4rem 0;
-            text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .certificates-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.05)"><polygon points="0,0 1000,50 0,100"/></svg>');
-            background-size: cover;
-        }
-
-        .certificates-hero h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            position: relative;
-            z-index: 2;
-        }
-
-        .certificates-hero p {
-            font-size: 1.2rem;
-            opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Фильтры по категориям */
-        .certificate-filters {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin: 2rem 0 3rem;
-            padding: 0 1rem;
-        }
-
-        .filter-btn {
-            padding: 0.7rem 1.5rem;
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: 25px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        /* Сетка сертификатов */
+        /* Добавьте этот CSS для исправления отображения */
         .certificates-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -101,323 +22,50 @@
             background: white;
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s ease;
         }
 
         .certificate-card:hover {
             transform: translateY(-8px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .certificate-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 1.5rem;
-            position: relative;
-        }
-
-        .certificate-type {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
-        }
-
-        .certificate-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .certificate-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            line-height: 1.3;
-        }
-
-        .certificate-issuer {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .certificate-body {
-            padding: 1.5rem;
-        }
-
-        .certificate-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        .meta-item i {
-            width: 20px;
-            color: var(--primary-color);
-        }
-
-        .certificate-description {
-            color: var(--text-color);
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .certificate-skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .skill-tag {
-            background: var(--primary-light);
-            color: var(--primary-dark);
-            padding: 0.3rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .certificate-actions {
-            display: flex;
-            gap: 0.8rem;
-        }
-
-        .btn {
-            padding: 0.7rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            flex: 1;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary-light);
-        }
-
-        /* Особые стили для диплома */
-        .certificate-card.diploma .certificate-header {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        }
-
-        .certificate-card.diploma .certificate-type {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Статистика */
-        .certificates-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            max-width: 1000px;
-            margin: 4rem auto;
-            padding: 0 1rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--text-light);
-            font-weight: 500;
-        }
-
-        /* Модальное окно */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-light);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .certificate-preview {
             width: 100%;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
         }
 
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .certificates-hero h1 {
-                font-size: 2rem;
-            }
-            
-            .certificates-hero p {
-                font-size: 1rem;
-            }
-            
-            .certificates-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .certificate-filters {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 0.5rem;
-            }
-            
-            .certificate-actions {
-                flex-direction: column;
-            }
-            
-            .certificates-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .certificate-content {
+            padding: 1.5rem;
         }
 
-        @media (max-width: 480px) {
-            .certificates-hero {
-                padding: 3rem 0;
-            }
-            
-            .certificates-hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .certificate-card {
-                margin: 0 0.5rem;
-            }
-            
-            .certificates-stats {
-                grid-template-columns: 1fr;
-            }
+        .certificate-placeholder {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .certificate-placeholder i {
+            font-size: 4rem;
+            color: #64748b;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header (оставьте ваш существующий header) -->
     <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="header-photos">
-                    <!-- Левое фото -->
-                    <div class="header-photo-left">
-                        <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
-                    </div>
-                    
-                    <!-- Центральный текст -->
-                    <div class="header-text-center">
-                        <h1>Дмитрий Панибратский</h1>
-                        <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
-                        
-                        <div class="contact-badges">
-                            <span class="badge">Управление SCM</span>
-                            <span class="badge">Цифровая трансформация</span>
-                            <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Оптимизация процессов</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Правое фото -->
-                    <div class="header-photo-right">
-                        <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Ваш существующий header код -->
     </header>
 
     <!-- Navigation -->
@@ -446,319 +94,55 @@
 
     <!-- Main Content -->
     <main class="container">
-        <!-- Статистика -->
-        <section class="certificates-stats">
-            <div class="stat-card">
-                <div class="stat-number">18</div>
-                <div class="stat-label">Сертификатов</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">1</div>
-                <div class="stat-label">Диплом о переподготовке</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">6</div>
-                <div class="stat-label">Направлений развития</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">5+</div>
-                <div class="stat-label">Лет непрерывного обучения</div>
-            </div>
-        </section>
+        <!-- Временное сообщение о том, что сертификаты в процессе загрузки -->
+        <div class="certificate-placeholder">
+            <i class="fas fa-file-pdf"></i>
+            <h3>Сертификаты загружаются</h3>
+            <p>PDF-файлы сертификатов в настоящее время подготавливаются для отображения.</p>
+            <p>Список подтвержденных сертификатов:</p>
+            <ul style="text-align: left; display: inline-block; margin-top: 1rem;">
+                <li>Диплом "Коммерческий директор" - Институт профессионального образования</li>
+                <li>7 навыков высокоэффективных людей - Business Learning</li>
+                <li>Гарвардская школа переговоров - Business Learning</li>
+                <li>45 татуировок менеджера - Максим Батырев</li>
+                <li>Инструменты McKinsey - Business Learning</li>
+                <!-- Добавьте остальные сертификаты -->
+            </ul>
+        </div>
 
-        <!-- Фильтры -->
-        <section class="certificate-filters">
-            <button class="filter-btn active" data-filter="all">Все</button>
-            <button class="filter-btn" data-filter="management">Управление</button>
-            <button class="filter-btn" data-filter="negotiations">Переговоры</button>
-            <button class="filter-btn" data-filter="time-management">Тайм-менеджмент</button>
-            <button class="filter-btn" data-filter="personal-development">Личностный рост</button>
-            <button class="filter-btn" data-filter="diploma">Диплом</button>
-        </section>
-
-        <!-- Сетка сертификатов -->
+        <!-- Сетка сертификатов (будет работать после добавления PDF) -->
         <section class="certificates-grid">
-            <!-- Диплом -->
-            <div class="certificate-card diploma" data-category="diploma">
-                <div class="certificate-header">
-                    <span class="certificate-type">Диплом</span>
-                    <div class="certificate-icon">🎓</div>
-                    <h3 class="certificate-title">Коммерческий директор</h3>
-                    <p class="certificate-issuer">Институт профессионального образования</p>
+            <!-- Пример одного сертификата с работающей структурой -->
+            <div class="certificate-card">
+                <div class="certificate-preview">
+                    🎓
                 </div>
-                <div class="certificate-body">
-                    <div class="certificate-meta">
-                        <div class="meta-item">
-                            <i class="far fa-calendar"></i>
-                            <span>05.12.2022 - 20.10.2023</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="far fa-clock"></i>
-                            <span>10 месяцев обучения</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-graduation-cap"></i>
-                            <span>Квалификация: Коммерческий директор</span>
-                        </div>
-                    </div>
-                    <p class="certificate-description">
-                        Профессиональная переподготовка по программе "Коммерческий директор" с присвоением квалификации.
-                    </p>
-                    <div class="certificate-skills">
-                        <span class="skill-tag">Стратегическое управление</span>
-                        <span class="skill-tag">Финансовый менеджмент</span>
-                        <span class="skill-tag">Управление продажами</span>
-                    </div>
+                <div class="certificate-content">
+                    <h3>Коммерческий директор</h3>
+                    <p>Институт профессионального образования</p>
+                    <p><strong>Дата:</strong> 20.10.2023</p>
                     <div class="certificate-actions">
-                        <a href="files/diplom-commercial-director.pdf" class="btn btn-primary" target="_blank">
-                            <i class="far fa-eye"></i> Просмотреть
-                        </a>
-                        <a href="files/diplom-commercial-director.pdf" class="btn btn-outline" download>
-                            <i class="fas fa-download"></i> Скачать
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Управленческие сертификаты -->
-            <div class="certificate-card" data-category="management">
-                <div class="certificate-header">
-                    <span class="certificate-type">Сертификат</span>
-                    <div class="certificate-icon">👨‍💼</div>
-                    <h3 class="certificate-title">7 навыков высокоэффективных людей</h3>
-                    <p class="certificate-issuer">Business Learning</p>
-                </div>
-                <div class="certificate-body">
-                    <div class="certificate-meta">
-                        <div class="meta-item">
-                            <i class="far fa-calendar"></i>
-                            <span>10.01.2020</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-hashtag"></i>
-                            <span>Рег. номер: 57994</span>
-                        </div>
-                    </div>
-                    <p class="certificate-description">
-                        Освоение принципов личной и профессиональной эффективности по системе Стивена Кови.
-                    </p>
-                    <div class="certificate-skills">
-                        <span class="skill-tag">Личная эффективность</span>
-                        <span class="skill-tag">Управление временем</span>
-                        <span class="skill-tag">Лидерство</span>
-                    </div>
-                    <div class="certificate-actions">
-                        <a href="files/7-habits-effective-people.pdf" class="btn btn-primary" target="_blank">
-                            <i class="far fa-eye"></i> Просмотреть
-                        </a>
-                        <a href="files/7-habits-effective-people.pdf" class="btn btn-outline" download>
-                            <i class="fas fa-download"></i> Скачать
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="certificate-card" data-category="management">
-                <div class="certificate-header">
-                    <span class="certificate-type">Сертификат</span>
-                    <div class="certificate-icon">📈</div>
-                    <h3 class="certificate-title">7 законов развития. Кручинг руководителей</h3>
-                    <p class="certificate-issuer">Business Learning</p>
-                </div>
-                <div class="certificate-body">
-                    <div class="certificate-meta">
-                        <div class="meta-item">
-                            <i class="far fa-calendar"></i>
-                            <span>11.01.2020</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-hashtag"></i>
-                            <span>Рег. номер: 58097</span>
-                        </div>
-                    </div>
-                    <p class="certificate-description">
-                        Изучение законов развития организаций и методов повышения эффективности руководства.
-                    </p>
-                    <div class="certificate-skills">
-                        <span class="skill-tag">Развитие организации</span>
-                        <span class="skill-tag">Управление командой</span>
-                        <span class="skill-tag">Бизнес-процессы</span>
-                    </div>
-                    <div class="certificate-actions">
-                        <a href="files/7-laws-development.pdf" class="btn btn-primary" target="_blank">
-                            <i class="far fa-eye"></i> Просмотреть
-                        </a>
-                        <a href="files/7-laws-development.pdf" class="btn btn-outline" download>
-                            <i class="fas fa-download"></i> Скачать
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="certificate-card" data-category="management">
-                <div class="certificate-header">
-                    <span class="certificate-type">Сертификат</span>
-                    <div class="certificate-icon">🏛️</div>
-                    <h3 class="certificate-title">13 столпов Адизеса</h3>
-                    <p class="certificate-issuer">Business Learning</p>
-                </div>
-                <div class="certificate-body">
-                    <div class="certificate-meta">
-                        <div class="meta-item">
-                            <i class="far fa-calendar"></i>
-                            <span>08.01.2020</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-hashtag"></i>
-                            <span>Рег. номер: 57824</span>
-                        </div>
-                    </div>
-                    <p class="certificate-description">
-                        Освоение методологии Ицхака Адизеса для эффективного управления организационными изменениями.
-                    </p>
-                    <div class="certificate-skills">
-                        <span class="skill-tag">Организационное развитие</span>
-                        <span class="skill-tag">Управление изменениями</span>
-                        <span class="skill-tag">Корпоративная культура</span>
-                    </div>
-                    <div class="certificate-actions">
-                        <a href="files/adizes-13-pillars.pdf" class="btn btn-primary" target="_blank">
-                            <i class="far fa-eye"></i> Просмотреть
-                        </a>
-                        <a href="files/adizes-13-pillars.pdf" class="btn btn-outline" download>
-                            <i class="fas fa-download"></i> Скачать
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="certificate-card" data-category="management">
-                <div class="certificate-header">
-                    <span class="certificate-type">Сертификат</span>
-                    <div class="certificate-icon">💪</div>
-                    <h3 class="certificate-title">45 татуировок менеджера</h3>
-                    <p class="certificate-issuer">Максим Батырев</p>
-                </div>
-                <div class="certificate-body">
-                    <div class="certificate-meta">
-                        <div class="meta-item">
-                            <i class="far fa-calendar"></i>
-                            <span>2020</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-award"></i>
-                            <span>Мастер-класс для руководителей</span>
-                        </div>
-                    </div>
-                    <p class="certificate-description">
-                        Практические принципы управления для достижения сверхрезультатов в команде.
-                    </p>
-                    <div class="certificate-skills">
-                        <span class="skill-tag">Управление командой</span>
-                        <span class="skill-tag">Мотивация</span>
-                        <span class="skill-tag">Лидерство</span>
-                    </div>
-                    <div class="certificate-actions">
-                        <a href="files/batyrev-45-tattoos.pdf" class="btn btn-primary" target="_blank">
-                            <i class="far fa-eye"></i> Просмотреть
-                        </a>
-                        <a href="files/batyrev-45-tattoos.pdf" class="btn btn-outline" download>
-                            <i class="fas fa-download"></i> Скачать
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Переговоры -->
-            <div class="certificate-card" data-category="negotiations">
-                <div class="certificate-header">
-                    <span class="certificate-type">Сертификат</span>
-                    <div class="certificate-icon">🎯</div>
-                    <h3 class="certificate-title">Гарвардская школа переговоров</h3>
-                    <p class="certificate-issuer">Business Learning</p>
-                </div>
-                <div class="certificate-body">
-                    <div class="certificate-meta">
-                        <div class="meta-item">
-                            <i class="far fa-calendar"></i>
-                            <span>11.01.2020</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-hashtag"></i>
-                            <span>Рег. номер: 58075</span>
-                        </div>
-                    </div>
-                    <p class="certificate-description">
-                        Методы ведения переговоров по гарвардской методике: как говорить "нет" и добиваться результатов.
-                    </p>
-                    <div class="certificate-skills">
-                        <span class="skill-tag">Переговоры</span>
-                        <span class="skill-tag">Коммуникации</span>
-                        <span class="skill-tag">Разрешение конфликтов</span>
-                    </div>
-                    <div class="certificate-actions">
-                        <a href="files/harvard-negotiations.pdf" class="btn btn-primary" target="_blank">
-                            <i class="far fa-eye"></i> Просмотреть
-                        </a>
-                        <a href="files/harvard-negotiations.pdf" class="btn btn-outline" download>
-                            <i class="fas fa-download"></i> Скачать
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Тайм-менеджмент -->
-            <div class="certificate-card" data-category="time-management">
-                <div class="certificate-header">
-                    <span class="certificate-type">Сертификат</span>
-                    <div class="certificate-icon">⏰</div>
-                    <h3 class="certificate-title">Тайм-менеджмент: Аудит времени</h3>
-                    <p class="certificate-issuer">Business Learning</p>
-                </div>
-                <div class="certificate-body">
-                    <div class="certificate-meta">
-                        <div class="meta-item">
-                            <i class="far fa-calendar"></i>
-                            <span>09.01.2020</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-hashtag"></i>
-                            <span>Рег. номер: 57917</span>
-                        </div>
-                    </div>
-                    <p class="certificate-description">
-                        Методики анализа и аудита использования времени для повышения личной эффективности.
-                    </p>
-                    <div class="certificate-skills">
-                        <span class="skill-tag">Тайм-менеджмент</span>
-                        <span class="skill-tag">Анализ времени</span>
-                        <span class="skill-tag">Планирование</span>
-                    </div>
-                    <div class="certificate-actions">
-                        <a href="files/time-management-audit.pdf" class="btn btn-primary" target="_blank">
-                            <i class="far fa-eye"></i> Просмотреть
-                        </a>
-                        <a href="files/time-management-audit.pdf" class="btn btn-outline" download>
-                            <i class="fas fa-download"></i> Скачать
+                        <a href="#" class="btn btn-primary" onclick="showCertificateModal('Диплом Коммерческий директор')">
+                            <i class="far fa-eye"></i> Информация
                         </a>
                     </div>
                 </div>
             </div>
 
             <!-- Добавьте остальные сертификаты по аналогии -->
-
         </section>
     </main>
 
-    <!-- Модальное окно для просмотра сертификата -->
-    <div id="certificateModal" class="modal">
+    <!-- Модальное окно для информации о сертификатах -->
+    <div id="certificateInfoModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Просмотр сертификата</h3>
+                <h3 id="modalTitle">Информация о сертификате</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <iframe id="certificateViewer" class="certificate-preview" style="height: 600px;" frameborder="0"></iframe>
+                <p>PDF-файлы сертификатов в настоящее время подготавливаются для отображения на сайте.</p>
+                <p>Все сертификаты доступны по запросу.</p>
             </div>
         </div>
     </div>
@@ -769,91 +153,77 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Фильтрация сертификатов
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const certificateCards = document.querySelectorAll('.certificate-card');
+        // Простой скрипт для модального окна
+        function showCertificateModal(title) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('certificateInfoModal').style.display = 'flex';
+        }
 
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Убираем активный класс у всех кнопок
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    // Добавляем активный класс текущей кнопке
-                    this.classList.add('active');
-                    
-                    const filterValue = this.getAttribute('data-filter');
-                    
-                    certificateCards.forEach(card => {
-                        if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            });
-
-            // Анимация появления карточек
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            certificateCards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
-            });
-
-            // Модальное окно для просмотра сертификатов
-            const modal = document.getElementById('certificateModal');
-            const closeModal = document.querySelector('.close-modal');
-            const certificateViewer = document.getElementById('certificateViewer');
-
-            // Закрытие модального окна
-            closeModal.addEventListener('click', function() {
-                modal.style.display = 'none';
-            });
-
-            window.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-
-            // Плавная прокрутка для навигации
-            const anchorLinks = document.querySelectorAll('a[href^="#"]');
-            anchorLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-                        
-                        window.scrollTo({
-                            top: offsetTop,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
+        document.querySelector('.close-modal').addEventListener('click', function() {
+            document.getElementById('certificateInfoModal').style.display = 'none';
         });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === document.getElementById('certificateInfoModal')) {
+                document.getElementById('certificateInfoModal').style.display = 'none';
+            }
+        });
+
+        // Стили для модального окна
+        const style = document.createElement('style');
+        style.textContent = `
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+            }
+            .modal-content {
+                background: white;
+                border-radius: 16px;
+                max-width: 500px;
+                width: 100%;
+                position: relative;
+            }
+            .modal-header {
+                padding: 1.5rem;
+                border-bottom: 1px solid #e2e8f0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .modal-body {
+                padding: 1.5rem;
+            }
+            .close-modal {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            .btn {
+                padding: 0.7rem 1.2rem;
+                border-radius: 8px;
+                font-weight: 500;
+                text-decoration: none;
+                display: inline-block;
+                text-align: center;
+                margin-top: 1rem;
+            }
+            .btn-primary {
+                background: #2563eb;
+                color: white;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
