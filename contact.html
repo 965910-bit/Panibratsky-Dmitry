@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты - Дмитрий Панибратский</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Стили для страницы контактов, включая социальные сети */
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary-color: #7c3aed;
+            --accent-color: #06b6d4;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .contact-hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .contact-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .contact-info {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .contact-info h2 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .contact-details {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-details li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-details li:last-child {
+            border-bottom: none;
+        }
+
+        .contact-details i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            width: 20px;
+        }
+
+        .social-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .social-section h2 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .social-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .social-link:hover {
+            background: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .social-link i {
+            font-size: 1.5rem;
+        }
+
+        .social-link.linkedin { color: #0077b5; }
+        .social-link.setka { color: var(--secondary-color); }
+        .social-link.telegram { color: #0088cc; }
+        .social-link.hh { color: #d6001c; }
+
+        /* Упрощенная шапка */
+        .header-simple {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+        }
+
+        .header-simple .header-text-center h1 {
+            margin-bottom: 0.8rem;
+            font-size: 2.5rem;
+        }
+
+        .header-simple .header-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .header-simple .contact-badges {
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .contact-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header-simple .header-text-center h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Упрощенный Header -->
+    <header class="header-simple">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-text-center">
+                    <h1>Дмитрий Панибратский</h1>
+                    <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
+                    
+                    <div class="contact-badges">
+                        <span class="badge">Управление SCM</span>
+                        <span class="badge">Цифровая трансформация</span>
+                        <span class="badge">AI & Аналитика</span>
+                        <span class="badge">Оптимизация процессов</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="expertise.html">Экспертиза</a></li>
+                <li><a href="experience.html">Опыт</a></li>
+                <li><a href="projects.html">Проекты</a></li>
+                <li><a href="tools.html">Инструменты</a></li>
+                <li><a href="calculators.html">Калькуляторы</a></li>
+                <li><a href="certificates.html">Сертификаты</a></li>
+                <li><a href="wiki.html">Wiki</a></li>
+                <li><a href="contact.html" class="active">Контакты</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="contact-hero">
+        <div class="container">
+            <h1>Контакты</h1>
+            <p>Свяжитесь со мной для обсуждения сотрудничества и проектов</p>
+        </div>
+    </section>
+
+    <!-- Contact Content -->
+    <main class="container">
+        <div class="contact-content">
+            <!-- Контактная информация -->
+            <section class="contact-info">
+                <h2>Контактная информация</h2>
+                <ul class="contact-details">
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <span>Email: example@example.com</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        <span>Телефон: +7 (XXX) XXX-XX-XX</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Местоположение: Москва, Россия</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-clock"></i>
+                        <span>Часы работы: Пн-Пт, 9:00-18:00</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Социальные сети -->
+            <section class="social-section">
+                <h2>🌐 Социальные сети и платформы</h2>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/dmitry-panibratsky" target="_blank" rel="noopener noreferrer nofollow" class="social-link linkedin">
+                        <i class="fab fa-linkedin"></i>
+                        LinkedIn
+                    </a>
+                    
+                    <a href="https://set.ki/EYUBwz5" target="_blank" rel="noopener noreferrer nofollow" class="social-link setka">
+                        <i class="fas fa-network-wired"></i>
+                        Setka Community
+                    </a>
+
+                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer nofollow" class="social-link telegram">
+                        <i class="fab fa-telegram"></i>
+                        Telegram
+                    </a>
+                    
+                    <a href="https://hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45" target="_blank" rel="noopener noreferrer nofollow" class="social-link hh">
+                        <i class="fas fa-briefcase"></i>
+                        HeadHunter
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Простой скрипт для анимации появления элементов
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactSections = document.querySelectorAll('.contact-info, .social-section');
+            
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            contactSections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
