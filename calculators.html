@@ -46,7 +46,7 @@
 
         .calculators-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
             gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
@@ -58,7 +58,7 @@
             border-radius: 12px;
             padding: 2rem;
             box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color);
             transition: all 0.3s ease;
         }
 
@@ -100,38 +100,38 @@
             margin-bottom: 1rem;
         }
 
-        .form-group label {
+        .form-label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--text-color);
         }
 
-        .form-group input {
+        .form-input {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
             transition: border-color 0.3s ease;
         }
 
-        .form-group input:focus {
+        .form-input:focus {
             outline: none;
             border-color: var(--primary-color);
         }
 
         .calculate-btn {
-            width: 100%;
-            padding: 0.75rem;
             background: var(--primary-color);
             color: white;
             border: none;
+            padding: 0.75rem 1.5rem;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.3s ease;
+            width: 100%;
         }
 
         .calculate-btn:hover {
@@ -139,28 +139,30 @@
         }
 
         .calculator-result {
-            background: var(--bg-light);
+            background: var(--primary-light);
             padding: 1.5rem;
             border-radius: 8px;
             margin-top: 1.5rem;
             display: none;
         }
 
-        .calculator-result h4 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
+        .result-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
         }
 
         .result-value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
         }
 
-        .result-description {
+        .result-explanation {
             color: var(--text-light);
             font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         /* Упрощенная шапка */
@@ -204,7 +206,7 @@
     </style>
 </head>
 <body>
-    <!-- Упрощенный Header без фото -->
+    <!-- Упрощенный Header -->
     <header class="header-simple">
         <div class="container">
             <div class="header-content">
@@ -244,191 +246,212 @@
     <section class="calculators-hero">
         <div class="container">
             <h1>Профессиональные калькуляторы</h1>
-            <p>Инструменты для расчета ключевых показателей эффективности цепей поставок</p>
+            <p>Расчеты и аналитика для эффективного управления цепями поставок</p>
         </div>
     </section>
 
     <!-- Calculators Grid -->
     <main class="container">
         <section class="calculators-grid">
-            <!-- Калькулятор оборачиваемости запасов -->
-            <div class="calculator-card">
-                <div class="calculator-header">
-                    <div class="calculator-icon">📊</div>
-                    <h3 class="calculator-title">Оборачиваемость запасов</h3>
-                </div>
-                <p class="calculator-description">
-                    Расчет коэффициента оборачиваемости запасов и дней оборачиваемости для оценки эффективности управления запасами.
-                </p>
-                <div class="calculator-form">
-                    <div class="form-group">
-                        <label for="costOfGoodsSold">Себестоимость проданных товаров (руб):</label>
-                        <input type="number" id="costOfGoodsSold" placeholder="Введите сумму">
-                    </div>
-                    <div class="form-group">
-                        <label for="averageInventory">Средний объем запасов (руб):</label>
-                        <input type="number" id="averageInventory" placeholder="Введите сумму">
-                    </div>
-                    <button class="calculate-btn" onclick="calculateInventoryTurnover()">Рассчитать</button>
-                </div>
-                <div class="calculator-result" id="inventoryResult">
-                    <h4>Результаты расчета:</h4>
-                    <div class="result-value" id="turnoverRatio"></div>
-                    <div class="result-value" id="daysInventory"></div>
-                    <p class="result-description" id="inventoryInterpretation"></p>
-                </div>
-            </div>
-
-            <!-- Калькулятор уровня сервиса -->
-            <div class="calculator-card">
-                <div class="calculator-header">
-                    <div class="calculator-icon">🎯</div>
-                    <h3 class="calculator-title">Уровень сервиса (CSL)</h3>
-                </div>
-                <p class="calculator-description">
-                    Расчет уровня сервиса клиентов на основе выполненных заказов и общего количества заказов.
-                </p>
-                <div class="calculator-form">
-                    <div class="form-group">
-                        <label for="fulfilledOrders">Количество выполненных заказов:</label>
-                        <input type="number" id="fulfilledOrders" placeholder="Введите количество">
-                    </div>
-                    <div class="form-group">
-                        <label for="totalOrders">Общее количество заказов:</label>
-                        <input type="number" id="totalOrders" placeholder="Введите количество">
-                    </div>
-                    <button class="calculate-btn" onclick="calculateServiceLevel()">Рассчитать</button>
-                </div>
-                <div class="calculator-result" id="serviceResult">
-                    <h4>Результаты расчета:</h4>
-                    <div class="result-value" id="serviceLevel"></div>
-                    <p class="result-description" id="serviceInterpretation"></p>
-                </div>
-            </div>
-
-            <!-- Калькулятор экономичного размера заказа -->
+            
+            <!-- EOQ Calculator -->
             <div class="calculator-card">
                 <div class="calculator-header">
                     <div class="calculator-icon">📦</div>
                     <h3 class="calculator-title">Экономичный размер заказа (EOQ)</h3>
                 </div>
                 <p class="calculator-description">
-                    Расчет оптимального размера заказа для минимизации суммарных затрат на хранение и заказ.
+                    Расчет оптимального размера заказа, который минимизирует суммарные затраты на хранение и выполнение заказов.
                 </p>
                 <div class="calculator-form">
                     <div class="form-group">
-                        <label for="annualDemand">Годовой спрос (единиц):</label>
-                        <input type="number" id="annualDemand" placeholder="Введите количество">
+                        <label class="form-label" for="eoq-demand">Годовой спрос (единиц)</label>
+                        <input type="number" id="eoq-demand" class="form-input" placeholder="Например: 10000">
                     </div>
                     <div class="form-group">
-                        <label for="orderCost">Стоимость заказа (руб):</label>
-                        <input type="number" id="orderCost" placeholder="Введите сумму">
+                        <label class="form-label" for="eoq-order-cost">Стоимость заказа (руб.)</label>
+                        <input type="number" id="eoq-order-cost" class="form-input" placeholder="Например: 500">
                     </div>
                     <div class="form-group">
-                        <label for="holdingCost">Стоимость хранения за единицу (руб):</label>
-                        <input type="number" id="holdingCost" placeholder="Введите сумму">
+                        <label class="form-label" for="eoq-holding-cost">Стоимость хранения за единицу (руб.)</label>
+                        <input type="number" id="eoq-holding-cost" class="form-input" placeholder="Например: 20">
                     </div>
-                    <button class="calculate-btn" onclick="calculateEOQ()">Рассчитать</button>
+                    <button class="calculate-btn" onclick="calculateEOQ()">Рассчитать EOQ</button>
                 </div>
-                <div class="calculator-result" id="eoqResult">
-                    <h4>Результаты расчета:</h4>
-                    <div class="result-value" id="eoqValue"></div>
-                    <p class="result-description" id="eoqInterpretation"></p>
+                <div class="calculator-result" id="eoq-result">
+                    <div class="result-title">Результат расчета:</div>
+                    <div class="result-value" id="eoq-value">0 единиц</div>
+                    <div class="result-explanation" id="eoq-explanation">
+                        EOQ - это оптимальный размер заказа, который минимизирует общие затраты на управление запасами.
+                    </div>
                 </div>
             </div>
 
-            <!-- Калькулятор общей стоимости владения -->
+            <!-- Safety Stock Calculator -->
             <div class="calculator-card">
                 <div class="calculator-header">
-                    <div class="calculator-icon">💰</div>
-                    <h3 class="calculator-title">Общая стоимость владения (TCO)</h3>
+                    <div class="calculator-icon">🛡️</div>
+                    <h3 class="calculator-title">Страховой запас</h3>
                 </div>
                 <p class="calculator-description">
-                    Расчет полной стоимости владения активами или системами с учетом всех прямых и косвенных затрат.
+                    Расчет страхового запаса для защиты от неопределенности спроса и времени выполнения заказа.
                 </p>
                 <div class="calculator-form">
                     <div class="form-group">
-                        <label for="acquisitionCost">Стоимость приобретения (руб):</label>
-                        <input type="number" id="acquisitionCost" placeholder="Введите сумму">
+                        <label class="form-label" for="ss-max-demand">Максимальный дневной спрос (единиц)</label>
+                        <input type="number" id="ss-max-demand" class="form-input" placeholder="Например: 120">
                     </div>
                     <div class="form-group">
-                        <label for="operatingCost">Годовые операционные затраты (руб):</label>
-                        <input type="number" id="operatingCost" placeholder="Введите сумму">
+                        <label class="form-label" for="ss-avg-demand">Средний дневной спрос (единиц)</label>
+                        <input type="number" id="ss-avg-demand" class="form-input" placeholder="Например: 100">
                     </div>
                     <div class="form-group">
-                        <label for="maintenanceCost">Годовые затраты на обслуживание (руб):</label>
-                        <input type="number" id="maintenanceCost" placeholder="Введите сумму">
+                        <label class="form-label" for="ss-lead-time">Время выполнения заказа (дни)</label>
+                        <input type="number" id="ss-lead-time" class="form-input" placeholder="Например: 7">
                     </div>
                     <div class="form-group">
-                        <label for="lifespan">Срок службы (лет):</label>
-                        <input type="number" id="lifespan" placeholder="Введите количество лет">
+                        <label class="form-label" for="ss-service-level">Уровень обслуживания (%)</label>
+                        <input type="number" id="ss-service-level" class="form-input" placeholder="Например: 95" min="0" max="100">
                     </div>
-                    <button class="calculate-btn" onclick="calculateTCO()">Рассчитать</button>
+                    <button class="calculate-btn" onclick="calculateSafetyStock()">Рассчитать страховой запас</button>
                 </div>
-                <div class="calculator-result" id="tcoResult">
-                    <h4>Результаты расчета:</h4>
-                    <div class="result-value" id="tcoValue"></div>
-                    <p class="result-description" id="tcoInterpretation"></p>
+                <div class="calculator-result" id="safety-stock-result">
+                    <div class="result-title">Результат расчета:</div>
+                    <div class="result-value" id="safety-stock-value">0 единиц</div>
+                    <div class="result-explanation" id="safety-stock-explanation">
+                        Страховой запас защищает от колебаний спроса и задержек поставок.
+                    </div>
                 </div>
             </div>
 
-            <!-- Калькулятор рентабельности инвестиций -->
+            <!-- Inventory Turnover Calculator -->
             <div class="calculator-card">
                 <div class="calculator-header">
-                    <div class="calculator-icon">📈</div>
-                    <h3 class="calculator-title">Рентабельность инвестиций (ROI)</h3>
+                    <div class="calculator-icon">🔄</div>
+                    <h3 class="calculator-title">Оборачиваемость запасов</h3>
                 </div>
                 <p class="calculator-description">
-                    Расчет возврата на инвестиции для оценки эффективности вложений в проекты и инициативы.
+                    Расчет коэффициента оборачиваемости запасов и периода оборота в днях.
                 </p>
                 <div class="calculator-form">
                     <div class="form-group">
-                        <label for="investmentGain">Доход от инвестиции (руб):</label>
-                        <input type="number" id="investmentGain" placeholder="Введите сумму">
+                        <label class="form-label" for="turnover-cogs">Себестоимость проданных товаров (руб.)</label>
+                        <input type="number" id="turnover-cogs" class="form-input" placeholder="Например: 5000000">
                     </div>
                     <div class="form-group">
-                        <label for="investmentCost">Стоимость инвестиции (руб):</label>
-                        <input type="number" id="investmentCost" placeholder="Введите сумму">
+                        <label class="form-label" for="turnover-avg-inventory">Средний объем запасов (руб.)</label>
+                        <input type="number" id="turnover-avg-inventory" class="form-input" placeholder="Например: 500000">
                     </div>
-                    <button class="calculate-btn" onclick="calculateROI()">Рассчитать</button>
+                    <button class="calculate-btn" onclick="calculateInventoryTurnover()">Рассчитать оборачиваемость</button>
                 </div>
-                <div class="calculator-result" id="roiResult">
-                    <h4>Результаты расчета:</h4>
-                    <div class="result-value" id="roiValue"></div>
-                    <p class="result-description" id="roiInterpretation"></p>
+                <div class="calculator-result" id="turnover-result">
+                    <div class="result-title">Результат расчета:</div>
+                    <div class="result-value" id="turnover-value">0 раз</div>
+                    <div class="result-explanation" id="turnover-explanation">
+                        Оборачиваемость показывает, сколько раз запасы обновляются за период.
+                    </div>
                 </div>
             </div>
 
-            <!-- Калькулятор точки безубыточности -->
+            <!-- Reorder Point Calculator -->
             <div class="calculator-card">
                 <div class="calculator-header">
-                    <div class="calculator-icon">⚖️</div>
-                    <h3 class="calculator-title">Точка безубыточности</h3>
+                    <div class="calculator-icon">📍</div>
+                    <h3 class="calculator-title">Точка заказа</h3>
                 </div>
                 <p class="calculator-description">
-                    Расчет объема продаж, при котором бизнес покрывает все расходы и начинает приносить прибыль.
+                    Расчет точки заказа - уровня запасов, при котором необходимо размещать новый заказ.
                 </p>
                 <div class="calculator-form">
                     <div class="form-group">
-                        <label for="fixedCosts">Постоянные затраты (руб):</label>
-                        <input type="number" id="fixedCosts" placeholder="Введите сумму">
+                        <label class="form-label" for="rop-demand">Средний дневной спрос (единиц)</label>
+                        <input type="number" id="rop-demand" class="form-input" placeholder="Например: 100">
                     </div>
                     <div class="form-group">
-                        <label for="pricePerUnit">Цена за единицу (руб):</label>
-                        <input type="number" id="pricePerUnit" placeholder="Введите сумму">
+                        <label class="form-label" for="rop-lead-time">Время выполнения заказа (дни)</label>
+                        <input type="number" id="rop-lead-time" class="form-input" placeholder="Например: 5">
                     </div>
                     <div class="form-group">
-                        <label for="variableCostPerUnit">Переменные затраты на единицу (руб):</label>
-                        <input type="number" id="variableCostPerUnit" placeholder="Введите сумму">
+                        <label class="form-label" for="rop-safety-stock">Страховой запас (единиц)</label>
+                        <input type="number" id="rop-safety-stock" class="form-input" placeholder="Например: 50">
                     </div>
-                    <button class="calculate-btn" onclick="calculateBreakEven()">Рассчитать</button>
+                    <button class="calculate-btn" onclick="calculateReorderPoint()">Рассчитать точку заказа</button>
                 </div>
-                <div class="calculator-result" id="breakEvenResult">
-                    <h4>Результаты расчета:</h4>
-                    <div class="result-value" id="breakEvenValue"></div>
-                    <p class="result-description" id="breakEvenInterpretation"></p>
+                <div class="calculator-result" id="rop-result">
+                    <div class="result-title">Результат расчета:</div>
+                    <div class="result-value" id="rop-value">0 единиц</div>
+                    <div class="result-explanation" id="rop-explanation">
+                        Точка заказа определяет, когда нужно размещать новый заказ для поддержания бесперебойных поставок.
+                    </div>
                 </div>
             </div>
+
+            <!-- Fill Rate Calculator -->
+            <div class="calculator-card">
+                <div class="calculator-header">
+                    <div class="calculator-icon">📊</div>
+                    <h3 class="calculator-title">Уровень выполнения заказов</h3>
+                </div>
+                <p class="calculator-description">
+                    Расчет уровня обслуживания (Fill Rate) - процента спроса, удовлетворенного из имеющихся запасов.
+                </p>
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label class="form-label" for="fill-total-demand">Общий спрос (единиц)</label>
+                        <input type="number" id="fill-total-demand" class="form-input" placeholder="Например: 1000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="fill-stockouts">Количество неудовлетворенных заказов (единиц)</label>
+                        <input type="number" id="fill-stockouts" class="form-input" placeholder="Например: 25">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateFillRate()">Рассчитать уровень обслуживания</button>
+                </div>
+                <div class="calculator-result" id="fill-rate-result">
+                    <div class="result-title">Результат расчета:</div>
+                    <div class="result-value" id="fill-rate-value">0%</div>
+                    <div class="result-explanation" id="fill-rate-explanation">
+                        Уровень выполнения заказов показывает эффективность управления запасами в удовлетворении спроса.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transportation Cost Calculator -->
+            <div class="calculator-card">
+                <div class="calculator-header">
+                    <div class="calculator-icon">🚚</div>
+                    <h3 class="calculator-title">Стоимость перевозки</h3>
+                </div>
+                <p class="calculator-description">
+                    Расчет общей стоимости перевозки с учетом различных факторов: расстояние, вес, тип транспорта.
+                </p>
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label class="form-label" for="transp-distance">Расстояние (км)</label>
+                        <input type="number" id="transp-distance" class="form-input" placeholder="Например: 500">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="transp-weight">Вес груза (кг)</label>
+                        <input type="number" id="transp-weight" class="form-input" placeholder="Например: 1000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="transp-rate">Тариф (руб./км)</label>
+                        <input type="number" id="transp-rate" class="form-input" placeholder="Например: 15" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="transp-additional">Дополнительные расходы (руб.)</label>
+                        <input type="number" id="transp-additional" class="form-input" placeholder="Например: 2000">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateTransportCost()">Рассчитать стоимость</button>
+                </div>
+                <div class="calculator-result" id="transport-cost-result">
+                    <div class="result-title">Результат расчета:</div>
+                    <div class="result-value" id="transport-cost-value">0 руб.</div>
+                    <div class="result-explanation" id="transport-cost-explanation">
+                        Общая стоимость перевозки включает базовый тариф и дополнительные расходы.
+                    </div>
+                </div>
+            </div>
+
         </section>
     </main>
 
@@ -439,129 +462,151 @@
     </footer>
 
     <script>
-        // Калькулятор оборачиваемости запасов
-        function calculateInventoryTurnover() {
-            const costOfGoodsSold = parseFloat(document.getElementById('costOfGoodsSold').value);
-            const averageInventory = parseFloat(document.getElementById('averageInventory').value);
-            
-            if (costOfGoodsSold && averageInventory && averageInventory > 0) {
-                const turnoverRatio = (costOfGoodsSold / averageInventory).toFixed(2);
-                const daysInventory = (365 / turnoverRatio).toFixed(1);
-                
-                let interpretation = "";
-                if (turnoverRatio > 8) {
-                    interpretation = "Отличная оборачиваемость! Эффективное управление запасами.";
-                } else if (turnoverRatio > 4) {
-                    interpretation = "Хорошая оборачиваемость. Запасы управляются эффективно.";
-                } else {
-                    interpretation = "Низкая оборачиваемость. Рекомендуется оптимизация управления запасами.";
-                }
-                
-                document.getElementById('turnoverRatio').textContent = `Коэффициент оборачиваемости: ${turnoverRatio}`;
-                document.getElementById('daysInventory').textContent = `Дней оборачиваемости: ${daysInventory}`;
-                document.getElementById('inventoryInterpretation').textContent = interpretation;
-                document.getElementById('inventoryResult').style.display = 'block';
-            }
+        // Функция для отображения результатов
+        function showResult(elementId) {
+            document.getElementById(elementId).style.display = 'block';
         }
 
-        // Калькулятор уровня сервиса
-        function calculateServiceLevel() {
-            const fulfilledOrders = parseFloat(document.getElementById('fulfilledOrders').value);
-            const totalOrders = parseFloat(document.getElementById('totalOrders').value);
-            
-            if (fulfilledOrders && totalOrders && totalOrders > 0) {
-                const serviceLevel = ((fulfilledOrders / totalOrders) * 100).toFixed(1);
-                
-                let interpretation = "";
-                if (serviceLevel >= 95) {
-                    interpretation = "Отличный уровень сервиса! Превышает отраслевые стандарты.";
-                } else if (serviceLevel >= 90) {
-                    interpretation = "Хороший уровень сервиса. Соответствует лучшим практикам.";
-                } else {
-                    interpretation = "Требуется улучшение уровня сервиса. Рекомендуется анализ процессов.";
-                }
-                
-                document.getElementById('serviceLevel').textContent = `Уровень сервиса: ${serviceLevel}%`;
-                document.getElementById('serviceInterpretation').textContent = interpretation;
-                document.getElementById('serviceResult').style.display = 'block';
-            }
-        }
-
-        // Калькулятор EOQ
+        // 1. Расчет EOQ (Экономичный размер заказа)
         function calculateEOQ() {
-            const annualDemand = parseFloat(document.getElementById('annualDemand').value);
-            const orderCost = parseFloat(document.getElementById('orderCost').value);
-            const holdingCost = parseFloat(document.getElementById('holdingCost').value);
-            
-            if (annualDemand && orderCost && holdingCost && holdingCost > 0) {
-                const eoq = Math.sqrt((2 * annualDemand * orderCost) / holdingCost).toFixed(0);
-                
-                document.getElementById('eoqValue').textContent = `Экономичный размер заказа: ${eoq} единиц`;
-                document.getElementById('eoqInterpretation').textContent = 
-                    `Рекомендуемый размер заказа для минимизации суммарных затрат на хранение и заказ.`;
-                document.getElementById('eoqResult').style.display = 'block';
+            const demand = parseFloat(document.getElementById('eoq-demand').value);
+            const orderCost = parseFloat(document.getElementById('eoq-order-cost').value);
+            const holdingCost = parseFloat(document.getElementById('eoq-holding-cost').value);
+
+            if (!demand || !orderCost || !holdingCost) {
+                alert('Пожалуйста, заполните все поля');
+                return;
             }
+
+            const eoq = Math.sqrt((2 * demand * orderCost) / holdingCost);
+            const roundedEOQ = Math.round(eoq);
+
+            document.getElementById('eoq-value').textContent = `${roundedEOQ} единиц`;
+            document.getElementById('eoq-explanation').textContent = 
+                `Экономичный размер заказа составляет ${roundedEOQ} единиц. Это оптимальное количество для заказа, которое минимизирует суммарные затраты на хранение и выполнение заказов.`;
+            
+            showResult('eoq-result');
         }
 
-        // Калькулятор TCO
-        function calculateTCO() {
-            const acquisitionCost = parseFloat(document.getElementById('acquisitionCost').value);
-            const operatingCost = parseFloat(document.getElementById('operatingCost').value);
-            const maintenanceCost = parseFloat(document.getElementById('maintenanceCost').value);
-            const lifespan = parseFloat(document.getElementById('lifespan').value);
-            
-            if (acquisitionCost && operatingCost && maintenanceCost && lifespan) {
-                const tco = acquisitionCost + (operatingCost + maintenanceCost) * lifespan;
-                
-                document.getElementById('tcoValue').textContent = `Общая стоимость владения: ${tco.toLocaleString()} руб`;
-                document.getElementById('tcoInterpretation').textContent = 
-                    `Полная стоимость с учетом всех затрат за ${lifespan} лет эксплуатации.`;
-                document.getElementById('tcoResult').style.display = 'block';
+        // 2. Расчет страхового запаса
+        function calculateSafetyStock() {
+            const maxDemand = parseFloat(document.getElementById('ss-max-demand').value);
+            const avgDemand = parseFloat(document.getElementById('ss-avg-demand').value);
+            const leadTime = parseFloat(document.getElementById('ss-lead-time').value);
+            const serviceLevel = parseFloat(document.getElementById('ss-service-level').value);
+
+            if (!maxDemand || !avgDemand || !leadTime || !serviceLevel) {
+                alert('Пожалуйста, заполните все поля');
+                return;
             }
+
+            // Упрощенный расчет страхового запаса
+            const demandVariability = maxDemand - avgDemand;
+            const zScore = serviceLevel / 100; // Упрощенный Z-коэффициент
+            const safetyStock = Math.round(demandVariability * leadTime * zScore);
+
+            document.getElementById('safety-stock-value').textContent = `${safetyStock} единиц`;
+            document.getElementById('safety-stock-explanation').textContent = 
+                `Рекомендуемый страховой запас составляет ${safetyStock} единиц. Это обеспечит уровень обслуживания ${serviceLevel}% при максимальном спросе ${maxDemand} единиц в день.`;
+            
+            showResult('safety-stock-result');
         }
 
-        // Калькулятор ROI
-        function calculateROI() {
-            const investmentGain = parseFloat(document.getElementById('investmentGain').value);
-            const investmentCost = parseFloat(document.getElementById('investmentCost').value);
-            
-            if (investmentGain && investmentCost && investmentCost > 0) {
-                const roi = ((investmentGain - investmentCost) / investmentCost * 100).toFixed(1);
-                
-                let interpretation = "";
-                if (roi > 100) {
-                    interpretation = "Отличная рентабельность инвестиций!";
-                } else if (roi > 20) {
-                    interpretation = "Хорошая рентабельность инвестиций.";
-                } else {
-                    interpretation = "Низкая рентабельность. Рекомендуется пересмотреть инвестицию.";
-                }
-                
-                document.getElementById('roiValue').textContent = `ROI: ${roi}%`;
-                document.getElementById('roiInterpretation').textContent = interpretation;
-                document.getElementById('roiResult').style.display = 'block';
+        // 3. Расчет оборачиваемости запасов
+        function calculateInventoryTurnover() {
+            const cogs = parseFloat(document.getElementById('turnover-cogs').value);
+            const avgInventory = parseFloat(document.getElementById('turnover-avg-inventory').value);
+
+            if (!cogs || !avgInventory) {
+                alert('Пожалуйста, заполните все поля');
+                return;
             }
+
+            const turnover = cogs / avgInventory;
+            const days = 365 / turnover;
+
+            const roundedTurnover = turnover.toFixed(2);
+            const roundedDays = Math.round(days);
+
+            document.getElementById('turnover-value').textContent = `${roundedTurnover} раз (${roundedDays} дней)`;
+            document.getElementById('turnover-explanation').textContent = 
+                `Оборачиваемость запасов составляет ${roundedTurnover} раз в год, что эквивалентно ${roundedDays} дням на один полный оборот. Высокая оборачиваемость указывает на эффективное управление запасами.`;
+            
+            showResult('turnover-result');
         }
 
-        // Калькулятор точки безубыточности
-        function calculateBreakEven() {
-            const fixedCosts = parseFloat(document.getElementById('fixedCosts').value);
-            const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value);
-            const variableCostPerUnit = parseFloat(document.getElementById('variableCostPerUnit').value);
-            
-            if (fixedCosts && pricePerUnit && variableCostPerUnit && pricePerUnit > variableCostPerUnit) {
-                const breakEvenUnits = fixedCosts / (pricePerUnit - variableCostPerUnit);
-                const breakEvenRevenue = breakEvenUnits * pricePerUnit;
-                
-                document.getElementById('breakEvenValue').textContent = `Точка безубыточности: ${breakEvenUnits.toFixed(0)} единиц (${breakEvenRevenue.toLocaleString()} руб)`;
-                document.getElementById('breakEvenInterpretation').textContent = 
-                    `Объем продаж, необходимый для покрытия всех затрат.`;
-                document.getElementById('breakEvenResult').style.display = 'block';
+        // 4. Расчет точки заказа
+        function calculateReorderPoint() {
+            const demand = parseFloat(document.getElementById('rop-demand').value);
+            const leadTime = parseFloat(document.getElementById('rop-lead-time').value);
+            const safetyStock = parseFloat(document.getElementById('rop-safety-stock').value);
+
+            if (!demand || !leadTime || !safetyStock) {
+                alert('Пожалуйста, заполните все поля');
+                return;
             }
+
+            const reorderPoint = Math.round((demand * leadTime) + safetyStock);
+
+            document.getElementById('rop-value').textContent = `${reorderPoint} единиц`;
+            document.getElementById('rop-explanation').textContent = 
+                `Точка заказа составляет ${reorderPoint} единиц. При достижении этого уровня запасов необходимо размещать новый заказ для поддержания бесперебойных поставок.`;
+            
+            showResult('rop-result');
         }
 
-        // Анимация появления элементов
+        // 5. Расчет уровня выполнения заказов
+        function calculateFillRate() {
+            const totalDemand = parseFloat(document.getElementById('fill-total-demand').value);
+            const stockouts = parseFloat(document.getElementById('fill-stockouts').value);
+
+            if (!totalDemand || !stockouts) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+
+            if (stockouts > totalDemand) {
+                alert('Количество неудовлетворенных заказов не может превышать общий спрос');
+                return;
+            }
+
+            const fillRate = ((totalDemand - stockouts) / totalDemand) * 100;
+            const roundedFillRate = fillRate.toFixed(1);
+
+            document.getElementById('fill-rate-value').textContent = `${roundedFillRate}%`;
+            document.getElementById('fill-rate-explanation').textContent = 
+                `Уровень выполнения заказов составляет ${roundedFillRate}%. Это означает, что ${roundedFillRate}% спроса было удовлетворено из имеющихся запасов.`;
+            
+            showResult('fill-rate-result');
+        }
+
+        // 6. Расчет стоимости перевозки
+        function calculateTransportCost() {
+            const distance = parseFloat(document.getElementById('transp-distance').value);
+            const weight = parseFloat(document.getElementById('transp-weight').value);
+            const rate = parseFloat(document.getElementById('transp-rate').value);
+            const additional = parseFloat(document.getElementById('transp-additional').value) || 0;
+
+            if (!distance || !weight || !rate) {
+                alert('Пожалуйста, заполните обязательные поля');
+                return;
+            }
+
+            const baseCost = distance * rate;
+            const weightFactor = weight > 1000 ? (weight / 1000) * 0.1 : 1; // Упрощенный коэффициент веса
+            const totalCost = Math.round((baseCost * weightFactor) + additional);
+
+            document.getElementById('transport-cost-value').textContent = `${totalCost} руб.`;
+            document.getElementById('transport-cost-explanation').textContent = 
+                `Общая стоимость перевозки составляет ${totalCost} руб. (базовая стоимость: ${Math.round(baseCost)} руб., дополнительные расходы: ${additional} руб.).`;
+            
+            showResult('transport-cost-result');
+        }
+
+        // Анимация появления калькуляторов
         document.addEventListener('DOMContentLoaded', function() {
+            const calculatorCards = document.querySelectorAll('.calculator-card');
+            
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -576,8 +621,7 @@
                 });
             }, observerOptions);
 
-            const cards = document.querySelectorAll('.calculator-card');
-            cards.forEach(card => {
+            calculatorCards.forEach(card => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(30px)';
                 card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
