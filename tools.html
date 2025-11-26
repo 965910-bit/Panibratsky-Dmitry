@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Инструменты и технологии - Дмитрий Панибратский</title>
+    <title>Инструменты - Дмитрий Панибратский</title>
     
     <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
@@ -11,7 +11,131 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Стили для страницы инструментов */
+        /* Стили для страницы инструментов в едином стиле */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .tool-title {
+            flex: 1;
+        }
+
+        .tool-title h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-color);
+        }
+
+        .tool-category {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .tool-description {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .tool-features {
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-features h4 {
+            margin-bottom: 0.8rem;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .tool-features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tool-features li {
+            padding: 0.3rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tool-features li:before {
+            content: "•";
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .tool-level {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .level-bar {
+            flex: 1;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0 1rem;
+        }
+
+        .level-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            border-radius: 3px;
+        }
+
+        .level-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-light);
+            min-width: 80px;
+            text-align: right;
+        }
+
         .tools-categories {
             display: flex;
             flex-wrap: wrap;
@@ -37,137 +161,6 @@
             border-color: var(--primary-color);
         }
 
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .tool-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .tool-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-            text-align: center;
-        }
-
-        .tool-card h3 {
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .tool-description {
-            flex-grow: 1;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .tool-features {
-            margin-top: auto;
-        }
-
-        .tool-features h4 {
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .tool-features ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .tool-features li {
-            padding: 0.3rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .tool-features li:before {
-            content: "•";
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .tool-level {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .level-badge {
-            background: var(--primary-light);
-            color: var(--primary-dark);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .tools-intro {
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-
-        /* Стили для диаграммы компетенций */
-        .competency-chart {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 3rem 0;
-            box-shadow: var(--shadow);
-        }
-
-        .competency-item {
-            margin-bottom: 1.5rem;
-        }
-
-        .competency-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-
-        .competency-bar {
-            height: 10px;
-            background: #e9ecef;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .competency-progress {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-            border-radius: 5px;
-            transition: width 1s ease-in-out;
-        }
-
         @media (max-width: 768px) {
             .tools-grid {
                 grid-template-columns: 1fr;
@@ -181,6 +174,21 @@
             .category-btn {
                 width: 100%;
                 text-align: center;
+            }
+            
+            .tool-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .tool-level {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .level-bar {
+                width: 100%;
+                margin: 0.5rem 0;
             }
         }
     </style>
@@ -245,197 +253,209 @@
             <h2>Инструменты и технологии</h2>
             
             <div class="tools-intro">
-                <p>В современном SCM эффективность определяется не только экспертизой, но и грамотным применением специализированных инструментов. В своей работе я использую комплексный подход, сочетая проверенные методологии с передовыми технологиями анализа и автоматизации.</p>
-            </div>
-
-            <!-- Диаграмма компетенций -->
-            <div class="competency-chart">
-                <h3>Области технологической экспертизы</h3>
-                <div class="competency-item">
-                    <div class="competency-header">
-                        <span>SCM системы и платформы</span>
-                        <span>95%</span>
-                    </div>
-                    <div class="competency-bar">
-                        <div class="competency-progress" style="width: 95%"></div>
-                    </div>
-                </div>
-                <div class="competency-item">
-                    <div class="competency-header">
-                        <span>Аналитика и визуализация данных</span>
-                        <span>90%</span>
-                    </div>
-                    <div class="competency-bar">
-                        <div class="competency-progress" style="width: 90%"></div>
-                    </div>
-                </div>
-                <div class="competency-item">
-                    <div class="competency-header">
-                        <span>ИИ и предиктивная аналитика</span>
-                        <span>85%</span>
-                    </div>
-                    <div class="competency-bar">
-                        <div class="competency-progress" style="width: 85%"></div>
-                    </div>
-                </div>
-                <div class="competency-item">
-                    <div class="competency-header">
-                        <span>Автоматизация процессов (RPA)</span>
-                        <span>80%</span>
-                    </div>
-                    <div class="competency-bar">
-                        <div class="competency-progress" style="width: 80%"></div>
-                    </div>
-                </div>
+                <p>Современное управление цепями поставок требует владения широким спектром инструментов и технологий. В своей практике я использую комплексный подход, сочетая проверенные ERP-системы с передовыми решениями в области аналитики и искусственного интеллекта.</p>
             </div>
 
             <!-- Фильтры по категориям -->
             <div class="tools-categories">
                 <button class="category-btn active" data-category="all">Все инструменты</button>
                 <button class="category-btn" data-category="analytics">Аналитика & BI</button>
-                <button class="category-btn" data-category="scm">SCM системы</button>
-                <button class="category-btn" data-category="ai">AI & Машинное обучение</button>
+                <button class="category-btn" data-category="erp">ERP системы</button>
+                <button class="category-btn" data-category="ai">AI & ML</button>
                 <button class="category-btn" data-category="automation">Автоматизация</button>
-                <button class="category-btn" data-category="methodology">Методологии</button>
             </div>
 
             <!-- Сетка инструментов -->
             <div class="tools-grid">
                 <!-- Power BI -->
                 <div class="tool-card" data-category="analytics">
-                    <div class="tool-icon">
-                        <i class="fas fa-chart-bar"></i>
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>Microsoft Power BI</h3>
+                            <span class="tool-category">BI & Аналитика</span>
+                        </div>
                     </div>
-                    <h3>Power BI</h3>
                     <div class="tool-description">
-                        <p>Платформа бизнес-аналитики для создания интерактивных дашбордов и отчетов. Использую для визуализации KPI цепей поставок и операционной аналитики.</p>
+                        <p>Создание интерактивных дашбордов и аналитических отчетов для мониторинга KPI цепей поставок, анализа эффективности логистики и визуализации операционных метрик.</p>
                     </div>
                     <div class="tool-features">
-                        <h4>Ключевые применения:</h4>
+                        <h4>Основные применения:</h4>
                         <ul>
                             <li>Дашборды эффективности SCM</li>
                             <li>Анализ отклонений в логистике</li>
                             <li>Мониторинг SLA поставщиков</li>
+                            <li>Визуализация складских метрик</li>
                         </ul>
                     </div>
                     <div class="tool-level">
-                        <span>Уровень владения:</span>
-                        <span class="level-badge">Эксперт</span>
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 95%"></div>
+                        </div>
+                        <span class="level-text">Эксперт</span>
                     </div>
                 </div>
 
                 <!-- SAP ERP -->
-                <div class="tool-card" data-category="scm">
-                    <div class="tool-icon">
-                        <i class="fas fa-database"></i>
+                <div class="tool-card" data-category="erp">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>SAP ERP</h3>
+                            <span class="tool-category">ERP системы</span>
+                        </div>
                     </div>
-                    <h3>SAP ERP</h3>
                     <div class="tool-description">
-                        <p>Интегрированная ERP-система для управления бизнес-процессами. Глубокая экспертиза в модулях MM, SD, PP и интегрированном планировании цепей поставок.</p>
+                        <p>Глубокая экспертиза в модулях MM (Materials Management), SD (Sales and Distribution), PP (Production Planning) и интегрированном планировании цепей поставок.</p>
                     </div>
                     <div class="tool-features">
-                        <h4>Ключевые применения:</h4>
+                        <h4>Основные применения:</h4>
                         <ul>
                             <li>Управление закупками и запасами</li>
                             <li>Планирование производства</li>
+                            <li>Управление продажами и дистрибуцией</li>
                             <li>Интеграция E2E процессов</li>
                         </ul>
                     </div>
                     <div class="tool-level">
-                        <span>Уровень владения:</span>
-                        <span class="level-badge">Продвинутый</span>
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 90%"></div>
+                        </div>
+                        <span class="level-text">Продвинутый</span>
                     </div>
                 </div>
 
-                <!-- Python для анализа данных -->
+                <!-- Python -->
                 <div class="tool-card" data-category="analytics ai">
-                    <div class="tool-icon">
-                        <i class="fab fa-python"></i>
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fab fa-python"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>Python & Data Science</h3>
+                            <span class="tool-category">AI & Аналитика</span>
+                        </div>
                     </div>
-                    <h3>Python & Data Science</h3>
                     <div class="tool-description">
-                        <p>Использую Python с библиотеками pandas, scikit-learn, statsmodels для анализа данных, построения прогнозных моделей и оптимизации цепей поставок.</p>
+                        <p>Разработка аналитических решений и ML-моделей с использованием библиотек pandas, scikit-learn, statsmodels для оптимизации цепей поставок и прогнозирования.</p>
                     </div>
                     <div class="tool-features">
-                        <h4>Ключевые применения:</h4>
+                        <h4>Основные применения:</h4>
                         <ul>
                             <li>Прогнозирование спроса</li>
                             <li>Анализ оптимальных уровней запасов</li>
                             <li>Оптимизация маршрутов доставки</li>
+                            <li>Предиктивная аналитика</li>
                         </ul>
                     </div>
                     <div class="tool-level">
-                        <span>Уровень владения:</span>
-                        <span class="level-badge">Продвинутый</span>
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 85%"></div>
+                        </div>
+                        <span class="level-text">Продвинутый</span>
                     </div>
                 </div>
 
                 <!-- Машинное обучение -->
                 <div class="tool-card" data-category="ai">
-                    <div class="tool-icon">
-                        <i class="fas fa-brain"></i>
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>Машинное обучение</h3>
+                            <span class="tool-category">AI & ML</span>
+                        </div>
                     </div>
-                    <h3>Машинное обучение</h3>
                     <div class="tool-description">
-                        <p>Применяю алгоритмы ML для решения задач классификации, кластеризации и регрессии в SCM. Создание предиктивных моделей для управления рисками и оптимизации.</p>
+                        <p>Применение алгоритмов машинного обучения для решения задач классификации, кластеризации и регрессии в управлении цепями поставок и логистике.</p>
                     </div>
                     <div class="tool-features">
-                        <h4>Ключевые применения:</h4>
+                        <h4>Основные применения:</h4>
                         <ul>
                             <li>Прогнозирование сбоев поставок</li>
-                            <li>Сегментация поставщиков</li>
-                            <li>Аномалии в закупочных ценах</li>
+                            <li>Сегментация поставщиков и клиентов</li>
+                            <li>Обнаружение аномалий в данных</li>
+                            <li>Оптимизация ценообразования</li>
                         </ul>
                     </div>
                     <div class="tool-level">
-                        <span>Уровень владения:</span>
-                        <span class="level-badge">Продвинутый</span>
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 80%"></div>
+                        </div>
+                        <span class="level-text">Продвинутый</span>
                     </div>
                 </div>
 
-                <!-- UiPath RPA -->
-                <div class="tool-card" data-category="automation">
-                    <div class="tool-icon">
-                        <i class="fas fa-robot"></i>
+                <!-- SQL -->
+                <div class="tool-card" data-category="analytics">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>SQL & Базы данных</h3>
+                            <span class="tool-category">Аналитика</span>
+                        </div>
                     </div>
-                    <h3>UiPath RPA</h3>
                     <div class="tool-description">
-                        <p>Платформа для роботизации бизнес-процессов. Автоматизация рутинных операций в SCM: обработка заказов, сверка данных, формирование отчетности.</p>
+                        <p>Работа с реляционными базами данных, написание сложных запросов для извлечения и анализа данных, оптимизация производительности запросов.</p>
                     </div>
                     <div class="tool-features">
-                        <h4>Ключевые применения:</h4>
+                        <h4>Основные применения:</h4>
+                        <ul>
+                            <li>Извлечение данных для отчетности</li>
+                            <li>Анализ эффективности процессов</li>
+                            <li>Интеграция данных из различных источников</li>
+                            <li>Создание витрин данных</li>
+                        </ul>
+                    </div>
+                    <div class="tool-level">
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 88%"></div>
+                        </div>
+                        <span class="level-text">Продвинутый</span>
+                    </div>
+                </div>
+
+                <!-- UiPath -->
+                <div class="tool-card" data-category="automation">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>UiPath RPA</h3>
+                            <span class="tool-category">Автоматизация</span>
+                        </div>
+                    </div>
+                    <div class="tool-description">
+                        <p>Автоматизация рутинных бизнес-процессов с помощью роботизации. Создание RPA-решений для оптимизации операционных задач в SCM.</p>
+                    </div>
+                    <div class="tool-features">
+                        <h4>Основные применения:</h4>
                         <ul>
                             <li>Автоматизация отчетности</li>
                             <li>Обработка заказов поставщиков</li>
                             <li>Сверка транспортных накладных</li>
+                            <li>Миграция данных между системами</li>
                         </ul>
                     </div>
                     <div class="tool-level">
-                        <span>Уровень владения:</span>
-                        <span class="level-badge">Средний</span>
-                    </div>
-                </div>
-
-                <!-- Методологии -->
-                <div class="tool-card" data-category="methodology">
-                    <div class="tool-icon">
-                        <i class="fas fa-project-diagram"></i>
-                    </div>
-                    <h3>SCRUM & Agile</h3>
-                    <div class="tool-description">
-                        <p>Гибкие методологии управления проектами цифровой трансформации. Использую для внедрения SCM-систем и разработки аналитических решений.</p>
-                    </div>
-                    <div class="tool-features">
-                        <h4>Ключевые применения:</h4>
-                        <ul>
-                            <li>Управление IT-проектами SCM</li>
-                            <li>Внедрение аналитических систем</li>
-                            <li>Разработка цифровых продуктов</li>
-                        </ul>
-                    </div>
-                    <div class="tool-level">
-                        <span>Уровень владения:</span>
-                        <span class="level-badge">Эксперт</span>
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 75%"></div>
+                        </div>
+                        <span class="level-text">Средний</span>
                     </div>
                 </div>
             </div>
@@ -467,7 +487,7 @@
                     // Показываем/скрываем карточки в зависимости от категории
                     toolCards.forEach(card => {
                         if (category === 'all' || card.getAttribute('data-category').includes(category)) {
-                            card.style.display = 'flex';
+                            card.style.display = 'block';
                         } else {
                             card.style.display = 'none';
                         }
@@ -486,33 +506,17 @@
                     if (entry.isIntersecting) {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
-                        
-                        // Анимация для прогресс-баров
-                        if (entry.target.classList.contains('competency-progress')) {
-                            const width = entry.target.style.width;
-                            entry.target.style.width = '0';
-                            setTimeout(() => {
-                                entry.target.style.width = width;
-                            }, 300);
-                        }
                     }
                 });
             }, observerOptions);
 
             // Наблюдаем за карточками инструментов
-            const animatedElements = document.querySelectorAll('.tool-card, .competency-item');
+            const animatedElements = document.querySelectorAll('.tool-card');
             animatedElements.forEach(element => {
                 element.style.opacity = '0';
                 element.style.transform = 'translateY(20px)';
                 element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(element);
-            });
-
-            // Наблюдаем за прогресс-барами
-            const progressBars = document.querySelectorAll('.competency-progress');
-            progressBars.forEach(bar => {
-                bar.style.transition = 'width 1.5s ease-in-out';
-                observer.observe(bar);
             });
 
             // Плавная прокрутка для навигации
