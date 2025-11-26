@@ -66,36 +66,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Contact Section */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        .contact-icon {
-            font-size: 1.5rem;
-            width: 40px;
-            text-align: center;
-        }
-
         /* Two Photos Header */
         .header-photos {
             display: flex;
@@ -131,6 +101,76 @@
             text-align: center;
         }
 
+        /* Welcome Section Styles */
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .audience-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .audience-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            color: var(--text-color);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .audience-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .welcome-message {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--primary-color);
+            display: none;
+        }
+
+        .welcome-message.active {
+            display: block;
+        }
+
+        .quick-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: white;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .quick-nav a:first-child {
+            background: var(--primary-color);
+            color: white;
+        }
+
         @media (max-width: 768px) {
             .about-grid {
                 grid-template-columns: 1fr;
@@ -149,6 +189,11 @@
             .photo-right-container {
                 width: 120px;
                 height: 120px;
+            }
+
+            .welcome-message > div {
+                grid-template-columns: 1fr !important;
+                text-align: center;
             }
         }
     </style>
@@ -207,6 +252,180 @@
         </div>
     </nav>
 
+    <!-- Welcome Section -->
+    <section id="welcome" class="section" style="background: linear-gradient(135deg, var(--bg-light) 0%, #f8fafc 100%); padding: 3rem 0;">
+        <div class="container">
+            <div class="welcome-header">
+                <h1 style="font-size: 2.5rem; color: var(--text-color); margin-bottom: 1rem;">Добро пожаловать на мою профессиональную страницу!</h1>
+                <p style="font-size: 1.2rem; color: var(--text-light); max-width: 800px; margin: 0 auto;">
+                    Здесь вы найдете комплексную информацию о моем опыте в управлении цепями поставок и цифровой трансформации бизнеса
+                </p>
+            </div>
+
+            <!-- Audience Selector -->
+            <div class="audience-selector">
+                <button class="audience-btn active" data-audience="all">👋 Всем</button>
+                <button class="audience-btn" data-audience="recruiters">💼 Рекрутерам</button>
+                <button class="audience-btn" data-audience="colleagues">🤝 Коллегам</button>
+                <button class="audience-btn" data-audience="partners">🚀 Партнерам</button>
+            </div>
+
+            <!-- Welcome Messages -->
+            <div class="welcome-messages">
+                <!-- Default Welcome -->
+                <div class="welcome-message active" data-audience="all">
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: center;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">🎯</div>
+                            <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">Дмитрий Панибратский</h3>
+                            <p style="color: var(--text-light); font-size: 0.9rem;">Эксперт в управлении цепями поставок</p>
+                        </div>
+                        <div>
+                            <p style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.5rem;">
+                                <strong>15+ лет преобразую бизнес-процессы через цифровую трансформацию SCM.</strong> 
+                                Специализируюсь на внедрении AI-решений, создании цифровых двойников и оптимизации end-to-end цепей поставок.
+                            </p>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="color: var(--primary-color);">✓</span>
+                                    <span>Цифровая трансформация</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="color: var(--primary-color);">✓</span>
+                                    <span>AI & Аналитика</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="color: var(--primary-color);">✓</span>
+                                    <span>Оптимизация процессов</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="color: var(--primary-color);">✓</span>
+                                    <span>Управление командами</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- For Recruiters -->
+                <div class="welcome-message" data-audience="recruiters">
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: center;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">💼</div>
+                            <h3 style="color: #0077B5; margin-bottom: 0.5rem;">Для рекрутеров</h3>
+                            <p style="color: var(--text-light); font-size: 0.9rem;">Ключевые компетенции и достижения</p>
+                        </div>
+                        <div>
+                            <p style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.5rem;">
+                                <strong>Ищу возможности в компаниях, готовых к цифровой трансформации.</strong> 
+                                Принося measurable результаты через внедрение современных технологий и оптимизацию процессов.
+                            </p>
+                            
+                            <div style="background: #f0f7ff; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                                <h4 style="color: #0077B5; margin-bottom: 1rem;">🎯 Ключевые достижения:</h4>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                                    <div>
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #0077B5;">143%</div>
+                                        <div style="font-size: 0.9rem;">Рост операционной эффективности</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #0077B5;">25%</div>
+                                        <div style="font-size: 0.9rem;">Снижение логистических затрат</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #0077B5;">87k+</div>
+                                        <div style="font-size: 0.9rem;">SKU под управлением</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #0077B5;">15+</div>
+                                        <div style="font-size: 0.9rem;">Успешных проектов</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p style="font-size: 0.95rem; color: var(--text-light); font-style: italic;">
+                                Открыт к предложениям на позиции: Коммерческий директор, Директор по SCM, Руководитель цифровой трансформации
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- For Colleagues -->
+                <div class="welcome-message" data-audience="colleagues">
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: center;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">🤝</div>
+                            <h3 style="color: #7c3aed; margin-bottom: 0.5rem;">Для коллег</h3>
+                            <p style="color: var(--text-light); font-size: 0.9rem;">Обмен опытом и сотрудничество</p>
+                        </div>
+                        <div>
+                            <p style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.5rem;">
+                                <strong>Рад приветствовать профессионалов индустрии!</strong> 
+                                Делюсь практическим опытом в цифровой трансформации SCM и создании эффективных бизнес-решений.
+                            </p>
+                            
+                            <div style="margin-bottom: 1.5rem;">
+                                <h4 style="color: #7c3aed; margin-bottom: 1rem;">🔧 Экспертиза для обсуждения:</h4>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                    <span style="background: #f3f4f6; padding: 0.4rem 0.8rem; border-radius: 12px; font-size: 0.9rem;">SAP ERP & SCM</span>
+                                    <span style="background: #f3f4f6; padding: 0.4rem 0.8rem; border-radius: 12px; font-size: 0.9rem;">Python & Data Science</span>
+                                    <span style="background: #f3f4f6; padding: 0.4rem 0.8rem; border-radius: 12px; font-size: 0.9rem;">AnyLogic & Digital Twins</span>
+                                    <span style="background: #f3f4f6; padding: 0.4rem 0.8rem; border-radius: 12px; font-size: 0.9rem;">Lean Six Sigma</span>
+                                    <span style="background: #f3f4f6; padding: 0.4rem 0.8rem; border-radius: 12px; font-size: 0.9rem;">AI & Machine Learning</span>
+                                </div>
+                            </div>
+
+                            <p style="font-size: 0.95rem; color: var(--text-light);">
+                                Открыт к обмену опытом, совместным исследованиям и обсуждению трендов в SCM и цифровизации. 
+                                Всегда рад профессиональному диалогу!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- For Partners -->
+                <div class="welcome-message" data-audience="partners">
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: center;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">🚀</div>
+                            <h3 style="color: #06b6d4; margin-bottom: 0.5rem;">Для партнеров</h3>
+                            <p style="color: var(--text-light); font-size: 0.9rem;">Создание ценности вместе</p>
+                        </div>
+                        <div>
+                            <p style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.5rem;">
+                                <strong>Создаем эффективные бизнес-решения через синергию экспертиз.</strong> 
+                                Мои компетенции в цифровой трансформации могут усилить ваши проекты и принести measurable результаты.
+                            </p>
+                            
+                            <div style="margin-bottom: 1.5rem;">
+                                <h4 style="color: #06b6d4; margin-bottom: 1rem;">💎 Что я могу предложить:</h4>
+                                <ul style="color: var(--text-light); line-height: 1.6;">
+                                    <li>Консалтинг по цифровой трансформации SCM</li>
+                                    <li>Внедрение AI-решений для оптимизации цепей поставок</li>
+                                    <li>Создание цифровых двойников бизнес-процессов</li>
+                                    <li>Оптимизация операционных затрат и повышение эффективности</li>
+                                    <li>Разработка и внедрение KPI-систем</li>
+                                </ul>
+                            </div>
+
+                            <p style="font-size: 0.95rem; color: var(--text-light); font-style: italic;">
+                                Готов обсудить форматы сотрудничества: проектная работа, консалтинг, стратегическое партнерство
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation -->
+            <div class="quick-nav">
+                <a href="#about">📊 Мой профиль</a>
+                <a href="experience.html">💼 Опыт работы</a>
+                <a href="projects.html">🎯 Проекты</a>
+                <a href="contact.html">📞 Контакты</a>
+            </div>
+        </div>
+    </section>
+
     <!-- Main Content -->
     <main class="container">
         <!-- About Section -->
@@ -214,26 +433,135 @@
             <h2>Профессиональный профиль</h2>
             <div class="about-grid">
                 <div class="about-text">
-                    <p><strong>Руководитель с 13-летним опытом в построении и оптимизации end-to-end цепей поставок.</strong> Специализируюсь на цифровой трансформации SCM-процессов с применением технологий искусственного интеллекта и предиктивной аналитики.</p>
+                    <p><strong>Эксперт по управлению цепями поставок с 15+ летним опытом цифровой трансформации бизнеса.</strong> Специализируюсь на внедрении AI-решений, создании цифровых двойников и оптимизации end-to-end SCM процессов для международных компаний.</p>
                     
                     <div class="personal-info">
                         <div class="info-item">
-                            <strong>📍 Локация:</strong>
-                            <span>Сургут / Санкт-Петербург</span>
+                            <strong>🎯 Ключевая экспертиза:</strong>
+                            <span>Цифровая трансформация SCM | AI & Предиктивная аналитика | Оптимизация бизнес-процессов | Lean Six Sigma</span>
                         </div>
                         <div class="info-item">
-                            <strong>📚 Квалификация:</strong>
-                            <span>Коммерческий директор (CCO), MBA Логистика и управление цепями поставок</span>
+                            <strong>📊 Технологический стек:</strong>
+                            <span>SAP ERP | Tableau | Python & Data Science | AnyLogic | SQL | Машинное обучение | Цифровые двойники</span>
                         </div>
                         <div class="info-item">
-                            <strong>🎯 Ключевые компетенции:</strong>
-                            <span>Цифровая трансформация SCM, AI-аналитика, оптимизация бизнес-процессов</span>
+                            <strong>🏆 Ключевые достижения:</strong>
+                            <span>Рост операционной эффективности на 143% | Снижение логистических затрат на 25% | Управление 87k+ SKU | Внедрение WMS/TMS систем</span>
                         </div>
+                    </div>
+
+                    <!-- Профессиональные компетенции -->
+                    <div style="margin-top: 2rem;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">💼 Профессиональные компетенции</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                            <div style="padding: 1rem; background: var(--card-bg); border-radius: 8px; border-left: 3px solid var(--primary-color);">
+                                <strong>SCM & Логистика</strong>
+                                <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">
+                                    • End-to-end управление цепями поставок<br>
+                                    • Стратегическое планирование SCM<br>
+                                    • Управление запасами и складами<br>
+                                    • Транспортная логистика<br>
+                                    • Таможенное оформление
+                                </div>
+                            </div>
+                            <div style="padding: 1rem; background: var(--card-bg); border-radius: 8px; border-left: 3px solid var(--secondary-color);">
+                                <strong>Цифровая трансформация</strong>
+                                <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">
+                                    • Внедрение AI и ML решений<br>
+                                    • Создание цифровых двойников<br>
+                                    • Автоматизация процессов (RPA)<br>
+                                    • BI системы и дашборды<br>
+                                    • ERP системы (SAP)
+                                </div>
+                            </div>
+                            <div style="padding: 1rem; background: var(--card-bg); border-radius: 8px; border-left: 3px solid var(--accent-color);">
+                                <strong>Аналитика и оптимизация</strong>
+                                <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">
+                                    • Предиктивная аналитика<br>
+                                    • Data Science (Python, SQL)<br>
+                                    • Lean Six Sigma<br>
+                                    • Финансовое моделирование<br>
+                                    • KPI разработка и мониторинг
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Лидерские компетенции -->
+                    <div style="margin-top: 2rem;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🌟 Лидерские компетенции</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div style="text-align: center; padding: 1rem; background: var(--primary-light); border-radius: 8px;">
+                                <div style="font-size: 1.5rem;">👥</div>
+                                <strong>Управление командами</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Руководство до 15+ специалистов</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: var(--primary-light); border-radius: 8px;">
+                                <div style="font-size: 1.5rem;">🎯</div>
+                                <strong>Стратегическое мышление</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Долгосрочное планирование</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: var(--primary-light); border-radius: 8px;">
+                                <div style="font-size: 1.5rem;">🔄</div>
+                                <strong>Управление изменениями</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Трансформация процессов</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: var(--primary-light); border-radius: 8px;">
+                                <div style="font-size: 1.5rem;">💬</div>
+                                <strong>Коммуникация</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Кросс-функциональное взаимодействие</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: var(--primary-light); border-radius: 8px;">
+                                <div style="font-size: 1.5rem;">📈</div>
+                                <strong>Принятие решений</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Data-driven подход</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: var(--primary-light); border-radius: 8px;">
+                                <div style="font-size: 1.5rem;">⚡</div>
+                                <strong>Решение проблем</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Критическое мышление</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Профессиональные ориентиры и увлечения -->
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, var(--primary-light) 0%, #f0f9ff 100%); border-radius: 12px; border: 2px solid var(--primary-color);">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">📚 Профессиональные ориентиры и увлечения</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎭</div>
+                                <strong>Ицхак Адизес</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Методология управления изменениями и корпоративная трансформация</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+                                <strong>Максим Батырев</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Комбат-менеджмент и эффективность бизнес-процессов</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+                                <strong>Игорь Манн</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Маркетинг, продажи и практический подход к бизнесу</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                                <strong>Евгений Горянский</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Системное мышление и управление по целям</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
+                                <strong>Владимир Сидоренко</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Performia - оценка и развитие персонала</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light); text-align: center; font-style: italic;">
+                            Постоянное обучение и применение лучших практик от ведущих бизнес-экспертов
+                        </p>
                     </div>
                 </div>
                 <div class="about-highlights">
                     <div class="highlight-card">
-                        <h3>13+ лет</h3>
+                        <h3>15+ лет</h3>
                         <p>в управлении цепями поставок</p>
                     </div>
                     <div class="highlight-card">
@@ -244,35 +572,24 @@
                         <h3>143%</h3>
                         <p>рост операционной эффективности</p>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="section">
-            <h2>📞 Контакты</h2>
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">📱</div>
-                        <div>
-                            <strong>Телефон:</strong>
-                            <span>+7-982-581-07-87</span>
-                        </div>
+                    <div class="highlight-card">
+                        <h3>25%</h3>
+                        <p>снижение логистических затрат</p>
                     </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">✉️</div>
-                        <div>
-                            <strong>Email:</strong>
-                            <a href="mailto:dmitriy.panibratskiy@yandex.ru">dmitriy.panibratskiy@yandex.ru</a>
-                        </div>
+                    <div class="highlight-card">
+                        <h3>15+</h3>
+                        <p>успешных цифровых проектов</div>
+                    <div class="highlight-card">
+                        <h3>6+</h3>
+                        <p>внедренных AI-решений</p>
                     </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📍</div>
-                        <div>
-                            <strong>Локация:</strong>
-                            <span>Сургут / Санкт-Петербург</span>
-                        </div>
+                    <div class="highlight-card">
+                        <h3>5+</h3>
+                        <p>бизнес-методологий в работе</p>
+                    </div>
+                    <div class="highlight-card">
+                        <h3>100%</h3>
+                        <p>проектов в срок и бюджет</p>
                     </div>
                 </div>
             </div>
@@ -287,57 +604,68 @@
 
     <!-- JavaScript -->
     <script>
-        // Плавная прокрутка для навигации
+        // Audience Selection
         document.addEventListener('DOMContentLoaded', function() {
-            // Плавная прокрутка для якорных ссылок
-            const anchorLinks = document.querySelectorAll('a[href^="#"]');
-            
-            anchorLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+            const audienceButtons = document.querySelectorAll('.audience-btn');
+            const welcomeMessages = document.querySelectorAll('.welcome-message');
+
+            audienceButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    audienceButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Hide all messages
+                    welcomeMessages.forEach(message => {
+                        message.classList.remove('active');
+                    });
+                    
+                    // Show selected message
+                    const audience = this.getAttribute('data-audience');
+                    const targetMessage = document.querySelector(`.welcome-message[data-audience="${audience}"]`);
+                    if (targetMessage) {
+                        targetMessage.classList.add('active');
+                    }
+                });
+            });
+
+            // Quick nav hover effects
+            const quickNavLinks = document.querySelectorAll('.quick-nav a');
+            quickNavLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    if (!this.style.background.includes('var(--primary-color)')) {
+                        this.style.background = 'var(--primary-light)';
+                        this.style.borderColor = 'var(--primary-color)';
+                    }
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    if (!this.style.background.includes('var(--primary-color)')) {
+                        this.style.background = 'white';
+                        this.style.borderColor = 'var(--border-color)';
+                    }
+                });
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
                     e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-                        
-                        window.scrollTo({
-                            top: offsetTop,
-                            behavior: 'smooth'
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
                         });
                     }
                 });
             });
 
-            // Добавляем активный класс к ссылкам навигации при скролле
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-            
-            function highlightNavigation() {
-                let current = '';
-                
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.clientHeight;
-                    
-                    if (window.scrollY >= sectionTop - 100) {
-                        current = section.getAttribute('id');
-                    }
-                });
-                
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${current}`) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-            
-            window.addEventListener('scroll', highlightNavigation);
-            
-            // Анимация появления элементов при скролле
+            // Animation for elements on scroll
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -352,7 +680,7 @@
                 });
             }, observerOptions);
 
-            // Наблюдаем за карточками и другими элементами
+            // Animate highlight cards and info items
             const animatedElements = document.querySelectorAll('.highlight-card, .info-item');
             animatedElements.forEach(element => {
                 element.style.opacity = '0';
@@ -360,28 +688,6 @@
                 element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(element);
             });
-
-            // Плавное появление изображений
-            const images = document.querySelectorAll('img');
-            images.forEach(img => {
-                img.addEventListener('load', function() {
-                    this.style.opacity = '1';
-                });
-                
-                img.style.opacity = '0';
-                img.style.transition = 'opacity 0.3s ease';
-            });
-        });
-
-        // Добавляем класс активной ссылке при загрузке страницы
-        window.addEventListener('load', function() {
-            const currentSection = window.location.hash;
-            if (currentSection) {
-                const activeLink = document.querySelector(`.nav-links a[href="${currentSection}"]`);
-                if (activeLink) {
-                    activeLink.classList.add('active');
-                }
-            }
         });
     </script>
 </body>
