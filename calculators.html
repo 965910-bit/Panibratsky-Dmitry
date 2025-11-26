@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* ===== ОСНОВНЫЕ СТИЛИ СТРАНИЦЫ ===== */
         .page-header {
             text-align: center;
             margin: 3rem 0;
@@ -20,7 +21,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: #2c5aa0;
+            background: var(--primary-color);
             color: white;
             padding: 0.8rem 1.5rem;
             border-radius: 8px;
@@ -31,50 +32,64 @@
         }
 
         .back-to-main:hover {
-            background: #1e3d72;
+            background: var(--primary-dark);
             transform: translateY(-2px);
         }
 
+        /* ===== СЕТКА КАЛЬКУЛЯТОРОВ ===== */
         .calculators-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
         .calculator-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e1e5e9;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
             transition: all 0.3s ease;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
         .calculator-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .calculator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
         }
 
         .calculator-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
-            color: #2c5aa0;
+            color: var(--primary-color);
         }
 
         .calculator-card h3 {
-            color: #2c5aa0;
+            color: var(--primary-color);
             margin-bottom: 1rem;
             font-size: 1.3rem;
         }
 
         .calculator-card p {
-            color: #666;
+            color: var(--text-light);
             margin-bottom: 1.5rem;
             line-height: 1.6;
         }
 
+        /* ===== ФОРМЫ И ИНПУТЫ ===== */
         .calculator-form {
             text-align: left;
         }
@@ -87,27 +102,35 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: #333;
+            color: var(--text-color);
         }
 
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 0.8rem;
-            border: 2px solid #e1e5e9;
+            border: 2px solid var(--border-color);
             border-radius: 6px;
             font-size: 1rem;
             transition: all 0.3s ease;
+            background: white;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #2c5aa0;
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
         }
 
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* ===== КНОПКИ ===== */
         .calculate-btn {
             width: 100%;
-            background: #2c5aa0;
+            background: var(--primary-color);
             color: white;
             border: none;
             padding: 1rem;
@@ -120,43 +143,145 @@
         }
 
         .calculate-btn:hover {
-            background: #1e3d72;
+            background: var(--primary-dark);
             transform: translateY(-2px);
         }
 
+        .reset-btn {
+            width: 100%;
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .reset-btn:hover {
+            background: #5a6268;
+        }
+
+        /* ===== РЕЗУЛЬТАТЫ ===== */
         .result {
             margin-top: 1.5rem;
-            padding: 1rem;
+            padding: 1.5rem;
             background: #f8f9fa;
-            border-radius: 6px;
-            border-left: 4px solid #2c5aa0;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
             display: none;
         }
 
         .result h4 {
             margin: 0 0 0.5rem 0;
-            color: #2c5aa0;
+            color: var(--primary-color);
         }
 
         .result-value {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #1e3d72;
+            color: var(--primary-dark);
+            margin: 0.5rem 0;
         }
 
-        .coming-soon {
-            text-align: center;
-            padding: 3rem;
-            background: #f8f9fa;
-            border-radius: 12px;
-            border: 2px dashed #e1e5e9;
+        .result-details {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.4;
         }
 
-        .coming-soon .calculator-icon {
-            font-size: 4rem;
+        .result-metric {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.3rem 0;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        /* ===== ВКЛАДКИ ДЛЯ СЛОЖНЫХ КАЛЬКУЛЯТОРОВ ===== */
+        .calculator-tabs {
+            display: flex;
+            gap: 0.5rem;
             margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
         }
 
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== КАТЕГОРИИ КАЛЬКУЛЯТОРОВ ===== */
+        .calculators-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+            justify-content: center;
+        }
+
+        .category-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active,
+        .category-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* ===== ИНФОРМАЦИОННЫЕ БЛОКИ ===== */
+        .info-box {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .formula-box {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        /* ===== АДАПТИВНОСТЬ ===== */
         @media (max-width: 768px) {
             .calculators-grid {
                 grid-template-columns: 1fr;
@@ -165,6 +290,53 @@
             .calculator-card {
                 padding: 1.5rem;
             }
+            
+            .calculator-tabs {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculators-categories {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* ===== СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ ОТДЕЛЬНЫХ КАЛЬКУЛЯТОРОВ ===== */
+        .risk-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .risk-low { background: #28a745; }
+        .risk-medium { background: #ffc107; }
+        .risk-high { background: #dc3545; }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            border-radius: 4px;
+            transition: width 0.5s ease;
         }
     </style>
 </head>
@@ -177,20 +349,27 @@
                     <!-- Левое фото -->
                     <div class="header-photo-left">
                         <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность">
+                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
                         </div>
                     </div>
                     
                     <!-- Центральный текст -->
                     <div class="header-text-center">
                         <h1>Дмитрий Панибратский</h1>
-                        <p class="header-subtitle">SCM Калькуляторы и инструменты</p>
+                        <p class="header-subtitle">SCM Калькуляторы и аналитические инструменты</p>
+                        
+                        <div class="contact-badges">
+                            <span class="badge">Расчеты SCM</span>
+                            <span class="badge">Оптимизация затрат</span>
+                            <span class="badge">Анализ эффективности</span>
+                            <span class="badge">Финансовые модели</span>
+                        </div>
                     </div>
                     
                     <!-- Правое фото -->
                     <div class="header-photo-right">
                         <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок">
+                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
                         </div>
                     </div>
                 </div>
@@ -203,10 +382,11 @@
         <div class="container">
             <ul class="nav-links">
                 <li><a href="index.html">Главная</a></li>
-                <li><a href="index.html#about">Профиль</a></li>
-                <li><a href="index.html#expertise">Экспертиза</a></li>
-                <li><a href="index.html#projects">Проекты</a></li>
+                <li><a href="expertise.html">Экспертиза</a></li>
+                <li><a href="experience.html">Опыт</a></li>
+                <li><a href="projects.html">Проекты</a></li>
                 <li><a href="tools.html">Инструменты</a></li>
+                <li><a href="calculators.html" class="active">Калькуляторы</a></li>
                 <li><a href="certificates.html">Сертификаты</a></li>
                 <li><a href="wiki.html">Wiki</a></li>
                 <li><a href="index.html#contact">Контакты</a></li>
@@ -222,13 +402,25 @@
                 Назад к инструментам
             </a>
             <h1><i class="fas fa-calculator"></i> SCM Калькуляторы</h1>
-            <p>Практические калькуляторы для анализа и оптимизации цепей поставок</p>
+            <p>Комплексные аналитические инструменты для расчета и оптимизации ключевых показателей цепей поставок</p>
+        </div>
+
+        <!-- Категории калькуляторов -->
+        <div class="calculators-categories">
+            <button class="category-btn active" data-category="all">Все калькуляторы</button>
+            <button class="category-btn" data-category="financial">Финансовые</button>
+            <button class="category-btn" data-category="inventory">Управление запасами</button>
+            <button class="category-btn" data-category="logistics">Логистика</button>
+            <button class="category-btn" data-category="optimization">Оптимизация</button>
+            <button class="category-btn" data-category="analytics">Аналитика</button>
         </div>
 
         <!-- Calculators Grid -->
         <div class="calculators-grid">
+            <!-- ===== СУЩЕСТВУЮЩИЕ КАЛЬКУЛЯТОРЫ ===== -->
+
             <!-- Калькулятор ROI -->
-            <div class="calculator-card">
+            <div class="calculator-card" data-category="financial">
                 <div class="calculator-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
@@ -244,20 +436,40 @@
                         <label for="netProfit">Чистая прибыль (руб/год):</label>
                         <input type="number" id="netProfit" placeholder="300000">
                     </div>
+                    <div class="form-group">
+                        <label for="timePeriod">Период (лет):</label>
+                        <input type="number" id="timePeriod" placeholder="3" value="1">
+                    </div>
                     <button class="calculate-btn" onclick="calculateROI()">
                         <i class="fas fa-calculator"></i> Рассчитать ROI
                     </button>
+                    <button class="reset-btn" onclick="resetROI()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
                     
                     <div class="result" id="roiResult">
-                        <h4>Результат:</h4>
+                        <h4>Результат ROI:</h4>
                         <div class="result-value" id="roiValue">0%</div>
-                        <p>ROI показывает эффективность инвестиций</p>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Годовой ROI:</span>
+                                <span id="annualROI">0%</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Окупаемость:</span>
+                                <span id="paybackPeriod">0 лет</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Чистая прибыль за период:</span>
+                                <span id="totalProfit">0 руб</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Калькулятор оборачиваемости запасов -->
-            <div class="calculator-card">
+            <div class="calculator-card" data-category="inventory analytics">
                 <div class="calculator-icon">
                     <i class="fas fa-boxes"></i>
                 </div>
@@ -273,20 +485,40 @@
                         <label for="averageInventory">Средний запас (руб):</label>
                         <input type="number" id="averageInventory" placeholder="1000000">
                     </div>
+                    <div class="form-group">
+                        <label for="period">Период (дней):</label>
+                        <input type="number" id="period" placeholder="365" value="365">
+                    </div>
                     <button class="calculate-btn" onclick="calculateInventoryTurnover()">
                         <i class="fas fa-calculator"></i> Рассчитать
                     </button>
+                    <button class="reset-btn" onclick="resetInventory()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
                     
                     <div class="result" id="inventoryResult">
-                        <h4>Результат:</h4>
+                        <h4>Результаты оборачиваемости:</h4>
                         <div class="result-value" id="inventoryValue">0</div>
-                        <p>Оборотов в год</p>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Оборачиваемость в год:</span>
+                                <span id="turnoverYear">0 раз</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Дней на один оборот:</span>
+                                <span id="daysPerTurnover">0 дней</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Уровень запасов:</span>
+                                <span id="inventoryLevel">0 дней</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Калькулятор уровня обслуживания -->
-            <div class="calculator-card">
+            <div class="calculator-card" data-category="analytics optimization">
                 <div class="calculator-icon">
                     <i class="fas fa-truck-loading"></i>
                 </div>
@@ -302,33 +534,568 @@
                         <label for="fulfilledOrders">Выполнено заказов:</label>
                         <input type="number" id="fulfilledOrders" placeholder="950">
                     </div>
+                    <div class="form-group">
+                        <label for="onTimeOrders">Вовремя выполнено:</label>
+                        <input type="number" id="onTimeOrders" placeholder="900">
+                    </div>
                     <button class="calculate-btn" onclick="calculateServiceLevel()">
                         <i class="fas fa-calculator"></i> Рассчитать
                     </button>
+                    <button class="reset-btn" onclick="resetService()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
                     
                     <div class="result" id="serviceResult">
-                        <h4>Результат:</h4>
+                        <h4>Показатели сервиса:</h4>
                         <div class="result-value" id="serviceValue">0%</div>
-                        <p>Уровень обслуживания</p>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Уровень выполнения:</span>
+                                <span id="fulfillmentRate">0%</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Уровень своевременности:</span>
+                                <span id="onTimeRate">0%</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Невыполненные заказы:</span>
+                                <span id="failedOrders">0</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Запланированные калькуляторы -->
-            <div class="calculator-card coming-soon">
+            <!-- ===== НОВЫЕ КАЛЬКУЛЯТОРЫ ===== -->
+
+            <!-- Калькулятор EOQ (Экономичный размер заказа) -->
+            <div class="calculator-card" data-category="inventory optimization">
                 <div class="calculator-icon">
-                    <i class="fas fa-tools"></i>
+                    <i class="fas fa-shopping-cart"></i>
                 </div>
-                <h3>Дополнительные калькуляторы</h3>
-                <p>Скоро появятся новые инструменты для расчета:</p>
-                <ul style="text-align: left; color: #666; margin-top: 1rem;">
-                    <li>NPV (Чистая приведенная стоимость)</li>
-                    <li>Точка безубыточности</li>
-                    <li>Экономичный размер заказа</li>
-                    <li>Производительность склада</li>
-                    <li>Транспортные расходы</li>
-                </ul>
+                <h3>Экономичный размер заказа (EOQ)</h3>
+                <p>Расчет оптимального размера заказа для минимизации затрат</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="annualDemand">Годовой спрос (ед.):</label>
+                        <input type="number" id="annualDemand" placeholder="10000">
+                    </div>
+                    <div class="form-group">
+                        <label for="orderCost">Стоимость заказа (руб):</label>
+                        <input type="number" id="orderCost" placeholder="500">
+                    </div>
+                    <div class="form-group">
+                        <label for="holdingCost">Стоимость хранения (руб/ед.):</label>
+                        <input type="number" id="holdingCost" placeholder="25">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateEOQ()">
+                        <i class="fas fa-calculator"></i> Рассчитать EOQ
+                    </button>
+                    <button class="reset-btn" onclick="resetEOQ()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                    
+                    <div class="result" id="eoqResult">
+                        <h4>Результаты EOQ:</h4>
+                        <div class="result-value" id="eoqValue">0 ед.</div>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Оптимальный размер заказа:</span>
+                                <span id="optimalOrder">0 ед.</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Количество заказов в год:</span>
+                                <span id="ordersPerYear">0</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Общие затраты:</span>
+                                <span id="totalCosts">0 руб</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Время между заказами:</span>
+                                <span id="timeBetweenOrders">0 дней</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Калькулятор точки безубыточности -->
+            <div class="calculator-card" data-category="financial analytics">
+                <div class="calculator-icon">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <h3>Точка безубыточности</h3>
+                <p>Расчет объема продаж для покрытия всех затрат</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="fixedCosts">Постоянные затраты (руб):</label>
+                        <input type="number" id="fixedCosts" placeholder="500000">
+                    </div>
+                    <div class="form-group">
+                        <label for="variableCosts">Переменные затраты (руб/ед.):</label>
+                        <input type="number" id="variableCosts" placeholder="150">
+                    </div>
+                    <div class="form-group">
+                        <label for="sellingPrice">Цена продажи (руб/ед.):</label>
+                        <input type="number" id="sellingPrice" placeholder="300">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateBreakEven()">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    <button class="reset-btn" onclick="resetBreakEven()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                    
+                    <div class="result" id="breakEvenResult">
+                        <h4>Точка безубыточности:</h4>
+                        <div class="result-value" id="breakEvenValue">0 ед.</div>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>В стоимостном выражении:</span>
+                                <span id="breakEvenRevenue">0 руб</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Маржинальная прибыль:</span>
+                                <span id="contributionMargin">0 руб/ед.</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Коэффициент маржи:</span>
+                                <span id="marginRatio">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Калькулятор NPV -->
+            <div class="calculator-card" data-category="financial">
+                <div class="calculator-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h3>NPV (Чистая приведенная стоимость)</h3>
+                <p>Оценка инвестиционной привлекательности проекта</p>
+                
+                <div class="calculator-tabs">
+                    <button class="tab-btn active" data-tab="npv-simple">Простой расчет</button>
+                    <button class="tab-btn" data-tab="npv-detailed">Детальный расчет</button>
+                </div>
+
+                <div class="tab-content active" id="npv-simple">
+                    <div class="form-group">
+                        <label for="initialInvestment">Начальные инвестиции (руб):</label>
+                        <input type="number" id="initialInvestment" placeholder="1000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="annualCashFlow">Годовой денежный поток (руб):</label>
+                        <input type="number" id="annualCashFlow" placeholder="300000">
+                    </div>
+                    <div class="form-group">
+                        <label for="discountRate">Ставка дисконтирования (%):</label>
+                        <input type="number" id="discountRate" placeholder="10" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectYears">Срок проекта (лет):</label>
+                        <input type="number" id="projectYears" placeholder="5">
+                    </div>
+                </div>
+
+                <div class="tab-content" id="npv-detailed">
+                    <div class="form-group">
+                        <label>Денежные потоки по годам:</label>
+                        <input type="number" id="cfYear1" placeholder="Год 1" class="year-cf">
+                        <input type="number" id="cfYear2" placeholder="Год 2" class="year-cf">
+                        <input type="number" id="cfYear3" placeholder="Год 3" class="year-cf">
+                        <input type="number" id="cfYear4" placeholder="Год 4" class="year-cf">
+                        <input type="number" id="cfYear5" placeholder="Год 5" class="year-cf">
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateNPV()">
+                    <i class="fas fa-calculator"></i> Рассчитать NPV
+                </button>
+                <button class="reset-btn" onclick="resetNPV()">
+                    <i class="fas fa-redo"></i> Сбросить
+                </button>
+                
+                <div class="result" id="npvResult">
+                    <h4>Результаты NPV:</h4>
+                    <div class="result-value" id="npvValue">0 руб</div>
+                    <div class="result-details">
+                        <div class="result-metric">
+                            <span>Статус проекта:</span>
+                            <span id="projectStatus">-</span>
+                        </div>
+                        <div class="result-metric">
+                            <span>Внутренняя норма доходности:</span>
+                            <span id="irrValue">0%</span>
+                        </div>
+                        <div class="result-metric">
+                            <span>Дисконтированные денежные потоки:</span>
+                            <span id="totalDCF">0 руб</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Калькулятор производительности склада -->
+            <div class="calculator-card" data-category="analytics optimization">
+                <div class="calculator-icon">
+                    <i class="fas fa-warehouse"></i>
+                </div>
+                <h3>Производительность склада</h3>
+                <p>Анализ эффективности складских операций</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="unitsShipped">Отгружено единиц:</label>
+                        <input type="number" id="unitsShipped" placeholder="5000">
+                    </div>
+                    <div class="form-group">
+                        <label for="laborHours">Трудозатраты (часы):</label>
+                        <input type="number" id="laborHours" placeholder="200">
+                    </div>
+                    <div class="form-group">
+                        <label for="warehouseArea">Площадь склада (м²):</label>
+                        <input type="number" id="warehouseArea" placeholder="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="operatingCosts">Операционные затраты (руб):</label>
+                        <input type="number" id="operatingCosts" placeholder="50000">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateWarehousePerformance()">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    <button class="reset-btn" onclick="resetWarehouse()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                    
+                    <div class="result" id="warehouseResult">
+                        <h4>Показатели производительности:</h4>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Производительность труда:</span>
+                                <span id="laborProductivity">0 ед/час</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Использование площади:</span>
+                                <span id="areaUtilization">0 ед/м²</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Себестоимость обработки:</span>
+                                <span id="costPerUnit">0 руб/ед</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Общая эффективность:</span>
+                                <span id="overallEfficiency">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Калькулятор транспортных расходов -->
+            <div class="calculator-card" data-category="logistics financial">
+                <div class="calculator-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3>Транспортные расходы</h3>
+                <p>Расчет и оптимизация логистических затрат</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="distance">Расстояние (км):</label>
+                        <input type="number" id="distance" placeholder="500">
+                    </div>
+                    <div class="form-group">
+                        <label for="fuelConsumption">Расход топлива (л/100км):</label>
+                        <input type="number" id="fuelConsumption" placeholder="12">
+                    </div>
+                    <div class="form-group">
+                        <label for="fuelPrice">Цена топлива (руб/л):</label>
+                        <input type="number" id="fuelPrice" placeholder="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="otherCosts">Прочие расходы (руб):</label>
+                        <input type="number" id="otherCosts" placeholder="5000">
+                    </div>
+                    <div class="form-group">
+                        <label for="cargoWeight">Вес груза (кг):</label>
+                        <input type="number" id="cargoWeight" placeholder="1000">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateTransportCosts()">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    <button class="reset-btn" onclick="resetTransport()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                    
+                    <div class="result" id="transportResult">
+                        <h4>Структура транспортных расходов:</h4>
+                        <div class="result-value" id="totalTransportCost">0 руб</div>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Затраты на топливо:</span>
+                                <span id="fuelCost">0 руб</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Себестоимость перевозки:</span>
+                                <span id="costPerKm">0 руб/км</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Себестоимость на кг:</span>
+                                <span id="costPerKg">0 руб/кг</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Эффективность маршрута:</span>
+                                <span id="routeEfficiency">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Калькулятор страхового запаса -->
+            <div class="calculator-card" data-category="inventory optimization">
+                <div class="calculator-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Страховой запас</h3>
+                <p>Расчет буферного запаса для минимизации рисков</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="avgDailyUsage">Средний дневной расход (ед.):</label>
+                        <input type="number" id="avgDailyUsage" placeholder="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="maxDailyUsage">Максимальный дневной расход (ед.):</label>
+                        <input type="number" id="maxDailyUsage" placeholder="150">
+                    </div>
+                    <div class="form-group">
+                        <label for="avgLeadTime">Среднее время поставки (дней):</label>
+                        <input type="number" id="avgLeadTime" placeholder="7">
+                    </div>
+                    <div class="form-group">
+                        <label for="maxLeadTime">Максимальное время поставки (дней):</label>
+                        <input type="number" id="maxLeadTime" placeholder="14">
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceLevel">Желаемый уровень обслуживания (%):</label>
+                        <input type="number" id="serviceLevel" placeholder="95" value="95">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateSafetyStock()">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    <button class="reset-btn" onclick="resetSafetyStock()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                    
+                    <div class="result" id="safetyStockResult">
+                        <h4>Рекомендуемый страховой запас:</h4>
+                        <div class="result-value" id="safetyStockValue">0 ед.</div>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Точка заказа:</span>
+                                <span id="reorderPoint">0 ед.</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Максимальный запас:</span>
+                                <span id="maxStock">0 ед.</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Уровень риска:</span>
+                                <span id="riskLevel"><span class="risk-indicator risk-low"></span>Низкий</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Калькулятор общих затрат на запасы -->
+            <div class="calculator-card" data-category="inventory financial">
+                <div class="calculator-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h3>Общие затраты на запасы</h3>
+                <p>Комплексный расчет затрат на управление запасами</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="purchaseCost">Закупочная стоимость (руб/ед.):</label>
+                        <input type="number" id="purchaseCost" placeholder="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="orderCostTotal">Стоимость заказа (руб):</label>
+                        <input type="number" id="orderCostTotal" placeholder="500">
+                    </div>
+                    <div class="form-group">
+                        <label for="holdingCostTotal">Стоимость хранения (%):</label>
+                        <input type="number" id="holdingCostTotal" placeholder="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="shortageCost">Стоимость дефицита (руб/ед.):</label>
+                        <input type="number" id="shortageCost" placeholder="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="annualDemandTotal">Годовой спрос (ед.):</label>
+                        <input type="number" id="annualDemandTotal" placeholder="10000">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateTotalInventoryCosts()">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    <button class="reset-btn" onclick="resetTotalCosts()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                    
+                    <div class="result" id="totalCostsResult">
+                        <h4>Структура общих затрат:</h4>
+                        <div class="result-value" id="totalInventoryCost">0 руб</div>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Затраты на заказ:</span>
+                                <span id="orderingCosts">0 руб</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Затраты на хранение:</span>
+                                <span id="holdingCosts">0 руб</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Затраты на закупку:</span>
+                                <span id="purchaseCosts">0 руб</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Оптимальный размер заказа:</span>
+                                <span id="optimalOrderQty">0 ед.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Калькулятор времени выполнения заказа -->
+            <div class="calculator-card" data-category="logistics analytics">
+                <div class="calculator-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Время выполнения заказа</h3>
+                <p>Анализ и оптимизация циклов выполнения заказов</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="orderProcessingTime">Время обработки заказа (дни):</label>
+                        <input type="number" id="orderProcessingTime" placeholder="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="productionTime">Время производства (дни):</label>
+                        <input type="number" id="productionTime" placeholder="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="shippingTime">Время доставки (дни):</label>
+                        <input type="number" id="shippingTime" placeholder="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="customsTime">Таможенное оформление (дни):</label>
+                        <input type="number" id="customsTime" placeholder="2">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateLeadTime()">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    <button class="reset-btn" onclick="resetLeadTime()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                    
+                    <div class="result" id="leadTimeResult">
+                        <h4>Общее время выполнения:</h4>
+                        <div class="result-value" id="totalLeadTime">0 дней</div>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Операционный цикл:</span>
+                                <span id="operationalCycle">0 дней</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Логистический цикл:</span>
+                                <span id="logisticsCycle">0 дней</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Эффективность цепи:</span>
+                                <span id="chainEfficiency">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Калькулятор эффективности поставщиков -->
+            <div class="calculator-card" data-category="analytics optimization">
+                <div class="calculator-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3>Эффективность поставщиков</h3>
+                <p>Оценка и сравнение показателей поставщиков</p>
+                
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="deliveryScore">Балл за доставку (1-10):</label>
+                        <input type="number" id="deliveryScore" placeholder="8" min="1" max="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="qualityScore">Балл за качество (1-10):</label>
+                        <input type="number" id="qualityScore" placeholder="9" min="1" max="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="priceScore">Балл за цену (1-10):</label>
+                        <input type="number" id="priceScore" placeholder="7" min="1" max="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="reliabilityScore">Балл за надежность (1-10):</label>
+                        <input type="number" id="reliabilityScore" placeholder="8" min="1" max="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="weightDelivery">Вес доставки (%):</label>
+                        <input type="number" id="weightDelivery" placeholder="30" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="weightQuality">Вес качества (%):</label>
+                        <input type="number" id="weightQuality" placeholder="40" value="40">
+                    </div>
+                    <div class="form-group">
+                        <label for="weightPrice">Вес цены (%):</label>
+                        <input type="number" id="weightPrice" placeholder="20" value="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="weightReliability">Вес надежности (%):</label>
+                        <input type="number" id="weightReliability" placeholder="10" value="10">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateSupplierEfficiency()">
+                        <i class="fas fa-calculator"></i> Рассчитать
+                    </button>
+                    <button class="reset-btn" onclick="resetSupplier()">
+                        <i class="fas fa-redo"></i> Сбросить
+                    </button>
+                    
+                    <div class="result" id="supplierResult">
+                        <h4>Итоговый балл поставщика:</h4>
+                        <div class="result-value" id="supplierScore">0.0</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="supplierProgress" style="width: 0%"></div>
+                        </div>
+                        <div class="result-details">
+                            <div class="result-metric">
+                                <span>Рейтинг:</span>
+                                <span id="supplierRating">-</span>
+                            </div>
+                            <div class="result-metric">
+                                <span>Рекомендация:</span>
+                                <span id="supplierRecommendation">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -339,53 +1106,546 @@
         </div>
     </footer>
 
+    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // Калькулятор ROI
+        // ===== ОБЩИЕ ФУНКЦИИ =====
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            initializeCategoryFilter();
+            initializeInputValidation();
+        });
+
+        // Инициализация вкладок
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Убираем активный класс у всех кнопок и контента
+                    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    
+                    // Добавляем активный класс текущей вкладке
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        // Инициализация фильтрации по категориям
+        function initializeCategoryFilter() {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            const calculatorCards = document.querySelectorAll('.calculator-card');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Убираем активный класс у всех кнопок
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    // Добавляем активный класс текущей кнопке
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // Показываем/скрываем карточки в зависимости от категории
+                    calculatorCards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category').includes(category)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+
+        // Валидация вводимых данных
+        function initializeInputValidation() {
+            const numberInputs = document.querySelectorAll('input[type="number"]');
+            numberInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value < 0) {
+                        this.value = 0;
+                    }
+                });
+            });
+        }
+
+        // Форматирование чисел
+        function formatNumber(num) {
+            return new Intl.NumberFormat('ru-RU').format(num);
+        }
+
+        function formatCurrency(num) {
+            return formatNumber(num) + ' руб';
+        }
+
+        function formatPercentage(num) {
+            return num.toFixed(1) + '%';
+        }
+
+        // ===== ФУНКЦИИ КАЛЬКУЛЯТОРОВ =====
+
+        // 1. Калькулятор ROI
         function calculateROI() {
             const investment = parseFloat(document.getElementById('investment').value) || 0;
             const netProfit = parseFloat(document.getElementById('netProfit').value) || 0;
+            const timePeriod = parseFloat(document.getElementById('timePeriod').value) || 1;
             
             if (investment > 0 && netProfit > 0) {
-                const roi = (netProfit / investment) * 100;
-                document.getElementById('roiValue').textContent = roi.toFixed(1) + '%';
+                const totalProfit = netProfit * timePeriod;
+                const roi = ((totalProfit - investment) / investment) * 100;
+                const annualROI = (netProfit / investment) * 100;
+                const paybackPeriod = investment / netProfit;
+                
+                document.getElementById('roiValue').textContent = formatPercentage(roi);
+                document.getElementById('annualROI').textContent = formatPercentage(annualROI);
+                document.getElementById('paybackPeriod').textContent = paybackPeriod.toFixed(1) + ' лет';
+                document.getElementById('totalProfit').textContent = formatCurrency(totalProfit);
                 document.getElementById('roiResult').style.display = 'block';
             } else {
-                alert('Пожалуйста, введите корректные значения');
+                alert('Пожалуйста, введите корректные значения инвестиций и прибыли');
             }
         }
 
-        // Калькулятор оборачиваемости запасов
+        function resetROI() {
+            document.getElementById('investment').value = '';
+            document.getElementById('netProfit').value = '';
+            document.getElementById('timePeriod').value = '1';
+            document.getElementById('roiResult').style.display = 'none';
+        }
+
+        // 2. Калькулятор оборачиваемости запасов
         function calculateInventoryTurnover() {
             const sales = parseFloat(document.getElementById('sales').value) || 0;
             const averageInventory = parseFloat(document.getElementById('averageInventory').value) || 0;
+            const period = parseFloat(document.getElementById('period').value) || 365;
             
             if (sales > 0 && averageInventory > 0) {
                 const turnover = sales / averageInventory;
+                const daysPerTurnover = period / turnover;
+                const turnoverYear = turnover * (365 / period);
+                const inventoryLevel = averageInventory / (sales / period);
+                
                 document.getElementById('inventoryValue').textContent = turnover.toFixed(1);
+                document.getElementById('turnoverYear').textContent = turnoverYear.toFixed(1) + ' раз';
+                document.getElementById('daysPerTurnover').textContent = daysPerTurnover.toFixed(1) + ' дней';
+                document.getElementById('inventoryLevel').textContent = inventoryLevel.toFixed(1) + ' дней';
                 document.getElementById('inventoryResult').style.display = 'block';
             } else {
-                alert('Пожалуйста, введите корректные значения');
+                alert('Пожалуйста, введите корректные значения себестоимости и среднего запаса');
             }
         }
 
-        // Калькулятор уровня обслуживания
+        function resetInventory() {
+            document.getElementById('sales').value = '';
+            document.getElementById('averageInventory').value = '';
+            document.getElementById('period').value = '365';
+            document.getElementById('inventoryResult').style.display = 'none';
+        }
+
+        // 3. Калькулятор уровня обслуживания
         function calculateServiceLevel() {
             const totalOrders = parseFloat(document.getElementById('totalOrders').value) || 0;
             const fulfilledOrders = parseFloat(document.getElementById('fulfilledOrders').value) || 0;
+            const onTimeOrders = parseFloat(document.getElementById('onTimeOrders').value) || 0;
             
             if (totalOrders > 0 && fulfilledOrders >= 0) {
                 const serviceLevel = (fulfilledOrders / totalOrders) * 100;
-                document.getElementById('serviceValue').textContent = serviceLevel.toFixed(1) + '%';
+                const fulfillmentRate = (fulfilledOrders / totalOrders) * 100;
+                const onTimeRate = (onTimeOrders / totalOrders) * 100;
+                const failedOrders = totalOrders - fulfilledOrders;
+                
+                document.getElementById('serviceValue').textContent = formatPercentage(serviceLevel);
+                document.getElementById('fulfillmentRate').textContent = formatPercentage(fulfillmentRate);
+                document.getElementById('onTimeRate').textContent = formatPercentage(onTimeRate);
+                document.getElementById('failedOrders').textContent = failedOrders;
                 document.getElementById('serviceResult').style.display = 'block';
             } else {
-                alert('Пожалуйста, введите корректные значения');
+                alert('Пожалуйста, введите корректные значения заказов');
             }
         }
 
-        // Инициализация при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            // Можно добавить дополнительную инициализацию при необходимости
-        });
+        function resetService() {
+            document.getElementById('totalOrders').value = '';
+            document.getElementById('fulfilledOrders').value = '';
+            document.getElementById('onTimeOrders').value = '';
+            document.getElementById('serviceResult').style.display = 'none';
+        }
+
+        // 4. Калькулятор EOQ
+        function calculateEOQ() {
+            const annualDemand = parseFloat(document.getElementById('annualDemand').value) || 0;
+            const orderCost = parseFloat(document.getElementById('orderCost').value) || 0;
+            const holdingCost = parseFloat(document.getElementById('holdingCost').value) || 0;
+            
+            if (annualDemand > 0 && orderCost > 0 && holdingCost > 0) {
+                const eoq = Math.sqrt((2 * annualDemand * orderCost) / holdingCost);
+                const ordersPerYear = annualDemand / eoq;
+                const totalCosts = (annualDemand / eoq) * orderCost + (eoq / 2) * holdingCost;
+                const timeBetweenOrders = 365 / ordersPerYear;
+                
+                document.getElementById('eoqValue').textContent = Math.ceil(eoq) + ' ед.';
+                document.getElementById('optimalOrder').textContent = Math.ceil(eoq) + ' ед.';
+                document.getElementById('ordersPerYear').textContent = ordersPerYear.toFixed(1);
+                document.getElementById('totalCosts').textContent = formatCurrency(totalCosts);
+                document.getElementById('timeBetweenOrders').textContent = timeBetweenOrders.toFixed(1) + ' дней';
+                document.getElementById('eoqResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения спроса и затрат');
+            }
+        }
+
+        function resetEOQ() {
+            document.getElementById('annualDemand').value = '';
+            document.getElementById('orderCost').value = '';
+            document.getElementById('holdingCost').value = '';
+            document.getElementById('eoqResult').style.display = 'none';
+        }
+
+        // 5. Калькулятор точки безубыточности
+        function calculateBreakEven() {
+            const fixedCosts = parseFloat(document.getElementById('fixedCosts').value) || 0;
+            const variableCosts = parseFloat(document.getElementById('variableCosts').value) || 0;
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value) || 0;
+            
+            if (fixedCosts >= 0 && variableCosts >= 0 && sellingPrice > variableCosts) {
+                const contributionMargin = sellingPrice - variableCosts;
+                const breakEvenUnits = fixedCosts / contributionMargin;
+                const breakEvenRevenue = breakEvenUnits * sellingPrice;
+                const marginRatio = (contributionMargin / sellingPrice) * 100;
+                
+                document.getElementById('breakEvenValue').textContent = Math.ceil(breakEvenUnits) + ' ед.';
+                document.getElementById('breakEvenRevenue').textContent = formatCurrency(breakEvenRevenue);
+                document.getElementById('contributionMargin').textContent = formatCurrency(contributionMargin);
+                document.getElementById('marginRatio').textContent = formatPercentage(marginRatio);
+                document.getElementById('breakEvenResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения. Цена должна быть выше переменных затрат.');
+            }
+        }
+
+        function resetBreakEven() {
+            document.getElementById('fixedCosts').value = '';
+            document.getElementById('variableCosts').value = '';
+            document.getElementById('sellingPrice').value = '';
+            document.getElementById('breakEvenResult').style.display = 'none';
+        }
+
+        // 6. Калькулятор NPV
+        function calculateNPV() {
+            const initialInvestment = parseFloat(document.getElementById('initialInvestment').value) || 0;
+            const discountRate = parseFloat(document.getElementById('discountRate').value) || 0;
+            const projectYears = parseFloat(document.getElementById('projectYears').value) || 0;
+            
+            let annualCashFlow = 0;
+            let cashFlows = [];
+            
+            // Определяем активную вкладку и собираем данные
+            const activeTab = document.querySelector('.tab-content.active').id;
+            
+            if (activeTab === 'npv-simple') {
+                annualCashFlow = parseFloat(document.getElementById('annualCashFlow').value) || 0;
+                for (let i = 0; i < projectYears; i++) {
+                    cashFlows.push(annualCashFlow);
+                }
+            } else {
+                // Собираем денежные потоки по годам из детальной вкладки
+                for (let i = 1; i <= 5; i++) {
+                    const cf = parseFloat(document.getElementById(`cfYear${i}`).value) || 0;
+                    cashFlows.push(cf);
+                }
+                projectYears = cashFlows.length;
+            }
+            
+            if (initialInvestment > 0 && discountRate > 0 && projectYears > 0) {
+                let npv = -initialInvestment;
+                let totalDCF = 0;
+                
+                for (let i = 0; i < projectYears; i++) {
+                    const dcf = cashFlows[i] / Math.pow(1 + discountRate/100, i + 1);
+                    npv += dcf;
+                    totalDCF += dcf;
+                }
+                
+                // Упрощенный расчет IRR
+                const irr = discountRate + (npv > 0 ? 5 : -5);
+                
+                document.getElementById('npvValue').textContent = formatCurrency(npv);
+                document.getElementById('projectStatus').textContent = npv >= 0 ? 'Принимается' : 'Отклоняется';
+                document.getElementById('irrValue').textContent = formatPercentage(irr);
+                document.getElementById('totalDCF').textContent = formatCurrency(totalDCF);
+                document.getElementById('npvResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения инвестиций, ставки и срока проекта');
+            }
+        }
+
+        function resetNPV() {
+            document.getElementById('initialInvestment').value = '';
+            document.getElementById('annualCashFlow').value = '';
+            document.getElementById('discountRate').value = '';
+            document.getElementById('projectYears').value = '';
+            
+            // Сброс детальных денежных потоков
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`cfYear${i}`).value = '';
+            }
+            
+            document.getElementById('npvResult').style.display = 'none';
+        }
+
+        // 7. Калькулятор производительности склада
+        function calculateWarehousePerformance() {
+            const unitsShipped = parseFloat(document.getElementById('unitsShipped').value) || 0;
+            const laborHours = parseFloat(document.getElementById('laborHours').value) || 0;
+            const warehouseArea = parseFloat(document.getElementById('warehouseArea').value) || 0;
+            const operatingCosts = parseFloat(document.getElementById('operatingCosts').value) || 0;
+            
+            if (unitsShipped > 0 && laborHours > 0 && warehouseArea > 0) {
+                const laborProductivity = unitsShipped / laborHours;
+                const areaUtilization = unitsShipped / warehouseArea;
+                const costPerUnit = operatingCosts / unitsShipped;
+                const overallEfficiency = (laborProductivity * areaUtilization) / 100; // Упрощенный расчет
+                
+                document.getElementById('laborProductivity').textContent = laborProductivity.toFixed(1) + ' ед/час';
+                document.getElementById('areaUtilization').textContent = areaUtilization.toFixed(1) + ' ед/м²';
+                document.getElementById('costPerUnit').textContent = formatCurrency(costPerUnit);
+                document.getElementById('overallEfficiency').textContent = formatPercentage(overallEfficiency);
+                document.getElementById('warehouseResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения производительности');
+            }
+        }
+
+        function resetWarehouse() {
+            document.getElementById('unitsShipped').value = '';
+            document.getElementById('laborHours').value = '';
+            document.getElementById('warehouseArea').value = '';
+            document.getElementById('operatingCosts').value = '';
+            document.getElementById('warehouseResult').style.display = 'none';
+        }
+
+        // 8. Калькулятор транспортных расходов
+        function calculateTransportCosts() {
+            const distance = parseFloat(document.getElementById('distance').value) || 0;
+            const fuelConsumption = parseFloat(document.getElementById('fuelConsumption').value) || 0;
+            const fuelPrice = parseFloat(document.getElementById('fuelPrice').value) || 0;
+            const otherCosts = parseFloat(document.getElementById('otherCosts').value) || 0;
+            const cargoWeight = parseFloat(document.getElementById('cargoWeight').value) || 0;
+            
+            if (distance > 0 && fuelConsumption > 0 && fuelPrice > 0) {
+                const fuelUsed = (distance / 100) * fuelConsumption;
+                const fuelCost = fuelUsed * fuelPrice;
+                const totalTransportCost = fuelCost + otherCosts;
+                const costPerKm = totalTransportCost / distance;
+                const costPerKg = cargoWeight > 0 ? totalTransportCost / cargoWeight : 0;
+                const routeEfficiency = cargoWeight > 0 ? (cargoWeight / distance) * 100 : 0;
+                
+                document.getElementById('totalTransportCost').textContent = formatCurrency(totalTransportCost);
+                document.getElementById('fuelCost').textContent = formatCurrency(fuelCost);
+                document.getElementById('costPerKm').textContent = formatCurrency(costPerKm);
+                document.getElementById('costPerKg').textContent = cargoWeight > 0 ? formatCurrency(costPerKg) : 'N/A';
+                document.getElementById('routeEfficiency').textContent = cargoWeight > 0 ? formatPercentage(routeEfficiency) : 'N/A';
+                document.getElementById('transportResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения расстояния и расхода топлива');
+            }
+        }
+
+        function resetTransport() {
+            document.getElementById('distance').value = '';
+            document.getElementById('fuelConsumption').value = '';
+            document.getElementById('fuelPrice').value = '';
+            document.getElementById('otherCosts').value = '';
+            document.getElementById('cargoWeight').value = '';
+            document.getElementById('transportResult').style.display = 'none';
+        }
+
+        // 9. Калькулятор страхового запаса
+        function calculateSafetyStock() {
+            const avgDailyUsage = parseFloat(document.getElementById('avgDailyUsage').value) || 0;
+            const maxDailyUsage = parseFloat(document.getElementById('maxDailyUsage').value) || 0;
+            const avgLeadTime = parseFloat(document.getElementById('avgLeadTime').value) || 0;
+            const maxLeadTime = parseFloat(document.getElementById('maxLeadTime').value) || 0;
+            const serviceLevel = parseFloat(document.getElementById('serviceLevel').value) || 0;
+            
+            if (avgDailyUsage > 0 && maxDailyUsage > 0 && avgLeadTime > 0 && maxLeadTime > 0) {
+                const usageVariation = maxDailyUsage - avgDailyUsage;
+                const leadTimeVariation = maxLeadTime - avgLeadTime;
+                
+                // Формула страхового запаса
+                const safetyStock = (usageVariation * maxLeadTime) + (avgDailyUsage * leadTimeVariation);
+                const reorderPoint = (avgDailyUsage * avgLeadTime) + safetyStock;
+                const maxStock = reorderPoint + (avgDailyUsage * avgLeadTime);
+                
+                // Определение уровня риска
+                let riskLevel = 'low';
+                let riskText = 'Низкий';
+                if (safetyStock > avgDailyUsage * 7) {
+                    riskLevel = 'high';
+                    riskText = 'Высокий';
+                } else if (safetyStock > avgDailyUsage * 3) {
+                    riskLevel = 'medium';
+                    riskText = 'Средний';
+                }
+                
+                document.getElementById('safetyStockValue').textContent = Math.ceil(safetyStock) + ' ед.';
+                document.getElementById('reorderPoint').textContent = Math.ceil(reorderPoint) + ' ед.';
+                document.getElementById('maxStock').textContent = Math.ceil(maxStock) + ' ед.';
+                
+                const riskIndicator = document.getElementById('riskLevel');
+                riskIndicator.innerHTML = `<span class="risk-indicator risk-${riskLevel}"></span>${riskText}`;
+                
+                document.getElementById('safetyStockResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения расхода и времени поставки');
+            }
+        }
+
+        function resetSafetyStock() {
+            document.getElementById('avgDailyUsage').value = '';
+            document.getElementById('maxDailyUsage').value = '';
+            document.getElementById('avgLeadTime').value = '';
+            document.getElementById('maxLeadTime').value = '';
+            document.getElementById('serviceLevel').value = '95';
+            document.getElementById('safetyStockResult').style.display = 'none';
+        }
+
+        // 10. Калькулятор общих затрат на запасы
+        function calculateTotalInventoryCosts() {
+            const purchaseCost = parseFloat(document.getElementById('purchaseCost').value) || 0;
+            const orderCost = parseFloat(document.getElementById('orderCostTotal').value) || 0;
+            const holdingCostPercent = parseFloat(document.getElementById('holdingCostTotal').value) || 0;
+            const shortageCost = parseFloat(document.getElementById('shortageCost').value) || 0;
+            const annualDemand = parseFloat(document.getElementById('annualDemandTotal').value) || 0;
+            
+            if (purchaseCost > 0 && orderCost > 0 && holdingCostPercent > 0 && annualDemand > 0) {
+                const holdingCost = purchaseCost * (holdingCostPercent / 100);
+                const eoq = Math.sqrt((2 * annualDemand * orderCost) / holdingCost);
+                const orderingCosts = (annualDemand / eoq) * orderCost;
+                const holdingCosts = (eoq / 2) * holdingCost;
+                const purchaseCosts = annualDemand * purchaseCost;
+                const totalInventoryCost = orderingCosts + holdingCosts + purchaseCosts;
+                
+                document.getElementById('totalInventoryCost').textContent = formatCurrency(totalInventoryCost);
+                document.getElementById('orderingCosts').textContent = formatCurrency(orderingCosts);
+                document.getElementById('holdingCosts').textContent = formatCurrency(holdingCosts);
+                document.getElementById('purchaseCosts').textContent = formatCurrency(purchaseCosts);
+                document.getElementById('optimalOrderQty').textContent = Math.ceil(eoq) + ' ед.';
+                document.getElementById('totalCostsResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения затрат и спроса');
+            }
+        }
+
+        function resetTotalCosts() {
+            document.getElementById('purchaseCost').value = '';
+            document.getElementById('orderCostTotal').value = '';
+            document.getElementById('holdingCostTotal').value = '';
+            document.getElementById('shortageCost').value = '';
+            document.getElementById('annualDemandTotal').value = '';
+            document.getElementById('totalCostsResult').style.display = 'none';
+        }
+
+        // 11. Калькулятор времени выполнения заказа
+        function calculateLeadTime() {
+            const orderProcessingTime = parseFloat(document.getElementById('orderProcessingTime').value) || 0;
+            const productionTime = parseFloat(document.getElementById('productionTime').value) || 0;
+            const shippingTime = parseFloat(document.getElementById('shippingTime').value) || 0;
+            const customsTime = parseFloat(document.getElementById('customsTime').value) || 0;
+            
+            if (orderProcessingTime >= 0 && productionTime >= 0 && shippingTime >= 0 && customsTime >= 0) {
+                const totalLeadTime = orderProcessingTime + productionTime + shippingTime + customsTime;
+                const operationalCycle = orderProcessingTime + productionTime;
+                const logisticsCycle = shippingTime + customsTime;
+                const chainEfficiency = (1 - (customsTime / totalLeadTime)) * 100;
+                
+                document.getElementById('totalLeadTime').textContent = totalLeadTime + ' дней';
+                document.getElementById('operationalCycle').textContent = operationalCycle + ' дней';
+                document.getElementById('logisticsCycle').textContent = logisticsCycle + ' дней';
+                document.getElementById('chainEfficiency').textContent = formatPercentage(chainEfficiency);
+                document.getElementById('leadTimeResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, введите корректные значения времени');
+            }
+        }
+
+        function resetLeadTime() {
+            document.getElementById('orderProcessingTime').value = '';
+            document.getElementById('productionTime').value = '';
+            document.getElementById('shippingTime').value = '';
+            document.getElementById('customsTime').value = '';
+            document.getElementById('leadTimeResult').style.display = 'none';
+        }
+
+        // 12. Калькулятор эффективности поставщиков
+        function calculateSupplierEfficiency() {
+            const deliveryScore = parseFloat(document.getElementById('deliveryScore').value) || 0;
+            const qualityScore = parseFloat(document.getElementById('qualityScore').value) || 0;
+            const priceScore = parseFloat(document.getElementById('priceScore').value) || 0;
+            const reliabilityScore = parseFloat(document.getElementById('reliabilityScore').value) || 0;
+            
+            const weightDelivery = parseFloat(document.getElementById('weightDelivery').value) || 0;
+            const weightQuality = parseFloat(document.getElementById('weightQuality').value) || 0;
+            const weightPrice = parseFloat(document.getElementById('weightPrice').value) || 0;
+            const weightReliability = parseFloat(document.getElementById('weightReliability').value) || 0;
+            
+            const totalWeight = weightDelivery + weightQuality + weightPrice + weightReliability;
+            
+            if (totalWeight === 100 && deliveryScore >= 1 && deliveryScore <= 10 &&
+                qualityScore >= 1 && qualityScore <= 10 &&
+                priceScore >= 1 && priceScore <= 10 &&
+                reliabilityScore >= 1 && reliabilityScore <= 10) {
+                
+                const weightedScore = 
+                    (deliveryScore * (weightDelivery / 100)) +
+                    (qualityScore * (weightQuality / 100)) +
+                    (priceScore * (weightPrice / 100)) +
+                    (reliabilityScore * (weightReliability / 100));
+                
+                let rating = '';
+                let recommendation = '';
+                let progressWidth = (weightedScore / 10) * 100;
+                
+                if (weightedScore >= 8) {
+                    rating = 'Отлично';
+                    recommendation = 'Рекомендуется к сотрудничеству';
+                } else if (weightedScore >= 6) {
+                    rating = 'Хорошо';
+                    recommendation = 'Требуется мониторинг';
+                } else if (weightedScore >= 4) {
+                    rating = 'Удовлетворительно';
+                    recommendation = 'Требуются улучшения';
+                } else {
+                    rating = 'Неудовлетворительно';
+                    recommendation = 'Рассмотреть замену';
+                }
+                
+                document.getElementById('supplierScore').textContent = weightedScore.toFixed(1);
+                document.getElementById('supplierProgress').style.width = progressWidth + '%';
+                document.getElementById('supplierRating').textContent = rating;
+                document.getElementById('supplierRecommendation').textContent = recommendation;
+                document.getElementById('supplierResult').style.display = 'block';
+            } else {
+                alert('Пожалуйста, проверьте введенные данные. Сумма весов должна быть 100%, баллы от 1 до 10.');
+            }
+        }
+
+        function resetSupplier() {
+            document.getElementById('deliveryScore').value = '';
+            document.getElementById('qualityScore').value = '';
+            document.getElementById('priceScore').value = '';
+            document.getElementById('reliabilityScore').value = '';
+            document.getElementById('weightDelivery').value = '30';
+            document.getElementById('weightQuality').value = '40';
+            document.getElementById('weightPrice').value = '20';
+            document.getElementById('weightReliability').value = '10';
+            document.getElementById('supplierResult').style.display = 'none';
+        }
+
     </script>
 </body>
 </html>
