@@ -8,642 +8,199 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary-color: #7c3aed;
+            --accent-color: #06b6d4;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
         .projects-hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: 3rem 0;
+            padding: 4rem 0;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         .projects-hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 1rem;
             font-weight: 700;
         }
 
         .projects-hero p {
             font-size: 1.2rem;
-            opacity: 0.95;
+            opacity: 0.9;
             max-width: 600px;
             margin: 0 auto;
         }
 
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
-            margin: 2rem 0;
             max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 0 20px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
         .project-card {
             background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            border-radius: 12px;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: fit-content;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
         .project-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
         }
 
         .project-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 1.2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .project-icon {
-            font-size: 2.2rem;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            flex-shrink: 0;
+            padding: 1.5rem;
         }
 
         .project-title {
             font-size: 1.4rem;
             font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.3rem;
-            line-height: 1.3;
+            margin-bottom: 0.5rem;
         }
 
-        .project-subtitle {
-            font-size: 0.95rem;
+        .project-client {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .project-body {
+            padding: 1.5rem;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
             color: var(--text-light);
-            font-style: italic;
-        }
-
-        .project-image {
-            width: 100%;
-            height: 180px;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 1.2rem;
-        }
-
-        .project-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .project-card:hover .project-image img {
-            transform: scale(1.05);
         }
 
         .project-description {
-            font-size: 1rem;
-            line-height: 1.5;
-            color: var(--text-light);
+            line-height: 1.6;
             margin-bottom: 1.5rem;
-            flex-grow: 1;
-        }
-
-        .project-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .status-writing {
-            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
-            color: white;
-        }
-
-        .status-live {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-        }
-
-        .status-planning {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            color: white;
-        }
-
-        .project-details {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.2rem;
-            margin: 1.2rem 0;
-        }
-
-        .project-features, .project-stats {
-            background: #f8fafc;
-            padding: 1.2rem;
-            border-radius: 10px;
-            border-left: 3px solid var(--primary-color);
-        }
-
-        .project-features h4, .project-stats h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .features-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .features-list li {
-            padding: 0.4rem 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .features-list li:last-child {
-            border-bottom: none;
-        }
-
-        .features-list li::before {
-            content: '✓';
-            color: var(--primary-color);
-            font-weight: bold;
-            flex-shrink: 0;
-            margin-top: 0.1rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 0.8rem 0.5rem;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .stat-value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.2rem;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-light);
-        }
-
-        .project-tech {
-            margin: 1rem 0;
-        }
-
-        .project-tech h4 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .tech-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-        }
-
-        .tech-tag {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            padding: 0.3rem 0.7rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .project-links {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .project-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.7rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .project-link.primary {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .project-link.secondary {
-            background: transparent;
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .project-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .project-card:nth-child(1) .project-icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .project-card:nth-child(2) .project-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .project-card:nth-child(3) .project-icon { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-
-        .business-plan-section {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            padding: 1.2rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            border-left: 3px solid var(--primary-color);
-        }
-
-        .business-plan-section h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .plan-features {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.6rem;
-        }
-
-        .plan-feature {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            font-size: 0.85rem;
             color: var(--text-color);
         }
 
-        .plan-feature i {
-            color: var(--primary-color);
-            width: 16px;
-            text-align: center;
-        }
-
-        .project-impact {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        .project-results {
+            background: var(--bg-light);
             padding: 1rem;
             border-radius: 8px;
-            color: white;
-            margin: 1rem 0;
-        }
-
-        .impact-title {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .project-impact p {
-            font-size: 0.85rem;
-            margin: 0;
-            line-height: 1.4;
-        }
-
-        .preview-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            padding: 20px;
-        }
-
-        .business-plan-preview {
-            background: white;
-            border-radius: 16px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 16px 16px 0 0;
-        }
-
-        .preview-header h3 {
-            margin: 0;
-            font-size: 1.3rem;
-        }
-
-        .close-preview {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.3s ease;
-        }
-
-        .close-preview:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .preview-content {
-            padding: 1.5rem;
-        }
-
-        .preview-section {
             margin-bottom: 1.5rem;
         }
 
-        .preview-section h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
+        .project-results h4 {
             color: var(--primary-color);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1rem;
+        .project-results ul {
+            list-style: none;
+            padding: 0;
         }
 
-        .metric {
-            text-align: center;
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .metric-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.3rem;
-        }
-
-        .metric-label {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-
-        .financial-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .financial-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem;
-            background: #f8fafc;
-            border-radius: 6px;
-            border-left: 3px solid var(--primary-color);
-        }
-
-        .financial-item strong {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .implementation-steps {
-            padding-left: 1.5rem;
-            margin: 0;
-        }
-
-        .implementation-steps li {
+        .project-results li {
             padding: 0.3rem 0;
-            color: var(--text-light);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
         }
 
-        .preview-notice {
-            background: linear-gradient(135deg, #fff9c4 0%, #ffecb3 100%);
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 4px solid #ffd54f;
-            margin-top: 1rem;
+        .project-results li:before {
+            content: "✓";
+            color: var(--primary-color);
+            font-weight: bold;
         }
 
-        .preview-notice p {
-            margin: 0;
-            font-size: 0.9rem;
-            line-height: 1.4;
+        .project-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        .preview-actions {
-            padding: 1.5rem;
-            border-top: 1px solid #e2e8f0;
+        .skill-tag {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Упрощенная шапка */
+        .header-simple {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2.5rem 0;
             text-align: center;
         }
 
-        .preview-download {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
-            background: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+        .header-simple .header-text-center h1 {
+            margin-bottom: 0.8rem;
+            font-size: 2.5rem;
         }
 
-        .preview-download:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        .header-simple .header-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .header-simple .contact-badges {
+            justify-content: center;
+            gap: 1rem;
         }
 
         @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
             .projects-hero h1 {
                 font-size: 2.2rem;
             }
             
-            .projects-hero p {
-                font-size: 1.1rem;
-            }
-            
-            .projects-grid {
-                grid-template-columns: 1fr;
-                padding: 0 15px;
-            }
-            
-            .project-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.8rem;
-            }
-            
-            .project-card {
-                padding: 1.5rem;
-            }
-            
-            .project-image {
-                height: 160px;
-            }
-            
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .preview-overlay {
-                padding: 10px;
-            }
-            
-            .business-plan-preview {
-                max-height: 95vh;
-            }
-            
-            .preview-header h3 {
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .projects-hero {
-                padding: 2rem 0;
-            }
-            
-            .projects-hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .project-links {
-                flex-direction: column;
-            }
-            
-            .project-link {
-                justify-content: center;
+            .header-simple .header-text-center h1 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
+    <!-- Упрощенный Header без фото -->
+    <header class="header-simple">
         <div class="container">
             <div class="header-content">
-                <div class="header-photos">
-                    <!-- Левое фото -->
-                    <div class="header-photo-left">
-                        <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
-                    </div>
+                <div class="header-text-center">
+                    <h1>Дмитрий Панибратский</h1>
+                    <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
                     
-                    <!-- Центральный текст -->
-                    <div class="header-text-center">
-                        <h1>Дмитрий Панибратский</h1>
-                        <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
-                        
-                        <div class="contact-badges">
-                            <span class="badge">Управление SCM</span>
-                            <span class="badge">Цифровая трансформация</span>
-                            <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Оптимизация процессов</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Правое фото -->
-                    <div class="header-photo-right">
-                        <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
+                    <div class="contact-badges">
+                        <span class="badge">Управление SCM</span>
+                        <span class="badge">Цифровая трансформация</span>
+                        <span class="badge">AI & Аналитика</span>
+                        <span class="badge">Оптимизация процессов</span>
                     </div>
                 </div>
             </div>
@@ -661,312 +218,163 @@
                 <li><a href="tools.html">Инструменты</a></li>
                 <li><a href="certificates.html">Сертификаты</a></li>
                 <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="#contact">Контакты</a></li>
+                <li><a href="index.html#contact">Контакты</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Projects Hero Section -->
+    <!-- Hero Section -->
     <section class="projects-hero">
         <div class="container">
-            <h1>Профессиональные проекты</h1>
-            <p>Реализованные и текущие проекты в области SCM и цифровой трансформации</p>
+            <h1>Ключевые проекты</h1>
+            <p>Реализованные проекты в области цифровой трансформации и оптимизации цепей поставок</p>
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main>
-        <div class="projects-grid">
-            <!-- Книга "Полная теория SCM" -->
+    <!-- Projects Grid -->
+    <main class="container">
+        <section class="projects-grid">
+            <!-- Проект 1 -->
             <div class="project-card">
                 <div class="project-header">
-                    <div class="project-icon">📚</div>
-                    <div>
-                        <h2 class="project-title">Книга "Полная теория SCM"</h2>
-                        <p class="project-subtitle">Практическое руководство по цифровой трансформации</p>
+                    <h3 class="project-title">Внедрение системы предиктивной аналитики</h3>
+                    <p class="project-client">X5 Retail Group</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-meta">
+                        <span><i class="far fa-calendar"></i> 2020-2021</span>
+                        <span><i class="fas fa-users"></i> Команда: 8 человек</span>
                     </div>
-                </div>
-
-                <div class="project-status status-writing">
-                    <i class="fas fa-pen-fancy"></i>
-                    В процессе написания
-                </div>
-
-                <div class="project-image">
-                    <img src="images/scm-book-screenshot.png" alt="Обложка книги 'Полная теория SCM'" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                </div>
-
-                <p class="project-description">
-                    Комплексное практическое руководство, охватывающее все аспекты современного управления цепями поставок - от базовых стандартов до создания цифровых двойников процессов.
-                </p>
-
-                <div class="project-details">
-                    <div class="project-features">
-                        <h4>🎯 Ключевые темы</h4>
-                        <ul class="features-list">
-                            <li>Цифровая трансформация SCM</li>
-                            <li>ИИ и предиктивная аналитика</li>
-                            <li>Цифровые двойники процессов</li>
-                            <li>Оптимизация сквозных процессов</li>
+                    <p class="project-description">
+                        Разработка и внедрение системы прогнозирования спроса на основе машинного обучения 
+                        для оптимизации уровней запасов и повышения оборачиваемости.
+                    </p>
+                    <div class="project-results">
+                        <h4>Результаты:</h4>
+                        <ul>
+                            <li>Точность прогнозирования повышена на 23%</li>
+                            <li>Снижение уровня страховых запасов на 18%</li>
+                            <li>Повышение оборачиваемости до 98.5%</li>
+                            <li>Автоматизация 85% процессов планирования</li>
                         </ul>
                     </div>
-
-                    <div class="project-stats">
-                        <h4>📊 Статистика</h4>
-                        <div class="stats-grid">
-                            <div class="stat-item">
-                                <div class="stat-value">500+</div>
-                                <div class="stat-label">страниц</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">15+</div>
-                                <div class="stat-label">глав</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">50+</div>
-                                <div class="stat-label">кейсов</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">2026</div>
-                                <div class="stat-label">публикация</div>
-                            </div>
-                        </div>
+                    <div class="project-skills">
+                        <span class="skill-tag">Machine Learning</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Tableau</span>
+                        <span class="skill-tag">SQL</span>
                     </div>
-                </div>
-
-                <div class="project-tech">
-                    <h4>🛠️ Технологии</h4>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Digital Twins</span>
-                        <span class="tech-tag">AI/ML</span>
-                        <span class="tech-tag">Process Mining</span>
-                        <span class="tech-tag">Data Analytics</span>
-                    </div>
-                </div>
-
-                <div class="project-impact">
-                    <div class="impact-title">💡 Ожидаемый эффект</div>
-                    <p>Создание универсального руководства для SCM-специалистов, позволяющего сократить время на внедрение лучших практик на 40-60%</p>
-                </div>
-
-                <div class="project-links">
-                    <a href="#" class="project-link primary">
-                        <i class="fas fa-book"></i>
-                        Узнать о предзаказе
-                    </a>
-                    <a href="#" class="project-link secondary">
-                        <i class="fas fa-file-pdf"></i>
-                        Скачать оглавление
-                    </a>
                 </div>
             </div>
 
-            <!-- Telegram-канал -->
+            <!-- Проект 2 -->
             <div class="project-card">
                 <div class="project-header">
-                    <div class="project-icon">📢</div>
-                    <div>
-                        <h2 class="project-title">Telegram-канал</h2>
-                        <p class="project-subtitle">Logistica & Supply Chain</p>
+                    <h3 class="project-title">Цифровая трансформация SCM</h3>
+                    <p class="project-client">ГК "Эталон"</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-meta">
+                        <span><i class="far fa-calendar"></i> 2021-2023</span>
+                        <span><i class="fas fa-users"></i> Команда: 12 человек</span>
                     </div>
-                </div>
-
-                <div class="project-status status-live">
-                    <i class="fas fa-broadcast-tower"></i>
-                    Активный проект
-                </div>
-
-                <div class="project-image">
-                    <img src="images/telegram-channel.png" alt="Telegram канал Logistica & Supply Chain" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1611606063065-ee7946f0787a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                </div>
-
-                <p class="project-description">
-                    Крупнейшее профессиональное сообщество специалистов по логистике и управлению цепями поставок в Telegram. Ежедневные публикации, кейсы, исследования и экспертные мнения.
-                </p>
-
-                <div class="project-details">
-                    <div class="project-features">
-                        <h4>🎯 Контент-план</h4>
-                        <ul class="features-list">
-                            <li>Практические кейсы</li>
-                            <li>Аналитика рынка</li>
-                            <li>Интервью с экспертами</li>
-                            <li>Обзоры технологий</li>
+                    <p class="project-description">
+                        Создание цифрового двойника логистической системы и внедрение ERP-системы 
+                        для управления цепями поставок строительных материалов.
+                    </p>
+                    <div class="project-results">
+                        <h4>Результаты:</h4>
+                        <ul>
+                            <li>Снижение транспортных расходов на 28%</li>
+                            <li>Сокращение времени обработки заказов на 40%</li>
+                            <li>Повышение прозрачности цепей поставок</li>
+                            <li>Автоматизация отчетности KPI</li>
                         </ul>
                     </div>
-
-                    <div class="project-stats">
-                        <h4>📊 Статистика</h4>
-                        <div class="stats-grid">
-                            <div class="stat-item">
-                                <div class="stat-value">5K+</div>
-                                <div class="stat-label">подписчиков</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">95%</div>
-                                <div class="stat-label">ERC</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">500+</div>
-                                <div class="stat-label">публикаций</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">2022</div>
-                                <div class="stat-label">запуск</div>
-                            </div>
-                        </div>
+                    <div class="project-skills">
+                        <span class="skill-tag">ERP</span>
+                        <span class="skill-tag">Digital Twin</span>
+                        <span class="skill-tag">Process Automation</span>
+                        <span class="skill-tag">KPI Dashboard</span>
                     </div>
-                </div>
-
-                <div class="project-tech">
-                    <h4>🎨 Форматы</h4>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Longreads</span>
-                        <span class="tech-tag">Инфографика</span>
-                        <span class="tech-tag">Опросы</span>
-                        <span class="tech-tag">Кейсы</span>
-                    </div>
-                </div>
-
-                <div class="project-impact">
-                    <div class="impact-title">💡 Достигнутый эффект</div>
-                    <p>Создано крупнейшее профессиональное сообщество SCM-специалистов в RU сегменте с ежемесячным охватом 50K+ пользователей</p>
-                </div>
-
-                <div class="project-links">
-                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer nofollow" class="project-link primary">
-                        <i class="fab fa-telegram"></i>
-                        Подписаться на канал
-                    </a>
-                    <a href="#" class="project-link secondary">
-                        <i class="fas fa-chart-bar"></i>
-                        Статистика канала
-                    </a>
                 </div>
             </div>
 
-            <!-- SCM Community Platform -->
+            <!-- Проект 3 -->
             <div class="project-card">
                 <div class="project-header">
-                    <div class="project-icon">🌐</div>
-                    <div>
-                        <h2 class="project-title">SCM Community Platform</h2>
-                        <p class="project-subtitle">Цифровая экосистема для SCM-специалистов</p>
+                    <h3 class="project-title">Оптимизация складской логистики</h3>
+                    <p class="project-client">Леруа Мерлен Восток</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-meta">
+                        <span><i class="far fa-calendar"></i> 2017-2018</span>
+                        <span><i class="fas fa-users"></i> Команда: 6 человек</span>
                     </div>
-                </div>
-
-                <div class="project-status status-planning">
-                    <i class="fas fa-lightbulb"></i>
-                    Планирование
-                </div>
-
-                <div class="project-image">
-                    <img src="images/community-platform.png" alt="SCM Community Platform" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                </div>
-
-                <p class="project-description">
-                    Многофункциональная онлайн-платформа для объединения SCM-сообщества: база знаний, инструменты для collaboration, marketplace экспертов и образовательные курсы.
-                </p>
-
-                <div class="project-details">
-                    <div class="project-features">
-                        <h4>🎯 Основные модули</h4>
-                        <ul class="features-list">
-                            <li>База знаний SCM</li>
-                            <li>Форум и сообщества</li>
-                            <li>Инструменты коллаборации</li>
-                            <li>Marketplace экспертов</li>
+                    <p class="project-description">
+                        Реинжиниринг складских процессов и внедрение системы кросс-докинга 
+                        для повышения эффективности региональной дистрибуции.
+                    </p>
+                    <div class="project-results">
+                        <h4>Результаты:</h4>
+                        <ul>
+                            <li>Повышение эффективности склада на 42%</li>
+                            <li>Сокращение сроков доставки на 35%</li>
+                            <li>Снижение логистических издержек на 15%</li>
+                            <li>Улучшение accuracy инвентаризации до 99.8%</li>
                         </ul>
                     </div>
-
-                    <div class="project-stats">
-                        <h4>📊 Планы</h4>
-                        <div class="stats-grid">
-                            <div class="stat-item">
-                                <div class="stat-value">10K+</div>
-                                <div class="stat-label">пользователей</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">500+</div>
-                                <div class="stat-label">экспертов</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">50+</div>
-                                <div class="stat-label">курсов</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">2025</div>
-                                <div class="stat-label">запуск</div>
-                            </div>
-                        </div>
+                    <div class="project-skills">
+                        <span class="skill-tag">WMS</span>
+                        <span class="skill-tag">Cross-docking</span>
+                        <span class="skill-tag">Lean Six Sigma</span>
+                        <span class="skill-tag">Process Optimization</span>
                     </div>
-                </div>
-
-                <div class="project-tech">
-                    <h4>🛠️ Технологии</h4>
-                    <div class="tech-tags">
-                        <span class="tech-tag">React</span>
-                        <span class="tech-tag">Node.js</span>
-                        <span class="tech-tag">MongoDB</span>
-                        <span class="tech-tag">AWS</span>
-                    </div>
-                </div>
-
-                <!-- Блок бизнес-плана -->
-                <div class="business-plan-section">
-                    <h4>📋 Бизнес-план проекта</h4>
-                    <div class="plan-features">
-                        <div class="plan-feature">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Финансовые прогнозы на 3 года</span>
-                        </div>
-                        <div class="plan-feature">
-                            <i class="fas fa-users"></i>
-                            <span>Анализ целевой аудитории</span>
-                        </div>
-                        <div class="plan-feature">
-                            <i class="fas fa-cogs"></i>
-                            <span>Техническая архитектура</span>
-                        </div>
-                        <div class="plan-feature">
-                            <i class="fas fa-rocket"></i>
-                            <span>План запуска и масштабирования</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-impact">
-                    <div class="impact-title">💡 Потенциальный эффект</div>
-                    <p>Создание централизованной цифровой экосистемы для SCM-сообщества с годовым оборотом 5M+ рублей</p>
-                </div>
-
-                <div class="project-links">
-                    <a href="#" class="project-link primary">
-                        <i class="fas fa-lightbulb"></i>
-                        Присоединиться к проекту
-                    </a>
-                    <a href="business-plan.html" class="project-link secondary" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-file-pdf"></i>
-                        Бизнес-план (PDF)
-                    </a>
-                    <a href="#" class="project-link secondary" onclick="showBusinessPlanPreview()">
-                        <i class="fas fa-eye"></i>
-                        Предпросмотр
-                    </a>
                 </div>
             </div>
-        </div>
+
+            <!-- Проект 4 -->
+            <div class="project-card">
+                <div class="project-header">
+                    <h3 class="project-title">Внедрение системы управления поставщиками</h3>
+                    <p class="project-client">X5 Retail Group</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-meta">
+                        <span><i class="far fa-calendar"></i> 2019-2020</span>
+                        <span><i class="fas fa-users"></i> Команда: 5 человек</span>
+                    </div>
+                    <p class="project-description">
+                        Разработка и внедрение SRM-системы для управления взаимоотношениями с поставщиками 
+                        и мониторинга SLA показателей.
+                    </p>
+                    <div class="project-results">
+                        <h4>Результаты:</h4>
+                        <ul>
+                            <li>Снижение количества срывов поставок на 67%</li>
+                            <li>Повышение удовлетворенности поставщиков на 35%</li>
+                            <li>Автоматизация 90% процессов коммуникации</li>
+                            <li>Снижение затрат на управление поставщиками на 22%</li>
+                        </ul>
+                    </div>
+                    <div class="project-skills">
+                        <span class="skill-tag">SRM</span>
+                        <span class="skill-tag">SLA Management</span>
+                        <span class="skill-tag">Vendor Management</span>
+                        <span class="skill-tag">Process Automation</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <p>&copy; 2025 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script>
-        // Анимация появления элементов при скролле
         document.addEventListener('DOMContentLoaded', function() {
             const observerOptions = {
                 threshold: 0.1,
@@ -977,4 +385,19 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
