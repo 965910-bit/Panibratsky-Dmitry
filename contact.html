@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Стили для страницы контактов, включая социальные сети */
         :root {
             --primary-color: #2563eb;
             --primary-dark: #1d4ed8;
@@ -47,65 +46,56 @@
 
         .contact-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        .contact-info {
+        .contact-card {
             background: white;
             border-radius: 12px;
             padding: 2rem;
             box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-color);
         }
 
-        .contact-info h2 {
+        .contact-card h2 {
             color: var(--text-color);
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .contact-details {
+        .contact-info {
             list-style: none;
             padding: 0;
         }
 
-        .contact-details li {
-            padding: 0.8rem 0;
+        .contact-info li {
+            padding: 1rem 0;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
-        .contact-details li:last-child {
+        .contact-info li:last-child {
             border-bottom: none;
         }
 
-        .contact-details i {
+        .contact-info i {
             color: var(--primary-color);
             font-size: 1.2rem;
             width: 20px;
         }
 
-        .social-section {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-        }
-
-        .social-section h2 {
-            color: var(--text-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-
         .social-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 1rem;
         }
 
@@ -137,6 +127,57 @@
         .social-link.setka { color: var(--secondary-color); }
         .social-link.telegram { color: #0088cc; }
         .social-link.hh { color: #d6001c; }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-input, .form-textarea {
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+        }
 
         /* Упрощенная шапка */
         .header-simple {
@@ -227,12 +268,12 @@
     <main class="container">
         <div class="contact-content">
             <!-- Контактная информация -->
-            <section class="contact-info">
-                <h2>Контактная информация</h2>
-                <ul class="contact-details">
+            <div class="contact-card">
+                <h2><i class="fas fa-address-card"></i> Контактная информация</h2>
+                <ul class="contact-info">
                     <li>
                         <i class="fas fa-envelope"></i>
-                        <span>Email: example@example.com</span>
+                        <span>Email: d.panibratsky@example.com</span>
                     </li>
                     <li>
                         <i class="fas fa-phone"></i>
@@ -247,33 +288,69 @@
                         <span>Часы работы: Пн-Пт, 9:00-18:00</span>
                     </li>
                 </ul>
-            </section>
+            </div>
 
             <!-- Социальные сети -->
-            <section class="social-section">
-                <h2>🌐 Социальные сети и платформы</h2>
+            <div class="contact-card">
+                <h2><i class="fas fa-share-alt"></i> Социальные сети и платформы</h2>
                 <div class="social-links">
                     <a href="https://www.linkedin.com/in/dmitry-panibratsky" target="_blank" rel="noopener noreferrer nofollow" class="social-link linkedin">
                         <i class="fab fa-linkedin"></i>
-                        LinkedIn
+                        <div>
+                            <strong>LinkedIn</strong>
+                            <div style="font-size: 0.9rem; color: var(--text-light);">Профессиональный профиль</div>
+                        </div>
                     </a>
                     
                     <a href="https://set.ki/EYUBwz5" target="_blank" rel="noopener noreferrer nofollow" class="social-link setka">
                         <i class="fas fa-network-wired"></i>
-                        Setka Community
+                        <div>
+                            <strong>Setka Community</strong>
+                            <div style="font-size: 0.9rem; color: var(--text-light);">Профессиональное сообщество</div>
+                        </div>
                     </a>
 
                     <a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer nofollow" class="social-link telegram">
                         <i class="fab fa-telegram"></i>
-                        Telegram
+                        <div>
+                            <strong>Telegram</strong>
+                            <div style="font-size: 0.9rem; color: var(--text-light);">Канал Logistica & Supply Chain</div>
+                        </div>
                     </a>
                     
                     <a href="https://hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45" target="_blank" rel="noopener noreferrer nofollow" class="social-link hh">
                         <i class="fas fa-briefcase"></i>
-                        HeadHunter
+                        <div>
+                            <strong>HeadHunter</strong>
+                            <div style="font-size: 0.9rem; color: var(--text-light);">Резюме и профессиональный опыт</div>
+                        </div>
                     </a>
                 </div>
-            </section>
+            </div>
+
+            <!-- Форма обратной связи -->
+            <div class="contact-card">
+                <h2><i class="fas fa-paper-plane"></i> Форма обратной связи</h2>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Ваше имя</label>
+                        <input type="text" id="name" class="form-input" placeholder="Введите ваше имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" class="form-input" placeholder="Введите ваш email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="subject">Тема сообщения</label>
+                        <input type="text" id="subject" class="form-input" placeholder="Тема сообщения" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="message">Сообщение</label>
+                        <textarea id="message" class="form-textarea" placeholder="Опишите ваш вопрос или предложение..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Отправить сообщение</button>
+                </form>
+            </div>
         </div>
     </main>
 
@@ -284,9 +361,9 @@
     </footer>
 
     <script>
-        // Простой скрипт для анимации появления элементов
         document.addEventListener('DOMContentLoaded', function() {
-            const contactSections = document.querySelectorAll('.contact-info, .social-section');
+            // Анимация появления элементов
+            const contactCards = document.querySelectorAll('.contact-card');
             
             const observerOptions = {
                 threshold: 0.1,
@@ -302,11 +379,19 @@
                 });
             }, observerOptions);
 
-            contactSections.forEach(section => {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(30px)';
-                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(section);
+            contactCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Обработка формы
+            const contactForm = document.querySelector('.contact-form');
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Сообщение отправлено! Я свяжусь с вами в ближайшее время.');
+                contactForm.reset();
             });
         });
     </script>
