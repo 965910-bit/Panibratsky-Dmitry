@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опыт - Дмитрий Панибратский</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Стили для страницы опыта */
+        .experience-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .experience-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.05)"><polygon points="0,0 1000,50 0,100"/></svg>');
+            background-size: cover;
+        }
+
+        .experience-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+
+        .experience-hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Временная шкала */
+        .career-timeline {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .career-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 4rem;
+        }
+
+        .career-progress::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .milestone {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--primary-color);
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .milestone:hover {
+            transform: scale(1.5);
+            background: var(--primary-color);
+        }
+
+        .milestone::after {
+            content: attr(data-year);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 600;
+            color: var(--primary-color);
+            white-space: nowrap;
+        }
+
+        .milestone::before {
+            content: attr(data-achievement);
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        /* Карточки опыта */
+        .experience-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .experience-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .experience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+        }
+
+        .experience-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .company-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .company-header .logo {
+            font-size: 3rem;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .company-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .period {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .position {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* KPI Dashboard */
+        .kpi-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .kpi-item {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .kpi-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Инновационные блоки */
+        .innovation-highlight, .business-impact, .expansion-map, .financial-results {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .innovation-highlight h4, .business-impact h4, .expansion-map h4, .financial-results h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .innovation-highlight ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .innovation-highlight li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .innovation-highlight li:last-child {
+            border-bottom: none;
+        }
+
+        .innovation-highlight li::before {
+            content: '🚀';
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        /* Бизнес-эффект */
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .impact-item {
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Карта расширения */
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .city-card {
+            padding: 1rem;
+            text-align: center;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .city-card.new {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, #f0f4ff, #e6eeff);
+        }
+
+        .city-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .city-role {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .scale-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            color: white;
+        }
+
+        .scale-item {
+            text-align: center;
+        }
+
+        .scale-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .scale-text {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Финансовые результаты */
+        .finance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric {
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+        }
+
+        .metric.positive {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .metric.negative {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .metric.team {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .startup-achievement {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+        }
+
+        .startup-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Формула успеха */
+        .success-formula {
+            max-width: 1000px;
+            margin: 6rem auto 4rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 24px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-formula::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.05)"><polygon points="0,100 1000,0 1000,100"/></svg>');
+            background-size: cover;
+        }
+
+        .success-formula h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .formula-elements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .formula-item {
+            padding: 2rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .formula-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .formula-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .formula-item h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .formula-item p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .experience-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .experience-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .career-progress {
+                flex-direction: column;
+                height: 400px;
+            }
+            
+            .career-progress::before {
+                width: 3px;
+                height: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .milestone::after {
+                top: -25px;
+                left: 30px;
+            }
+            
+            .milestone::before {
+                bottom: -25px;
+                left: 30px;
+            }
+            
+            .company-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .kpi-dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .scale-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .success-formula {
+                padding: 2rem 1rem;
+            }
+            
+            .success-formula h2 {
+                font-size: 2rem;
+            }
+            
+            .formula-elements {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .experience-hero {
+                padding: 3rem 0;
+            }
+            
+            .experience-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .kpi-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .impact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cities-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-photos">
+                    <!-- Левое фото -->
+                    <div class="header-photo-left">
+                        <div class="photo-left-container">
+                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                        </div>
+                    </div>
+                    
+                    <!-- Центральный текст -->
+                    <div class="header-text-center">
+                        <h1>Дмитрий Панибратский</h1>
+                        <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
+                        
+                        <div class="contact-badges">
+                            <span class="badge">Управление SCM</span>
+                            <span class="badge">Цифровая трансформация</span>
+                            <span class="badge">AI & Аналитика</span>
+                            <span class="badge">Оптимизация процессов</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Правое фото -->
+                    <div class="header-photo-right">
+                        <div class="photo-right-container">
+                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="expertise.html">Экспертиза</a></li>
+                <li><a href="experience.html" class="active">Опыт</a></li>
+                <li><a href="projects.html">Проекты</a></li>
+                <li><a href="tools.html">Инструменты</a></li>
+                <li><a href="certificates.html">Сертификаты</a></li>
+                <li><a href="wiki.html">Wiki</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Experience Hero Section -->
+    <section class="experience-hero">
+        <div class="container">
+            <h1>WOW-КОНЦЕПЦИЯ: ЦИФРОВОЙ ДВОЙНИК ЛОГИСТИЧЕСКОГО ЛИДЕРА</h1>
+            <p>Трансформация бизнесов через цифры и технологии</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Временная шкала -->
+        <section class="career-timeline">
+            <div class="career-progress">
+                <div class="milestone" data-year="2011" data-achievement="Старт в логистике"></div>
+                <div class="milestone" data-year="2014" data-achievement="+30% к обороту"></div>
+                <div class="milestone" data-year="2018" data-achievement="Запуск 3 филиалов"></div>
+                <div class="milestone" data-year="2022" data-achievement="ТОП-2 в стране"></div>
+                <div class="milestone" data-year="2023" data-achievement="CSat 95%"></div>
+                <div class="milestone" data-year="2025" data-achievement="AI в логистике"></div>
+            </div>
+        </section>
+
+        <!-- Карточки опыта -->
+        <section class="experience-grid">
+            <!-- ЛЕРУА МЕРЛЕН -->
+            <div class="experience-card wow-card">
+                <div class="company-header">
+                    <div class="logo">🛒</div>
+                    <div class="company-info">
+                        <h3>ЛЕРУА МЕРЛЕН</h3>
+                        <p class="period">Март 2020 — Июль 2025 · 5 лет 5 месяцев</p>
+                        <p class="position">Менеджер цепи поставок магазина</p>
+                    </div>
+                </div>
+                
+                <!-- Блок WOW-цифр -->
+                <div class="kpi-dashboard">
+                    <div class="kpi-item">
+                        <div class="kpi-value">79</div>
+                        <div class="kpi-label">человек в команде</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">87K</div>
+                        <div class="kpi-label">SKU на складе</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">-10%</div>
+                        <div class="kpi-label">транспортные расходы</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">#2</div>
+                        <div class="kpi-label">в стране по продуктивности</div>
+                    </div>
+                </div>
+
+                <!-- Инновационный блок -->
+                <div class="innovation-highlight">
+                    <h4>🚀 Ключевые инновации:</h4>
+                    <ul>
+                        <li><strong>Внедрение ИИ для прогнозирования спроса</strong> - сокращение излишков склада</li>
+                        <li><strong>Цифровой двойник логистических процессов</strong> - визуализация и оптимизация потоков</li>
+                        <li><strong>Система мониторинга заказов в реальном времени</strong> - +8% к точности остатков</li>
+                    </ul>
+                </div>
+
+                <!-- Бизнес-влияние -->
+                <div class="business-impact">
+                    <h4>💡 Бизнес-эффект:</h4>
+                    <div class="impact-grid">
+                        <div class="impact-item">📈 Рост продуктивности с 2.1 до 5.1</div>
+                        <div class="impact-item">🎯 Вход в ТОП-10 по CSat</div>
+                        <div class="impact-item">⚡ Равномерность поставок: 70% → 91%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ГРИНЛАЙТ -->
+            <div class="experience-card scale-card">
+                <div class="company-header">
+                    <div class="logo">🚗</div>
+                    <div class="company-info">
+                        <h3>ООО «ГРИНЛАЙТ» (Rossko)</h3>
+                        <p class="period">Май 2018 — Декабрь 2019 · 1 год 8 месяцев</p>
+                        <p class="position">Начальник склада | Архитектор региональной экспансии</p>
+                    </div>
+                </div>
+
+                <div class="expansion-map">
+                    <h4>🗺️ География масштабирования:</h4>
+                    <div class="cities-grid">
+                        <div class="city-card">
+                            <div class="city-name">Сургут</div>
+                            <div class="city-role">Хаб</div>
+                        </div>
+                        <div class="city-card new">
+                            <div class="city-name">Ноябрьск</div>
+                            <div class="city-role">Новый филиал</div>
+                        </div>
+                        <div class="city-card new">
+                            <div class="city-name">Ханты-Мансийск</div>
+                            <div class="city-role">Новый филиал</div>
+                        </div>
+                        <div class="city-card new">
+                            <div class="city-name">Нижневартовск</div>
+                            <div class="city-role">Новый филиал</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scale-stats">
+                    <div class="scale-item">
+                        <div class="scale-number">3</div>
+                        <div class="scale-text">новых города за 1 год</div>
+                    </div>
+                    <div class="scale-item">
+                        <div class="scale-number">24</div>
+                        <div class="scale-text">человека в управлении</div>
+                    </div>
+                    <div class="scale-item">
+                        <div class="scale-number">20K</div>
+                        <div class="scale-text">SKU под контролем</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- АВТО-ПРИТЯЖЕНИЕ -->
+            <div class="experience-card finance-card">
+                <div class="company-header">
+                    <div class="logo">🏆</div>
+                    <div class="company-info">
+                        <h3>АВТО-ПРИТЯЖЕНИЕ | ЮЛСАН | ЮГРАПРОМСЕРВИС</h3>
+                        <p class="period">Октябрь 2014 — Май 2018 · 3 года 8 месяцев</p>
+                        <p class="position">Директор филиала | Основатель операционной модели</p>
+                    </div>
+                </div>
+
+                <div class="financial-results">
+                    <h4>💸 Финансовые результаты:</h4>
+                    <div class="finance-metrics">
+                        <div class="metric positive">
+                            <div class="metric-value">+30%</div>
+                            <div class="metric-desc">Рост оборота за 2016 год</div>
+                        </div>
+                        <div class="metric negative">
+                            <div class="metric-value">-10%</div>
+                            <div class="metric-desc">Снижение затрат за 2016 год</div>
+                        </div>
+                        <div class="metric team">
+                            <div class="metric-value">15</div>
+                            <div class="metric-desc">Человек в команде</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="startup-achievement">
+                    <div class="startup-badge">🚀 СТАРТАП С НУЛЯ</div>
+                    <p>Построил филиал с чистого листа до прибыльной единицы</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Формула успеха -->
+        <section class="success-formula">
+            <h2>🧠 Моя формула эффективной логистики</h2>
+            <div class="formula-elements">
+                <div class="formula-item">
+                    <div class="formula-icon">🤖</div>
+                    <h3>AI + Data</h3>
+                    <p>Искусственный интеллект для точного прогнозирования</p>
+                </div>
+                <div class="formula-item">
+                    <div class="formula-icon">📊</div>
+                    <h3>KPI + Metrics</h3>
+                    <p>Измерение каждого процесса для постоянного улучшения</p>
+                </div>
+                <div class="formula-item">
+                    <div class="formula-icon">🚀</div>
+                    <h3>Scale + Speed</h3>
+                    <p>Масштабирование успешных практик на новые рынки</p>
+                </div>
+                <div class="formula-item">
+                    <div class="formula-icon">💡</div>
+                    <h3>Innovation + Impact</h3>
+                    <p>Технологии, которые напрямую влияют на прибыль</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Анимация появления элементов при скролле
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Наблюдаем за карточками опыта
+            const experienceCards = document.querySelectorAll('.experience-card');
+            experienceCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Наблюдаем за элементами формулы успеха
+            const formulaItems = document.querySelectorAll('.formula-item');
+            formulaItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(item);
+            });
+
+            // Анимация KPI при наведении
+            const kpiItems = document.querySelectorAll('.kpi-item');
+            kpiItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.05)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Интерактивные вехи временной шкалы
+            const milestones = document.querySelectorAll('.milestone');
+            milestones.forEach(milestone => {
+                milestone.addEventListener('click', function() {
+                    // Можно добавить функционал для показа деталей по году
+                    const year = this.getAttribute('data-year');
+                    const achievement = this.getAttribute('data-achievement');
+                    console.log(`Год: ${year}, Достижение: ${achievement}`);
+                });
+            });
+
+            // Плавная прокрутка для навигации
+            const anchorLinks = document.querySelectorAll('a[href^="#"]');
+            anchorLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
+                        
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Плавное появление изображений
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+                
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.3s ease';
+            });
+        });
+    </script>
+</body>
+</html>
