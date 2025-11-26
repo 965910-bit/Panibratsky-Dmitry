@@ -4,233 +4,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wiki - Дмитрий Панибратский</title>
-    
-    <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        .wiki-intro {
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary-color: #7c3aed;
+            --accent-color: #06b6d4;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .wiki-hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 4rem 0;
             text-align: center;
-            max-width: 800px;
-            margin: 0 auto 3rem;
-            font-size: 1.1rem;
-            line-height: 1.7;
+            margin-bottom: 3rem;
+        }
+
+        .wiki-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .wiki-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .wiki-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0 3rem;
+            padding: 0 1rem;
         }
 
-        .category-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
+        .category-btn {
+            padding: 0.8rem 1.5rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
             transition: all 0.3s ease;
-            text-align: center;
         }
 
-        .category-card:hover {
+        .category-btn:hover, .category-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .wiki-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .wiki-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .wiki-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-hover);
         }
 
-        .category-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .category-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-color);
-            margin-bottom: 1rem;
-        }
-
-        .category-description {
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            color: var(--text-light);
-        }
-
-        .articles-list {
-            list-style: none;
-            padding: 0;
-            text-align: left;
-        }
-
-        .articles-list li {
-            margin-bottom: 0.8rem;
-            padding: 0.8rem;
-            background: #f8f9fa;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .articles-list li:hover {
-            background: var(--primary-light);
-            transform: translateX(5px);
-        }
-
-        .articles-list a {
+        .wiki-header {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .articles-list i {
+        .wiki-icon {
+            font-size: 2.5rem;
             color: var(--primary-color);
-            font-size: 0.9rem;
         }
 
-        .wiki-search {
-            max-width: 600px;
-            margin: 2rem auto;
+        .wiki-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0;
         }
 
-        .search-box {
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid var(--border-color);
-            border-radius: 50px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
+        .wiki-description {
             color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
         }
 
-        .recent-articles {
-            margin-top: 3rem;
+        .wiki-content {
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
         }
 
-        .articles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+        .wiki-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        .article-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-
-        .article-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .article-category {
-            display: inline-block;
+        .wiki-tag {
             background: var(--primary-light);
             color: var(--primary-dark);
             padding: 0.3rem 0.8rem;
-            border-radius: 15px;
+            border-radius: 12px;
             font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+            font-weight: 500;
         }
 
-        .article-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 0.5rem;
+        /* Упрощенная шапка */
+        .header-simple {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
         }
 
-        .article-excerpt {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            line-height: 1.5;
-            margin-bottom: 1rem;
+        .header-simple .header-text-center h1 {
+            margin-bottom: 0.8rem;
+            font-size: 2.5rem;
         }
 
-        .article-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--text-light);
+        .header-simple .header-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
         }
 
-        .read-time {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
+        .header-simple .contact-badges {
+            justify-content: center;
+            gap: 1rem;
         }
 
         @media (max-width: 768px) {
-            .wiki-categories {
+            .wiki-grid {
                 grid-template-columns: 1fr;
+                padding: 1rem;
             }
             
-            .articles-grid {
-                grid-template-columns: 1fr;
+            .wiki-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header-simple .header-text-center h1 {
+                font-size: 2rem;
+            }
+            
+            .wiki-categories {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
+    <!-- Упрощенный Header без фото -->
+    <header class="header-simple">
         <div class="container">
             <div class="header-content">
-                <div class="header-photos">
-                    <!-- Левое фото -->
-                    <div class="header-photo-left">
-                        <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
-                    </div>
+                <div class="header-text-center">
+                    <h1>Дмитрий Панибратский</h1>
+                    <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
                     
-                    <!-- Центральный текст -->
-                    <div class="header-text-center">
-                        <h1>Дмитрий Панибратский</h1>
-                        <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
-                        
-                        <div class="contact-badges">
-                            <span class="badge">Управление SCM</span>
-                            <span class="badge">Цифровая трансформация</span>
-                            <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Оптимизация процессов</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Правое фото -->
-                    <div class="header-photo-right">
-                        <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
+                    <div class="contact-badges">
+                        <span class="badge">Управление SCM</span>
+                        <span class="badge">Цифровая трансформация</span>
+                        <span class="badge">AI & Аналитика</span>
+                        <span class="badge">Оптимизация процессов</span>
                     </div>
                 </div>
             </div>
@@ -246,7 +213,6 @@
                 <li><a href="experience.html">Опыт</a></li>
                 <li><a href="projects.html">Проекты</a></li>
                 <li><a href="tools.html">Инструменты</a></li>
-                <li><a href="calculators.html">Калькуляторы</a></li>
                 <li><a href="certificates.html">Сертификаты</a></li>
                 <li><a href="wiki.html" class="active">Wiki</a></li>
                 <li><a href="index.html#contact">Контакты</a></li>
@@ -254,314 +220,191 @@
         </div>
     </nav>
 
+    <!-- Hero Section -->
+    <section class="wiki-hero">
+        <div class="container">
+            <h1>База знаний SCM</h1>
+            <p>Методологии, концепции и лучшие практики управления цепями поставок</p>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="wiki-categories">
+        <button class="category-btn active" data-category="all">Все статьи</button>
+        <button class="category-btn" data-category="methodology">Методологии</button>
+        <button class="category-btn" data-category="optimization">Оптимизация</button>
+        <button class="category-btn" data-category="technology">Технологии</button>
+        <button class="category-btn" data-category="kpi">KPI и метрики</button>
+    </section>
+
+    <!-- Wiki Grid -->
     <main class="container">
-        <!-- Wiki Section -->
-        <section id="wiki" class="section">
-            <h2>SCM Wiki</h2>
-            
-            <div class="wiki-intro">
-                <p>База знаний по управлению цепями поставок, цифровой трансформации и оптимизации бизнес-процессов. Практические руководства, методологии и лучшие практики для профессионалов SCM.</p>
-            </div>
-
-            <!-- Поиск -->
-            <div class="wiki-search">
-                <div class="search-box">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" placeholder="Поиск по статьям и материалам...">
+        <section class="wiki-grid">
+            <!-- Lean Six Sigma -->
+            <div class="wiki-card" data-category="methodology,optimization">
+                <div class="wiki-header">
+                    <div class="wiki-icon">⚡</div>
+                    <h3 class="wiki-title">Lean Six Sigma</h3>
                 </div>
-            </div>
-
-            <!-- Категории Wiki -->
-            <div class="wiki-categories">
-                <!-- Категория 1 -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-network-wired"></i>
-                    </div>
-                    <h3 class="category-title">Управление цепями поставок</h3>
-                    <p class="category-description">Методологии, стратегии и лучшие практики управления end-to-end цепями поставок.</p>
-                    
-                    <ul class="articles-list">
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-book"></i>
-                                Основы SCM: от планирования до исполнения
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-chart-line"></i>
-                                KPI для измерения эффективности цепей поставок
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-shipping-fast"></i>
-                                Управление логистикой и дистрибуцией
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-boxes"></i>
-                                Оптимизация управления запасами
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-handshake"></i>
-                                SRM: Управление взаимоотношениями с поставщиками
-                            </a>
-                        </li>
+                <p class="wiki-description">
+                    Комбинированная методология, объединяющая инструменты бережливого производства и шести сигм для повышения эффективности процессов.
+                </p>
+                <div class="wiki-content">
+                    <p><strong>Ключевые принципы:</strong></p>
+                    <ul>
+                        <li>Устранение потерь (Muda)</li>
+                        <li>Снижение вариативности процессов</li>
+                        <li>Постоянное улучшение (Kaizen)</li>
+                        <li>Ориентация на клиента</li>
                     </ul>
+                    <p><strong>DMAIC методология:</strong> Define, Measure, Analyze, Improve, Control</p>
                 </div>
-
-                <!-- Категория 2 -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-digital-tachograph"></i>
-                    </div>
-                    <h3 class="category-title">Цифровая трансформация</h3>
-                    <p class="category-description">Технологии и подходы для цифровизации бизнес-процессов в SCM.</p>
-                    
-                    <ul class="articles-list">
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-robot"></i>
-                                RPA в автоматизации SCM процессов
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-cloud"></i>
-                                Облачные решения для управления цепями поставок
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-project-diagram"></i>
-                                Цифровые двойники в SCM
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-mobile-alt"></i>
-                                Мобильные решения для полевых сотрудников
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-database"></i>
-                                IoT и Big Data в управлении цепями поставок
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Категория 3 -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <h3 class="category-title">AI & Аналитика</h3>
-                    <p class="category-description">Искусственный интеллект и аналитика данных для предиктивного управления.</p>
-                    
-                    <ul class="articles-list">
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-chart-bar"></i>
-                                Предиктивная аналитика спроса
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-calculator"></i>
-                                ML модели для оптимизации запасов
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-road"></i>
-                                AI для оптимизации транспортных маршрутов
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                Анализ рисков с помощью машинного обучения
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-eye"></i>
-                                Компьютерное зрение в контроле качества
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Категория 4 -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-tachometer-alt"></i>
-                    </div>
-                    <h3 class="category-title">Оптимизация процессов</h3>
-                    <p class="category-description">Методологии и инструменты для повышения операционной эффективности.</p>
-                    
-                    <ul class="articles-list">
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-stream"></i>
-                                Value Stream Mapping в SCM
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-bolt"></i>
-                                Lean Six Sigma для цепей поставок
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-crosshairs"></i>
-                                Теория ограничений в управлении запасами
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-redo"></i>
-                                Continuous Improvement в SCM
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-search-dollar"></i>
-                                Анализ совокупной стоимости владения
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Категория 5 -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <h3 class="category-title">Инструменты и технологии</h3>
-                    <p class="category-description">Обзоры и руководства по программным решениям для SCM.</p>
-                    
-                    <ul class="articles-list">
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-database"></i>
-                                ERP системы: SAP, Oracle, Microsoft
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-warehouse"></i>
-                                WMS системы для управления складом
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-truck"></i>
-                                TMS системы для управления транспортом
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fab fa-python"></i>
-                                Python для анализа данных в SCM
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-chart-bar"></i>
-                                Power BI для визуализации SCM метрик
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Категория 6 -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-chart-pie"></i>
-                    </div>
-                    <h3 class="category-title">Аналитика и отчетность</h3>
-                    <p class="category-description">Метрики, дашборды и системы отчетности для SCM.</p>
-                    
-                    <ul class="articles-list">
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-ruler"></i>
-                                Ключевые метрики эффективности SCM
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-tachometer-alt"></i>
-                                Создание дашбордов для мониторинга SCM
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-calculator"></i>
-                                Финансовая аналитика в цепях поставок
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-chart-line"></i>
-                                Прогнозная аналитика и тренды
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-balance-scale"></i>
-                                Бенчмаркинг и сравнительный анализ
-                            </a>
-                        </li>
-                    </ul>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">Процессное улучшение</span>
+                    <span class="wiki-tag">Качество</span>
+                    <span class="wiki-tag">Эффективность</span>
                 </div>
             </div>
 
-            <!-- Недавние статьи -->
-            <div class="recent-articles">
-                <h3>Недавно добавленные статьи</h3>
-                <div class="articles-grid">
-                    <!-- Статья 1 -->
-                    <div class="article-card">
-                        <span class="article-category">AI & Аналитика</span>
-                        <h4 class="article-title">Предиктивное прогнозирование спроса с использованием ML</h4>
-                        <p class="article-excerpt">Практическое руководство по построению ML моделей для точного прогнозирования спроса на товары с сезонностью и трендами.</p>
-                        <div class="article-meta">
-                            <span>Добавлено: 15.01.2024</span>
-                            <span class="read-time"><i class="far fa-clock"></i> 12 мин</span>
-                        </div>
-                    </div>
+            <!-- Цифровые двойники -->
+            <div class="wiki-card" data-category="technology,optimization">
+                <div class="wiki-header">
+                    <div class="wiki-icon">🔄</div>
+                    <h3 class="wiki-title">Цифровые двойники в логистике</h3>
+                </div>
+                <p class="wiki-description">
+                    Виртуальные копии физических систем для моделирования, анализа и оптимизации логистических процессов.
+                </p>
+                <div class="wiki-content">
+                    <p><strong>Области применения:</strong></p>
+                    <ul>
+                        <li>Моделирование складских операций</li>
+                        <li>Оптимизация маршрутов доставки</li>
+                        <li>Прогнозирование спроса</li>
+                        <li>Анализ "что-если" сценариев</li>
+                    </ul>
+                    <p><strong>Преимущества:</strong> снижение рисков, повышение точности прогнозов, оптимизация ресурсов.</p>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">Digital Twin</span>
+                    <span class="wiki-tag">Симуляция</span>
+                    <span class="wiki-tag">AI</span>
+                </div>
+            </div>
 
-                    <!-- Статья 2 -->
-                    <div class="article-card">
-                        <span class="article-category">Оптимизация процессов</span>
-                        <h4 class="article-title">Методология Value Stream Mapping в SCM</h4>
-                        <p class="article-excerpt">Пошаговое руководство по применению VSM для выявления потерь и оптимизации потоков создания ценности в цепях поставок.</p>
-                        <div class="article-meta">
-                            <span>Добавлено: 10.01.2024</span>
-                            <span class="read-time"><i class="far fa-clock"></i> 8 мин</span>
-                        </div>
-                    </div>
+            <!-- KPI цепей поставок -->
+            <div class="wiki-card" data-category="kpi">
+                <div class="wiki-header">
+                    <div class="wiki-icon">📊</div>
+                    <h3 class="wiki-title">Ключевые показатели SCM</h3>
+                </div>
+                <p class="wiki-description">
+                    Основные метрики для измерения эффективности управления цепями поставок и логистических операций.
+                </p>
+                <div class="wiki-content">
+                    <p><strong>Основные KPI:</strong></p>
+                    <ul>
+                        <li><strong>Оборачиваемость запасов:</strong> COGS / Средние запасы</li>
+                        <li><strong>Уровень сервиса:</strong> Выполненные заказы / Все заказы</li>
+                        <li><strong>Точность прогнозирования:</strong> MAPE, WMAPE</li>
+                        <li><strong>Время цикла заказа:</strong> От размещения до доставки</li>
+                        <li><strong>Perfect Order Rate:</strong> Безупречное выполнение заказов</li>
+                    </ul>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">Метрики</span>
+                    <span class="wiki-tag">Аналитика</span>
+                    <span class="wiki-tag">Эффективность</span>
+                </div>
+            </div>
 
-                    <!-- Статья 3 -->
-                    <div class="article-card">
-                        <span class="article-category">Цифровая трансформация</span>
-                        <h4 class="article-title">RPA для автоматизации отчетности в SCM</h4>
-                        <p class="article-excerpt">Кейсы автоматизации рутинных процессов отчетности с использованием UiPath и других RPA платформ.</p>
-                        <div class="article-meta">
-                            <span>Добавлено: 05.01.2024</span>
-                            <span class="read-time"><i class="far fa-clock"></i> 10 мин</span>
-                        </div>
-                    </div>
+            <!-- ABC анализ -->
+            <div class="wiki-card" data-category="optimization,methodology">
+                <div class="wiki-header">
+                    <div class="wiki-icon">📦</div>
+                    <h3 class="wiki-title">ABC-XYZ анализ запасов</h3>
+                </div>
+                <p class="wiki-description">
+                    Метод классификации товарных запасов для оптимизации управления и контроля.
+                </p>
+                <div class="wiki-content">
+                    <p><strong>ABC анализ:</strong></p>
+                    <ul>
+                        <li><strong>A:</strong> 20% SKU → 80% оборота (строгий контроль)</li>
+                        <li><strong>B:</strong> 30% SKU → 15% оборота (умеренный контроль)</li>
+                        <li><strong>C:</strong> 50% SKU → 5% оборота (минимальный контроль)</li>
+                    </ul>
+                    <p><strong>XYZ анализ:</strong> по стабильности спроса (X - стабильный, Y - сезонный, Z - нерегулярный)</p>
+                    <p><strong>Комбинированный подход:</strong> ABC-XYZ матрица для точного управления</p>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">Управление запасами</span>
+                    <span class="wiki-tag">Классификация</span>
+                    <span class="wiki-tag">Оптимизация</span>
+                </div>
+            </div>
+
+            <!-- Предиктивная аналитика -->
+            <div class="wiki-card" data-category="technology,kpi">
+                <div class="wiki-header">
+                    <div class="wiki-icon">🤖</div>
+                    <h3 class="wiki-title">Предиктивная аналитика в SCM</h3>
+                </div>
+                <p class="wiki-description">
+                    Использование методов машинного обучения для прогнозирования спроса и оптимизации цепей поставок.
+                </p>
+                <div class="wiki-content">
+                    <p><strong>Основные методы:</strong></p>
+                    <ul>
+                        <li>Временные ряды (ARIMA, Prophet)</li>
+                        <li>Машинное обучение (XGBoost, Random Forest)</li>
+                        <li>Глубокое обучение (LSTM сети)</li>
+                        <li>Ансамбли моделей</li>
+                    </ul>
+                    <p><strong>Применение:</strong></p>
+                    <ul>
+                        <li>Прогнозирование спроса</li>
+                        <li>Оптимизация уровней запасов</li>
+                        <li>Предсказание срывов поставок</li>
+                        <li>Оптимизация маршрутов</li>
+                    </ul>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">Machine Learning</span>
+                    <span class="wiki-tag">Прогнозирование</span>
+                    <span class="wiki-tag">AI</span>
+                </div>
+            </div>
+
+            <!-- Управление рисками -->
+            <div class="wiki-card" data-category="methodology">
+                <div class="wiki-header">
+                    <div class="wiki-icon">🛡️</div>
+                    <h3 class="wiki-title">Управление рисками в цепях поставок</h3>
+                </div>
+                <p class="wiki-description">
+                    Систематический подход к идентификации, оценке и минимизации рисков в глобальных цепях поставок.
+                </p>
+                <div class="wiki-content">
+                    <p><strong>Типы рисков:</strong></p>
+                    <ul>
+                        <li><strong>Операционные:</strong> срывы поставок, качество</li>
+                        <li><strong>Финансовые:</strong> валютные, кредитные</li>
+                        <li><strong>Стратегические:</strong> изменения рынка</li>
+                        <li><strong>Внешние:</strong> политические, природные</li>
+                    </ul>
+                    <p><strong>Методы управления:</strong></p>
+                    <ul>
+                        <li>Диверсификация поставщиков</li>
+                        <li>Буферные запасы</li>
+                        <li>Страхование рисков</li>
+                        <li>Планы непрерывности бизнеса</li>
+                    </ul>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">Риск-менеджмент</span>
+                    <span class="wiki-tag">Устойчивость</span>
+                    <span class="wiki-tag">Бизнес-непрерывность</span>
                 </div>
             </div>
         </section>
@@ -569,31 +412,36 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <p>&copy; 2025 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Поиск по статьям
-            const searchInput = document.querySelector('.search-input');
-            const articles = document.querySelectorAll('.articles-list li, .article-card');
-            
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                
-                articles.forEach(article => {
-                    const text = article.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        article.style.display = 'block';
-                    } else {
-                        article.style.display = 'none';
-                    }
+            // Фильтрация статей
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            const wikiCards = document.querySelectorAll('.wiki-card');
+
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Убираем активный класс у всех кнопок
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    // Добавляем активный класс текущей кнопке
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    wikiCards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category').includes(category)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
                 });
             });
 
-            // Анимация появления элементов при скролле
+            // Анимация появления элементов
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -608,36 +456,12 @@
                 });
             }, observerOptions);
 
-            // Наблюдаем за карточками категорий и статей
-            const animatedElements = document.querySelectorAll('.category-card, .article-card');
-            animatedElements.forEach(element => {
-                element.style.opacity = '0';
-                element.style.transform = 'translateY(20px)';
-                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(element);
-            });
-
-            // Плавная прокрутка для навигации
-            const anchorLinks = document.querySelectorAll('a[href^="#"]');
-            
-            anchorLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
-                        
-                        const targetId = this.getAttribute('href');
-                        const targetElement = document.querySelector(targetId);
-                        
-                        if (targetElement) {
-                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-                            
-                            window.scrollTo({
-                                top: offsetTop,
-                                behavior: 'smooth'
-                            });
-                        }
-                    }
-                });
+            const cards = document.querySelectorAll('.wiki-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
             });
         });
     </script>
