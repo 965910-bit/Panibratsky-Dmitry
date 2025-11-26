@@ -12,58 +12,48 @@
         .projects-hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 4rem 0;
+            padding: 3rem 0;
             text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .projects-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.05)"><polygon points="0,0 1000,50 0,100"/></svg>');
-            background-size: cover;
+            margin-bottom: 2rem;
         }
 
         .projects-hero h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 1rem;
             font-weight: 700;
-            position: relative;
-            z-index: 2;
         }
 
         .projects-hero p {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             opacity: 0.95;
             max-width: 600px;
             margin: 0 auto;
-            position: relative;
-            z-index: 2;
         }
 
-        /* Сетка проектов */
+        /* Сетка проектов - исправленная */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 3rem;
-            margin: 3rem 0;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
         }
 
         .project-card {
             background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             border: 1px solid #e2e8f0;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
         }
 
         .project-card::before {
@@ -77,49 +67,50 @@
         }
 
         .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
         }
 
         .project-header {
             display: flex;
             align-items: flex-start;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
         }
 
         .project-icon {
-            font-size: 3rem;
-            width: 80px;
-            height: 80px;
+            font-size: 2.2rem;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 16px;
+            border-radius: 12px;
             background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
             color: white;
             flex-shrink: 0;
         }
 
         .project-title {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
+            line-height: 1.3;
         }
 
         .project-subtitle {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: var(--text-light);
             font-style: italic;
         }
 
         .project-image {
             width: 100%;
-            height: 250px;
-            border-radius: 12px;
+            height: 180px;
+            border-radius: 10px;
             overflow: hidden;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .project-image img {
@@ -134,10 +125,11 @@
         }
 
         .project-description {
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-size: 1rem;
+            line-height: 1.5;
             color: var(--text-light);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
         }
 
         /* Статус проекта */
@@ -145,10 +137,11 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.7rem 1.5rem;
-            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
         }
 
         .status-writing {
@@ -166,26 +159,26 @@
             color: white;
         }
 
-        /* Детали проекта */
+        /* Детали проекта - компактные */
         .project-details {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+            margin: 1.2rem 0;
         }
 
         .project-features, .project-stats {
             background: #f8fafc;
-            padding: 1.5rem;
-            border-radius: 12px;
-            border-left: 4px solid var(--primary-color);
+            padding: 1.2rem;
+            border-radius: 10px;
+            border-left: 3px solid var(--primary-color);
         }
 
         .project-features h4, .project-stats h4 {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--primary-color);
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -194,13 +187,15 @@
         .features-list {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .features-list li {
-            padding: 0.7rem 0;
+            padding: 0.4rem 0;
             display: flex;
             align-items: flex-start;
             gap: 0.5rem;
+            font-size: 0.9rem;
             border-bottom: 1px solid #e2e8f0;
         }
 
@@ -219,55 +214,60 @@
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
         .stat-item {
             text-align: center;
-            padding: 1rem;
+            padding: 0.8rem 0.5rem;
             background: white;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid #e2e8f0;
         }
 
         .stat-value {
-            font-size: 1.5rem;
-            font-weight: 800;
+            font-size: 1.1rem;
+            font-weight: 700;
             color: var(--primary-color);
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.2rem;
         }
 
         .stat-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-light);
         }
 
         /* Технологии */
         .project-tech {
-            margin: 1.5rem 0;
+            margin: 1rem 0;
+        }
+
+        .project-tech h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
         }
 
         .tech-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            gap: 0.4rem;
         }
 
         .tech-tag {
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
             font-weight: 500;
         }
 
         /* Ссылки проекта */
         .project-links {
             display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
         }
 
@@ -275,10 +275,11 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
+            padding: 0.7rem 1.2rem;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             border: 2px solid transparent;
         }
@@ -303,48 +304,68 @@
         .project-card:nth-child(1) .project-icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .project-card:nth-child(2) .project-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
         .project-card:nth-child(3) .project-icon { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .project-card:nth-child(4) .project-icon { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        /* Блок воздействия */
+        .project-impact {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 1rem;
+            border-radius: 8px;
+            color: white;
+            margin: 1rem 0;
+        }
+
+        .impact-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-impact p {
+            font-size: 0.85rem;
+            margin: 0;
+            line-height: 1.4;
+        }
 
         /* Адаптивность */
         @media (max-width: 768px) {
             .projects-hero h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             
             .projects-hero p {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
             
             .projects-grid {
                 grid-template-columns: 1fr;
+                padding: 0 15px;
             }
             
             .project-header {
                 flex-direction: column;
                 text-align: center;
-                gap: 1rem;
-            }
-            
-            .project-details {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
             }
             
             .project-card {
-                padding: 2rem;
+                padding: 1.5rem;
+            }
+            
+            .project-image {
+                height: 160px;
             }
         }
 
         @media (max-width: 480px) {
             .projects-hero {
-                padding: 3rem 0;
+                padding: 2rem 0;
             }
             
             .projects-hero h1 {
-                font-size: 1.8rem;
+                font-size: 1.7rem;
             }
             
             .stats-grid {
@@ -358,23 +379,6 @@
             .project-link {
                 justify-content: center;
             }
-        }
-
-        /* Дополнительные стили */
-        .project-impact {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            padding: 1.5rem;
-            border-radius: 12px;
-            color: white;
-            margin: 1.5rem 0;
-        }
-
-        .impact-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
     </style>
 </head>
@@ -440,7 +444,7 @@
     </section>
 
     <!-- Main Content -->
-    <main class="container">
+    <main>
         <div class="projects-grid">
             <!-- Книга "Полная теория SCM" -->
             <div class="project-card">
@@ -448,7 +452,7 @@
                     <div class="project-icon">📚</div>
                     <div>
                         <h2 class="project-title">Книга "Полная теория SCM"</h2>
-                        <p class="project-subtitle">Практическое руководство по цифровой трансформации цепей поставок</p>
+                        <p class="project-subtitle">Практическое руководство по цифровой трансформации</p>
                     </div>
                 </div>
 
@@ -473,7 +477,6 @@
                             <li>ИИ и предиктивная аналитика</li>
                             <li>Цифровые двойники процессов</li>
                             <li>Оптимизация сквозных процессов</li>
-                            <li>KPI и метрики эффективности</li>
                         </ul>
                     </div>
 
@@ -501,13 +504,12 @@
                 </div>
 
                 <div class="project-tech">
-                    <h4>🛠️ Технологии и методы</h4>
+                    <h4>🛠️ Технологии</h4>
                     <div class="tech-tags">
                         <span class="tech-tag">Digital Twins</span>
                         <span class="tech-tag">AI/ML</span>
                         <span class="tech-tag">Process Mining</span>
                         <span class="tech-tag">Data Analytics</span>
-                        <span class="tech-tag">SCM Standards</span>
                     </div>
                 </div>
 
@@ -533,8 +535,8 @@
                 <div class="project-header">
                     <div class="project-icon">📢</div>
                     <div>
-                        <h2 class="project-title">Telegram-канал: Logistica & Supply Chain</h2>
-                        <p class="project-subtitle">Профессиональное сообщество SCM-специалистов</p>
+                        <h2 class="project-title">Telegram-канал</h2>
+                        <p class="project-subtitle">Logistica & Supply Chain</p>
                     </div>
                 </div>
 
@@ -559,7 +561,6 @@
                             <li>Аналитика рынка</li>
                             <li>Интервью с экспертами</li>
                             <li>Обзоры технологий</li>
-                            <li>Новости индустрии</li>
                         </ul>
                     </div>
 
@@ -587,19 +588,18 @@
                 </div>
 
                 <div class="project-tech">
-                    <h4>🎨 Форматы контента</h4>
+                    <h4>🎨 Форматы</h4>
                     <div class="tech-tags">
                         <span class="tech-tag">Longreads</span>
                         <span class="tech-tag">Инфографика</span>
                         <span class="tech-tag">Опросы</span>
                         <span class="tech-tag">Кейсы</span>
-                        <span class="tech-tag">Экспертиза</span>
                     </div>
                 </div>
 
                 <div class="project-impact">
                     <div class="impact-title">💡 Достигнутый эффект</div>
-                    <p>Создано крупнейшее профессиональное сообщество SCM-специалистов в RU сегменте с ежемесячным охватом 50K+ уникальных пользователей</p>
+                    <p>Создано крупнейшее профессиональное сообщество SCM-специалистов в RU сегменте с ежемесячным охватом 50K+ пользователей</p>
                 </div>
 
                 <div class="project-links">
@@ -645,7 +645,6 @@
                             <li>Форум и сообщества</li>
                             <li>Инструменты коллаборации</li>
                             <li>Marketplace экспертов</li>
-                            <li>Онлайн-курсы</li>
                         </ul>
                     </div>
 
@@ -673,19 +672,18 @@
                 </div>
 
                 <div class="project-tech">
-                    <h4>🛠️ Технологический стек</h4>
+                    <h4>🛠️ Технологии</h4>
                     <div class="tech-tags">
                         <span class="tech-tag">React</span>
                         <span class="tech-tag">Node.js</span>
                         <span class="tech-tag">MongoDB</span>
                         <span class="tech-tag">AWS</span>
-                        <span class="tech-tag">WebRTC</span>
                     </div>
                 </div>
 
                 <div class="project-impact">
                     <div class="impact-title">💡 Потенциальный эффект</div>
-                    <p>Создание централизованной цифровой экосистемы для SCM-сообщества с годовым оборотом 5M+ рублей и охватом 50K+ специалистов</p>
+                    <p>Создание централизованной цифровой экосистемы для SCM-сообщества с годовым оборотом 5M+ рублей</p>
                 </div>
 
                 <div class="project-links">
@@ -730,7 +728,7 @@
             const projectCards = document.querySelectorAll('.project-card');
             projectCards.forEach(card => {
                 card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
+                card.style.transform = 'translateY(20px)';
                 card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(card);
             });
@@ -739,11 +737,11 @@
             const statItems = document.querySelectorAll('.stat-item');
             statItems.forEach(item => {
                 item.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-5px) scale(1.05)';
+                    this.style.transform = 'translateY(-3px)';
                 });
                 
                 item.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
+                    this.style.transform = 'translateY(0)';
                 });
             });
 
@@ -766,17 +764,6 @@
                         });
                     }
                 });
-            });
-
-            // Плавное появление изображений
-            const images = document.querySelectorAll('img');
-            images.forEach(img => {
-                img.addEventListener('load', function() {
-                    this.style.opacity = '1';
-                });
-                
-                img.style.opacity = '0';
-                img.style.transition = 'opacity 0.3s ease';
             });
         });
     </script>
