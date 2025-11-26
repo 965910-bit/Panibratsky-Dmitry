@@ -22,7 +22,7 @@
 
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
@@ -188,6 +188,24 @@
             border-color: var(--primary-color);
         }
 
+        .calculator-link {
+            display: block;
+            text-align: center;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .calculator-link:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .tools-grid {
                 grid-template-columns: 1fr;
@@ -267,6 +285,7 @@
                 <li><a href="experience.html">Опыт</a></li>
                 <li><a href="projects.html">Проекты</a></li>
                 <li><a href="tools.html" class="active">Инструменты</a></li>
+                <li><a href="calculators.html">Калькуляторы</a></li>
                 <li><a href="certificates.html">Сертификаты</a></li>
                 <li><a href="wiki.html">Wiki</a></li>
                 <li><a href="index.html#contact">Контакты</a></li>
@@ -552,6 +571,38 @@
                         <span class="level-text">Эксперт</span>
                     </div>
                 </div>
+
+                <!-- SCM Калькуляторы -->
+                <div class="tool-card" data-category="ai optimization business-optimization supply-chain-optimization analytics">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>SCM Калькуляторы</h3>
+                            <span class="tool-category">Аналитика & Расчеты</span>
+                        </div>
+                    </div>
+                    <div class="tool-description">
+                        <p>Комплексные аналитические инструменты для расчета ключевых показателей эффективности и оптимизации цепей поставок.</p>
+                    </div>
+                    <div class="tool-features">
+                        <h4>Доступные калькуляторы:</h4>
+                        <ul>
+                            <li>ROI и инвестиционный анализ</li>
+                            <li>Оборачиваемость запасов и EOQ</li>
+                            <li>Уровень обслуживания и сервиса</li>
+                            <li>Точка безубыточности и NPV</li>
+                            <li>Транспортные расходы и логистика</li>
+                            <li>Производительность склада</li>
+                            <li>Страховой запас и управление рисками</li>
+                        </ul>
+                    </div>
+                    <a href="calculators.html" class="calculator-link">
+                        <i class="fas fa-external-link-alt"></i> Перейти к калькуляторам
+                    </a>
+                </div>
+
             </div>
         </section>
     </main>
