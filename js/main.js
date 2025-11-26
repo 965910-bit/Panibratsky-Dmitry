@@ -1,11 +1,9 @@
-// js/main.js
+// Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Dmitry Panibratsky portfolio loaded');
-
-    // Smooth scrolling for navigation
-    const navLinks = document.querySelectorAll('a[href^="#"]');
+    // Smooth scroll for anchor links
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
     
-    navLinks.forEach(link => {
+    anchorLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             
@@ -14,70 +12,80 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                const headerHeight = document.querySelector('.header').offsetHeight;
-                const targetPosition = targetElement.offsetTop - headerHeight - 20;
+                const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
                 
                 window.scrollTo({
-                    top: targetPosition,
+                    top: offsetTop,
                     behavior: 'smooth'
                 });
             }
         });
     });
 
-    // Intersection Observer for animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-
-    // Animate expertise cards
-    const expertiseCards = document.querySelectorAll('.expertise-card');
-    expertiseCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = `opacity 0.6s ease ${index * 0.2}s, transform 0.6s ease ${index * 0.2}s`;
-        observer.observe(card);
-    });
-
-    // Active navigation highlighting
+    // Add active class to navigation links based on scroll position
     const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
     
-    function highlightNav() {
-        const scrollY = window.pageYOffset;
+    function highlightNavigation() {
+        let current = '';
         
         sections.forEach(section => {
-            const sectionHeight = section.offsetHeight;
-            const sectionTop = section.offsetTop - 100;
-            const sectionId = section.getAttribute('id');
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
             
-            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                const navLink = document.querySelector(`.nav-list a[href="#${sectionId}"]`);
-                if (navLink) {
-                    navLink.style.backgroundColor = 'rgba(255,255,255,0.2)';
-                }
-            } else {
-                const navLink = document.querySelector(`.nav-list a[href="#${sectionId}"]`);
-                if (navLink) {
-                    navLink.style.backgroundColor = 'transparent';
-                }
+            if (window.scrollY >= sectionTop - 100) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
             }
         });
     }
-
-    window.addEventListener('scroll', highlightNav);
+    
+    window.addEventListener('scroll', highlightNavigation);
+    
+    // Image lazy loading fallback
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    
+    if ('loading' in HTMLImageElement.prototype) {
+        // Browser supports native lazy loading
+        images.forEach(img => {
+            img.src = img.dataset.src;
+        });
+    } else {
+        // Fallback for browsers that don't support lazy loading
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+        
+        images.forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
 });
 
-// Error handling
-window.addEventListener('error', function(e) {
-    console.error('Resource loading error:', e);
+// Add some interactive effects
+document.addEventListener('DOMContentLoaded', function() {
+    // Add loading animation for images
+    const images = document.querySelectorAll('img');
+    
+    images.forEach(img => {
+        img.addEventListener('load', function() {
+            this.style.opacity = '1';
+        });
+        
+        // Set initial opacity for fade-in effect
+        img.style.opacity = '0';
+        img.style.transition = 'opacity 0.3s ease';
+    });
 });
