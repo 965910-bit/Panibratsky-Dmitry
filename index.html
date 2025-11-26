@@ -3,124 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панибратский Дмитрий - Эксперт в AI и Цифровой трансформации SCM</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="expertise.css">
+    <title>Дмитрий Панибратский - Эксперт по управлению цепями поставок</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/calculators.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dual-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+            margin: 2rem 0;
+        }
+        .photo-side {
+            text-align: center;
+        }
+        .photo-side img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .main-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .tools-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .tool-preview-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+        .tool-preview-card:hover {
+            transform: translateY(-5px);
+        }
+        @media (max-width: 768px) {
+            .dual-layout {
+                grid-template-columns: 1fr;
+            }
+            .photo-side {
+                order: -1;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Шапка сайта -->
     <header class="header">
         <nav class="nav">
-            <div class="container">
-                <ul class="nav-list">
-                    <li><a href="#expertise">Экспертиза</a></li>
-                    <li><a href="tools.html">Инструменты</a></li>
-                    <li><a href="calculators.html">Калькуляторы</a></li>
-                    <li><a href="certificates.html">Сертификаты</a></li>
-                    <li><a href="wiki.html">База знаний</a></li>
-                </ul>
+            <div class="nav-brand">
+                <h1><a href="index.html">📊 Центр управления</a></h1>
+                <span>Эксперт в управлении цепями поставок</span>
             </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="control.html">Все инструменты</a></li>
+                <li><a href="#about">О проекте</a></li>
+            </ul>
         </nav>
     </header>
 
-    <main>
-        <!-- Герой секция -->
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">Панибратский Дмитрий</h1>
-                    <p class="hero-subtitle">Эксперт в области AI, предиктивной аналитики и цифровой трансформации Supply Chain Management</p>
-                    <div class="hero-cta">
-                        <a href="#expertise" class="cta-button">Узнать об экспертизе</a>
-                        <a href="#contact" class="cta-button secondary">Контакты</a>
-                    </div>
-                </div>
+    <main class="container">
+        <div class="dual-layout">
+            <!-- Левое фото -->
+            <div class="photo-side">
+                <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - Профессиональное фото 1">
+                <h3>13+ лет в SCM</h3>
+                <p>Опыт управления цепями поставок</p>
             </div>
-        </section>
 
-        <!-- Секция экспертиз -->
-        <section id="expertise" class="expertise-section">
-            <div class="container">
-                <h2 class="section-title">Ключевые направления экспертизы</h2>
-                
-                <div class="expertise-grid">
-                    <!-- Блок 1: AI & Предиктивная аналитика -->
-                    <div class="expertise-card">
-                        <div class="expertise-header">
-                            <div class="expertise-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 3.5L9 7V9L15 12.5L21 9ZM21 16C21 14.9 20.1 14 19 14C17.9 14 17 14.9 17 16C17 17.1 17.9 18 19 18C20.1 18 21 17.1 21 16ZM19 20C16.8 20 15 18.2 15 16H3V14H15C15 11.8 16.8 10 19 10C21.2 10 23 11.8 23 14V22H21V20H19Z" fill="currentColor"/>
-                                </svg>
-                            </div>
-                            <h3 class="expertise-title">AI & Предиктивная аналитика</h3>
-                        </div>
-                        <p class="expertise-subtitle">Трансформация данных в конкурентные преимущества</p>
-                        
-                        <div class="expertise-features">
-                            <div class="feature-item">
-                                <h4 class="feature-title">AI-прогнозирование спроса</h4>
-                                <p class="feature-description">Разработка систем искусственного интеллекта для точного прогнозирования спроса с учетом 150+ факторов влияния.</p>
-                            </div>
-                            <div class="feature-item">
-                                <h4 class="feature-title">Предиктивная аналитика рисков</h4>
-                                <p class="feature-description">Прогнозирование сбоев в целях поставок с вероятностью до 95% для проактивного управления.</p>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Основной контент -->
+            <div class="main-content">
+                <div class="section-header">
+                    <h1>Дмитрий Панибратский</h1>
+                    <p>Эксперт в управлении цепями поставок и цифровой трансформации бизнеса</p>
+                </div>
 
-                    <!-- Блок 2: Цифровая трансформация SCM -->
-                    <div class="expertise-card">
-                        <div class="expertise-header">
-                            <div class="expertise-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21 16V4C21 2.9 20.1 2 19 2H5C3.9 2 3 2.9 3 4V16C3 17.1 3.9 18 5 18H10V20H8V22H16V20H14V18H19C20.1 18 21 17.1 21 16ZM5 4H19V16H5V4Z" fill="currentColor"/>
-                                </svg>
-                            </div>
-                            <h3 class="expertise-title">Цифровая трансформация SCM</h3>
+                <div class="personal-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>📍 Локация:</strong>
+                            <span>Сургут / Санкт-Петербург</span>
                         </div>
-                        <p class="expertise-subtitle">Создание цифровых экосистем для управления цепями поставок</p>
-                        
-                        <div class="expertise-features">
-                            <div class="feature-item">
-                                <h4 class="feature-title">Цифровые двойники процессов</h4>
-                                <p class="feature-description">Создание виртуальных копий цепей поставок для тестирования сценариев и оптимизации процессов.</p>
-                            </div>
-                            <div class="feature-item">
-                                <h4 class="feature-title">Автоматизация E2E-процессов</h4>
-                                <p class="feature-description">Роботизация сквозных процессов от заказа до поставки.</p>
-                            </div>
+                        <div class="info-item">
+                            <strong>📚 Квалификация:</strong>
+                            <span>Коммерческий директор (CCO), MBA Логистика</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>🎯 Специализация:</strong>
+                            <span>Цифровая трансформация SCM, AI-аналитика</span>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Секция контактов -->
-        <section id="contact" class="contact-section">
-            <div class="container">
-                <h2 class="section-title">Контакты</h2>
-                <div class="contact-content">
-                    <div class="contact-info">
-                        <p>Готов обсудить ваш проект и предложить решения в области AI и цифровой трансформации</p>
-                        <div class="contact-links">
-                            <a href="https://github.com/965910-bit" class="contact-link" target="_blank">GitHub</a>
-                            <a href="https://965910-bit.github.io/Panibratsky-Dmitry/" class="contact-link" target="_blank">Портфолио</a>
+                <div class="achievements">
+                    <h3>Ключевые достижения</h3>
+                    <div class="achievements-grid">
+                        <div class="achievement-card">
+                            <div class="achievement-icon">📈</div>
+                            <h4>143% рост эффективности</h4>
+                            <p>Оптимизация операционных процессов</p>
                         </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">💰</div>
+                            <h4>10% экономии затрат</h4>
+                            <p>Снижение логистических расходов</p>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">🤖</div>
+                            <h4>AI-прогнозирование</h4>
+                            <p>Внедрение систем искусственного интеллекта</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Блок инструментов -->
+                <div class="tools-preview-section">
+                    <h3>🛠️ Профессиональные инструменты</h3>
+                    <p>Комплексные калькуляторы и аналитические инструменты для управления бизнесом</p>
+                    
+                    <div class="tools-preview">
+                        <a href="finance.html" class="tool-preview-card">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Финансы</h4>
+                            <p>ROS, ROI, NPV, окупаемость</p>
+                        </a>
+                        <a href="logistics.html" class="tool-preview-card">
+                            <i class="fas fa-truck"></i>
+                            <h4>Логистика</h4>
+                            <p>Запасы, транспорт, склад</p>
+                        </a>
+                        <a href="hr.html" class="tool-preview-card">
+                            <i class="fas fa-users"></i>
+                            <h4>HR аналитика</h4>
+                            <p>Персонал, найм, обучение</p>
+                        </a>
+                        <a href="control.html" class="tool-preview-card">
+                            <i class="fas fa-cogs"></i>
+                            <h4>Все инструменты</h4>
+                            <p>Полный набор калькуляторов</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правое фото -->
+            <div class="photo-side">
+                <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - Профессиональное фото 2">
+                <h3>87,000+ SKU</h3>
+                <p>Под операционным управлением</p>
+            </div>
+        </div>
+
+        <!-- Секция сертификатов -->
+        <section id="documents" class="section">
+            <h2>📚 Сертификаты и квалификация</h2>
+            <div class="documents-grid">
+                <!-- Основные документы -->
+                <div class="document-category">
+                    <h3>🎓 Основные документы</h3>
+                    <div class="documents-row">
+                        <div class="document-card diploma-card">
+                            <div class="doc-icon">🏆</div>
+                            <h4>Диплом коммерческого директора</h4>
+                            <p class="doc-date">20.10.2023</p>
+                            <p class="doc-institution">Институт профессионального образования</p>
+                            <a href="certificates/diplom-commercial-director.pdf" target="_blank" class="doc-btn diploma-btn">
+                                📄 PDF сертификат
+                            </a>
+                        </div>
+                        <div class="document-card">
+                            <div class="doc-icon">🎯</div>
+                            <h4>45 татуировок менеджера</h4>
+                            <p class="doc-date">2020</p>
+                            <p class="doc-description">Мастер-класс Максима Батырева</p>
+                            <a href="certificates/batyrev-45-tattoos.pdf" target="_blank" class="doc-btn">
+                                📄 PDF сертификат
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Тайм-менеджмент -->
+                <div class="document-category">
+                    <h3>⏱️ Тайм-менеджмент</h3>
+                    <div class="documents-row">
+                        <div class="document-card">
+                            <div class="doc-icon">📊</div>
+                            <h4>Аудит времени</h4>
+                            <p class="doc-date">09.01.2020</p>
+                            <a href="certificates/time-management-audit.pdf" target="_blank" class="doc-btn">
+                                📄 PDF сертификат
+                            </a>
+                        </div>
+                        <div class="document-card">
+                            <div class="doc-icon">🎯</div>
+                            <h4>Приоритезация задач</h4>
+                            <p class="doc-date">11.01.2020</p>
+                            <a href="certificates/time-management-prioritization.pdf" target="_blank" class="doc-btn">
+                                📄 PDF сертификат
+                            </a>
+                        </div>
+                        <!-- Добавьте остальные сертификаты по аналогии -->
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Подвал сайта -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Панибратский Дмитрий. Все права защищены.</p>
-            <p>Специалист в области AI и цифровой трансформации Supply Chain Management</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Центр управления</h3>
+                    <p>Комплексные инструменты для эффективного управления</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p>📱 +7-982-581-07-87</p>
+                    <p>✉️ dmitriy.panibratskiy@yandex.ru</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Центр управления. Все права защищены.</p>
+            </div>
         </div>
     </footer>
-
-    <!-- Подключение JavaScript -->
-    <script src="js/main.js"></script>
 </body>
 </html>
