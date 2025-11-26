@@ -3,354 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Инструменты SCM - Дмитрий Панибратский</title>
-    
-    <!-- Styles -->
+    <title>Инструменты управления - Центр управления</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/calculators.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        .page-header {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .page-header h1 {
-            font-size: 2.5rem;
-            color: #2c5aa0;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .page-header p {
-            font-size: 1.2rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .tool-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e1e5e9;
-            transition: all 0.3s ease;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tool-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #2c5aa0, #1e3d72);
-        }
-
-        .tool-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-            border-color: #2c5aa0;
-        }
-
-        .tool-icon {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            color: #2c5aa0;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .tool-card h3 {
-            color: #2c5aa0;
-            margin-bottom: 1rem;
-            font-size: 1.4rem;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        .tool-card p {
-            color: #666;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            font-size: 1rem;
-        }
-
-        .tool-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            background: linear-gradient(135deg, #2c5aa0, #1e3d72);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(44, 90, 160, 0.3);
-        }
-
-        .tool-link:hover {
-            background: linear-gradient(135deg, #1e3d72, #2c5aa0);
-            transform: translateY(-2px);
-            color: white;
-            text-decoration: none;
-            box-shadow: 0 6px 20px rgba(44, 90, 160, 0.4);
-        }
-
-        .tool-link i {
-            font-size: 1.1rem;
-        }
-
-        /* Специальные стили для разных категорий инструментов */
-        .tool-card:nth-child(1) .tool-icon { color: #27ae60; }
-        .tool-card:nth-child(2) .tool-icon { color: #e74c3c; }
-        .tool-card:nth-child(3) .tool-icon { color: #9b59b6; }
-        .tool-card:nth-child(4) .tool-icon { color: #f39c12; }
-        .tool-card:nth-child(5) .tool-icon { color: #3498db; }
-        .tool-card:nth-child(6) .tool-icon { color: #1abc9c; }
-
-        .tool-card:nth-child(1)::before { background: linear-gradient(135deg, #27ae60, #219653); }
-        .tool-card:nth-child(2)::before { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-        .tool-card:nth-child(3)::before { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
-        .tool-card:nth-child(4)::before { background: linear-gradient(135deg, #f39c12, #e67e22); }
-        .tool-card:nth-child(5)::before { background: linear-gradient(135deg, #3498db, #2980b9); }
-        .tool-card:nth-child(6)::before { background: linear-gradient(135deg, #1abc9c, #16a085); }
-
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .tools-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .tool-card {
-                padding: 2rem 1.5rem;
-            }
-            
-            .page-header h1 {
-                font-size: 2rem;
-            }
-            
-            .page-header p {
-                font-size: 1.1rem;
-            }
-            
-            .tool-icon {
-                font-size: 3rem;
-                height: 70px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .tool-card {
-                padding: 1.5rem 1rem;
-            }
-            
-            .page-header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .tool-link {
-                padding: 0.8rem 1.5rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Анимация появления карточек */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .tool-card {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        .tool-card:nth-child(1) { animation-delay: 0.1s; }
-        .tool-card:nth-child(2) { animation-delay: 0.2s; }
-        .tool-card:nth-child(3) { animation-delay: 0.3s; }
-        .tool-card:nth-child(4) { animation-delay: 0.4s; }
-        .tool-card:nth-child(5) { animation-delay: 0.5s; }
-        .tool-card:nth-child(6) { animation-delay: 0.6s; }
-    </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="header-photos">
-                    <!-- Левое фото -->
-                    <div class="header-photo-left">
-                        <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность">
-                        </div>
-                    </div>
-                    
-                    <!-- Центральный текст -->
-                    <div class="header-text-center">
-                        <h1>Дмитрий Панибратский</h1>
-                        <p class="header-subtitle">Инструменты управления SCM</p>
-                    </div>
-                    
-                    <!-- Правое фото -->
-                    <div class="header-photo-right">
-                        <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок">
-                        </div>
-                    </div>
-                </div>
+        <nav class="nav">
+            <div class="nav-brand">
+                <h1><a href="index.html">📊 Центр управления</a></h1>
+                <span>Профессиональные инструменты</span>
             </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="navigation">
-        <div class="container">
             <ul class="nav-links">
                 <li><a href="index.html">Главная</a></li>
-                <li><a href="index.html#about">Профиль</a></li>
-                <li><a href="index.html#expertise">Экспертиза</a></li>
-                <li><a href="index.html#projects">Проекты</a></li>
                 <li><a href="tools.html" class="active">Инструменты</a></li>
+                <li><a href="calculators.html">Калькуляторы</a></li>
                 <li><a href="certificates.html">Сертификаты</a></li>
-                <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="index.html#contact">Контакты</a></li>
+                <li><a href="wiki.html">WiKi</a></li>
             </ul>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <main class="container">
-        <!-- Page Header -->
-        <div class="page-header">
-            <h1><i class="fas fa-tools"></i> Инструменты управления SCM</h1>
-            <p>Практические инструменты и калькуляторы для оптимизации управления цепями поставок и бизнес-процессов</p>
+        <div class="section-header">
+            <h1>Профессиональные инструменты управления</h1>
+            <p>Комплексные решения для оптимизации бизнес-процессов и повышения эффективности</p>
         </div>
 
-        <!-- Tools Grid -->
-        <div class="tools-grid">
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-chart-line"></i>
+        <div class="tools-categories">
+            <!-- Финансовые инструменты -->
+            <div class="tool-category">
+                <h2><i class="fas fa-chart-line"></i> Финансовые калькуляторы</h2>
+                <div class="tools-grid">
+                    <a href="finance.html" class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <h3>Рентабельность продаж (ROS)</h3>
+                        <p>Расчет рентабельности и финансовых показателей бизнеса</p>
+                        <div class="tool-features">
+                            <span class="feature">Анализ прибыльности</span>
+                            <span class="feature">Бенчмаркинг</span>
+                        </div>
+                    </a>
+                    <a href="finance.html" class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h3>Рентабельность инвестиций (ROI)</h3>
+                        <p>Анализ эффективности инвестиций и капиталовложений</p>
+                        <div class="tool-features">
+                            <span class="feature">Окупаемость</span>
+                            <span class="feature">Анализ проектов</span>
+                        </div>
+                    </a>
                 </div>
-                <h3>Финансовые калькуляторы</h3>
-                <p>Расчет ROS, ROI, NPV, срока окупаемости и других ключевых финансовых показателей для оценки эффективности проектов</p>
-                <a href="calculators.html" class="tool-link">
-                    <i class="fas fa-calculator"></i>
-                    Открыть инструменты
-                </a>
             </div>
 
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-warehouse"></i>
+            <!-- Логистика -->
+            <div class="tool-category">
+                <h2><i class="fas fa-truck"></i> Логистика и склад</h2>
+                <div class="tools-grid">
+                    <a href="logistics.html" class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <h3>Оборачиваемость запасов</h3>
+                        <p>Расчет оборачиваемости и оптимального уровня запасов</p>
+                        <div class="tool-features">
+                            <span class="feature">Анализ запасов</span>
+                            <span class="feature">Оптимизация</span>
+                        </div>
+                    </a>
+                    <a href="logistics.html" class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-truck-loading"></i>
+                        </div>
+                        <h3>Уровень обслуживания</h3>
+                        <p>Анализ качества логистического сервиса и выполнения заказов</p>
+                        <div class="tool-features">
+                            <span class="feature">KPI логистики</span>
+                            <span class="feature">Качество сервиса</span>
+                        </div>
+                    </a>
                 </div>
-                <h3>Логистика и склад</h3>
-                <p>Калькуляторы оборачиваемости запасов, уровня обслуживания, производительности склада и оптимизации логистических цепочек</p>
-                <a href="calculators.html" class="tool-link">
-                    <i class="fas fa-calculator"></i>
-                    Открыть инструменты
-                </a>
             </div>
 
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-users"></i>
+            <!-- HR аналитика -->
+            <div class="tool-category">
+                <h2><i class="fas fa-users"></i> HR аналитика</h2>
+                <div class="tools-grid">
+                    <a href="hr.html" class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <h3>Текучесть кадров</h3>
+                        <p>Анализ текучести персонала и эффективности HR-процессов</p>
+                        <div class="tool-features">
+                            <span class="feature">Анализ персонала</span>
+                            <span class="feature">Удержание</span>
+                        </div>
+                    </a>
+                    <a href="hr.html" class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>ROI обучения</h3>
+                        <p>Расчет возврата инвестиций в обучение и развитие персонала</p>
+                        <div class="tool-features">
+                            <span class="feature">Эффективность обучения</span>
+                            <span class="feature">Развитие</span>
+                        </div>
+                    </a>
                 </div>
-                <h3>HR аналитика</h3>
-                <p>Инструменты анализа текучести кадров, стоимости найма, ROI обучения сотрудников и показателей абсентеизма</p>
-                <a href="calculators.html" class="tool-link">
-                    <i class="fas fa-calculator"></i>
-                    Открыть инструменты
-                </a>
-            </div>
-
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-project-diagram"></i>
-                </div>
-                <h3>Управление проектами</h3>
-                <p>Расчет NPV, IRR, срока окупаемости, индекса рентабельности для оценки инвестиционных проектов и инициатив</p>
-                <a href="calculators.html" class="tool-link">
-                    <i class="fas fa-calculator"></i>
-                    Открыть инструменты
-                </a>
-            </div>
-
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                </div>
-                <h3>Закупки и тендеры</h3>
-                <p>Инструменты расчета экономии от закупок, TCO (полной стоимости владения), эффективности проведения тендеров</p>
-                <a href="calculators.html" class="tool-link">
-                    <i class="fas fa-calculator"></i>
-                    Открыть инструменты
-                </a>
-            </div>
-
-            <div class="tool-card">
-                <div class="tool-icon">
-                    <i class="fas fa-chart-pie"></i>
-                </div>
-                <h3>Управление и контроль</h3>
-                <p>KPI безопасности, эффективность аудита, покрытие рисков и другие инструменты операционного контроля</p>
-                <a href="calculators.html" class="tool-link">
-                    <i class="fas fa-calculator"></i>
-                    Все инструменты
-                </a>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Центр управления</h3>
+                    <p>Комплексные инструменты для эффективного управления</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p><i class="fas fa-phone"></i> +7-982-581-07-87</p>
+                    <p><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Центр управления. Все права защищены.</p>
+            </div>
         </div>
     </footer>
-
-    <!-- JavaScript -->
-    <script>
-        // Добавляем интерактивность для карточек
-        document.addEventListener('DOMContentLoaded', function() {
-            const toolCards = document.querySelectorAll('.tool-card');
-            
-            toolCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-8px) scale(1.02)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
-                });
-            });
-        });
-    </script>
 </body>
 </html>
