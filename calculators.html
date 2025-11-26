@@ -371,6 +371,64 @@
                     <p class="result-description" id="tcoInterpretation"></p>
                 </div>
             </div>
+
+            <!-- Калькулятор рентабельности инвестиций -->
+            <div class="calculator-card">
+                <div class="calculator-header">
+                    <div class="calculator-icon">📈</div>
+                    <h3 class="calculator-title">Рентабельность инвестиций (ROI)</h3>
+                </div>
+                <p class="calculator-description">
+                    Расчет возврата на инвестиции для оценки эффективности вложений в проекты и инициативы.
+                </p>
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="investmentGain">Доход от инвестиции (руб):</label>
+                        <input type="number" id="investmentGain" placeholder="Введите сумму">
+                    </div>
+                    <div class="form-group">
+                        <label for="investmentCost">Стоимость инвестиции (руб):</label>
+                        <input type="number" id="investmentCost" placeholder="Введите сумму">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateROI()">Рассчитать</button>
+                </div>
+                <div class="calculator-result" id="roiResult">
+                    <h4>Результаты расчета:</h4>
+                    <div class="result-value" id="roiValue"></div>
+                    <p class="result-description" id="roiInterpretation"></p>
+                </div>
+            </div>
+
+            <!-- Калькулятор точки безубыточности -->
+            <div class="calculator-card">
+                <div class="calculator-header">
+                    <div class="calculator-icon">⚖️</div>
+                    <h3 class="calculator-title">Точка безубыточности</h3>
+                </div>
+                <p class="calculator-description">
+                    Расчет объема продаж, при котором бизнес покрывает все расходы и начинает приносить прибыль.
+                </p>
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label for="fixedCosts">Постоянные затраты (руб):</label>
+                        <input type="number" id="fixedCosts" placeholder="Введите сумму">
+                    </div>
+                    <div class="form-group">
+                        <label for="pricePerUnit">Цена за единицу (руб):</label>
+                        <input type="number" id="pricePerUnit" placeholder="Введите сумму">
+                    </div>
+                    <div class="form-group">
+                        <label for="variableCostPerUnit">Переменные затраты на единицу (руб):</label>
+                        <input type="number" id="variableCostPerUnit" placeholder="Введите сумму">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateBreakEven()">Рассчитать</button>
+                </div>
+                <div class="calculator-result" id="breakEvenResult">
+                    <h4>Результаты расчета:</h4>
+                    <div class="result-value" id="breakEvenValue"></div>
+                    <p class="result-description" id="breakEvenInterpretation"></p>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -459,6 +517,46 @@
                 document.getElementById('tcoInterpretation').textContent = 
                     `Полная стоимость с учетом всех затрат за ${lifespan} лет эксплуатации.`;
                 document.getElementById('tcoResult').style.display = 'block';
+            }
+        }
+
+        // Калькулятор ROI
+        function calculateROI() {
+            const investmentGain = parseFloat(document.getElementById('investmentGain').value);
+            const investmentCost = parseFloat(document.getElementById('investmentCost').value);
+            
+            if (investmentGain && investmentCost && investmentCost > 0) {
+                const roi = ((investmentGain - investmentCost) / investmentCost * 100).toFixed(1);
+                
+                let interpretation = "";
+                if (roi > 100) {
+                    interpretation = "Отличная рентабельность инвестиций!";
+                } else if (roi > 20) {
+                    interpretation = "Хорошая рентабельность инвестиций.";
+                } else {
+                    interpretation = "Низкая рентабельность. Рекомендуется пересмотреть инвестицию.";
+                }
+                
+                document.getElementById('roiValue').textContent = `ROI: ${roi}%`;
+                document.getElementById('roiInterpretation').textContent = interpretation;
+                document.getElementById('roiResult').style.display = 'block';
+            }
+        }
+
+        // Калькулятор точки безубыточности
+        function calculateBreakEven() {
+            const fixedCosts = parseFloat(document.getElementById('fixedCosts').value);
+            const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value);
+            const variableCostPerUnit = parseFloat(document.getElementById('variableCostPerUnit').value);
+            
+            if (fixedCosts && pricePerUnit && variableCostPerUnit && pricePerUnit > variableCostPerUnit) {
+                const breakEvenUnits = fixedCosts / (pricePerUnit - variableCostPerUnit);
+                const breakEvenRevenue = breakEvenUnits * pricePerUnit;
+                
+                document.getElementById('breakEvenValue').textContent = `Точка безубыточности: ${breakEvenUnits.toFixed(0)} единиц (${breakEvenRevenue.toLocaleString()} руб)`;
+                document.getElementById('breakEvenInterpretation').textContent = 
+                    `Объем продаж, необходимый для покрытия всех затрат.`;
+                document.getElementById('breakEvenResult').style.display = 'block';
             }
         }
 
