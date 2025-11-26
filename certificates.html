@@ -3,589 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сертификаты и квалификация - Дмитрий Панибратский</title>
-    
-    <!-- Стили -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Сертификаты - Центр управления</title>
     <link rel="stylesheet" href="css/style.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .page-header {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .back-to-main {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #2c5aa0;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-bottom: 2rem;
-        }
-
-        .back-to-main:hover {
-            background: #1e3d72;
-            transform: translateY(-2px);
-        }
-
-        /* Statistics */
-        .certificate-stats {
+        .certificates-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
         }
-
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border: 1px solid #e1e5e9;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2c5aa0;
-            display: block;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* Filters */
-        .certificate-filters {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .filter-btn {
-            padding: 0.7rem 1.5rem;
-            border: 2px solid #2c5aa0;
-            background: white;
-            color: #2c5aa0;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .filter-btn.active,
-        .filter-btn:hover {
-            background: #2c5aa0;
-            color: white;
-        }
-
-        /* Search */
-        .search-box {
-            max-width: 400px;
-            margin: 0 auto 3rem;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-            border-color: #2c5aa0;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
-        }
-
-        /* Documents Grid */
-        .documents-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 3rem;
-        }
-
-        .document-category {
-            margin-bottom: 2rem;
-        }
-
-        .document-category h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #e1e5e9;
-        }
-
-        .documents-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .document-card {
+        .certificate-card {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 1px solid #e1e5e9;
             transition: all 0.3s ease;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
         }
-
-        .document-card:hover {
+        .certificate-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
-
-        .doc-icon {
+        .certificate-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
             color: #2c5aa0;
         }
-
-        .document-card h4 {
-            color: #2c5aa0;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .doc-date {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .doc-institution, .doc-description {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            flex-grow: 1;
-        }
-
-        .doc-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            background: #2c5aa0;
+        .certificate-category {
+            display: inline-block;
+            background: #667eea;
             color: white;
-            padding: 0.7rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: auto;
-            font-size: 0.9rem;
-            border: none;
-            cursor: pointer;
-        }
-
-        .doc-btn:hover {
-            background: #1e3d72;
-            transform: translateY(-2px);
-        }
-
-        .diploma-card {
-            border: 2px solid #ffd700;
-            background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
-        }
-
-        .diploma-btn {
-            background: #ffd700;
-            color: #333;
-        }
-
-        .diploma-btn:hover {
-            background: #e6c200;
-        }
-
-        @media (max-width: 768px) {
-            .certificate-filters {
-                gap: 0.5rem;
-            }
-            
-            .filter-btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-            
-            .documents-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .certificate-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .certificate-stats {
-                grid-template-columns: 1fr;
-            }
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="header-photos">
-                    <div class="header-photo-left">
-                        <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский">
-                        </div>
-                    </div>
-                    
-                    <div class="header-text-center">
-                        <h1>Дмитрий Панибратский</h1>
-                        <p class="header-subtitle">Сертификаты и квалификация</p>
-                    </div>
-                    
-                    <div class="header-photo-right">
-                        <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский">
-                        </div>
-                    </div>
-                </div>
+        <nav class="nav">
+            <div class="nav-brand">
+                <h1><a href="index.html">📊 Центр управления</a></h1>
+                <span>Сертификаты и квалификация</span>
             </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="navigation">
-        <div class="container">
             <ul class="nav-links">
                 <li><a href="index.html">Главная</a></li>
-                <li><a href="index.html#about">Профиль</a></li>
-                <li><a href="index.html#expertise">Экспертиза</a></li>
-                <li><a href="index.html#projects">Проекты</a></li>
                 <li><a href="tools.html">Инструменты</a></li>
                 <li><a href="certificates.html" class="active">Сертификаты</a></li>
-                <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="index.html#contact">Контакты</a></li>
+                <li><a href="wiki.html">WiKi</a></li>
             </ul>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <main class="container">
-        <!-- Page Header -->
-        <div class="page-header">
-            <a href="index.html" class="back-to-main">
-                <i class="fas fa-arrow-left"></i>
-                На главную
-            </a>
-            <h1><i class="fas fa-graduation-cap"></i> Сертификаты и квалификация</h1>
-            <p>Документы, подтверждающие профессиональную квалификацию и пройденное обучение</p>
+        <div class="section-header">
+            <h1>Сертификаты и квалификация</h1>
+            <p>Документы, подтверждающие профессиональные компетенции и обучение</p>
         </div>
 
-        <!-- Statistics -->
-        <div class="certificate-stats">
-            <div class="stat-card">
-                <span class="stat-number">17</span>
-                <span class="stat-label">Сертификатов</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">4</span>
-                <span class="stat-label">Категорий</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">2023-2024</span>
-                <span class="stat-label">Период обучения</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">100%</span>
-                <span class="stat-label">Доступны онлайн</span>
-            </div>
-        </div>
-
-        <!-- Search -->
-        <div class="search-box">
-            <input type="text" id="certificate-search" placeholder="Поиск по сертификатам...">
-        </div>
-
-        <!-- Filters -->
-        <div class="certificate-filters">
-            <button class="filter-btn active" data-filter="all">Все</button>
-            <button class="filter-btn" data-filter="management">Управление</button>
-            <button class="filter-btn" data-filter="time-management">Тайм-менеджмент</button>
-            <button class="filter-btn" data-filter="analytics">Аналитика</button>
-        </div>
-
-        <!-- Documents Grid -->
-        <div class="documents-grid">
-            <!-- Основные документы -->
-            <div class="document-category" data-category="management">
-                <h3><i class="fas fa-users"></i> Управление и менеджмент</h3>
-                <div class="documents-row">
-                    <div class="document-card diploma-card">
-                        <div class="doc-icon"><i class="fas fa-trophy"></i></div>
-                        <h4>Диплом коммерческого директора</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-institution">Профессиональная переподготовка</p>
-                        <p class="doc-description">Диплом о профессиональной переподготовке по специальности Коммерческий директор</p>
-                        <a href="images/diplom-commercial-director.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn diploma-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-                    
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-chart-line"></i></div>
-                        <h4>45 татуировок менеджера</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Практические принципы эффективного управления</p>
-                        <a href="images/batyrev-45-tattoos.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-user-check"></i></div>
-                        <h4>7 навыков высокоэффективных людей</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Классика управления временем и личной эффективности</p>
-                        <a href="images/7-habits-effective-people.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-rocket"></i></div>
-                        <h4>7 законов развития</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Фундаментальные законы личностного и профессионального роста</p>
-                        <a href="images/7-laws-development.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-building"></i></div>
-                        <h4>13 столпов Adizes</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Методология управления организационными изменениями</p>
-                        <a href="images/adizes-13-pillars.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-sync-alt"></i></div>
-                        <h4>Корпоративный жизненный цикл</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Теория жизненных циклов организаций</p>
-                        <a href="images/corporate-lifecycle.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-hands-helping"></i></div>
-                        <h4>Принцип кураторства</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Методология наставничества и развития персонала</p>
-                        <a href="images/curatorship-principle.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-handshake"></i></div>
-                        <h4>Гарвардские переговоры</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Методология Гарвардской школы переговоров</p>
-                        <a href="images/harvard-negotiations.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-laptop-code"></i></div>
-                        <h4>Менеджмент 21 века</h4>
-                        <p class="doc-date">2024</p>
-                        <p class="doc-description">Современные подходы к управлению в цифровую эпоху</p>
-                        <a href="images/management-21-century.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-shield-alt"></i></div>
-                        <h4>Менеджмент спецназа</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Принципы управления из практики специальных подразделений</p>
-                        <a href="images/management-special-forces.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-shopping-cart"></i></div>
-                        <h4>Практика продаж</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Практические методики и техники продаж</p>
-                        <a href="images/sales-practice.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-search"></i></div>
-                        <h4>Поиск призвания</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Методики поиска профессионального призвания и самореализации</p>
-                        <a href="images/vocation-finding.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-                </div>
+        <div class="certificates-grid">
+            <div class="certificate-card">
+                <div class="certificate-icon">🏆</div>
+                <span class="certificate-category">Основной документ</span>
+                <h3>Диплом коммерческого директора</h3>
+                <p class="doc-date">20.10.2023</p>
+                <p class="doc-institution">Институт профессионального образования</p>
+                <a href="certificates/diplom-commercial-director.pdf" target="_blank" class="doc-btn">
+                    <i class="fas fa-file-pdf"></i> PDF сертификат
+                </a>
             </div>
 
-            <!-- Тайм-менеджмент -->
-            <div class="document-category" data-category="time-management">
-                <h3><i class="fas fa-clock"></i> Тайм-менеджмент</h3>
-                <div class="documents-row">
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-chart-bar"></i></div>
-                        <h4>Аудит тайм-менеджмента</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Методика аудита и анализа системы управления временем</p>
-                        <a href="images/time-management%20audit.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-                    
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-sort-amount-down"></i></div>
-                        <h4>Приоритизация в тайм-менеджменте</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Системы расстановки приоритетов и фокусировки</p>
-                        <a href="images/time-management-prioritization.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-user-friends"></i></div>
-                        <h4>Делегирование в тайм-менеджменте</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Эффективные методики делегирования задач</p>
-                        <a href="images/time-management-delegation.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-tasks"></i></div>
-                        <h4>Исполнение в тайм-менеджменте</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Методики эффективного исполнения задач и проектов</p>
-                        <a href="images/time-management-execution.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-                </div>
+            <div class="certificate-card">
+                <div class="certificate-icon">🎯</div>
+                <span class="certificate-category">Менеджмент</span>
+                <h3>45 татуировок менеджера</h3>
+                <p class="doc-date">2020</p>
+                <p class="doc-institution">Мастер-класс Максима Батырева</p>
+                <a href="certificates/batyrev-45-tattoos.pdf" target="_blank" class="doc-btn">
+                    <i class="fas fa-file-pdf"></i> PDF сертификат
+                </a>
             </div>
 
-            <!-- Аналитика -->
-            <div class="document-category" data-category="analytics">
-                <h3><i class="fas fa-chart-line"></i> Аналитика</h3>
-                <div class="documents-row">
-                    <div class="document-card">
-                        <div class="doc-icon"><i class="fas fa-tools"></i></div>
-                        <h4>Инструменты McKinsey</h4>
-                        <p class="doc-date">2023</p>
-                        <p class="doc-description">Аналитические инструменты и фреймворки консалтинговой компании</p>
-                        <a href="images/mckinsey-tools.pdf" target="_blank" rel="noopener noreferrer" class="doc-btn">
-                            <i class="fas fa-file-pdf"></i>
-                            PDF сертификат
-                        </a>
-                    </div>
-                </div>
+            <div class="certificate-card">
+                <div class="certificate-icon">⏱️</div>
+                <span class="certificate-category">Тайм-менеджмент</span>
+                <h3>Аудит времени</h3>
+                <p class="doc-date">09.01.2020</p>
+                <p class="doc-institution">Бизнес-школа</p>
+                <a href="certificates/time-management-audit.pdf" target="_blank" class="doc-btn">
+                    <i class="fas fa-file-pdf"></i> PDF сертификат
+                </a>
             </div>
         </div>
     </main>
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Центр управления</h3>
+                    <p>Комплексные инструменты для эффективного управления</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p><i class="fas fa-phone"></i> +7-982-581-07-87</p>
+                    <p><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Центр управления. Все права защищены.</p>
+            </div>
         </div>
     </footer>
-
-    <script>
-        // Фильтрация сертификатов
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const certificateCategories = document.querySelectorAll('.document-category');
-        
-        filterButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const filter = this.getAttribute('data-filter');
-                
-                // Обновляем активную кнопку
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Показываем/скрываем категории
-                certificateCategories.forEach(category => {
-                    if (filter === 'all' || category.getAttribute('data-category') === filter) {
-                        category.style.display = 'block';
-                    } else {
-                        category.style.display = 'none';
-                    }
-                });
-            });
-        });
-        
-        // Поиск по сертификатам
-        const searchInput = document.querySelector('#certificate-search');
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const documentCards = document.querySelectorAll('.document-card');
-                
-                documentCards.forEach(card => {
-                    const text = card.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
-        }
-    </script>
 </body>
 </html>
