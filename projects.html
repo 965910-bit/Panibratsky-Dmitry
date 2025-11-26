@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Стили для страницы проектов */
         .projects-hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -30,7 +29,6 @@
             margin: 0 auto;
         }
 
-        /* Сетка проектов - исправленная */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -132,7 +130,6 @@
             flex-grow: 1;
         }
 
-        /* Статус проекта */
         .project-status {
             display: inline-flex;
             align-items: center;
@@ -159,7 +156,6 @@
             color: white;
         }
 
-        /* Детали проекта - компактные */
         .project-details {
             display: grid;
             grid-template-columns: 1fr;
@@ -237,7 +233,6 @@
             color: var(--text-light);
         }
 
-        /* Технологии */
         .project-tech {
             margin: 1rem 0;
         }
@@ -263,7 +258,6 @@
             font-weight: 500;
         }
 
-        /* Ссылки проекта */
         .project-links {
             display: flex;
             gap: 0.8rem;
@@ -300,12 +294,48 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* Цветовые акценты для разных проектов */
         .project-card:nth-child(1) .project-icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .project-card:nth-child(2) .project-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
         .project-card:nth-child(3) .project-icon { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
 
-        /* Блок воздействия */
+        .business-plan-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .business-plan-section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .plan-features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.6rem;
+        }
+
+        .plan-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 0.85rem;
+            color: var(--text-color);
+        }
+
+        .plan-feature i {
+            color: var(--primary-color);
+            width: 16px;
+            text-align: center;
+        }
+
         .project-impact {
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
             padding: 1rem;
@@ -329,14 +359,199 @@
             line-height: 1.4;
         }
 
-        /* Адаптивность */
+        .preview-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .business-plan-preview {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .preview-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .close-preview {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .close-preview:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .preview-content {
+            padding: 1.5rem;
+        }
+
+        .preview-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-section h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .metric-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .financial-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .financial-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .financial-item strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .implementation-steps {
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+
+        .implementation-steps li {
+            padding: 0.3rem 0;
+            color: var(--text-light);
+        }
+
+        .preview-notice {
+            background: linear-gradient(135deg, #fff9c4 0%, #ffecb3 100%);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #ffd54f;
+            margin-top: 1rem;
+        }
+
+        .preview-notice p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .preview-actions {
+            padding: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .preview-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .preview-download:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
         @media (max-width: 768px) {
             .projects-hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .projects-hero p {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
             
             .projects-grid {
@@ -357,6 +572,22 @@
             .project-image {
                 height: 160px;
             }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-overlay {
+                padding: 10px;
+            }
+            
+            .business-plan-preview {
+                max-height: 95vh;
+            }
+            
+            .preview-header h3 {
+                font-size: 1.1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -365,7 +596,7 @@
             }
             
             .projects-hero h1 {
-                font-size: 1.7rem;
+                font-size: 1.8rem;
             }
             
             .stats-grid {
@@ -681,6 +912,29 @@
                     </div>
                 </div>
 
+                <!-- Блок бизнес-плана -->
+                <div class="business-plan-section">
+                    <h4>📋 Бизнес-план проекта</h4>
+                    <div class="plan-features">
+                        <div class="plan-feature">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Финансовые прогнозы на 3 года</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-users"></i>
+                            <span>Анализ целевой аудитории</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-cogs"></i>
+                            <span>Техническая архитектура</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-rocket"></i>
+                            <span>План запуска и масштабирования</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="project-impact">
                     <div class="impact-title">💡 Потенциальный эффект</div>
                     <p>Создание централизованной цифровой экосистемы для SCM-сообщества с годовым оборотом 5M+ рублей</p>
@@ -691,9 +945,13 @@
                         <i class="fas fa-lightbulb"></i>
                         Присоединиться к проекту
                     </a>
-                    <a href="#" class="project-link secondary">
-                        <i class="fas fa-file-alt"></i>
-                        Бизнес-план
+                    <a href="business-plan.html" class="project-link secondary" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-file-pdf"></i>
+                        Бизнес-план (PDF)
+                    </a>
+                    <a href="#" class="project-link secondary" onclick="showBusinessPlanPreview()">
+                        <i class="fas fa-eye"></i>
+                        Предпросмотр
                     </a>
                 </div>
             </div>
@@ -719,53 +977,4 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            // Наблюдаем за карточками проектов
-            const projectCards = document.querySelectorAll('.project-card');
-            projectCards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
-            });
-
-            // Анимация статистики при наведении
-            const statItems = document.querySelectorAll('.stat-item');
-            statItems.forEach(item => {
-                item.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-3px)';
-                });
-                
-                item.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
-
-            // Плавная прокрутка для навигации
-            const anchorLinks = document.querySelectorAll('a[href^="#"]');
-            anchorLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-                        
-                        window.scrollTo({
-                            top: offsetTop,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+                        entry.target.style.transform = 'translateY(0
