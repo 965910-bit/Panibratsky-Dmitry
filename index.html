@@ -6,83 +6,13 @@
     <title>Дмитрий Панибратский - Эксперт по управлению цепями поставок</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Стили для фото по бокам */
-        .hero-section {
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 2rem;
-            align-items: center;
-            margin: 2rem 0;
-            min-height: 70vh;
-        }
-        .side-photo {
-            text-align: center;
-            padding: 1rem;
-        }
-        .side-photo img {
-            width: 100%;
-            max-width: 280px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease;
-        }
-        .side-photo img:hover {
-            transform: scale(1.05);
-        }
-        .main-content {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .photo-caption {
-            margin-top: 1rem;
-            font-style: italic;
-            color: #666;
-        }
-        .tools-preview {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        .tool-preview-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .tool-preview-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .tool-preview-card i {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        @media (max-width: 768px) {
-            .hero-section {
-                grid-template-columns: 1fr;
-            }
-            .side-photo {
-                order: -1;
-            }
-        }
-    </style>
 </head>
 <body>
+    <!-- Шапка сайта -->
     <header class="header">
         <nav class="nav">
             <div class="nav-brand">
-                <h1><a href="index.html">📊 Центр управления</a></h1>
+                <h1><a href="index.html">Дмитрий Панибратский</a></h1>
                 <span>Эксперт в управлении цепями поставок</span>
             </div>
             <ul class="nav-links">
@@ -94,155 +24,200 @@
         </nav>
     </header>
 
-    <main class="container">
-        <!-- Герой-секция с двумя фото -->
-        <div class="hero-section">
-            <!-- Левое фото -->
-            <div class="side-photo">
-                <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - Профессиональное фото 1" onerror="this.src='https://via.placeholder.com/280x350/667eea/ffffff?text=Professional+Photo'">
-                <div class="photo-caption">
-                    <h3>13+ лет в SCM</h3>
-                    <p>Опыт управления цепями поставок международного уровня</p>
+    <!-- Главный экран с фото -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <!-- Левое фото -->
+                <div class="hero-photo left-photo">
+                    <div class="photo-frame">
+                        <img src="images/photo-left.jpg" alt="Дмитрий Панибратский" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+                    <div class="photo-badge">
+                        <i class="fas fa-award"></i>
+                        <span>13+ лет опыта</span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Основной контент -->
-            <div class="main-content">
-                <div class="section-header">
+                <!-- Центральный текст -->
+                <div class="hero-text">
                     <h1>Дмитрий Панибратский</h1>
-                    <p class="header-subtitle">Эксперт в управлении цепями поставок и цифровой трансформации бизнеса</p>
-                </div>
+                    <p class="subtitle">Эксперт в управлении цепями поставок и цифровой трансформации бизнеса</p>
+                    
+                    <div class="specialization">
+                        <span class="specialty">SCM</span>
+                        <span class="specialty">Цифровая трансформация</span>
+                        <span class="specialty">AI & Аналитика</span>
+                        <span class="specialty">Оптимизация процессов</span>
+                    </div>
 
-                <div class="personal-info">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <strong>📍 Локация:</strong>
+                    <!-- Контактная информация -->
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
                             <span>Сургут / Санкт-Петербург</span>
                         </div>
-                        <div class="info-item">
-                            <strong>📚 Квалификация:</strong>
+                        <div class="contact-item">
+                            <i class="fas fa-graduation-cap"></i>
                             <span>Коммерческий директор (CCO), MBA Логистика</span>
                         </div>
-                        <div class="info-item">
-                            <strong>🎯 Специализация:</strong>
-                            <span>Цифровая трансформация SCM, AI-аналитика, оптимизация процессов</span>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+7-982-581-07-87</span>
                         </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>dmitriy.panibratskiy@yandex.ru</span>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки быстрого доступа -->
+                    <div class="quick-actions">
+                        <a href="#achievements" class="action-btn primary">
+                            <i class="fas fa-trophy"></i>
+                            Мои достижения
+                        </a>
+                        <a href="tools.html" class="action-btn secondary">
+                            <i class="fas fa-tools"></i>
+                            Инструменты
+                        </a>
                     </div>
                 </div>
 
-                <div class="achievements">
-                    <h3>Ключевые достижения</h3>
-                    <div class="achievements-grid">
-                        <div class="achievement-card">
-                            <div class="achievement-icon">📈</div>
-                            <h4>143% рост эффективности</h4>
-                            <p>Оптимизация операционных процессов</p>
-                        </div>
-                        <div class="achievement-card">
-                            <div class="achievement-icon">💰</div>
-                            <h4>10% экономии затрат</h4>
-                            <p>Снижение логистических расходов</p>
-                        </div>
-                        <div class="achievement-card">
-                            <div class="achievement-icon">🤖</div>
-                            <h4>AI-прогнозирование</h4>
-                            <p>Внедрение систем искусственного интеллекта</p>
-                        </div>
+                <!-- Правое фото -->
+                <div class="hero-photo right-photo">
+                    <div class="photo-frame">
+                        <img src="images/photo-right.jpg" alt="Профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
                     </div>
-                </div>
-
-                <!-- Блок инструментов -->
-                <div class="tools-preview-section">
-                    <h3>🛠️ Профессиональные инструменты</h3>
-                    <p>Комплексные калькуляторы и аналитические инструменты для управления бизнесом</p>
-                    
-                    <div class="tools-preview">
-                        <a href="finance.html" class="tool-preview-card">
-                            <i class="fas fa-chart-line"></i>
-                            <h4>Финансы</h4>
-                            <p>ROS, ROI, NPV, окупаемость</p>
-                        </a>
-                        <a href="logistics.html" class="tool-preview-card">
-                            <i class="fas fa-truck"></i>
-                            <h4>Логистика</h4>
-                            <p>Запасы, транспорт, склад</p>
-                        </a>
-                        <a href="hr.html" class="tool-preview-card">
-                            <i class="fas fa-users"></i>
-                            <h4>HR аналитика</h4>
-                            <p>Персонал, найм, обучение</p>
-                        </a>
-                        <a href="tools.html" class="tool-preview-card">
-                            <i class="fas fa-cogs"></i>
-                            <h4>Все инструменты</h4>
-                            <p>Полный набор калькуляторов</p>
-                        </a>
+                    <div class="photo-badge">
+                        <i class="fas fa-chart-line"></i>
+                        <span>87,000+ SKU</span>
                     </div>
-                </div>
-            </div>
-
-            <!-- Правое фото -->
-            <div class="side-photo">
-                <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - Профессиональное фото 2" onerror="this.src='https://via.placeholder.com/280x350/764ba2/ffffff?text=Business+Photo'">
-                <div class="photo-caption">
-                    <h3>87,000+ SKU</h3>
-                    <p>Под операционным управлением</p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Секция сертификатов -->
-        <section id="documents" class="section">
-            <h2>📚 Сертификаты и квалификация</h2>
-            <div class="documents-grid">
-                <!-- Основные документы -->
-                <div class="document-category">
-                    <h3>🎓 Основные документы</h3>
-                    <div class="documents-row">
-                        <div class="document-card diploma-card">
-                            <div class="doc-icon">🏆</div>
-                            <h4>Диплом коммерческого директора</h4>
-                            <p class="doc-date">20.10.2023</p>
-                            <p class="doc-institution">Институт профессионального образования</p>
-                            <a href="certificates/diplom-commercial-director.pdf" target="_blank" class="doc-btn diploma-btn">
-                                <i class="fas fa-file-pdf"></i> PDF сертификат
-                            </a>
+    <!-- Секция достижений -->
+    <section id="achievements" class="achievements-section">
+        <div class="container">
+            <h2>Ключевые достижения</h2>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>143% рост эффективности</h3>
+                    <p>Оптимизация операционных процессов и внедрение AI-решений</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>10% экономии затрат</h3>
+                    <p>Снижение логистических расходов через автоматизацию процессов</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI-прогнозирование</h3>
+                    <p>Внедрение систем искусственного интеллекта для прогнозирования спроса</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>Ускорение доставки</h3>
+                    <p>Оптимизация цепочек поставок и сокращение времени доставки</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция сертификатов -->
+    <section class="certificates-preview">
+        <div class="container">
+            <h2>Сертификаты и квалификация</h2>
+            <div class="certificates-grid">
+                <div class="certificate-card main-certificate">
+                    <div class="certificate-badge">Основной</div>
+                    <div class="certificate-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Диплом коммерческого директора</h3>
+                    <p class="certificate-date">20.10.2023</p>
+                    <p class="certificate-institution">Институт профессионального образования</p>
+                    <a href="certificates/diplom-commercial-director.pdf" class="certificate-btn">
+                        <i class="fas fa-file-pdf"></i>
+                        Смотреть PDF
+                    </a>
+                </div>
+                
+                <div class="certificates-list">
+                    <div class="certificate-item">
+                        <div class="certificate-icon small">
+                            <i class="fas fa-certificate"></i>
                         </div>
-                        <div class="document-card">
-                            <div class="doc-icon">🎯</div>
+                        <div class="certificate-info">
                             <h4>45 татуировок менеджера</h4>
-                            <p class="doc-date">2020</p>
-                            <p class="doc-description">Мастер-класс Максима Батырева</p>
-                            <a href="certificates/batyrev-45-tattoos.pdf" target="_blank" class="doc-btn">
-                                <i class="fas fa-file-pdf"></i> PDF сертификат
-                            </a>
+                            <span class="date">2020</span>
                         </div>
+                        <a href="certificates/batyrev-45-tattoos.pdf" class="view-btn">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="certificate-item">
+                        <div class="certificate-icon small">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="certificate-info">
+                            <h4>Аудит времени</h4>
+                            <span class="date">09.01.2020</span>
+                        </div>
+                        <a href="certificates/time-management-audit.pdf" class="view-btn">
+                            <i class="fas fa-eye"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div style="text-align: center; margin-top: 2rem;">
-                <a href="certificates.html" class="btn btn-primary">
-                    <i class="fas fa-certificate"></i> Все сертификаты
+            
+            <div class="section-footer">
+                <a href="certificates.html" class="view-all-btn">
+                    <i class="fas fa-certificate"></i>
+                    Все сертификаты
                 </a>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
+    <!-- Подвал сайта -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Центр управления</h3>
-                    <p>Комплексные инструменты для эффективного управления</p>
+                    <h3>Дмитрий Панибратский</h3>
+                    <p>Эксперт в управлении цепями поставок и цифровой трансформации бизнеса</p>
                 </div>
                 <div class="footer-section">
                     <h4>Контакты</h4>
-                    <p><i class="fas fa-phone"></i> +7-982-581-07-87</p>
-                    <p><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</p>
+                    <div class="footer-contacts">
+                        <p><i class="fas fa-phone"></i> +7-982-581-07-87</p>
+                        <p><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</p>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Быстрые ссылки</h4>
+                    <div class="footer-links">
+                        <a href="tools.html"><i class="fas fa-tools"></i> Инструменты</a>
+                        <a href="certificates.html"><i class="fas fa-certificate"></i> Сертификаты</a>
+                        <a href="wiki.html"><i class="fas fa-book"></i> WiKi</a>
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Центр управления. Все права защищены.</p>
+                <p>&copy; 2024 Дмитрий Панибратский. Все права защищены.</p>
             </div>
         </div>
     </footer>
