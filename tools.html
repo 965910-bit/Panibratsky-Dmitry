@@ -12,6 +12,14 @@
 
     <style>
         /* Стили для страницы инструментов в едином стиле */
+        .tools-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -22,10 +30,12 @@
         .tool-card {
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .tool-card:hover {
@@ -33,23 +43,34 @@
             box-shadow: var(--shadow-hover);
         }
 
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+        }
+
         .tool-header {
             display: flex;
-            align-items: center;
-            gap: 1rem;
+            align-items: flex-start;
+            gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
 
         .tool-icon {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            border-radius: 12px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: white;
+            flex-shrink: 0;
         }
 
         .tool-title {
@@ -59,32 +80,34 @@
         .tool-title h3 {
             margin: 0 0 0.5rem 0;
             color: var(--text-color);
+            font-size: 1.4rem;
         }
 
         .tool-category {
             display: inline-block;
             background: var(--primary-light);
             color: var(--primary-dark);
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
             font-weight: 600;
         }
 
         .tool-description {
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 1.5rem;
             color: var(--text-light);
+            font-size: 1.05rem;
         }
 
         .tool-features {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .tool-features h4 {
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
             color: var(--primary-color);
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .tool-features ul {
@@ -93,31 +116,35 @@
         }
 
         .tool-features li {
-            padding: 0.3rem 0;
+            padding: 0.5rem 0;
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            align-items: flex-start;
+            gap: 0.8rem;
+            line-height: 1.5;
         }
 
         .tool-features li:before {
-            content: "•";
+            content: "✓";
             color: var(--primary-color);
             font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
         }
 
         .tool-level {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 1rem;
+            padding-top: 1.5rem;
             border-top: 1px solid var(--border-color);
         }
 
         .level-bar {
             flex: 1;
-            height: 6px;
+            height: 8px;
             background: #e9ecef;
-            border-radius: 3px;
+            border-radius: 4px;
             overflow: hidden;
             margin: 0 1rem;
         }
@@ -125,7 +152,7 @@
         .level-progress {
             height: 100%;
             background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-            border-radius: 3px;
+            border-radius: 4px;
         }
 
         .level-text {
@@ -179,6 +206,7 @@
             .tool-header {
                 flex-direction: column;
                 text-align: center;
+                gap: 1rem;
             }
             
             .tool-level {
@@ -253,41 +281,43 @@
             <h2>Инструменты и технологии</h2>
             
             <div class="tools-intro">
-                <p>Современное управление цепями поставок требует владения широким спектром инструментов и технологий. В своей практике я использую комплексный подход, сочетая проверенные ERP-системы с передовыми решениями в области аналитики и искусственного интеллекта.</p>
+                <p>Каждое направление экспертизы требует специализированных инструментов и технологий. В своей работе я использую комплексный технологический стек, который позволяет эффективно решать задачи в области управления цепями поставок, цифровой трансформации и оптимизации бизнес-процессов.</p>
             </div>
 
-            <!-- Фильтры по категориям -->
+            <!-- Фильтры по категориям экспертизы -->
             <div class="tools-categories">
                 <button class="category-btn active" data-category="all">Все инструменты</button>
-                <button class="category-btn" data-category="analytics">Аналитика & BI</button>
-                <button class="category-btn" data-category="erp">ERP системы</button>
-                <button class="category-btn" data-category="ai">AI & ML</button>
-                <button class="category-btn" data-category="automation">Автоматизация</button>
+                <button class="category-btn" data-category="scm">Управление SCM</button>
+                <button class="category-btn" data-category="digital">Цифровая трансформация</button>
+                <button class="category-btn" data-category="ai">AI & Аналитика</button>
+                <button class="category-btn" data-category="optimization">Оптимизация процессов</button>
+                <button class="category-btn" data-category="business-optimization">Оптимизация БП</button>
+                <button class="category-btn" data-category="supply-chain-optimization">Оптимизация ЦП</button>
             </div>
 
             <!-- Сетка инструментов -->
             <div class="tools-grid">
-                <!-- Power BI -->
-                <div class="tool-card" data-category="analytics">
+                <!-- SAP S/4HANA -->
+                <div class="tool-card" data-category="scm digital business-optimization">
                     <div class="tool-header">
                         <div class="tool-icon">
-                            <i class="fas fa-chart-bar"></i>
+                            <i class="fas fa-network-wired"></i>
                         </div>
                         <div class="tool-title">
-                            <h3>Microsoft Power BI</h3>
-                            <span class="tool-category">BI & Аналитика</span>
+                            <h3>SAP S/4HANA</h3>
+                            <span class="tool-category">ERP система</span>
                         </div>
                     </div>
                     <div class="tool-description">
-                        <p>Создание интерактивных дашбордов и аналитических отчетов для мониторинга KPI цепей поставок, анализа эффективности логистики и визуализации операционных метрик.</p>
+                        <p>Передовая ERP-платформа для интегрированного управления цепями поставок. Реализация end-to-end процессов от планирования до исполнения.</p>
                     </div>
                     <div class="tool-features">
-                        <h4>Основные применения:</h4>
+                        <h4>Ключевые применения:</h4>
                         <ul>
-                            <li>Дашборды эффективности SCM</li>
-                            <li>Анализ отклонений в логистике</li>
-                            <li>Мониторинг SLA поставщиков</li>
-                            <li>Визуализация складских метрик</li>
+                            <li>Интегрированное бизнес-планирование (IBP)</li>
+                            <li>Управление закупками и поставщиками (SRM)</li>
+                            <li>Планирование производства и дистрибуции</li>
+                            <li>Управление качеством и соблюдением требований</li>
                         </ul>
                     </div>
                     <div class="tool-level">
@@ -299,123 +329,27 @@
                     </div>
                 </div>
 
-                <!-- SAP ERP -->
-                <div class="tool-card" data-category="erp">
+                <!-- Oracle NetSuite -->
+                <div class="tool-card" data-category="scm digital business-optimization">
                     <div class="tool-header">
                         <div class="tool-icon">
-                            <i class="fas fa-database"></i>
+                            <i class="fas fa-cloud"></i>
                         </div>
                         <div class="tool-title">
-                            <h3>SAP ERP</h3>
-                            <span class="tool-category">ERP системы</span>
+                            <h3>Oracle NetSuite</h3>
+                            <span class="tool-category">Cloud ERP</span>
                         </div>
                     </div>
                     <div class="tool-description">
-                        <p>Глубокая экспертиза в модулях MM (Materials Management), SD (Sales and Distribution), PP (Production Planning) и интегрированном планировании цепей поставок.</p>
+                        <p>Облачная ERP-система для управления бизнес-процессами. Идеальное решение для среднего бизнеса и цифровой трансформации.</p>
                     </div>
                     <div class="tool-features">
-                        <h4>Основные применения:</h4>
+                        <h4>Ключевые применения:</h4>
                         <ul>
-                            <li>Управление закупками и запасами</li>
-                            <li>Планирование производства</li>
-                            <li>Управление продажами и дистрибуцией</li>
-                            <li>Интеграция E2E процессов</li>
-                        </ul>
-                    </div>
-                    <div class="tool-level">
-                        <span>Уровень:</span>
-                        <div class="level-bar">
-                            <div class="level-progress" style="width: 90%"></div>
-                        </div>
-                        <span class="level-text">Продвинутый</span>
-                    </div>
-                </div>
-
-                <!-- Python -->
-                <div class="tool-card" data-category="analytics ai">
-                    <div class="tool-header">
-                        <div class="tool-icon">
-                            <i class="fab fa-python"></i>
-                        </div>
-                        <div class="tool-title">
-                            <h3>Python & Data Science</h3>
-                            <span class="tool-category">AI & Аналитика</span>
-                        </div>
-                    </div>
-                    <div class="tool-description">
-                        <p>Разработка аналитических решений и ML-моделей с использованием библиотек pandas, scikit-learn, statsmodels для оптимизации цепей поставок и прогнозирования.</p>
-                    </div>
-                    <div class="tool-features">
-                        <h4>Основные применения:</h4>
-                        <ul>
-                            <li>Прогнозирование спроса</li>
-                            <li>Анализ оптимальных уровней запасов</li>
-                            <li>Оптимизация маршрутов доставки</li>
-                            <li>Предиктивная аналитика</li>
-                        </ul>
-                    </div>
-                    <div class="tool-level">
-                        <span>Уровень:</span>
-                        <div class="level-bar">
-                            <div class="level-progress" style="width: 85%"></div>
-                        </div>
-                        <span class="level-text">Продвинутый</span>
-                    </div>
-                </div>
-
-                <!-- Машинное обучение -->
-                <div class="tool-card" data-category="ai">
-                    <div class="tool-header">
-                        <div class="tool-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <div class="tool-title">
-                            <h3>Машинное обучение</h3>
-                            <span class="tool-category">AI & ML</span>
-                        </div>
-                    </div>
-                    <div class="tool-description">
-                        <p>Применение алгоритмов машинного обучения для решения задач классификации, кластеризации и регрессии в управлении цепями поставок и логистике.</p>
-                    </div>
-                    <div class="tool-features">
-                        <h4>Основные применения:</h4>
-                        <ul>
-                            <li>Прогнозирование сбоев поставок</li>
-                            <li>Сегментация поставщиков и клиентов</li>
-                            <li>Обнаружение аномалий в данных</li>
-                            <li>Оптимизация ценообразования</li>
-                        </ul>
-                    </div>
-                    <div class="tool-level">
-                        <span>Уровень:</span>
-                        <div class="level-bar">
-                            <div class="level-progress" style="width: 80%"></div>
-                        </div>
-                        <span class="level-text">Продвинутый</span>
-                    </div>
-                </div>
-
-                <!-- SQL -->
-                <div class="tool-card" data-category="analytics">
-                    <div class="tool-header">
-                        <div class="tool-icon">
-                            <i class="fas fa-server"></i>
-                        </div>
-                        <div class="tool-title">
-                            <h3>SQL & Базы данных</h3>
-                            <span class="tool-category">Аналитика</span>
-                        </div>
-                    </div>
-                    <div class="tool-description">
-                        <p>Работа с реляционными базами данных, написание сложных запросов для извлечения и анализа данных, оптимизация производительности запросов.</p>
-                    </div>
-                    <div class="tool-features">
-                        <h4>Основные применения:</h4>
-                        <ul>
-                            <li>Извлечение данных для отчетности</li>
-                            <li>Анализ эффективности процессов</li>
-                            <li>Интеграция данных из различных источников</li>
-                            <li>Создание витрин данных</li>
+                            <li>Управление цепями поставок в реальном времени</li>
+                            <li>Финансовое планирование и бюджетирование</li>
+                            <li>Управление отношениями с клиентами (CRM)</li>
+                            <li>Аналитика и бизнес-интеллект</li>
                         </ul>
                     </div>
                     <div class="tool-level">
@@ -427,35 +361,195 @@
                     </div>
                 </div>
 
-                <!-- UiPath -->
-                <div class="tool-card" data-category="automation">
+                <!-- Power BI -->
+                <div class="tool-card" data-category="ai optimization business-optimization supply-chain-optimization">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>Microsoft Power BI</h3>
+                            <span class="tool-category">BI & Аналитика</span>
+                        </div>
+                    </div>
+                    <div class="tool-description">
+                        <p>Мощная платформа бизнес-аналитики для создания интерактивных дашбордов и глубокого анализа данных цепей поставок.</p>
+                    </div>
+                    <div class="tool-features">
+                        <h4>Ключевые применения:</h4>
+                        <ul>
+                            <li>Дашборды KPI цепей поставок</li>
+                            <li>Предиктивная аналитика спроса</li>
+                            <li>Мониторинг эффективности логистики</li>
+                            <li>Визуализация складских метрик</li>
+                        </ul>
+                    </div>
+                    <div class="tool-level">
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 92%"></div>
+                        </div>
+                        <span class="level-text">Эксперт</span>
+                    </div>
+                </div>
+
+                <!-- Python & Data Science -->
+                <div class="tool-card" data-category="ai optimization supply-chain-optimization">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fab fa-python"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>Python & Data Science</h3>
+                            <span class="tool-category">AI & Аналитика</span>
+                        </div>
+                    </div>
+                    <div class="tool-description">
+                        <p>Комплексная экосистема для анализа данных и машинного обучения. Использую для создания продвинутых аналитических решений в SCM.</p>
+                    </div>
+                    <div class="tool-features">
+                        <h4>Ключевые применения:</h4>
+                        <ul>
+                            <li>Прогнозирование спроса и оптимизация запасов</li>
+                            <li>ML-модели для сегментации поставщиков</li>
+                            <li>Анализ временных рядов для планирования</li>
+                            <li>Оптимизация маршрутов и транспортных расходов</li>
+                        </ul>
+                    </div>
+                    <div class="tool-level">
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 85%"></div>
+                        </div>
+                        <span class="level-text">Продвинутый</span>
+                    </div>
+                </div>
+
+                <!-- Tableau -->
+                <div class="tool-card" data-category="ai business-optimization supply-chain-optimization">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>Tableau</h3>
+                            <span class="tool-category">Визуализация данных</span>
+                        </div>
+                    </div>
+                    <div class="tool-description">
+                        <p>Инструмент для продвинутой визуализации данных и создания интерактивных аналитических панелей для принятия стратегических решений.</p>
+                    </div>
+                    <div class="tool-features">
+                        <h4>Ключевые применения:</h4>
+                        <ul>
+                            <li>Визуализация цепочек создания стоимости</li>
+                            <li>Анализ эффективности поставщиков</li>
+                            <li>Мониторинг логистических коридоров</li>
+                            <li>Дашборды управления производительностью</li>
+                        </ul>
+                    </div>
+                    <div class="tool-level">
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 80%"></div>
+                        </div>
+                        <span class="level-text">Продвинутый</span>
+                    </div>
+                </div>
+
+                <!-- UiPath RPA -->
+                <div class="tool-card" data-category="digital optimization business-optimization">
                     <div class="tool-header">
                         <div class="tool-icon">
                             <i class="fas fa-robot"></i>
                         </div>
                         <div class="tool-title">
                             <h3>UiPath RPA</h3>
-                            <span class="tool-category">Автоматизация</span>
+                            <span class="tool-category">Автоматизация процессов</span>
                         </div>
                     </div>
                     <div class="tool-description">
-                        <p>Автоматизация рутинных бизнес-процессов с помощью роботизации. Создание RPA-решений для оптимизации операционных задач в SCM.</p>
+                        <p>Платформа для роботизации бизнес-процессов. Автоматизация рутинных операций и повышение операционной эффективности.</p>
                     </div>
                     <div class="tool-features">
-                        <h4>Основные применения:</h4>
+                        <h4>Ключевые применения:</h4>
                         <ul>
-                            <li>Автоматизация отчетности</li>
-                            <li>Обработка заказов поставщиков</li>
-                            <li>Сверка транспортных накладных</li>
-                            <li>Миграция данных между системами</li>
+                            <li>Автоматизация обработки заказов</li>
+                            <li>Роботизация отчетности и сверки данных</li>
+                            <li>Автоматическое обновление прайс-листов</li>
+                            <li>Обработка транспортных накладных</li>
                         </ul>
                     </div>
                     <div class="tool-level">
                         <span>Уровень:</span>
                         <div class="level-bar">
-                            <div class="level-progress" style="width: 75%"></div>
+                            <div class="level-progress" style="width: 78%"></div>
                         </div>
                         <span class="level-text">Средний</span>
+                    </div>
+                </div>
+
+                <!-- JDA/Blue Yonder -->
+                <div class="tool-card" data-category="scm optimization supply-chain-optimization">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>JDA/Blue Yonder</h3>
+                            <span class="tool-category">SCM Planning</span>
+                        </div>
+                    </div>
+                    <div class="tool-description">
+                        <p>Специализированная платформа для планирования и оптимизации цепей поставок. AI-решения для управления спросом и цепочками поставок.</p>
+                    </div>
+                    <div class="tool-features">
+                        <h4>Ключевые применения:</h4>
+                        <ul>
+                            <li>Планирование спроса и предложения</li>
+                            <li>Оптимизация уровней запасов</li>
+                            <li>Планирование производства и дистрибуции</li>
+                            <li>Управление транспортом и логистикой</li>
+                        </ul>
+                    </div>
+                    <div class="tool-level">
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 82%"></div>
+                        </div>
+                        <span class="level-text">Продвинутый</span>
+                    </div>
+                </div>
+
+                <!-- SQL & Базы данных -->
+                <div class="tool-card" data-category="ai optimization business-optimization supply-chain-optimization">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="tool-title">
+                            <h3>SQL & Базы данных</h3>
+                            <span class="tool-category">Управление данными</span>
+                        </div>
+                    </div>
+                    <div class="tool-description">
+                        <p>Глубокое понимание реляционных баз данных и языка SQL для эффективного управления данными и создания аналитических решений.</p>
+                    </div>
+                    <div class="tool-features">
+                        <h4>Ключевые применения:</h4>
+                        <ul>
+                            <li>Проектирование и оптимизация баз данных</li>
+                            <li>Создание сложных аналитических запросов</li>
+                            <li>Интеграция данных из различных источников</li>
+                            <li>Разработка ETL процессов и витрин данных</li>
+                        </ul>
+                    </div>
+                    <div class="tool-level">
+                        <span>Уровень:</span>
+                        <div class="level-bar">
+                            <div class="level-progress" style="width: 90%"></div>
+                        </div>
+                        <span class="level-text">Эксперт</span>
                     </div>
                 </div>
             </div>
