@@ -44,105 +44,153 @@
             margin: 0 auto;
         }
 
+        .projects-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+            margin: 3rem 0;
         }
 
         .project-card {
-            background: white;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
         .project-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             box-shadow: var(--shadow-hover);
         }
 
         .project-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 1.5rem;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .project-company {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
         }
 
         .project-title {
             font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .project-client {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .project-body {
-            padding: 1.5rem;
-        }
-
-        .project-meta {
-            display: flex;
-            justify-content: space-between;
+            color: var(--text-color);
             margin-bottom: 1rem;
-            font-size: 0.9rem;
-            color: var(--text-light);
+        }
+
+        .project-period {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .project-content {
+            padding: 1.5rem 2rem;
         }
 
         .project-description {
+            color: var(--text-light);
             line-height: 1.6;
             margin-bottom: 1.5rem;
-            color: var(--text-color);
         }
 
-        .project-results {
-            background: var(--bg-light);
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
             padding: 1rem;
+            background: var(--bg-light);
             border-radius: 8px;
-            margin-bottom: 1.5rem;
         }
 
-        .project-results h4 {
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .project-achievements {
+            margin: 1.5rem 0;
+        }
+
+        .project-achievements h4 {
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
         }
 
-        .project-results ul {
+        .project-achievements ul {
             list-style: none;
             padding: 0;
         }
 
-        .project-results li {
-            padding: 0.3rem 0;
+        .project-achievements li {
+            padding: 0.5rem 0;
             display: flex;
             align-items: flex-start;
             gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .project-results li:before {
+        .project-achievements li:last-child {
+            border-bottom: none;
+        }
+
+        .project-achievements li:before {
             content: "✓";
             color: var(--primary-color);
             font-weight: bold;
+            flex-shrink: 0;
         }
 
-        .project-skills {
+        .project-tech {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
+            margin-top: 1.5rem;
         }
 
-        .skill-tag {
+        .tech-tag {
             background: var(--primary-light);
             color: var(--primary-dark);
             padding: 0.3rem 0.8rem;
-            border-radius: 12px;
+            border-radius: 15px;
             font-size: 0.8rem;
             font-weight: 500;
         }
@@ -166,15 +214,69 @@
             opacity: 0.9;
         }
 
-        .header-simple .contact-badges {
+        .contact-badges {
+            display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Навигация */
+        .navigation {
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a.active,
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Футер */
+        .footer {
+            background: var(--bg-light);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-light);
+            margin-top: 4rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         @media (max-width: 768px) {
             .projects-grid {
                 grid-template-columns: 1fr;
-                padding: 1rem;
             }
             
             .projects-hero h1 {
@@ -183,6 +285,30 @@
             
             .header-simple .header-text-center h1 {
                 font-size: 2rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .project-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .projects-hero {
+                padding: 3rem 0;
+            }
+            
+            .projects-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .project-header,
+            .project-content {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -218,7 +344,7 @@
                 <li><a href="tools.html">Инструменты</a></li>
                 <li><a href="certificates.html">Сертификаты</a></li>
                 <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="index.html#contact">Контакты</a></li>
+                <li><a href="contact.html">Контакты</a></li>
             </ul>
         </div>
     </nav>
@@ -227,155 +353,228 @@
     <section class="projects-hero">
         <div class="container">
             <h1>Ключевые проекты</h1>
-            <p>Реализованные проекты в области цифровой трансформации и оптимизации цепей поставок</p>
+            <p>Реализованные решения в области управления цепями поставок и цифровой трансформации</p>
         </div>
     </section>
 
-    <!-- Projects Grid -->
+    <!-- Main Content -->
     <main class="container">
-        <section class="projects-grid">
-            <!-- Проект 1 -->
+        <div class="projects-intro">
+            <p>За 13+ лет профессиональной деятельности реализовал множество успешных проектов по оптимизации логистических процессов, внедрению цифровых решений и масштабированию бизнеса.</p>
+        </div>
+
+        <div class="projects-grid">
+            <!-- Проект 1 - ЛЕРУА МЕРЛЕН -->
             <div class="project-card">
                 <div class="project-header">
-                    <h3 class="project-title">Внедрение системы предиктивной аналитики</h3>
-                    <p class="project-client">X5 Retail Group</p>
+                    <div class="project-company">ЛЕРУА МЕРЛЕН</div>
+                    <h2 class="project-title">Внедрение ИИ для прогнозирования спроса</h2>
+                    <span class="project-period">2022-2023</span>
                 </div>
-                <div class="project-body">
-                    <div class="project-meta">
-                        <span><i class="far fa-calendar"></i> 2020-2021</span>
-                        <span><i class="fas fa-users"></i> Команда: 8 человек</span>
+                <div class="project-content">
+                    <p class="project-description">Разработка и внедрение системы искусственного интеллекта для точного прогнозирования спроса и оптимизации уровней запасов.</p>
+                    
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">-15%</div>
+                            <div class="stat-label">Снижение излишков</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">+8%</div>
+                            <div class="stat-label">Точность остатков</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">98.5%</div>
+                            <div class="stat-label">Оборачиваемость SKU</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">#2</div>
+                            <div class="stat-label">В стране по CSat</div>
+                        </div>
                     </div>
-                    <p class="project-description">
-                        Разработка и внедрение системы прогнозирования спроса на основе машинного обучения 
-                        для оптимизации уровней запасов и повышения оборачиваемости.
-                    </p>
-                    <div class="project-results">
-                        <h4>Результаты:</h4>
+
+                    <div class="project-achievements">
+                        <h4>Ключевые результаты:</h4>
                         <ul>
-                            <li>Точность прогнозирования повышена на 23%</li>
-                            <li>Снижение уровня страховых запасов на 18%</li>
-                            <li>Повышение оборачиваемости до 98.5%</li>
-                            <li>Автоматизация 85% процессов планирования</li>
+                            <li>Снижение излишков склада на 15% за счет точного прогнозирования</li>
+                            <li>Повышение точности управления остатками на 8%</li>
+                            <li>Внедрение системы мониторинга заказов в реальном времени</li>
+                            <li>Автоматизация процессов отчетности и аналитики</li>
+                            <li>Достижение позиции ТОП-2 в стране по клиентской удовлетворенности</li>
                         </ul>
                     </div>
-                    <div class="project-skills">
-                        <span class="skill-tag">Machine Learning</span>
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">Tableau</span>
-                        <span class="skill-tag">SQL</span>
+
+                    <div class="project-tech">
+                        <span class="tech-tag">Искусственный интеллект</span>
+                        <span class="tech-tag">Прогнозная аналитика</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Data Science</span>
+                        <span class="tech-tag">KPI мониторинг</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Проект 2 -->
+            <!-- Проект 2 - ГРИНЛАЙТ -->
             <div class="project-card">
                 <div class="project-header">
-                    <h3 class="project-title">Цифровая трансформация SCM</h3>
-                    <p class="project-client">ГК "Эталон"</p>
+                    <div class="project-company">ООО «ГРИНЛАЙТ» (Rossko)</div>
+                    <h2 class="project-title">Региональная экспансия и масштабирование</h2>
+                    <span class="project-period">2018-2019</span>
                 </div>
-                <div class="project-body">
-                    <div class="project-meta">
-                        <span><i class="far fa-calendar"></i> 2021-2023</span>
-                        <span><i class="fas fa-users"></i> Команда: 12 человек</span>
+                <div class="project-content">
+                    <p class="project-description">Организация и запуск трех новых региональных филиалов с нуля, построение эффективной логистической сети.</p>
+                    
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Новых города</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24</div>
+                            <div class="stat-label">Человека в команде</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">20K</div>
+                            <div class="stat-label">SKU под контролем</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1 год</div>
+                            <div class="stat-label">Срок реализации</div>
+                        </div>
                     </div>
-                    <p class="project-description">
-                        Создание цифрового двойника логистической системы и внедрение ERP-системы 
-                        для управления цепями поставок строительных материалов.
-                    </p>
-                    <div class="project-results">
-                        <h4>Результаты:</h4>
+
+                    <div class="project-achievements">
+                        <h4>Ключевые результаты:</h4>
                         <ul>
-                            <li>Снижение транспортных расходов на 28%</li>
-                            <li>Сокращение времени обработки заказов на 40%</li>
-                            <li>Повышение прозрачности цепей поставок</li>
-                            <li>Автоматизация отчетности KPI</li>
+                            <li>Успешный запуск филиалов в Ноябрьске, Ханты-Мансийске и Нижневартовске</li>
+                            <li>Построение команды из 24 специалистов</li>
+                            <li>Организация управления 20,000+ SKU</li>
+                            <li>Разработка стандартов операционной деятельности для филиалов</li>
+                            <li>Создание системы кросс-региональной логистики</li>
                         </ul>
                     </div>
-                    <div class="project-skills">
-                        <span class="skill-tag">ERP</span>
-                        <span class="skill-tag">Digital Twin</span>
-                        <span class="skill-tag">Process Automation</span>
-                        <span class="skill-tag">KPI Dashboard</span>
+
+                    <div class="project-tech">
+                        <span class="tech-tag">Масштабирование</span>
+                        <span class="tech-tag">Управление филиалами</span>
+                        <span class="tech-tag">Логистика</span>
+                        <span class="tech-tag">Операционная эффективность</span>
+                        <span class="tech-tag">Командообразование</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Проект 3 -->
+            <!-- Проект 3 - АВТО-ПРИТЯЖЕНИЕ -->
             <div class="project-card">
                 <div class="project-header">
-                    <h3 class="project-title">Оптимизация складской логистики</h3>
-                    <p class="project-client">Леруа Мерлен Восток</p>
+                    <div class="project-company">АВТО-ПРИТЯЖЕНИЕ</div>
+                    <h2 class="project-title">Создание прибыльного филиала с нуля</h2>
+                    <span class="project-period">2014-2016</span>
                 </div>
-                <div class="project-body">
-                    <div class="project-meta">
-                        <span><i class="far fa-calendar"></i> 2017-2018</span>
-                        <span><i class="fas fa-users"></i> Команда: 6 человек</span>
+                <div class="project-content">
+                    <p class="project-description">Полный цикл создания и развития филиала компании от первоначального планирования до стабильной прибыльной работы.</p>
+                    
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">+30%</div>
+                            <div class="stat-label">Рост оборота</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">-10%</div>
+                            <div class="stat-label">Снижение затрат</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">Сотрудников</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0→1</div>
+                            <div class="stat-label">Стартап с нуля</div>
+                        </div>
                     </div>
-                    <p class="project-description">
-                        Реинжиниринг складских процессов и внедрение системы кросс-докинга 
-                        для повышения эффективности региональной дистрибуции.
-                    </p>
-                    <div class="project-results">
-                        <h4>Результаты:</h4>
+
+                    <div class="project-achievements">
+                        <h4>Ключевые результаты:</h4>
                         <ul>
-                            <li>Повышение эффективности склада на 42%</li>
-                            <li>Сокращение сроков доставки на 35%</li>
-                            <li>Снижение логистических издержек на 15%</li>
-                            <li>Улучшение accuracy инвентаризации до 99.8%</li>
+                            <li>Построение филиала с чистого листа до прибыльной единицы</li>
+                            <li>Достижение роста оборота на 30% за первый год работы</li>
+                            <li>Снижение операционных затрат на 10%</li>
+                            <li>Формирование команды из 15 высококвалифицированных специалистов</li>
+                            <li>Разработка и внедрение системы KPI для мониторинга эффективности</li>
                         </ul>
                     </div>
-                    <div class="project-skills">
-                        <span class="skill-tag">WMS</span>
-                        <span class="skill-tag">Cross-docking</span>
-                        <span class="skill-tag">Lean Six Sigma</span>
-                        <span class="skill-tag">Process Optimization</span>
+
+                    <div class="project-tech">
+                        <span class="tech-tag">Стартап</span>
+                        <span class="tech-tag">Бизнес-развитие</span>
+                        <span class="tech-tag">Финансовый менеджмент</span>
+                        <span class="tech-tag">Управление командой</span>
+                        <span class="tech-tag">KPI системы</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Проект 4 -->
+            <!-- Проект 4 - ЮЛСАН -->
             <div class="project-card">
                 <div class="project-header">
-                    <h3 class="project-title">Внедрение системы управления поставщиками</h3>
-                    <p class="project-client">X5 Retail Group</p>
+                    <div class="project-company">ЮЛСАН</div>
+                    <h2 class="project-title">Оптимизация логистических процессов</h2>
+                    <span class="project-period">2013-2014</span>
                 </div>
-                <div class="project-body">
-                    <div class="project-meta">
-                        <span><i class="far fa-calendar"></i> 2019-2020</span>
-                        <span><i class="fas fa-users"></i> Команда: 5 человек</span>
+                <div class="project-content">
+                    <p class="project-description">Реорганизация и оптимизация логистической системы компании, внедрение современных методов управления транспортом.</p>
+                    
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">-15%</div>
+                            <div class="stat-label">Логистические издержки</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">+25%</div>
+                            <div class="stat-label">Эффективность маршрутов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Автоматизация отчетности</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label">Мониторинг SLA</div>
+                        </div>
                     </div>
-                    <p class="project-description">
-                        Разработка и внедрение SRM-системы для управления взаимоотношениями с поставщиками 
-                        и мониторинга SLA показателей.
-                    </p>
-                    <div class="project-results">
-                        <h4>Результаты:</h4>
+
+                    <div class="project-achievements">
+                        <h4>Ключевые результаты:</h4>
                         <ul>
-                            <li>Снижение количества срывов поставок на 67%</li>
-                            <li>Повышение удовлетворенности поставщиков на 35%</li>
-                            <li>Автоматизация 90% процессов коммуникации</li>
-                            <li>Снижение затрат на управление поставщиками на 22%</li>
+                            <li>Снижение логистических издержек на 15% через оптимизацию процессов</li>
+                            <li>Внедрение системы управления транспортными потоками</li>
+                            <li>Повышение эффективности маршрутов доставки на 25%</li>
+                            <li>Разработка системы мониторинга SLA поставщиков</li>
+                            <li>Полная автоматизация процессов логистической отчетности</li>
                         </ul>
                     </div>
-                    <div class="project-skills">
-                        <span class="skill-tag">SRM</span>
-                        <span class="skill-tag">SLA Management</span>
-                        <span class="skill-tag">Vendor Management</span>
-                        <span class="skill-tag">Process Automation</span>
+
+                    <div class="project-tech">
+                        <span class="tech-tag">Оптимизация логистики</span>
+                        <span class="tech-tag">Управление транспортом</span>
+                        <span class="tech-tag">SLA мониторинг</span>
+                        <span class="tech-tag">Автоматизация</span>
+                        <span class="tech-tag">Аналитика затрат</span>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Анимация появления элементов при скролле
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -390,12 +589,36 @@
                 });
             }, observerOptions);
 
-            const cards = document.querySelectorAll('.project-card');
-            cards.forEach(card => {
+            // Наблюдаем за карточками проектов
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(30px)';
                 card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(card);
+            });
+
+            // Плавная прокрутка для навигации
+            const anchorLinks = document.querySelectorAll('a[href^="#"]');
+            
+            anchorLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
+                            
+                            window.scrollTo({
+                                top: offsetTop,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
             });
         });
     </script>
