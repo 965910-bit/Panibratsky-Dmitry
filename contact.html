@@ -70,6 +70,30 @@
             gap: 0.5rem;
         }
 
+        .contact-photos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-photo {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-photo:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-photo img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
         .contact-info {
             list-style: none;
             padding: 0;
@@ -216,6 +240,10 @@
             .header-simple .header-text-center h1 {
                 font-size: 2rem;
             }
+            
+            .contact-photos {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -267,25 +295,53 @@
     <!-- Contact Content -->
     <main class="container">
         <div class="contact-content">
+            <!-- Фотографии -->
+            <div class="contact-card">
+                <h2><i class="fas fa-camera"></i> Фотографии</h2>
+                <div class="contact-photos">
+                    <div class="contact-photo">
+                        <img src="images/contact-photo1.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+                    <div class="contact-photo">
+                        <img src="images/contact-photo2.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+                </div>
+                <p style="color: var(--text-light); text-align: center; font-style: italic;">
+                    Профессиональные фото для делового общения и сотрудничества
+                </p>
+            </div>
+
             <!-- Контактная информация -->
             <div class="contact-card">
                 <h2><i class="fas fa-address-card"></i> Контактная информация</h2>
                 <ul class="contact-info">
                     <li>
-                        <i class="fas fa-envelope"></i>
-                        <span>Email: d.panibratsky@example.com</span>
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <strong>Телефон:</strong>
+                            <div>+7-982-581-07-87</div>
+                        </div>
                     </li>
                     <li>
-                        <i class="fas fa-phone"></i>
-                        <span>Телефон: +7 (XXX) XXX-XX-XX</span>
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email:</strong>
+                            <div><a href="mailto:dmitriy.panibratskiy@yandex.ru">dmitriy.panibratskiy@yandex.ru</a></div>
+                        </div>
                     </li>
                     <li>
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>Местоположение: Москва, Россия</span>
+                        <div>
+                            <strong>Локация:</strong>
+                            <div>Сургут / Санкт-Петербург</div>
+                        </div>
                     </li>
                     <li>
                         <i class="fas fa-clock"></i>
-                        <span>Часы работы: Пн-Пт, 9:00-18:00</span>
+                        <div>
+                            <strong>Часы работы:</strong>
+                            <div>Пн-Пт, 9:00-18:00</div>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -364,6 +420,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Анимация появления элементов
             const contactCards = document.querySelectorAll('.contact-card');
+            const contactPhotos = document.querySelectorAll('.contact-photo');
             
             const observerOptions = {
                 threshold: 0.1,
@@ -386,12 +443,30 @@
                 observer.observe(card);
             });
 
+            contactPhotos.forEach(photo => {
+                photo.style.opacity = '0';
+                photo.style.transform = 'translateY(20px)';
+                photo.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(photo);
+            });
+
             // Обработка формы
             const contactForm = document.querySelector('.contact-form');
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 alert('Сообщение отправлено! Я свяжусь с вами в ближайшее время.');
                 contactForm.reset();
+            });
+
+            // Плавное появление изображений
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+                
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.3s ease';
             });
         });
     </script>
