@@ -240,6 +240,66 @@
             text-decoration: underline;
         }
 
+        /* Social Links */
+        .social-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .social-link:hover {
+            background: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .social-icon.hh {
+            background: #d6001c;
+        }
+
+        .social-icon.setka {
+            background: #7c3aed;
+        }
+
+        .social-icon.telegram {
+            background: #0088cc;
+        }
+
+        .social-icon.max {
+            background: #00a862;
+        }
+
+        .social-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
         /* Contact Form */
         .contact-form {
             background: var(--card-bg);
@@ -343,6 +403,10 @@
             
             .contact-form {
                 padding: 1.5rem;
+            }
+            
+            .social-links {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -464,6 +528,34 @@
                             <p>Готов к удаленной работе</p>
                             <p>Готов к командировкам до 70%</p>
                         </div>
+                    </div>
+
+                    <!-- Соцсети и мессенджеры -->
+                    <div class="social-links">
+                        <a href="https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45" target="_blank" class="social-link">
+                            <div class="social-icon hh">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <span class="social-name">HeadHunter</span>
+                        </a>
+                        <a href="https://set.ki/EYUBwz5" target="_blank" class="social-link">
+                            <div class="social-icon setka">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <span class="social-name">Setka</span>
+                        </a>
+                        <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="social-link">
+                            <div class="social-icon telegram">
+                                <i class="fab fa-telegram"></i>
+                            </div>
+                            <span class="social-name">Telegram</span>
+                        </a>
+                        <a href="https://max.ru/u/f9LHodD0cOJWkmqphqMLwYEjE-cp3srsPoVUGFmORlOYMtMftRb7FCciSpE" target="_blank" class="social-link">
+                            <div class="social-icon max">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <span class="social-name">Max</span>
+                        </a>
                     </div>
                 </div>
 
