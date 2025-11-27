@@ -171,6 +171,341 @@
             color: white;
         }
 
+        /* Стили чат-бота */
+        #chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        #chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .chatbot-pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        #chatbot-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 380px;
+            height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #chatbot-window.active {
+            display: flex;
+        }
+
+        #chatbot-header {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chatbot-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .chatbot-info {
+            flex: 1;
+        }
+
+        .chatbot-info h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .status {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .status.online::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        #chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        #chatbot-close:hover {
+            opacity: 1;
+        }
+
+        #chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            align-items: flex-start;
+        }
+
+        .user-message {
+            align-items: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            margin: 0 10px;
+        }
+
+        .bot-message .message-avatar {
+            background: #2563eb;
+            color: white;
+        }
+
+        .user-message .message-avatar {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .message-content {
+            max-width: 70%;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .bot-message .message-content {
+            background: white;
+            border-bottom-left-radius: 5px;
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-content p {
+            margin: 0 0 8px 0;
+            line-height: 1.4;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.6;
+            display: block;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-reply {
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 15px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #2563eb;
+        }
+
+        .quick-reply:hover {
+            background: rgba(37, 99, 235, 0.2);
+            transform: translateY(-1px);
+        }
+
+        #chatbot-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        #chatbot-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        #chatbot-input:focus {
+            border-color: #2563eb;
+        }
+
+        #chatbot-send {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #chatbot-send:hover {
+            transform: scale(1.05);
+        }
+
+        #chatbot-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .chatbot-suggestions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .suggestion {
+            background: none;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 4px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #64748b;
+        }
+
+        .suggestion:hover {
+            background: #f1f5f9;
+            color: #2563eb;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #64748b;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
         @media (max-width: 768px) {
             .about-grid {
                 grid-template-columns: 1fr;
@@ -194,6 +529,51 @@
             .welcome-message > div {
                 grid-template-columns: 1fr !important;
                 text-align: center;
+            }
+
+            #chatbot-container {
+                bottom: 10px;
+                right: 10px;
+            }
+
+            #chatbot-window {
+                width: calc(100vw - 40px);
+                height: 70vh;
+                right: -10px;
+            }
+
+            #chatbot-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .contact-hero {
+                padding: 3rem 0;
+            }
+            
+            .contact-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .contact-card {
+                padding: 1.5rem;
+            }
+            
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .photo-container {
+                width: 120px;
+                height: 120px;
             }
         }
     </style>
@@ -602,6 +982,67 @@
         </div>
     </footer>
 
+    <!-- Чат-бот -->
+    <div id="chatbot-container">
+        <!-- Кнопка открытия чата -->
+        <div id="chatbot-toggle">
+            <i class="fas fa-robot"></i>
+            <span class="chatbot-pulse"></span>
+        </div>
+
+        <!-- Окно чата -->
+        <div id="chatbot-window">
+            <!-- Заголовок -->
+            <div id="chatbot-header">
+                <div class="chatbot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chatbot-info">
+                    <h4>SCM Assistant</h4>
+                    <span class="status online">Online</span>
+                </div>
+                <button id="chatbot-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Сообщения -->
+            <div id="chatbot-messages">
+                <div class="message bot-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>Привет! Я SCM Assistant 🤖</p>
+                        <p>Помогу вам связаться с Дмитрием или ответить на вопросы по управлению цепями поставок. Чем могу помочь?</p>
+                        <div class="quick-replies">
+                            <button class="quick-reply" data-reply="Связаться с Дмитрием">👋 Связаться</button>
+                            <button class="quick-reply" data-reply="SCM экспертиза">📊 SCM экспертиза</button>
+                            <button class="quick-reply" data-reply="Опыт работы">💼 Опыт работы</button>
+                        </div>
+                        <span class="message-time">12:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Поле ввода -->
+            <div id="chatbot-input-container">
+                <div class="input-wrapper">
+                    <input type="text" id="chatbot-input" placeholder="Напишите ваше сообщение..." maxlength="500">
+                    <button id="chatbot-send">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="chatbot-suggestions">
+                    <span>Можете спросить:</span>
+                    <button class="suggestion" data-question="Какие проекты вы реализовали?">Проекты</button>
+                    <button class="suggestion" data-question="Какие технологии используете?">Технологии</button>
+                    <button class="suggestion" data-question="Как с вами связаться?">Контакты</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script>
         // Audience Selection
@@ -687,6 +1128,309 @@
                 element.style.transform = 'translateY(20px)';
                 element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(element);
+            });
+
+            // Чат-бот
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const chatbotClose = document.getElementById('chatbot-close');
+            const chatbotMessages = document.getElementById('chatbot-messages');
+            const chatbotInput = document.getElementById('chatbot-input');
+            const chatbotSend = document.getElementById('chatbot-send');
+            const quickReplies = document.querySelectorAll('.quick-reply');
+            const suggestions = document.querySelectorAll('.suggestion');
+
+            let isTyping = false;
+            let conversationHistory = [];
+
+            // Открытие/закрытие чата
+            chatbotToggle.addEventListener('click', function() {
+                chatbotWindow.classList.toggle('active');
+                chatbotInput.focus();
+            });
+
+            chatbotClose.addEventListener('click', function() {
+                chatbotWindow.classList.remove('active');
+            });
+
+            // Отправка сообщения
+            function sendMessage() {
+                const message = chatbotInput.value.trim();
+                if (message && !isTyping) {
+                    addMessage(message, 'user');
+                    chatbotInput.value = '';
+                    simulateTyping();
+                    setTimeout(() => handleBotResponse(message), 1000);
+                }
+            }
+
+            chatbotSend.addEventListener('click', sendMessage);
+
+            chatbotInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Быстрые ответы
+            quickReplies.forEach(button => {
+                button.addEventListener('click', function() {
+                    const reply = this.getAttribute('data-reply');
+                    addMessage(reply, 'user');
+                    simulateTyping();
+                    setTimeout(() => handleBotResponse(reply), 1000);
+                });
+            });
+
+            // Подсказки
+            suggestions.forEach(button => {
+                button.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    chatbotInput.value = question;
+                    chatbotInput.focus();
+                });
+            });
+
+            // Добавление сообщения в чат
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message`;
+                
+                const time = new Date().toLocaleTimeString('ru-RU', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-${sender === 'user' ? 'user' : 'robot'}"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>${text}</p>
+                        <span class="message-time">${time}</span>
+                    </div>
+                `;
+
+                chatbotMessages.appendChild(messageDiv);
+                scrollToBottom();
+                
+                // Сохраняем в историю
+                conversationHistory.push({ sender, text, time });
+            }
+
+            // Симуляция печати
+            function simulateTyping() {
+                isTyping = true;
+                chatbotSend.disabled = true;
+
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot-message';
+                typingDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                `;
+
+                chatbotMessages.appendChild(typingDiv);
+                scrollToBottom();
+
+                return typingDiv;
+            }
+
+            // Обработка ответов бота
+            function handleBotResponse(userMessage) {
+                isTyping = false;
+                chatbotSend.disabled = false;
+
+                // Удаляем индикатор печати
+                const typingIndicator = document.querySelector('.typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.parentElement.parentElement.remove();
+                }
+
+                const response = generateBotResponse(userMessage.toLowerCase());
+                addMessage(response.text, 'bot');
+
+                // Если есть быстрые ответы, добавляем их
+                if (response.quickReplies) {
+                    setTimeout(() => addQuickReplies(response.quickReplies), 300);
+                }
+
+                // Если нужно отправить в Telegram (для сложных вопросов)
+                if (response.forwardToTelegram) {
+                    sendToTelegram(userMessage);
+                }
+            }
+
+            // Генерация ответов бота
+            function generateBotResponse(message) {
+                const responses = {
+                    greetings: {
+                        patterns: ['привет', 'здравствуйте', 'добрый день', 'hello', 'hi', 'начать', 'start'],
+                        response: `Рад вас видеть! Я SCM Assistant - ваш помощник по вопросам управления цепями поставок и цифровой трансформации. 
+
+Чем конкретно могу помочь?`,
+                        quickReplies: ['SCM экспертиза', 'Опыт работы', 'Связаться с Дмитрием']
+                    },
+                    contact: {
+                        patterns: ['связаться', 'контакты', 'телефон', 'email', 'связь', 'свяжитесь'],
+                        response: `Конечно! Вот контакты Дмитрия:
+
+📞 Телефон: +7 (928) 581-07-87
+📧 Email: dmitriy.panibratskiy@yandex.ru
+📍 Локация: Сургут / Санкт-Петербург
+
+Также вы можете заполнить форму обратной связи на сайте, и Дмитрий свяжется с вами в ближайшее время.`,
+                        quickReplies: ['Заполнить форму', 'SCM экспертиза', 'Проекты']
+                    },
+                    expertise: {
+                        patterns: ['экспертиза', 'scm', 'поставки', 'логистика', 'цепь поставок', 'оптимизация'],
+                        response: `Дмитрий специализируется на:
+                        
+• Управлении цепями поставок (SCM)
+• Цифровой трансформации бизнеса  
+• Внедрении AI и аналитики
+• Оптимизации бизнес-процессов
+• Управлении проектами
+
+Более 10 лет опыта в крупных международных компаниях.`,
+                        quickReplies: ['Опыт работы', 'Технологии', 'Проекты']
+                    },
+                    experience: {
+                        patterns: ['опыт', 'резюме', 'background', 'работал', 'квалификация'],
+                        response: `Профессиональный опыт Дмитрия:
+
+🎯 10+ лет в управлении цепями поставок
+🏢 Опыт в FMCG, ритейле, логистике
+🌍 Международные проекты
+📈 Успешная реализация +15 крупных проектов
+🎓 Профильное образование и сертификаты
+
+Подробнее в разделе "Опыт" на сайте.`,
+                        quickReplies: ['Проекты', 'SCM экспертиза', 'Контакты']
+                    },
+                    projects: {
+                        patterns: ['проекты', 'реализовал', 'кейсы', 'примеры'],
+                        response: `Ключевые реализованные проекты:
+
+• Внедрение WMS системы - экономия 15% на складе
+• Оптимизация транспортных маршрутов -20% затрат
+• Цифровизация цепочки поставок +30% эффективности
+• Внедрение AI для прогнозирования спроса
+
+Каждый проект принес значимый бизнес-результат.`,
+                        quickReplies: ['Технологии', 'SCM экспертиза', 'Связаться']
+                    },
+                    technologies: {
+                        patterns: ['технологии', 'инструменты', 'программы', 'software', 'ai'],
+                        response: `Используемые технологии и инструменты:
+
+🤖 AI/ML: прогнозирование спроса, оптимизация
+📊 Аналитика: Power BI, Tableau, Python
+🔄 SCM системы: SAP, Oracle, 1C
+🚚 WMS/TMS: собственные и коммерческие решения
+☁️ Cloud: Azure, AWS, Google Cloud
+
+Постоянное изучение новых технологий.`,
+                        quickReplies: ['Проекты', 'SCM экспертиза', 'Контакты']
+                    },
+                    default: {
+                        response: `Интересный вопрос! Дмитрий имеет обширный опыт в этой области, но для точного ответа лучше обсудить детали персонально.
+
+Могу предложить:
+• Связаться с Дмитрием для консультации
+• Изучить раздел "Опыт" на сайте
+• Посмотреть реализованные проекты
+
+Какой вариант вам подходит?`,
+                        quickReplies: ['Связаться с Дмитрием', 'SCM экспертиза', 'Опыт работы'],
+                        forwardToTelegram: true
+                    }
+                };
+
+                // Поиск подходящего ответа
+                for (const [key, config] of Object.entries(responses)) {
+                    if (key === 'default') continue;
+                    
+                    if (config.patterns.some(pattern => message.includes(pattern))) {
+                        return config;
+                    }
+                }
+
+                return responses.default;
+            }
+
+            // Добавление быстрых ответов
+            function addQuickReplies(replies) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot-message';
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="quick-replies">
+                            ${replies.map(reply => 
+                                `<button class="quick-reply" data-reply="${reply}">${reply}</button>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+
+                chatbotMessages.appendChild(messageDiv);
+                scrollToBottom();
+
+                // Добавляем обработчики для новых кнопок
+                messageDiv.querySelectorAll('.quick-reply').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const reply = this.getAttribute('data-reply');
+                        addMessage(reply, 'user');
+                        simulateTyping();
+                        setTimeout(() => handleBotResponse(reply), 1000);
+                    });
+                });
+            }
+
+            // Отправка сложных вопросов в Telegram
+            function sendToTelegram(question) {
+                const TELEGRAM_TOKEN = '8414212107:AAF2UAhSin1_m8HuASJ-aqhrwsGPs0WyxGA';
+                const CHAT_ID = '2032477871';
+                
+                const text = `❓ Сложный вопрос из чат-бота:\n\n${question}\n\n💬 История чата:\n${conversationHistory.slice(-5).map(msg => `${msg.sender === 'user' ? '👤' : '🤖'} ${msg.text}`).join('\n')}`;
+
+                fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: text
+                    })
+                }).catch(err => console.error('Ошибка отправки в Telegram:', err));
+            }
+
+            // Прокрутка вниз
+            function scrollToBottom() {
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+
+            // Авто-фокус на поле ввода при открытии
+            chatbotToggle.addEventListener('click', function() {
+                setTimeout(() => chatbotInput.focus(), 300);
+            });
+
+            // Закрытие по клику вне чата
+            document.addEventListener('click', function(e) {
+                if (!chatbotContainer.contains(e.target) && chatbotWindow.classList.contains('active')) {
+                    chatbotWindow.classList.remove('active');
+                }
             });
         });
     </script>
