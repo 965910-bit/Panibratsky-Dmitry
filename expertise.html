@@ -4,182 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Экспертиза - Дмитрий Панибратский</title>
+    
+    <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #dbeafe;
-            --secondary-color: #7c3aed;
-            --accent-color: #06b6d4;
-            --text-color: #1e293b;
-            --text-light: #64748b;
-            --bg-light: #f8fafc;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-        .expertise-hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 4rem 0;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .expertise-hero h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .expertise-hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .expertise-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1000px;
-            margin: 3rem auto;
-            padding: 0 1rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .expertise-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .expertise-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--primary-color);
-            transition: all 0.3s ease;
-        }
-
-        .expertise-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .expertise-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .expertise-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-        }
-
-        .expertise-description {
-            color: var(--text-light);
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .expertise-skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .skill-tag {
-            background: var(--primary-light);
-            color: var(--primary-dark);
-            padding: 0.4rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        /* Упрощенная шапка */
-        .header-simple {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 2.5rem 0;
-            text-align: center;
-        }
-
-        .header-simple .header-text-center h1 {
-            margin-bottom: 0.8rem;
-            font-size: 2.5rem;
-        }
-
-        .header-simple .header-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-
-        .header-simple .contact-badges {
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .expertise-hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .expertise-grid {
-                grid-template-columns: 1fr;
-                padding: 1rem;
-            }
-            
-            .header-simple .header-text-center h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
 </head>
 <body>
-    <!-- Упрощенный Header без фото -->
-    <header class="header-simple">
+    <!-- Header -->
+    <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="header-text-center">
-                    <h1>Дмитрий Панибратский</h1>
-                    <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
+                <div class="header-photos">
+                    <div class="header-photo-left">
+                        <div class="photo-left-container">
+                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                        </div>
+                    </div>
                     
-                    <div class="contact-badges">
-                        <span class="badge">Управление SCM</span>
-                        <span class="badge">Цифровая трансформация</span>
-                        <span class="badge">AI & Аналитика</span>
-                        <span class="badge">Оптимизация процессов</span>
+                    <div class="header-text-center">
+                        <h1>Дмитрий Панибратский</h1>
+                        <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
+                        
+                        <div class="contact-badges">
+                            <span class="badge">Управление SCM</span>
+                            <span class="badge">Цифровая трансформация</span>
+                            <span class="badge">AI & Аналитика</span>
+                            <span class="badge">Оптимизация процессов</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-photo-right">
+                        <div class="photo-right-container">
+                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -195,137 +54,118 @@
                 <li><a href="experience.html">Опыт</a></li>
                 <li><a href="projects.html">Проекты</a></li>
                 <li><a href="tools.html">Инструменты</a></li>
+                <li><a href="calculators.html">Калькуляторы</a></li>
                 <li><a href="certificates.html">Сертификаты</a></li>
                 <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="index.html#contact">Контакты</a></li>
+                <li><a href="contact.html">Контакты</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="expertise-hero">
-        <div class="container">
-            <h1>Экспертиза и компетенции</h1>
-            <p>Ключевые направления профессиональной экспертизы в управлении цепями поставок</p>
-        </div>
-    </section>
-
-    <!-- Statistics -->
-    <section class="expertise-stats">
-        <div class="stat-card">
-            <div class="stat-number">13+</div>
-            <div class="stat-label">Лет опыта в SCM</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">28%</div>
-            <div class="stat-label">Средняя оптимизация затрат</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">95%</div>
-            <div class="stat-label">Уровень сервиса CSAT</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">87K+</div>
-            <div class="stat-label">SKU под управлением</div>
-        </div>
-    </section>
-
-    <!-- Expertise Grid -->
+    <!-- Main Content -->
     <main class="container">
-        <section class="expertise-grid">
-            <!-- Управление цепями поставок -->
-            <div class="expertise-card">
-                <div class="expertise-icon">📦</div>
-                <h3 class="expertise-title">Управление цепями поставок</h3>
-                <p class="expertise-description">
-                    End-to-end управление цепями поставок от планирования до исполнения. 
-                    Оптимизация логистических процессов и управление запасами.
-                </p>
-                <div class="expertise-skills">
-                    <span class="skill-tag">SCM стратегия</span>
-                    <span class="skill-tag">Управление запасами</span>
-                    <span class="skill-tag">Логистика</span>
-                    <span class="skill-tag">Дистрибуция</span>
+        <section class="section">
+            <h1>Профессиональная экспертиза</h1>
+            
+            <!-- SCM Экспертиза -->
+            <div class="expertise-section">
+                <h2>📊 Управление цепями поставок (SCM)</h2>
+                <div class="expertise-grid">
+                    <div class="expertise-card">
+                        <h3>Стратегическое планирование SCM</h3>
+                        <ul>
+                            <li>Разработка SCM стратегии</li>
+                            <li>Оптимизация сетей поставок</li>
+                            <li>Управление поставщиками</li>
+                            <li>Планирование мощностей</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <h3>Управление запасами</h3>
+                        <ul>
+                            <li>ABC/XYZ анализ</li>
+                            <li>Оптимизация уровней запасов</li>
+                            <li>Forecast & Demand Planning</li>
+                            <li>Inventory Turnover оптимизация</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <h3>Логистика и дистрибуция</h3>
+                        <ul>
+                            <li>Мультимодальные перевозки</li>
+                            <li>Оптимизация маршрутов</li>
+                            <li>Управление складской сетью</li>
+                            <li>Last-mile delivery решения</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
             <!-- Цифровая трансформация -->
-            <div class="expertise-card">
-                <div class="expertise-icon">🚀</div>
-                <h3 class="expertise-title">Цифровая трансформация</h3>
-                <p class="expertise-description">
-                    Внедрение цифровых технологий и автоматизация бизнес-процессов. 
-                    Создание цифровых двойников логистических систем.
-                </p>
-                <div class="expertise-skills">
-                    <span class="skill-tag">ERP системы</span>
-                    <span class="skill-tag">Автоматизация</span>
-                    <span class="skill-tag">Цифровые двойники</span>
-                    <span class="skill-tag">Бизнес-процессы</span>
+            <div class="expertise-section">
+                <h2>🚀 Цифровая трансформация</h2>
+                <div class="expertise-grid">
+                    <div class="expertise-card">
+                        <h3>AI & Машинное обучение</h3>
+                        <ul>
+                            <li>Прогнозирование спроса</li>
+                            <li>Оптимизация маршрутов</li>
+                            <li>Predictive Maintenance</li>
+                            <li>Computer Vision для складов</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <h3>Цифровые двойники</h3>
+                        <ul>
+                            <li>Моделирование цепей поставок</li>
+                            <li>AnyLogic симуляции</li>
+                            <li>What-if анализ</li>
+                            <li>Оптимизация сценариев</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <h3>Автоматизация процессов</h3>
+                        <ul>
+                            <li>RPA внедрение</li>
+                            <li>Workflow автоматизация</li>
+                            <li>API интеграции</li>
+                            <li>Low-code платформы</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <!-- AI и аналитика -->
-            <div class="expertise-card">
-                <div class="expertise-icon">🤖</div>
-                <h3 class="expertise-title">AI и предиктивная аналитика</h3>
-                <p class="expertise-description">
-                    Использование искусственного интеллекта для прогнозирования спроса, 
-                    оптимизации маршрутов и управления рисками в цепях поставок.
-                </p>
-                <div class="expertise-skills">
-                    <span class="skill-tag">Предиктивная аналитика</span>
-                    <span class="skill-tag">Машинное обучение</span>
-                    <span class="skill-tag">Прогнозирование</span>
-                    <span class="skill-tag">Data Science</span>
-                </div>
-            </div>
-
-            <!-- Оптимизация процессов -->
-            <div class="expertise-card">
-                <div class="expertise-icon">⚡</div>
-                <h3 class="expertise-title">Оптимизация процессов</h3>
-                <p class="expertise-description">
-                    Повышение операционной эффективности через реинжиниринг процессов, 
-                    внедрение бережливого производства и сокращение издержек.
-                </p>
-                <div class="expertise-skills">
-                    <span class="skill-tag">Lean Six Sigma</span>
-                    <span class="skill-tag">Бережливое производство</span>
-                    <span class="skill-tag">KPI оптимизация</span>
-                    <span class="skill-tag">Снижение затрат</span>
-                </div>
-            </div>
-
-            <!-- Управление проектами -->
-            <div class="expertise-card">
-                <div class="expertise-icon">📊</div>
-                <h3 class="expertise-title">Управление проектами</h3>
-                <p class="expertise-description">
-                    Управление комплексными проектами цифровой трансформации 
-                    и оптимизации цепей поставок от инициации до внедрения.
-                </p>
-                <div class="expertise-skills">
-                    <span class="skill-tag">Agile/Scrum</span>
-                    <span class="skill-tag">Waterfall</span>
-                    <span class="skill-tag">Управление рисками</span>
-                    <span class="skill-tag">Бюджетирование</span>
-                </div>
-            </div>
-
-            <!-- Стратегическое управление -->
-            <div class="expertise-card">
-                <div class="expertise-icon">🎯</div>
-                <h3 class="expertise-title">Стратегическое управление</h3>
-                <p class="expertise-description">
-                    Разработка и внедрение стратегий развития цепей поставок, 
-                    управление изменениями и трансформация бизнес-моделей.
-                </p>
-                <div class="expertise-skills">
-                    <span class="skill-tag">Стратегическое планирование</span>
-                    <span class="skill-tag">Бизнес-трансформация</span>
-                    <span class="skill-tag">Управление изменениями</span>
-                    <span class="skill-tag">Roadmapping</span>
+            <!-- Аналитика и BI -->
+            <div class="expertise-section">
+                <h2>📈 Аналитика и Business Intelligence</h2>
+                <div class="expertise-grid">
+                    <div class="expertise-card">
+                        <h3>Предиктивная аналитика</h3>
+                        <ul>
+                            <li>Time Series анализ</li>
+                            <li>Machine Learning модели</li>
+                            <li>Анализ временных рядов</li>
+                            <li>Прогнозные алгоритмы</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <h3>BI системы и дашборды</h3>
+                        <ul>
+                            <li>Tableau разработка</li>
+                            <li>Power BI дашборды</li>
+                            <li>KPI мониторинг</li>
+                            <li>Real-time аналитика</li>
+                        </ul>
+                    </div>
+                    <div class="expertise-card">
+                        <h3>Data Science</h3>
+                        <ul>
+                            <li>Python & Pandas</li>
+                            <li>SQL & базы данных</li>
+                            <li>Статистический анализ</li>
+                            <li>Data Mining</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
@@ -333,35 +173,11 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
 
-    <script>
-        // Анимация появления элементов
-        document.addEventListener('DOMContentLoaded', function() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            const cards = document.querySelectorAll('.expertise-card');
-            cards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
-            });
-        });
-    </script>
+    <!-- Подключаем чат-бот -->
+    <script src="js/chatbot.js"></script>
 </body>
 </html>
