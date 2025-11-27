@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wiki - Дмитрий Панибратский</title>
+    <title>База знаний SCM - Дмитрий Панибратский</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -23,6 +24,7 @@
             --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
+        /* Hero Section */
         .wiki-hero {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
@@ -44,6 +46,7 @@
             margin: 0 auto;
         }
 
+        /* Categories */
         .wiki-categories {
             display: flex;
             justify-content: center;
@@ -69,6 +72,7 @@
             border-color: var(--primary-color);
         }
 
+        /* Wiki Grid */
         .wiki-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -85,6 +89,13 @@
             box-shadow: var(--shadow);
             border-left: 4px solid var(--primary-color);
             transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .wiki-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .wiki-card:hover {
@@ -138,30 +149,333 @@
             font-weight: 500;
         }
 
-        /* Упрощенная шапка */
-        .header-simple {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 2.5rem 0;
-            text-align: center;
+        /* Чек-листы */
+        .checklist {
+            margin: 1rem 0;
         }
 
-        .header-simple .header-text-center h1 {
-            margin-bottom: 0.8rem;
-            font-size: 2.5rem;
-        }
-
-        .header-simple .header-subtitle {
-            font-size: 1.2rem;
+        .checklist-section, .checklist-phase {
             margin-bottom: 1.5rem;
-            opacity: 0.9;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
         }
 
-        .header-simple .contact-badges {
-            justify-content: center;
+        .checklist-section h4, .checklist-phase h4 {
+            margin: 0 0 0.8rem 0;
+            color: var(--text-color);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .checklist-item:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checklist-item span:not(.checkmark) {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .checklist-progress {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Калькуляторы */
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .calculator-form {
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .btn-calculate {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-calculate:hover {
+            background: var(--primary-dark);
+        }
+
+        .calculator-results {
+            padding: 1.5rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary-light);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-title {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Дашборды */
+        .dashboard-container {
+            margin: 1rem 0;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .chart-container.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-value {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        /* Инфографика */
+        .infographic-container {
+            margin: 1.5rem 0;
+        }
+
+        .evolution-timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 1rem;
         }
 
+        @media (max-width: 1024px) {
+            .evolution-timeline {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .evolution-timeline {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .evolution-stage {
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .evolution-stage:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .evolution-stage::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1.5rem;
+        }
+
+        .evolution-stage:last-child::after {
+            display: none;
+        }
+
+        .stage-header {
+            margin-bottom: 1rem;
+        }
+
+        .stage-number {
+            background: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 0.5rem;
+        }
+
+        .stage-title {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* Навигация по расчетам */
+        .calculations-nav {
+            margin: 2rem 0 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .nav-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Адаптивность */
         @media (max-width: 768px) {
             .wiki-grid {
                 grid-template-columns: 1fr;
@@ -172,14 +486,39 @@
                 font-size: 2.2rem;
             }
             
-            .header-simple .header-text-center h1 {
-                font-size: 2rem;
-            }
-            
             .wiki-categories {
                 justify-content: flex-start;
                 overflow-x: auto;
                 padding-bottom: 0.5rem;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                text-align: left;
+                border-bottom: 1px solid var(--border-color);
+                border-left: 3px solid transparent;
+            }
+            
+            .nav-tab.active {
+                border-left-color: var(--primary-color);
+                border-bottom-color: var(--border-color);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wiki-hero {
+                padding: 3rem 0;
+            }
+            
+            .wiki-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .wiki-card {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -235,6 +574,8 @@
         <button class="category-btn" data-category="optimization">Оптимизация</button>
         <button class="category-btn" data-category="technology">Технологии</button>
         <button class="category-btn" data-category="kpi">KPI и метрики</button>
+        <button class="category-btn" data-category="checklists">Чек-листы</button>
+        <button class="category-btn" data-category="calculations">Расчеты</button>
     </section>
 
     <!-- Wiki Grid -->
@@ -407,6 +748,423 @@
                     <span class="wiki-tag">Бизнес-непрерывность</span>
                 </div>
             </div>
+
+            <!-- Чек-лист аудита отдела закупок -->
+            <div class="wiki-card" data-category="checklists,methodology">
+                <div class="wiki-header">
+                    <div class="wiki-icon">🔍</div>
+                    <h3 class="wiki-title">Аудит отдела закупок: полный чек-лист</h3>
+                </div>
+                <p class="wiki-description">
+                    Комплексная система оценки эффективности и оптимизации работы отдела закупок
+                </p>
+                <div class="wiki-content">
+                    <div class="checklist">
+                        <div class="checklist-phase">
+                            <h4>📊 1. Анализ текущего состояния</h4>
+                            
+                            <div class="checklist-section">
+                                <h5>1.1 Организационная структура</h5>
+                                <label class="checklist-item">
+                                    <input type="checkbox">
+                                    <span>Соответствие штатной численности объёму задач</span>
+                                </label>
+                                <label class="checklist-item">
+                                    <input type="checkbox">
+                                    <span>Чёткость зон ответственности и линий подчинения</span>
+                                </label>
+                                <label class="checklist-item">
+                                    <input type="checkbox">
+                                    <span>Наличие дублирующих функций</span>
+                                </label>
+                            </div>
+
+                            <div class="checklist-section">
+                                <h5>1.2 Процессы и регламенты</h5>
+                                <label class="checklist-item">
+                                    <input type="checkbox">
+                                    <span>Анализ полного цикла закупки (от заявки до оплаты)</span>
+                                </label>
+                                <label class="checklist-item">
+                                    <input type="checkbox">
+                                    <span>Проверка действующих регламентов и инструкций</span>
+                                </label>
+                                <label class="checklist-item">
+                                    <input type="checkbox">
+                                    <span>Оценка уровня автоматизации процессов</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-phase">
+                            <h4>🎯 2. Миссия и цели отдела</h4>
+                            
+                            <div class="checklist-section">
+                                <h5>Стратегические цели (1–3 года)</h5>
+                                <label class="checklist-item">
+                                    <input type="checkbox">
+                                    <span>Снизить закупочную стоимость на 10% без потери качества</span>
+                                </label>
+                                <label class="checklist-item">
+                                    <input type="checkbox">
+                                    <span>Увеличить долю стратегических поставщиков до 70%</span>
+                                </label>
+                                <label class="checklist-item">
+                                    <input type="checkbox">
+                                    <span>Сократить срок закупки на 20%</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checklist-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="progress-text">0% завершено</span>
+                    </div>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">Аудит</span>
+                    <span class="wiki-tag">Закупки</span>
+                    <span class="wiki-tag">KPI</span>
+                    <span class="wiki-tag">Оптимизация</span>
+                </div>
+            </div>
+
+            <!-- Калькулятор страхового запаса -->
+            <div class="wiki-card" data-category="calculations,optimization">
+                <div class="wiki-header">
+                    <div class="wiki-icon">🧮</div>
+                    <h3 class="wiki-title">Калькулятор страхового запаса</h3>
+                </div>
+                
+                <div class="calculator-container">
+                    <div class="calculator-form">
+                        <div class="input-group">
+                            <label for="avgDemand">Средний спрос (ед./день):</label>
+                            <input type="number" id="avgDemand" value="100" min="1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="stdDev">Стандартное отклонение спроса:</label>
+                            <input type="number" id="stdDev" value="20" min="1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="leadTime">Время поставки (дни):</label>
+                            <input type="number" id="leadTime" value="5" min="1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="serviceLevel">Уровень сервиса (%):</label>
+                            <input type="range" id="serviceLevel" min="80" max="99" value="95">
+                            <span id="serviceLevelValue">95%</span>
+                        </div>
+
+                        <button class="btn-calculate" onclick="calculateSafetyStock()">
+                            <i class="fas fa-calculator"></i> Рассчитать
+                        </button>
+                    </div>
+
+                    <div class="calculator-results">
+                        <div class="result-card">
+                            <div class="result-title">Страховой запас</div>
+                            <div class="result-value" id="safetyStockResult">74 ед.</div>
+                            <div class="result-formula">
+                                Z × σ × √L = 1.65 × 20 × √5 ≈ 74 ед.
+                            </div>
+                        </div>
+                        
+                        <div class="result-breakdown">
+                            <h5>Детали расчета:</h5>
+                            <div class="breakdown-item">
+                                <span>Z-коэффициент (95%):</span>
+                                <span>1.65</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Стандартное отклонение:</span>
+                                <span>20 ед./день</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Время поставки:</span>
+                                <span>5 дней</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">Расчеты</span>
+                    <span class="wiki-tag">Запасы</span>
+                    <span class="wiki-tag">Оптимизация</span>
+                </div>
+            </div>
+
+            <!-- Инфографика эволюции логистических моделей -->
+            <div class="wiki-card" data-category="methodology">
+                <div class="wiki-header">
+                    <div class="wiki-icon">🚀</div>
+                    <h3 class="wiki-title">Эволюция логистических моделей 1PL → 4PL</h3>
+                </div>
+                
+                <div class="infographic-container">
+                    <div class="evolution-timeline">
+                        <div class="evolution-stage" data-stage="1pl">
+                            <div class="stage-header">
+                                <div class="stage-number">1PL</div>
+                                <div class="stage-title">Прямая логистика</div>
+                            </div>
+                            <div class="stage-visual">
+                                <div class="company">Компания</div>
+                                <div class="connections">
+                                    <div class="connection">└── Склад</div>
+                                    <div class="connection">└── Транспорт</div>
+                                    <div class="connection">└── Клиенты</div>
+                                </div>
+                            </div>
+                            <div class="stage-features">
+                                <div class="feature">✓ Полный контроль</div>
+                                <div class="feature">✗ Высокие затраты</div>
+                            </div>
+                        </div>
+
+                        <div class="evolution-stage" data-stage="2pl">
+                            <div class="stage-header">
+                                <div class="stage-number">2PL</div>
+                                <div class="stage-title">Аутсорсинг транспорта</div>
+                            </div>
+                            <div class="stage-visual">
+                                <div class="company">Компания</div>
+                                <div class="connections">
+                                    <div class="connection">├── Склад</div>
+                                    <div class="connection">└── 2PL провайдер → Клиенты</div>
+                                </div>
+                            </div>
+                            <div class="stage-features">
+                                <div class="feature">✓ Снижение CAPEX</div>
+                                <div class="feature">✗ Частичный контроль</div>
+                            </div>
+                        </div>
+
+                        <div class="evolution-stage" data-stage="3pl">
+                            <div class="stage-header">
+                                <div class="stage-number">3PL</div>
+                                <div class="stage-title">Комплексный аутсорсинг</div>
+                            </div>
+                            <div class="stage-visual">
+                                <div class="company">Компания</div>
+                                <div class="connections">
+                                    <div class="connection">└── 3PL провайдер</div>
+                                    <div class="connection-sub">├── Склад</div>
+                                    <div class="connection-sub">├── Транспорт</div>
+                                    <div class="connection-sub">└── Клиенты</div>
+                                </div>
+                            </div>
+                            <div class="stage-features">
+                                <div class="feature">✓ Операционная эффективность</div>
+                                <div class="feature">✗ Ограниченная стратегия</div>
+                            </div>
+                        </div>
+
+                        <div class="evolution-stage" data-stage="4pl">
+                            <div class="stage-header">
+                                <div class="stage-number">4PL</div>
+                                <div class="stage-title">Стратегическое партнерство</div>
+                            </div>
+                            <div class="stage-visual">
+                                <div class="company">Компания</div>
+                                <div class="connections">
+                                    <div class="connection">└── 4PL интегратор</div>
+                                    <div class="connection-sub">├── Управление 3PL</div>
+                                    <div class="connection-sub">├── Оптимизация сети</div>
+                                    <div class="connection-sub">└── Технологии</div>
+                                </div>
+                            </div>
+                            <div class="stage-features">
+                                <div class="feature">✓ Единое управление</div>
+                                <div class="feature">✗ Высокая стоимость</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">1PL</span>
+                    <span class="wiki-tag">2PL</span>
+                    <span class="wiki-tag">3PL</span>
+                    <span class="wiki-tag">4PL</span>
+                </div>
+            </div>
+
+            <!-- Дашборд KPI -->
+            <div class="wiki-card" data-category="kpi,technology">
+                <div class="wiki-header">
+                    <div class="wiki-icon">📈</div>
+                    <h3 class="wiki-title">Интерактивный KPI Дашборд</h3>
+                </div>
+                
+                <div class="dashboard-container">
+                    <div class="charts-grid">
+                        <!-- График 1 -->
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h4>OTIF Performance</h4>
+                                <span class="chart-value">92%</span>
+                            </div>
+                            <canvas id="otifChart" width="400" height="200"></canvas>
+                        </div>
+
+                        <!-- График 2 -->
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h4>Оборачиваемость запасов</h4>
+                                <span class="chart-value">8.2</span>
+                            </div>
+                            <canvas id="inventoryChart" width="400" height="200"></canvas>
+                        </div>
+
+                        <!-- График 3 -->
+                        <div class="chart-container full-width">
+                            <div class="chart-header">
+                                <h4>Структура логистических затрат</h4>
+                                <span class="chart-value">15.3% от выручки</span>
+                            </div>
+                            <canvas id="costChart" width="400" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">KPI</span>
+                    <span class="wiki-tag">Дашборд</span>
+                    <span class="wiki-tag">Визуализация</span>
+                </div>
+            </div>
+
+            <!-- Расчеты эффективности -->
+            <div class="wiki-card" data-category="calculations,kpi">
+                <div class="wiki-header">
+                    <div class="wiki-icon">📊</div>
+                    <h3 class="wiki-title">Расчеты эффективности цепей поставок</h3>
+                </div>
+                <p class="wiki-description">
+                    Комплексная система метрик и расчетов для оценки продуктивности, рентабельности и маржинальности всех звеньев SCM
+                </p>
+                
+                <div class="calculations-nav">
+                    <div class="nav-tabs">
+                        <button class="nav-tab active" data-tab="department">По отделам</button>
+                        <button class="nav-tab" data-tab="enterprise">По предприятию</button>
+                        <button class="nav-tab" data-tab="digital">Эффект цифровизации</button>
+                    </div>
+                </div>
+
+                <div class="calculations-content">
+                    <!-- Вкладка по отделам -->
+                    <div class="tab-content active" id="department-tab">
+                        <div class="department-metrics">
+                            <h4>Отдел закупок</h4>
+                            <div class="metric-list">
+                                <div class="metric-item">
+                                    <div class="metric-name">Экономия от закупок</div>
+                                    <div class="metric-formula">(Плановая цена - Фактическая цена) × Объем</div>
+                                    <div class="metric-example">
+                                        <strong>Пример:</strong> (1000₽ - 850₽) × 1000 ед. = 150,000₽
+                                    </div>
+                                </div>
+                                
+                                <div class="metric-item">
+                                    <div class="metric-name">Стоимость обработки заказа</div>
+                                    <div class="metric-formula">Затраты отдела / Количество заказов</div>
+                                    <div class="metric-example">
+                                        <strong>Пример:</strong> 500,000₽ / 250 заказов = 2,000₽/заказ
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h4>Складская логистика</h4>
+                            <div class="metric-list">
+                                <div class="metric-item">
+                                    <div class="metric-name">Стоимость хранения на паллето-место</div>
+                                    <div class="metric-formula">Общие затраты склада / Количество паллето-мест</div>
+                                    <div class="metric-example">
+                                        <strong>Пример:</strong> 2,000,000₽ / 5,000 мест = 400₽/место
+                                    </div>
+                                </div>
+                                
+                                <div class="metric-item">
+                                    <div class="metric-name">Производительность комплектации</div>
+                                    <div class="metric-formula">Количество строк заказов / Человеко-часы</div>
+                                    <div class="metric-example">
+                                        <strong>Пример:</strong> 15,000 строк / 600 часов = 25 строк/час
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Вкладка по предприятию -->
+                    <div class="tab-content" id="enterprise-tab">
+                        <div class="enterprise-metrics">
+                            <h4>Финансовые показатели предприятия</h4>
+                            <div class="financial-metrics">
+                                <div class="financial-metric">
+                                    <div class="metric-name">Рентабельность логистики (ROS)</div>
+                                    <div class="metric-formula">(Прибыль от логистики / Выручка) × 100%</div>
+                                    <div class="metric-value">8.5%</div>
+                                </div>
+                                
+                                <div class="financial-metric">
+                                    <div class="metric-name">Доля логистики в себестоимости</div>
+                                    <div class="metric-formula">(Логистические затраты / Себестоимость) × 100%</div>
+                                    <div class="metric-value">12.3%</div>
+                                </div>
+                                
+                                <div class="financial-metric">
+                                    <div class="metric-name">Cash-to-Cash цикл</div>
+                                    <div class="metric-formula">Дни запасов + Дни ДЗ - Дни КЗ</div>
+                                    <div class="metric-value">45 дней</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Вкладка эффекта цифровизации -->
+                    <div class="tab-content" id="digital-tab">
+                        <div class="digital-impact">
+                            <h4>Эффект цифровизации процессов SCM</h4>
+                            
+                            <div class="impact-metrics">
+                                <div class="impact-category">
+                                    <h5>WMS внедрение</h5>
+                                    <div class="impact-list">
+                                        <div class="impact-item">
+                                            <span class="impact-label">Точность инвентаризации</span>
+                                            <div class="impact-values">
+                                                <span class="before">97%</span>
+                                                <span class="arrow">→</span>
+                                                <span class="after">99.8%</span>
+                                            </div>
+                                        </div>
+                                        <div class="impact-item">
+                                            <span class="impact-label">Производительность склада</span>
+                                            <div class="impact-values">
+                                                <span class="before">18 зак/час</span>
+                                                <span class="arrow">→</span>
+                                                <span class="after">28 зак/час</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wiki-tags">
+                    <span class="wiki-tag">Расчеты</span>
+                    <span class="wiki-tag">Эффективность</span>
+                    <span class="wiki-tag">Рентабельность</span>
+                </div>
+            </div>
+
         </section>
     </main>
 
@@ -450,20 +1208,216 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.classList.add('visible');
                     }
                 });
             }, observerOptions);
 
             const cards = document.querySelectorAll('.wiki-card');
             cards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
                 card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(card);
             });
+
+            // Инициализация графиков
+            initializeCharts();
+
+            // Инициализация навигации по расчетам
+            initializeCalculationTabs();
+
+            // Инициализация чек-листов
+            initializeChecklists();
+
+            // Инициализация калькуляторов
+            initializeCalculators();
         });
+
+        function initializeCharts() {
+            // График OTIF
+            const otifCtx = document.getElementById('otifChart').getContext('2d');
+            new Chart(otifCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн'],
+                    datasets: [{
+                        label: 'OTIF',
+                        data: [88, 90, 89, 92, 91, 92],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 85,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // График оборачиваемости запасов
+            const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+            new Chart(inventoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['A-товары', 'B-товары', 'C-товары'],
+                    datasets: [{
+                        label: 'Оборачиваемость',
+                        data: [12.5, 6.8, 2.1],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(234, 179, 8, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // График структуры затрат
+            const costCtx = document.getElementById('costChart').getContext('2d');
+            new Chart(costCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Транспорт', 'Склад', 'Персонал', 'ИТ', 'Прочее'],
+                    datasets: [{
+                        data: [45, 25, 15, 10, 5],
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#6366f1',
+                            '#8b5cf6',
+                            '#a855f7',
+                            '#d946ef'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function initializeCalculationTabs() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetTab = this.dataset.tab;
+                    
+                    // Убираем активный класс у всех вкладок и контента
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    
+                    // Добавляем активный класс текущей вкладке и контенту
+                    this.classList.add('active');
+                    document.getElementById(`${targetTab}-tab`).classList.add('active');
+                });
+            });
+        }
+
+        function initializeChecklists() {
+            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const totalItems = checkboxes.length;
+            
+            // Восстанавливаем состояние из localStorage
+            checkboxes.forEach((checkbox, index) => {
+                const storageKey = `checklist-item-${index}`;
+                const isChecked = localStorage.getItem(storageKey) === 'true';
+                checkbox.checked = isChecked;
+                
+                checkbox.addEventListener('change', function() {
+                    const storageKey = `checklist-item-${index}`;
+                    localStorage.setItem(storageKey, this.checked);
+                    updateChecklistProgress();
+                });
+            });
+
+            updateChecklistProgress();
+
+            function updateChecklistProgress() {
+                const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+                const totalItems = checkboxes.length;
+                const completedItems = Array.from(checkboxes).filter(cb => cb.checked).length;
+                const percentage = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+                
+                // Обновляем прогресс-бар
+                const progressFill = document.querySelector('.progress-fill');
+                const progressText = document.querySelector('.progress-text');
+                
+                if (progressFill) {
+                    progressFill.style.width = `${percentage}%`;
+                }
+                
+                if (progressText) {
+                    progressText.textContent = `${Math.round(percentage)}% завершено (${completedItems}/${totalItems})`;
+                }
+            }
+        }
+
+        function initializeCalculators() {
+            // Калькулятор страхового запаса
+            const serviceLevelSlider = document.getElementById('serviceLevel');
+            const serviceLevelValue = document.getElementById('serviceLevelValue');
+            
+            if (serviceLevelSlider && serviceLevelValue) {
+                serviceLevelSlider.addEventListener('input', function() {
+                    serviceLevelValue.textContent = `${this.value}%`;
+                    calculateSafetyStock();
+                });
+            }
+            
+            // Инициализируем расчет при загрузке
+            calculateSafetyStock();
+        }
+
+        function calculateSafetyStock() {
+            const avgDemand = parseFloat(document.getElementById('avgDemand').value) || 100;
+            const stdDev = parseFloat(document.getElementById('stdDev').value) || 20;
+            const leadTime = parseFloat(document.getElementById('leadTime').value) || 5;
+            const serviceLevel = parseFloat(document.getElementById('serviceLevel').value) || 95;
+
+            // Z-коэффициенты для разных уровней сервиса
+            const zScores = {
+                80: 0.84, 85: 1.04, 90: 1.28, 95: 1.65, 99: 2.33
+            };
+            
+            const z = zScores[serviceLevel] || 1.65;
+            const safetyStock = Math.round(z * stdDev * Math.sqrt(leadTime));
+            
+            // Обновляем результаты
+            const resultElement = document.getElementById('safetyStockResult');
+            if (resultElement) {
+                resultElement.textContent = `${safetyStock} ед.`;
+            }
+            
+            // Обновляем формулу
+            const formulaElement = document.querySelector('.result-formula');
+            if (formulaElement) {
+                formulaElement.textContent = `Z × σ × √L = ${z} × ${stdDev} × √${leadTime} ≈ ${safetyStock} ед.`;
+            }
+        }
     </script>
 </body>
 </html>
