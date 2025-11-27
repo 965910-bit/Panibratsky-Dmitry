@@ -41,17 +41,45 @@
             padding: 0 2rem;
         }
 
-        /* Header */
-        .header-simple {
+        /* Header с фото */
+        .header-with-photo {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: 2.5rem 0;
-            text-align: center;
+            padding: 3rem 0;
         }
 
-        .header-simple h1 {
-            margin-bottom: 0.8rem;
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .header-photo {
+            flex-shrink: 0;
+        }
+
+        .photo-container {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow);
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-text {
+            flex: 1;
+        }
+
+        .header-text h1 {
             font-size: 2.5rem;
+            margin-bottom: 0.8rem;
         }
 
         .header-subtitle {
@@ -63,9 +91,7 @@
         .contact-badges {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
             gap: 1rem;
-            margin-top: 1rem;
         }
 
         .badge {
@@ -286,6 +312,17 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+            
+            .photo-container {
+                width: 150px;
+                height: 150px;
+            }
+            
             .contact-content {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -295,7 +332,7 @@
                 font-size: 2.2rem;
             }
             
-            .header-simple h1 {
+            .header-text h1 {
                 font-size: 2rem;
             }
             
@@ -330,22 +367,34 @@
                 flex-direction: column;
                 text-align: center;
             }
+            
+            .photo-container {
+                width: 120px;
+                height: 120px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header-simple">
+    <!-- Header с фото -->
+    <header class="header-with-photo">
         <div class="container">
-            <div class="header-text-center">
-                <h1>Дмитрий Панибратский</h1>
-                <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
-                
-                <div class="contact-badges">
-                    <span class="badge">Управление SCM</span>
-                    <span class="badge">Цифровая трансформация</span>
-                    <span class="badge">AI & Аналитика</span>
-                    <span class="badge">Оптимизация процессов</span>
+            <div class="header-content">
+                <div class="header-photo">
+                    <div class="photo-container">
+                        <img src="images/photo.jpg" alt="Дмитрий Панибратский" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+                </div>
+                <div class="header-text">
+                    <h1>Дмитрий Панибратский</h1>
+                    <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
+                    
+                    <div class="contact-badges">
+                        <span class="badge">Управление SCM</span>
+                        <span class="badge">Цифровая трансформация</span>
+                        <span class="badge">AI & Аналитика</span>
+                        <span class="badge">Оптимизация процессов</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -389,8 +438,8 @@
                         </div>
                         <div class="contact-details">
                             <h4>Телефон</h4>
-                            <p>+7 (XXX) XXX-XX-XX</p>
-                            <a href="tel:+7XXXXXXXXXX" class="contact-link">Позвонить</a>
+                            <p>+7 (928) 581-07-87</p>
+                            <a href="tel:+79285810787" class="contact-link">Позвонить</a>
                         </div>
                     </div>
                     
@@ -400,8 +449,8 @@
                         </div>
                         <div class="contact-details">
                             <h4>Email</h4>
-                            <p>dmitry@example.com</p>
-                            <a href="mailto:dmitry@example.com" class="contact-link">Написать</a>
+                            <p>d.panibratsky@example.com</p>
+                            <a href="mailto:d.panibratsky@example.com" class="contact-link">Написать</a>
                         </div>
                     </div>
                     
@@ -411,8 +460,9 @@
                         </div>
                         <div class="contact-details">
                             <h4>Локация</h4>
-                            <p>Москва, Россия</p>
+                            <p><strong>Сургут / Санкт-Петербург</strong></p>
                             <p>Готов к удаленной работе</p>
+                            <p>Готов к командировкам до 70%</p>
                         </div>
                     </div>
                 </div>
@@ -439,6 +489,17 @@
                             <h4>Ответ в течение</h4>
                             <p>2-4 часов в рабочее время</p>
                             <p>24 часов в выходные</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Командировки</h4>
+                            <p>Готов к командировкам до 70% рабочего времени</p>
+                            <p>По России и международные</p>
                         </div>
                     </div>
                 </div>
