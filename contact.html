@@ -686,6 +686,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             const contactForm = document.getElementById('contactForm');
             
+            // Функция для экранирования HTML-символов
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
             contactForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -705,11 +712,21 @@
                 submitButton.disabled = true;
                 
                 try {
-                    // 1. Отправляем в Telegram
+                    // 1. Отправляем в Telegram с улучшенным форматированием
                     const TELEGRAM_TOKEN = '8414212107:AAF2UAhSin1_m8HuASJ-aqhrwsGPs0WyxGA';
                     const CHAT_ID = '2032477871';
                     
-                    const telegramText = `📨 НОВОЕ СООБЩЕНИЕ С САЙТА\n\n👤 Имя: ${formData.name}\n📧 Email: ${formData.email}\n🏢 Компания: ${formData.company || 'Не указана'}\n📋 Тема: ${formData.subject}\n💬 Сообщение: ${formData.message}`;
+                    const telegramText = `📋 <b>НОВОЕ СООБЩЕНИЕ С САЙТА</b>
+
+👤 <b>Имя:</b> ${escapeHtml(formData.name)}
+📧 <b>Email:</b> ${escapeHtml(formData.email)}
+🏢 <b>Компания:</b> ${escapeHtml(formData.company || 'Не указана')}
+🎯 <b>Тема:</b> ${escapeHtml(formData.subject)}
+💬 <b>Сообщение:</b> 
+${escapeHtml(formData.message)}
+
+━━━━━━━━━━━━━━━━━━━━
+⏰ <i>Отправлено: ${new Date().toLocaleString('ru-RU')}</i>`;
                     
                     const telegramResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
                         method: 'POST',
@@ -718,7 +735,8 @@
                         },
                         body: JSON.stringify({
                             chat_id: CHAT_ID,
-                            text: telegramText
+                            text: telegramText,
+                            parse_mode: 'HTML'
                         })
                     });
                     
@@ -736,22 +754,21 @@
                             email: formData.email,
                             company: formData.company,
                             subject: formData.subject,
-                            message: formData.message
+                            message: formData.message,
+                            from_name: 'Сайт Дмитрия Панибратского',
+                            botcheck: ''
                         })
                     });
                     
                     const web3formsResult = await web3formsResponse.json();
                     
                     if (telegramResult.ok && web3formsResult.success) {
-                        // Успешная отправка в оба места
                         showNotification('✅ Сообщение отправлено! Я свяжусь с вами в ближайшее время.', 'success');
                         contactForm.reset();
                     } else if (telegramResult.ok) {
-                        // Успешно только в Telegram
                         showNotification('✅ Сообщение отправлено в Telegram!', 'success');
                         contactForm.reset();
                     } else if (web3formsResult.success) {
-                        // Успешно только на почту
                         showNotification('✅ Сообщение отправлено на почту!', 'success');
                         contactForm.reset();
                     } else {
