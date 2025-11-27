@@ -195,6 +195,168 @@
             font-weight: 500;
         }
 
+        /* Калькуляторы */
+        .calculators-section {
+            margin: 6rem 0 3rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .calculator-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .calculator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .calculator-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calculator-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .calculator-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .calculator-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .calculator-form {
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-light);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .calculator-result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            display: none;
+        }
+
+        .calculator-result.show {
+            display: block;
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
         /* Упрощенная шапка */
         .header-simple {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -295,6 +457,14 @@
             .project-stats {
                 grid-template-columns: 1fr;
             }
+
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -308,6 +478,10 @@
             
             .project-header,
             .project-content {
+                padding: 1.5rem;
+            }
+
+            .calculator-card {
                 padding: 1.5rem;
             }
         }
@@ -564,6 +738,117 @@
                 </div>
             </div>
         </div>
+
+        <!-- Калькуляторы -->
+        <section class="calculators-section">
+            <h2 class="section-title">Профессиональные калькуляторы</h2>
+            <p style="text-align: center; color: var(--text-light); max-width: 600px; margin: 0 auto 3rem; line-height: 1.6;">
+                Интерактивные инструменты для расчета ключевых метрик управления цепями поставок и логистики
+            </p>
+
+            <div class="calculator-grid">
+                <!-- Калькулятор 1 -->
+                <div class="calculator-card">
+                    <div class="calculator-header">
+                        <div class="calculator-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div>
+                            <h3 class="calculator-title">Калькулятор оборачиваемости запасов</h3>
+                            <p class="calculator-description">Расчет коэффициента оборачиваемости и дней на складе</p>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-form">
+                        <div class="form-group">
+                            <label for="costOfGoodsSold">Себестоимость проданных товаров (руб)</label>
+                            <input type="number" id="costOfGoodsSold" class="form-control" placeholder="Введите сумму">
+                        </div>
+                        <div class="form-group">
+                            <label for="averageInventory">Средний объем запасов (руб)</label>
+                            <input type="number" id="averageInventory" class="form-control" placeholder="Введите сумму">
+                        </div>
+                        <button onclick="calculateInventoryTurnover()" class="btn">
+                            Рассчитать оборачиваемость
+                        </button>
+                        <div id="inventoryTurnoverResult" class="calculator-result">
+                            <div class="result-title">Результаты расчета:</div>
+                            <div class="result-value" id="turnoverRatio"></div>
+                            <div class="result-value" id="daysInInventory"></div>
+                            <div class="result-description" id="turnoverInterpretation"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Калькулятор 2 -->
+                <div class="calculator-card">
+                    <div class="calculator-header">
+                        <div class="calculator-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <h3 class="calculator-title">Калькулятор уровня сервиса</h3>
+                            <p class="calculator-description">Расчет показателя выполнения заказов и удовлетворенности клиентов</p>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-form">
+                        <div class="form-group">
+                            <label for="totalOrders">Общее количество заказов</label>
+                            <input type="number" id="totalOrders" class="form-control" placeholder="Введите число">
+                        </div>
+                        <div class="form-group">
+                            <label for="fulfilledOrders">Количество выполненных заказов</label>
+                            <input type="number" id="fulfilledOrders" class="form-control" placeholder="Введите число">
+                        </div>
+                        <button onclick="calculateServiceLevel()" class="btn">
+                            Рассчитать уровень сервиса
+                        </button>
+                        <div id="serviceLevelResult" class="calculator-result">
+                            <div class="result-title">Результаты расчета:</div>
+                            <div class="result-value" id="serviceLevel"></div>
+                            <div class="result-description" id="serviceInterpretation"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Калькулятор 3 -->
+                <div class="calculator-card">
+                    <div class="calculator-header">
+                        <div class="calculator-icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div>
+                            <h3 class="calculator-title">Калькулятор EOQ</h3>
+                            <p class="calculator-description">Расчет экономичного размера заказа для минимизации затрат</p>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-form">
+                        <div class="form-group">
+                            <label for="annualDemand">Годовой спрос (ед.)</label>
+                            <input type="number" id="annualDemand" class="form-control" placeholder="Введите количество">
+                        </div>
+                        <div class="form-group">
+                            <label for="orderCost">Стоимость заказа (руб/заказ)</label>
+                            <input type="number" id="orderCost" class="form-control" placeholder="Введите сумму">
+                        </div>
+                        <div class="form-group">
+                            <label for="holdingCost">Стоимость хранения (руб/ед./год)</label>
+                            <input type="number" id="holdingCost" class="form-control" placeholder="Введите сумму">
+                        </div>
+                        <button onclick="calculateEOQ()" class="btn">
+                            Рассчитать EOQ
+                        </button>
+                        <div id="eoqResult" class="calculator-result">
+                            <div class="result-title">Результаты расчета:</div>
+                            <div class="result-value" id="eoqValue"></div>
+                            <div class="result-description" id="eoqInterpretation"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -598,6 +883,15 @@
                 observer.observe(card);
             });
 
+            // Наблюдаем за калькуляторами
+            const calculatorCards = document.querySelectorAll('.calculator-card');
+            calculatorCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
             // Плавная прокрутка для навигации
             const anchorLinks = document.querySelectorAll('a[href^="#"]');
             
@@ -621,6 +915,78 @@
                 });
             });
         });
+
+        // Калькулятор оборачиваемости запасов
+        function calculateInventoryTurnover() {
+            const costOfGoodsSold = parseFloat(document.getElementById('costOfGoodsSold').value);
+            const averageInventory = parseFloat(document.getElementById('averageInventory').value);
+
+            if (isNaN(costOfGoodsSold) || isNaN(averageInventory) || averageInventory === 0) {
+                alert('Пожалуйста, введите корректные числовые значения.');
+                return;
+            }
+
+            const turnoverRatio = (costOfGoodsSold / averageInventory).toFixed(2);
+            const daysInInventory = (365 / turnoverRatio).toFixed(1);
+            
+            document.getElementById('turnoverRatio').textContent = `Коэффициент оборачиваемости: ${turnoverRatio}`;
+            document.getElementById('daysInInventory').textContent = `Дней на складе: ${daysInInventory}`;
+
+            let interpretation = '';
+            if (turnoverRatio < 2) {
+                interpretation = 'Низкая оборачиваемость. Возможно, избыток запасов. Рекомендуется оптимизировать управление запасами.';
+            } else if (turnoverRatio >= 2 && turnoverRatio < 5) {
+                interpretation = 'Средняя оборачиваемость. Нормальный уровень управления запасами.';
+            } else {
+                interpretation = 'Высокая оборачиваемость. Эффективное управление запасами.';
+            }
+            document.getElementById('turnoverInterpretation').textContent = interpretation;
+            document.getElementById('inventoryTurnoverResult').classList.add('show');
+        }
+
+        // Калькулятор уровня сервиса
+        function calculateServiceLevel() {
+            const totalOrders = parseFloat(document.getElementById('totalOrders').value);
+            const fulfilledOrders = parseFloat(document.getElementById('fulfilledOrders').value);
+
+            if (isNaN(totalOrders) || isNaN(fulfilledOrders) || totalOrders === 0) {
+                alert('Пожалуйста, введите корректные числовые значения.');
+                return;
+            }
+
+            const serviceLevel = ((fulfilledOrders / totalOrders) * 100).toFixed(2);
+            document.getElementById('serviceLevel').textContent = `Уровень сервиса: ${serviceLevel}%`;
+
+            let interpretation = '';
+            if (serviceLevel < 90) {
+                interpretation = 'Низкий уровень сервиса. Требуются улучшения в процессах выполнения заказов.';
+            } else if (serviceLevel >= 90 && serviceLevel < 95) {
+                interpretation = 'Удовлетворительный уровень сервиса. Есть возможности для улучшения.';
+            } else {
+                interpretation = 'Высокий уровень сервиса. Отличная работа!';
+            }
+            document.getElementById('serviceInterpretation').textContent = interpretation;
+            document.getElementById('serviceLevelResult').classList.add('show');
+        }
+
+        // Калькулятор EOQ
+        function calculateEOQ() {
+            const annualDemand = parseFloat(document.getElementById('annualDemand').value);
+            const orderCost = parseFloat(document.getElementById('orderCost').value);
+            const holdingCost = parseFloat(document.getElementById('holdingCost').value);
+
+            if (isNaN(annualDemand) || isNaN(orderCost) || isNaN(holdingCost) || holdingCost === 0) {
+                alert('Пожалуйста, введите корректные числовые значения.');
+                return;
+            }
+
+            const eoq = Math.sqrt((2 * annualDemand * orderCost) / holdingCost).toFixed(0);
+            document.getElementById('eoqValue').textContent = `Оптимальный размер заказа: ${eoq} единиц`;
+
+            let interpretation = `Рекомендуется размещать заказы по ${eoq} единиц для минимизации общих затрат на заказ и хранение.`;
+            document.getElementById('eoqInterpretation').textContent = interpretation;
+            document.getElementById('eoqResult').classList.add('show');
+        }
     </script>
 </body>
 </html>
