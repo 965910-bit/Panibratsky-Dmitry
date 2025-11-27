@@ -370,6 +370,39 @@
             margin-top: 4rem;
         }
 
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -407,6 +440,12 @@
             
             .social-links {
                 grid-template-columns: 1fr;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
             }
         }
 
@@ -647,15 +686,113 @@
         document.addEventListener('DOMContentLoaded', function() {
             const contactForm = document.getElementById('contactForm');
             
-            contactForm.addEventListener('submit', function(e) {
+            contactForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                // Здесь должна быть логика отправки формы
-                // Например, через Formspree, EmailJS или бэкенд
+                // Получаем данные формы
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    company: document.getElementById('company').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('message').value
+                };
                 
-                alert('Сообщение отправлено! Я свяжусь с вами в ближайшее время.');
-                contactForm.reset();
+                // Показываем загрузку
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+                submitButton.disabled = true;
+                
+                try {
+                    // 1. Отправляем в Telegram
+                    const TELEGRAM_TOKEN = '8414212107:AAF2UAhSin1_m8HuASJ-aqhrwsGPs0WyxGA';
+                    const CHAT_ID = '2032477871';
+                    
+                    const telegramText = `📨 НОВОЕ СООБЩЕНИЕ С САЙТА\n\n👤 Имя: ${formData.name}\n📧 Email: ${formData.email}\n🏢 Компания: ${formData.company || 'Не указана'}\n📋 Тема: ${formData.subject}\n💬 Сообщение: ${formData.message}`;
+                    
+                    const telegramResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: telegramText
+                        })
+                    });
+                    
+                    const telegramResult = await telegramResponse.json();
+                    
+                    // 2. Отправляем на почту через Web3Forms
+                    const web3formsResponse = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            access_key: 'c2b1c4d1-725c-4ae0-ad76-ba0939ded73e',
+                            name: formData.name,
+                            email: formData.email,
+                            company: formData.company,
+                            subject: formData.subject,
+                            message: formData.message
+                        })
+                    });
+                    
+                    const web3formsResult = await web3formsResponse.json();
+                    
+                    if (telegramResult.ok && web3formsResult.success) {
+                        // Успешная отправка в оба места
+                        showNotification('✅ Сообщение отправлено! Я свяжусь с вами в ближайшее время.', 'success');
+                        contactForm.reset();
+                    } else if (telegramResult.ok) {
+                        // Успешно только в Telegram
+                        showNotification('✅ Сообщение отправлено в Telegram!', 'success');
+                        contactForm.reset();
+                    } else if (web3formsResult.success) {
+                        // Успешно только на почту
+                        showNotification('✅ Сообщение отправлено на почту!', 'success');
+                        contactForm.reset();
+                    } else {
+                        throw new Error('Ошибка отправки');
+                    }
+                    
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    showNotification('❌ Ошибка отправки. Пожалуйста, свяжитесь со мной другим способом.', 'error');
+                } finally {
+                    // Возвращаем кнопку в нормальное состояние
+                    submitButton.innerHTML = originalText;
+                    submitButton.disabled = false;
+                }
             });
+            
+            // Функция для показа уведомлений
+            function showNotification(message, type) {
+                // Создаем элемент уведомления
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Убираем уведомление через 5 секунд
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 5000);
+            }
 
             // Плавная прокрутка для навигации
             const anchorLinks = document.querySelectorAll('a[href^="#"]');
