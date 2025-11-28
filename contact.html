@@ -887,7 +887,7 @@
                 <div class="offer-info">
                     <h4><i class="fas fa-handshake"></i> Формат сотрудничества</h4>
                     <p>
-                        Готов рассмотреть предложения на позиции: <strong>Коммерческий директор, Директор по трансформации, Операционный директор Руководитель цепей поставок</strong>. 
+                        Готов рассмотреть предложения на позиции: <strong>Коммерческий директор, Директор по трансформации, Операционный директор Руководитель цепи поставок</strong>. 
                         Прикрепите детализированный оффер для рассмотрения.
                     </p>
                 </div>
@@ -896,7 +896,7 @@
                     <i class="fas fa-paper-plane"></i> Отправить предложение
                 </h3>
                 
-                <form id="contactForm" enctype="multipart/form-data">
+                <form id="contactForm">
                     <div class="form-group">
                         <label for="name">Ваше имя *</label>
                         <input type="text" id="name" name="name" class="form-control" required>
@@ -918,23 +918,20 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="offer">Прикрепить оффер (PDF/DOCX) *</label>
-                        <div class="file-upload-wrapper">
-                            <input type="file" id="offer" name="offer" class="file-input" accept=".pdf,.doc,.docx" required>
-                            <label for="offer" class="file-upload-label">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <span class="file-text">Выберите файл оффера</span>
-                                <span class="file-size">Макс. 10MB</span>
-                            </label>
-                        </div>
-                        <div class="file-selected">
-                            <i class="fas fa-check-circle"></i> Файл выбран
-                        </div>
+                        <label for="message">Комментарий к предложению *</label>
+                        <textarea id="message" name="message" class="form-control" placeholder="Опишите ваше предложение, условия, проект..." required></textarea>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="message">Комментарий к предложению</label>
-                        <textarea id="message" name="message" class="form-control" placeholder="Дополнительная информация о вакансии, условиях, проекте..."></textarea>
+                        <label>Прикрепление оффера</label>
+                        <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <p style="margin: 0 0 0.5rem 0; color: #64748b; font-size: 0.9rem;">
+                                <i class="fas fa-info-circle"></i> После отправки формы я свяжусь с вами для получения оффера
+                            </p>
+                            <p style="margin: 0; color: #64748b; font-size: 0.8rem;">
+                                Вы можете отправить оффер по email или в мессенджере после предварительного контакта
+                            </p>
+                        </div>
                     </div>
                     
                     <button type="submit" class="btn" style="width: 100%;">
@@ -954,8 +951,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const contactForm = document.getElementById('contactForm');
-            const fileInput = document.getElementById('offer');
-            const fileText = document.querySelector('.file-text');
             
             // Функция для экранирования HTML-символов
             function escapeHtml(text) {
@@ -964,33 +959,17 @@
                 return div.innerHTML;
             }
             
-            // Обработка отображения выбранного файла
-            fileInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const fileName = this.files[0].name;
-                    const fileSize = (this.files[0].size / 1024 / 1024).toFixed(2); // MB
-                    fileText.textContent = `${fileName} (${fileSize} MB)`;
-                    
-                    // Проверка размера файла
-                    if (this.files[0].size > 10 * 1024 * 1024) {
-                        showNotification('❌ Файл слишком большой. Максимальный размер: 10MB', 'error');
-                        this.value = '';
-                        fileText.textContent = 'Выберите файл оффера';
-                    }
-                }
-            });
-            
             contactForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                // Проверка размера файла перед отправкой
-                if (fileInput.files[0] && fileInput.files[0].size > 10 * 1024 * 1024) {
-                    showNotification('❌ Файл слишком большой. Максимальный размер: 10MB', 'error');
-                    return;
-                }
-                
-                // Создаем FormData для отправки файла
-                const formData = new FormData(this);
+                // Получаем данные формы
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    company: document.getElementById('company').value,
+                    position: document.getElementById('position').value,
+                    message: document.getElementById('message').value
+                };
                 
                 // Показываем загрузку
                 const submitButton = this.querySelector('button[type="submit"]');
@@ -999,82 +978,46 @@
                 submitButton.disabled = true;
                 
                 try {
-                    let telegramSent = false;
-                    let web3formsSent = false;
+                    // Отправляем только в Telegram (упрощенная версия)
+                    const TELEGRAM_TOKEN = '8414212107:AAF2UAhSin1_m8HuASJ-aqhrwsGPs0WyxGA';
+                    const CHAT_ID = '2032477871';
                     
-                    // Отправка в Telegram
-                    try {
-                        const TELEGRAM_TOKEN = '8414212107:AAF2UAhSin1_m8HuASJ-aqhrwsGPs0WyxGA';
-                        const CHAT_ID = '2032477871';
-                        
-                        const fileName = fileInput.files[0] ? fileInput.files[0].name : 'Не прикреплен';
-                        const fileSize = fileInput.files[0] ? ` (${(fileInput.files[0].size / 1024 / 1024).toFixed(2)} MB)` : '';
-                        
-                        const telegramText = `🎯 <b>НОВОЕ ПРЕДЛОЖЕНИЕ О СОТРУДНИЧЕСТВЕ</b>
+                    const telegramText = `🎯 <b>НОВОЕ ПРЕДЛОЖЕНИЕ О СОТРУДНИЧЕСТВЕ</b>
 
-👤 <b>Имя:</b> ${escapeHtml(formData.get('name'))}
-📧 <b>Email:</b> ${escapeHtml(formData.get('email'))}
-🏢 <b>Компания:</b> ${escapeHtml(formData.get('company'))}
-💼 <b>Должность:</b> ${escapeHtml(formData.get('position'))}
-📎 <b>Оффер:</b> ${escapeHtml(fileName)}${fileSize}
+👤 <b>Имя:</b> ${escapeHtml(formData.name)}
+📧 <b>Email:</b> ${escapeHtml(formData.email)}
+🏢 <b>Компания:</b> ${escapeHtml(formData.company)}
+💼 <b>Должность:</b> ${escapeHtml(formData.position)}
 💬 <b>Комментарий:</b> 
-${escapeHtml(formData.get('message') || 'Не указан')}
+${escapeHtml(formData.message)}
 
 ━━━━━━━━━━━━━━━━━━━━
 ⏰ <i>Отправлено: ${new Date().toLocaleString('ru-RU')}</i>`;
-                        
-                        const telegramResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                chat_id: CHAT_ID,
-                                text: telegramText,
-                                parse_mode: 'HTML'
-                            })
-                        });
-                        
-                        const telegramResult = await telegramResponse.json();
-                        if (telegramResult.ok) {
-                            telegramSent = true;
-                        }
-                    } catch (telegramError) {
-                        console.error('Ошибка Telegram:', telegramError);
-                    }
-
-                    // Отправка в Web3Forms
-                    try {
-                        // Добавляем необходимые поля для Web3Forms
-                        formData.append('access_key', 'c2b1c4d1-725c-4ae0-ad76-ba0939ded73e');
-                        formData.append('from_name', 'Сайт Дмитрия Панибратского');
-                        formData.append('botcheck', '');
-                        formData.append('subject', 'Новое предложение о сотрудничестве');
-                        
-                        const web3formsResponse = await fetch('https://api.web3forms.com/submit', {
-                            method: 'POST',
-                            body: formData
-                        });
-                        
-                        const web3formsResult = await web3formsResponse.json();
-                        if (web3formsResult.success) {
-                            web3formsSent = true;
-                        }
-                    } catch (web3formsError) {
-                        console.error('Ошибка Web3Forms:', web3formsError);
-                    }
-
-                    if (telegramSent || web3formsSent) {
-                        showNotification('✅ Предложение отправлено! Я изучу ваш оффер и свяжусь с вами.', 'success');
+                    
+                    const telegramResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: telegramText,
+                            parse_mode: 'HTML'
+                        })
+                    });
+                    
+                    const telegramResult = await telegramResponse.json();
+                    
+                    if (telegramResult.ok) {
+                        showNotification('✅ Предложение отправлено! Я свяжусь с вами для обсуждения деталей.', 'success');
                         contactForm.reset();
-                        fileText.textContent = 'Выберите файл оффера';
                     } else {
-                        throw new Error('Оба метода отправки не сработали');
+                        throw new Error('Ошибка отправки в Telegram');
                     }
                     
                 } catch (error) {
                     console.error('Ошибка:', error);
-                    showNotification('❌ Ошибка отправки. Пожалуйста, свяжитесь со мной другим способом.', 'error');
+                    showNotification('❌ Ошибка отправки. Пожалуйста, свяжитесь со мной по телефону или email.', 'error');
                 } finally {
                     submitButton.innerHTML = originalText;
                     submitButton.disabled = false;
