@@ -3,235 +3,716 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Сертификаты и дипломы Дмитрия Панибратского - подтверждение профессиональной квалификации">
     <title>Сертификаты - Дмитрий Панибратский</title>
+    
+    <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* ДИЗАЙН-СИСТЕМА - Основа для всех страниц */
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #dbeafe;
-            --secondary-color: #7c3aed;
-            --accent-color: #06b6d4;
-            --text-color: #1e293b;
-            --text-light: #64748b;
-            --bg-light: #f8fafc;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            /* Основная цветовая палитра */
+            --primary-dark: #0A142C;
+            --primary-color: #0F1C3F;
+            --primary-light: #1E2A4A;
+            --primary-lighter: #2A3655;
+            
+            /* Акцентные цвета по качествам */
+            --accent-innovation: #009B77;
+            --accent-strategy: #8B5FBF;
+            --accent-leadership: #D4AF37;
+            --accent-expert: #0F1C3F;
+            
+            /* Нейтральные цвета */
+            --text-primary: #0F1C3F;
+            --text-secondary: #5D6B8C;
+            --text-light: #8A96B2;
+            --bg-light: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --border-light: #E8ECF2;
+            
+            /* Градиенты */
+            --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            --gradient-innovation: linear-gradient(135deg, var(--accent-innovation) 0%, #00C9A7 100%);
+            --gradient-strategy: linear-gradient(135deg, var(--accent-strategy) 0%, #9D71DE 100%);
+            --gradient-leadership: linear-gradient(135deg, var(--accent-leadership) 0%, #E8C352 100%);
+            
+            /* Тени */
+            --shadow-sm: 0 2px 8px rgba(15, 28, 63, 0.08);
+            --shadow-md: 0 4px 16px rgba(15, 28, 63, 0.12);
+            --shadow-lg: 0 8px 32px rgba(15, 28, 63, 0.16);
+            
+            /* Радиусы */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            /* Отступы */
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            --space-xxl: 64px;
         }
 
-        .certificates-hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 4rem 0;
-            text-align: center;
-            margin-bottom: 3rem;
+        /* Базовые стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .certificates-hero h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-light);
         }
 
-        .certificates-hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 0 var(--space-md);
         }
 
-        .certificates-stats {
+        /* Секции */
+        .section {
+            padding: var(--space-xl) 0;
+        }
+
+        .section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            position: relative;
+        }
+
+        .section h1:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent-leadership);
+            border-radius: 2px;
+        }
+
+        /* HEADER - с фотографиями */
+        .header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-xl) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-innovation);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+        }
+
+        .header:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background: var(--accent-strategy);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-photos {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: var(--space-lg);
+            align-items: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .header-photo-left,
+        .header-photo-right {
+            display: flex;
+            justify-content: center;
+        }
+
+        .photo-left-container,
+        .photo-right-container {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--accent-leadership);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .photo-left-container:hover,
+        .photo-right-container:hover {
+            transform: scale(1.05);
+            border-color: white;
+        }
+
+        .photo-left-container img,
+        .photo-right-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-text-center {
+            text-align: center;
+            padding: 0 var(--space-md);
+        }
+
+        .header-text-center h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8ECF2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: var(--space-lg);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .contact-badges {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .header-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            max-width: 1000px;
-            margin: 3rem auto;
-            padding: 0 1rem;
+            gap: var(--space-md);
         }
 
         .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
             text-align: center;
-            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
         }
 
         .stat-number {
             font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
         }
 
-        .certificates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* НАВИГАЦИЯ */
+        .navigation {
+            background: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--accent-leadership);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .nav-links li {
+            margin: 0;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 20px 24px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--accent-leadership);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* CERTIFICATES HERO */
+        .certificates-hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-xxl) 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .certificates-hero:before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-leadership);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+        }
+
+        .certificates-hero:after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-innovation);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+        }
+
+        .certificates-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .certificates-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8ECF2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .certificates-hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
             margin: 0 auto;
-            padding: 2rem;
+            line-height: 1.6;
         }
 
-        .certificate-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--primary-color);
+        /* CERTIFICATES CONTENT */
+        .certificates-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-xxl);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            padding: 0 var(--space-md);
+        }
+
+        /* STATISTICS */
+        .certificates-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            max-width: 1200px;
+            margin: var(--space-xxl) auto;
+            padding: 0 var(--space-md);
+        }
+
+        .stat-card-large {
+            background: var(--card-bg);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            border: 1px solid var(--border-light);
             transition: all 0.3s ease;
         }
 
-        .certificate-card:hover {
+        .stat-card-large:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number-large {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-innovation), var(--accent-strategy));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+            line-height: 1;
+        }
+
+        .stat-label-large {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* CERTIFICATES GRID */
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: var(--space-xl);
+            margin: var(--space-xxl) 0;
+        }
+
+        .certificate-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            border-left: 4px solid var(--accent-innovation);
+        }
+
+        .certificate-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .certificate-card.diploma {
+            border-left-color: var(--accent-leadership);
         }
 
         .certificate-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: var(--space-md);
         }
 
         .certificate-icon {
             font-size: 2.5rem;
-            color: var(--primary-color);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-innovation);
+            border-radius: var(--radius-md);
+            color: white;
+        }
+
+        .certificate-card.diploma .certificate-icon {
+            background: var(--gradient-leadership);
         }
 
         .certificate-title {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-color);
+            color: var(--text-primary);
             margin: 0;
+            line-height: 1.3;
+        }
+
+        .certificate-content {
+            padding: var(--space-lg);
         }
 
         .certificate-meta {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: var(--space-md);
+            line-height: 1.5;
         }
 
         .certificate-description {
-            color: var(--text-color);
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: var(--space-lg);
         }
 
         .certificate-actions {
             display: flex;
-            gap: 0.8rem;
+            gap: var(--space-sm);
         }
 
         .btn {
-            padding: 0.7rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 500;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            font-weight: 600;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: var(--space-xs);
             transition: all 0.3s ease;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             flex: 1;
             text-align: center;
+            border: 2px solid transparent;
         }
 
         .btn-primary {
-            background: var(--primary-color);
+            background: var(--accent-innovation);
             color: white;
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
+            background: #007A5E;
+            transform: translateY(-2px);
         }
 
         .btn-outline {
             background: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
+            color: var(--accent-innovation);
+            border: 2px solid var(--accent-innovation);
         }
 
         .btn-outline:hover {
-            background: var(--primary-light);
-        }
-
-        /* Особые стили для диплома */
-        .certificate-card.diploma {
-            border-left-color: #f59e0b;
-        }
-
-        .certificate-card.diploma .certificate-icon {
-            color: #f59e0b;
-        }
-
-        /* Упрощенная шапка */
-        .header-simple {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: var(--accent-innovation);
             color: white;
-            padding: 2.5rem 0;
+            transform: translateY(-2px);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: var(--primary-dark);
+            color: white;
             text-align: center;
+            padding: var(--space-xl) 0;
+            margin-top: var(--space-xxl);
         }
 
-        .header-simple .header-text-center h1 {
-            margin-bottom: 0.8rem;
-            font-size: 2.5rem;
-        }
-
-        .header-simple .header-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-
-        .header-simple .contact-badges {
-            justify-content: center;
-            gap: 1rem;
+        /* Адаптивность */
+        @media (max-width: 1024px) {
+            .header-photos {
+                grid-template-columns: 1fr 1.5fr 1fr;
+                gap: var(--space-md);
+            }
+            
+            .photo-left-container,
+            .photo-right-container {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .header-text-center h1 {
+                font-size: 2.4rem;
+            }
         }
 
         @media (max-width: 768px) {
-            .certificates-grid {
+            .header-photos {
                 grid-template-columns: 1fr;
-                padding: 1rem;
+                gap: var(--space-lg);
+                text-align: center;
+            }
+            
+            .header-photo-left,
+            .header-photo-right {
+                display: none;
+            }
+            
+            .header-text-center h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1.1rem;
             }
             
             .certificates-hero h1 {
                 font-size: 2.2rem;
             }
             
-            .header-simple .header-text-center h1 {
-                font-size: 2rem;
+            .certificates-grid {
+                grid-template-columns: 1fr;
             }
             
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            
+            .nav-links a {
+                padding: 15px 20px;
+            }
+
             .certificate-actions {
                 flex-direction: column;
+            }
+
+            .certificates-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .badge {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .certificate-header,
+            .certificate-content {
+                padding: var(--space-md);
+            }
+            
+            .certificates-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .certificates-hero p {
+                font-size: 1.1rem;
+            }
+
+            .certificate-header {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-sm);
+            }
+
+            .certificate-icon {
+                align-self: center;
+            }
+
+            .certificates-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-number-large {
+                font-size: 2.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Упрощенный Header без фото -->
-    <header class="header-simple">
+    <!-- Header -->
+    <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="header-text-center">
-                    <h1>Дмитрий Панибратский</h1>
-                    <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
+                <div class="header-photos">
+                    <!-- Левое фото -->
+                    <div class="header-photo-left">
+                        <div class="photo-left-container">
+                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                        </div>
+                    </div>
                     
-                    <div class="contact-badges">
-                        <span class="badge">Управление SCM</span>
-                        <span class="badge">Цифровая трансформация</span>
-                        <span class="badge">AI & Аналитика</span>
-                        <span class="badge">Оптимизация процессов</span>
+                    <!-- Центральный текст -->
+                    <div class="header-text-center">
+                        <h1>Дмитрий Панибратский</h1>
+                        <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
+                        
+                        <div class="contact-badges">
+                            <span class="badge">Управление SCM</span>
+                            <span class="badge">Цифровая трансформация</span>
+                            <span class="badge">AI & Аналитика</span>
+                            <span class="badge">Оптимизация процессов</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Правое фото -->
+                    <div class="header-photo-right">
+                        <div class="photo-right-container">
+                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">реализованных проектов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">лет в SCM</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">87k+</div>
+                        <div class="stat-label">SKU под управлением</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">успешная реализация</div>
                     </div>
                 </div>
             </div>
@@ -247,9 +728,10 @@
                 <li><a href="experience.html">Опыт</a></li>
                 <li><a href="projects.html">Проекты</a></li>
                 <li><a href="tools.html">Инструменты</a></li>
+                <li><a href="calculators.html">Калькуляторы</a></li>
                 <li><a href="certificates.html" class="active">Сертификаты</a></li>
                 <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="index.html#contact">Контакты</a></li>
+                <li><a href="contact.html">Контакты</a></li>
             </ul>
         </div>
     </nav>
@@ -262,28 +744,33 @@
         </div>
     </section>
 
-    <!-- Statistics -->
-    <section class="certificates-stats">
-        <div class="stat-card">
-            <div class="stat-number">18</div>
-            <div class="stat-label">Сертификатов</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">1</div>
-            <div class="stat-label">Диплом о переподготовке</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">6</div>
-            <div class="stat-label">Направлений развития</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">5+</div>
-            <div class="stat-label">Лет непрерывного обучения</div>
-        </div>
-    </section>
-
-    <!-- Certificates Grid -->
+    <!-- Main Content -->
     <main class="container">
+        <div class="certificates-intro">
+            <p>Профессиональное развитие - это непрерывный процесс. За годы работы в управлении цепями поставок прошел множество курсов и программ, подтверждающих экспертность в ключевых направлениях SCM, управления и цифровой трансформации.</p>
+        </div>
+
+        <!-- Statistics -->
+        <section class="certificates-stats">
+            <div class="stat-card-large">
+                <div class="stat-number-large">18</div>
+                <div class="stat-label-large">Сертификатов</div>
+            </div>
+            <div class="stat-card-large">
+                <div class="stat-number-large">1</div>
+                <div class="stat-label-large">Диплом о переподготовке</div>
+            </div>
+            <div class="stat-card-large">
+                <div class="stat-number-large">6</div>
+                <div class="stat-label-large">Направлений развития</div>
+            </div>
+            <div class="stat-card-large">
+                <div class="stat-number-large">5+</div>
+                <div class="stat-label-large">Лет непрерывного обучения</div>
+            </div>
+        </section>
+
+        <!-- Certificates Grid -->
         <section class="certificates-grid">
             <!-- Диплом -->
             <div class="certificate-card diploma">
@@ -291,17 +778,19 @@
                     <div class="certificate-icon">🎓</div>
                     <h3 class="certificate-title">Коммерческий директор</h3>
                 </div>
-                <div class="certificate-meta">
-                    Институт профессионального образования<br>
-                    20.10.2023
-                </div>
-                <p class="certificate-description">
-                    Профессиональная переподготовка по программе "Коммерческий директор" с присвоением квалификации.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/diplom-commercial-director.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Институт профессионального образования<br>
+                        20.10.2023
+                    </div>
+                    <p class="certificate-description">
+                        Профессиональная переподготовка по программе "Коммерческий директор" с присвоением квалификации. Программа охватывает стратегическое управление, финансовый менеджмент, управление продажами и маркетингом.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/diplom-commercial-director.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -311,17 +800,19 @@
                     <div class="certificate-icon">📊</div>
                     <h3 class="certificate-title">Инструменты McKinsey</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    10.01.2020
-                </div>
-                <p class="certificate-description">
-                    Лучшая практика решения бизнес-проблем с использованием инструментов McKinsey.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/mckinsey-tools.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        10.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Лучшая практика решения бизнес-проблем с использованием инструментов McKinsey. Изучение методологий структурированного подхода к решению сложных бизнес-задач.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/mckinsey-tools.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -331,17 +822,19 @@
                     <div class="certificate-icon">🎯</div>
                     <h3 class="certificate-title">Гарвардская школа переговоров</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    11.01.2020
-                </div>
-                <p class="certificate-description">
-                    Методы ведения переговоров по гарвардской методике: как говорить "нет" и добиваться результатов.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/harvard-negotiations.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        11.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Методы ведения переговоров по гарвардской методике: как говорить "нет" и добиваться результатов. Принципы win-win переговоров в бизнес-среде.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/harvard-negotiations.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -351,17 +844,19 @@
                     <div class="certificate-icon">💪</div>
                     <h3 class="certificate-title">45 татуировок менеджера</h3>
                 </div>
-                <div class="certificate-meta">
-                    Максим Батырев<br>
-                    2020
-                </div>
-                <p class="certificate-description">
-                    Практические принципы управления для достижения сверхрезультатов в команде.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/batyrev-45-tattoos.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Максим Батырев<br>
+                        2020
+                    </div>
+                    <p class="certificate-description">
+                        Практические принципы управления для достижения сверхрезультатов в команде. Методы эффективного руководства и мотивации сотрудников.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/batyrev-45-tattoos.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -371,17 +866,19 @@
                     <div class="certificate-icon">👨‍💼</div>
                     <h3 class="certificate-title">7 навыков высокоэффективных людей</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    10.01.2020
-                </div>
-                <p class="certificate-description">
-                    Освоение принципов личной и профессиональной эффективности по системе Стивена Кови.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/7-habits-effective-people.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        10.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Освоение принципов личной и профессиональной эффективности по системе Стивена Кови. Фундаментальные подходы к саморазвитию и управлению.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/7-habits-effective-people.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -391,17 +888,19 @@
                     <div class="certificate-icon">🏛️</div>
                     <h3 class="certificate-title">13 столпов Адизеса</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    08.01.2020
-                </div>
-                <p class="certificate-description">
-                    Освоение методологии Ицхака Адизеса для эффективного управления организационными изменениями.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/adizes-13-pillars.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        08.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Освоение методологии Ицхака Адизеса для эффективного управления организационными изменениями. Принципы жизненного цикла организаций.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/adizes-13-pillars.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -411,17 +910,19 @@
                     <div class="certificate-icon">📈</div>
                     <h3 class="certificate-title">7 законов развития</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    11.01.2020
-                </div>
-                <p class="certificate-description">
-                    Изучение законов развития организаций и методов повышения эффективности руководства.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/7-laws-development.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        11.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Изучение законов развития организаций и методов повышения эффективности руководства. Системный подход к управлению ростом компании.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/7-laws-development.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -431,17 +932,19 @@
                     <div class="certificate-icon">🔄</div>
                     <h3 class="certificate-title">Управление жизненным циклом корпорации</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    07.01.2020
-                </div>
-                <p class="certificate-description">
-                    Стратегии управления компанией на разных этапах ее жизненного цикла.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/corporate-lifecycle.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        07.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Стратегии управления компанией на разных этапах ее жизненного цикла. Методы адаптации к изменениям и кризисам.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/corporate-lifecycle.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -451,17 +954,19 @@
                     <div class="certificate-icon">👥</div>
                     <h3 class="certificate-title">Принцип кураторства</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    12.01.2020
-                </div>
-                <p class="certificate-description">
-                    Методы эффективного наставничества и кураторства в управлении командами.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/curatorship-principle.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        12.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Методы эффективного наставничества и кураторства в управлении командами. Развитие лидерских качеств и управление талантами.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/curatorship-principle.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -471,17 +976,19 @@
                     <div class="certificate-icon">🎯</div>
                     <h3 class="certificate-title">Задачи менеджмента в 21 веке</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    12.01.2020
-                </div>
-                <p class="certificate-description">
-                    Современные подходы к управлению в условиях цифровой трансформации.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/management-21-century.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        12.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Современные подходы к управлению в условиях цифровой трансформации. Адаптация методов управления к вызовам нового времени.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/management-21-century.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -491,17 +998,19 @@
                     <div class="certificate-icon">💪</div>
                     <h3 class="certificate-title">Управленческий спецназ</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    12.01.2020
-                </div>
-                <p class="certificate-description">
-                    Экстремальные методы управления в кризисных ситуациях.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/management-special-forces.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        12.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Экстремальные методы управления в кризисных ситуациях. Тактики принятия решений в условиях неопределенности.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/management-special-forces.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -511,17 +1020,19 @@
                     <div class="certificate-icon">🔍</div>
                     <h3 class="certificate-title">Призвание</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    12.01.2020
-                </div>
-                <p class="certificate-description">
-                    Как найти то, для чего вы созданы и построить карьеру по призванию.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/vocation-finding.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        12.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Как найти то, для чего вы созданы и построить карьеру по призванию. Методы самоанализа и профессионального самоопределения.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/vocation-finding.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -531,17 +1042,19 @@
                     <div class="certificate-icon">💰</div>
                     <h3 class="certificate-title">Практика продаж</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    11.01.2020
-                </div>
-                <p class="certificate-description">
-                    Практические техники и методики эффективных продаж.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/sales-practice.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        11.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Практические техники и методики эффективных продаж. Современные подходы к построению продающей системы.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/sales-practice.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -551,17 +1064,19 @@
                     <div class="certificate-icon">⏰</div>
                     <h3 class="certificate-title">Тайм-менеджмент: Аудит времени</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    09.01.2020
-                </div>
-                <p class="certificate-description">
-                    Методики анализа и аудита использования времени для повышения личной эффективности.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/time-management-audit.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        09.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Методики анализа и аудита использования времени для повышения личной эффективности. Инструменты управления временем.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/time-management-audit.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -571,17 +1086,19 @@
                     <div class="certificate-icon">✅</div>
                     <h3 class="certificate-title">Тайм-менеджмент: Выполнение задач</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    10.01.2020
-                </div>
-                <p class="certificate-description">
-                    Эффективные методы планирования и выполнения задач.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/time-management-execution.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        10.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Эффективные методы планирования и выполнения задач. Системы продуктивности и управления проектами.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/time-management-execution.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -591,17 +1108,19 @@
                     <div class="certificate-icon">📋</div>
                     <h3 class="certificate-title">Тайм-менеджмент: Делегирование</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    11.01.2020
-                </div>
-                <p class="certificate-description">
-                    Искусство эффективного делегирования задач и ответственности.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/time-management-delegation.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        11.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Искусство эффективного делегирования задач и ответственности. Методы распределения workload в команде.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/time-management-delegation.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -611,17 +1130,19 @@
                     <div class="certificate-icon">🎯</div>
                     <h3 class="certificate-title">Тайм-менеджмент: Приоритезация</h3>
                 </div>
-                <div class="certificate-meta">
-                    Business Learning<br>
-                    11.01.2020
-                </div>
-                <p class="certificate-description">
-                    Методы определения приоритетов и фокусировки на важных задачах.
-                </p>
-                <div class="certificate-actions">
-                    <a href="files/time-management-prioritization.pdf" class="btn btn-primary" target="_blank">
-                        <i class="far fa-eye"></i> Просмотреть PDF
-                    </a>
+                <div class="certificate-content">
+                    <div class="certificate-meta">
+                        Business Learning<br>
+                        11.01.2020
+                    </div>
+                    <p class="certificate-description">
+                        Методы определения приоритетов и фокусировки на важных задачах. Системы расстановки приоритетов в работе.
+                    </p>
+                    <div class="certificate-actions">
+                        <a href="files/time-management-prioritization.pdf" class="btn btn-primary" target="_blank">
+                            <i class="far fa-eye"></i> Просмотреть PDF
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -629,13 +1150,13 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Анимация появления элементов
+            // Анимация появления элементов при скролле
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -644,18 +1165,39 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.classList.add('visible');
                     }
                 });
             }, observerOptions);
 
-            const cards = document.querySelectorAll('.certificate-card');
-            cards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
+            // Наблюдаем за карточками сертификатов
+            const certificateCards = document.querySelectorAll('.certificate-card');
+            certificateCards.forEach(card => {
                 card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(card);
+            });
+
+            // Плавная прокрутка для навигации
+            const anchorLinks = document.querySelectorAll('a[href^="#"]');
+            
+            anchorLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
+                            
+                            window.scrollTo({
+                                top: offsetTop,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
             });
         });
     </script>
