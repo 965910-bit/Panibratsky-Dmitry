@@ -10,38 +10,850 @@
     <link rel="stylesheet" href="css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ДИЗАЙН-СИСТЕМА - Основа для всех страниц */
+        :root {
+            /* Основная цветовая палитра */
+            --primary-dark: #0A142C;
+            --primary-color: #0F1C3F;
+            --primary-light: #1E2A4A;
+            --primary-lighter: #2A3655;
+            
+            /* Акцентные цвета по качествам */
+            --accent-innovation: #009B77;
+            --accent-strategy: #8B5FBF;
+            --accent-leadership: #D4AF37;
+            --accent-expert: #0F1C3F;
+            
+            /* Нейтральные цвета */
+            --text-primary: #0F1C3F;
+            --text-secondary: #5D6B8C;
+            --text-light: #8A96B2;
+            --bg-light: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --border-light: #E8ECF2;
+            
+            /* Градиенты */
+            --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            --gradient-innovation: linear-gradient(135deg, var(--accent-innovation) 0%, #00C9A7 100%);
+            --gradient-strategy: linear-gradient(135deg, var(--accent-strategy) 0%, #9D71DE 100%);
+            --gradient-leadership: linear-gradient(135deg, var(--accent-leadership) 0%, #E8C352 100%);
+            
+            /* Тени */
+            --shadow-sm: 0 2px 8px rgba(15, 28, 63, 0.08);
+            --shadow-md: 0 4px 16px rgba(15, 28, 63, 0.12);
+            --shadow-lg: 0 8px 32px rgba(15, 28, 63, 0.16);
+            
+            /* Радиусы */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            /* Отступы */
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            --space-xxl: 64px;
+        }
+
+        /* Базовые стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        /* Секции */
+        .section {
+            padding: var(--space-xl) 0;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            position: relative;
+        }
+
+        .section h2:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent-leadership);
+            border-radius: 2px;
+        }
+
+        /* КАРТОЧКИ - универсальный компонент */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--border-light);
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .card-body {
+            padding: var(--space-md);
+        }
+
+        /* КНОПКИ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-innovation {
+            background: var(--gradient-innovation);
+            color: white;
+        }
+
+        .btn-strategy {
+            background: var(--gradient-strategy);
+            color: white;
+        }
+
+        .btn-leadership {
+            background: var(--gradient-leadership);
+            color: var(--text-primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* HEADER - как в contact.html */
+        .header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-xl) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-innovation);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+        }
+
+        .header:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background: var(--accent-strategy);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8ECF2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: var(--space-lg);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .header-badges {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-xl);
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* НАВИГАЦИЯ */
+        .navigation {
+            background: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--accent-leadership);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .nav-links li {
+            margin: 0;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 20px 24px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--accent-leadership);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* WELCOME SECTION */
+        .welcome-section {
+            background: var(--card-bg);
+            position: relative;
+        }
+
+        .welcome-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .welcome-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-md);
+        }
+
+        .welcome-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Audience Selector */
+        .audience-selector {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .audience-btn {
+            padding: 12px 24px;
+            border: 2px solid var(--border-light);
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .audience-btn.active,
+        .audience-btn:hover {
+            border-color: var(--accent-leadership);
+            background: var(--accent-leadership);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Welcome Messages */
+        .welcome-messages {
+            max-width: 900px;
+            margin: 0 auto var(--space-xl);
+        }
+
+        .welcome-message {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .welcome-message.active {
+            display: block;
+        }
+
+        .welcome-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: var(--space-lg);
+            align-items: start;
+        }
+
+        .welcome-icon {
+            text-align: center;
+        }
+
+        .icon-container {
+            width: 120px;
+            height: 120px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto var(--space-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        .welcome-icon h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--space-xs);
+        }
+
+        .welcome-icon p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .welcome-content p {
+            margin-bottom: var(--space-md);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-sm);
+            margin: var(--space-md) 0;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-sm);
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--accent-innovation);
+        }
+
+        .skill-item .check {
+            color: var(--accent-innovation);
+            font-weight: bold;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-md) 0;
+        }
+
+        .stat {
+            text-align: center;
+            padding: var(--space-md);
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            border-top: 4px solid var(--accent-leadership);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin: var(--space-md) 0;
+        }
+
+        .tag {
+            background: var(--gradient-strategy);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Quick Navigation */
+        .quick-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .quick-nav a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-lg);
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border-light);
+            text-align: center;
+        }
+
+        .quick-nav a:hover {
+            border-color: var(--accent-leadership);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ABOUT SECTION */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-xl);
+            align-items: start;
+        }
+
+        .about-text p.lead {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            line-height: 1.7;
+        }
+
+        .personal-info {
+            background: var(--card-bg);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-item {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            align-items: flex-start;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item strong {
+            min-width: 180px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .info-item span {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Competencies */
+        .competencies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .competency-card {
+            background: var(--card-bg);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border-top: 4px solid var(--accent-innovation);
+            transition: all 0.3s ease;
+        }
+
+        .competency-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .competency-card strong {
+            display: block;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-md);
+        }
+
+        .competency-list {
+            list-style: none;
+        }
+
+        .competency-list li {
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: var(--space-md);
+        }
+
+        .competency-list li:before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-innovation);
+            font-weight: bold;
+        }
+
+        .competency-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Leadership */
+        .leadership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .leadership-card {
+            text-align: center;
+            padding: var(--space-lg);
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-light);
+        }
+
+        .leadership-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-leadership);
+        }
+
+        .leadership-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .leadership-card strong {
+            display: block;
+            color: var(--primary-color);
+            margin-bottom: var(--space-xs);
+            font-size: 1.1rem;
+        }
+
+        .leadership-card div {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Inspiration */
+        .inspiration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .inspiration-card {
+            text-align: center;
+            padding: var(--space-lg);
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-light);
+        }
+
+        .inspiration-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .inspiration-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-md);
+            opacity: 0.8;
+        }
+
+        .inspiration-card strong {
+            display: block;
+            color: var(--primary-color);
+            margin-bottom: var(--space-sm);
+        }
+
+        .inspiration-card div {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .inspiration-note {
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+        }
+
+        /* About Highlights */
+        .about-highlights {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .highlight-card {
+            background: var(--card-bg);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--accent-leadership);
+            transition: all 0.3s ease;
+        }
+
+        .highlight-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .highlight-card h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-xs);
+            font-weight: 700;
+        }
+
+        .highlight-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: var(--space-xl) 0;
+            margin-top: var(--space-xxl);
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .welcome-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            
+            .nav-links a {
+                padding: 15px 20px;
+            }
+            
+            .info-item {
+                flex-direction: column;
+                gap: var(--space-xs);
+            }
+            
+            .info-item strong {
+                min-width: auto;
+            }
+            
+            .quick-nav {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .competencies-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .leadership-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="header-photos">
-                    <!-- Левое фото -->
-                    <div class="header-photo-left">
-                        <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
+                <h1>Дмитрий Панибратский</h1>
+                <p class="header-subtitle">Эксперт в управлении цепями поставок и цифровой трансформации бизнеса</p>
+                
+                <div class="header-badges">
+                    <span class="badge">Управление SCM</span>
+                    <span class="badge">Цифровая трансформация</span>
+                    <span class="badge">AI & Аналитика</span>
+                    <span class="badge">Оптимизация процессов</span>
+                </div>
+
+                <div class="header-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">лет в управлении SCM</div>
                     </div>
-                    
-                    <!-- Центральный текст -->
-                    <div class="header-text-center">
-                        <h1>Дмитрий Панибратский</h1>
-                        <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
-                        
-                        <div class="contact-badges">
-                            <span class="badge">Управление SCM</span>
-                            <span class="badge">Цифровая трансформация</span>
-                            <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Оптимизация процессов</span>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-number">143%</div>
+                        <div class="stat-label">рост эффективности</div>
                     </div>
-                    
-                    <!-- Правое фото -->
-                    <div class="header-photo-right">
-                        <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-number">25%</div>
+                        <div class="stat-label">снижение затрат</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">87k+</div>
+                        <div class="stat-label">SKU под управлением</div>
                     </div>
                 </div>
             </div>
@@ -225,7 +1037,7 @@
             <h2>Профессиональный профиль</h2>
             <div class="about-grid">
                 <div class="about-text">
-                    <p><strong>Эксперт по управлению цепями поставок с 15+ летним опытом цифровой трансформации бизнеса.</strong> Специализируюсь на внедрении AI-решений, создании цифровых двойников и оптимизации end-to-end SCM процессов для международных компаний.</p>
+                    <p class="lead"><strong>Эксперт по управлению цепями поставок с 15+ летним опытом цифровой трансформации бизнеса.</strong> Специализируюсь на внедрении AI-решений, создании цифровых двойников и оптимизации end-to-end SCM процессов для международных компаний.</p>
                     
                     <div class="personal-info">
                         <div class="info-item">
