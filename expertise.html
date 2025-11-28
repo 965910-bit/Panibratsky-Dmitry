@@ -10,6 +10,660 @@
     <link rel="stylesheet" href="css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ДИЗАЙН-СИСТЕМА - Основа для всех страниц */
+        :root {
+            /* Основная цветовая палитра */
+            --primary-dark: #0A142C;
+            --primary-color: #0F1C3F;
+            --primary-light: #1E2A4A;
+            --primary-lighter: #2A3655;
+            
+            /* Акцентные цвета по качествам */
+            --accent-innovation: #009B77;
+            --accent-strategy: #8B5FBF;
+            --accent-leadership: #D4AF37;
+            --accent-expert: #0F1C3F;
+            
+            /* Нейтральные цвета */
+            --text-primary: #0F1C3F;
+            --text-secondary: #5D6B8C;
+            --text-light: #8A96B2;
+            --bg-light: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --border-light: #E8ECF2;
+            
+            /* Градиенты */
+            --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            --gradient-innovation: linear-gradient(135deg, var(--accent-innovation) 0%, #00C9A7 100%);
+            --gradient-strategy: linear-gradient(135deg, var(--accent-strategy) 0%, #9D71DE 100%);
+            --gradient-leadership: linear-gradient(135deg, var(--accent-leadership) 0%, #E8C352 100%);
+            
+            /* Тени */
+            --shadow-sm: 0 2px 8px rgba(15, 28, 63, 0.08);
+            --shadow-md: 0 4px 16px rgba(15, 28, 63, 0.12);
+            --shadow-lg: 0 8px 32px rgba(15, 28, 63, 0.16);
+            
+            /* Радиусы */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            /* Отступы */
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            --space-xxl: 64px;
+        }
+
+        /* Базовые стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        /* Секции */
+        .section {
+            padding: var(--space-xl) 0;
+        }
+
+        .section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            position: relative;
+        }
+
+        .section h1:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent-leadership);
+            border-radius: 2px;
+        }
+
+        /* HEADER - с фотографиями */
+        .header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-xl) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-innovation);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+        }
+
+        .header:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background: var(--accent-strategy);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-photos {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: var(--space-lg);
+            align-items: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .header-photo-left,
+        .header-photo-right {
+            display: flex;
+            justify-content: center;
+        }
+
+        .photo-left-container,
+        .photo-right-container {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--accent-leadership);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .photo-left-container:hover,
+        .photo-right-container:hover {
+            transform: scale(1.05);
+            border-color: white;
+        }
+
+        .photo-left-container img,
+        .photo-right-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-text-center {
+            text-align: center;
+            padding: 0 var(--space-md);
+        }
+
+        .header-text-center h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8ECF2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: var(--space-lg);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .contact-badges {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* НАВИГАЦИЯ */
+        .navigation {
+            background: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--accent-leadership);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .nav-links li {
+            margin: 0;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 20px 24px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--accent-leadership);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* EXPERTISE SECTIONS */
+        .expertise-section {
+            margin-bottom: var(--space-xxl);
+        }
+
+        .expertise-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            padding: var(--space-lg);
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border-left: 6px solid;
+        }
+
+        .expertise-header.scm {
+            border-left-color: var(--accent-expert);
+        }
+
+        .expertise-header.digital {
+            border-left-color: var(--accent-innovation);
+        }
+
+        .expertise-header.analytics {
+            border-left-color: var(--accent-strategy);
+        }
+
+        .expertise-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .expertise-icon.scm {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .expertise-icon.digital {
+            background: var(--gradient-innovation);
+            color: white;
+        }
+
+        .expertise-icon.analytics {
+            background: var(--gradient-strategy);
+            color: white;
+        }
+
+        .expertise-title {
+            flex: 1;
+        }
+
+        .expertise-title h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-sm);
+        }
+
+        .expertise-title p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* EXPERTISE GRID */
+        .expertise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .expertise-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border-top: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .expertise-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: inherit;
+            opacity: 0.1;
+        }
+
+        .expertise-card.scm {
+            border-top-color: var(--accent-expert);
+        }
+
+        .expertise-card.digital {
+            border-top-color: var(--accent-innovation);
+        }
+
+        .expertise-card.analytics {
+            border-top-color: var(--accent-strategy);
+        }
+
+        .expertise-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .expertise-card h3 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .expertise-card h3:before {
+            content: '';
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .expertise-card.scm h3:before {
+            background: var(--accent-expert);
+        }
+
+        .expertise-card.digital h3:before {
+            background: var(--accent-innovation);
+        }
+
+        .expertise-card.analytics h3:before {
+            background: var(--accent-strategy);
+        }
+
+        .expertise-card ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .expertise-card li {
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: var(--space-lg);
+            transition: all 0.3s ease;
+        }
+
+        .expertise-card li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-leadership);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .expertise-card li:last-child {
+            border-bottom: none;
+        }
+
+        .expertise-card li:hover {
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        /* SKILL LEVEL INDICATORS */
+        .skill-levels {
+            margin-top: var(--space-xxl);
+        }
+
+        .skill-levels h2 {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+            color: var(--primary-color);
+        }
+
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .skill-category h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .skill-category h3 i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .skill-item {
+            margin-bottom: var(--space-md);
+        }
+
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+        }
+
+        .skill-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .skill-percentage {
+            font-weight: 600;
+            color: var(--accent-leadership);
+        }
+
+        .skill-bar {
+            height: 8px;
+            background: var(--border-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease-in-out;
+        }
+
+        .skill-progress.scm {
+            background: var(--gradient-primary);
+        }
+
+        .skill-progress.digital {
+            background: var(--gradient-innovation);
+        }
+
+        .skill-progress.analytics {
+            background: var(--gradient-strategy);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: var(--space-xl) 0;
+            margin-top: var(--space-xxl);
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1024px) {
+            .header-photos {
+                grid-template-columns: 1fr 1.5fr 1fr;
+                gap: var(--space-md);
+            }
+            
+            .photo-left-container,
+            .photo-right-container {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .header-text-center h1 {
+                font-size: 2.4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-photos {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+                text-align: center;
+            }
+            
+            .header-photo-left,
+            .header-photo-right {
+                display: none;
+            }
+            
+            .header-text-center h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .expertise-header {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-md);
+            }
+            
+            .expertise-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            
+            .nav-links a {
+                padding: 15px 20px;
+            }
+            
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .badge {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .expertise-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -17,12 +671,14 @@
         <div class="container">
             <div class="header-content">
                 <div class="header-photos">
+                    <!-- Левое фото -->
                     <div class="header-photo-left">
                         <div class="photo-left-container">
                             <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
                         </div>
                     </div>
                     
+                    <!-- Центральный текст -->
                     <div class="header-text-center">
                         <h1>Дмитрий Панибратский</h1>
                         <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
@@ -35,10 +691,30 @@
                         </div>
                     </div>
                     
+                    <!-- Правое фото -->
                     <div class="header-photo-right">
                         <div class="photo-right-container">
                             <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
                         </div>
+                    </div>
+                </div>
+
+                <div class="header-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">лет экспертизы в SCM</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">25+</div>
+                        <div class="stat-label">успешных проектов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">12+</div>
+                        <div class="stat-label">технологий освоено</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">реализованных решений</div>
                     </div>
                 </div>
             </div>
@@ -69,33 +745,48 @@
             
             <!-- SCM Экспертиза -->
             <div class="expertise-section">
-                <h2>📊 Управление цепями поставок (SCM)</h2>
+                <div class="expertise-header scm">
+                    <div class="expertise-icon scm">
+                        📊
+                    </div>
+                    <div class="expertise-title">
+                        <h2>Управление цепями поставок (SCM)</h2>
+                        <p>Комплексный подход к оптимизации end-to-end цепей поставок, от стратегического планирования до операционного исполнения</p>
+                    </div>
+                </div>
+                
                 <div class="expertise-grid">
-                    <div class="expertise-card">
+                    <div class="expertise-card scm">
                         <h3>Стратегическое планирование SCM</h3>
                         <ul>
                             <li>Разработка SCM стратегии</li>
                             <li>Оптимизация сетей поставок</li>
                             <li>Управление поставщиками</li>
                             <li>Планирование мощностей</li>
+                            <li>Risk management</li>
+                            <li>Cost-to-serve анализ</li>
                         </ul>
                     </div>
-                    <div class="expertise-card">
+                    <div class="expertise-card scm">
                         <h3>Управление запасами</h3>
                         <ul>
                             <li>ABC/XYZ анализ</li>
                             <li>Оптимизация уровней запасов</li>
                             <li>Forecast & Demand Planning</li>
                             <li>Inventory Turnover оптимизация</li>
+                            <li>Safety stock расчеты</li>
+                            <li>SKU рационализация</li>
                         </ul>
                     </div>
-                    <div class="expertise-card">
+                    <div class="expertise-card scm">
                         <h3>Логистика и дистрибуция</h3>
                         <ul>
                             <li>Мультимодальные перевозки</li>
                             <li>Оптимизация маршрутов</li>
                             <li>Управление складской сетью</li>
                             <li>Last-mile delivery решения</li>
+                            <li>Таможенное оформление</li>
+                            <li>3PL/4PL управление</li>
                         </ul>
                     </div>
                 </div>
@@ -103,33 +794,48 @@
 
             <!-- Цифровая трансформация -->
             <div class="expertise-section">
-                <h2>🚀 Цифровая трансформация</h2>
+                <div class="expertise-header digital">
+                    <div class="expertise-icon digital">
+                        🚀
+                    </div>
+                    <div class="expertise-title">
+                        <h2>Цифровая трансформация</h2>
+                        <p>Внедрение современных технологий для создания интеллектуальных и автоматизированных бизнес-процессов</p>
+                    </div>
+                </div>
+                
                 <div class="expertise-grid">
-                    <div class="expertise-card">
+                    <div class="expertise-card digital">
                         <h3>AI & Машинное обучение</h3>
                         <ul>
                             <li>Прогнозирование спроса</li>
                             <li>Оптимизация маршрутов</li>
                             <li>Predictive Maintenance</li>
                             <li>Computer Vision для складов</li>
+                            <li>Natural Language Processing</li>
+                            <li>Recommendation системы</li>
                         </ul>
                     </div>
-                    <div class="expertise-card">
+                    <div class="expertise-card digital">
                         <h3>Цифровые двойники</h3>
                         <ul>
                             <li>Моделирование цепей поставок</li>
                             <li>AnyLogic симуляции</li>
                             <li>What-if анализ</li>
                             <li>Оптимизация сценариев</li>
+                            <li>Real-time мониторинг</li>
+                            <li>Prescriptive analytics</li>
                         </ul>
                     </div>
-                    <div class="expertise-card">
+                    <div class="expertise-card digital">
                         <h3>Автоматизация процессов</h3>
                         <ul>
                             <li>RPA внедрение</li>
                             <li>Workflow автоматизация</li>
                             <li>API интеграции</li>
                             <li>Low-code платформы</li>
+                            <li>IoT решения</li>
+                            <li>Blockchain для SCM</li>
                         </ul>
                     </div>
                 </div>
@@ -137,34 +843,148 @@
 
             <!-- Аналитика и BI -->
             <div class="expertise-section">
-                <h2>📈 Аналитика и Business Intelligence</h2>
+                <div class="expertise-header analytics">
+                    <div class="expertise-icon analytics">
+                        📈
+                    </div>
+                    <div class="expertise-title">
+                        <h2>Аналитика и Business Intelligence</h2>
+                        <p>Data-driven подход к принятию решений через передовые аналитические методы и визуализацию данных</p>
+                    </div>
+                </div>
+                
                 <div class="expertise-grid">
-                    <div class="expertise-card">
+                    <div class="expertise-card analytics">
                         <h3>Предиктивная аналитика</h3>
                         <ul>
                             <li>Time Series анализ</li>
                             <li>Machine Learning модели</li>
                             <li>Анализ временных рядов</li>
                             <li>Прогнозные алгоритмы</li>
+                            <li>Cluster анализ</li>
+                            <li>Anomaly detection</li>
                         </ul>
                     </div>
-                    <div class="expertise-card">
+                    <div class="expertise-card analytics">
                         <h3>BI системы и дашборды</h3>
                         <ul>
                             <li>Tableau разработка</li>
                             <li>Power BI дашборды</li>
                             <li>KPI мониторинг</li>
                             <li>Real-time аналитика</li>
+                            <li>Data storytelling</li>
+                            <li>Executive dashboards</li>
                         </ul>
                     </div>
-                    <div class="expertise-card">
+                    <div class="expertise-card analytics">
                         <h3>Data Science</h3>
                         <ul>
                             <li>Python & Pandas</li>
                             <li>SQL & базы данных</li>
                             <li>Статистический анализ</li>
                             <li>Data Mining</li>
+                            <li>A/B тестирование</li>
+                            <li>Big Data обработка</li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Уровни навыков -->
+            <div class="skill-levels">
+                <h2>Уровень владения технологиями</h2>
+                <div class="skills-container">
+                    <div class="skill-category">
+                        <h3><i class="fas fa-cogs"></i> SCM Системы</h3>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">SAP ERP</span>
+                                <span class="skill-percentage">95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress scm" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">SAP SCM</span>
+                                <span class="skill-percentage">90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress scm" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">WMS системы</span>
+                                <span class="skill-percentage">88%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress scm" style="width: 88%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3><i class="fas fa-laptop-code"></i> Технологии</h3>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Python & Data Science</span>
+                                <span class="skill-percentage">85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress digital" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">SQL & Базы данных</span>
+                                <span class="skill-percentage">92%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress digital" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">AnyLogic</span>
+                                <span class="skill-percentage">80%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress digital" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3><i class="fas fa-chart-bar"></i> BI & Аналитика</h3>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Tableau</span>
+                                <span class="skill-percentage">88%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress analytics" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Power BI</span>
+                                <span class="skill-percentage">82%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress analytics" style="width: 82%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Статистический анализ</span>
+                                <span class="skill-percentage">90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress analytics" style="width: 90%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -179,5 +999,44 @@
 
     <!-- Подключаем чат-бот -->
     <script src="js/chatbot.js"></script>
+
+    <script>
+        // Анимация прогресс-баров при скролле
+        document.addEventListener('DOMContentLoaded', function() {
+            const skillBars = document.querySelectorAll('.skill-progress');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const skillBar = entry.target;
+                        const width = skillBar.style.width;
+                        skillBar.style.width = '0';
+                        setTimeout(() => {
+                            skillBar.style.width = width;
+                        }, 300);
+                        observer.unobserve(skillBar);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            skillBars.forEach(bar => {
+                observer.observe(bar);
+            });
+
+            // Плавная прокрутка для anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
