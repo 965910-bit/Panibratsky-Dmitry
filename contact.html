@@ -887,7 +887,7 @@
                 <div class="offer-info">
                     <h4><i class="fas fa-handshake"></i> Формат сотрудничества</h4>
                     <p>
-                        Готов рассмотреть предложения на позиции: <strong>Коммерческий директор, Директор по трансформации, Операционный директор Руководитель цепи поставок</strong>. 
+                        Готов рассмотреть предложения на позиции: <strong>Коммерческий директор, Директор по трансформации, Операционный директор Руководитель цепей поставок</strong>. 
                         Прикрепите детализированный оффер для рассмотрения.
                     </p>
                 </div>
@@ -980,29 +980,6 @@
                 }
             });
             
-            // Плавная прокрутка для навигации
-            const anchorLinks = document.querySelectorAll('a[href^="#"]');
-            
-            anchorLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
-                        
-                        const targetId = this.getAttribute('href');
-                        const targetElement = document.querySelector(targetId);
-                        
-                        if (targetElement) {
-                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-                            
-                            window.scrollTo({
-                                top: offsetTop,
-                                behavior: 'smooth'
-                            });
-                        }
-                    }
-                });
-            });
-
             contactForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -1014,9 +991,6 @@
                 
                 // Создаем FormData для отправки файла
                 const formData = new FormData(this);
-                formData.append('access_key', 'c2b1c4d1-725c-4ae0-ad76-ba0939ded73e');
-                formData.append('from_name', 'Сайт Дмитрия Панибратского');
-                formData.append('botcheck', '');
                 
                 // Показываем загрузку
                 const submitButton = this.querySelector('button[type="submit"]');
@@ -1025,14 +999,18 @@
                 submitButton.disabled = true;
                 
                 try {
-                    // Отправляем в Telegram (без файла, только информация)
-                    const TELEGRAM_TOKEN = '8414212107:AAF2UAhSin1_m8HuASJ-aqhrwsGPs0WyxGA';
-                    const CHAT_ID = '2032477871';
+                    let telegramSent = false;
+                    let web3formsSent = false;
                     
-                    const fileName = fileInput.files[0] ? fileInput.files[0].name : 'Не прикреплен';
-                    const fileSize = fileInput.files[0] ? ` (${(fileInput.files[0].size / 1024 / 1024).toFixed(2)} MB)` : '';
-                    
-                    const telegramText = `🎯 <b>НОВОЕ ПРЕДЛОЖЕНИЕ О СОТРУДНИЧЕСТВЕ</b>
+                    // Отправка в Telegram
+                    try {
+                        const TELEGRAM_TOKEN = '8414212107:AAF2UAhSin1_m8HuASJ-aqhrwsGPs0WyxGA';
+                        const CHAT_ID = '2032477871';
+                        
+                        const fileName = fileInput.files[0] ? fileInput.files[0].name : 'Не прикреплен';
+                        const fileSize = fileInput.files[0] ? ` (${(fileInput.files[0].size / 1024 / 1024).toFixed(2)} MB)` : '';
+                        
+                        const telegramText = `🎯 <b>НОВОЕ ПРЕДЛОЖЕНИЕ О СОТРУДНИЧЕСТВЕ</b>
 
 👤 <b>Имя:</b> ${escapeHtml(formData.get('name'))}
 📧 <b>Email:</b> ${escapeHtml(formData.get('email'))}
@@ -1044,35 +1022,54 @@ ${escapeHtml(formData.get('message') || 'Не указан')}
 
 ━━━━━━━━━━━━━━━━━━━━
 ⏰ <i>Отправлено: ${new Date().toLocaleString('ru-RU')}</i>`;
-                    
-                    const telegramResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            chat_id: CHAT_ID,
-                            text: telegramText,
-                            parse_mode: 'HTML'
-                        })
-                    });
-                    
-                    const telegramResult = await telegramResponse.json();
-                    
-                    // Отправляем форму с файлом в Web3Forms
-                    const web3formsResponse = await fetch('https://api.web3forms.com/submit', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    
-                    const web3formsResult = await web3formsResponse.json();
-                    
-                    if (telegramResult.ok && web3formsResult.success) {
+                        
+                        const telegramResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                chat_id: CHAT_ID,
+                                text: telegramText,
+                                parse_mode: 'HTML'
+                            })
+                        });
+                        
+                        const telegramResult = await telegramResponse.json();
+                        if (telegramResult.ok) {
+                            telegramSent = true;
+                        }
+                    } catch (telegramError) {
+                        console.error('Ошибка Telegram:', telegramError);
+                    }
+
+                    // Отправка в Web3Forms
+                    try {
+                        // Добавляем необходимые поля для Web3Forms
+                        formData.append('access_key', 'c2b1c4d1-725c-4ae0-ad76-ba0939ded73e');
+                        formData.append('from_name', 'Сайт Дмитрия Панибратского');
+                        formData.append('botcheck', '');
+                        formData.append('subject', 'Новое предложение о сотрудничестве');
+                        
+                        const web3formsResponse = await fetch('https://api.web3forms.com/submit', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const web3formsResult = await web3formsResponse.json();
+                        if (web3formsResult.success) {
+                            web3formsSent = true;
+                        }
+                    } catch (web3formsError) {
+                        console.error('Ошибка Web3Forms:', web3formsError);
+                    }
+
+                    if (telegramSent || web3formsSent) {
                         showNotification('✅ Предложение отправлено! Я изучу ваш оффер и свяжусь с вами.', 'success');
                         contactForm.reset();
                         fileText.textContent = 'Выберите файл оффера';
                     } else {
-                        throw new Error('Ошибка отправки');
+                        throw new Error('Оба метода отправки не сработали');
                     }
                     
                 } catch (error) {
@@ -1109,6 +1106,29 @@ ${escapeHtml(formData.get('message') || 'Не указан')}
                     }, 300);
                 }, 5000);
             }
+
+            // Плавная прокрутка для навигации
+            const anchorLinks = document.querySelectorAll('a[href^="#"]');
+            
+            anchorLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
+                            
+                            window.scrollTo({
+                                top: offsetTop,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
         });
     </script>
 </body>
