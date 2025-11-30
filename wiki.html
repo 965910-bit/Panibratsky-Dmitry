@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="База знаний SCM - методологии, концепции и лучшие практики управления цепями поставок">
-    <title>База знаний SCM - Дмитрий Панибратский</title>
+    <title>Wiki - Дмитрий Панибратский</title>
     
     <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         /* ДИЗАЙН-СИСТЕМА - Основа для всех страниц */
@@ -374,454 +372,178 @@
             padding: 0 var(--space-md);
         }
 
-        /* CATEGORIES FILTER */
         .wiki-categories {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: var(--space-sm);
-            margin: var(--space-xl) 0;
-            padding: 0 var(--space-md);
-        }
-
-        .category-btn {
-            padding: var(--space-sm) var(--space-lg);
-            background: var(--card-bg);
-            border: 2px solid var(--border-light);
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-secondary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .category-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--accent-leadership);
-            color: var(--primary-color);
-        }
-
-        .category-btn.active {
-            background: var(--accent-leadership);
-            color: var(--primary-color);
-            border-color: var(--accent-leadership);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* WIKI GRID */
-        .wiki-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: var(--space-xl);
-            margin: var(--space-xxl) 0;
+            margin-bottom: var(--space-xxl);
         }
 
-        .wiki-card {
+        .wiki-category {
             background: var(--card-bg);
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
             border: 1px solid var(--border-light);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            opacity: 0;
-            transform: translateY(30px);
-            border-left: 4px solid var(--accent-innovation);
         }
 
-        .wiki-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .wiki-card:hover {
+        .wiki-category:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-lg);
         }
 
-        .wiki-header {
-            padding: var(--space-lg);
+        .wiki-category-header {
+            padding: var(--space-xl);
             border-bottom: 1px solid var(--border-light);
-            position: relative;
+            text-align: center;
+            background: var(--bg-light);
+        }
+
+        .wiki-category-header h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-sm);
+        }
+
+        .wiki-category-header p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .wiki-articles {
+            padding: var(--space-xl);
+        }
+
+        .wiki-articles-grid {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: var(--space-md);
         }
 
-        .wiki-icon {
-            font-size: 2.5rem;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--gradient-innovation);
-            border-radius: var(--radius-md);
-            color: white;
-        }
-
-        .wiki-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 0;
-            line-height: 1.3;
-        }
-
-        .wiki-content {
-            padding: var(--space-lg);
-        }
-
-        .wiki-description {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: var(--space-lg);
-            font-size: 1.05rem;
-        }
-
-        .wiki-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-sm);
-            margin-top: var(--space-lg);
-        }
-
-        .wiki-tag {
-            background: var(--bg-light);
-            color: var(--text-primary);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-
-        .wiki-tag:hover {
-            background: var(--accent-leadership);
-            color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        /* Чек-листы */
-        .checklist {
-            margin: var(--space-lg) 0;
-        }
-
-        .checklist-section, .checklist-phase {
-            margin-bottom: var(--space-lg);
-            padding: var(--space-md);
-            background: var(--bg-light);
-            border-radius: var(--radius-md);
-            border-left: 4px solid var(--accent-innovation);
-        }
-
-        .checklist-section h4, .checklist-phase h4 {
-            margin: 0 0 var(--space-md) 0;
-            color: var(--text-primary);
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .checklist-item {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--space-sm);
-            padding: var(--space-sm) 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: var(--radius-sm);
-            position: relative;
-        }
-
-        .checklist-item:hover {
-            background: rgba(255, 255, 255, 0.5);
-            transform: translateX(4px);
-        }
-
-        .checklist-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            margin-top: 2px;
-        }
-
-        .checklist-item span:not(.checkmark) {
-            color: var(--text-color);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            flex: 1;
-        }
-
-        .checklist-progress {
-            margin-top: var(--space-lg);
-            padding: var(--space-md);
-            background: var(--card-bg);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--border-light);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: var(--space-sm);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient-innovation);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        /* Калькуляторы */
-        .calculator-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-lg);
-            margin: var(--space-lg) 0;
-        }
-
-        .calculator-form {
-            padding: var(--space-lg);
-            background: var(--bg-light);
-            border-radius: var(--radius-md);
-        }
-
-        .input-group {
-            margin-bottom: var(--space-md);
-        }
-
-        .input-group label {
+        .wiki-article-card {
             display: block;
-            margin-bottom: var(--space-xs);
-            font-weight: 600;
+            padding: var(--space-lg);
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            text-decoration: none;
             color: var(--text-primary);
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: var(--space-sm);
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-sm);
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--accent-innovation);
-        }
-
-        .btn-calculate {
-            width: 100%;
-            padding: var(--space-md);
-            background: var(--accent-innovation);
-            color: white;
-            border: none;
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
             transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-calculate:hover {
-            background: #007A5E;
-            transform: translateY(-2px);
+        .wiki-article-card:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--accent-innovation);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
         }
 
-        .calculator-results {
-            padding: var(--space-lg);
+        .wiki-article-card:hover {
             background: var(--card-bg);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
+            border-color: var(--accent-innovation);
+            transform: translateX(8px);
         }
 
-        .result-card {
-            text-align: center;
-            padding: var(--space-lg);
-            background: var(--gradient-innovation);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--space-lg);
-            color: white;
+        .wiki-article-card:hover:before {
+            transform: scaleY(1);
         }
 
-        .result-title {
+        .wiki-article-card h4 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-sm);
+            line-height: 1.4;
+        }
+
+        .wiki-article-card p {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            line-height: 1.5;
             font-size: 0.95rem;
-            margin-bottom: var(--space-sm);
-            opacity: 0.9;
         }
 
-        .result-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: var(--space-sm);
-        }
-
-        .result-formula {
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        /* Дашборды */
-        .dashboard-container {
-            margin: var(--space-lg) 0;
-        }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-lg);
-            margin-bottom: var(--space-xl);
-        }
-
-        .chart-container {
-            background: var(--card-bg);
-            padding: var(--space-lg);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-        }
-
-        .chart-container.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .chart-header {
+        .article-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--space-md);
+            font-size: 0.9rem;
         }
 
-        .chart-value {
-            font-weight: 700;
+        .read-time, .article-level {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .article-level {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .level-basic {
+            background: rgba(0, 155, 119, 0.1);
             color: var(--accent-innovation);
-            font-size: 1.2rem;
         }
 
-        /* Инфографика */
-        .infographic-container {
-            margin: var(--space-lg) 0;
+        .level-advanced {
+            background: rgba(139, 95, 191, 0.1);
+            color: var(--accent-strategy);
         }
 
-        .evolution-timeline {
+        .level-expert {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-leadership);
+        }
+
+        /* KNOWLEDGE BASE STATS */
+        .knowledge-stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: var(--space-md);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            max-width: 1000px;
+            margin: var(--space-xxl) auto;
         }
 
-        .evolution-stage {
-            padding: var(--space-lg);
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-md);
+        .knowledge-stat {
             text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
+            padding: var(--space-xl);
             background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
         }
 
-        .evolution-stage:hover {
-            border-color: var(--accent-innovation);
-            transform: translateY(-5px);
+        .knowledge-stat:hover {
+            transform: translateY(-4px);
             box-shadow: var(--shadow-md);
         }
 
-        .evolution-stage::after {
-            content: '→';
-            position: absolute;
-            right: -15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-            font-size: 1.5rem;
+        .knowledge-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-innovation), var(--accent-strategy));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+            line-height: 1;
         }
 
-        .evolution-stage:last-child::after {
-            display: none;
-        }
-
-        .stage-header {
-            margin-bottom: var(--space-md);
-        }
-
-        .stage-number {
-            background: var(--accent-innovation);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            margin: 0 auto var(--space-xs);
-        }
-
-        .stage-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 1.1rem;
-        }
-
-        /* Навигация по расчетам */
-        .calculations-nav {
-            margin: var(--space-xl) 0 var(--space-lg);
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .nav-tabs {
-            display: flex;
-            gap: 0;
-            flex-wrap: wrap;
-        }
-
-        .nav-tab {
-            padding: var(--space-md) var(--space-lg);
-            background: none;
-            border: none;
-            border-bottom: 3px solid transparent;
-            font-weight: 600;
-            color: var(--text-light);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .nav-tab:hover {
-            color: var(--accent-innovation);
-            background: rgba(0, 155, 119, 0.05);
-        }
-
-        .nav-tab.active {
-            color: var(--accent-innovation);
-            border-bottom-color: var(--accent-innovation);
-            background: rgba(0, 155, 119, 0.05);
-        }
-
-        .tab-content {
-            display: none;
-            padding: var(--space-lg) 0;
-        }
-
-        .tab-content.active {
-            display: block;
+        .knowledge-stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
         /* FOOTER */
@@ -831,12 +553,6 @@
             text-align: center;
             padding: var(--space-xl) 0;
             margin-top: var(--space-xxl);
-        }
-
-        /* Loading state */
-        .wiki-grid.loading {
-            opacity: 0.7;
-            pointer-events: none;
         }
 
         /* Адаптивность */
@@ -854,10 +570,6 @@
             
             .header-text-center h1 {
                 font-size: 2.4rem;
-            }
-
-            .evolution-timeline {
-                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -885,7 +597,7 @@
                 font-size: 2.2rem;
             }
             
-            .wiki-grid {
+            .wiki-categories {
                 grid-template-columns: 1fr;
             }
             
@@ -897,45 +609,8 @@
                 padding: 15px 20px;
             }
 
-            .wiki-categories {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: var(--space-sm);
-            }
-
-            .category-btn {
-                flex-shrink: 0;
-            }
-
-            .calculator-container {
-                grid-template-columns: 1fr;
-            }
-
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .evolution-timeline {
-                grid-template-columns: 1fr;
-            }
-
-            .evolution-stage::after {
-                display: none;
-            }
-
-            .nav-tabs {
-                flex-direction: column;
-            }
-            
-            .nav-tab {
-                text-align: left;
-                border-bottom: 1px solid var(--border-light);
-                border-left: 3px solid transparent;
-            }
-            
-            .nav-tab.active {
-                border-left-color: var(--accent-innovation);
-                border-bottom-color: var(--border-light);
+            .knowledge-stats {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -954,11 +629,6 @@
                 text-align: center;
             }
             
-            .wiki-header,
-            .wiki-content {
-                padding: var(--space-md);
-            }
-            
             .wiki-hero h1 {
                 font-size: 1.8rem;
             }
@@ -967,14 +637,21 @@
                 font-size: 1.1rem;
             }
 
-            .wiki-header {
-                flex-direction: column;
-                text-align: center;
-                gap: var(--space-sm);
+            .wiki-category-header,
+            .wiki-articles {
+                padding: var(--space-lg);
             }
 
-            .wiki-icon {
-                align-self: center;
+            .wiki-article-card {
+                padding: var(--space-md);
+            }
+
+            .knowledge-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .knowledge-stat {
+                padding: var(--space-lg);
             }
         }
     </style>
@@ -1001,7 +678,9 @@
                             <span class="badge">Управление SCM</span>
                             <span class="badge">Цифровая трансформация</span>
                             <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Оптимизация процессов</span>
+                            <span class="badge">Управление закупками</span>
+                            <span class="badge">Технический контроль</span>
+                            <span class="badge">MBA Логистика</span>
                         </div>
                     </div>
                     
@@ -1015,7 +694,7 @@
 
                 <div class="header-stats">
                     <div class="stat-card">
-                        <div class="stat-number">15+</div>
+                        <div class="stat-number">20+</div>
                         <div class="stat-label">реализованных проектов</div>
                     </div>
                     <div class="stat-card">
@@ -1055,661 +734,338 @@
     <!-- Hero Section -->
     <section class="wiki-hero">
         <div class="container">
-            <h1>База знаний SCM</h1>
-            <p>Методологии, концепции и лучшие практики управления цепями поставок</p>
+            <h1>База знаний Wiki</h1>
+            <p>Профессиональные материалы, методологии и лучшие практики в управлении цепями поставок и цифровой трансформации</p>
         </div>
     </section>
 
     <!-- Main Content -->
     <main class="container">
         <div class="wiki-intro">
-            <p>За 7+ лет работы в управлении цепями поставок собрал и систематизировал ключевые методологии, инструменты и лучшие практики. База знаний постоянно пополняется новыми материалами, исследованиями и кейсами.</p>
+            <p>Накопленные за 15+ лет профессионального опыта знания, методологии и практические решения для эффективного управления цепями поставок, цифровой трансформации и бизнес-оптимизации.</p>
         </div>
 
-        <!-- Categories -->
-        <section class="wiki-categories" role="toolbar" aria-label="Фильтры статей">
-            <button class="category-btn active" data-category="all" aria-pressed="true">Все статьи</button>
-            <button class="category-btn" data-category="methodology">Методологии</button>
-            <button class="category-btn" data-category="optimization">Оптимизация</button>
-            <button class="category-btn" data-category="technology">Технологии</button>
-            <button class="category-btn" data-category="kpi">KPI и метрики</button>
-            <button class="category-btn" data-category="checklists">Чек-листы</button>
-            <button class="category-btn" data-category="calculations">Расчеты</button>
+        <!-- Knowledge Base Statistics -->
+        <section class="knowledge-stats">
+            <div class="knowledge-stat">
+                <div class="knowledge-stat-number">50+</div>
+                <div class="knowledge-stat-label">Статей и материалов</div>
+            </div>
+            <div class="knowledge-stat">
+                <div class="knowledge-stat-number">8</div>
+                <div class="knowledge-stat-label">Основных категорий</div>
+            </div>
+            <div class="knowledge-stat">
+                <div class="knowledge-stat-number">15+</div>
+                <div class="knowledge-stat-label">Лет опыта в материалах</div>
+            </div>
+            <div class="knowledge-stat">
+                <div class="knowledge-stat-number">100%</div>
+                <div class="knowledge-stat-label">Практическая применимость</div>
+            </div>
         </section>
 
-        <!-- Wiki Grid -->
-        <section class="wiki-grid">
-            <!-- Lean Six Sigma -->
-            <div class="wiki-card" data-category="methodology,optimization">
-                <div class="wiki-header">
-                    <div class="wiki-icon">⚡</div>
-                    <h3 class="wiki-title">Lean Six Sigma</h3>
+        <!-- Wiki Categories -->
+        <section class="wiki-categories">
+            <!-- Управление закупками -->
+            <div class="wiki-category">
+                <div class="wiki-category-header">
+                    <h3>📦 Управление закупками</h3>
+                    <p>Стратегии, методы и лучшие практики в управлении закупками и снабжением</p>
                 </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Комбинированная методология, объединяющая инструменты бережливого производства и шести сигм для повышения эффективности процессов.
-                    </p>
-                    
-                    <div class="wiki-content">
-                        <p><strong>Ключевые принципы:</strong></p>
-                        <ul>
-                            <li>Устранение потерь (Muda)</li>
-                            <li>Снижение вариативности процессов</li>
-                            <li>Постоянное улучшение (Kaizen)</li>
-                            <li>Ориентация на клиента</li>
-                        </ul>
-                        <p><strong>DMAIC методология:</strong> Define, Measure, Analyze, Improve, Control</p>
-                    </div>
+                <div class="wiki-articles">
+                    <div class="wiki-articles-grid">
+                        <a href="wiki/procurement-strategy.html" class="wiki-article-card">
+                            <h4>Стратегия закупок</h4>
+                            <p>Разработка и реализация закупочной стратегии предприятия, категорийный менеджмент</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 15 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
+                        
+                        <a href="wiki/supplier-management.html" class="wiki-article-card">
+                            <h4>Управление поставщиками</h4>
+                            <p>Методы оценки, отбора и развития поставщиков, SRM стратегии</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 20 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
+                        
+                        <a href="wiki/cost-optimization.html" class="wiki-article-card">
+                            <h4>Оптимизация затрат на закупки</h4>
+                            <p>Техники снижения закупочных расходов и расчета TCO, cost reduction программы</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 25 мин</span>
+                                <span class="article-level level-expert">🟣 Эксперт</span>
+                            </div>
+                        </a>
+                        
+                        <a href="wiki/contract-management.html" class="wiki-article-card">
+                            <h4>Управление контрактами</h4>
+                            <p>Подготовка, заключение и сопровождение договоров поставки, переговорные стратегии</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 18 мин</span>
+                                <span class="article-level level-basic">🟢 Базовый</span>
+                            </div>
+                        </a>
 
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">Процессное улучшение</span>
-                        <span class="wiki-tag">Качество</span>
-                        <span class="wiki-tag">Эффективность</span>
+                        <a href="wiki/procurement-analytics.html" class="wiki-article-card">
+                            <h4>Аналитика закупок</h4>
+                            <p>KPI для закупочной деятельности, дашборды и отчетность, анализ эффективности</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 22 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Цифровые двойники -->
-            <div class="wiki-card" data-category="technology,optimization">
-                <div class="wiki-header">
-                    <div class="wiki-icon">🔄</div>
-                    <h3 class="wiki-title">Цифровые двойники в логистике</h3>
+            <!-- Технический контроль транспорта -->
+            <div class="wiki-category">
+                <div class="wiki-category-header">
+                    <h3>🚛 Технический контроль транспорта</h3>
+                    <p>Нормативные требования и методики контроля технического состояния АТС</p>
                 </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Виртуальные копии физических систем для моделирования, анализа и оптимизации логистических процессов.
-                    </p>
-                    
-                    <div class="wiki-content">
-                        <p><strong>Области применения:</strong></p>
-                        <ul>
-                            <li>Моделирование складских операций</li>
-                            <li>Оптимизация маршрутов доставки</li>
-                            <li>Прогнозирование спроса</li>
-                            <li>Анализ "что-если" сценариев</li>
-                        </ul>
-                        <p><strong>Преимущества:</strong> снижение рисков, повышение точности прогнозов, оптимизация ресурсов.</p>
-                    </div>
+                <div class="wiki-articles">
+                    <div class="wiki-articles-grid">
+                        <a href="wiki/vehicle-standards.html" class="wiki-article-card">
+                            <h4>Нормативные требования к АТС</h4>
+                            <p>Современные стандарты и регламенты для автотранспорта, требования безопасности</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 12 мин</span>
+                                <span class="article-level level-basic">🟢 Базовый</span>
+                            </div>
+                        </a>
+                        
+                        <a href="wiki/technical-control.html" class="wiki-article-card">
+                            <h4>Методы технического контроля</h4>
+                            <p>Процедуры и методики контроля технического состояния транспортных средств</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 16 мин</span>
+                                <span class="article-level level-basic">🟢 Базовый</span>
+                            </div>
+                        </a>
+                        
+                        <a href="wiki/transport-safety.html" class="wiki-article-card">
+                            <h4>Безопасность транспорта</h4>
+                            <p>Обеспечение безопасности эксплуатации транспортных средств, управление рисками</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 14 мин</span>
+                                <span class="article-level level-basic">🟢 Базовый</span>
+                            </div>
+                        </a>
 
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">Digital Twin</span>
-                        <span class="wiki-tag">Симуляция</span>
-                        <span class="wiki-tag">AI</span>
+                        <a href="wiki/fleet-management.html" class="wiki-article-card">
+                            <h4>Управление автопарком</h4>
+                            <p>Оптимизация эксплуатации fleet, управление расходами и эффективностью транспорта</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 20 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
+
+                        <a href="wiki/transport-documentation.html" class="wiki-article-card">
+                            <h4>Документооборот транспорта</h4>
+                            <p>Ведение технической документации, отчетность и compliance в управлении транспортом</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 15 мин</span>
+                                <span class="article-level level-basic">🟢 Базовый</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- KPI цепей поставок -->
-            <div class="wiki-card" data-category="kpi">
-                <div class="wiki-header">
-                    <div class="wiki-icon">📊</div>
-                    <h3 class="wiki-title">Ключевые показатели SCM</h3>
+            <!-- SCM и логистика -->
+            <div class="wiki-category">
+                <div class="wiki-category-header">
+                    <h3>🔗 SCM и логистика</h3>
+                    <p>Управление цепями поставок, логистические процессы и оптимизация</p>
                 </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Основные метрики для измерения эффективности управления цепями поставок и логистических операций.
-                    </p>
-                    
-                    <div class="wiki-content">
-                        <p><strong>Основные KPI:</strong></p>
-                        <ul>
-                            <li><strong>Оборачиваемость запасов:</strong> COGS / Средние запасы</li>
-                            <li><strong>Уровень сервиса:</strong> Выполненные заказы / Все заказы</li>
-                            <li><strong>Точность прогнозирования:</strong> MAPE, WMAPE</li>
-                            <li><strong>Время цикла заказа:</strong> От размещения до доставки</li>
-                            <li><strong>Perfect Order Rate:</strong> Безупречное выполнение заказов</li>
-                        </ul>
-                    </div>
+                <div class="wiki-articles">
+                    <div class="wiki-articles-grid">
+                        <a href="wiki/scm-strategy.html" class="wiki-article-card">
+                            <h4>Стратегия SCM</h4>
+                            <p>Разработка и реализация стратегии управления цепями поставок</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 25 мин</span>
+                                <span class="article-level level-expert">🟣 Эксперт</span>
+                            </div>
+                        </a>
+                        
+                        <a href="wiki/inventory-management.html" class="wiki-article-card">
+                            <h4>Управление запасами</h4>
+                            <p>Методы оптимизации inventory, ABC-XYZ анализ, управление SKU</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 20 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
+                        
+                        <a href="wiki/warehouse-optimization.html" class="wiki-article-card">
+                            <h4>Оптимизация складов</h4>
+                            <p>WMS системы, layout планирование, оптимизация складских процессов</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 22 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
 
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">Метрики</span>
-                        <span class="wiki-tag">Аналитика</span>
-                        <span class="wiki-tag">Эффективность</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ABC анализ -->
-            <div class="wiki-card" data-category="optimization,methodology">
-                <div class="wiki-header">
-                    <div class="wiki-icon">📦</div>
-                    <h3 class="wiki-title">ABC-XYZ анализ запасов</h3>
-                </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Метод классификации товарных запасов для оптимизации управления и контроля.
-                    </p>
-                    
-                    <div class="wiki-content">
-                        <p><strong>ABC анализ:</strong></p>
-                        <ul>
-                            <li><strong>A:</strong> 20% SKU → 80% оборота (строгий контроль)</li>
-                            <li><strong>B:</strong> 30% SKU → 15% оборота (умеренный контроль)</li>
-                            <li><strong>C:</strong> 50% SKU → 5% оборота (минимальный контроль)</li>
-                        </ul>
-                        <p><strong>XYZ анализ:</strong> по стабильности спроса (X - стабильный, Y - сезонный, Z - нерегулярный)</p>
-                        <p><strong>Комбинированный подход:</strong> ABC-XYZ матрица для точного управления</p>
-                    </div>
-
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">Управление запасами</span>
-                        <span class="wiki-tag">Классификация</span>
-                        <span class="wiki-tag">Оптимизация</span>
+                        <a href="wiki/transport-logistics.html" class="wiki-article-card">
+                            <h4>Транспортная логистика</h4>
+                            <p>Оптимизация маршрутов, TMS системы, управление перевозками</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 18 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Предиктивная аналитика -->
-            <div class="wiki-card" data-category="technology,kpi">
-                <div class="wiki-header">
-                    <div class="wiki-icon">🤖</div>
-                    <h3 class="wiki-title">Предиктивная аналитика в SCM</h3>
+            <!-- Цифровая трансформация -->
+            <div class="wiki-category">
+                <div class="wiki-category-header">
+                    <h3>🚀 Цифровая трансформация</h3>
+                    <p>AI, автоматизация и цифровые технологии в SCM</p>
                 </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Использование методов машинного обучения для прогнозирования спроса и оптимизации цепей поставок.
-                    </p>
-                    
-                    <div class="wiki-content">
-                        <p><strong>Основные методы:</strong></p>
-                        <ul>
-                            <li>Временные ряды (ARIMA, Prophet)</li>
-                            <li>Машинное обучение (XGBoost, Random Forest)</li>
-                            <li>Глубокое обучение (LSTM сети)</li>
-                            <li>Ансамбли моделей</li>
-                        </ul>
-                        <p><strong>Применение:</strong></p>
-                        <ul>
-                            <li>Прогнозирование спроса</li>
-                            <li>Оптимизация уровней запасов</li>
-                            <li>Предсказание срывов поставок</li>
-                            <li>Оптимизация маршрутов</li>
-                        </ul>
-                    </div>
+                <div class="wiki-articles">
+                    <div class="wiki-articles-grid">
+                        <a href="wiki/ai-in-scm.html" class="wiki-article-card">
+                            <h4>AI в управлении цепями поставок</h4>
+                            <p>Применение искусственного интеллекта для прогнозирования и оптимизации SCM</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 30 мин</span>
+                                <span class="article-level level-expert">🟣 Эксперт</span>
+                            </div>
+                        </a>
+                        
+                        <a href="wiki/digital-twins.html" class="wiki-article-card">
+                            <h4>Цифровые двойники</h4>
+                            <p>Создание digital twins бизнес-процессов для симуляции и оптимизации</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 25 мин</span>
+                                <span class="article-level level-expert">🟣 Эксперт</span>
+                            </div>
+                        </a>
+                        
+                        <a href="wiki/rpa-automation.html" class="wiki-article-card">
+                            <h4>RPA автоматизация</h4>
+                            <p>Внедрение robotic process automation для рутинных операций</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 20 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
 
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">Machine Learning</span>
-                        <span class="wiki-tag">Прогнозирование</span>
-                        <span class="wiki-tag">AI</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Управление рисками -->
-            <div class="wiki-card" data-category="methodology">
-                <div class="wiki-header">
-                    <div class="wiki-icon">🛡️</div>
-                    <h3 class="wiki-title">Управление рисками в цепях поставок</h3>
-                </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Систематический подход к идентификации, оценке и минимизации рисков в глобальных цепях поставок.
-                    </p>
-                    
-                    <div class="wiki-content">
-                        <p><strong>Типы рисков:</strong></p>
-                        <ul>
-                            <li><strong>Операционные:</strong> срывы поставок, качество</li>
-                            <li><strong>Финансовые:</strong> валютные, кредитные</li>
-                            <li><strong>Стратегические:</strong> изменения рынка</li>
-                            <li><strong>Внешние:</strong> политические, природные</li>
-                        </ul>
-                        <p><strong>Методы управления:</strong></p>
-                        <ul>
-                            <li>Диверсификация поставщиков</li>
-                            <li>Буферные запасы</li>
-                            <li>Страхование рисков</li>
-                            <li>Планы непрерывности бизнеса</li>
-                        </ul>
-                    </div>
-
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">Риск-менеджмент</span>
-                        <span class="wiki-tag">Устойчивость</span>
-                        <span class="wiki-tag">Бизнес-непрерывность</span>
+                        <a href="wiki/bi-dashboards.html" class="wiki-article-card">
+                            <h4>BI системы и дашборды</h4>
+                            <p>Создание систем бизнес-аналитики для мониторинга KPI</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 22 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Чек-лист аудита отдела закупок -->
-            <div class="wiki-card" data-category="checklists,methodology">
-                <div class="wiki-header">
-                    <div class="wiki-icon">🔍</div>
-                    <h3 class="wiki-title">Аудит отдела закупок: полный чек-лист</h3>
+            <!-- Аналитика и Data Science -->
+            <div class="wiki-category">
+                <div class="wiki-category-header">
+                    <h3>📊 Аналитика и Data Science</h3>
+                    <p>Data-driven подход, аналитика и прогнозирование в SCM</p>
                 </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Комплексная система оценки эффективности и оптимизации работы отдела закупок
-                    </p>
-                    
-                    <div class="checklist">
-                        <div class="checklist-phase">
-                            <h4>📊 1. Анализ текущего состояния</h4>
-                            
-                            <div class="checklist-section">
-                                <h5>1.1 Организационная структура</h5>
-                                <label class="checklist-item">
-                                    <input type="checkbox">
-                                    <span>Соответствие штатной численности объёму задач</span>
-                                </label>
-                                <label class="checklist-item">
-                                    <input type="checkbox">
-                                    <span>Чёткость зон ответственности и линий подчинения</span>
-                                </label>
-                                <label class="checklist-item">
-                                    <input type="checkbox">
-                                    <span>Наличие дублирующих функций</span>
-                                </label>
+                <div class="wiki-articles">
+                    <div class="wiki-articles-grid">
+                        <a href="wiki/data-analytics.html" class="wiki-article-card">
+                            <h4>Аналитика данных в SCM</h4>
+                            <p>Методы анализа данных для оптимизации цепей поставок</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 25 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
                             </div>
-
-                            <div class="checklist-section">
-                                <h5>1.2 Процессы и регламенты</h5>
-                                <label class="checklist-item">
-                                    <input type="checkbox">
-                                    <span>Анализ полного цикла закупки (от заявки до оплаты)</span>
-                                </label>
-                                <label class="checklist-item">
-                                    <input type="checkbox">
-                                    <span>Проверка действующих регламентов и инструкций</span>
-                                </label>
-                                <label class="checklist-item">
-                                    <input type="checkbox">
-                                    <span>Оценка уровня автоматизации процессов</span>
-                                </label>
+                        </a>
+                        
+                        <a href="wiki/python-scm.html" class="wiki-article-card">
+                            <h4>Python для SCM</h4>
+                            <p>Применение Python для анализа данных и автоматизации в цепях поставок</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 30 мин</span>
+                                <span class="article-level level-expert">🟣 Эксперт</span>
                             </div>
-                        </div>
-
-                        <div class="checklist-phase">
-                            <h4>🎯 2. Миссия и цели отдела</h4>
-                            
-                            <div class="checklist-section">
-                                <h5>Стратегические цели (1–3 года)</h5>
-                                <label class="checklist-item">
-                                    <input type="checkbox">
-                                    <span>Снизить закупочную стоимость на 10% без потери качества</span>
-                                </label>
-                                <label class="checklist-item">
-                                    <input type="checkbox">
-                                    <span>Увеличить долю стратегических поставщиков до 70%</span>
-                                </label>
-                                <label class="checklist-item">
-                                    <input type="checkbox">
-                                    <span>Сократить срок закупки на 20%</span>
-                                </label>
+                        </a>
+                        
+                        <a href="wiki/forecasting-methods.html" class="wiki-article-card">
+                            <h4>Методы прогнозирования</h4>
+                            <p>Статистические и ML методы для прогнозирования спроса</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 28 мин</span>
+                                <span class="article-level level-expert">🟣 Эксперт</span>
                             </div>
-                        </div>
-                    </div>
+                        </a>
 
-                    <div class="checklist-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 0%"></div>
-                        </div>
-                        <span class="progress-text">0% завершено</span>
-                    </div>
-
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">Аудит</span>
-                        <span class="wiki-tag">Закупки</span>
-                        <span class="wiki-tag">KPI</span>
-                        <span class="wiki-tag">Оптимизация</span>
+                        <a href="wiki/kpi-development.html" class="wiki-article-card">
+                            <h4>Разработка KPI систем</h4>
+                            <p>Создание и внедрение систем ключевых показателей эффективности</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 20 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Калькулятор страхового запаса -->
-            <div class="wiki-card" data-category="calculations,optimization">
-                <div class="wiki-header">
-                    <div class="wiki-icon">🧮</div>
-                    <h3 class="wiki-title">Калькулятор страхового запаса</h3>
+            <!-- Бизнес-методологии -->
+            <div class="wiki-category">
+                <div class="wiki-category-header">
+                    <h3>🎯 Бизнес-методологии</h3>
+                    <p>Lean, Six Sigma, Agile и другие подходы к управлению</p>
                 </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Расчет оптимального страхового запаса для защиты от колебаний спроса и задержек поставок
-                    </p>
-                    
-                    <div class="calculator-container">
-                        <div class="calculator-form">
-                            <div class="input-group">
-                                <label for="avgDemand">Средний спрос (ед./день):</label>
-                                <input type="number" id="avgDemand" value="100" min="1">
+                <div class="wiki-articles">
+                    <div class="wiki-articles-grid">
+                        <a href="wiki/lean-six-sigma.html" class="wiki-article-card">
+                            <h4>Lean Six Sigma</h4>
+                            <p>Применение методологий Lean и Six Sigma в SCM</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 35 мин</span>
+                                <span class="article-level level-expert">🟣 Эксперт</span>
                             </div>
-                            
-                            <div class="input-group">
-                                <label for="stdDev">Стандартное отклонение спроса:</label>
-                                <input type="number" id="stdDev" value="20" min="1">
+                        </a>
+                        
+                        <a href="wiki/agile-scm.html" class="wiki-article-card">
+                            <h4>Agile в SCM</h4>
+                            <p>Адаптация Agile методологий для управления цепями поставок</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 22 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
                             </div>
-                            
-                            <div class="input-group">
-                                <label for="leadTime">Время поставки (дни):</label>
-                                <input type="number" id="leadTime" value="5" min="1">
+                        </a>
+                        
+                        <a href="wiki/change-management.html" class="wiki-article-card">
+                            <h4>Управление изменениями</h4>
+                            <p>Методологии внедрения изменений в организации</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 18 мин</span>
+                                <span class="article-level level-basic">🟢 Базовый</span>
                             </div>
-                            
-                            <div class="input-group">
-                                <label for="serviceLevel">Уровень сервиса (%):</label>
-                                <input type="range" id="serviceLevel" min="80" max="99" value="95">
-                                <span id="serviceLevelValue">95%</span>
-                            </div>
+                        </a>
 
-                            <button class="btn-calculate" onclick="calculateSafetyStock()">
-                                <i class="fas fa-calculator"></i> Рассчитать
-                            </button>
-                        </div>
-
-                        <div class="calculator-results">
-                            <div class="result-card">
-                                <div class="result-title">Страховой запас</div>
-                                <div class="result-value" id="safetyStockResult">74 ед.</div>
-                                <div class="result-formula">
-                                    Z × σ × √L = 1.65 × 20 × √5 ≈ 74 ед.
-                                </div>
+                        <a href="wiki/process-optimization.html" class="wiki-article-card">
+                            <h4>Оптимизация процессов</h4>
+                            <p>Методы анализа и улучшения бизнес-процессов</p>
+                            <div class="article-meta">
+                                <span class="read-time">⏱️ 25 мин</span>
+                                <span class="article-level level-advanced">🟡 Продвинутый</span>
                             </div>
-                            
-                            <div class="result-breakdown">
-                                <h5>Детали расчета:</h5>
-                                <div class="breakdown-item">
-                                    <span>Z-коэффициент (95%):</span>
-                                    <span>1.65</span>
-                                </div>
-                                <div class="breakdown-item">
-                                    <span>Стандартное отклонение:</span>
-                                    <span>20 ед./день</span>
-                                </div>
-                                <div class="breakdown-item">
-                                    <span>Время поставки:</span>
-                                    <span>5 дней</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">Расчеты</span>
-                        <span class="wiki-tag">Запасы</span>
-                        <span class="wiki-tag">Оптимизация</span>
+                        </a>
                     </div>
                 </div>
             </div>
-
-            <!-- Инфографика эволюции логистических моделей -->
-            <div class="wiki-card" data-category="methodology">
-                <div class="wiki-header">
-                    <div class="wiki-icon">🚀</div>
-                    <h3 class="wiki-title">Эволюция логистических моделей 1PL → 4PL</h3>
-                </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        От прямого управления логистикой до комплексного аутсорсинга и стратегического партнерства
-                    </p>
-                    
-                    <div class="infographic-container">
-                        <div class="evolution-timeline">
-                            <div class="evolution-stage" data-stage="1pl">
-                                <div class="stage-header">
-                                    <div class="stage-number">1PL</div>
-                                    <div class="stage-title">Прямая логистика</div>
-                                </div>
-                                <div class="stage-visual">
-                                    <div class="company">Компания</div>
-                                    <div class="connections">
-                                        <div class="connection">└── Склад</div>
-                                        <div class="connection">└── Транспорт</div>
-                                        <div class="connection">└── Клиенты</div>
-                                    </div>
-                                </div>
-                                <div class="stage-features">
-                                    <div class="feature">✓ Полный контроль</div>
-                                    <div class="feature">✗ Высокие затраты</div>
-                                </div>
-                            </div>
-
-                            <div class="evolution-stage" data-stage="2pl">
-                                <div class="stage-header">
-                                    <div class="stage-number">2PL</div>
-                                    <div class="stage-title">Аутсорсинг транспорта</div>
-                                </div>
-                                <div class="stage-visual">
-                                    <div class="company">Компания</div>
-                                    <div class="connections">
-                                        <div class="connection">├── Склад</div>
-                                        <div class="connection">└── 2PL провайдер → Клиенты</div>
-                                    </div>
-                                </div>
-                                <div class="stage-features">
-                                    <div class="feature">✓ Снижение CAPEX</div>
-                                    <div class="feature">✗ Частичный контроль</div>
-                                </div>
-                            </div>
-
-                            <div class="evolution-stage" data-stage="3pl">
-                                <div class="stage-header">
-                                    <div class="stage-number">3PL</div>
-                                    <div class="stage-title">Комплексный аутсорсинг</div>
-                                </div>
-                                <div class="stage-visual">
-                                    <div class="company">Компания</div>
-                                    <div class="connections">
-                                        <div class="connection">└── 3PL провайдер</div>
-                                        <div class="connection-sub">├── Склад</div>
-                                        <div class="connection-sub">├── Транспорт</div>
-                                        <div class="connection-sub">└── Клиенты</div>
-                                    </div>
-                                </div>
-                                <div class="stage-features">
-                                    <div class="feature">✓ Операционная эффективность</div>
-                                    <div class="feature">✗ Ограниченная стратегия</div>
-                                </div>
-                            </div>
-
-                            <div class="evolution-stage" data-stage="4pl">
-                                <div class="stage-header">
-                                    <div class="stage-number">4PL</div>
-                                    <div class="stage-title">Стратегическое партнерство</div>
-                                </div>
-                                <div class="stage-visual">
-                                    <div class="company">Компания</div>
-                                    <div class="connections">
-                                        <div class="connection">└── 4PL интегратор</div>
-                                        <div class="connection-sub">├── Управление 3PL</div>
-                                        <div class="connection-sub">├── Оптимизация сети</div>
-                                        <div class="connection-sub">└── Технологии</div>
-                                    </div>
-                                </div>
-                                <div class="stage-features">
-                                    <div class="feature">✓ Единое управление</div>
-                                    <div class="feature">✗ Высокая стоимость</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">1PL</span>
-                        <span class="wiki-tag">2PL</span>
-                        <span class="wiki-tag">3PL</span>
-                        <span class="wiki-tag">4PL</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Дашборд KPI -->
-            <div class="wiki-card" data-category="kpi,technology">
-                <div class="wiki-header">
-                    <div class="wiki-icon">📈</div>
-                    <h3 class="wiki-title">Интерактивный KPI Дашборд</h3>
-                </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Визуализация ключевых показателей эффективности цепей поставок в реальном времени
-                    </p>
-                    
-                    <div class="dashboard-container">
-                        <div class="charts-grid">
-                            <!-- График 1 -->
-                            <div class="chart-container">
-                                <div class="chart-header">
-                                    <h4>OTIF Performance</h4>
-                                    <span class="chart-value">92%</span>
-                                </div>
-                                <canvas id="otifChart" width="400" height="200"></canvas>
-                            </div>
-
-                            <!-- График 2 -->
-                            <div class="chart-container">
-                                <div class="chart-header">
-                                    <h4>Оборачиваемость запасов</h4>
-                                    <span class="chart-value">8.2</span>
-                                </div>
-                                <canvas id="inventoryChart" width="400" height="200"></canvas>
-                            </div>
-
-                            <!-- График 3 -->
-                            <div class="chart-container full-width">
-                                <div class="chart-header">
-                                    <h4>Структура логистических затрат</h4>
-                                    <span class="chart-value">15.3% от выручки</span>
-                                </div>
-                                <canvas id="costChart" width="400" height="250"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">KPI</span>
-                        <span class="wiki-tag">Дашборд</span>
-                        <span class="wiki-tag">Визуализация</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Расчеты эффективности -->
-            <div class="wiki-card" data-category="calculations,kpi">
-                <div class="wiki-header">
-                    <div class="wiki-icon">📊</div>
-                    <h3 class="wiki-title">Расчеты эффективности цепей поставок</h3>
-                </div>
-                <div class="wiki-content">
-                    <p class="wiki-description">
-                        Комплексная система метрик и расчетов для оценки продуктивности, рентабельности и маржинальности всех звеньев SCM
-                    </p>
-                    
-                    <div class="calculations-nav">
-                        <div class="nav-tabs">
-                            <button class="nav-tab active" data-tab="department">По отделам</button>
-                            <button class="nav-tab" data-tab="enterprise">По предприятию</button>
-                            <button class="nav-tab" data-tab="digital">Эффект цифровизации</button>
-                        </div>
-                    </div>
-
-                    <div class="calculations-content">
-                        <!-- Вкладка по отделам -->
-                        <div class="tab-content active" id="department-tab">
-                            <div class="department-metrics">
-                                <h4>Отдел закупок</h4>
-                                <div class="metric-list">
-                                    <div class="metric-item">
-                                        <div class="metric-name">Экономия от закупок</div>
-                                        <div class="metric-formula">(Плановая цена - Фактическая цена) × Объем</div>
-                                        <div class="metric-example">
-                                            <strong>Пример:</strong> (1000₽ - 850₽) × 1000 ед. = 150,000₽
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="metric-item">
-                                        <div class="metric-name">Стоимость обработки заказа</div>
-                                        <div class="metric-formula">Затраты отдела / Количество заказов</div>
-                                        <div class="metric-example">
-                                            <strong>Пример:</strong> 500,000₽ / 250 заказов = 2,000₽/заказ
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <h4>Складская логистика</h4>
-                                <div class="metric-list">
-                                    <div class="metric-item">
-                                        <div class="metric-name">Стоимость хранения на паллето-место</div>
-                                        <div class="metric-formula">Общие затраты склада / Количество паллето-мест</div>
-                                        <div class="metric-example">
-                                            <strong>Пример:</strong> 2,000,000₽ / 5,000 мест = 400₽/место
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="metric-item">
-                                        <div class="metric-name">Производительность комплектации</div>
-                                        <div class="metric-formula">Количество строк заказов / Человеко-часы</div>
-                                        <div class="metric-example">
-                                            <strong>Пример:</strong> 15,000 строк / 600 часов = 25 строк/час
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Вкладка по предприятию -->
-                        <div class="tab-content" id="enterprise-tab">
-                            <div class="enterprise-metrics">
-                                <h4>Финансовые показатели предприятия</h4>
-                                <div class="financial-metrics">
-                                    <div class="financial-metric">
-                                        <div class="metric-name">Рентабельность логистики (ROS)</div>
-                                        <div class="metric-formula">(Прибыль от логистики / Выручка) × 100%</div>
-                                        <div class="metric-value">8.5%</div>
-                                    </div>
-                                    
-                                    <div class="financial-metric">
-                                        <div class="metric-name">Доля логистики в себестоимости</div>
-                                        <div class="metric-formula">(Логистические затраты / Себестоимость) × 100%</div>
-                                        <div class="metric-value">12.3%</div>
-                                    </div>
-                                    
-                                    <div class="financial-metric">
-                                        <div class="metric-name">Cash-to-Cash цикл</div>
-                                        <div class="metric-formula">Дни запасов + Дни ДЗ - Дни КЗ</div>
-                                        <div class="metric-value">45 дней</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Вкладка эффекта цифровизации -->
-                        <div class="tab-content" id="digital-tab">
-                            <div class="digital-impact">
-                                <h4>Эффект цифровизации процессов SCM</h4>
-                                
-                                <div class="impact-metrics">
-                                    <div class="impact-category">
-                                        <h5>WMS внедрение</h5>
-                                        <div class="impact-list">
-                                            <div class="impact-item">
-                                                <span class="impact-label">Точность инвентаризации</span>
-                                                <div class="impact-values">
-                                                    <span class="before">97%</span>
-                                                    <span class="arrow">→</span>
-                                                    <span class="after">99.8%</span>
-                                                </div>
-                                            </div>
-                                            <div class="impact-item">
-                                                <span class="impact-label">Производительность склада</span>
-                                                <div class="impact-values">
-                                                    <span class="before">18 зак/час</span>
-                                                    <span class="arrow">→</span>
-                                                    <span class="after">28 зак/час</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="wiki-tags">
-                        <span class="wiki-tag">Расчеты</span>
-                        <span class="wiki-tag">Эффективность</span>
-                        <span class="wiki-tag">Рентабельность</span>
-                    </div>
-                </div>
-            </div>
-
         </section>
     </main>
 
@@ -1721,44 +1077,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Фильтрация статей
-            const categoryButtons = document.querySelectorAll('.category-btn');
-            const wikiCards = document.querySelectorAll('.wiki-card');
-            const wikiGrid = document.querySelector('.wiki-grid');
-
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Добавляем индикатор загрузки
-                    wikiGrid.classList.add('loading');
-                    
-                    // Убираем активный класс у всех кнопок
-                    categoryButtons.forEach(btn => {
-                        btn.classList.remove('active');
-                        btn.setAttribute('aria-pressed', 'false');
-                    });
-                    
-                    // Добавляем активный класс текущей кнопке
-                    this.classList.add('active');
-                    this.setAttribute('aria-pressed', 'true');
-                    
-                    const category = this.getAttribute('data-category');
-                    
-                    // Задержка для плавности анимации
-                    setTimeout(() => {
-                        wikiCards.forEach(card => {
-                            if (category === 'all' || card.getAttribute('data-category').includes(category)) {
-                                card.style.display = 'block';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        });
-                        
-                        // Убираем индикатор загрузки
-                        wikiGrid.classList.remove('loading');
-                    }, 150);
-                });
-            });
-
             // Анимация появления элементов при скролле
             const observerOptions = {
                 threshold: 0.1,
@@ -1768,29 +1086,29 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
                     }
                 });
             }, observerOptions);
 
-            // Наблюдаем за карточками wiki
-            const cards = document.querySelectorAll('.wiki-card');
-            cards.forEach(card => {
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
+            // Наблюдаем за категориями Wiki
+            const wikiCategories = document.querySelectorAll('.wiki-category');
+            wikiCategories.forEach(category => {
+                category.style.opacity = '0';
+                category.style.transform = 'translateY(30px)';
+                category.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(category);
             });
 
-            // Инициализация графиков
-            initializeCharts();
-
-            // Инициализация навигации по расчетам
-            initializeCalculationTabs();
-
-            // Инициализация чек-листов
-            initializeChecklists();
-
-            // Инициализация калькуляторов
-            initializeCalculators();
+            // Наблюдаем за статистикой знаний
+            const knowledgeStats = document.querySelectorAll('.knowledge-stat');
+            knowledgeStats.forEach(stat => {
+                stat.style.opacity = '0';
+                stat.style.transform = 'translateY(20px)';
+                stat.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(stat);
+            });
 
             // Плавная прокрутка для навигации
             const anchorLinks = document.querySelectorAll('a[href^="#"]');
@@ -1815,193 +1133,6 @@
                 });
             });
         });
-
-        function initializeCharts() {
-            // График OTIF
-            const otifCtx = document.getElementById('otifChart').getContext('2d');
-            new Chart(otifCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн'],
-                    datasets: [{
-                        label: 'OTIF',
-                        data: [88, 90, 89, 92, 91, 92],
-                        borderColor: '#009B77',
-                        backgroundColor: 'rgba(0, 155, 119, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            min: 85,
-                            max: 100
-                        }
-                    }
-                }
-            });
-
-            // График оборачиваемости запасов
-            const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
-            new Chart(inventoryCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['A-товары', 'B-товары', 'C-товары'],
-                    datasets: [{
-                        label: 'Оборачиваемость',
-                        data: [12.5, 6.8, 2.1],
-                        backgroundColor: [
-                            'rgba(0, 155, 119, 0.8)',
-                            'rgba(139, 95, 191, 0.8)',
-                            'rgba(212, 175, 55, 0.8)'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-
-            // График структуры затрат
-            const costCtx = document.getElementById('costChart').getContext('2d');
-            new Chart(costCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Транспорт', 'Склад', 'Персонал', 'ИТ', 'Прочее'],
-                    datasets: [{
-                        data: [45, 25, 15, 10, 5],
-                        backgroundColor: [
-                            '#009B77',
-                            '#8B5FBF',
-                            '#D4AF37',
-                            '#0F1C3F',
-                            '#5D6B8C'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-        }
-
-        function initializeCalculationTabs() {
-            const tabs = document.querySelectorAll('.nav-tab');
-            const contents = document.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const targetTab = this.dataset.tab;
-                    
-                    // Убираем активный класс у всех вкладок и контента
-                    tabs.forEach(t => t.classList.remove('active'));
-                    contents.forEach(c => c.classList.remove('active'));
-                    
-                    // Добавляем активный класс текущей вкладке и контенту
-                    this.classList.add('active');
-                    document.getElementById(`${targetTab}-tab`).classList.add('active');
-                });
-            });
-        }
-
-        function initializeChecklists() {
-            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
-            const totalItems = checkboxes.length;
-            
-            // Восстанавливаем состояние из localStorage
-            checkboxes.forEach((checkbox, index) => {
-                const storageKey = `checklist-item-${index}`;
-                const isChecked = localStorage.getItem(storageKey) === 'true';
-                checkbox.checked = isChecked;
-                
-                checkbox.addEventListener('change', function() {
-                    const storageKey = `checklist-item-${index}`;
-                    localStorage.setItem(storageKey, this.checked);
-                    updateChecklistProgress();
-                });
-            });
-
-            updateChecklistProgress();
-
-            function updateChecklistProgress() {
-                const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
-                const totalItems = checkboxes.length;
-                const completedItems = Array.from(checkboxes).filter(cb => cb.checked).length;
-                const percentage = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
-                
-                // Обновляем прогресс-бар
-                const progressFill = document.querySelector('.progress-fill');
-                const progressText = document.querySelector('.progress-text');
-                
-                if (progressFill) {
-                    progressFill.style.width = `${percentage}%`;
-                }
-                
-                if (progressText) {
-                    progressText.textContent = `${Math.round(percentage)}% завершено (${completedItems}/${totalItems})`;
-                }
-            }
-        }
-
-        function initializeCalculators() {
-            // Калькулятор страхового запаса
-            const serviceLevelSlider = document.getElementById('serviceLevel');
-            const serviceLevelValue = document.getElementById('serviceLevelValue');
-            
-            if (serviceLevelSlider && serviceLevelValue) {
-                serviceLevelSlider.addEventListener('input', function() {
-                    serviceLevelValue.textContent = `${this.value}%`;
-                    calculateSafetyStock();
-                });
-            }
-            
-            // Инициализируем расчет при загрузке
-            calculateSafetyStock();
-        }
-
-        function calculateSafetyStock() {
-            const avgDemand = parseFloat(document.getElementById('avgDemand').value) || 100;
-            const stdDev = parseFloat(document.getElementById('stdDev').value) || 20;
-            const leadTime = parseFloat(document.getElementById('leadTime').value) || 5;
-            const serviceLevel = parseFloat(document.getElementById('serviceLevel').value) || 95;
-
-            // Z-коэффициенты для разных уровней сервиса
-            const zScores = {
-                80: 0.84, 85: 1.04, 90: 1.28, 95: 1.65, 99: 2.33
-            };
-            
-            const z = zScores[serviceLevel] || 1.65;
-            const safetyStock = Math.round(z * stdDev * Math.sqrt(leadTime));
-            
-            // Обновляем результаты
-            const resultElement = document.getElementById('safetyStockResult');
-            if (resultElement) {
-                resultElement.textContent = `${safetyStock} ед.`;
-            }
-            
-            // Обновляем формулу
-            const formulaElement = document.querySelector('.result-formula');
-            if (formulaElement) {
-                formulaElement.textContent = `Z × σ × √L = ${z} × ${stdDev} × √${leadTime} ≈ ${safetyStock} ед.`;
-            }
-        }
     </script>
 </body>
 </html>
