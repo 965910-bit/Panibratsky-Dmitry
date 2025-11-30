@@ -7,7 +7,6 @@
     
     <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -303,7 +302,76 @@
             background: rgba(212, 175, 55, 0.05);
         }
 
+        /* EXPERTISE HERO */
+        .expertise-hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-xxl) 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .expertise-hero:before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-leadership);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+        }
+
+        .expertise-hero:after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-innovation);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+        }
+
+        .expertise-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .expertise-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8ECF2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .expertise-hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
         /* EXPERTISE SECTIONS */
+        .expertise-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-xxl);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            padding: 0 var(--space-md);
+        }
+
         .expertise-section {
             margin-bottom: var(--space-xxl);
         }
@@ -311,51 +379,42 @@
         .expertise-header {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
+            gap: var(--space-lg);
             margin-bottom: var(--space-xl);
             padding: var(--space-lg);
             background: var(--card-bg);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm);
-            border-left: 6px solid;
+            border-left: 4px solid var(--accent-innovation);
         }
 
-        .expertise-header.scm {
-            border-left-color: var(--accent-expert);
-        }
-
-        .expertise-header.digital {
-            border-left-color: var(--accent-innovation);
-        }
-
-        .expertise-header.analytics {
+        .expertise-header.strategy {
             border-left-color: var(--accent-strategy);
+        }
+
+        .expertise-header.leadership {
+            border-left-color: var(--accent-leadership);
         }
 
         .expertise-icon {
             width: 80px;
             height: 80px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: var(--gradient-innovation);
+            border-radius: var(--radius-md);
             font-size: 2.5rem;
+            color: white;
             flex-shrink: 0;
         }
 
-        .expertise-icon.scm {
-            background: var(--gradient-primary);
-            color: white;
-        }
-
-        .expertise-icon.digital {
-            background: var(--gradient-innovation);
-            color: white;
-        }
-
-        .expertise-icon.analytics {
+        .expertise-icon.strategy {
             background: var(--gradient-strategy);
-            color: white;
+        }
+
+        .expertise-icon.leadership {
+            background: var(--gradient-leadership);
         }
 
         .expertise-title {
@@ -369,12 +428,11 @@
         }
 
         .expertise-title p {
-            color: var(--text-secondary);
             font-size: 1.1rem;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
-        /* EXPERTISE GRID */
         .expertise-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -383,11 +441,11 @@
 
         .expertise-card {
             background: var(--card-bg);
-            border-radius: var(--radius-md);
-            padding: var(--space-lg);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm);
+            border-top: 4px solid var(--accent-innovation);
             transition: all 0.3s ease;
-            border-top: 4px solid;
             position: relative;
             overflow: hidden;
         }
@@ -399,20 +457,9 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: inherit;
-            opacity: 0.1;
-        }
-
-        .expertise-card.scm {
-            border-top-color: var(--accent-expert);
-        }
-
-        .expertise-card.digital {
-            border-top-color: var(--accent-innovation);
-        }
-
-        .expertise-card.analytics {
-            border-top-color: var(--accent-strategy);
+            background: var(--accent-innovation);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .expertise-card:hover {
@@ -420,147 +467,89 @@
             box-shadow: var(--shadow-lg);
         }
 
+        .expertise-card:hover:before {
+            transform: scaleX(1);
+        }
+
+        .expertise-card.strategy {
+            border-top-color: var(--accent-strategy);
+        }
+
+        .expertise-card.strategy:before {
+            background: var(--accent-strategy);
+        }
+
+        .expertise-card.leadership {
+            border-top-color: var(--accent-leadership);
+        }
+
+        .expertise-card.leadership:before {
+            background: var(--accent-leadership);
+        }
+
         .expertise-card h3 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: var(--primary-color);
             margin-bottom: var(--space-md);
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
+            position: relative;
+            padding-bottom: var(--space-sm);
         }
 
-        .expertise-card h3:before {
+        .expertise-card h3:after {
             content: '';
-            width: 20px;
-            height: 3px;
-            border-radius: 2px;
-        }
-
-        .expertise-card.scm h3:before {
-            background: var(--accent-expert);
-        }
-
-        .expertise-card.digital h3:before {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
             background: var(--accent-innovation);
         }
 
-        .expertise-card.analytics h3:before {
+        .expertise-card.strategy h3:after {
             background: var(--accent-strategy);
+        }
+
+        .expertise-card.leadership h3:after {
+            background: var(--accent-leadership);
         }
 
         .expertise-card ul {
             list-style: none;
-            margin: 0;
-            padding: 0;
+            margin-bottom: var(--space-lg);
         }
 
         .expertise-card li {
-            padding: var(--space-sm) 0;
-            border-bottom: 1px solid var(--border-light);
+            padding: var(--space-xs) 0;
             color: var(--text-secondary);
             position: relative;
-            padding-left: var(--space-lg);
-            transition: all 0.3s ease;
+            padding-left: var(--space-md);
+            line-height: 1.5;
         }
 
         .expertise-card li:before {
             content: '✓';
             position: absolute;
             left: 0;
-            color: var(--accent-leadership);
+            color: var(--accent-innovation);
             font-weight: bold;
-            font-size: 1.1rem;
         }
 
-        .expertise-card li:last-child {
-            border-bottom: none;
+        .expertise-card.strategy li:before {
+            color: var(--accent-strategy);
         }
 
-        .expertise-card li:hover {
-            color: var(--text-primary);
-            transform: translateX(4px);
-        }
-
-        /* SKILL LEVEL INDICATORS */
-        .skill-levels {
-            margin-top: var(--space-xxl);
-        }
-
-        .skill-levels h2 {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-            color: var(--primary-color);
-        }
-
-        .skills-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--space-lg);
-        }
-
-        .skill-category {
-            background: var(--card-bg);
-            padding: var(--space-lg);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .skill-category h3 {
-            color: var(--primary-color);
-            margin-bottom: var(--space-lg);
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .skill-category h3 i {
-            width: 24px;
-            text-align: center;
-        }
-
-        .skill-item {
-            margin-bottom: var(--space-md);
-        }
-
-        .skill-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: var(--space-xs);
-        }
-
-        .skill-name {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .skill-percentage {
-            font-weight: 600;
+        .expertise-card.leadership li:before {
             color: var(--accent-leadership);
         }
 
-        .skill-bar {
-            height: 8px;
-            background: var(--border-light);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .skill-progress {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 1s ease-in-out;
-        }
-
-        .skill-progress.scm {
-            background: var(--gradient-primary);
-        }
-
-        .skill-progress.digital {
-            background: var(--gradient-innovation);
-        }
-
-        .skill-progress.analytics {
-            background: var(--gradient-strategy);
+        .expertise-level {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--bg-light);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
 
         /* FOOTER */
@@ -570,17 +559,6 @@
             text-align: center;
             padding: var(--space-xl) 0;
             margin-top: var(--space-xxl);
-        }
-
-        /* Анимации */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
         }
 
         /* Адаптивность */
@@ -621,10 +599,8 @@
                 font-size: 1.1rem;
             }
             
-            .expertise-header {
-                flex-direction: column;
-                text-align: center;
-                gap: var(--space-md);
+            .expertise-hero h1 {
+                font-size: 2.2rem;
             }
             
             .expertise-grid {
@@ -638,9 +614,15 @@
             .nav-links a {
                 padding: 15px 20px;
             }
-            
-            .skills-container {
-                grid-template-columns: 1fr;
+
+            .expertise-header {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-md);
+            }
+
+            .expertise-icon {
+                align-self: center;
             }
         }
 
@@ -659,8 +641,16 @@
                 text-align: center;
             }
             
-            .expertise-grid {
-                grid-template-columns: 1fr;
+            .expertise-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .expertise-hero p {
+                font-size: 1.1rem;
+            }
+
+            .expertise-card {
+                padding: var(--space-lg);
             }
         }
     </style>
@@ -687,7 +677,9 @@
                             <span class="badge">Управление SCM</span>
                             <span class="badge">Цифровая трансформация</span>
                             <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Оптимизация процессов</span>
+                            <span class="badge">Управление закупками</span>
+                            <span class="badge">Технический контроль</span>
+                            <span class="badge">MBA Логистика</span>
                         </div>
                     </div>
                     
@@ -701,20 +693,20 @@
 
                 <div class="header-stats">
                     <div class="stat-card">
-                        <div class="stat-number">15+</div>
-                        <div class="stat-label">лет экспертизы в SCM</div>
+                        <div class="stat-number">20+</div>
+                        <div class="stat-label">реализованных проектов</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">25+</div>
-                        <div class="stat-label">успешных проектов</div>
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">лет в SCM</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">12+</div>
-                        <div class="stat-label">технологий освоено</div>
+                        <div class="stat-number">87k+</div>
+                        <div class="stat-label">SKU под управлением</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number">100%</div>
-                        <div class="stat-label">реализованных решений</div>
+                        <div class="stat-label">успешная реализация</div>
                     </div>
                 </div>
             </div>
@@ -738,254 +730,313 @@
         </div>
     </nav>
 
+    <!-- Hero Section -->
+    <section class="expertise-hero">
+        <div class="container">
+            <h1>Профессиональная экспертиза</h1>
+            <p>Комплексный подход к управлению цепями поставок, цифровой трансформации и бизнес-оптимизации</p>
+        </div>
+    </section>
+
     <!-- Main Content -->
     <main class="container">
-        <section class="section">
-            <h1>Профессиональная экспертиза</h1>
+        <div class="expertise-intro">
+            <p>Многолетний опыт в управлении сложными SCM-процессами, цифровой трансформации бизнеса и внедрении инновационных решений позволяет достигать measurable результатов в различных отраслях промышленности и торговли.</p>
+        </div>
+
+        <!-- Управление цепями поставок -->
+        <section class="expertise-section">
+            <div class="expertise-header">
+                <div class="expertise-icon">
+                    🔄
+                </div>
+                <div class="expertise-title">
+                    <h2>Управление цепями поставок (SCM)</h2>
+                    <p>Комплексное управление end-to-end цепями поставок от планирования до исполнения</p>
+                </div>
+            </div>
             
-            <!-- SCM Экспертиза -->
-            <div class="expertise-section">
-                <div class="expertise-header scm">
-                    <div class="expertise-icon scm">
-                        📊
-                    </div>
-                    <div class="expertise-title">
-                        <h2>Управление цепями поставок (SCM)</h2>
-                        <p>Комплексный подход к оптимизации end-to-end цепей поставок, от стратегического планирования до операционного исполнения</p>
-                    </div>
+            <div class="expertise-grid">
+                <div class="expertise-card">
+                    <h3>Стратегическое планирование SCM</h3>
+                    <ul>
+                        <li>Разработка SCM-стратегии компании</li>
+                        <li>Оптимизация сети распределения</li>
+                        <li>Управление складской инфраструктурой</li>
+                        <li>Планирование мощностей и ресурсов</li>
+                        <li>Анализ рисков цепей поставок</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
                 </div>
-                
-                <div class="expertise-grid">
-                    <div class="expertise-card scm">
-                        <h3>Стратегическое планирование SCM</h3>
-                        <ul>
-                            <li>Разработка SCM стратегии</li>
-                            <li>Оптимизация сетей поставок</li>
-                            <li>Управление поставщиками</li>
-                            <li>Планирование мощностей</li>
-                            <li>Risk management</li>
-                            <li>Cost-to-serve анализ</li>
-                        </ul>
-                    </div>
-                    <div class="expertise-card scm">
-                        <h3>Управление запасами</h3>
-                        <ul>
-                            <li>ABC/XYZ анализ</li>
-                            <li>Оптимизация уровней запасов</li>
-                            <li>Forecast & Demand Planning</li>
-                            <li>Inventory Turnover оптимизация</li>
-                            <li>Safety stock расчеты</li>
-                            <li>SKU рационализация</li>
-                        </ul>
-                    </div>
-                    <div class="expertise-card scm">
-                        <h3>Логистика и дистрибуция</h3>
-                        <ul>
-                            <li>Мультимодальные перевозки</li>
-                            <li>Оптимизация маршрутов</li>
-                            <li>Управление складской сетью</li>
-                            <li>Last-mile delivery решения</li>
-                            <li>Таможенное оформление</li>
-                            <li>3PL/4PL управление</li>
-                        </ul>
-                    </div>
+                <div class="expertise-card">
+                    <h3>Операционное управление логистикой</h3>
+                    <ul>
+                        <li>Управление складскими операциями</li>
+                        <li>Транспортная логистика и дистрибуция</li>
+                        <li>Управление запасами и stock-keeping</li>
+                        <li>Таможенное оформление и ВЭД</li>
+                        <li>Управление reverse logistics</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
+                </div>
+                <div class="expertise-card">
+                    <h3>Управление производительностью</h3>
+                    <ul>
+                        <li>Разработка KPI-систем для SCM</li>
+                        <li>Анализ и оптимизация затрат</li>
+                        <li>Бенчмаркинг и best practices</li>
+                        <li>Управление сервисным уровнем (SL)</li>
+                        <li>Continuous improvement процессов</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
                 </div>
             </div>
+        </section>
 
-            <!-- Цифровая трансформация -->
-            <div class="expertise-section">
-                <div class="expertise-header digital">
-                    <div class="expertise-icon digital">
-                        🚀
-                    </div>
-                    <div class="expertise-title">
-                        <h2>Цифровая трансформация</h2>
-                        <p>Внедрение современных технологий для создания интеллектуальных и автоматизированных бизнес-процессов</p>
-                    </div>
+        <!-- Управление закупками и снабжением -->
+        <section class="expertise-section">
+            <div class="expertise-header strategy">
+                <div class="expertise-icon strategy">
+                    📦
                 </div>
-                
-                <div class="expertise-grid">
-                    <div class="expertise-card digital">
-                        <h3>AI & Машинное обучение</h3>
-                        <ul>
-                            <li>Прогнозирование спроса</li>
-                            <li>Оптимизация маршрутов</li>
-                            <li>Predictive Maintenance</li>
-                            <li>Computer Vision для складов</li>
-                            <li>Natural Language Processing</li>
-                            <li>Recommendation системы</li>
-                        </ul>
-                    </div>
-                    <div class="expertise-card digital">
-                        <h3>Цифровые двойники</h3>
-                        <ul>
-                            <li>Моделирование цепей поставок</li>
-                            <li>AnyLogic симуляции</li>
-                            <li>What-if анализ</li>
-                            <li>Оптимизация сценариев</li>
-                            <li>Real-time мониторинг</li>
-                            <li>Prescriptive analytics</li>
-                        </ul>
-                    </div>
-                    <div class="expertise-card digital">
-                        <h3>Автоматизация процессов</h3>
-                        <ul>
-                            <li>RPA внедрение</li>
-                            <li>Workflow автоматизация</li>
-                            <li>API интеграции</li>
-                            <li>Low-code платформы</li>
-                            <li>IoT решения</li>
-                            <li>Blockchain для SCM</li>
-                        </ul>
-                    </div>
+                <div class="expertise-title">
+                    <h2>Управление закупками и снабжением</h2>
+                    <p>Стратегическое управление материально-техническим снабжением и оптимизация закупочной деятельности на основе методологии MBA</p>
                 </div>
             </div>
-
-            <!-- Аналитика и BI -->
-            <div class="expertise-section">
-                <div class="expertise-header analytics">
-                    <div class="expertise-icon analytics">
-                        📈
-                    </div>
-                    <div class="expertise-title">
-                        <h2>Аналитика и Business Intelligence</h2>
-                        <p>Data-driven подход к принятию решений через передовые аналитические методы и визуализацию данных</p>
-                    </div>
+            
+            <div class="expertise-grid">
+                <div class="expertise-card strategy">
+                    <h3>Стратегические закупки</h3>
+                    <ul>
+                        <li>Разработка закупочной стратегии</li>
+                        <li>Управление поставщиками (SRM)</li>
+                        <li>Оптимизация закупочных процессов</li>
+                        <li>Cost reduction программы</li>
+                        <li>Переговоры и контрактная работа</li>
+                        <li>Бюджетирование закупок</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
                 </div>
-                
-                <div class="expertise-grid">
-                    <div class="expertise-card analytics">
-                        <h3>Предиктивная аналитика</h3>
-                        <ul>
-                            <li>Time Series анализ</li>
-                            <li>Machine Learning модели</li>
-                            <li>Анализ временных рядов</li>
-                            <li>Прогнозные алгоритмы</li>
-                            <li>Cluster анализ</li>
-                            <li>Anomaly detection</li>
-                        </ul>
-                    </div>
-                    <div class="expertise-card analytics">
-                        <h3>BI системы и дашборды</h3>
-                        <ul>
-                            <li>Tableau разработка</li>
-                            <li>Power BI дашборды</li>
-                            <li>KPI мониторинг</li>
-                            <li>Real-time аналитика</li>
-                            <li>Data storytelling</li>
-                            <li>Executive dashboards</li>
-                        </ul>
-                    </div>
-                    <div class="expertise-card analytics">
-                        <h3>Data Science</h3>
-                        <ul>
-                            <li>Python & Pandas</li>
-                            <li>SQL & базы данных</li>
-                            <li>Статистический анализ</li>
-                            <li>Data Mining</li>
-                            <li>A/B тестирование</li>
-                            <li>Big Data обработка</li>
-                        </ul>
-                    </div>
+                <div class="expertise-card strategy">
+                    <h3>Материально-техническое снабжение</h3>
+                    <ul>
+                        <li>Управление MRO запасами</li>
+                        <li>Планирование потребностей</li>
+                        <li>Оптимизация складской логистики</li>
+                        <li>Управление бюджетами закупок</li>
+                        <li>Контроль качества поставок</li>
+                        <li>Логистика снабжения</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
+                </div>
+                <div class="expertise-card strategy">
+                    <h3>Административно-хозяйственная деятельность</h3>
+                    <ul>
+                        <li>Управление хозяйственными процессами</li>
+                        <li>Контроль эксплуатации активов</li>
+                        <li>Оптимизация операционных затрат</li>
+                        <li>Управление инфраструктурой</li>
+                        <li>Техническое обслуживание</li>
+                        <li>Регламентация процессов</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
                 </div>
             </div>
+        </section>
 
-            <!-- Уровни навыков -->
-            <div class="skill-levels">
-                <h2>Уровень владения технологиями</h2>
-                <div class="skills-container">
-                    <div class="skill-category">
-                        <h3><i class="fas fa-cogs"></i> SCM Системы</h3>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">SAP ERP</span>
-                                <span class="skill-percentage">95%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress scm" style="width: 95%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">SAP SCM</span>
-                                <span class="skill-percentage">90%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress scm" style="width: 90%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">WMS системы</span>
-                                <span class="skill-percentage">88%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress scm" style="width: 88%"></div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Технический контроль -->
+        <section class="expertise-section">
+            <div class="expertise-header leadership">
+                <div class="expertise-icon leadership">
+                    🔧
+                </div>
+                <div class="expertise-title">
+                    <h2>Технический контроль автотранспорта</h2>
+                    <p>Профессиональный контроль технического состояния автотранспортных средств и соответствие нормативным требованиям</p>
+                </div>
+            </div>
+            
+            <div class="expertise-grid">
+                <div class="expertise-card leadership">
+                    <h3>Нормативное соответствие</h3>
+                    <ul>
+                        <li>Контроль технического состояния АТС</li>
+                        <li>Соответствие требованиям безопасности</li>
+                        <li>Нормативные требования к транспорту</li>
+                        <li>Европейская транспортная политика</li>
+                        <li>Правила перевозки грузов</li>
+                    </ul>
+                    <span class="expertise-level">Специалист</span>
+                </div>
+                <div class="expertise-card leadership">
+                    <h3>Эксплуатация транспорта</h3>
+                    <ul>
+                        <li>Техническое обслуживание автопарка</li>
+                        <li>Управление эксплуатационными расходами</li>
+                        <li>Контроль технической документации</li>
+                        <li>Оптимизация использования транспорта</li>
+                        <li>Управление fleet operations</li>
+                    </ul>
+                    <span class="expertise-level">Специалист</span>
+                </div>
+                <div class="expertise-card leadership">
+                    <h3>Контрольные процедуры</h3>
+                    <ul>
+                        <li>Методы технического контроля</li>
+                        <li>Процедуры проверки состояния АТС</li>
+                        <li>Документооборот и отчетность</li>
+                        <li>Системы мониторинга транспорта</li>
+                        <li>Управление техническими регламентами</li>
+                    </ul>
+                    <span class="expertise-level">Специалист</span>
+                </div>
+            </div>
+        </section>
 
-                    <div class="skill-category">
-                        <h3><i class="fas fa-laptop-code"></i> Технологии</h3>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Python & Data Science</span>
-                                <span class="skill-percentage">85%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress digital" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">SQL & Базы данных</span>
-                                <span class="skill-percentage">92%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress digital" style="width: 92%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">AnyLogic</span>
-                                <span class="skill-percentage">80%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress digital" style="width: 80%"></div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Цифровая трансформация -->
+        <section class="expertise-section">
+            <div class="expertise-header">
+                <div class="expertise-icon">
+                    🚀
+                </div>
+                <div class="expertise-title">
+                    <h2>Цифровая трансформация</h2>
+                    <p>Внедрение современных технологий для цифровизации бизнес-процессов и создания конкурентных преимуществ</p>
+                </div>
+            </div>
+            
+            <div class="expertise-grid">
+                <div class="expertise-card">
+                    <h3>AI & Машинное обучение</h3>
+                    <ul>
+                        <li>Предиктивная аналитика для SCM</li>
+                        <li>Машинное обучение для прогнозирования</li>
+                        <li>AI-оптимизация маршрутов и запасов</li>
+                        <li>Natural Language Processing</li>
+                        <li>Компьютерное зрение в логистике</li>
+                    </ul>
+                    <span class="expertise-level">Продвинутый</span>
+                </div>
+                <div class="expertise-card">
+                    <h3>Цифровые двойники</h3>
+                    <ul>
+                        <li>Создание digital twins процессов</li>
+                        <li>Имитационное моделирование (AnyLogic)</li>
+                        <li>Оптимизация через симуляции</li>
+                        <li>Анализ сценариев what-if</li>
+                        <li>Виртуальное тестирование решений</li>
+                    </ul>
+                    <span class="expertise-level">Продвинутый</span>
+                </div>
+                <div class="expertise-card">
+                    <h3>Автоматизация процессов</h3>
+                    <ul>
+                        <li>Robotic Process Automation (RPA)</li>
+                        <li>Автоматизация документооборота</li>
+                        <li>Интеграция систем (API, EDI)</li>
+                        <li>Бизнес-процессный менеджмент</li>
+                        <li>Workflow оптимизация</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
+                </div>
+            </div>
+        </section>
 
-                    <div class="skill-category">
-                        <h3><i class="fas fa-chart-bar"></i> BI & Аналитика</h3>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Tableau</span>
-                                <span class="skill-percentage">88%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress analytics" style="width: 88%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Power BI</span>
-                                <span class="skill-percentage">82%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress analytics" style="width: 82%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">Статистический анализ</span>
-                                <span class="skill-percentage">90%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress analytics" style="width: 90%"></div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Бизнес-аналитика -->
+        <section class="expertise-section">
+            <div class="expertise-header strategy">
+                <div class="expertise-icon strategy">
+                    📊
+                </div>
+                <div class="expertise-title">
+                    <h2>Бизнес-аналитика и Data Science</h2>
+                    <p>Преобразование данных в ценную информацию для принятия стратегических решений</p>
+                </div>
+            </div>
+            
+            <div class="expertise-grid">
+                <div class="expertise-card strategy">
+                    <h3>BI системы и дашборды</h3>
+                    <ul>
+                        <li>Разработка KPI-дашбордов</li>
+                        <li>Tableau, Power BI, Qlik</li>
+                        <li>Визуализация данных для SCM</li>
+                        <li>Real-time мониторинг показателей</li>
+                        <li>Аналитические отчеты</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
+                </div>
+                <div class="expertise-card strategy">
+                    <h3>Data Science & Python</h3>
+                    <ul>
+                        <li>Анализ данных (pandas, numpy)</li>
+                        <li>Статистическое моделирование</li>
+                        <li>Временные ряды и прогнозирование</li>
+                        <li>Оптимизационные алгоритмы</li>
+                        <li>SQL и базы данных</li>
+                    </ul>
+                    <span class="expertise-level">Продвинутый</span>
+                </div>
+                <div class="expertise-card strategy">
+                    <h3>Финансовая аналитика</h3>
+                    <ul>
+                        <li>Анализ рентабельности SCM</li>
+                        <li>Финансовое моделирование</li>
+                        <li>Расчет TCO и ROI</li>
+                        <li>Бюджетирование и контроль затрат</li>
+                        <li>Анализ инвестиционных проектов</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Управление проектами -->
+        <section class="expertise-section">
+            <div class="expertise-header leadership">
+                <div class="expertise-icon leadership">
+                    🎯
+                </div>
+                <div class="expertise-title">
+                    <h2>Управление проектами и командами</h2>
+                    <p>Эффективное руководство проектами цифровой трансформации и кросс-функциональными командами</p>
+                </div>
+            </div>
+            
+            <div class="expertise-grid">
+                <div class="expertise-card leadership">
+                    <h3>Project Management</h3>
+                    <ul>
+                        <li>Управление IT и digital проектами</li>
+                        <li>Agile & Waterfall методологии</li>
+                        <li>Управление рисками проектов</li>
+                        <li>Бюджетирование и контроль сроков</li>
+                        <li>Stakeholder management</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
+                </div>
+                <div class="expertise-card leadership">
+                    <h3>Лидерство и управление командами</h3>
+                    <ul>
+                        <li>Руководство до 15+ специалистов</li>
+                        <li>Кросс-функциональные команды</li>
+                        <li>Управление изменениями</li>
+                        <li>Развитие и мотивация персонала</li>
+                        <li>Коммуникация и презентации</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
+                </div>
+                <div class="expertise-card leadership">
+                    <h3>Бизнес-методологии</h3>
+                    <ul>
+                        <li>Lean Six Sigma</li>
+                        <li>Business Process Management</li>
+                        <li>Change Management</li>
+                        <li>Strategic Planning</li>
+                        <li>Performance Management</li>
+                    </ul>
+                    <span class="expertise-level">Эксперт</span>
                 </div>
             </div>
         </section>
@@ -997,42 +1048,51 @@
         </div>
     </footer>
 
-    <!-- Подключаем чат-бот -->
-    <script src="js/chatbot.js"></script>
-
     <script>
-        // Анимация прогресс-баров при скролле
         document.addEventListener('DOMContentLoaded', function() {
-            const skillBars = document.querySelectorAll('.skill-progress');
-            
+            // Анимация появления элементов при скролле
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const skillBar = entry.target;
-                        const width = skillBar.style.width;
-                        skillBar.style.width = '0';
-                        setTimeout(() => {
-                            skillBar.style.width = width;
-                        }, 300);
-                        observer.unobserve(skillBar);
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
                     }
                 });
-            }, { threshold: 0.5 });
+            }, observerOptions);
 
-            skillBars.forEach(bar => {
-                observer.observe(bar);
+            // Наблюдаем за карточками экспертизы
+            const expertiseCards = document.querySelectorAll('.expertise-card');
+            expertiseCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
             });
 
-            // Плавная прокрутка для anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+            // Плавная прокрутка для навигации
+            const anchorLinks = document.querySelectorAll('a[href^="#"]');
+            
+            anchorLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
+                            
+                            window.scrollTo({
+                                top: offsetTop,
+                                behavior: 'smooth'
+                            });
+                        }
                     }
                 });
             });
