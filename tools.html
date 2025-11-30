@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Профессиональные инструменты для управления цепями поставок - SAP, Tableau, Python, AnyLogic, Lean Six Sigma, SQL">
     <title>Инструменты - Дмитрий Панибратский</title>
     
     <!-- Стили -->
@@ -373,67 +372,94 @@
             padding: 0 var(--space-md);
         }
 
-        /* CATEGORIES FILTER */
-        .tools-categories {
+        .tools-category {
+            margin-bottom: var(--space-xxl);
+        }
+
+        .category-header {
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: var(--space-sm);
-            margin: var(--space-xl) 0;
-            padding: 0 var(--space-md);
-        }
-
-        .category-btn {
-            padding: var(--space-sm) var(--space-lg);
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            padding: var(--space-lg);
             background: var(--card-bg);
-            border: 2px solid var(--border-light);
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-secondary);
+            border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--accent-innovation);
         }
 
-        .category-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--accent-leadership);
+        .category-header.strategy {
+            border-left-color: var(--accent-strategy);
+        }
+
+        .category-header.leadership {
+            border-left-color: var(--accent-leadership);
+        }
+
+        .category-icon {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-innovation);
+            border-radius: var(--radius-md);
+            font-size: 2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .category-icon.strategy {
+            background: var(--gradient-strategy);
+        }
+
+        .category-icon.leadership {
+            background: var(--gradient-leadership);
+        }
+
+        .category-title {
+            flex: 1;
+        }
+
+        .category-title h2 {
+            font-size: 1.8rem;
             color: var(--primary-color);
+            margin-bottom: var(--space-sm);
         }
 
-        .category-btn.active {
-            background: var(--accent-leadership);
-            color: var(--primary-color);
-            border-color: var(--accent-leadership);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+        .category-title p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        /* TOOLS GRID */
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: var(--space-xl);
-            margin: var(--space-xxl) 0;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-lg);
         }
 
         .tool-card {
             background: var(--card-bg);
+            padding: var(--space-xl);
             border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            border-top: 4px solid var(--accent-innovation);
+            transition: all 0.3s ease;
             position: relative;
-            opacity: 0;
-            transform: translateY(30px);
-            border-left: 4px solid var(--accent-innovation);
+            overflow: hidden;
         }
 
-        .tool-card.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .tool-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-innovation);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .tool-card:hover {
@@ -441,118 +467,81 @@
             box-shadow: var(--shadow-lg);
         }
 
-        .tool-header {
-            padding: var(--space-lg);
-            border-bottom: 1px solid var(--border-light);
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: var(--space-md);
+        .tool-card:hover:before {
+            transform: scaleX(1);
+        }
+
+        .tool-card.strategy {
+            border-top-color: var(--accent-strategy);
+        }
+
+        .tool-card.strategy:before {
+            background: var(--accent-strategy);
+        }
+
+        .tool-card.leadership {
+            border-top-color: var(--accent-leadership);
+        }
+
+        .tool-card.leadership:before {
+            background: var(--accent-leadership);
         }
 
         .tool-icon {
             font-size: 2.5rem;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--gradient-innovation);
-            border-radius: var(--radius-md);
-            color: white;
+            margin-bottom: var(--space-md);
+            text-align: center;
         }
 
-        .tool-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 0;
-            line-height: 1.3;
-        }
-
-        .tool-content {
-            padding: var(--space-lg);
-        }
-
-        .tool-description {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: var(--space-lg);
-            font-size: 1.05rem;
-        }
-
-        .tool-features {
-            margin: var(--space-lg) 0;
-        }
-
-        .tool-features h4 {
+        .tool-card h3 {
+            font-size: 1.4rem;
             color: var(--primary-color);
             margin-bottom: var(--space-md);
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
+            text-align: center;
+            position: relative;
+            padding-bottom: var(--space-sm);
         }
 
-        .tool-features h4:before {
-            content: '🎯';
-            font-size: 1.2rem;
+        .tool-card h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: var(--accent-innovation);
         }
 
-        .tool-features ul {
-            list-style: none;
-            padding: 0;
+        .tool-card.strategy h3:after {
+            background: var(--accent-strategy);
         }
 
-        .tool-features li {
-            padding: var(--space-sm) 0;
-            display: flex;
-            align-items: flex-start;
-            gap: var(--space-sm);
-            border-bottom: 1px solid var(--border-light);
-            transition: all 0.3s ease;
+        .tool-card.leadership h3:after {
+            background: var(--accent-leadership);
         }
 
-        .tool-features li:last-child {
-            border-bottom: none;
-        }
-
-        .tool-features li:before {
-            content: "✓";
-            color: var(--accent-innovation);
-            font-weight: bold;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .tool-features li:hover {
-            color: var(--text-primary);
-            transform: translateX(4px);
+        .tool-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-lg);
+            text-align: center;
         }
 
         .tool-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: var(--space-sm);
-            margin-top: var(--space-lg);
+            gap: var(--space-xs);
+            justify-content: center;
         }
 
         .tool-tag {
             background: var(--bg-light);
-            color: var(--text-primary);
             padding: 6px 12px;
-            border-radius: 15px;
+            border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 500;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-
-        .tool-tag:hover {
-            background: var(--accent-leadership);
-            color: var(--primary-color);
-            transform: translateY(-2px);
+            color: var(--text-secondary);
         }
 
         /* FOOTER */
@@ -562,18 +551,6 @@
             text-align: center;
             padding: var(--space-xl) 0;
             margin-top: var(--space-xxl);
-        }
-
-        /* Анимации */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Loading state */
-        .tools-grid.loading {
-            opacity: 0.7;
-            pointer-events: none;
         }
 
         /* Адаптивность */
@@ -630,14 +607,14 @@
                 padding: 15px 20px;
             }
 
-            .tools-categories {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: var(--space-sm);
+            .category-header {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-md);
             }
 
-            .category-btn {
-                flex-shrink: 0;
+            .category-icon {
+                align-self: center;
             }
         }
 
@@ -656,11 +633,6 @@
                 text-align: center;
             }
             
-            .tool-header,
-            .tool-content {
-                padding: var(--space-md);
-            }
-            
             .tools-hero h1 {
                 font-size: 1.8rem;
             }
@@ -669,14 +641,12 @@
                 font-size: 1.1rem;
             }
 
-            .tool-header {
-                flex-direction: column;
-                text-align: center;
-                gap: var(--space-sm);
+            .tool-card {
+                padding: var(--space-lg);
             }
 
-            .tool-icon {
-                align-self: center;
+            .category-header {
+                padding: var(--space-md);
             }
         }
     </style>
@@ -703,7 +673,9 @@
                             <span class="badge">Управление SCM</span>
                             <span class="badge">Цифровая трансформация</span>
                             <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Оптимизация процессов</span>
+                            <span class="badge">Управление закупками</span>
+                            <span class="badge">Технический контроль</span>
+                            <span class="badge">MBA Логистика</span>
                         </div>
                     </div>
                     
@@ -717,11 +689,11 @@
 
                 <div class="header-stats">
                     <div class="stat-card">
-                        <div class="stat-number">15+</div>
+                        <div class="stat-number">20+</div>
                         <div class="stat-label">реализованных проектов</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">7</div>
+                        <div class="stat-number">15</div>
                         <div class="stat-label">лет в SCM</div>
                     </div>
                     <div class="stat-card">
@@ -758,209 +730,350 @@
     <section class="tools-hero">
         <div class="container">
             <h1>Профессиональные инструменты</h1>
-            <p>Технологии и методики для эффективного управления цепями поставок</p>
+            <p>Современные технологии и методологии для эффективного управления цепями поставок и цифровой трансформации</p>
         </div>
     </section>
 
     <!-- Main Content -->
     <main class="container">
         <div class="tools-intro">
-            <p>В арсенале современного SCM-специалиста - широкий спектр технологий и методологий. От классических ERP-систем до передовых решений в области искусственного интеллекта и анализа данных. Каждый инструмент решает конкретные бизнес-задачи и вносит вклад в общую эффективность цепи поставок.</p>
+            <p>Использую комплексный подход, сочетая проверенные бизнес-методологии с современными технологическими решениями для достижения measurable результатов в управлении цепями поставок и цифровой трансформации бизнеса.</p>
         </div>
 
-        <!-- Categories -->
-        <section class="tools-categories" role="toolbar" aria-label="Фильтры инструментов">
-            <button class="category-btn active" data-category="all" aria-pressed="true">Все инструменты</button>
-            <button class="category-btn" data-category="analytics" aria-pressed="false">Аналитика</button>
-            <button class="category-btn" data-category="planning" aria-pressed="false">Планирование</button>
-            <button class="category-btn" data-category="optimization" aria-pressed="false">Оптимизация</button>
-            <button class="category-btn" data-category="automation" aria-pressed="false">Автоматизация</button>
+        <!-- Инструменты управления закупками -->
+        <section class="tools-category">
+            <div class="category-header strategy">
+                <div class="category-icon strategy">
+                    📦
+                </div>
+                <div class="category-title">
+                    <h2>Управление закупками и снабжением</h2>
+                    <p>Стратегические инструменты и методологии для оптимизации закупочной деятельности и материально-технического снабжения</p>
+                </div>
+            </div>
+            
+            <div class="tools-grid">
+                <div class="tool-card strategy">
+                    <div class="tool-icon">💰</div>
+                    <h3>Закупочная стратегия</h3>
+                    <p>Разработка и внедрение стратегических подходов к закупкам, категорийный менеджмент и оптимизация поставщиков</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Strategic Sourcing</span>
+                        <span class="tool-tag">Category Management</span>
+                        <span class="tool-tag">Supplier Optimization</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card strategy">
+                    <div class="tool-icon">🤝</div>
+                    <h3>Supplier Relationship Management</h3>
+                    <p>Управление взаимоотношениями с поставщиками, оценка и развитие партнеров, performance management</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">SRM</span>
+                        <span class="tool-tag">Vendor Management</span>
+                        <span class="tool-tag">Partnership Development</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card strategy">
+                    <div class="tool-icon">📊</div>
+                    <h3>Cost Analysis & Optimization</h3>
+                    <p>Анализ и оптимизация закупочных затрат, расчет TCO, ценовой бенчмаркинг и cost reduction программы</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Cost Analysis</span>
+                        <span class="tool-tag">TCO</span>
+                        <span class="tool-tag">Benchmarking</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card strategy">
+                    <div class="tool-icon">📋</div>
+                    <h3>Контрактная работа</h3>
+                    <p>Подготовка и ведение контрактов, управление договорной базой, переговоры и согласование условий</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Contract Management</span>
+                        <span class="tool-tag">Negotiation</span>
+                        <span class="tool-tag">Legal Compliance</span>
+                    </div>
+                </div>
+
+                <div class="tool-card strategy">
+                    <div class="tool-icon">📈</div>
+                    <h3>Бюджетирование закупок</h3>
+                    <p>Планирование и контроль закупочных бюджетов, управление cash flow, финансовый анализ закупок</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Budget Planning</span>
+                        <span class="tool-tag">Financial Control</span>
+                        <span class="tool-tag">Cash Flow Management</span>
+                    </div>
+                </div>
+
+                <div class="tool-card strategy">
+                    <div class="tool-icon">🔍</div>
+                    <h3>Анализ поставщиков</h3>
+                    <p>Комплексная оценка и отбор поставщиков, due diligence, мониторинг performance и рисков</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Vendor Assessment</span>
+                        <span class="tool-tag">Due Diligence</span>
+                        <span class="tool-tag">Risk Management</span>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- Tools Grid -->
-        <section class="tools-grid">
-            <!-- SAP -->
-            <div class="tool-card" data-category="planning,automation">
-                <div class="tool-header">
+        <!-- Инструменты технического контроля -->
+        <section class="tools-category">
+            <div class="category-header leadership">
+                <div class="category-icon leadership">
+                    🔧
+                </div>
+                <div class="category-title">
+                    <h2>Технический контроль автотранспорта</h2>
+                    <p>Профессиональные инструменты для контроля технического состояния АТС и обеспечения нормативного соответствия</p>
+                </div>
+            </div>
+            
+            <div class="tools-grid">
+                <div class="tool-card leadership">
+                    <div class="tool-icon">⚖️</div>
+                    <h3>Нормативные требования</h3>
+                    <p>Соответствие требованиям к техническому состоянию автотранспортных средств, контроль соблюдения стандартов</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Technical Standards</span>
+                        <span class="tool-tag">Compliance</span>
+                        <span class="tool-tag">Regulatory Requirements</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card leadership">
+                    <div class="tool-icon">🔍</div>
+                    <h3>Контрольные процедуры</h3>
+                    <p>Методики контроля технического состояния транспортных средств, проверочные листы и процедуры инспекции</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Inspection</span>
+                        <span class="tool-tag">Quality Control</span>
+                        <span class="tool-tag">Checklists</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card leadership">
+                    <div class="tool-icon">🚛</div>
+                    <h3>Эксплуатация транспорта</h3>
+                    <p>Оптимизация эксплуатационных процессов транспортных средств, управление fleet operations и техническим обслуживанием</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Fleet Management</span>
+                        <span class="tool-tag">Operations</span>
+                        <span class="tool-tag">Maintenance</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card leadership">
+                    <div class="tool-icon">📝</div>
+                    <h3>Документооборот</h3>
+                    <p>Ведение технической документации и отчетности по автотранспорту, управление records и compliance документами</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Documentation</span>
+                        <span class="tool-tag">Reporting</span>
+                        <span class="tool-tag">Records Management</span>
+                    </div>
+                </div>
+
+                <div class="tool-card leadership">
+                    <div class="tool-icon">🛡️</div>
+                    <h3>Безопасность транспорта</h3>
+                    <p>Обеспечение безопасности эксплуатации транспортных средств, управление рисками и профилактика инцидентов</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Safety Management</span>
+                        <span class="tool-tag">Risk Assessment</span>
+                        <span class="tool-tag">Incident Prevention</span>
+                    </div>
+                </div>
+
+                <div class="tool-card leadership">
                     <div class="tool-icon">📊</div>
-                    <h3 class="tool-title">SAP ERP</h3>
-                </div>
-                <div class="tool-content">
-                    <p class="tool-description">
-                        Комплексная ERP-система для управления бизнес-процессами, включая планирование ресурсов, 
-                        управление цепями поставок, финансы и человеческие ресурсы.
-                    </p>
-                    
-                    <div class="tool-features">
-                        <h4>Ключевые возможности:</h4>
-                        <ul>
-                            <li>Модуль SAP SCM для управления цепями поставок</li>
-                            <li>Планирование производства и потребностей</li>
-                            <li>Управление запасами в реальном времени</li>
-                            <li>Интеграция с системами логистики</li>
-                        </ul>
-                    </div>
-
+                    <h3>Мониторинг эффективности</h3>
+                    <p>Анализ показателей эксплуатации транспорта, оптимизация расходов и повышение эффективности fleet</p>
                     <div class="tool-tags">
-                        <span class="tool-tag">ERP</span>
-                        <span class="tool-tag">SCM</span>
-                        <span class="tool-tag">Планирование</span>
-                        <span class="tool-tag">Интеграция</span>
+                        <span class="tool-tag">Performance Monitoring</span>
+                        <span class="tool-tag">Cost Optimization</span>
+                        <span class="tool-tag">Efficiency Analysis</span>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Tableau -->
-            <div class="tool-card" data-category="analytics">
-                <div class="tool-header">
+        <!-- Инструменты SCM и логистики -->
+        <section class="tools-category">
+            <div class="category-header">
+                <div class="category-icon">
+                    🔄
+                </div>
+                <div class="category-title">
+                    <h2>SCM и логистика</h2>
+                    <p>Комплексные инструменты для управления цепями поставок, оптимизации логистики и складских операций</p>
+                </div>
+            </div>
+            
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">📦</div>
+                    <h3>WMS системы</h3>
+                    <p>Внедрение и оптимизация складских管理系统, управление inventory и складскими операциями</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Warehouse Management</span>
+                        <span class="tool-tag">Inventory Control</span>
+                        <span class="tool-tag">WMS Implementation</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">🚚</div>
+                    <h3>TMS системы</h3>
+                    <p>Управление транспортной логистикой, оптимизация маршрутов и контроль перевозок</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Transport Management</span>
+                        <span class="tool-tag">Route Optimization</span>
+                        <span class="tool-tag">TMS Implementation</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">📊</div>
+                    <h3>ERP системы (SAP)</h3>
+                    <p>Внедрение и настройка ERP-систем для управления бизнес-процессами и интеграции данных</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">SAP ERP</span>
+                        <span class="tool-tag">Business Integration</span>
+                        <span class="tool-tag">Process Automation</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card">
                     <div class="tool-icon">📈</div>
-                    <h3 class="tool-title">Tableau</h3>
-                </div>
-                <div class="tool-content">
-                    <p class="tool-description">
-                        Инструмент бизнес-аналитики для визуализации данных и создания интерактивных дашбордов 
-                        для мониторинга KPI цепей поставок.
-                    </p>
-                    
-                    <div class="tool-features">
-                        <h4>Ключевые возможности:</h4>
-                        <ul>
-                            <li>Создание интерактивных дашбордов KPI</li>
-                            <li>Визуализация цепочек поставок</li>
-                            <li>Анализ тенденций и прогнозирование</li>
-                            <li>Интеграция с различными источниками данных</li>
-                        </ul>
-                    </div>
-
+                    <h3>KPI системы</h3>
+                    <p>Разработка и внедрение систем ключевых показателей эффективности для мониторинга SCM</p>
                     <div class="tool-tags">
-                        <span class="tool-tag">BI</span>
-                        <span class="tool-tag">Визуализация</span>
-                        <span class="tool-tag">Дашборды</span>
-                        <span class="tool-tag">Аналитика</span>
+                        <span class="tool-tag">Performance Metrics</span>
+                        <span class="tool-tag">KPI Development</span>
+                        <span class="tool-tag">Dashboard Creation</span>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Python -->
-            <div class="tool-card" data-category="analytics,optimization,automation">
-                <div class="tool-header">
-                    <div class="tool-icon">🐍</div>
-                    <h3 class="tool-title">Python & Data Science</h3>
+        <!-- Инструменты цифровой трансформации -->
+        <section class="tools-category">
+            <div class="category-header strategy">
+                <div class="category-icon strategy">
+                    🚀
                 </div>
-                <div class="tool-content">
-                    <p class="tool-description">
-                        Программирование и анализ данных для создания предиктивных моделей, 
-                        автоматизации процессов и оптимизации цепей поставок.
-                    </p>
-                    
-                    <div class="tool-features">
-                        <h4>Ключевые возможности:</h4>
-                        <ul>
-                            <li>Предиктивная аналитика спроса</li>
-                            <li>Машинное обучение для оптимизации запасов</li>
-                            <li>Автоматизация отчетности и ETL процессов</li>
-                            <li>Оптимизация маршрутов и логистики</li>
-                        </ul>
-                    </div>
-
+                <div class="category-title">
+                    <h2>Цифровая трансформация</h2>
+                    <p>Современные технологии и платформы для цифровизации бизнес-процессов и создания инновационных решений</p>
+                </div>
+            </div>
+            
+            <div class="tools-grid">
+                <div class="tool-card strategy">
+                    <div class="tool-icon">🤖</div>
+                    <h3>AI & Machine Learning</h3>
+                    <p>Внедрение искусственного интеллекта и машинного обучения для прогнозирования и оптимизации процессов</p>
                     <div class="tool-tags">
-                        <span class="tool-tag">Data Science</span>
+                        <span class="tool-tag">Artificial Intelligence</span>
                         <span class="tool-tag">Machine Learning</span>
-                        <span class="tool-tag">Автоматизация</span>
-                        <span class="tool-tag">Аналитика</span>
+                        <span class="tool-tag">Predictive Analytics</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- AnyLogic -->
-            <div class="tool-card" data-category="optimization,analytics">
-                <div class="tool-header">
+                
+                <div class="tool-card strategy">
                     <div class="tool-icon">🔄</div>
-                    <h3 class="tool-title">AnyLogic</h3>
-                </div>
-                <div class="tool-content">
-                    <p class="tool-description">
-                        Платформа для имитационного моделирования и создания цифровых двойников 
-                        логистических систем и цепей поставок.
-                    </p>
-                    
-                    <div class="tool-features">
-                        <h4>Ключевые возможности:</h4>
-                        <ul>
-                            <li>Создание цифровых двойников логистики</li>
-                            <li>Имитационное моделирование процессов</li>
-                            <li>Оптимизация складских мощностей</li>
-                            <li>Анализ "что-если" сценариев</li>
-                        </ul>
-                    </div>
-
+                    <h3>Цифровые двойники</h3>
+                    <p>Создание digital twins бизнес-процессов для симуляции, анализа и оптимизации операций</p>
                     <div class="tool-tags">
-                        <span class="tool-tag">Симуляция</span>
-                        <span class="tool-tag">Digital Twin</span>
-                        <span class="tool-tag">Оптимизация</span>
-                        <span class="tool-tag">Моделирование</span>
+                        <span class="tool-tag">Digital Twins</span>
+                        <span class="tool-tag">Simulation</span>
+                        <span class="tool-tag">Process Optimization</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- Lean Six Sigma -->
-            <div class="tool-card" data-category="optimization">
-                <div class="tool-header">
+                
+                <div class="tool-card strategy">
                     <div class="tool-icon">⚡</div>
-                    <h3 class="tool-title">Lean Six Sigma</h3>
-                </div>
-                <div class="tool-content">
-                    <p class="tool-description">
-                        Методология непрерывного улучшения процессов, сочетающая инструменты бережливого производства 
-                        и шести сигм для повышения эффективности.
-                    </p>
-                    
-                    <div class="tool-features">
-                        <h4>Ключевые возможности:</h4>
-                        <ul>
-                            <li>DMAIC для улучшения процессов</li>
-                            <li>Value Stream Mapping</li>
-                            <li>Снижение вариативности процессов</li>
-                            <li>Устранение потерь и оптимизация циклов</li>
-                        </ul>
-                    </div>
-
+                    <h3>RPA автоматизация</h3>
+                    <p>Автоматизация рутинных процессов через robotic process automation, повышение эффективности</p>
                     <div class="tool-tags">
-                        <span class="tool-tag">Процессное улучшение</span>
-                        <span class="tool-tag">Бережливое производство</span>
-                        <span class="tool-tag">Качество</span>
-                        <span class="tool-tag">Эффективность</span>
+                        <span class="tool-tag">RPA</span>
+                        <span class="tool-tag">Process Automation</span>
+                        <span class="tool-tag">Efficiency Improvement</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card strategy">
+                    <div class="tool-icon">📊</div>
+                    <h3>BI платформы</h3>
+                    <p>Внедрение бизнес-аналитики и дашбордов для визуализации данных и принятия решений</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Business Intelligence</span>
+                        <span class="tool-tag">Data Visualization</span>
+                        <span class="tool-tag">Dashboard Development</span>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- SQL -->
-            <div class="tool-card" data-category="analytics,automation">
-                <div class="tool-header">
-                    <div class="tool-icon">🗃️</div>
-                    <h3 class="tool-title">SQL & Базы данных</h3>
+        <!-- Инструменты аналитики и Data Science -->
+        <section class="tools-category">
+            <div class="category-header">
+                <div class="category-icon">
+                    📈
                 </div>
-                <div class="tool-content">
-                    <p class="tool-description">
-                        Работа с реляционными базами данных для анализа больших объемов информации, 
-                        создания отчетов и автоматизации бизнес-процессов.
-                    </p>
-                    
-                    <div class="tool-features">
-                        <h4>Ключевые возможности:</h4>
-                        <ul>
-                            <li>Сложные аналитические запросы</li>
-                            <li>Автоматизация отчетности</li>
-                            <li>Интеграция данных из различных систем</li>
-                            <li>Мониторинг KPI в реальном времени</li>
-                        </ul>
-                    </div>
-
+                <div class="category-title">
+                    <h2>Аналитика и Data Science</h2>
+                    <p>Инструменты для анализа данных, прогнозирования и извлечения ценных insights для бизнеса</p>
+                </div>
+            </div>
+            
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">🐍</div>
+                    <h3>Python & Data Science</h3>
+                    <p>Использование Python для анализа данных, машинного обучения и создания аналитических решений</p>
                     <div class="tool-tags">
-                        <span class="tool-tag">Базы данных</span>
-                        <span class="tool-tag">Аналитика</span>
-                        <span class="tool-tag">Отчетность</span>
-                        <span class="tool-tag">ETL</span>
+                        <span class="tool-tag">Python</span>
+                        <span class="tool-tag">Data Analysis</span>
+                        <span class="tool-tag">Machine Learning</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">📊</div>
+                    <h3>SQL и базы данных</h3>
+                    <p>Работа с реляционными базами данных, сложные запросы и оптимизация работы с данными</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">SQL</span>
+                        <span class="tool-tag">Database Management</span>
+                        <span class="tool-tag">Data Querying</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">📉</div>
+                    <h3>Статистический анализ</h3>
+                    <p>Применение статистических методов для анализа данных, тестирования гипотез и прогнозирования</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Statistical Analysis</span>
+                        <span class="tool-tag">Hypothesis Testing</span>
+                        <span class="tool-tag">Forecasting</span>
+                    </div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">📋</div>
+                    <h3>Визуализация данных</h3>
+                    <p>Создание интерактивных дашбордов и визуализаций для представления аналитических данных</p>
+                    <div class="tool-tags">
+                        <span class="tool-tag">Data Visualization</span>
+                        <span class="tool-tag">Dashboard Design</span>
+                        <span class="tool-tag">Interactive Reports</span>
                     </div>
                 </div>
             </div>
@@ -975,44 +1088,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Фильтрация инструментов
-            const categoryButtons = document.querySelectorAll('.category-btn');
-            const toolCards = document.querySelectorAll('.tool-card');
-            const toolsGrid = document.querySelector('.tools-grid');
-
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Добавляем индикатор загрузки
-                    toolsGrid.classList.add('loading');
-                    
-                    // Убираем активный класс у всех кнопок
-                    categoryButtons.forEach(btn => {
-                        btn.classList.remove('active');
-                        btn.setAttribute('aria-pressed', 'false');
-                    });
-                    
-                    // Добавляем активный класс текущей кнопке
-                    this.classList.add('active');
-                    this.setAttribute('aria-pressed', 'true');
-                    
-                    const category = this.getAttribute('data-category');
-                    
-                    // Задержка для плавности анимации
-                    setTimeout(() => {
-                        toolCards.forEach(card => {
-                            if (category === 'all' || card.getAttribute('data-category').includes(category)) {
-                                card.style.display = 'block';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        });
-                        
-                        // Убираем индикатор загрузки
-                        toolsGrid.classList.remove('loading');
-                    }, 150);
-                });
-            });
-
             // Анимация появления элементов при скролле
             const observerOptions = {
                 threshold: 0.1,
@@ -1022,14 +1097,17 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
                     }
                 });
             }, observerOptions);
 
             // Наблюдаем за карточками инструментов
-            const cards = document.querySelectorAll('.tool-card');
-            cards.forEach(card => {
+            const toolCards = document.querySelectorAll('.tool-card');
+            toolCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
                 card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(card);
             });
