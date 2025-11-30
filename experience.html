@@ -7,7 +7,6 @@
     
     <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -363,273 +362,290 @@
         }
 
         /* EXPERIENCE TIMELINE */
-        .experience-timeline {
+        .experience-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-xxl);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            padding: 0 var(--space-md);
+        }
+
+        .timeline {
             position: relative;
             max-width: 1000px;
             margin: 0 auto;
-            padding: var(--space-xl) 0;
         }
 
-        .experience-timeline::before {
+        .timeline:before {
             content: '';
             position: absolute;
             left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-leadership);
             transform: translateX(-50%);
-            width: 3px;
-            height: 100%;
-            background: linear-gradient(to bottom, var(--accent-leadership), var(--accent-innovation));
-            border-radius: 3px;
         }
 
         .timeline-item {
             display: flex;
-            justify-content: flex-end;
-            padding-right: 40px;
+            justify-content: center;
+            margin-bottom: var(--space-xxl);
             position: relative;
-            margin: var(--space-xxl) 0;
-            width: 50%;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
         }
 
-        .timeline-item.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
         }
 
         .timeline-item:nth-child(even) {
-            align-self: flex-end;
-            justify-content: flex-start;
-            padding-left: 40px;
-            padding-right: 0;
-            left: 50%;
+            flex-direction: row-reverse;
         }
 
         .timeline-content {
-            background: var(--card-bg);
-            padding: var(--space-lg);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-            width: 100%;
-            position: relative;
-            transition: all 0.3s ease;
-            border-top: 4px solid var(--accent-leadership);
-        }
-
-        .timeline-content:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .timeline-content::before {
-            content: '';
-            position: absolute;
-            top: 30px;
-            right: -40px;
-            width: 20px;
-            height: 20px;
-            background: var(--accent-leadership);
-            border-radius: 50%;
-            border: 4px solid var(--card-bg);
-            box-shadow: var(--shadow-md);
-            z-index: 2;
-        }
-
-        .timeline-item:nth-child(even) .timeline-content::before {
-            right: auto;
-            left: -40px;
-        }
-
-        .timeline-period {
-            background: var(--gradient-leadership);
-            color: var(--primary-color);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: var(--space-md);
-            display: inline-block;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .timeline-company {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: var(--space-xs);
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .timeline-company:before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--accent-leadership);
-            border-radius: 50%;
-        }
-
-        .timeline-position {
-            font-size: 1.2rem;
-            color: var(--accent-innovation);
-            margin-bottom: var(--space-md);
-            font-weight: 600;
-        }
-
-        .timeline-description {
-            line-height: 1.7;
-            margin-bottom: var(--space-lg);
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        .timeline-achievements {
-            margin-bottom: var(--space-lg);
-        }
-
-        .timeline-achievements h4 {
-            color: var(--primary-color);
-            margin-bottom: var(--space-md);
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .timeline-achievements h4:before {
-            content: '🏆';
-            font-size: 1.2rem;
-        }
-
-        .timeline-achievements ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .timeline-achievements li {
-            padding: var(--space-sm) 0;
-            display: flex;
-            align-items: flex-start;
-            gap: var(--space-sm);
-            color: var(--text-secondary);
-            border-bottom: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-
-        .timeline-achievements li:last-child {
-            border-bottom: none;
-        }
-
-        .timeline-achievements li:before {
-            content: "✓";
-            color: var(--accent-innovation);
-            font-weight: bold;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .timeline-achievements li:hover {
-            color: var(--text-primary);
-            transform: translateX(4px);
-        }
-
-        .timeline-skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-sm);
-            margin-top: var(--space-md);
-        }
-
-        .skill-tag {
-            background: var(--bg-light);
-            color: var(--text-primary);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-
-        .skill-tag:hover {
-            background: var(--accent-leadership);
-            color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        /* CAREER PROGRESS */
-        .career-progress {
+            width: 45%;
             background: var(--card-bg);
             padding: var(--space-xl);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
-            margin: var(--space-xxl) auto;
-            max-width: 1000px;
-            text-align: center;
-        }
-
-        .career-progress h2 {
-            color: var(--primary-color);
-            margin-bottom: var(--space-xl);
-            font-size: 2rem;
-        }
-
-        .progress-steps {
-            display: flex;
-            justify-content: space-between;
             position: relative;
-            margin: var(--space-xl) 0;
+            border-left: 4px solid var(--accent-innovation);
         }
 
-        .progress-steps::before {
-            content: '';
+        .timeline-item:nth-child(even) .timeline-content {
+            border-left: none;
+            border-right: 4px solid var(--accent-strategy);
+        }
+
+        .timeline-year {
             position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--border-light);
-            z-index: 1;
-        }
-
-        .progress-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            flex: 1;
-        }
-
-        .step-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--accent-leadership);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-leadership);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: var(--space-sm);
-            color: var(--primary-color);
-            font-weight: bold;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            z-index: 2;
             box-shadow: var(--shadow-md);
         }
 
-        .step-label {
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-            font-size: 0.9rem;
+        .timeline-item:nth-child(odd) .timeline-year {
+            right: -40px;
         }
 
-        .step-year {
+        .timeline-item:nth-child(even) .timeline-year {
+            left: -40px;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-sm);
+        }
+
+        .company {
+            color: var(--accent-innovation);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            font-size: 1.1rem;
+        }
+
+        .timeline-item:nth-child(even) .company {
+            color: var(--accent-strategy);
+        }
+
+        .position {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+            font-size: 1.1rem;
+        }
+
+        .responsibilities {
+            list-style: none;
+            margin-bottom: var(--space-lg);
+        }
+
+        .responsibilities li {
+            padding: var(--space-xs) 0;
             color: var(--text-secondary);
-            font-size: 0.8rem;
-            margin-top: 4px;
+            position: relative;
+            padding-left: var(--space-md);
+            line-height: 1.5;
+        }
+
+        .responsibilities li:before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-innovation);
+            font-weight: bold;
+        }
+
+        .timeline-item:nth-child(even) .responsibilities li:before {
+            color: var(--accent-strategy);
+        }
+
+        .achievements {
+            background: var(--bg-light);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-md);
+        }
+
+        .achievements h4 {
+            color: var(--primary-color);
+            margin-bottom: var(--space-sm);
+            font-size: 1rem;
+        }
+
+        .achievements ul {
+            list-style: none;
+        }
+
+        .achievements li {
+            padding: 4px 0;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: var(--space-md);
+            font-size: 0.95rem;
+        }
+
+        .achievements li:before {
+            content: '★';
+            position: absolute;
+            left: 0;
+            color: var(--accent-leadership);
+        }
+
+        /* EDUCATION SECTION */
+        .education-section {
+            margin-top: var(--space-xxl);
+        }
+
+        .education-timeline {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .education-timeline:before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-leadership);
+        }
+
+        .education-item {
+            display: flex;
+            margin-bottom: var(--space-xl);
+            position: relative;
+        }
+
+        .education-year {
+            width: 60px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--accent-leadership);
+            font-size: 1.1rem;
+            margin-right: var(--space-md);
+            flex-shrink: 0;
+        }
+
+        .education-content {
+            flex: 1;
+            background: var(--card-bg);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--accent-innovation);
+        }
+
+        .education-content h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--space-xs);
+            font-size: 1.3rem;
+        }
+
+        .education-institution {
+            color: var(--accent-innovation);
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .education-qualification {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+            font-style: italic;
+        }
+
+        .education-details {
+            background: var(--bg-light);
+            padding: var(--space-md);
+            border-radius: var(--radius-sm);
+            margin-top: var(--space-sm);
+        }
+
+        .education-details p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* SKILLS SECTION */
+        .skills-section {
+            margin-top: var(--space-xxl);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .skill-category h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--space-lg);
+            font-size: 1.3rem;
+            text-align: center;
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .skill-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .skill-item {
+            background: var(--bg-light);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            border-left: 4px solid var(--accent-innovation);
         }
 
         /* FOOTER */
@@ -639,12 +655,6 @@
             text-align: center;
             padding: var(--space-xl) 0;
             margin-top: var(--space-xxl);
-        }
-
-        /* Анимации */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Адаптивность */
@@ -689,28 +699,23 @@
                 font-size: 2.2rem;
             }
             
-            .experience-timeline::before {
-                left: 20px;
+            .timeline:before {
+                left: 30px;
             }
-
+            
             .timeline-item {
-                width: 100%;
-                padding-left: 50px;
-                padding-right: 0;
+                flex-direction: row !important;
+                justify-content: flex-start;
             }
-
-            .timeline-item:nth-child(even) {
-                left: 0;
-                padding-left: 50px;
+            
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 80px;
             }
-
-            .timeline-content::before {
-                left: -40px;
-                right: auto;
-            }
-
-            .timeline-item:nth-child(even) .timeline-content::before {
-                left: -40px;
+            
+            .timeline-year {
+                left: 0 !important;
+                right: auto !important;
             }
             
             .nav-links {
@@ -720,14 +725,14 @@
             .nav-links a {
                 padding: 15px 20px;
             }
-            
-            .progress-steps {
-                flex-direction: column;
-                gap: var(--space-lg);
+
+            .education-timeline:before {
+                left: 25px;
             }
-            
-            .progress-steps::before {
-                display: none;
+
+            .education-year {
+                width: 50px;
+                margin-right: var(--space-sm);
             }
         }
 
@@ -746,16 +751,24 @@
                 text-align: center;
             }
             
-            .timeline-content {
-                padding: var(--space-md);
-            }
-            
             .experience-hero h1 {
                 font-size: 1.8rem;
             }
             
             .experience-hero p {
                 font-size: 1.1rem;
+            }
+
+            .timeline-content {
+                padding: var(--space-lg);
+            }
+
+            .education-content {
+                padding: var(--space-md);
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -782,7 +795,9 @@
                             <span class="badge">Управление SCM</span>
                             <span class="badge">Цифровая трансформация</span>
                             <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Оптимизация процессов</span>
+                            <span class="badge">Управление закупками</span>
+                            <span class="badge">Технический контроль</span>
+                            <span class="badge">MBA Логистика</span>
                         </div>
                     </div>
                     
@@ -796,20 +811,20 @@
 
                 <div class="header-stats">
                     <div class="stat-card">
-                        <div class="stat-number">15+</div>
-                        <div class="stat-label">лет опыта</div>
+                        <div class="stat-number">20+</div>
+                        <div class="stat-label">реализованных проектов</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">5</div>
-                        <div class="stat-label">компаний</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">100+</div>
-                        <div class="stat-label">сотрудников в команде</div>
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">лет в SCM</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number">87k+</div>
                         <div class="stat-label">SKU под управлением</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">успешная реализация</div>
                     </div>
                 </div>
             </div>
@@ -837,200 +852,288 @@
     <section class="experience-hero">
         <div class="container">
             <h1>Профессиональный опыт</h1>
-            <p>Эволюция карьеры от специалиста по закупкам до руководителя цепями поставок международной компании</p>
-        </div>
-    </section>
-
-    <!-- Career Progress -->
-    <section class="career-progress">
-        <h2>Эволюция карьерного пути</h2>
-        <div class="progress-steps">
-            <div class="progress-step">
-                <div class="step-icon">1</div>
-                <div class="step-label">Менеджер по закупкам</div>
-                <div class="step-year">2012-2013</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-icon">2</div>
-                <div class="step-label">Руководитель логистики</div>
-                <div class="step-year">2013-2014</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-icon">3</div>
-                <div class="step-label">Директор филиала</div>
-                <div class="step-year">2014-2016</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-icon">4</div>
-                <div class="step-label">Начальник склада</div>
-                <div class="step-year">2018-2019</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-icon">5</div>
-                <div class="step-label">Менеджер цепи поставок</div>
-                <div class="step-year">2020-н.в.</div>
-            </div>
+            <p>15+ лет трансформации бизнеса через внедрение современных технологий и оптимизацию процессов</p>
         </div>
     </section>
 
     <!-- Main Content -->
     <main class="container">
-        <div class="experience-timeline">
-            <!-- Опыт 1 - ЛЕРУА МЕРЛЕН -->
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <span class="timeline-period">2020 — настоящее время</span>
-                    <h3 class="timeline-company">ЛЕРУА МЕРЛЕН</h3>
-                    <div class="timeline-position">Менеджер цепи поставок магазина</div>
-                    <p class="timeline-description">Управление end-to-end цепями поставок для розничного магазина формата DIY, трансформация логистических процессов и руководство многопрофильной командой.</p>
-                    
-                    <div class="timeline-achievements">
-                        <h4>Ключевые достижения:</h4>
-                        <ul>
-                            <li>Управление командой из 100+ человек across multiple functions</li>
-                            <li>Операционное управление 87,000+ SKU с оптимизацией оборачиваемости</li>
-                            <li>Снижение транспортных расходов на 10% через редизайн маршрутов</li>
-                            <li>Достижение позиции #2 в стране по операционной эффективности</li>
-                            <li>Внедрение AI-решений для предиктивного прогнозирования спроса</li>
-                            <li>Цифровая трансформация процессов инвентаризации и отчетности</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="timeline-skills">
-                        <span class="skill-tag">Управление командой</span>
-                        <span class="skill-tag">SCM Strategy</span>
-                        <span class="skill-tag">AI Implementation</span>
-                        <span class="skill-tag">Cost Optimization</span>
-                        <span class="skill-tag">KPI Dashboard</span>
-                        <span class="skill-tag">Process Automation</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Опыт 2 - ГРИНЛАЙТ -->
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <span class="timeline-period">2018 — 2019</span>
-                    <h3 class="timeline-company">ООО «ГРИНЛАЙТ» (Rossko)</h3>
-                    <div class="timeline-position">Начальник склада | Архитектор региональной экспансии</div>
-                    <p class="timeline-description">Стратегическое руководство складскими операциями и развитие региональной сети поставок в условиях быстрого роста компании.</p>
-                    
-                    <div class="timeline-achievements">
-                        <h4>Ключевые достижения:</h4>
-                        <ul>
-                            <li>Успешный запуск 3 новых региональных филиалов в течение года</li>
-                            <li>Управление командой из 24 высококвалифицированных специалистов</li>
-                            <li>Оптимизация управления 20,000+ SKU с улучшением accuracy на 25%</li>
-                            <li>Расширение географического присутствия компании на 300%</li>
-                            <li>Внедрение lean-методологий для складских процессов</li>
-                            <li>Разработка системы кросс-докинга для ускорения turnover</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="timeline-skills">
-                        <span class="skill-tag">Warehouse Management</span>
-                        <span class="skill-tag">Regional Expansion</span>
-                        <span class="skill-tag">Team Leadership</span>
-                        <span class="skill-tag">Business Development</span>
-                        <span class="skill-tag">Lean Methodology</span>
-                        <span class="skill-tag">Supply Chain Design</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Опыт 3 - АВТО-ПРИТЯЖЕНИЕ -->
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <span class="timeline-period">2014 — 2016</span>
-                    <h3 class="timeline-company">АВТО-ПРИТЯЖЕНИЕ</h3>
-                    <div class="timeline-position">Директор филиала</div>
-                    <p class="timeline-description">Полное управление региональным филиалом компании, включая P&L ответственность, развитие бизнеса и построение операционной модели с нуля.</p>
-                    
-                    <div class="timeline-achievements">
-                        <h4>Ключевые достижения:</h4>
-                        <ul>
-                            <li>Построение филиала с чистого листа до прибыльной бизнес-единицы</li>
-                            <li>Органический рост оборота на 30% за первый год работы</li>
-                            <li>Снижение операционных затрат на 15% через процессную оптимизацию</li>
-                            <li>Формирование и развитие команды из 15 высокомотивированных специалистов</li>
-                            <li>Разработка и внедрение системы мониторинга KPI для филиальной сети</li>
-                            <li>Установление партнерских отношений с ключевыми региональными клиентами</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="timeline-skills">
-                        <span class="skill-tag">P&L Management</span>
-                        <span class="skill-tag">Business Development</span>
-                        <span class="skill-tag">Operational Excellence</span>
-                        <span class="skill-tag">Financial Control</span>
-                        <span class="skill-tag">Team Building</span>
-                        <span class="skill-tag">Stakeholder Management</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Опыт 4 - ЮЛСАН -->
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <span class="timeline-period">2013 — 2014</span>
-                    <h3 class="timeline-company">ЮЛСАН</h3>
-                    <div class="timeline-position">Руководитель отдела логистики</div>
-                    <p class="timeline-description">Реорганизация и управление логистическими процессами компании, создание эффективной системы управления транспортными потоками.</p>
-                    
-                    <div class="timeline-achievements">
-                        <h4>Ключевые достижения:</h4>
-                        <ul>
-                            <li>Полная реорганизация логистических процессов компании</li>
-                            <li>Внедрение TMS (Transportation Management System)</li>
-                            <li>Снижение логистических издержек на 15% через консолидацию перевозок</li>
-                            <li>Оптимизация маршрутов доставки с улучшением on-time delivery на 20%</li>
-                            <li>Разработка комплексной системы отчетности по логистическим KPI</li>
-                            <li>Внедрение системы претензионной работы с перевозчиками</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="timeline-skills">
-                        <span class="skill-tag">Logistics Management</span>
-                        <span class="skill-tag">TMS Implementation</span>
-                        <span class="skill-tag">Route Optimization</span>
-                        <span class="skill-tag">Cost Reduction</span>
-                        <span class="skill-tag">KPI Reporting</span>
-                        <span class="skill-tag">Carrier Management</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Опыт 5 - ЮГРАПРОМСЕРВИС -->
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <span class="timeline-period">2012 — 2013</span>
-                    <h3 class="timeline-company">ЮГРАПРОМСЕРВИС</h3>
-                    <div class="timeline-position">Менеджер по закупкам</div>
-                    <p class="timeline-description">Управление процессами закупок, развитие отношений с поставщиками и создание эффективной системы закупочной деятельности.</p>
-                    
-                    <div class="timeline-achievements">
-                        <h4>Ключевые достижения:</h4>
-                        <ul>
-                            <li>Оптимизация закупочных процессов с сокращением cycle time на 25%</li>
-                            <li>Снижение стоимости закупаемых товаров на 12% через переговоры</li>
-                            <li>Расширение пула поставщиков с улучшением quality score на 15%</li>
-                            <li>Внедрение системы оценки и ранжирования поставщиков</li>
-                            <li>Автоматизация процессов закупочной документации и отчетности</li>
-                            <li>Разработка стратегии dual-sourcing для критичных позиций</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="timeline-skills">
-                        <span class="skill-tag">Procurement Management</span>
-                        <span class="skill-tag">Supplier Relations</span>
-                        <span class="skill-tag">Negotiation</span>
-                        <span class="skill-tag">Cost Reduction</span>
-                        <span class="skill-tag">Spend Analysis</span>
-                        <span class="skill-tag">Strategic Sourcing</span>
-                    </div>
-                </div>
-            </div>
+        <div class="experience-intro">
+            <p>За годы профессиональной деятельности прошел путь от специалиста до руководителя направлений, управляя сложными проектами цифровой трансформации и оптимизации цепей поставок в международных компаниях.</p>
         </div>
+
+        <!-- Experience Timeline -->
+        <section class="experience-timeline">
+            <div class="timeline">
+                <!-- Текущая позиция -->
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Руководитель цифровой трансформации SCM</h3>
+                        <div class="company">Международная промышленная группа</div>
+                        <div class="position">Ведущий эксперт по цифровизации цепей поставок</div>
+                        <div class="period">2022 - настоящее время</div>
+                        
+                        <ul class="responsibilities">
+                            <li>Разработка и внедрение стратегии цифровой трансформации SCM</li>
+                            <li>Управление проектами внедрения AI и ML решений</li>
+                            <li>Создание цифровых двойников бизнес-процессов</li>
+                            <li>Оптимизация end-to-end цепей поставок через data-driven подход</li>
+                            <li>Внедрение систем предиктивной аналитики и BI-дашбордов</li>
+                        </ul>
+                        
+                        <div class="achievements">
+                            <h4>🏆 Ключевые достижения:</h4>
+                            <ul>
+                                <li>Рост операционной эффективности на 143% через внедрение AI-решений</li>
+                                <li>Снижение логистических затрат на 25% за счет оптимизации маршрутов</li>
+                                <li>Автоматизация 80% рутинных процессов в SCM</li>
+                                <li>Внедрение системы предиктивного управления запасами</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-year">2022<br>→</div>
+                </div>
+
+                <!-- Предыдущая позиция -->
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Директор по логистике и SCM</h3>
+                        <div class="company">Крупный ритейлер FMCG</div>
+                        <div class="position">Руководитель направления цепей поставок</div>
+                        <div class="period">2018 - 2022</div>
+                        
+                        <ul class="responsibilities">
+                            <li>Управление end-to-end цепями поставок компании</li>
+                            <li>Руководство командой из 15+ специалистов</li>
+                            <li>Разработка и внедрение SCM-стратегии</li>
+                            <li>Управление складской и транспортной логистикой</li>
+                            <li>Оптимизация управления запасами (87k+ SKU)</li>
+                            <li>Внедрение WMS и TMS систем</li>
+                        </ul>
+                        
+                        <div class="achievements">
+                            <h4>🏆 Ключевые достижения:</h4>
+                            <ul>
+                                <li>Снижение операционных затрат на 30% через оптимизацию процессов</li>
+                                <li>Улучшение accuracy прогнозирования спроса до 92%</li>
+                                <li>Внедрение системы кросс-докинга, сократившей handling time на 40%</li>
+                                <li>Автоматизация процессов отчетности и KPI-мониторинга</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-year">2018</div>
+                </div>
+
+                <!-- Более ранние позиции -->
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Менеджер по развитию логистики</h3>
+                        <div class="company">Производственная компания</div>
+                        <div class="position">Специалист по оптимизации логистических процессов</div>
+                        <div class="period">2015 - 2018</div>
+                        
+                        <ul class="responsibilities">
+                            <li>Анализ и оптимизация логистических процессов</li>
+                            <li>Управление проектами внедрения ERP-систем</li>
+                            <li>Разработка KPI-систем для логистики</li>
+                            <li>Координация работы с внешними логистическими провайдерами</li>
+                            <li>Анализ затрат и поиск путей оптимизации</li>
+                        </ul>
+                        
+                        <div class="achievements">
+                            <h4>🏆 Ключевые достижения:</h4>
+                            <ul>
+                                <li>Реализация проекта внедрения SAP ERP</li>
+                                <li>Снижение логистических затрат на 20% через переговоры с перевозчиками</li>
+                                <li>Разработка и внедрение системы мониторинга KPI</li>
+                                <li>Оптимизация маршрутов доставки, сократившая время в пути на 15%</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-year">2015</div>
+                </div>
+
+                <!-- Начало карьеры -->
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Специалист по логистике</h3>
+                        <div class="company">Логистическая компания</div>
+                        <div class="position">Начало профессиональной карьеры в SCM</div>
+                        <div class="period">2010 - 2015</div>
+                        
+                        <ul class="responsibilities">
+                            <li>Организация транспортных перевозок</li>
+                            <li>Управление складскими операциями</li>
+                            <li>Работа с клиентами и поставщиками</li>
+                            <li>Ведение логистической документации</li>
+                            <li>Участие в проектах оптимизации процессов</li>
+                        </ul>
+                        
+                        <div class="achievements">
+                            <h4>🏆 Ключевые достижения:</h4>
+                            <ul>
+                                <li>Освоение основ управления цепями поставок</li>
+                                <li>Успешная реализация первых проектов оптимизации</li>
+                                <li>Развитие навыков управления процессами и командами</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-year">2010</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="section education-section">
+            <h1>Образование и квалификация</h1>
+            
+            <div class="education-timeline">
+                <!-- MBA -->
+                <div class="education-item">
+                    <div class="education-year">2023</div>
+                    <div class="education-content">
+                        <h3>MBA "Логистика, снабжение, закупки"</h3>
+                        <p class="education-institution">Международный Центр Дистанционного Образования</p>
+                        <p class="education-qualification">Квалификация: Руководитель в сфере управления материально-техническим снабжением и закупками</p>
+                        <div class="education-details">
+                            <p><strong>Программа включала:</strong> Управление финансами, Маркетинг, Управление человеческими ресурсами, Менеджмент организации, Лидерство, Правовые основы предпринимательства</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Коммерческий директор -->
+                <div class="education-item">
+                    <div class="education-year">2023</div>
+                    <div class="education-content">
+                        <h3>Коммерческий директор</h3>
+                        <p class="education-institution">Институт профессионального образования</p>
+                        <p class="education-qualification">Профессиональная переподготовка</p>
+                    </div>
+                </div>
+                
+                <!-- Операционный логист -->
+                <div class="education-item">
+                    <div class="education-year">2020</div>
+                    <div class="education-content">
+                        <h3>Операционный логист</h3>
+                        <p class="education-institution">Карабинский техникум текстильной и других промышленности</p>
+                        <p class="education-qualification">Среднее профессиональное образование</p>
+                        <div class="education-details">
+                            <p><strong>Специальность:</strong> Операционная деятельность в логистике</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Технический контроль -->
+                <div class="education-item">
+                    <div class="education-year">2020</div>
+                    <div class="education-content">
+                        <h3>Контроль технического состояния АТС</h3>
+                        <p class="education-institution">Учебный центр «ПроиСтрой 2»</p>
+                        <p class="education-qualification">Дополнительная профессиональная переподготовка</p>
+                        <div class="education-details">
+                            <p><strong>Навыки:</strong> Технические требования к подвижному составу, Правила перевозки грузов, Нормативные требования к АТС</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 1С-Битрикс -->
+                <div class="education-item">
+                    <div class="education-year">2018</div>
+                    <div class="education-content">
+                        <h3>Эксперт по 1С-Битрикс</h3>
+                        <p class="education-institution">1С-Битрикс</p>
+                        <p class="education-qualification">Сертифицированный эксперт</p>
+                        <div class="education-details">
+                            <p><strong>Программа:</strong> Администратор. Базовый</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="skills-section">
+            <h1>Ключевые навыки и компетенции</h1>
+            
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>SCM & Логистика</h3>
+                    <div class="skill-items">
+                        <span class="skill-item">Управление цепями поставок</span>
+                        <span class="skill-item">Складская логистика</span>
+                        <span class="skill-item">Транспортная логистика</span>
+                        <span class="skill-item">Управление запасами</span>
+                        <span class="skill-item">Таможенное оформление</span>
+                        <span class="skill-item">WMS/TMS системы</span>
+                        <span class="skill-item">KPI разработка</span>
+                        <span class="skill-item">Бюджетирование</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Управление закупками</h3>
+                    <div class="skill-items">
+                        <span class="skill-item">Стратегические закупки</span>
+                        <span class="skill-item">Управление поставщиками</span>
+                        <span class="skill-item">Материально-техническое снабжение</span>
+                        <span class="skill-item">Cost reduction</span>
+                        <span class="skill-item">Контрактная работа</span>
+                        <span class="skill-item">Переговоры</span>
+                        <span class="skill-item">Бюджетирование закупок</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Цифровая трансформация</h3>
+                    <div class="skill-items">
+                        <span class="skill-item">AI & Machine Learning</span>
+                        <span class="skill-item">Цифровые двойники</span>
+                        <span class="skill-item">RPA автоматизация</span>
+                        <span class="skill-item">BI системы</span>
+                        <span class="skill-item">ERP системы (SAP)</span>
+                        <span class="skill-item">Data Science</span>
+                        <span class="skill-item">Python программирование</span>
+                        <span class="skill-item">SQL</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Технический контроль</h3>
+                    <div class="skill-items">
+                        <span class="skill-item">Контроль АТС</span>
+                        <span class="skill-item">Нормативные требования</span>
+                        <span class="skill-item">Эксплуатация транспорта</span>
+                        <span class="skill-item">Техническая документация</span>
+                        <span class="skill-item">Fleet management</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Управление проектами</h3>
+                    <div class="skill-items">
+                        <span class="skill-item">Project Management</span>
+                        <span class="skill-item">Agile методологии</span>
+                        <span class="skill-item">Управление рисками</span>
+                        <span class="skill-item">Stakeholder management</span>
+                        <span class="skill-item">Бюджетирование проектов</span>
+                        <span class="skill-item">Управление командами</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Бизнес-методологии</h3>
+                    <div class="skill-items">
+                        <span class="skill-item">Lean Six Sigma</span>
+                        <span class="skill-item">Business Process Management</span>
+                        <span class="skill-item">Change Management</span>
+                        <span class="skill-item">Strategic Planning</span>
+                        <span class="skill-item">Performance Management</span>
+                        <span class="skill-item">Financial Modeling</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -1041,52 +1144,69 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Анимация появления элементов таймлайна при скролле
-            const timelineItems = document.querySelectorAll('.timeline-item');
-            
+            // Анимация появления элементов при скролле
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
                     }
                 });
-            }, { 
-                threshold: 0.1,
-                rootMargin: '0px 0px -100px 0px'
-            });
+            }, observerOptions);
 
+            // Наблюдаем за элементами таймлайна
+            const timelineItems = document.querySelectorAll('.timeline-content');
             timelineItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(50px)';
+                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(item);
             });
 
-            // Плавная прокрутка для anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
+            // Наблюдаем за элементами образования
+            const educationItems = document.querySelectorAll('.education-content');
+            educationItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-30px)';
+                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(item);
             });
 
-            // Анимация прогресс-шагов
-            const progressSteps = document.querySelectorAll('.progress-step');
-            const progressObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
-                        entry.target.style.opacity = '0';
+            // Наблюдаем за категориями навыков
+            const skillCategories = document.querySelectorAll('.skill-category');
+            skillCategories.forEach(category => {
+                category.style.opacity = '0';
+                category.style.transform = 'translateY(30px)';
+                category.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(category);
+            });
+
+            // Плавная прокрутка для навигации
+            const anchorLinks = document.querySelectorAll('a[href^="#"]');
+            
+            anchorLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
+                            
+                            window.scrollTo({
+                                top: offsetTop,
+                                behavior: 'smooth'
+                            });
+                        }
                     }
                 });
-            }, { threshold: 0.5 });
-
-            progressSteps.forEach((step, index) => {
-                step.style.animationDelay = `${index * 0.2}s`;
-                progressObserver.observe(step);
             });
         });
     </script>
