@@ -3,13 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Эксперт по управлению цепями поставок (SCM) с 15+ летним опытом цифровой трансформации бизнеса. Специализация: AI-решения, цифровые двойники, оптимизация SCM процессов.">
+    <meta name="keywords" content="SCM, управление цепями поставок, цифровая трансформация, AI, логистика, закупки, Дмитрий Панибратский, supply chain management, digital transformation">
+    <meta name="author" content="Дмитрий Панибратский">
+    <meta property="og:title" content="Дмитрий Панибратский - Эксперт по управлению цепями поставок (SCM)">
+    <meta property="og:description" content="15+ лет опыта в цифровой трансформации цепей поставок. AI-решения, оптимизация процессов, рост эффективности на 143%">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://965910-bit.github.io/Panibratsky-Dmitry/index.html">
+    <meta property="og:image" content="https://965910-bit.github.io/Panibratsky-Dmitry/images/og-image.jpg">
+    
     <title>Дмитрий Панибратский - Эксперт по управлению цепями поставок (SCM)</title>
+    
+    <!-- Preconnect для внешних ресурсов -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     
     <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Structured Data для SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Дмитрий Панибратский",
+        "jobTitle": "Эксперт по управлению цепями поставок",
+        "description": "Эксперт с 15+ летним опытом в цифровой трансформации цепей поставок, специализируюсь на внедрении AI-решений и оптимизации бизнес-процессов",
+        "url": "https://965910-bit.github.io/Panibratsky-Dmitry/index.html",
+        "sameAs": [
+            "https://linkedin.com/in/dmitry-panibratsky",
+            "https://github.com/965910-bit"
+        ],
+        "knowsAbout": [
+            "Supply Chain Management",
+            "Digital Transformation",
+            "Artificial Intelligence",
+            "Logistics",
+            "Procurement Management",
+            "Business Process Optimization"
+        ],
+        "experienceYears": "15",
+        "hasOccupation": {
+            "@type": "Occupation",
+            "name": "SCM Director",
+            "description": "Руководитель цифровой трансформации цепей поставок"
+        }
+    }
+    </script>
     
     <style>
         /* ДИЗАЙН-СИСТЕМА - Основа для всех страниц */
@@ -26,10 +77,10 @@
             --accent-leadership: #D4AF37;
             --accent-expert: #0F1C3F;
             
-            /* Нейтральные цвета */
+            /* Нейтральные цвета с улучшенным контрастом */
             --text-primary: #0F1C3F;
-            --text-secondary: #5D6B8C;
-            --text-light: #8A96B2;
+            --text-secondary: #4A5568;
+            --text-light: #6B7280;
             --bg-light: #F8F9FA;
             --card-bg: #FFFFFF;
             --border-light: #E8ECF2;
@@ -57,6 +108,10 @@
             --space-lg: 32px;
             --space-xl: 48px;
             --space-xxl: 64px;
+            
+            /* Анимации */
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.2s ease;
         }
 
         /* Базовые стили */
@@ -66,11 +121,16 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             color: var(--text-primary);
             background-color: var(--bg-light);
+            overflow-x: hidden;
         }
 
         .container {
@@ -79,9 +139,44 @@
             padding: 0 var(--space-md);
         }
 
-        /* Секции */
+        /* Skip link для доступности */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent-leadership);
+            color: var(--primary-color);
+            padding: var(--space-sm);
+            text-decoration: none;
+            font-weight: 600;
+            z-index: 9999;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Секции с анимацией появления */
         .section {
             padding: var(--space-xl) 0;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s ease-out forwards;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .section h2 {
@@ -112,6 +207,9 @@
             padding: var(--space-xl) 0;
             position: relative;
             overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
         }
 
         .header:before {
@@ -143,6 +241,7 @@
         .header-content {
             position: relative;
             z-index: 2;
+            width: 100%;
         }
 
         .header-photos {
@@ -167,7 +266,7 @@
             overflow: hidden;
             border: 4px solid var(--accent-leadership);
             box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
         }
 
         .photo-left-container:hover,
@@ -202,7 +301,7 @@
             font-size: 1.3rem;
             font-weight: 400;
             margin-bottom: var(--space-lg);
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
             line-height: 1.5;
         }
 
@@ -221,7 +320,8 @@
             border-radius: 25px;
             font-size: 0.95rem;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
+            cursor: default;
         }
 
         .badge:hover {
@@ -233,6 +333,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: var(--space-md);
+            margin-top: var(--space-xl);
         }
 
         .stat-card {
@@ -242,7 +343,7 @@
             border-radius: var(--radius-md);
             padding: var(--space-md);
             text-align: center;
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
         }
 
         .stat-card:hover {
@@ -292,18 +393,60 @@
             text-decoration: none;
             color: var(--text-primary);
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: var(--transition-fast);
             border-bottom: 3px solid transparent;
+            position: relative;
         }
 
         .nav-links a:hover,
         .nav-links a.active {
             color: var(--primary-color);
-            border-bottom-color: var(--accent-leadership);
             background: rgba(212, 175, 55, 0.05);
         }
 
-        /* Остальные стили остаются без изменений */
+        .nav-links a.active:after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-leadership);
+        }
+
+        /* Кнопка "Наверх" */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-leadership);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-smooth);
+            z-index: 1000;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .back-to-top:focus {
+            outline: 3px solid var(--accent-leadership);
+            outline-offset: 2px;
+        }
+
+        /* Остальные стили */
         .welcome-section {
             background: var(--card-bg);
             position: relative;
@@ -342,9 +485,10 @@
             background: var(--card-bg);
             border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
             font-weight: 500;
             color: var(--text-secondary);
+            font-size: 1rem;
         }
 
         .audience-btn.active,
@@ -354,6 +498,11 @@
             color: var(--primary-color);
             transform: translateY(-2px);
             box-shadow: var(--shadow-sm);
+        }
+
+        .audience-btn:focus {
+            outline: 3px solid var(--accent-leadership);
+            outline-offset: 2px;
         }
 
         /* Welcome Messages */
@@ -393,6 +542,11 @@
             font-size: 3rem;
             margin: 0 auto var(--space-md);
             box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
+        }
+
+        .icon-container:hover {
+            transform: rotate(10deg) scale(1.05);
         }
 
         .welcome-icon h3 {
@@ -427,6 +581,13 @@
             background: var(--bg-light);
             border-radius: var(--radius-sm);
             border-left: 4px solid var(--accent-innovation);
+            transition: var(--transition-fast);
+        }
+
+        .skill-item:hover {
+            transform: translateX(5px);
+            background: var(--card-bg);
+            box-shadow: var(--shadow-sm);
         }
 
         .skill-item .check {
@@ -448,6 +609,12 @@
             background: var(--bg-light);
             border-radius: var(--radius-md);
             border-top: 4px solid var(--accent-leadership);
+            transition: var(--transition-smooth);
+        }
+
+        .stat:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
         }
 
         .stat-number {
@@ -477,6 +644,11 @@
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 500;
+            transition: var(--transition-fast);
+        }
+
+        .tag:hover {
+            transform: scale(1.05);
         }
 
         /* Quick Navigation */
@@ -499,15 +671,17 @@
             text-decoration: none;
             color: var(--text-primary);
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
             border: 2px solid var(--border-light);
             text-align: center;
         }
 
-        .quick-nav a:hover {
+        .quick-nav a:hover,
+        .quick-nav a:focus {
             border-color: var(--accent-leadership);
             transform: translateY(-4px);
             box-shadow: var(--shadow-md);
+            outline: none;
         }
 
         /* ABOUT SECTION */
@@ -569,12 +743,17 @@
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
             border-top: 4px solid var(--accent-innovation);
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
         }
 
         .competency-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-md);
+        }
+
+        .competency-card:focus-within {
+            outline: 3px solid var(--accent-innovation);
+            outline-offset: 2px;
         }
 
         .competency-card strong {
@@ -622,7 +801,7 @@
             background: var(--card-bg);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
             border: 1px solid var(--border-light);
         }
 
@@ -663,7 +842,7 @@
             background: var(--card-bg);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
             border: 1px solid var(--border-light);
         }
 
@@ -714,7 +893,7 @@
             text-align: center;
             box-shadow: var(--shadow-sm);
             border-left: 4px solid var(--accent-leadership);
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
         }
 
         .highlight-card:hover {
@@ -743,6 +922,10 @@
             margin-top: var(--space-xxl);
         }
 
+        .footer p {
+            opacity: 0.9;
+        }
+
         /* Анимации */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -765,6 +948,10 @@
             .header-text-center h1 {
                 font-size: 2.4rem;
             }
+            
+            .section h2 {
+                font-size: 2rem;
+            }
         }
 
         @media (max-width: 768px) {
@@ -776,7 +963,7 @@
             
             .header-photo-left,
             .header-photo-right {
-                display: none; /* Скрываем боковые фото на мобильных */
+                display: none;
             }
             
             .header-text-center h1 {
@@ -798,10 +985,12 @@
             
             .nav-links {
                 flex-wrap: wrap;
+                justify-content: center;
             }
             
             .nav-links a {
                 padding: 15px 20px;
+                font-size: 0.9rem;
             }
             
             .info-item {
@@ -811,16 +1000,29 @@
             
             .info-item strong {
                 min-width: auto;
+                font-size: 1rem;
             }
             
             .quick-nav {
                 grid-template-columns: 1fr;
             }
+            
+            .section {
+                padding: var(--space-lg) 0;
+            }
+            
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
             .header-stats {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .stats-grid {
@@ -835,19 +1037,84 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
+            .inspiration-grid {
+                grid-template-columns: 1fr;
+            }
+            
             .contact-badges {
                 flex-direction: column;
                 align-items: center;
             }
             
             .badge {
-                width: 200px;
+                width: 100%;
+                max-width: 280px;
                 text-align: center;
+            }
+            
+            .audience-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .audience-btn {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .header-text-center h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .navigation,
+            .audience-selector,
+            .quick-nav,
+            .back-to-top {
+                display: none !important;
+            }
+            
+            .header {
+                min-height: auto;
+                padding: var(--space-lg) 0;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+                opacity: 1;
+                transform: none;
+                animation: none;
+            }
+            
+            .container {
+                max-width: 100%;
+            }
+            
+            a {
+                text-decoration: none;
+                color: var(--text-primary);
+            }
+            
+            .badge,
+            .tag {
+                border: 1px solid var(--border-light);
+                background: var(--bg-light) !important;
+                color: var(--text-primary) !important;
+                -webkit-print-color-adjust: exact;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Skip link для доступности -->
+    <a href="#main-content" class="skip-link">Перейти к основному содержанию</a>
+    
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -856,7 +1123,15 @@
                     <!-- Левое фото -->
                     <div class="header-photo-left">
                         <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                            <picture>
+                                <source srcset="images/photo-left.webp" type="image/webp">
+                                <img src="images/photo-left.jpg" 
+                                     alt="Дмитрий Панибратский на бизнес-конференции" 
+                                     loading="lazy" 
+                                     width="200" 
+                                     height="200"
+                                     onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                            </picture>
                         </div>
                     </div>
                     
@@ -866,37 +1141,45 @@
                         <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
                         
                         <div class="contact-badges">
-                            <span class="badge">Управление SCM</span>
-                            <span class="badge">Цифровая трансформация</span>
-                            <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Управление закупками</span>
-                            <span class="badge">Технический контроль</span>
-                            <span class="badge">MBA Логистика</span>
+                            <span class="badge" role="note">Управление SCM</span>
+                            <span class="badge" role="note">Цифровая трансформация</span>
+                            <span class="badge" role="note">AI & Аналитика</span>
+                            <span class="badge" role="note">Управление закупками</span>
+                            <span class="badge" role="note">Технический контроль</span>
+                            <span class="badge" role="note">MBA Логистика</span>
                         </div>
                     </div>
                     
                     <!-- Правое фото -->
                     <div class="header-photo-right">
                         <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                            <picture>
+                                <source srcset="images/photo-right.webp" type="image/webp">
+                                <img src="images/photo-right.jpg" 
+                                     alt="Дмитрий Панибратский - работа с аналитикой" 
+                                     loading="lazy" 
+                                     width="200" 
+                                     height="200"
+                                     onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'">
+                            </picture>
                         </div>
                     </div>
                 </div>
 
                 <div class="header-stats">
-                    <div class="stat-card">
+                    <div class="stat-card" role="article">
                         <div class="stat-number">15+</div>
                         <div class="stat-label">лет в управлении SCM</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" role="article">
                         <div class="stat-number">143%</div>
                         <div class="stat-label">рост эффективности</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" role="article">
                         <div class="stat-number">25%</div>
                         <div class="stat-label">снижение затрат</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" role="article">
                         <div class="stat-number">87k+</div>
                         <div class="stat-label">SKU под управлением</div>
                     </div>
@@ -906,42 +1189,67 @@
     </header>
 
     <!-- Navigation -->
-    <nav class="navigation">
+    <nav class="navigation" aria-label="Основная навигация">
         <div class="container">
             <ul class="nav-links">
-                <li><a href="index.html" class="active">Главная</a></li>
-                <li><a href="expertise.html">Экспертиза</a></li>
+                <li><a href="#welcome" class="active" aria-current="page">Главная</a></li>
+                <li><a href="#about">Профиль</a></li>
                 <li><a href="experience.html">Опыт</a></li>
                 <li><a href="projects.html">Проекты</a></li>
                 <li><a href="tools.html">Инструменты</a></li>
-                <li><a href="calculators.html">Калькуляторы</a></li>
-                <li><a href="certificates.html">Сертификаты</a></li>
-                <li><a href="wiki.html">Wiki</a></li>
                 <li><a href="contact.html">Контакты</a></li>
             </ul>
         </div>
     </nav>
 
     <!-- Welcome Section -->
-    <section id="welcome" class="section welcome-section">
+    <section id="welcome" class="section welcome-section" aria-labelledby="welcome-heading">
         <div class="container">
             <div class="welcome-header">
-                <h1>Добро пожаловать на мою профессиональную страницу!</h1>
+                <h1 id="welcome-heading">Добро пожаловать на мою профессиональную страницу!</h1>
                 <p>Здесь вы найдете комплексную информацию о моем опыте в управлении цепями поставок и цифровой трансформации бизнеса</p>
             </div>
 
             <!-- Audience Selector -->
-            <div class="audience-selector">
-                <button class="audience-btn active" data-audience="all">👋 Всем</button>
-                <button class="audience-btn" data-audience="recruiters">💼 Рекрутерам</button>
-                <button class="audience-btn" data-audience="colleagues">🤝 Коллегам</button>
-                <button class="audience-btn" data-audience="partners">🚀 Партнерам</button>
+            <div class="audience-selector" role="tablist" aria-label="Выбор аудитории">
+                <button class="audience-btn active" 
+                        data-audience="all" 
+                        role="tab" 
+                        aria-selected="true" 
+                        aria-controls="all-panel">
+                    👋 Всем
+                </button>
+                <button class="audience-btn" 
+                        data-audience="recruiters" 
+                        role="tab" 
+                        aria-selected="false" 
+                        aria-controls="recruiters-panel">
+                    💼 Рекрутерам
+                </button>
+                <button class="audience-btn" 
+                        data-audience="colleagues" 
+                        role="tab" 
+                        aria-selected="false" 
+                        aria-controls="colleagues-panel">
+                    🤝 Коллегам
+                </button>
+                <button class="audience-btn" 
+                        data-audience="partners" 
+                        role="tab" 
+                        aria-selected="false" 
+                        aria-controls="partners-panel">
+                    🚀 Партнерам
+                </button>
             </div>
 
             <!-- Welcome Messages -->
             <div class="welcome-messages">
                 <!-- Default Welcome -->
-                <div class="welcome-message active" data-audience="all">
+                <div class="welcome-message active" 
+                     id="all-panel" 
+                     role="tabpanel" 
+                     aria-labelledby="all-tab" 
+                     data-audience="all">
                     <div class="welcome-grid">
                         <div class="welcome-icon">
                             <div class="icon-container">🎯</div>
@@ -973,7 +1281,11 @@
                 </div>
 
                 <!-- For Recruiters -->
-                <div class="welcome-message" data-audience="recruiters">
+                <div class="welcome-message" 
+                     id="recruiters-panel" 
+                     role="tabpanel" 
+                     aria-labelledby="recruiters-tab" 
+                     data-audience="recruiters">
                     <div class="welcome-grid">
                         <div class="welcome-icon">
                             <div class="icon-container">💼</div>
@@ -1018,7 +1330,11 @@
                 </div>
 
                 <!-- For Colleagues -->
-                <div class="welcome-message" data-audience="colleagues">
+                <div class="welcome-message" 
+                     id="colleagues-panel" 
+                     role="tabpanel" 
+                     aria-labelledby="colleagues-tab" 
+                     data-audience="colleagues">
                     <div class="welcome-grid">
                         <div class="welcome-icon">
                             <div class="icon-container">🤝</div>
@@ -1047,7 +1363,11 @@
                 </div>
 
                 <!-- For Partners -->
-                <div class="welcome-message" data-audience="partners">
+                <div class="welcome-message" 
+                     id="partners-panel" 
+                     role="tabpanel" 
+                     aria-labelledby="partners-tab" 
+                     data-audience="partners">
                     <div class="welcome-grid">
                         <div class="welcome-icon">
                             <div class="icon-container">🚀</div>
@@ -1077,7 +1397,7 @@
             </div>
 
             <!-- Quick Navigation -->
-            <div class="quick-nav">
+            <div class="quick-nav" aria-label="Быстрая навигация">
                 <a href="#about">📊 Мой профиль</a>
                 <a href="experience.html">💼 Опыт работы</a>
                 <a href="projects.html">🎯 Проекты</a>
@@ -1087,15 +1407,15 @@
     </section>
 
     <!-- Main Content -->
-    <main class="container">
+    <main id="main-content" class="container">
         <!-- About Section -->
-        <section id="about" class="section">
-            <h2>Профессиональный профиль</h2>
+        <section id="about" class="section" aria-labelledby="about-heading">
+            <h2 id="about-heading">Профессиональный профиль</h2>
             <div class="about-grid">
                 <div class="about-text">
                     <p class="lead"><strong>Эксперт по управлению цепями поставок с 15+ летним опытом цифровой трансформации бизнеса.</strong> Специализируюсь на внедрении AI-решений, создании цифровых двойников и оптимизации end-to-end SCM процессов для международных компаний.</p>
                     
-                    <div class="personal-info">
+                    <div class="personal-info" role="article">
                         <div class="info-item">
                             <strong>🎯 Ключевая экспертиза:</strong>
                             <span>Цифровая трансформация SCM | AI & Предиктивная аналитика | Управление закупками | Оптимизация бизнес-процессов | Lean Six Sigma</span>
@@ -1118,7 +1438,7 @@
                     <div class="competencies">
                         <h4>💼 Профессиональные компетенции</h4>
                         <div class="competencies-grid">
-                            <div class="competency-card">
+                            <div class="competency-card" role="article">
                                 <strong>SCM & Логистика</strong>
                                 <ul class="competency-list">
                                     <li>End-to-end управление цепями поставок</li>
@@ -1128,7 +1448,7 @@
                                     <li>Таможенное оформление</li>
                                 </ul>
                             </div>
-                            <div class="competency-card">
+                            <div class="competency-card" role="article">
                                 <strong>Цифровая трансформация</strong>
                                 <ul class="competency-list">
                                     <li>Внедрение AI и ML решений</li>
@@ -1138,7 +1458,7 @@
                                     <li>ERP системы (SAP)</li>
                                 </ul>
                             </div>
-                            <div class="competency-card">
+                            <div class="competency-card" role="article">
                                 <strong>Аналитика и оптимизация</strong>
                                 <ul class="competency-list">
                                     <li>Предиктивная аналитика</li>
@@ -1148,7 +1468,7 @@
                                     <li>KPI разработка и мониторинг</li>
                                 </ul>
                             </div>
-                            <div class="competency-card">
+                            <div class="competency-card" role="article">
                                 <strong>Управление закупками и снабжением</strong>
                                 <ul class="competency-list">
                                     <li>Стратегические закупки</li>
@@ -1158,7 +1478,7 @@
                                     <li>Бюджетирование закупок</li>
                                 </ul>
                             </div>
-                            <div class="competency-card">
+                            <div class="competency-card" role="article">
                                 <strong>Технический контроль</strong>
                                 <ul class="competency-list">
                                     <li>Контроль технического состояния АТС</li>
@@ -1175,32 +1495,32 @@
                     <div class="leadership">
                         <h4>🌟 Лидерские компетенции</h4>
                         <div class="leadership-grid">
-                            <div class="leadership-card">
+                            <div class="leadership-card" role="article">
                                 <div class="leadership-icon">👥</div>
                                 <strong>Управление командами</strong>
                                 <div>Руководство до 15+ специалистов</div>
                             </div>
-                            <div class="leadership-card">
+                            <div class="leadership-card" role="article">
                                 <div class="leadership-icon">🎯</div>
                                 <strong>Стратегическое мышление</strong>
                                 <div>Долгосрочное планирование</div>
                             </div>
-                            <div class="leadership-card">
+                            <div class="leadership-card" role="article">
                                 <div class="leadership-icon">🔄</div>
                                 <strong>Управление изменениями</strong>
                                 <div>Трансформация процессов</div>
                             </div>
-                            <div class="leadership-card">
+                            <div class="leadership-card" role="article">
                                 <div class="leadership-icon">💬</div>
                                 <strong>Коммуникация</strong>
                                 <div>Кросс-функциональное взаимодействие</div>
                             </div>
-                            <div class="leadership-card">
+                            <div class="leadership-card" role="article">
                                 <div class="leadership-icon">📈</div>
                                 <strong>Принятие решений</strong>
                                 <div>Data-driven подход</div>
                             </div>
-                            <div class="leadership-card">
+                            <div class="leadership-card" role="article">
                                 <div class="leadership-icon">⚡</div>
                                 <strong>Решение проблем</strong>
                                 <div>Критическое мышление</div>
@@ -1212,27 +1532,27 @@
                     <div class="inspiration">
                         <h4>📚 Профессиональные ориентиры и увлечения</h4>
                         <div class="inspiration-grid">
-                            <div class="inspiration-card">
+                            <div class="inspiration-card" role="article">
                                 <div class="inspiration-icon">🎭</div>
                                 <strong>Ицхак Адизес</strong>
                                 <div>Методология управления изменениями и корпоративная трансформация</div>
                             </div>
-                            <div class="inspiration-card">
+                            <div class="inspiration-card" role="article">
                                 <div class="inspiration-icon">🚀</div>
                                 <strong>Максим Батырев</strong>
                                 <div>Комбат-менеджмент и эффективность бизнес-процессов</div>
                             </div>
-                            <div class="inspiration-card">
+                            <div class="inspiration-card" role="article">
                                 <div class="inspiration-icon">🎯</div>
                                 <strong>Игорь Манн</strong>
                                 <div>Маркетинг, продажи и практический подход к бизнесу</div>
                             </div>
-                            <div class="inspiration-card">
+                            <div class="inspiration-card" role="article">
                                 <div class="inspiration-icon">📊</div>
                                 <strong>Евгений Горянский</strong>
                                 <div>Системное мышление и управление по целям</div>
                             </div>
-                            <div class="inspiration-card">
+                            <div class="inspiration-card" role="article">
                                 <div class="inspiration-icon">⚡</div>
                                 <strong>Владимир Сидоренко</strong>
                                 <div>Performia - оценка и развитие персонала</div>
@@ -1242,34 +1562,35 @@
                     </div>
                 </div>
                 <div class="about-highlights">
-                    <div class="highlight-card">
+                    <div class="highlight-card" role="article">
                         <h3>15+ лет</h3>
                         <p>в управлении цепями поставок</p>
                     </div>
-                    <div class="highlight-card">
+                    <div class="highlight-card" role="article">
                         <h3>87k+ SKU</h3>
                         <p>под операционным управлением</p>
                     </div>
-                    <div class="highlight-card">
+                    <div class="highlight-card" role="article">
                         <h3>143%</h3>
                         <p>рост операционной эффективности</p>
                     </div>
-                    <div class="highlight-card">
+                    <div class="highlight-card" role="article">
                         <h3>25%</h3>
                         <p>снижение логистических затрат</p>
                     </div>
-                    <div class="highlight-card">
+                    <div class="highlight-card" role="article">
                         <h3>15+</h3>
-                        <p>успешных цифровых проектов</div>
-                    <div class="highlight-card">
+                        <p>успешных цифровых проектов</p>
+                    </div>
+                    <div class="highlight-card" role="article">
                         <h3>6+</h3>
                         <p>внедренных AI-решений</p>
                     </div>
-                    <div class="highlight-card">
+                    <div class="highlight-card" role="article">
                         <h3>5+</h3>
                         <p>бизнес-методологий в работе</p>
                     </div>
-                    <div class="highlight-card">
+                    <div class="highlight-card" role="article">
                         <h3>100%</h3>
                         <p>проектов в срок и бюджет</p>
                     </div>
@@ -1278,13 +1599,19 @@
         </section>
     </main>
 
-    <footer class="footer">
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
         <div class="container">
             <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
 
-    <script src="js/chatbot.js"></script>
+    <!-- Кнопка "Наверх" -->
+    <button id="backToTop" class="back-to-top" aria-label="Вернуться наверх">
+        ↑
+    </button>
+
+    <!-- JavaScript -->
     <script>
         // Audience Selection
         document.addEventListener('DOMContentLoaded', function() {
@@ -1296,10 +1623,12 @@
                     // Remove active class from all buttons
                     audienceButtons.forEach(btn => {
                         btn.classList.remove('active');
+                        btn.setAttribute('aria-selected', 'false');
                     });
                     
                     // Add active class to clicked button
                     this.classList.add('active');
+                    this.setAttribute('aria-selected', 'true');
                     
                     // Hide all messages
                     welcomeMessages.forEach(message => {
@@ -1313,22 +1642,164 @@
                         targetMessage.classList.add('active');
                     }
                 });
+
+                // Keyboard navigation for audience buttons
+                button.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
             });
 
             // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') return;
+                    
                     e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
+                    const target = document.querySelector(href);
                     if (target) {
                         target.scrollIntoView({
                             behavior: 'smooth',
                             block: 'start'
                         });
+                        
+                        // Update URL without page reload
+                        history.pushState(null, null, href);
+                        
+                        // Update active navigation
+                        updateActiveNav(href);
                     }
                 });
             });
+
+            // Update active navigation on scroll
+            function updateActiveNav(targetId = null) {
+                const sections = document.querySelectorAll('.section');
+                const navLinks = document.querySelectorAll('.nav-links a');
+                
+                let current = targetId ? targetId.replace('#', '') : '';
+                
+                if (!targetId) {
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop - 100;
+                        const sectionHeight = section.clientHeight;
+                        if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                            current = section.getAttribute('id');
+                        }
+                    });
+                }
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    link.removeAttribute('aria-current');
+                    
+                    const href = link.getAttribute('href');
+                    if (href === `#${current}` || (current === 'welcome' && href === 'index.html')) {
+                        link.classList.add('active');
+                        link.setAttribute('aria-current', 'page');
+                    }
+                });
+            }
+
+            // Back to Top button
+            const backToTopBtn = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', () => {
+                // Show/hide back to top button
+                backToTopBtn.style.display = window.scrollY > 500 ? 'flex' : 'none';
+                
+                // Update active navigation
+                updateActiveNav();
+            });
+
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                updateActiveNav('#welcome');
+            });
+
+            // Keyboard accessibility for back to top
+            backToTopBtn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+
+            // Initialize animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe sections for animation
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.animationPlayState = 'paused';
+                observer.observe(section);
+            });
+
+            // Preload images when in viewport
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const src = img.getAttribute('data-src');
+                        if (src) {
+                            img.src = src;
+                            img.removeAttribute('data-src');
+                        }
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            // Lazy load images
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+
+            // Initialize with welcome section active
+            updateActiveNav('#welcome');
         });
+
+        // Print functionality
+        window.addEventListener('beforeprint', () => {
+            document.body.classList.add('printing');
+        });
+
+        window.addEventListener('afterprint', () => {
+            document.body.classList.remove('printing');
+        });
+
+        // Service Worker registration (опционально)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+    
+    <!-- Google Analytics (опционально) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
     </script>
 </body>
 </html>
