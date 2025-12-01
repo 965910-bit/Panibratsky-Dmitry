@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Эксперт по управлению цепями поставок (SCM) с 15+ летним опытом цифровой трансформации бизнеса. Специализация: AI-решения, цифровые двойники, оптимизация SCM процессов.">
+    <meta name="keywords" content="SCM, управление цепями поставок, цифровая трансформация, AI, логистика, закупки, Дмитрий Панибратский, supply chain management, digital transformation">
     <title>Дмитрий Панибратский - Эксперт по управлению цепями поставок (SCM)</title>
     
     <!-- Стили -->
@@ -179,12 +181,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .photo-left-container:hover img,
-        .photo-right-container:hover img {
-            transform: scale(1.1);
         }
 
         .header-text-center {
@@ -307,7 +303,35 @@
             background: rgba(212, 175, 55, 0.05);
         }
 
-        /* Остальные стили остаются без изменений */
+        /* Кнопка "Наверх" */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-leadership);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Остальные стили */
         .welcome-section {
             background: var(--card-bg);
             position: relative;
@@ -349,6 +373,7 @@
             transition: all 0.3s ease;
             font-weight: 500;
             color: var(--text-secondary);
+            font-size: 1rem;
         }
 
         .audience-btn.active,
@@ -780,7 +805,7 @@
             
             .header-photo-left,
             .header-photo-right {
-                display: none;
+                display: none; /* Скрываем боковые фото на мобильных */
             }
             
             .header-text-center h1 {
@@ -820,6 +845,14 @@
             .quick-nav {
                 grid-template-columns: 1fr;
             }
+            
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -847,6 +880,20 @@
             .badge {
                 width: 200px;
                 text-align: center;
+            }
+            
+            .audience-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .audience-btn {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .section h2 {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -1272,7 +1319,8 @@
                     </div>
                     <div class="highlight-card">
                         <h3>15+</h3>
-                        <p>успешных цифровых проектов</div>
+                        <p>успешных цифровых проектов</p>
+                    </div>
                     <div class="highlight-card">
                         <h3>6+</h3>
                         <p>внедренных AI-решений</p>
@@ -1295,6 +1343,11 @@
             <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
         </div>
     </footer>
+
+    <!-- Кнопка "Наверх" -->
+    <button id="backToTop" class="back-to-top" aria-label="Вернуться наверх">
+        ↑
+    </button>
 
     <script>
         // Audience Selection
@@ -1336,6 +1389,49 @@
                             behavior: 'smooth',
                             block: 'start'
                         });
+                    }
+                });
+            });
+
+            // Back to Top button functionality
+            const backToTopBtn = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Highlight active navigation link on scroll
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (scrollY >= (sectionTop - 150)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}` || 
+                        (current === '' && link.getAttribute('href') === 'index.html')) {
+                        link.classList.add('active');
                     }
                 });
             });
