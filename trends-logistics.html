@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренды логистики — ваш ключ к лидерству | Дмитрий Панибратский</title>
+    
+    <!-- Стили -->
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Используем ту же дизайн-систему */
+        :root {
+            --primary-dark: #0A142C;
+            --primary-color: #0F1C3F;
+            --primary-light: #1E2A4A;
+            --primary-lighter: #2A3655;
+            --accent-innovation: #009B77;
+            --accent-strategy: #8B5FBF;
+            --accent-leadership: #D4AF37;
+            --accent-danger: #E74C3C;
+            --accent-success: #2ECC71;
+            --text-primary: #0F1C3F;
+            --text-secondary: #5D6B8C;
+            --text-light: #8A96B2;
+            --bg-light: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --border-light: #E8ECF2;
+            --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            --gradient-innovation: linear-gradient(135deg, var(--accent-innovation) 0%, #00C9A7 100%);
+            --gradient-strategy: linear-gradient(135deg, var(--accent-strategy) 0%, #9D71DE 100%);
+            --gradient-leadership: linear-gradient(135deg, var(--accent-leadership) 0%, #E8C352 100%);
+            --gradient-danger: linear-gradient(135deg, #E74C3C 0%, #FF6B6B 100%);
+            --shadow-sm: 0 2px 8px rgba(15, 28, 63, 0.08);
+            --shadow-md: 0 4px 16px rgba(15, 28, 63, 0.12);
+            --shadow-lg: 0 8px 32px rgba(15, 28, 63, 0.16);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            --space-xxl: 64px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        /* Header */
+        .trends-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-xxl) 0 var(--space-xl);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trends-header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-innovation);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.1;
+        }
+
+        .trends-header:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background: var(--accent-strategy);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.1;
+        }
+
+        .trends-header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .trends-header h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: var(--space-md);
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8ECF2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .trends-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: var(--space-lg);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .current-date {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            margin: var(--space-lg) auto 0;
+            display: inline-block;
+        }
+
+        /* Navigation */
+        .navigation {
+            background: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--accent-leadership);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .nav-links li {
+            margin: 0;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 20px 24px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--accent-leadership);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* Year Navigation */
+        .year-navigation {
+            background: var(--card-bg);
+            padding: var(--space-md) 0;
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 60px;
+            z-index: 999;
+        }
+
+        .year-tabs {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .year-tab {
+            padding: 12px 28px;
+            border: 2px solid var(--border-light);
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .year-tab:hover {
+            border-color: var(--accent-innovation);
+            transform: translateY(-2px);
+        }
+
+        .year-tab.active {
+            background: var(--accent-leadership);
+            border-color: var(--accent-leadership);
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Main Content */
+        .trends-content {
+            padding: var(--space-xl) 0;
+        }
+
+        /* Year Sections */
+        .year-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .year-section.active {
+            display: block;
+        }
+
+        .year-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .year-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-md);
+            position: relative;
+            display: inline-block;
+        }
+
+        .year-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent-leadership);
+            border-radius: 2px;
+        }
+
+        .year-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            font-size: 1.1rem;
+        }
+
+        .badge-2024 { background: var(--gradient-innovation); color: white; }
+        .badge-2025 { background: var(--gradient-strategy); color: white; }
+        .badge-2026 { background: var(--gradient-leadership); color: var(--primary-color); }
+
+        /* Content Blocks */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-xl);
+        }
+
+        .main-article {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .article h3 {
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            margin: var(--space-lg) 0 var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .article p {
+            margin-bottom: var(--space-md);
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .article ul, .article ol {
+            margin: var(--space-md) 0 var(--space-md) var(--space-lg);
+            color: var(--text-secondary);
+        }
+
+        .article li {
+            margin-bottom: var(--space-sm);
+            line-height: 1.6;
+        }
+
+        /* Trend Cards */
+        .trend-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            border-left: 4px solid;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .trend-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .trend-card.innovation { border-color: var(--accent-innovation); }
+        .trend-card.strategy { border-color: var(--accent-strategy); }
+        .trend-card.leadership { border-color: var(--accent-leadership); }
+        .trend-card.success { border-color: var(--accent-success); }
+
+        .trend-card h4 {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-md);
+        }
+
+        .trend-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .icon-innovation { background: var(--gradient-innovation); }
+        .icon-strategy { background: var(--gradient-strategy); }
+        .icon-leadership { background: var(--gradient-leadership); }
+        .icon-success { background: var(--gradient-success); }
+
+        /* Checklist */
+        .checklist-container {
+            background: linear-gradient(135deg, rgba(0, 155, 119, 0.05) 0%, rgba(0, 201, 167, 0.05) 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .checklist-container h4 {
+            color: var(--accent-innovation);
+            margin-bottom: var(--space-md);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            padding: var(--space-sm);
+            background: white;
+            border-radius: var(--radius-sm);
+        }
+
+        .checkmark {
+            color: var(--accent-success);
+            font-weight: bold;
+            min-width: 20px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: var(--space-lg) 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .fill-2024 { width: 90%; background: var(--accent-innovation); }
+        .fill-2025 { width: 75%; background: var(--accent-strategy); }
+        .fill-2026 { width: 30%; background: var(--accent-leadership); }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            height: fit-content;
+            position: sticky;
+            top: 140px;
+        }
+
+        .sidebar h3 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--accent-leadership);
+        }
+
+        .nav-year {
+            list-style: none;
+        }
+
+        .nav-year li {
+            margin-bottom: var(--space-sm);
+        }
+
+        .nav-year a {
+            display: block;
+            padding: var(--space-sm);
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-year a:hover {
+            background: var(--bg-light);
+            color: var(--primary-color);
+            padding-left: var(--space-md);
+            border-left-color: var(--accent-leadership);
+        }
+
+        .trend-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+            margin-top: var(--space-lg);
+        }
+
+        .trend-tag {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: var(--space-xl) 0;
+            margin-top: var(--space-xxl);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .trends-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .year-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .year-tab {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            
+            .nav-links a {
+                padding: 15px 20px;
+            }
+            
+            .year-navigation {
+                top: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .trends-header h1 {
+                font-size: 2rem;
+            }
+            
+            .trends-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .main-article {
+                padding: var(--space-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="trends-header">
+        <div class="container">
+            <div class="trends-header-content">
+                <h1>Тренды логистики — ваш ключ к лидерству</h1>
+                <p class="trends-subtitle">Эволюция цепей поставок 2024-2026: от цифровой трансформации к устойчивому развитию и автономной логистике</p>
+                <div class="current-date">
+                    <i class="far fa-calendar"></i> Актуально на 02.12.2025
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="trends-logistics.html" class="active">Тренды логистики</a></li>
+                <li><a href="expertise.html">Экспертиза</a></li>
+                <li><a href="experience.html">Опыт</a></li>
+                <li><a href="projects.html">Проекты</a></li>
+                <li><a href="tools.html">Инструменты</a></li>
+                <li><a href="contact.html">Контакты</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Year Navigation -->
+    <div class="year-navigation">
+        <div class="container">
+            <div class="year-tabs">
+                <a href="#2024" class="year-tab active" data-year="2024">📅 2024 год: Итоги</a>
+                <a href="#2025" class="year-tab" data-year="2025">🎯 2025 год: Текущий</a>
+                <a href="#2026" class="year-tab" data-year="2026">🚀 2026 год: Прогноз</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="trends-content">
+            <div class="content-grid">
+                <!-- Основной контент -->
+                <div>
+                    <!-- 2024 Year Section -->
+                    <section id="2024" class="year-section active">
+                        <div class="year-header">
+                            <span class="year-badge badge-2024">2024 год: Итоги и анализ</span>
+                            <h2>Цифровая трансформация в действии</h2>
+                            <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">Подводим итоги ключевых изменений и извлекаем уроки для будущего</p>
+                        </div>
+
+                        <div class="main-article">
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Уровень внедрения цифровых технологий</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill fill-2024"></div>
+                                </div>
+                            </div>
+
+                            <h3>🎯 Ключевые достижения 2024 года</h3>
+                            
+                            <div class="trend-card innovation">
+                                <h4>
+                                    <span class="trend-icon icon-innovation">🤖</span>
+                                    <span>Массовое внедрение AI-решений</span>
+                                </h4>
+                                <p><strong>Результат:</strong> Более 60% крупных компаний внедрили AI для прогнозирования спроса и оптимизации маршрутов.</p>
+                                <p><strong>Эффект:</strong> Снижение ошибок прогнозирования на 40%, оптимизация транспортных расходов на 15-20%.</p>
+                            </div>
+
+                            <div class="trend-card strategy">
+                                <h4>
+                                    <span class="trend-icon icon-strategy">🌱</span>
+                                    <span>Устойчивая логистика стала нормой</span>
+                                </h4>
+                                <p><strong>Результат:</strong> 45% компаний внедрили программы по снижению углеродного следа.</p>
+                                <p><strong>Эффект:</strong> Снижение выбросов CO₂ на 25%, экономия на топливе до 18%.</p>
+                            </div>
+
+                            <div class="checklist-container">
+                                <h4>✅ Чек-лист выполненных задач 2024</h4>
+                                <div class="checklist-item">
+                                    <span class="checkmark">✓</span>
+                                    <span>Внедрение WMS/TMS систем в 75% компаний</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">✓</span>
+                                    <span>Переход на электронный документооборот (ЭДО)</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">✓</span>
+                                    <span>Запуск пилотных проектов с беспилотным транспортом</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">✓</span>
+                                    <span>Внедрение IoT-датчиков для отслеживания грузов</span>
+                                </div>
+                            </div>
+
+                            <h3>📊 Статистика рынка за 2024 год</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-md); margin: var(--space-lg) 0;">
+                                <div style="text-align: center; padding: var(--space-md); background: var(--bg-light); border-radius: var(--radius-md);">
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent-innovation);">87%</div>
+                                    <div style="font-size: 0.9rem;">компаний инвестировали в цифровизацию</div>
+                                </div>
+                                <div style="text-align: center; padding: var(--space-md); background: var(--bg-light); border-radius: var(--radius-md);">
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent-success);">42%</div>
+                                    <div style="font-size: 0.9rem;">снижение операционных затрат при оптимизации</div>
+                                </div>
+                                <div style="text-align: center; padding: var(--space-md); background: var(--bg-light); border-radius: var(--radius-md);">
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent-strategy);">3.5×</div>
+                                    <div style="font-size: 0.9rem;">рост производительности при внедрении AI</div>
+                                </div>
+                            </div>
+
+                            <h3>💡 Уроки 2024 года</h3>
+                            <ul>
+                                <li>Постепенное внедрение технологий эффективнее "большого скачка"</li>
+                                <li>Обучение персонала — критический фактор успеха цифровой трансформации</li>
+                                <li>Гибридные модели (традиционные + цифровые процессы) показывают лучшие результаты</li>
+                                <li>Экологические инициативы становятся конкурентным преимуществом</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- 2025 Year Section -->
+                    <section id="2025" class="year-section">
+                        <div class="year-header">
+                            <span class="year-badge badge-2025">2025 год: Текущие тренды</span>
+                            <h2>Автономизация и гиперлокализация</h2>
+                            <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">Что происходит на рынке логистики в конце 2025 года</p>
+                        </div>
+
+                        <div class="main-article">
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Внедрение автономных технологий</span>
+                                    <span>75%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill fill-2025"></div>
+                                </div>
+                            </div>
+
+                            <h3>🎯 Ключевые тренды 2025 года (итоги на 02.12.2025)</h3>
+                            
+                            <div class="trend-card leadership">
+                                <h4>
+                                    <span class="trend-icon icon-leadership">🚚</span>
+                                    <span>Автономный транспорт выходит на дороги</span>
+                                </h4>
+                                <p><strong>Текущий статус:</strong> Активное тестирование беспилотных грузовиков на трассах М-4 и М-11.</p>
+                                <p><strong>Реализация:</strong> Первые коммерческие рейсы выполнены, законодательная база в разработке.</p>
+                            </div>
+
+                            <div class="trend-card success">
+                                <h4>
+                                    <span class="trend-icon icon-success">🏙️</span>
+                                    <span>Гиперлокальная логистика</span>
+                                </h4>
+                                <p><strong>Тренд:</strong> Создание микрологических центров в городах для доставки за 1-2 часа.</p>
+                                <p><strong>Результат:</strong> Количество ПВЗ и постаматов увеличилось на 40% за год.</p>
+                            </div>
+
+                            <div class="checklist-container">
+                                <h4>📋 Чек-лист внедрения 2025</h4>
+                                <div class="checklist-item">
+                                    <span class="checkmark">✓</span>
+                                    <span>Внедрены ли WMS/TMS-системы?</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">✓</span>
+                                    <span>Используются ли ИИ-алгоритмы для аналитики?</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span style="color: var(--accent-danger); font-weight: bold;">✗</span>
+                                    <span>Реализована ли интеграция с блокчейн для отслеживания грузов?</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">✓</span>
+                                    <span>Запущены ли пилотные проекты с роботами на складах?</span>
+                                </div>
+                            </div>
+
+                            <h3>📈 Прогресс по направлениям</h3>
+                            <div style="margin: var(--space-lg) 0;">
+                                <div style="margin-bottom: var(--space-md);">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                                        <span>Цифровизация и автоматизация</span>
+                                        <span style="color: var(--accent-success); font-weight: 600;">Выполнено</span>
+                                    </div>
+                                    <div style="height: 8px; background: var(--border-light); border-radius: 4px; overflow: hidden;">
+                                        <div style="width: 90%; height: 100%; background: var(--accent-success);"></div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: var(--space-md);">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                                        <span>Экологичность и устойчивое развитие</span>
+                                        <span style="color: var(--accent-innovation); font-weight: 600;">В процессе</span>
+                                    </div>
+                                    <div style="height: 8px; background: var(--border-light); border-radius: 4px; overflow: hidden;">
+                                        <div style="width: 75%; height: 100%; background: var(--accent-innovation);"></div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: var(--space-md);">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                                        <span>Международная логистика (переориентация)</span>
+                                        <span style="color: var(--accent-leadership); font-weight: 600;">Выполнено</span>
+                                    </div>
+                                    <div style="height: 8px; background: var(--border-light); border-radius: 4px; overflow: hidden;">
+                                        <div style="width: 85%; height: 100%; background: var(--accent-leadership);"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>⚡ Вызовы 2025 года</h3>
+                            <ul>
+                                <li><strong>Кадровый дефицит:</strong> Острая нехватка специалистов по работе с новыми технологиями</li>
+                                <li><strong>Кибербезопасность:</strong> Рост числа кибератак на цепочки поставок</li>
+                                <li><strong>Геополитика:</strong> Необходимость постоянной адаптации логистических маршрутов</li>
+                                <li><strong>Экономика:</strong> Высокая стоимость внедрения современных решений</li>
+                            </ul>
+
+                            <h3>🎯 Рекомендации на 2026 год</h3>
+                            <ol>
+                                <li>Ускорить внедрение блокчейн-решений для прозрачности цепочек</li>
+                                <li>Инвестировать в обучение и переподготовку персонала</li>
+                                <li>Развивать партнерские экосистемы вместо конкурентной борьбы</li>
+                                <li>Формировать резервные логистические схемы</li>
+                            </ol>
+                        </div>
+                    </section>
+
+                    <!-- 2026 Year Section -->
+                    <section id="2026" class="year-section">
+                        <div class="year-header">
+                            <span class="year-badge badge-2026">2026 год: Прогноз и подготовка</span>
+                            <h2>Революционные изменения отрасли</h2>
+                            <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">Что ждёт логистику в 2026 году и как подготовиться уже сегодня</p>
+                        </div>
+
+                        <div class="main-article">
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Готовность к изменениям 2026 года</span>
+                                    <span>30%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill fill-2026"></div>
+                                </div>
+                            </div>
+
+                            <h3>🔥 5 революционных трендов 2026 года</h3>
+                            
+                            <div class="trend-card innovation">
+                                <h4>
+                                    <span class="trend-icon icon-innovation">⚡</span>
+                                    <span>Обязательный электронный документооборот (ЭДО)</span>
+                                </h4>
+                                <p><strong>С 1 сентября 2026 года:</strong> ЭДО становится обязательным для всех видов транспорта.</p>
+                                <p><strong>Что делать:</strong> Начинать переход уже сейчас, тестировать системы, обучать персонал.</p>
+                            </div>
+
+                            <div class="trend-card strategy">
+                                <h4>
+                                    <span class="trend-icon icon-strategy">🌿</span>
+                                    <span>Экология как лицензия на работу</span>
+                                </h4>
+                                <p><strong>Изменения:</strong> "Зелёные бейджи" от маркетплейсов, повышенные сборы для "грязных" компаний.</p>
+                                <p><strong>Что делать:</strong> Внедрять электропарк, оптимизировать маршруты, использовать эко-упаковку.</p>
+                            </div>
+
+                            <div class="trend-card leadership">
+                                <h4>
+                                    <span class="trend-icon icon-leadership">👷</span>
+                                    <span>Кадровая революция: новые профессии</span>
+                                </h4>
+                                <p><strong>Прогноз:</strong> Роботизация заменит 70% ручного труда к 2026 году.</p>
+                                <p><strong>ТОП-5 профессий 2026:</strong> Оператор беспилотников, аналитик логистических данных, специалист по кибербезопасности, менеджер по устойчивому развитию, инженер по автоматизации.</p>
+                            </div>
+
+                            <div class="trend-card success">
+                                <h4>
+                                    <span class="trend-icon icon-success">🌐</span>
+                                    <span>Новые глобальные маршруты</span>
+                                </h4>
+                                <p><strong>Тренды:</strong> Северный морской путь, экспорт в Азию (рост 30-40%), диверсификация поставщиков.</p>
+                                <p><strong>Рекомендация:</strong> Исследовать азиатские рынки и альтернативные логистические коридоры.</p>
+                            </div>
+
+                            <div class="checklist-container">
+                                <h4>✅ 6 шагов к успеху в 2026</h4>
+                                <div class="checklist-item">
+                                    <span class="checkmark">1</span>
+                                    <span><strong>Цифровизируйтесь:</strong> внедрите ЭДО и IoT-трекинг</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">2</span>
+                                    <span><strong>Пересчитайте налоги:</strong> адаптируйтесь к новым режимам</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">3</span>
+                                    <span><strong>Обучайте команду:</strong> готовьте специалистов под новые профессии</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">4</span>
+                                    <span><strong>Оптимизируйте маршруты:</strong> используйте ИИ-решения</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">5</span>
+                                    <span><strong>Станьте "зелёными":</strong> эко-упаковка и электропарк</span>
+                                </div>
+                                <div class="checklist-item">
+                                    <span class="checkmark">6</span>
+                                    <span><strong>Диверсифицируйте цепочки:</strong> ищите новых поставщиков и рынки</span>
+                                </div>
+                            </div>
+
+                            <h3>📊 Прогноз развития технологий</h3>
+                            <div style="margin: var(--space-lg) 0;">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md);">
+                                    <div style="text-align: center; padding: var(--space-md); background: var(--bg-light); border-radius: var(--radius-md);">
+                                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">AI & ML</div>
+                                        <div style="font-size: 0.9rem; color: var(--text-secondary);">90% компаний будут использовать</div>
+                                    </div>
+                                    <div style="text-align: center; padding: var(--space-md); background: var(--bg-light); border-radius: var(--radius-md);">
+                                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">Блокчейн</div>
+                                        <div style="font-size: 0.9rem; color: var(--text-secondary);">60% для отслеживания цепочек</div>
+                                    </div>
+                                    <div style="text-align: center; padding: var(--space-md); background: var(--bg-light); border-radius: var(--radius-md);">
+                                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">Беспилотники</div>
+                                        <div style="font-size: 0.9rem; color: var(--text-secondary);">40% доставки "последней мили"</div>
+                                    </div>
+                                    <div style="text-align: center; padding: var(--space-md); background: var(--bg-light); border-radius: var(--radius-md);">
+                                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">Роботы</div>
+                                        <div style="font-size: 0.9rem; color: var(--text-secondary);">70% складских операций</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>💡 Стратегические рекомендации</h3>
+                            <ol>
+                                <li><strong>Начинайте готовиться сейчас:</strong> 2026 год уже близко</li>
+                                <li><strong>Формируйте цифровой бюджет:</strong> не менее 15% от операционных расходов</li>
+                                <li><strong>Создавайте гибкие цепочки поставок:</strong> способные к быстрой адаптации</li>
+                                <li><strong>Инвестируйте в людей:</strong> обучение дешевле найма новых специалистов</li>
+                                <li><strong>Строите партнерства:</strong> экосистемы побеждают одиночек</li>
+                            </ol>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Сайдбар -->
+                <aside class="sidebar">
+                    <h3>📅 Навигация по годам</h3>
+                    <ul class="nav-year">
+                        <li><a href="#2024" data-year="2024">📊 2024: Итоги и анализ</a></li>
+                        <li><a href="#2025" data-year="2025">🎯 2025: Текущие тренды</a></li>
+                        <li><a href="#2026" data-year="2026">🚀 2026: Прогноз и подготовка</a></li>
+                    </ul>
+
+                    <h3>🏷 Ключевые темы</h3>
+                    <div class="trend-tags">
+                        <span class="trend-tag">Цифровизация</span>
+                        <span class="trend-tag">Экология</span>
+                        <span class="trend-tag">AI & ML</span>
+                        <span class="trend-tag">Автономизация</span>
+                        <span class="trend-tag">ЭДО 2026</span>
+                        <span class="trend-tag">Блокчейн</span>
+                        <span class="trend-tag">IoT</span>
+                        <span class="trend-tag">Кадры 2026</span>
+                    </div>
+
+                    <h3>📈 Аналитика рынка</h3>
+                    <div style="margin-top: var(--space-md); padding: var(--space-md); background: var(--bg-light); border-radius: var(--radius-md);">
+                        <p style="font-weight: 600; color: var(--primary-color); margin-bottom: var(--space-xs);">Динамика внедрения технологий</p>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                                <span>2024:</span>
+                                <span style="color: var(--accent-success); font-weight: 600;">90%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                                <span>2025:</span>
+                                <span style="color: var(--accent-innovation); font-weight: 600;">75%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+                                <span>2026 (прогноз):</span>
+                                <span style="color: var(--accent-leadership); font-weight: 600;">95%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>📊 Статистика по годам</h3>
+                    <div style="margin-top: var(--space-md);">
+                        <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm);">
+                            <div style="width: 12px; height: 12px; background: var(--accent-innovation); border-radius: 2px;"></div>
+                            <div style="flex: 1; font-size: 0.9rem;">2024: Цифровизация</div>
+                            <div style="font-weight: 600; color: var(--accent-innovation);">90%</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm);">
+                            <div style="width: 12px; height: 12px; background: var(--accent-strategy); border-radius: 2px;"></div>
+                            <div style="flex: 1; font-size: 0.9rem;">2025: Автономизация</div>
+                            <div style="font-weight: 600; color: var(--accent-strategy);">75%</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm);">
+                            <div style="width: 12px; height: 12px; background: var(--accent-leadership); border-radius: 2px;"></div>
+                            <div style="flex: 1; font-size: 0.9rem;">2026: Интеграция</div>
+                            <div style="font-weight: 600; color: var(--accent-leadership);">30%</div>
+                        </div>
+                    </div>
+
+                    <h3>👨‍💼 Экспертное мнение</h3>
+                    <div style="margin-top: var(--space-md); padding: var(--space-md); background: var(--bg-light); border-radius: var(--radius-md);">
+                        <p style="font-weight: 600; color: var(--primary-color); margin-bottom: var(--space-xs);">Дмитрий Панибратский</p>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: var(--space-sm);">"2026 год — не угроза, а возможность для компаний, которые готовятся уже сегодня."</p>
+                        <a href="contact.html" style="display: inline-block; color: var(--accent-innovation); font-weight: 500; text-decoration: none; font-size: 0.9rem;">
+                            👉 Заказать стратегическую сессию
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024-2025 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <p style="margin-top: var(--space-sm); opacity: 0.8; font-size: 0.9rem;">Тренды логистики 2024-2026 — ваш ключ к лидерству в новой реальности</p>
+            <p style="margin-top: var(--space-xs); opacity: 0.6; font-size: 0.85rem;">Актуально на 02.12.2025</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const yearTabs = document.querySelectorAll('.year-tab');
+            const yearSections = document.querySelectorAll('.year-section');
+            const navYearLinks = document.querySelectorAll('.nav-year a');
+
+            // Function to switch year
+            function switchYear(year) {
+                // Update tabs
+                yearTabs.forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.year === year) {
+                        tab.classList.add('active');
+                    }
+                });
+
+                // Update sections
+                yearSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === year) {
+                        section.classList.add('active');
+                    }
+                });
+
+                // Update URL hash
+                window.location.hash = year;
+
+                // Update sidebar links
+                navYearLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.year === year) {
+                        link.classList.add('active');
+                        link.style.background = 'var(--accent-leadership)';
+                        link.style.color = 'var(--primary-color)';
+                    } else {
+                        link.style.background = '';
+                        link.style.color = '';
+                    }
+                });
+            }
+
+            // Tab click handlers
+            yearTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const year = this.dataset.year;
+                    switchYear(year);
+                });
+            });
+
+            // Sidebar navigation
+            navYearLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const year = this.dataset.year;
+                    switchYear(year);
+                    
+                    // Smooth scroll to section
+                    const targetSection = document.getElementById(year);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 140,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Check URL hash on load
+            const hash = window.location.hash.substring(1);
+            if (['2024', '2025', '2026'].includes(hash)) {
+                switchYear(hash);
+            }
+
+            // Update progress bars animation
+            function animateProgressBars() {
+                const progressFills = document.querySelectorAll('.progress-fill');
+                progressFills.forEach(fill => {
+                    const width = fill.style.width;
+                    fill.style.width = '0';
+                    setTimeout(() => {
+                        fill.style.width = width;
+                    }, 100);
+                });
+            }
+
+            // Animate on year switch
+            yearTabs.forEach(tab => {
+                tab.addEventListener('click', animateProgressBars);
+            });
+
+            // Initial animation
+            setTimeout(animateProgressBars, 500);
+
+            // Update current date
+            const currentDateElement = document.querySelector('.current-date');
+            const now = new Date();
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const formattedDate = now.toLocaleDateString('ru-RU', options);
+            currentDateElement.innerHTML = `<i class="far fa-calendar"></i> Актуально на ${formattedDate}`;
+        });
+    </script>
+</body>
+</html>
