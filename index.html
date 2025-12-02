@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский - Эксперт по управлению цепями поставок (SCM)</title>
     
+    <!-- Favicon - Взаимосвязанные узлы для SCM эксперта -->
+    <link rel="icon" href="data:image/svg+xml,
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+    <circle cx='30' cy='30' r='10' fill='none' stroke='%2300d4ff' stroke-width='4'/>
+    <circle cx='70' cy='30' r='10' fill='none' stroke='%2300d4ff' stroke-width='4'/>
+    <circle cx='30' cy='70' r='10' fill='none' stroke='%2300d4ff' stroke-width='4'/>
+    <circle cx='70' cy='70' r='10' fill='none' stroke='%2300d4ff' stroke-width='4'/>
+    <line x1='35' y1='30' x2='65' y2='30' stroke='%2300d4ff' stroke-width='4'/>
+    <line x1='30' y1='35' x2='30' y2='65' stroke='%2300d4ff' stroke-width='4'/>
+    <line x1='70' y1='35' x2='70' y2='65' stroke='%2300d4ff' stroke-width='4'/>
+    <line x1='35' y1='70' x2='65' y2='70' stroke='%2300d4ff' stroke-width='4'/>
+    <line x1='35' y1='35' x2='65' y2='65' stroke='%2300d4ff' stroke-width='4'/>
+    </svg>">
+    
     <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/chatbot.css">
@@ -265,7 +279,7 @@
             opacity: 0.9;
         }
 
-        /* НАВИГАЦИЯ */
+        /* НАВИГАЦИЯ с логотипом */
         .navigation {
             background: var(--card-bg);
             box-shadow: var(--shadow-sm);
@@ -275,11 +289,53 @@
             border-bottom: 3px solid var(--accent-leadership);
         }
 
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            flex-shrink: 0;
+            margin-right: 2rem;
+        }
+
+        .logo-link {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .logo-link:hover {
+            color: var(--accent-innovation);
+        }
+
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .logo-link:hover .logo-text {
+            color: var(--accent-innovation);
+        }
+
         .nav-links {
             display: flex;
             list-style: none;
-            justify-content: center;
+            justify-content: flex-end;
             gap: 0;
+            flex-grow: 1;
         }
 
         .nav-links li {
@@ -450,14 +506,14 @@
             border-top: 4px solid var(--accent-leadership);
         }
 
-        .stat-number {
+        .stat .stat-number {
             font-size: 2rem;
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: var(--space-xs);
         }
 
-        .stat-label {
+        .stat .stat-label {
             font-size: 0.9rem;
             color: var(--text-secondary);
         }
@@ -749,7 +805,25 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Адаптивность */
+        /* Адаптивность для логотипа */
+        @media (max-width: 1100px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .nav-logo {
+                margin-right: 0;
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+            
+            .nav-links {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
         @media (max-width: 1024px) {
             .header-photos {
                 grid-template-columns: 1fr 1.5fr 1fr;
@@ -776,7 +850,7 @@
             
             .header-photo-left,
             .header-photo-right {
-                display: none; /* Скрываем боковые фото на мобильных */
+                display: none;
             }
             
             .header-text-center h1 {
@@ -796,8 +870,29 @@
                 grid-template-columns: 1fr;
             }
             
+            .logo-text {
+                display: none;
+            }
+            
             .nav-links {
-                flex-wrap: wrap;
+                overflow-x: auto;
+                justify-content: flex-start;
+                white-space: nowrap;
+                padding-bottom: 10px;
+                flex-wrap: nowrap;
+            }
+            
+            .nav-links::-webkit-scrollbar {
+                height: 4px;
+            }
+            
+            .nav-links::-webkit-scrollbar-track {
+                background: var(--border-light);
+            }
+            
+            .nav-links::-webkit-scrollbar-thumb {
+                background: var(--accent-leadership);
+                border-radius: 2px;
             }
             
             .nav-links a {
@@ -910,18 +1005,42 @@
     <!-- Navigation -->
     <nav class="navigation">
         <div class="container">
-            <ul class="nav-links">
-                <li><a href="index.html" class="active">Главная</a></li>
-                <li><a href="trends-logistics.html" class="active">Тренды логистики</a></li>
-                <li><a href="expertise.html">Экспертиза</a></li>
-                <li><a href="experience.html">Опыт</a></li>
-                <li><a href="projects.html">Проекты</a></li>
-                <li><a href="tools.html">Инструменты</a></li>
-                <li><a href="calculators.html">Калькуляторы</a></li>
-                <li><a href="certificates.html">Сертификаты</a></li>
-                <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="contact.html">Контакты</a></li>
-            </ul>
+            <div class="nav-container">
+                <!-- Логотип слева -->
+                <div class="nav-logo">
+                    <a href="index.html" class="logo-link">
+                        <div class="logo-icon">
+                            <!-- SVG логотип (взаимосвязанные узлы) -->
+                            <svg width="40" height="40" viewBox="0 0 100 100" style="vertical-align: middle;">
+                                <circle cx="30" cy="30" r="10" fill="none" stroke="#00d4ff" stroke-width="4"/>
+                                <circle cx="70" cy="30" r="10" fill="none" stroke="#00d4ff" stroke-width="4"/>
+                                <circle cx="30" cy="70" r="10" fill="none" stroke="#00d4ff" stroke-width="4"/>
+                                <circle cx="70" cy="70" r="10" fill="none" stroke="#00d4ff" stroke-width="4"/>
+                                <line x1="35" y1="30" x2="65" y2="30" stroke="#00d4ff" stroke-width="4"/>
+                                <line x1="30" y1="35" x2="30" y2="65" stroke="#00d4ff" stroke-width="4"/>
+                                <line x1="70" y1="35" x2="70" y2="65" stroke="#00d4ff" stroke-width="4"/>
+                                <line x1="35" y1="70" x2="65" y2="70" stroke="#00d4ff" stroke-width="4"/>
+                                <line x1="35" y1="35" x2="65" y2="65" stroke="#00d4ff" stroke-width="4"/>
+                            </svg>
+                            <span class="logo-text">Дмитрий Панибратский</span>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Навигационные ссылки -->
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">Главная</a></li>
+                    <li><a href="trends-logistics.html">Тренды логистики</a></li>
+                    <li><a href="expertise.html">Экспертиза</a></li>
+                    <li><a href="experience.html">Опыт</a></li>
+                    <li><a href="projects.html">Проекты</a></li>
+                    <li><a href="tools.html">Инструменты</a></li>
+                    <li><a href="calculators.html">Калькуляторы</a></li>
+                    <li><a href="certificates.html">Сертификаты</a></li>
+                    <li><a href="wiki.html">Wiki</a></li>
+                    <li><a href="contact.html">Контакты</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
