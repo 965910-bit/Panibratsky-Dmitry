@@ -1,0 +1,142 @@
+/* Основные стили для всех страниц */
+:root {
+    --primary-dark: #0A142C;
+    --primary-color: #0F1C3F;
+    --primary-light: #1E2A4A;
+    --primary-lighter: #2A3655;
+    --accent-innovation: #009B77;
+    --accent-strategy: #8B5FBF;
+    --accent-leadership: #D4AF37;
+    --accent-danger: #E74C3C;
+    --accent-success: #2ECC71;
+    --accent-future: #FF6B35;
+    --text-primary: #0F1C3F;
+    --text-secondary: #5D6B8C;
+    --text-light: #8A96B2;
+    --bg-light: #F8F9FA;
+    --card-bg: #FFFFFF;
+    --border-light: #E8ECF2;
+    --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    --gradient-innovation: linear-gradient(135deg, var(--accent-innovation) 0%, #00C9A7 100%);
+    --gradient-strategy: linear-gradient(135deg, var(--accent-strategy) 0%, #9D71DE 100%);
+    --gradient-leadership: linear-gradient(135deg, var(--accent-leadership) 0%, #E8C352 100%);
+    --gradient-danger: linear-gradient(135deg, #E74C3C 0%, #FF6B6B 100%);
+    --gradient-future: linear-gradient(135deg, var(--accent-future) 0%, #FF9E6D 100%);
+    --shadow-sm: 0 2px 8px rgba(15, 28, 63, 0.08);
+    --shadow-md: 0 4px 16px rgba(15, 28, 63, 0.12);
+    --shadow-lg: 0 8px 32px rgba(15, 28, 63, 0.16);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --space-xs: 8px;
+    --space-sm: 16px;
+    --space-md: 24px;
+    --space-lg: 32px;
+    --space-xl: 48px;
+    --space-xxl: 64px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-light);
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0; 
+        transform: translateX(-20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateX(0); 
+    }
+}
+
+/* Утилитарные классы */
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-1 { margin-top: var(--space-xs); }
+.mt-2 { margin-top: var(--space-sm); }
+.mt-3 { margin-top: var(--space-md); }
+.mt-4 { margin-top: var(--space-lg); }
+.mt-5 { margin-top: var(--space-xl); }
+
+.mb-1 { margin-bottom: var(--space-xs); }
+.mb-2 { margin-bottom: var(--space-sm); }
+.mb-3 { margin-bottom: var(--space-md); }
+.mb-4 { margin-bottom: var(--space-lg); }
+.mb-5 { margin-bottom: var(--space-xl); }
+
+.p-1 { padding: var(--space-xs); }
+.p-2 { padding: var(--space-sm); }
+.p-3 { padding: var(--space-md); }
+.p-4 { padding: var(--space-lg); }
+.p-5 { padding: var(--space-xl); }
+
+/* Стили для других страниц будут здесь */
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 var(--space-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 var(--space-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--space-sm);
+    }
+}
