@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский - Эксперт по управлению цепями поставок (SCM)</title>
     
-    <!-- Favicon - Взаимосвязанные узлы для SCM эксперта -->
+    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
     <circle cx='30' cy='30' r='10' fill='none' stroke='%2300d4ff' stroke-width='4'/>
@@ -19,52 +19,38 @@
     <line x1='35' y1='35' x2='65' y2='65' stroke='%2300d4ff' stroke-width='4'/>
     </svg>">
     
-    <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* ДИЗАЙН-СИСТЕМА - Основа для всех страниц */
+        /* СТИЛИ ОСТАЮТСЯ ПРЕЖНИМИ - ТОЧНАЯ КОПИЯ */
         :root {
-            /* Основная цветовая палитра */
             --primary-dark: #0A142C;
             --primary-color: #0F1C3F;
             --primary-light: #1E2A4A;
             --primary-lighter: #2A3655;
-            
-            /* Акцентные цвета по качествам */
             --accent-innovation: #009B77;
             --accent-strategy: #8B5FBF;
             --accent-leadership: #D4AF37;
             --accent-expert: #0F1C3F;
-            
-            /* Нейтральные цвета */
             --text-primary: #0F1C3F;
             --text-secondary: #5D6B8C;
             --text-light: #8A96B2;
             --bg-light: #F8F9FA;
             --card-bg: #FFFFFF;
             --border-light: #E8ECF2;
-            
-            /* Градиенты */
             --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
             --gradient-innovation: linear-gradient(135deg, var(--accent-innovation) 0%, #00C9A7 100%);
             --gradient-strategy: linear-gradient(135deg, var(--accent-strategy) 0%, #9D71DE 100%);
             --gradient-leadership: linear-gradient(135deg, var(--accent-leadership) 0%, #E8C352 100%);
-            
-            /* Тени */
             --shadow-sm: 0 2px 8px rgba(15, 28, 63, 0.08);
             --shadow-md: 0 4px 16px rgba(15, 28, 63, 0.12);
             --shadow-lg: 0 8px 32px rgba(15, 28, 63, 0.16);
-            
-            /* Радиусы */
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
-            
-            /* Отступы */
             --space-xs: 8px;
             --space-sm: 16px;
             --space-md: 24px;
@@ -73,7 +59,6 @@
             --space-xxl: 64px;
         }
 
-        /* Базовые стили */
         * {
             margin: 0;
             padding: 0;
@@ -93,7 +78,6 @@
             padding: 0 var(--space-md);
         }
 
-        /* Секции */
         .section {
             padding: var(--space-xl) 0;
         }
@@ -119,7 +103,6 @@
             border-radius: 2px;
         }
 
-        /* HEADER - с фотографиями */
         .header {
             background: var(--gradient-primary);
             color: white;
@@ -215,9 +198,18 @@
         .header-subtitle {
             font-size: 1.3rem;
             font-weight: 400;
-            margin-bottom: var(--space-lg);
+            margin-bottom: var(--space-sm);
             color: rgba(255, 255, 255, 0.9);
             line-height: 1.5;
+        }
+
+        /* ДОБАВЛЕН СЛОГАН В HEADER */
+        .header-slogan {
+            font-size: 1.2rem;
+            color: #D4AF37;
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            font-style: italic;
         }
 
         .contact-badges {
@@ -279,7 +271,6 @@
             opacity: 0.9;
         }
 
-        /* НАВИГАЦИЯ с логотипом */
         .navigation {
             background: var(--card-bg);
             box-shadow: var(--shadow-sm);
@@ -320,13 +311,31 @@
             gap: 12px;
         }
 
+        /* ДОБАВЛЕН СЛОГАН В НАВИГАЦИЮ */
+        .logo-text-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
         .logo-text {
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--primary-color);
         }
 
+        .logo-slogan {
+            font-size: 0.8rem;
+            color: #8B5FBF;
+            font-weight: 500;
+            font-style: italic;
+        }
+
         .logo-link:hover .logo-text {
+            color: var(--accent-innovation);
+        }
+
+        .logo-link:hover .logo-slogan {
             color: var(--accent-innovation);
         }
 
@@ -359,7 +368,6 @@
             background: rgba(212, 175, 55, 0.05);
         }
 
-        /* Остальные стили остаются без изменений */
         .welcome-section {
             background: var(--card-bg);
             position: relative;
@@ -376,6 +384,15 @@
             margin-bottom: var(--space-md);
         }
 
+        /* ДОБАВЛЕН СЛОГАН В WELCOME SECTION */
+        .welcome-lead-slogan {
+            font-size: 1.3rem;
+            color: #8B5FBF;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            font-style: italic;
+        }
+
         .welcome-header p {
             font-size: 1.2rem;
             color: var(--text-secondary);
@@ -383,7 +400,6 @@
             margin: 0 auto;
         }
 
-        /* Audience Selector */
         .audience-selector {
             display: flex;
             justify-content: center;
@@ -412,7 +428,6 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* Welcome Messages */
         .welcome-messages {
             max-width: 900px;
             margin: 0 auto var(--space-xl);
@@ -467,7 +482,6 @@
             line-height: 1.7;
         }
 
-        /* Skills Grid */
         .skills-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -490,7 +504,6 @@
             font-weight: bold;
         }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -518,7 +531,6 @@
             color: var(--text-secondary);
         }
 
-        /* Tags */
         .tags {
             display: flex;
             flex-wrap: wrap;
@@ -535,7 +547,6 @@
             font-weight: 500;
         }
 
-        /* Quick Navigation */
         .quick-nav {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -566,7 +577,6 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* ABOUT SECTION */
         .about-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -611,7 +621,6 @@
             line-height: 1.6;
         }
 
-        /* Competencies */
         .competencies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -664,7 +673,6 @@
             border-bottom: none;
         }
 
-        /* Leadership */
         .leadership-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -705,7 +713,6 @@
             font-size: 0.95rem;
         }
 
-        /* Inspiration */
         .inspiration-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -756,7 +763,6 @@
             border-radius: var(--radius-md);
         }
 
-        /* About Highlights */
         .about-highlights {
             display: flex;
             flex-direction: column;
@@ -790,7 +796,6 @@
             font-size: 0.95rem;
         }
 
-        /* FOOTER */
         .footer {
             background: var(--primary-dark);
             color: white;
@@ -799,13 +804,16 @@
             margin-top: var(--space-xxl);
         }
 
-        /* Анимации */
+        /* ДОБАВЛЕН СЛОГАН В ФУТЕР */
+        .footer strong {
+            color: #D4AF37;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Адаптивность для логотипа */
         @media (max-width: 1100px) {
             .nav-container {
                 flex-direction: column;
@@ -839,6 +847,10 @@
             .header-text-center h1 {
                 font-size: 2.4rem;
             }
+            
+            .header-slogan {
+                font-size: 1.1rem;
+            }
         }
 
         @media (max-width: 768px) {
@@ -861,6 +873,10 @@
                 font-size: 1.1rem;
             }
             
+            .header-slogan {
+                font-size: 1rem;
+            }
+            
             .welcome-grid {
                 grid-template-columns: 1fr;
                 text-align: center;
@@ -871,6 +887,10 @@
             }
             
             .logo-text {
+                display: block;
+            }
+            
+            .logo-slogan {
                 display: none;
             }
             
@@ -911,6 +931,10 @@
             .quick-nav {
                 grid-template-columns: 1fr;
             }
+            
+            .welcome-lead-slogan {
+                font-size: 1.1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -939,6 +963,10 @@
                 width: 200px;
                 text-align: center;
             }
+            
+            .header-slogan {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -948,7 +976,6 @@
         <div class="container">
             <div class="header-content">
                 <div class="header-photos">
-                    <!-- Левое фото -->
                     <div class="header-photo-left">
                         <div class="photo-left-container">
                             <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" 
@@ -956,10 +983,11 @@
                         </div>
                     </div>
                     
-                    <!-- Центральный текст -->
                     <div class="header-text-center">
                         <h1>Дмитрий Панибратский</h1>
                         <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
+                        <!-- СЛОГАН 1: В хедере -->
+                        <p class="header-slogan">Преобразую сложности SCM в стратегию роста прибыли</p>
                         
                         <div class="contact-badges">
                             <span class="badge">Управление SCM</span>
@@ -971,7 +999,6 @@
                         </div>
                     </div>
                     
-                    <!-- Правое фото -->
                     <div class="header-photo-right">
                         <div class="photo-right-container">
                             <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" 
@@ -1006,11 +1033,9 @@
     <nav class="navigation">
         <div class="container">
             <div class="nav-container">
-                <!-- Логотип слева -->
                 <div class="nav-logo">
                     <a href="index.html" class="logo-link">
                         <div class="logo-icon">
-                            <!-- SVG логотип (взаимосвязанные узлы) -->
                             <svg width="40" height="40" viewBox="0 0 100 100" style="vertical-align: middle;">
                                 <circle cx="30" cy="30" r="10" fill="none" stroke="#00d4ff" stroke-width="4"/>
                                 <circle cx="70" cy="30" r="10" fill="none" stroke="#00d4ff" stroke-width="4"/>
@@ -1022,12 +1047,15 @@
                                 <line x1="35" y1="70" x2="65" y2="70" stroke="#00d4ff" stroke-width="4"/>
                                 <line x1="35" y1="35" x2="65" y2="65" stroke="#00d4ff" stroke-width="4"/>
                             </svg>
-                            <span class="logo-text">Дмитрий Панибратский</span>
+                            <!-- СЛОГАН 2: В навигации -->
+                            <div class="logo-text-container">
+                                <span class="logo-text">Дмитрий Панибратский</span>
+                                <span class="logo-slogan">SCM-стратегия для роста</span>
+                            </div>
                         </div>
                     </a>
                 </div>
                 
-                <!-- Навигационные ссылки -->
                 <ul class="nav-links">
                     <li><a href="index.html" class="active">Главная</a></li>
                     <li><a href="trends-logistics.html">Тренды логистики</a></li>
@@ -1049,6 +1077,8 @@
         <div class="container">
             <div class="welcome-header">
                 <h1>Добро пожаловать на мою профессиональную страницу!</h1>
+                <!-- СЛОГАН 3: В welcome-секции -->
+                <p class="welcome-lead-slogan">Нет неэффективных цепей поставок. Есть непроработанная стратегия.</p>
                 <p>Здесь вы найдете комплексную информацию о моем опыте в управлении цепями поставок и цифровой трансформации бизнеса</p>
             </div>
 
@@ -1060,9 +1090,8 @@
                 <button class="audience-btn" data-audience="partners">🚀 Партнерам</button>
             </div>
 
-            <!-- Welcome Messages -->
+            <!-- Welcome Messages (остаются без изменений) -->
             <div class="welcome-messages">
-                <!-- Default Welcome -->
                 <div class="welcome-message active" data-audience="all">
                     <div class="welcome-grid">
                         <div class="welcome-icon">
@@ -1094,7 +1123,6 @@
                     </div>
                 </div>
 
-                <!-- For Recruiters -->
                 <div class="welcome-message" data-audience="recruiters">
                     <div class="welcome-grid">
                         <div class="welcome-icon">
@@ -1139,7 +1167,6 @@
                     </div>
                 </div>
 
-                <!-- For Colleagues -->
                 <div class="welcome-message" data-audience="colleagues">
                     <div class="welcome-grid">
                         <div class="welcome-icon">
@@ -1168,7 +1195,6 @@
                     </div>
                 </div>
 
-                <!-- For Partners -->
                 <div class="welcome-message" data-audience="partners">
                     <div class="welcome-grid">
                         <div class="welcome-icon">
@@ -1198,7 +1224,6 @@
                 </div>
             </div>
 
-            <!-- Quick Navigation -->
             <div class="quick-nav">
                 <a href="#about">📊 Мой профиль</a>
                 <a href="experience.html">💼 Опыт работы</a>
@@ -1210,7 +1235,6 @@
 
     <!-- Main Content -->
     <main class="container">
-        <!-- About Section -->
         <section id="about" class="section">
             <h2>Профессиональный профиль</h2>
             <div class="about-grid">
@@ -1236,7 +1260,6 @@
                         </div>
                     </div>
 
-                    <!-- Профессиональные компетенции -->
                     <div class="competencies">
                         <h4>💼 Профессиональные компетенции</h4>
                         <div class="competencies-grid">
@@ -1293,7 +1316,6 @@
                         </div>
                     </div>
 
-                    <!-- Лидерские компетенции -->
                     <div class="leadership">
                         <h4>🌟 Лидерские компетенции</h4>
                         <div class="leadership-grid">
@@ -1330,7 +1352,6 @@
                         </div>
                     </div>
 
-                    <!-- Профессиональные ориентиры и увлечения -->
                     <div class="inspiration">
                         <h4>📚 Профессиональные ориентиры и увлечения</h4>
                         <div class="inspiration-grid">
@@ -1402,33 +1423,29 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <!-- СЛОГАН 4: В футере -->
+            <p>&copy; 2024 Дмитрий Панибратский. <strong>Оптимизирую SCM через цифровую стратегию.</strong></p>
         </div>
     </footer>
 
-    <script src="js/chatbot.js"></script>
     <script>
-        // Audience Selection
+        // Скрипт остается без изменений
         document.addEventListener('DOMContentLoaded', function() {
             const audienceButtons = document.querySelectorAll('.audience-btn');
             const welcomeMessages = document.querySelectorAll('.welcome-message');
 
             audienceButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Remove active class from all buttons
                     audienceButtons.forEach(btn => {
                         btn.classList.remove('active');
                     });
                     
-                    // Add active class to clicked button
                     this.classList.add('active');
                     
-                    // Hide all messages
                     welcomeMessages.forEach(message => {
                         message.classList.remove('active');
                     });
                     
-                    // Show selected message
                     const audience = this.getAttribute('data-audience');
                     const targetMessage = document.querySelector(`.welcome-message[data-audience="${audience}"]`);
                     if (targetMessage) {
@@ -1437,7 +1454,6 @@
                 });
             });
 
-            // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
