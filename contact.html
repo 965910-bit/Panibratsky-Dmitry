@@ -3,1034 +3,466 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Контакты - Дмитрий Панибратский</title>
+    <title>Контакты | Дмитрий Панибратский - Эксперт SCM</title>
+    <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #0F1C3F;
-            --primary-dark: #0A142C;
-            --primary-light: #1E2A4A;
-            --secondary-color: #D4AF37;
-            --accent-color: #009B77;
-            --text-color: #0F1C3F;
-            --text-light: #5D6B8C;
-            --bg-light: #F8F9FA;
-            --card-bg: #FFFFFF;
-            --border-color: #E2E8F0;
-            --shadow: 0 4px 6px -1px rgba(15, 28, 63, 0.1), 0 2px 4px -1px rgba(15, 28, 63, 0.06);
-            --shadow-hover: 0 20px 25px -5px rgba(15, 28, 63, 0.15), 0 10px 10px -5px rgba(15, 28, 63, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-light);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Header */
-        .header-executive {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        .contact-hero {
+            background: linear-gradient(135deg, #4a7bc8 0%, #2c5aa0 100%);
             color: white;
-            padding: 3rem 0;
+            padding: 5rem 0;
             text-align: center;
-            border-bottom: 4px solid var(--secondary-color);
         }
-
-        .header-executive h1 {
-            font-size: 2.8rem;
-            margin-bottom: 0.8rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .header-executive .header-subtitle {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            font-weight: 400;
-        }
-
-        .executive-highlights {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 2.5rem 0;
-            flex-wrap: wrap;
-        }
-
-        .executive-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            min-width: 220px;
-        }
-
-        .executive-item:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: translateY(-2px);
-        }
-
-        .executive-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--secondary-color);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: var(--primary-dark);
-        }
-
-        .executive-text {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-
-        .executive-text strong {
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-
-        .executive-text span {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-            font-weight: 400;
-        }
-
-        .executive-cta {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-
-        .executive-badge {
-            background: rgba(212, 175, 55, 0.15);
-            color: var(--secondary-color);
-            padding: 0.8rem 1.5rem;
-            border-radius: 6px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            font-size: 0.95rem;
-        }
-
-        .executive-button {
-            background: var(--secondary-color);
-            color: var(--primary-dark);
-            padding: 0.8rem 1.8rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            border: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .executive-button:hover {
-            background: #E6C02E;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        .expertise-tags {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .expertise-tag {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-weight: 500;
-        }
-
-        /* Navigation */
-        .navigation-executive {
-            background: var(--card-bg);
-            border-bottom: 2px solid var(--border-color);
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(15, 28, 63, 0.08);
-        }
-
-        .nav-links-executive {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            gap: 2.5rem;
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-links-executive a {
-            text-decoration: none;
-            color: var(--text-light);
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 0;
-            position: relative;
-        }
-
-        .nav-links-executive a.active,
-        .nav-links-executive a:hover {
-            color: var(--primary-color);
-        }
-
-        .nav-links-executive a.active:after,
-        .nav-links-executive a:hover:after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--secondary-color);
-        }
-
-        /* Hero Section */
-        .contact-hero-executive {
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-            color: white;
-            padding: 4rem 0;
-            text-align: center;
-            margin-bottom: 3rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .contact-hero-executive h1 {
-            font-size: 2.5rem;
+        .contact-hero h1 {
+            font-size: 3.2rem;
             margin-bottom: 1rem;
-            font-weight: 700;
+            font-weight: 800;
         }
-
-        .contact-hero-executive p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-            font-weight: 400;
+        @media (max-width: 768px) {
+            .contact-hero h1 { font-size: 2.5rem; }
         }
-
-        /* Contact Content */
-        .contact-content-executive {
+        .contact-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            margin: 3rem 0;
+            gap: 4rem;
+            margin: 4rem 0;
         }
-
-        .contact-info-executive {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
+        @media (max-width: 1024px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
         }
-
-        .contact-card-executive {
-            background: var(--card-bg);
+        .contact-info {
+            background: white;
             padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            position: relative;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
-
-        .contact-card-executive:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-hover);
+        .contact-form {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
-
-        .contact-card-executive h3 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-        }
-
-        .contact-item-executive {
+        .info-item {
             display: flex;
             align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding: 1.2rem;
-            background: var(--bg-light);
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
         }
-
-        .contact-item-executive:hover {
-            background: white;
-            transform: translateX(5px);
-            border-left: 3px solid var(--secondary-color);
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
-
-        .contact-icon-executive {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-
-        .contact-details-executive h4 {
-            margin-bottom: 0.3rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .contact-details-executive p {
-            color: var(--text-light);
-            margin-bottom: 0.2rem;
-            font-size: 0.95rem;
-        }
-
-        .contact-link-executive {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .contact-link-executive:hover {
-            color: var(--primary-color);
-            text-decoration: underline;
-        }
-
-        /* Social Links */
-        .social-links-executive {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .social-link-executive {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1.2rem;
-            background: var(--bg-light);
-            border-radius: 6px;
-            text-decoration: none;
-            color: var(--text-color);
-            transition: all 0.3s ease;
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-
-        .social-link-executive:hover {
-            background: white;
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-            border-color: var(--secondary-color);
-        }
-
-        .social-icon-executive {
+        .info-icon {
             width: 50px;
             height: 50px;
-            border-radius: 6px;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
         }
-
-        .social-icon-executive.hh {
-            background: #d6001c;
-        }
-
-        .social-icon-executive.setka {
-            background: #7c3aed;
-        }
-
-        .social-icon-executive.telegram {
-            background: #0088cc;
-        }
-
-        .social-icon-executive.max {
-            background: #00a862;
-        }
-
-        .social-name-executive {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* Offer Info */
-        .offer-info-executive {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-color);
-        }
-
-        .offer-info-executive h4 {
+        .info-content h3 {
             color: var(--primary-color);
             margin-bottom: 0.5rem;
+        }
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .social-link {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            background: #f8f9fa;
+            border-radius: 25px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
-
-        .offer-info-executive p {
-            color: var(--text-light);
-            margin: 0;
-            line-height: 1.5;
-            font-size: 0.95rem;
+        .social-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
         }
-
-        /* Contact Form */
-        .contact-form-executive {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        .contact-form-executive:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
-            border-radius: 8px 8px 0 0;
-        }
-
-        .form-group-executive {
+        .social-link.telegram { background: #0088cc; color: white; }
+        .social-link.telegram:hover { background: #0077b5; }
+        .social-link.email { background: #ea4335; color: white; }
+        .social-link.email:hover { background: #d23c2e; }
+        .form-group {
             margin-bottom: 1.5rem;
         }
-
-        .form-group-executive label {
+        .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: var(--primary-color);
-            font-size: 0.95rem;
-        }
-
-        .form-control-executive {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: var(--bg-light);
             color: var(--text-color);
         }
-
-        .form-control-executive:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-            background: white;
-        }
-
-        textarea.form-control-executive {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .btn-executive {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-            color: white;
-            border: none;
-            padding: 0.85rem 2rem;
-            border-radius: 6px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s ease;
         }
-
-        .btn-executive:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(15, 28, 63, 0.2);
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
         }
-
-        /* Footer */
-        .footer-executive {
-            background: var(--primary-color);
-            color: white;
-            padding: 2.5rem 0;
-            text-align: center;
-            margin-top: 4rem;
-            border-top: 4px solid var(--secondary-color);
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
-
-        .footer-executive p {
-            opacity: 0.8;
-            font-size: 0.95rem;
-        }
-
-        /* Notification Styles */
-        .notification-executive {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 6px;
-            color: white;
-            font-weight: 600;
-            z-index: 10000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            max-width: 400px;
-            animation: slideIn 0.3s ease;
-            border-left: 4px solid;
-        }
-
-        .notification-executive.success {
-            background: var(--primary-color);
-            border-left-color: var(--accent-color);
-        }
-
-        .notification-executive.error {
-            background: #DC2626;
-            border-left-color: #EF4444;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .contact-content-executive {
+            .form-row {
                 grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
-            .contact-hero-executive h1 {
-                font-size: 2.2rem;
-            }
-            
-            .header-executive h1 {
-                font-size: 2.2rem;
-            }
-            
-            .nav-links-executive {
-                flex-wrap: wrap;
-                gap: 1.5rem;
-            }
-            
-            .contact-form-executive {
-                padding: 2rem;
-            }
-            
-            .social-links-executive {
-                grid-template-columns: 1fr;
-            }
-
-            .notification-executive {
-                right: 10px;
-                left: 10px;
-                max-width: none;
-            }
-
-            .executive-highlights {
-                gap: 1rem;
-            }
-            
-            .executive-item {
-                min-width: 100%;
-                max-width: 280px;
-            }
-            
-            .executive-cta {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .executive-badge,
-            .executive-button {
-                width: 100%;
-                justify-content: center;
-                text-align: center;
             }
         }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 0 1.5rem;
-            }
-            
-            .contact-hero-executive {
-                padding: 3rem 0;
-            }
-            
-            .contact-hero-executive h1 {
-                font-size: 1.8rem;
-            }
-            
-            .contact-card-executive {
-                padding: 2rem;
-            }
-            
-            .contact-item-executive {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .executive-item {
-                padding: 1.2rem;
-            }
-            
-            .executive-icon {
-                width: 44px;
-                height: 44px;
-                font-size: 1.2rem;
-            }
+        .download-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 3rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 4rem 0;
+        }
+        .download-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .download-card:hover {
+            transform: translateY(-5px);
+        }
+        .map-placeholder {
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            margin-top: 3rem;
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header-executive">
+    <!-- Навигация -->
+    <nav class="navigation">
         <div class="container">
-            <div class="header-content">
-                <div class="header-text-center">
-                    <h1>Дмитрий Панибратский</h1>
-                    <p class="header-subtitle">Топ-руководитель в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
-                    
-                    <div class="executive-highlights">
-                        <div class="executive-item">
-                            <div class="executive-icon">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <div class="executive-text">
-                                <strong>15+ лет</strong>
-                                <span>управления SCM</span>
-                            </div>
-                        </div>
-                        <div class="executive-item">
-                            <div class="executive-icon">
-                                <i class="fas fa-trophy"></i>
-                            </div>
-                            <div class="executive-text">
-                                <strong>30%+ рост</strong>
-                                <span>операционной эффективности</span>
-                            </div>
-                        </div>
-                        <div class="executive-item">
-                            <div class="executive-icon">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="executive-text">
-                                <strong>AI-driven</strong>
-                                <span>трансформация</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="executive-cta">
-                        <div class="executive-badge">
-                            <i class="fas fa-circle" style="color: var(--accent-color); margin-right: 8px;"></i>
-                            Открыт к стратегическим предложениям
-                        </div>
-                        <a href="#contact-form" class="executive-button">
-                            <i class="fas fa-paper-plane"></i>
-                            Обсудить сотрудничество
-                        </a>
-                    </div>
-
-                    <div class="expertise-tags">
-                        <span class="expertise-tag">SCM Strategy</span>
-                        <span class="expertise-tag">Digital Transformation</span>
-                        <span class="expertise-tag">AI & Analytics</span>
-                        <span class="expertise-tag">Operational Excellence</span>
-                    </div>
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="index.html">
+                        <div class="logo-icon">DP</div>
+                        <span class="logo-text">Дмитрий Панибратский</span>
+                    </a>
                 </div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="philosophy.html">Философия</a></li>
+                    <li><a href="cases.html">Кейсы</a></li>
+                    <li><a href="methodology.html">Методология</a></li>
+                    <li><a href="knowledge-base.html">База знаний</a></li>
+                    <li><a href="contact.html" class="active">Контакты</a></li>
+                </ul>
             </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="navigation-executive">
-        <div class="container">
-            <ul class="nav-links-executive">
-                <li><a href="index.html">Главная</a></li>
-                <li><a href="trends-logistics.html" class="active">Тренды логистики</a></li>
-                <li><a href="expertise.html">Экспертиза</a></li>
-                <li><a href="experience.html">Опыт</a></li>
-                <li><a href="projects.html">Проекты</a></li>
-                <li><a href="tools.html">Инструменты</a></li>
-                <li><a href="calculators.html">Калькуляторы</a></li>
-                <li><a href="certificates.html">Сертификаты</a></li>
-                <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="contact.html" class="active">Контакты</a></li>
-            </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="contact-hero-executive">
+    <!-- Заголовок -->
+    <header class="contact-hero">
         <div class="container">
-            <h1>Свяжитесь со мной</h1>
-            <p>Готов обсудить стратегические проекты и предложить решения для оптимизации цепей поставок</p>
+            <h1>Контакты</h1>
+            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
+                Готов обсудить ваши задачи по оптимизации цепей поставок и цифровой трансформации бизнеса
+            </p>
         </div>
-    </section>
+    </header>
 
-    <!-- Contact Content -->
-    <main class="container">
-        <div class="contact-content-executive">
-            <!-- Contact Information -->
-            <div class="contact-info-executive">
-                <div class="contact-card-executive">
-                    <h3><i class="fas fa-envelope"></i> Контактная информация</h3>
-                    
-                    <div class="contact-item-executive">
-                        <div class="contact-icon-executive">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="contact-details-executive">
-                            <h4>Телефон</h4>
-                            <p>+7 (928) 581-07-87</p>
-                            <a href="tel:+79285810787" class="contact-link-executive">Позвонить</a>
-                        </div>
+    <main class="container" style="padding: 3rem 0;">
+        <div class="contact-content">
+            <!-- Контактная информация -->
+            <div class="contact-info">
+                <h2 style="color: var(--primary-color); margin-bottom: 2rem;">Свяжитесь со мной</h2>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
                     </div>
-                    
-                    <div class="contact-item-executive">
-                        <div class="contact-icon-executive">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="contact-details-executive">
-                            <h4>Email</h4>
-                            <p>dmitriy.panibratskiy@yandex.ru</p>
-                            <a href="mailto:dmitriy.panibratskiy@yandex.ru" class="contact-link-executive">Написать</a>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item-executive">
-                        <div class="contact-icon-executive">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="contact-details-executive">
-                            <h4>Локация</h4>
-                            <p><strong>Сургут / Санкт-Петербург</strong></p>
-                            <p>Готов к удаленной работе</p>
-                            <p>Готов к командировкам до 70%</p>
-                        </div>
-                    </div>
-
-                    <!-- Соцсети и мессенджеры -->
-                    <div class="social-links-executive">
-                        <a href="https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45" target="_blank" class="social-link-executive">
-                            <div class="social-icon-executive hh">
-                                <i class="fas fa-briefcase"></i>
-                            </div>
-                            <span class="social-name-executive">HeadHunter</span>
-                        </a>
-                        <a href="https://set.ki/EYUBwz5" target="_blank" class="social-link-executive">
-                            <div class="social-icon-executive setka">
-                                <i class="fas fa-network-wired"></i>
-                            </div>
-                            <span class="social-name-executive">Setka</span>
-                        </a>
-                        <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="social-link-executive">
-                            <div class="social-icon-executive telegram">
-                                <i class="fab fa-telegram"></i>
-                            </div>
-                            <span class="social-name-executive">Telegram</span>
-                        </a>
-                        <a href="https://max.ru/u/f9LHodD0cOJWkmqphqMLwYEjE-cp3srsPoVUGFmORlOYMtMftRb7FCciSpE" target="_blank" class="social-link-executive">
-                            <div class="social-icon-executive max">
-                                <i class="fas fa-comment"></i>
-                            </div>
-                            <span class="social-name-executive">Max</span>
-                        </a>
+                    <div class="info-content">
+                        <h3>Email</h3>
+                        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">panibratsky.dmitry@example.com</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Отвечаю в течение 24 часов</p>
                     </div>
                 </div>
-
-                <div class="contact-card-executive">
-                    <h3><i class="fas fa-clock"></i> Доступность</h3>
-                    
-                    <div class="contact-item-executive">
-                        <div class="contact-icon-executive">
-                            <i class="fas fa-calendar"></i>
-                        </div>
-                        <div class="contact-details-executive">
-                            <h4>Рабочие часы</h4>
-                            <p>Пн-Пт: 9:00 - 18:00</p>
-                            <p>Сб-Вс: По договоренности</p>
-                        </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fab fa-telegram"></i>
                     </div>
-                    
-                    <div class="contact-item-executive">
-                        <div class="contact-icon-executive">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                        <div class="contact-details-executive">
-                            <h4>Ответ в течение</h4>
-                            <p>2-4 часов в рабочее время</p>
-                            <p>24 часов в выходные</p>
-                        </div>
+                    <div class="info-content">
+                        <h3>Telegram</h3>
+                        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">@LogisticaandSupplyChain</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Экспертный канал и личные сообщения</p>
                     </div>
-
-                    <div class="contact-item-executive">
-                        <div class="contact-icon-executive">
-                            <i class="fas fa-plane"></i>
-                        </div>
-                        <div class="contact-details-executive">
-                            <h4>Командировки</h4>
-                            <p>Готов к командировкам до 70% рабочего времени</p>
-                            <p>По России и международные</p>
-                        </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
                     </div>
+                    <div class="info-content">
+                        <h3>Телефон</h3>
+                        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">+7 (XXX) XXX-XX-XX</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">По предварительной договорённости</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>Локация</h3>
+                        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">Россия, Сургут</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Работаю по всей России и удалённо</p>
+                    </div>
+                </div>
+                
+                <h3 style="color: var(--primary-color); margin-top: 2rem; margin-bottom: 1rem;">Социальные сети</h3>
+                <div class="social-links">
+                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="social-link telegram">
+                        <i class="fab fa-telegram"></i> Telegram-канал
+                    </a>
+                    <a href="mailto:panibratsky.dmitry@example.com" class="social-link email">
+                        <i class="fas fa-envelope"></i> Написать email
+                    </a>
                 </div>
             </div>
-
-            <!-- Contact Form -->
-            <div class="contact-form-executive" id="contact-form">
-                <div class="offer-info-executive">
-                    <h4><i class="fas fa-handshake"></i> Формат сотрудничества</h4>
-                    <p>
-                        Готов рассмотреть стратегические предложения на позиции: <strong>Коммерческий директор, Директор по трансформации, Операционный директор Руководитель Цепей поставок</strong>. 
-                        Прикрепите детализированный оффер для рассмотрения.
-                    </p>
-                </div>
-
-                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; font-size: 1.3rem;">
-                    <i class="fas fa-paper-plane"></i> Отправить предложение
-                </h3>
+            
+            <!-- Форма обратной связи -->
+            <div class="contact-form">
+                <h2 style="color: var(--primary-color); margin-bottom: 2rem;">Обсудить проект</h2>
+                <p style="color: var(--text-light); margin-bottom: 2rem;">
+                    Опишите вашу задачу, и я свяжусь с вами для обсуждения возможных решений
+                </p>
                 
                 <form id="contactForm">
-                    <div class="form-group-executive">
-                        <label for="name">Ваше имя *</label>
-                        <input type="text" id="name" name="name" class="form-control-executive" required>
-                    </div>
-                    
-                    <div class="form-group-executive">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" class="form-control-executive" required>
-                    </div>
-                    
-                    <div class="form-group-executive">
-                        <label for="company">Компания *</label>
-                        <input type="text" id="company" name="company" class="form-control-executive" required>
-                    </div>
-                    
-                    <div class="form-group-executive">
-                        <label for="position">Предлагаемая должность *</label>
-                        <input type="text" id="position" name="position" class="form-control-executive" required>
-                    </div>
-                    
-                    <div class="form-group-executive">
-                        <label for="message">Комментарий к предложению *</label>
-                        <textarea id="message" name="message" class="form-control-executive" placeholder="Опишите ваше предложение, условия, проект..." required></textarea>
-                    </div>
-
-                    <div class="form-group-executive">
-                        <label>Прикрепление оффера</label>
-                        <div style="background: #f8fafc; padding: 1.2rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <p style="margin: 0 0 0.5rem 0; color: var(--text-light); font-size: 0.9rem;">
-                                <i class="fas fa-info-circle" style="color: var(--accent-color);"></i> После отправки формы я свяжусь с вами для получения оффера
-                            </p>
-                            <p style="margin: 0; color: var(--text-light); font-size: 0.8rem;">
-                                Вы можете отправить оффер по email или в мессенджере после предварительного контакта
-                            </p>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Имя *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Компания</label>
+                            <input type="text" id="company" name="company">
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn-executive">
-                        <i class="fas fa-paper-plane"></i> Отправить предложение
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Телефон</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="topic">Тема обращения *</label>
+                        <select id="topic" name="topic" required>
+                            <option value="">Выберите тему</option>
+                            <option value="consulting">Консалтинг по SCM</option>
+                            <option value="digital">Цифровая трансформация</option>
+                            <option value="ai">Внедрение AI-решений</option>
+                            <option value="optimization">Оптимизация логистики</option>
+                            <option value="procurement">Управление закупками</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Сообщение *</label>
+                        <textarea id="message" name="message" rows="5" required placeholder="Опишите вашу задачу, текущие проблемы и желаемые результаты..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="budget">Бюджет проекта</label>
+                        <select id="budget" name="budget">
+                            <option value="">Не указан</option>
+                            <option value="small">До 500 тыс. ₽</option>
+                            <option value="medium">500 тыс. - 2 млн ₽</option>
+                            <option value="large">Более 2 млн ₽</option>
+                            <option value="discuss">Требует обсуждения</option>
+                        </select>
+                    </div>
+                    
+                    <div class="success-message" id="successMessage">
+                        <i class="fas fa-check-circle"></i> Сообщение отправлено! Свяжусь с вами в ближайшее время.
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                        <i class="fas fa-paper-plane"></i> Отправить сообщение
                     </button>
+                    
+                    <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 1rem;">
+                        Нажимая кнопку, вы соглашаетесь с обработкой персональных данных
+                    </p>
                 </form>
+            </div>
+        </div>
+        
+        <!-- Скачать резюме -->
+        <section class="download-section">
+            <h2 style="color: var(--primary-color); margin-bottom: 1rem;">Скачать резюме</h2>
+            <p style="color: var(--text-light); max-width: 600px; margin: 0 auto;">
+                Подробное резюме с описанием опыта, компетенций и реализованных проектов
+            </p>
+            
+            <div class="download-card">
+                <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">Дмитрий Панибратский - CV</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    PDF, 2.4 MB | Обновлено: Январь 2025
+                </p>
+                <a href="Panibratsky_Dmitry_CV.pdf" class="btn btn-primary" download>
+                    <i class="fas fa-download"></i> Скачать резюме
+                </a>
+            </div>
+        </section>
+        
+        <!-- Карта (заглушка) -->
+        <div class="map-placeholder">
+            <div style="text-align: center;">
+                <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: var(--border-color); margin-bottom: 1rem;"></i>
+                <p>География работы: вся Россия</p>
+                <p style="font-size: 0.9rem; color: var(--text-light);">Работаю удалённо и с выездом на объекты</p>
             </div>
         </div>
     </main>
 
-    <footer class="footer-executive">
+    <!-- Футер -->
+    <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Дмитрий Панибратский</h3>
+                    <p class="footer-tagline">SCM-стратегия для роста</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Навигация</h4>
+                        <ul>
+                            <li><a href="index.html">Главная</a></li>
+                            <li><a href="philosophy.html">Философия</a></li>
+                            <li><a href="cases.html">Кейсы</a></li>
+                            <li><a href="methodology.html">Методология</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Ресурсы</h4>
+                        <ul>
+                            <li><a href="knowledge-base.html">База знаний</a></li>
+                            <li><a href="contact.html">Контакты</a></li>
+                            <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank">Telegram-канал</a></li>
+                            <li><a href="contact.html">Скачать резюме</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Контакты</h4>
+                        <div class="footer-contact">
+                            <p><i class="fas fa-envelope"></i> panibratsky.dmitry@example.com</p>
+                            <p><i class="fab fa-telegram"></i> @LogisticaandSupplyChain</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Дмитрий Панибратский. Все права защищены.</p>
+            </div>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const contactForm = document.getElementById('contactForm');
+        // Обработка формы
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // Функция для экранирования HTML-символов
-            function escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
+            // Здесь должна быть логика отправки формы на сервер
+            // Для демонстрации просто показываем сообщение об успехе
             
-            contactForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                // Получаем данные формы
-                const formData = {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    company: document.getElementById('company').value,
-                    position: document.getElementById('position').value,
-                    message: document.getElementById('message').value
-                };
-                
-                // Показываем загрузку
-                const submitButton = this.querySelector('button[type="submit"]');
-                const originalText = submitButton.innerHTML;
-                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
-                submitButton.disabled = true;
-                
-                try {
-                    // Отправляем только в Telegram (упрощенная версия)
-                    const TELEGRAM_TOKEN = '8414212107:AAF2UAhSin1_m8HuASJ-aqhrwsGPs0WyxGA';
-                    const CHAT_ID = '2032477871';
-                    
-                    const telegramText = `🎯 <b>НОВОЕ ПРЕДЛОЖЕНИЕ О СОТРУДНИЧЕСТВЕ</b>
-
-👤 <b>Имя:</b> ${escapeHtml(formData.name)}
-📧 <b>Email:</b> ${escapeHtml(formData.email)}
-🏢 <b>Компания:</b> ${escapeHtml(formData.company)}
-💼 <b>Должность:</b> ${escapeHtml(formData.position)}
-💬 <b>Комментарий:</b> 
-${escapeHtml(formData.message)}
-
-━━━━━━━━━━━━━━━━━━━━
-⏰ <i>Отправлено: ${new Date().toLocaleString('ru-RU')}</i>`;
-                    
-                    const telegramResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            chat_id: CHAT_ID,
-                            text: telegramText,
-                            parse_mode: 'HTML'
-                        })
-                    });
-                    
-                    const telegramResult = await telegramResponse.json();
-                    
-                    if (telegramResult.ok) {
-                        showNotification('✅ Предложение отправлено! Я свяжусь с вами для обсуждения деталей.', 'success');
-                        contactForm.reset();
-                    } else {
-                        throw new Error('Ошибка отправки в Telegram');
-                    }
-                    
-                } catch (error) {
-                    console.error('Ошибка:', error);
-                    showNotification('❌ Ошибка отправки. Пожалуйста, свяжитесь со мной по телефону или email.', 'error');
-                } finally {
-                    submitButton.innerHTML = originalText;
-                    submitButton.disabled = false;
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            
+            // Прокручиваем к сообщению об успехе
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Очищаем форму через 3 секунды
+            setTimeout(() => {
+                this.reset();
+                successMessage.style.display = 'none';
+            }, 3000);
+        });
+        
+        // Маска для телефона
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = '+' + value;
+                } else if (value.length <= 6) {
+                    value = '+' + value.substring(0, 1) + ' (' + value.substring(1, 4) + ') ' + value.substring(4);
+                } else if (value.length <= 8) {
+                    value = '+' + value.substring(0, 1) + ' (' + value.substring(1, 4) + ') ' + value.substring(4, 7) + '-' + value.substring(7, 9);
+                } else {
+                    value = '+' + value.substring(0, 1) + ' (' + value.substring(1, 4) + ') ' + value.substring(4, 7) + '-' + value.substring(7, 9) + '-' + value.substring(9, 11);
                 }
-            });
-            
-            // Функция для показа уведомлений
-            function showNotification(message, type) {
-                // Создаем элемент уведомления
-                const notification = document.createElement('div');
-                notification.className = `notification-executive ${type}`;
-                
-                notification.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-                        <span>${message}</span>
-                    </div>
-                `;
-                
-                document.body.appendChild(notification);
-                
-                // Убираем уведомление через 5 секунд
-                setTimeout(() => {
-                    notification.style.animation = 'slideOut 0.3s ease';
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 300);
-                }, 5000);
             }
-
-            // Плавная прокрутка для навигации
-            const anchorLinks = document.querySelectorAll('a[href^="#"]');
             
-            anchorLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
-                        
-                        const targetId = this.getAttribute('href');
-                        const targetElement = document.querySelector(targetId);
-                        
-                        if (targetElement) {
-                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-                            
-                            window.scrollTo({
-                                top: offsetTop,
-                                behavior: 'smooth'
-                            });
-                        }
-                    }
-                });
-            });
+            e.target.value = value;
+        });
+        
+        // Загрузка файла резюме
+        document.querySelector('a[download]').addEventListener('click', function(e) {
+            // В реальном проекте здесь была бы ссылка на реальный PDF
+            // Для демонстрации показываем alert
+            alert('В реальном проекте здесь будет загрузка PDF-файла с резюме.');
         });
     </script>
 </body>
