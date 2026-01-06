@@ -3,20 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дмитрий Панибратский - Эксперт по SCM и цифровой трансформации</title>
+    <title>Дмитрий Панибратский | Стратегический лидер в SCM и цифровой трансформации</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #1a56db;
-            --primary-dark: #1e429f;
-            --secondary-color: #047857;
-            --dark-color: #111827;
-            --light-color: #f9fafb;
-            --gray-color: #6b7280;
-            --light-gray: #f3f4f6;
+            --primary-dark: #0f172a;
+            --primary-blue: #1e40af;
+            --primary-light: #3b82f6;
+            --accent-gold: #d4af37;
+            --accent-steel: #475569;
+            --neutral-dark: #1e293b;
+            --neutral-medium: #64748b;
+            --neutral-light: #f1f5f9;
+            --success-color: #10b981;
+            --border-radius-sm: 4px;
             --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --transition: all 0.3s ease;
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         * {
@@ -26,26 +33,37 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             line-height: 1.6;
-            color: var(--dark-color);
+            color: var(--neutral-dark);
             background-color: #ffffff;
+            font-weight: 400;
+            overflow-x: hidden;
         }
         
         .container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
         
-        /* Header & Navigation */
+        /* Header - Minimal & Professional */
         header {
-            background-color: white;
-            box-shadow: var(--shadow);
-            position: sticky;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            position: fixed;
             top: 0;
-            z-index: 100;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        .header-scrolled {
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid rgba(226, 232, 240, 1);
         }
         
         .nav-container {
@@ -56,14 +74,18 @@
         }
         
         .logo {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--primary-dark);
             text-decoration: none;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
         }
         
-        .logo span {
-            color: var(--secondary-color);
+        .logo-dot {
+            color: var(--accent-gold);
+            margin: 0 2px;
         }
         
         nav ul {
@@ -72,35 +94,37 @@
         }
         
         nav ul li {
-            margin-left: 30px;
+            margin-left: 40px;
         }
         
         nav ul li a {
             text-decoration: none;
-            color: var(--dark-color);
+            color: var(--neutral-medium);
             font-weight: 500;
+            font-size: 15px;
             transition: var(--transition);
-            padding: 5px 0;
+            padding: 8px 0;
             position: relative;
+            letter-spacing: 0.2px;
         }
         
         nav ul li a:hover {
-            color: var(--primary-color);
+            color: var(--primary-blue);
         }
         
         nav ul li a.active {
-            color: var(--primary-color);
+            color: var(--primary-blue);
             font-weight: 600;
         }
         
         nav ul li a.active::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
             width: 100%;
             height: 2px;
-            background-color: var(--primary-color);
+            background-color: var(--accent-gold);
         }
         
         .mobile-menu-btn {
@@ -108,20 +132,36 @@
             background: none;
             border: none;
             font-size: 24px;
-            color: var(--dark-color);
+            color: var(--primary-dark);
             cursor: pointer;
+            padding: 5px;
         }
         
-        /* Hero Section */
+        /* Hero Section - Executive Presence */
         .hero-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #f0f9ff 0%, #fefce8 100%);
+            padding: 160px 0 100px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(30, 64, 175, 0) 100%);
+            z-index: 0;
         }
         
         .hero-container {
             display: flex;
             align-items: center;
-            gap: 60px;
+            gap: 80px;
+            position: relative;
+            z-index: 1;
         }
         
         .hero-content {
@@ -132,313 +172,433 @@
             flex: 1;
             display: flex;
             justify-content: center;
+            position: relative;
         }
         
         .profile-photo {
-            width: 350px;
-            height: 350px;
+            width: 380px;
+            height: 380px;
             border-radius: 50%;
             object-fit: cover;
-            border: 8px solid white;
-            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
         }
         
-        .tagline {
-            color: var(--primary-color);
-            font-size: 18px;
+        .photo-frame {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-gold);
+            transform: rotate(45deg);
+            z-index: 1;
+            top: 0;
+        }
+        
+        .executive-tag {
+            display: inline-block;
+            background-color: var(--primary-blue);
+            color: white;
+            font-size: 12px;
             font-weight: 600;
-            margin-bottom: 10px;
-            display: block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
         }
         
         h1 {
-            font-size: 48px;
+            font-size: 56px;
             line-height: 1.1;
-            margin-bottom: 20px;
-            color: var(--dark-color);
+            margin-bottom: 24px;
+            color: var(--primary-dark);
+            font-weight: 700;
+            letter-spacing: -1px;
         }
         
-        .highlight {
-            color: var(--primary-color);
-        }
-        
-        .hero-description {
+        .hero-title {
             font-size: 20px;
-            color: var(--gray-color);
-            margin-bottom: 30px;
+            color: var(--neutral-medium);
+            margin-bottom: 32px;
+            font-weight: 400;
+            max-width: 600px;
         }
         
-        .philosophy {
-            font-size: 24px;
-            font-style: italic;
-            color: var(--secondary-color);
-            border-left: 4px solid var(--secondary-color);
-            padding-left: 20px;
-            margin: 30px 0;
-        }
-        
-        /* Stats Section */
-        .stats-section {
-            padding: 60px 0;
+        .philosophy-box {
             background-color: white;
+            border-left: 4px solid var(--accent-gold);
+            padding: 28px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
+        }
+        
+        .philosophy-text {
+            font-size: 22px;
+            font-style: italic;
+            color: var(--primary-dark);
+            line-height: 1.5;
+            font-weight: 300;
+        }
+        
+        .philosophy-author {
+            font-size: 14px;
+            color: var(--neutral-medium);
+            margin-top: 16px;
+            font-weight: 500;
+            text-align: right;
+        }
+        
+        /* Executive Stats */
+        .executive-stats {
+            padding: 80px 0;
+            background-color: var(--neutral-light);
+        }
+        
+        .stats-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 60px;
+            letter-spacing: -0.5px;
         }
         
         .stats-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 30px;
         }
         
         .stat-card {
-            text-align: center;
-            padding: 30px 20px;
+            background-color: white;
             border-radius: var(--border-radius);
-            background-color: var(--light-gray);
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
             transition: var(--transition);
+            border-top: 4px solid transparent;
         }
         
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-top: 4px solid var(--accent-gold);
         }
         
         .stat-number {
-            font-size: 48px;
+            font-size: 52px;
             font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 10px;
+            color: var(--primary-blue);
+            margin-bottom: 12px;
+            line-height: 1;
         }
         
         .stat-label {
             font-size: 16px;
-            color: var(--gray-color);
+            color: var(--neutral-medium);
+            font-weight: 500;
+        }
+        
+        .download-stat {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 40px 30px;
+        }
+        
+        .download-stat .stat-number {
+            color: var(--accent-gold);
+        }
+        
+        .download-stat .stat-label {
+            color: rgba(255, 255, 255, 0.9);
         }
         
         .download-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-top: 15px;
-            padding: 12px 24px;
-            background-color: var(--secondary-color);
-            color: white;
+            margin-top: 24px;
+            padding: 14px 28px;
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
             text-decoration: none;
             border-radius: var(--border-radius);
             font-weight: 600;
             transition: var(--transition);
             border: none;
             cursor: pointer;
+            font-size: 16px;
+            letter-spacing: 0.3px;
         }
         
         .download-btn:hover {
-            background-color: #065f46;
+            background-color: #c19b2c;
             transform: translateY(-2px);
-            box-shadow: var(--shadow);
+            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.2);
         }
         
         .download-btn i {
-            margin-right: 8px;
+            margin-right: 10px;
         }
         
-        /* Profile Section */
-        .profile-section {
-            padding: 60px 0;
-            background-color: var(--light-gray);
+        /* Expertise Section */
+        .expertise-section {
+            padding: 100px 0;
+            background-color: white;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
         }
         
         .section-title {
-            font-size: 36px;
-            text-align: center;
-            margin-bottom: 50px;
-            color: var(--dark-color);
-            position: relative;
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
         }
         
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: var(--primary-color);
-            border-radius: 2px;
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--neutral-medium);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
         
-        .profile-content {
+        .expertise-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 40px;
         }
         
-        .profile-card {
+        .expertise-card {
             background-color: white;
-            border-radius: var(--border-radius);
-            padding: 30px;
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
             box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
         
-        .profile-card:hover {
+        .expertise-card:hover {
             transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
         }
         
-        .card-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: var(--primary-color);
+        .expertise-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
+        }
+        
+        .expertise-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(30, 64, 175, 0.1);
+            color: var(--primary-blue);
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            margin-bottom: 28px;
+            font-size: 24px;
         }
         
-        .card-title i {
-            font-size: 28px;
+        .expertise-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
         }
         
-        .competence-list {
+        .expertise-list {
             list-style: none;
         }
         
-        .competence-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--light-gray);
+        .expertise-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
             display: flex;
             align-items: center;
+            color: var(--neutral-medium);
         }
         
-        .competence-list li:last-child {
+        .expertise-list li:last-child {
             border-bottom: none;
         }
         
-        .competence-list li i {
-            color: var(--secondary-color);
-            margin-right: 10px;
-            font-size: 18px;
+        .expertise-list li i {
+            color: var(--accent-gold);
+            margin-right: 12px;
+            font-size: 14px;
         }
         
         /* Leadership Section */
         .leadership-section {
-            padding: 60px 0;
-            background-color: white;
-        }
-        
-        .leadership-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-        
-        .leadership-card {
-            text-align: center;
-            padding: 30px;
-            border-radius: var(--border-radius);
-            background-color: var(--light-gray);
-            transition: var(--transition);
-        }
-        
-        .leadership-card:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .leadership-card:hover .leadership-icon {
-            background-color: white;
-            color: var(--primary-color);
-        }
-        
-        .leadership-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 30px;
-            transition: var(--transition);
+            padding: 100px 0;
+            background-color: var(--neutral-light);
         }
         
         .leadership-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 70px;
+            letter-spacing: -0.5px;
         }
         
-        /* Inspirations Section */
-        .inspirations-section {
-            padding: 60px 0;
-            background-color: var(--light-gray);
-        }
-        
-        .inspirations-container {
+        .leadership-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
         }
         
-        .inspiration-card {
-            display: flex;
-            align-items: center;
+        .leadership-card {
             background-color: white;
             border-radius: var(--border-radius);
-            padding: 25px;
+            padding: 40px 30px;
+            text-align: center;
             box-shadow: var(--shadow);
             transition: var(--transition);
         }
         
-        .inspiration-card:hover {
+        .leadership-card:hover {
             transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
         }
         
-        .inspiration-icon {
-            width: 60px;
-            height: 60px;
+        .leadership-icon {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background-color: #e0f2fe;
-            color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-blue), #1e3a8a);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 20px;
-            font-size: 24px;
-            flex-shrink: 0;
+            margin: 0 auto 24px;
+            font-size: 32px;
+            transition: var(--transition);
         }
         
-        .inspiration-content h3 {
+        .leadership-card:hover .leadership-icon {
+            transform: scale(1.05);
+        }
+        
+        .leadership-name {
             font-size: 20px;
-            margin-bottom: 5px;
-            color: var(--dark-color);
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
         }
         
-        .inspiration-content p {
-            color: var(--gray-color);
-            font-size: 15px;
+        .leadership-desc {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            line-height: 1.6;
+        }
+        
+        /* Methodology Section */
+        .methodology-section {
+            padding: 100px 0;
+            background-color: white;
+        }
+        
+        .methodology-title {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 70px;
+            letter-spacing: -0.5px;
+        }
+        
+        .methodology-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .methodology-card {
+            display: flex;
+            align-items: flex-start;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .methodology-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-gold);
+        }
+        
+        .methodology-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 24px;
+            flex-shrink: 0;
+            font-size: 24px;
+        }
+        
+        .methodology-content h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+        
+        .methodology-content p {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            line-height: 1.6;
         }
         
         /* Footer */
         footer {
-            background-color: var(--dark-color);
+            background-color: var(--primary-dark);
             color: white;
-            padding: 60px 0 30px;
+            padding: 80px 0 40px;
         }
         
         .footer-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
+            gap: 50px;
+            margin-bottom: 60px;
         }
         
         .footer-column h3 {
             font-size: 20px;
-            margin-bottom: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
             color: white;
             position: relative;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
         }
         
         .footer-column h3::after {
@@ -446,9 +606,34 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 50px;
+            width: 40px;
             height: 3px;
-            background-color: var(--primary-color);
+            background-color: var(--accent-gold);
+        }
+        
+        .footer-column p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .footer-stats {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+        
+        .footer-stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 5px;
+        }
+        
+        .footer-stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
         }
         
         .footer-column ul {
@@ -456,13 +641,16 @@
         }
         
         .footer-column ul li {
-            margin-bottom: 10px;
+            margin-bottom: 14px;
         }
         
         .footer-column ul li a {
-            color: #d1d5db;
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: var(--transition);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
         }
         
         .footer-column ul li a:hover {
@@ -470,29 +658,76 @@
             padding-left: 5px;
         }
         
+        .footer-column ul li i {
+            margin-right: 10px;
+            width: 20px;
+            color: var(--accent-gold);
+        }
+        
+        .footer-contact-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 28px;
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .footer-contact-btn:hover {
+            background-color: #c19b2c;
+            transform: translateY(-2px);
+        }
+        
         .copyright {
             text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid #374151;
-            color: #9ca3af;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
         }
         
         /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .hero-container {
+                gap: 60px;
+            }
+            
+            .profile-photo, .photo-frame {
+                width: 340px;
+                height: 340px;
+            }
+        }
+        
         @media (max-width: 992px) {
             .hero-container {
                 flex-direction: column;
                 text-align: center;
-                gap: 40px;
+                gap: 50px;
             }
             
             h1 {
-                font-size: 42px;
+                font-size: 48px;
             }
             
-            .profile-photo {
-                width: 300px;
-                height: 300px;
+            .profile-photo, .photo-frame {
+                width: 320px;
+                height: 320px;
+            }
+            
+            .hero-section::before {
+                width: 100%;
+                height: 40%;
+                top: 0;
+            }
+            
+            .expertise-grid {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -506,47 +741,74 @@
             }
             
             h1 {
-                font-size: 36px;
+                font-size: 40px;
             }
             
-            .hero-description {
+            .hero-title {
                 font-size: 18px;
             }
             
-            .philosophy {
+            .philosophy-text {
                 font-size: 20px;
             }
             
-            .section-title {
-                font-size: 30px;
+            .section-title, .leadership-title, .methodology-title {
+                font-size: 32px;
             }
             
             .stat-number {
-                font-size: 36px;
+                font-size: 44px;
+            }
+            
+            .hero-section {
+                padding: 140px 0 80px;
+            }
+            
+            .executive-stats, .expertise-section, .leadership-section, .methodology-section {
+                padding: 70px 0;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
             }
         }
         
         @media (max-width: 576px) {
             .hero-section {
-                padding: 60px 0;
+                padding: 120px 0 60px;
             }
             
-            .profile-photo {
-                width: 250px;
-                height: 250px;
+            .profile-photo, .photo-frame {
+                width: 280px;
+                height: 280px;
             }
             
-            .stat-card, .profile-card, .leadership-card, .inspiration-card {
-                padding: 20px;
+            h1 {
+                font-size: 36px;
+            }
+            
+            .philosophy-box {
+                padding: 24px;
+            }
+            
+            .stat-card, .expertise-card, .leadership-card, .methodology-card {
+                padding: 30px 20px;
+            }
+            
+            .container {
+                padding: 0 20px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header & Navigation -->
-    <header>
+    <!-- Header -->
+    <header id="mainHeader">
         <div class="container nav-container">
-            <a href="index.html" class="logo">Дмитрий<span>Панибратский</span></a>
+            <a href="index.html" class="logo">
+                ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
+            </a>
             
             <button class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
@@ -554,9 +816,9 @@
             
             <nav>
                 <ul>
-                    <li><a href="index.html" class="active">Обо мне</a></li>
-                    <li><a href="experience.html">Опыт и проекты</a></li>
-                    <li><a href="expertise.html">Экспертиза и ресурсы</a></li>
+                    <li><a href="index.html" class="active">Стратегия</a></li>
+                    <li><a href="experience.html">Опыт</a></li>
+                    <li><a href="expertise.html">Экспертиза</a></li>
                     <li><a href="contact.html">Контакты</a></li>
                 </ul>
             </nav>
@@ -567,94 +829,110 @@
     <section class="hero-section">
         <div class="container hero-container">
             <div class="hero-content">
-                <span class="tagline">Эксперт в управлении цепями поставок</span>
-                <h1>Дмитрий <span class="highlight">Панибратский</span></h1>
-                <p class="hero-description">Преобразую сложности SCM в стратегию роста прибыли через цифровую трансформацию, AI-решения и оптимизацию end-to-end процессов.</p>
+                <span class="executive-tag">Стратегический лидер SCM</span>
+                <h1>Дмитрий Панибратский</h1>
+                <p class="hero-title">Преобразую операционные сложности в конкурентные преимущества через цифровую трансформацию, AI-стратегии и системную оптимизацию цепей поставок.</p>
                 
-                <blockquote class="philosophy">
-                    Нет неэффективных цепей поставок. Есть непроработанная стратегия.
-                </blockquote>
+                <div class="philosophy-box">
+                    <p class="philosophy-text">В условиях волатильности рынка не операционная эффективность, а стратегическая адаптивность определяет лидеров. Цифровая трансформация SCM — это не технологический проект, а фундаментальная перестройка бизнес-логики.</p>
+                    <div class="philosophy-author">— Дмитрий Панибратский</div>
+                </div>
                 
                 <div class="hero-tags">
-                    <span class="tag">Управление SCM</span>
+                    <span class="tag">Стратегия SCM</span>
                     <span class="tag">Цифровая трансформация</span>
-                    <span class="tag">AI & Аналитика</span>
+                    <span class="tag">AI-аналитика</span>
                     <span class="tag">Управление закупками</span>
-                    <span class="tag">Технический контроль</span>
-                    <span class="tag">MBA Логистика</span>
                 </div>
             </div>
             
             <div class="hero-image">
-                <!-- Локальное фото из папки images -->
+                <div class="photo-frame"></div>
                 <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
-        <div class="container stats-container">
-            <div class="stat-card">
-                <div class="stat-number">15+</div>
-                <div class="stat-label">лет в управлении SCM</div>
-            </div>
+    <!-- Executive Stats -->
+    <section class="executive-stats">
+        <div class="container">
+            <h2 class="stats-title">Измеримые результаты стратегического управления</h2>
             
-            <div class="stat-card">
-                <div class="stat-number">143%</div>
-                <div class="stat-label">рост операционной эффективности</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-number" id="downloadCounter">248</div>
-                <div class="stat-label">скачиваний резюме</div>
-                <button class="download-btn" onclick="downloadResume()">
-                    <i class="fas fa-download"></i> Скачать резюме
-                </button>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-number">87k+</div>
-                <div class="stat-label">SKU под управлением</div>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">лет стратегического опыта в SCM</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">143%</div>
+                    <div class="stat-label">рост операционной эффективности</div>
+                </div>
+                
+                <div class="stat-card download-stat">
+                    <div class="stat-number" id="downloadCounter">248</div>
+                    <div class="stat-label">скачиваний резюме стратега</div>
+                    <button class="download-btn" onclick="downloadResume()">
+                        <i class="fas fa-download"></i> Скачать стратегическое резюме
+                    </button>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">87k+</div>
+                    <div class="stat-label">SKU под стратегическим управлением</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Professional Profile Section -->
-    <section class="profile-section">
+    <!-- Expertise Section -->
+    <section class="expertise-section">
         <div class="container">
-            <h2 class="section-title">Профессиональный профиль</h2>
+            <div class="section-header">
+                <h2 class="section-title">Стратегические компетенции</h2>
+                <p class="section-subtitle">Комплексный подход к управлению цепями поставок, сочетающий технологическую экспертизу с бизнес-стратегией для создания устойчивых конкурентных преимуществ.</p>
+            </div>
             
-            <div class="profile-content">
-                <div class="profile-card">
-                    <h3 class="card-title"><i class="fas fa-bullseye"></i> Ключевая экспертиза</h3>
-                    <ul class="competence-list">
-                        <li><i class="fas fa-check"></i> Цифровая трансформация SCM</li>
-                        <li><i class="fas fa-check"></i> AI & Предиктивная аналитика</li>
-                        <li><i class="fas fa-check"></i> Управление закупками</li>
-                        <li><i class="fas fa-check"></i> Оптимизация бизнес-процессов</li>
+            <div class="expertise-grid">
+                <div class="expertise-card">
+                    <div class="expertise-icon">
+                        <i class="fas fa-chess-board"></i>
+                    </div>
+                    <h3 class="expertise-title">Стратегия SCM</h3>
+                    <ul class="expertise-list">
+                        <li><i class="fas fa-check"></i> Разработка SCM-стратегии компании</li>
+                        <li><i class="fas fa-check"></i> Оптимизация сети распределения</li>
+                        <li><i class="fas fa-check"></i> Управление складской инфраструктурой</li>
+                        <li><i class="fas fa-check"></i> Планирование мощностей и ресурсов</li>
+                        <li><i class="fas fa-check"></i> Анализ рисков цепей поставок</li>
+                    </ul>
+                </div>
+                
+                <div class="expertise-card">
+                    <div class="expertise-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="expertise-title">Цифровая трансформация</h3>
+                    <ul class="expertise-list">
+                        <li><i class="fas fa-check"></i> Внедрение AI и ML решений</li>
+                        <li><i class="fas fa-check"></i> Создание цифровых двойников</li>
+                        <li><i class="fas fa-check"></i> Автоматизация процессов (RPA)</li>
+                        <li><i class="fas fa-check"></i> BI системы и дашборды</li>
+                        <li><i class="fas fa-check"></i> ERP системы (SAP)</li>
+                    </ul>
+                </div>
+                
+                <div class="expertise-card">
+                    <div class="expertise-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="expertise-title">Аналитика и оптимизация</h3>
+                    <ul class="expertise-list">
+                        <li><i class="fas fa-check"></i> Предиктивная аналитика</li>
+                        <li><i class="fas fa-check"></i> Data Science (Python, SQL)</li>
                         <li><i class="fas fa-check"></i> Lean Six Sigma</li>
-                    </ul>
-                </div>
-                
-                <div class="profile-card">
-                    <h3 class="card-title"><i class="fas fa-graduation-cap"></i> Образование</h3>
-                    <ul class="competence-list">
-                        <li><i class="fas fa-certificate"></i> MBA "Логистика, снабжение, закупки"</li>
-                        <li><i class="fas fa-certificate"></i> Операционный логист</li>
-                        <li><i class="fas fa-certificate"></i> Коммерческий директор</li>
-                        <li><i class="fas fa-certificate"></i> Контроль технического состояния АТС</li>
-                    </ul>
-                </div>
-                
-                <div class="profile-card">
-                    <h3 class="card-title"><i class="fas fa-laptop-code"></i> Технологический стек</h3>
-                    <ul class="competence-list">
-                        <li><i class="fas fa-database"></i> SAP ERP</li>
-                        <li><i class="fas fa-chart-bar"></i> Tableau</li>
-                        <li><i class="fab fa-python"></i> Python & Data Science</li>
-                        <li><i class="fas fa-project-diagram"></i> AnyLogic</li>
-                        <li><i class="fas fa-server"></i> SQL & Машинное обучение</li>
+                        <li><i class="fas fa-check"></i> Финансовое моделирование</li>
+                        <li><i class="fas fa-check"></i> KPI разработка и мониторинг</li>
                     </ul>
                 </div>
             </div>
@@ -664,90 +942,77 @@
     <!-- Leadership Section -->
     <section class="leadership-section">
         <div class="container">
-            <h2 class="section-title">Лидерские компетенции</h2>
+            <h2 class="leadership-title">Стратегическое лидерство</h2>
             
-            <div class="leadership-container">
+            <div class="leadership-grid">
                 <div class="leadership-card">
                     <div class="leadership-icon">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-chess-king"></i>
                     </div>
-                    <h3 class="leadership-title">Управление командами</h3>
-                    <p>Руководство до 15+ специалистов, кросс-функциональные команды</p>
+                    <h3 class="leadership-name">Стратегическое видение</h3>
+                    <p class="leadership-desc">Преобразование операционных данных в долгосрочные стратегические решения, определяющие конкурентные преимущества компании.</p>
                 </div>
                 
                 <div class="leadership-card">
                     <div class="leadership-icon">
-                        <i class="fas fa-chess"></i>
+                        <i class="fas fa-project-diagram"></i>
                     </div>
-                    <h3 class="leadership-title">Стратегическое мышление</h3>
-                    <p>Долгосрочное планирование и системный подход к решению задач</p>
+                    <h3 class="leadership-name">Системное мышление</h3>
+                    <p class="leadership-desc">Анализ взаимосвязей в сложных системах, выявление точек влияния и создание устойчивых архитектур бизнес-процессов.</p>
                 </div>
                 
                 <div class="leadership-card">
                     <div class="leadership-icon">
-                        <i class="fas fa-exchange-alt"></i>
+                        <i class="fas fa-users-cog"></i>
                     </div>
-                    <h3 class="leadership-title">Управление изменениями</h3>
-                    <p>Трансформация процессов и адаптация к новым условиям</p>
+                    <h3 class="leadership-name">Управление трансформацией</h3>
+                    <p class="leadership-desc">Системное внедрение изменений, балансирование между технологическими возможностями и организационной готовностью.</p>
                 </div>
                 
                 <div class="leadership-card">
                     <div class="leadership-icon">
-                        <i class="fas fa-comments"></i>
+                        <i class="fas fa-handshake"></i>
                     </div>
-                    <h3 class="leadership-title">Эффективная коммуникация</h3>
-                    <p>Кросс-функциональное взаимодействие и убедительные презентации</p>
+                    <h3 class="leadership-name">Стейкхолдер-менеджмент</h3>
+                    <p class="leadership-desc">Выстраивание стратегических альянсов, управление ожиданиями и создание экосистемы взаимовыгодного сотрудничества.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Inspirations Section -->
-    <section class="inspirations-section">
+    <!-- Methodology Section -->
+    <section class="methodology-section">
         <div class="container">
-            <h2 class="section-title">Профессиональные ориентиры</h2>
-            <p style="text-align: center; margin-bottom: 40px; color: var(--gray-color); max-width: 800px; margin-left: auto; margin-right: auto;">
-                Постоянное обучение и применение лучших практик от ведущих бизнес-экспертов
-            </p>
+            <h2 class="methodology-title">Методологический фундамент</h2>
             
-            <div class="inspirations-container">
-                <div class="inspiration-card">
-                    <div class="inspiration-icon">
-                        <i class="fas fa-chart-line"></i>
+            <div class="methodology-container">
+                <div class="methodology-card">
+                    <div class="methodology-icon">
+                        <i class="fas fa-sitemap"></i>
                     </div>
-                    <div class="inspiration-content">
-                        <h3>Ицхак Адизес</h3>
-                        <p>Методология управления изменениями и корпоративная трансформация</p>
+                    <div class="methodology-content">
+                        <h3>Методология Адизеса</h3>
+                        <p>Стратегии управления организационными изменениями и корпоративной трансформацией на разных этапах жизненного цикла компании.</p>
                     </div>
                 </div>
                 
-                <div class="inspiration-card">
-                    <div class="inspiration-icon">
+                <div class="methodology-card">
+                    <div class="methodology-icon">
                         <i class="fas fa-tachometer-alt"></i>
                     </div>
-                    <div class="inspiration-content">
-                        <h3>Максим Батырев</h3>
-                        <p>Комбат-менеджмент и эффективность бизнес-процессов</p>
+                    <div class="methodology-content">
+                        <h3>Комбат-менеджмент</h3>
+                        <p>Принципы экстремальной эффективности бизнес-процессов и принятия решений в условиях ограниченных ресурсов и высокой неопределенности.</p>
                     </div>
                 </div>
                 
-                <div class="inspiration-card">
-                    <div class="inspiration-icon">
-                        <i class="fas fa-bullhorn"></i>
+                <div class="methodology-card">
+                    <div class="methodology-icon">
+                        <i class="fas fa-bullseye"></i>
                     </div>
-                    <div class="inspiration-content">
-                        <h3>Игорь Манн</h3>
-                        <p>Маркетинг, продажи и практический подход к бизнесу</p>
-                    </div>
-                </div>
-                
-                <div class="inspiration-card">
-                    <div class="inspiration-icon">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <div class="inspiration-content">
-                        <h3>Владимир Сидоренко</h3>
-                        <p>Performia - оценка и развитие персонала, эффективность работы</p>
+                    <div class="methodology-content">
+                        <h3>Управление по целям</h3>
+                        <p>Системное мышление и фокусировка на ключевых результатах, обеспечивающих стратегическое преимущество компании.</p>
                     </div>
                 </div>
             </div>
@@ -759,53 +1024,57 @@
         <div class="container footer-container">
             <div class="footer-column">
                 <h3>Дмитрий Панибратский</h3>
-                <p>Эксперт в управлении цепями поставок и цифровой трансформации бизнеса с 15+ летним опытом.</p>
-                <div style="margin-top: 15px;">
-                    <div style="font-size: 32px; font-weight: bold; color: var(--primary-color);" id="footerDownloadCounter">248</div>
-                    <div style="color: #d1d5db; font-size: 14px;">резюме уже скачано</div>
+                <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса. Создаю измеримые конкурентные преимущества через технологические инновации и системную оптимизацию.</p>
+                <div class="footer-stats">
+                    <div class="footer-stat-number" id="footerDownloadCounter">248</div>
+                    <div class="footer-stat-label">стратегических резюме скачано</div>
                 </div>
             </div>
             
             <div class="footer-column">
                 <h3>Навигация</h3>
                 <ul>
-                    <li><a href="index.html">Обо мне и философия</a></li>
-                    <li><a href="experience.html">Опыт и проекты</a></li>
-                    <li><a href="expertise.html">Экспертиза и ресурсы</a></li>
-                    <li><a href="contact.html">Контакты</a></li>
+                    <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия и философия</a></li>
+                    <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт и кейсы</a></li>
+                    <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза и инструменты</a></li>
+                    <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты и сотрудничество</a></li>
                 </ul>
             </div>
             
             <div class="footer-column">
                 <h3>Контакты</h3>
                 <ul>
-                    <li><i class="fas fa-envelope"></i> panibratsky.dmitry@example.com</li>
-                    <li><i class="fab fa-telegram"></i> @LogisticaandSupplyChain</li>
-                    <li><i class="fas fa-phone"></i> +7 (XXX) XXX-XX-XX</li>
-                    <li><i class="fas fa-map-marker-alt"></i> Россия, Сургут</li>
+                    <li><a href="mailto:panibratsky.dmitry@example.com"><i class="fas fa-envelope"></i> panibratsky.dmitry@example.com</a></li>
+                    <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> @LogisticaandSupplyChain</a></li>
+                    <li><a href="tel:+7XXXXXXXXXX"><i class="fas fa-phone"></i> +7 (XXX) XXX-XX-XX</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Россия, Сургут</a></li>
                 </ul>
+                <a href="contact.html" class="footer-contact-btn">Обсудить стратегию</a>
             </div>
             
             <div class="footer-column">
-                <h3>Связаться со мной</h3>
-                <p>Готов обсудить ваши задачи по оптимизации цепей поставок и цифровой трансформации бизнеса.</p>
-                <a href="contact.html" style="display: inline-block; margin-top: 15px; padding: 10px 20px; background-color: var(--primary-color); color: white; text-decoration: none; border-radius: var(--border-radius);">Написать сообщение</a>
+                <h3>Стратегическое сотрудничество</h3>
+                <p>Готов обсудить задачи цифровой трансформации SCM, разработку стратегий оптимизации цепей поставок и создание AI-решений для вашего бизнеса.</p>
+                <p style="margin-top: 20px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Форматы сотрудничества: консалтинг, проектная работа, стратегическое партнерство, контрактное управление.</p>
             </div>
         </div>
         
         <div class="container">
             <div class="copyright">
-                &copy; 2024 Дмитрий Панибратский. Все права защищены. | <span id="downloadCountDisplay">248 скачиваний резюме</span>
+                &copy; 2024 Дмитрий Панибратский. Стратегический лидер в SCM и цифровой трансформации. <span id="downloadCountDisplay">248 скачиваний резюме</span>
             </div>
         </div>
     </footer>
 
     <script>
         // Mobile menu toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            const nav = document.querySelector('nav ul');
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const nav = document.querySelector('nav ul');
+        
+        mobileMenuBtn.addEventListener('click', function() {
             if (nav.style.display === 'flex') {
                 nav.style.display = 'none';
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
             } else {
                 nav.style.display = 'flex';
                 nav.style.flexDirection = 'column';
@@ -815,12 +1084,23 @@
                 nav.style.width = '100%';
                 nav.style.backgroundColor = 'white';
                 nav.style.padding = '20px';
-                nav.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+                nav.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                nav.style.zIndex = '1000';
+                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
             }
         });
         
-        // Update active nav link on scroll
+        // Header scroll effect
+        const header = document.getElementById('mainHeader');
+        
         window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                header.classList.add('header-scrolled');
+            } else {
+                header.classList.remove('header-scrolled');
+            }
+            
+            // Update active nav link on scroll
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('nav ul li a');
             
@@ -841,18 +1121,19 @@
             });
         });
         
-        // Simple tag styling
+        // Initialize tags styling
         const tags = document.querySelectorAll('.tag');
         tags.forEach(tag => {
             tag.style.display = 'inline-block';
-            tag.style.backgroundColor = '#e0f2fe';
-            tag.style.color = '#0369a1';
-            tag.style.padding = '5px 15px';
+            tag.style.backgroundColor = 'rgba(30, 64, 175, 0.1)';
+            tag.style.color = 'var(--primary-blue)';
+            tag.style.padding = '8px 16px';
             tag.style.borderRadius = '20px';
             tag.style.marginRight = '10px';
             tag.style.marginBottom = '10px';
             tag.style.fontSize = '14px';
             tag.style.fontWeight = '500';
+            tag.style.border = '1px solid rgba(30, 64, 175, 0.2)';
         });
         
         // Функция для загрузки и подсчета скачиваний резюме
@@ -878,14 +1159,14 @@
             
             // Имитация загрузки файла
             const link = document.createElement('a');
-            link.href = 'resume/Дмитрий_Панибратский_CV.pdf'; // Укажите путь к вашему файлу резюме
-            link.download = 'Дмитрий_Панибратский_CV.pdf';
+            link.href = 'resume/Дмитрий_Панибратский_Стратегическое_резюме.pdf'; // Укажите путь к вашему файлу резюме
+            link.download = 'Дмитрий_Панибратский_Стратегическое_резюме.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             
             // Показываем уведомление
-            showNotification('Резюме успешно скачано! Спасибо за интерес к моему опыту.');
+            showNotification('Стратегическое резюме успешно скачано! Благодарю за проявленный интерес.');
         }
         
         // Функция для показа уведомления
@@ -893,28 +1174,35 @@
             // Создаем элемент уведомления
             const notification = document.createElement('div');
             notification.style.position = 'fixed';
-            notification.style.top = '20px';
-            notification.style.right = '20px';
-            notification.style.backgroundColor = '#10b981';
+            notification.style.top = '30px';
+            notification.style.right = '30px';
+            notification.style.backgroundColor = 'var(--primary-dark)';
             notification.style.color = 'white';
-            notification.style.padding = '15px 20px';
-            notification.style.borderRadius = '8px';
-            notification.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-            notification.style.zIndex = '1000';
+            notification.style.padding = '20px 25px';
+            notification.style.borderRadius = 'var(--border-radius)';
+            notification.style.boxShadow = 'var(--shadow-lg)';
+            notification.style.zIndex = '9999';
             notification.style.fontWeight = '500';
-            notification.textContent = message;
+            notification.style.borderLeft = '4px solid var(--accent-gold)';
+            notification.style.maxWidth = '350px';
+            notification.style.display = 'flex';
+            notification.style.alignItems = 'center';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle" style="color: var(--accent-gold); margin-right: 15px; font-size: 20px;"></i>
+                <span>${message}</span>
+            `;
             
             // Добавляем уведомление на страницу
             document.body.appendChild(notification);
             
-            // Удаляем уведомление через 3 секунды
+            // Удаляем уведомление через 4 секунды
             setTimeout(() => {
                 notification.style.opacity = '0';
                 notification.style.transition = 'opacity 0.5s ease';
                 setTimeout(() => {
                     document.body.removeChild(notification);
                 }, 500);
-            }, 3000);
+            }, 4000);
         }
         
         // Инициализация счетчика скачиваний при загрузке страницы
@@ -929,6 +1217,23 @@
             document.getElementById('downloadCounter').textContent = downloadCount;
             document.getElementById('footerDownloadCounter').textContent = downloadCount;
             document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
+            
+            // Инициализация плавного скролла для навигации
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
         });
     </script>
 </body>
