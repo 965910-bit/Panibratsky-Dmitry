@@ -1044,10 +1044,10 @@
             <div class="footer-column">
                 <h3>Контакты</h3>
                 <ul>
-                    <li><a href="mailto:panibratsky.dmitry@example.com"><i class="fas fa-envelope"></i> panibratsky.dmitry@example.com</a></li>
+                    <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
                     <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> @LogisticaandSupplyChain</a></li>
-                    <li><a href="tel:+7XXXXXXXXXX"><i class="fas fa-phone"></i> +7 (XXX) XXX-XX-XX</a></li>
-                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Россия, Сургут</a></li>
+                    <li><a href="tel:+79822282949"><i class="fas fa-phone"></i> +7 (982) 228-29-49</a></li>
+                    <li><a href="tel:+79825810787"><i class="fas fa-phone"></i> +7 (982) 581-07-87</a></li>
                 </ul>
                 <a href="contact.html" class="footer-contact-btn">Обсудить стратегию</a>
             </div>
@@ -1099,26 +1099,6 @@
             } else {
                 header.classList.remove('header-scrolled');
             }
-            
-            // Update active nav link on scroll
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('nav ul li a');
-            
-            let currentSection = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-                    currentSection = section.getAttribute('id');
-                }
-            });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').includes(currentSection)) {
-                    link.classList.add('active');
-                }
-            });
         });
         
         // Initialize tags styling
@@ -1157,10 +1137,13 @@
             document.getElementById('footerDownloadCounter').textContent = downloadCount;
             document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
             
-            // Имитация загрузки файла
+            // Создаем ссылку для скачивания файла
             const link = document.createElement('a');
-            link.href = 'resume/Дмитрий_Панибратский_Стратегическое_резюме.pdf'; // Укажите путь к вашему файлу резюме
+            link.href = 'resume/Дмитрий_Панибратский_CV.pdf';
             link.download = 'Дмитрий_Панибратский_Стратегическое_резюме.pdf';
+            link.target = '_blank';
+            
+            // Добавляем ссылку на страницу и имитируем клик
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -1217,23 +1200,6 @@
             document.getElementById('downloadCounter').textContent = downloadCount;
             document.getElementById('footerDownloadCounter').textContent = downloadCount;
             document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
-            
-            // Инициализация плавного скролла для навигации
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
         });
     </script>
 </body>
