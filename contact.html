@@ -6,6 +6,8 @@
     <title>Контакты и сотрудничество | Дмитрий Панибратский</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Библиотека для генерации QR-кода -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary-dark: #0f172a;
@@ -351,10 +353,128 @@
             margin-right: 8px;
         }
         
+        /* QR Code Section */
+        .qrcode-section {
+            padding: 100px 0;
+            background-color: var(--neutral-light);
+        }
+        
+        .qrcode-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .qrcode-card {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: 50px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            text-align: center;
+        }
+        
+        .qrcode-header {
+            margin-bottom: 40px;
+        }
+        
+        .qrcode-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 32px;
+        }
+        
+        .qrcode-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+        
+        .qrcode-subtitle {
+            font-size: 18px;
+            color: var(--neutral-medium);
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .qrcode-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+        
+        .qrcode-display {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .qrcode-info {
+            flex: 1;
+            min-width: 300px;
+            text-align: left;
+        }
+        
+        #qrcode {
+            display: inline-block;
+            padding: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        
+        .qrcode-desc {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            margin-bottom: 25px;
+        }
+        
+        .qrcode-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .qrcode-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            display: flex;
+            align-items: center;
+            color: var(--neutral-medium);
+        }
+        
+        .qrcode-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .qrcode-features li i {
+            color: var(--accent-gold);
+            margin-right: 12px;
+            font-size: 16px;
+        }
+        
+        .qrcode-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
         /* Audience Section */
         .audience-section {
             padding: 100px 0;
-            background-color: var(--neutral-light);
+            background-color: white;
         }
         
         .audience-grid {
@@ -752,6 +872,15 @@
             .contact-grid, .audience-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .qrcode-content {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .qrcode-info {
+                text-align: center;
+            }
         }
         
         @media (max-width: 768px) {
@@ -779,11 +908,11 @@
                 padding: 140px 0 60px;
             }
             
-            .contact-sections, .audience-section, .form-section, .social-section {
+            .contact-sections, .qrcode-section, .audience-section, .form-section, .social-section {
                 padding: 70px 0;
             }
             
-            .form-card {
+            .form-card, .qrcode-card {
                 padding: 30px;
             }
             
@@ -828,6 +957,11 @@
                 width: 50px;
                 height: 50px;
                 font-size: 20px;
+            }
+            
+            .qrcode-actions {
+                flex-direction: column;
+                gap: 15px;
             }
         }
     </style>
@@ -928,6 +1062,54 @@
                     <a href="tel:+79822282949" class="contact-btn">
                         <i class="fas fa-phone"></i> Позвонить
                     </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QR Code Section -->
+    <section class="qrcode-section" id="qrcodeSection">
+        <div class="container qrcode-container">
+            <div class="qrcode-card">
+                <div class="qrcode-header">
+                    <div class="qrcode-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h2 class="qrcode-title">QR-код для быстрой связи</h2>
+                    <p class="qrcode-subtitle">Отсканируйте QR-код смартфоном, чтобы мгновенно сохранить мои контактные данные, перейти на сайт или написать сообщение</p>
+                </div>
+                
+                <div class="qrcode-content">
+                    <div class="qrcode-display">
+                        <div id="qrcode"></div>
+                        <p class="qrcode-desc">QR-код содержит все контакты и ссылки</p>
+                    </div>
+                    
+                    <div class="qrcode-info">
+                        <p class="qrcode-desc">Этот QR-код содержит полную контактную информацию, которую можно мгновенно сохранить в телефон:</p>
+                        
+                        <ul class="qrcode-features">
+                            <li><i class="fas fa-mobile-alt"></i> Телефонные номера для быстрого набора</li>
+                            <li><i class="fas fa-envelope"></i> Электронную почту для отправки писем</li>
+                            <li><i class="fab fa-telegram"></i> Ссылку на Telegram-канал и чат</li>
+                            <li><i class="fas fa-globe"></i> Ссылку на персональный сайт</li>
+                            <li><i class="fas fa-user-tie"></i> Полное имя и должность</li>
+                        </ul>
+                        
+                        <p class="qrcode-desc">Используйте камеру телефона или приложение для сканирования QR-кодов</p>
+                    </div>
+                </div>
+                
+                <div class="qrcode-actions">
+                    <button class="contact-btn" onclick="downloadQRCode()">
+                        <i class="fas fa-download"></i> Скачать QR-код
+                    </button>
+                    <button class="contact-btn" onclick="shareQRCode()">
+                        <i class="fas fa-share-alt"></i> Поделиться
+                    </button>
+                    <button class="contact-btn" onclick="printQRCode()">
+                        <i class="fas fa-print"></i> Распечатать
+                    </button>
                 </div>
             </div>
         </div>
@@ -1233,6 +1415,11 @@
             document.getElementById('contactForm').scrollIntoView({ behavior: 'smooth' });
         }
         
+        // Function to scroll to QR code section
+        function scrollToQRCode() {
+            document.getElementById('qrcodeSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
         // Function to download resume
         function downloadResume() {
             let downloadCount = localStorage.getItem('resumeDownloadCount');
@@ -1303,7 +1490,167 @@
             
             document.getElementById('footerDownloadCounter').textContent = downloadCount;
             document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
+            
+            // Generate QR Code
+            generateQRCode();
         });
+        
+        // QR Code Functions
+        function generateQRCode() {
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+            
+            // Create QR code data
+            const qrData = `BEGIN:VCARD
+VERSION:3.0
+N:Панибратский;Дмитрий;;;
+FN:Дмитрий Панибратский
+ORG:Эксперт по SCM и цифровой трансформации
+TITLE:Стратегический лидер в управлении цепями поставок
+TEL;TYPE=CELL,VOICE:+79822282949
+TEL;TYPE=CELL,VOICE:+79825810787
+EMAIL;TYPE=INTERNET:dmitriy.panibratskiy@yandex.ru
+URL:https://965910-bit.github.io/Panibratsky-Dmitry/
+URL:https://t.me/LogisticaandSupplyChain
+NOTE:15+ лет опыта в управлении цепями поставок. Цифровая трансформация SCM, AI-решения, оптимизация процессов.
+END:VCARD`;
+            
+            // Generate QR code
+            new QRCode(document.getElementById('qrcode'), {
+                text: qrData,
+                width: 250,
+                height: 250,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+        
+        function downloadQRCode() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'Дмитрий_Панибратский_QR_код.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                showNotification('QR-код успешно скачан!');
+            } else {
+                showNotification('Ошибка при создании QR-кода. Попробуйте обновить страницу.');
+            }
+        }
+        
+        function shareQRCode() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Контакты Дмитрия Панибратского',
+                    text: 'QR-код с контактами эксперта по SCM и цифровой трансформации',
+                    url: window.location.href + '#qrcodeSection'
+                })
+                .then(() => console.log('Успешный шаринг'))
+                .catch((error) => console.log('Ошибка шаринга:', error));
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const canvas = document.querySelector('#qrcode canvas');
+                if (canvas) {
+                    canvas.toBlob(function(blob) {
+                        const file = new File([blob], 'Дмитрий_Панибратский_QR_код.png', { type: 'image/png' });
+                        const data = {
+                            files: [file],
+                            title: 'QR-код Дмитрия Панибратского',
+                            text: 'Контакты эксперта по SCM и цифровой трансформации'
+                        };
+                        
+                        if (navigator.canShare && navigator.canShare(data)) {
+                            navigator.share(data);
+                        } else {
+                            showNotification('Функция "Поделиться" не поддерживается в вашем браузере. Вы можете скачать QR-код и отправить его вручную.');
+                        }
+                    });
+                }
+            }
+        }
+        
+        function printQRCode() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (canvas) {
+                const dataUrl = canvas.toDataURL('image/png');
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Печать QR-кода</title>
+                            <style>
+                                body { 
+                                    font-family: Arial, sans-serif; 
+                                    text-align: center; 
+                                    padding: 40px;
+                                }
+                                h1 { 
+                                    color: #0f172a; 
+                                    margin-bottom: 20px;
+                                }
+                                p { 
+                                    color: #64748b; 
+                                    margin-bottom: 30px;
+                                    max-width: 500px;
+                                    margin-left: auto;
+                                    margin-right: auto;
+                                }
+                                img { 
+                                    max-width: 300px; 
+                                    height: auto;
+                                    margin: 20px 0;
+                                    border: 2px solid #d4af37;
+                                    border-radius: 12px;
+                                }
+                                @media print {
+                                    button { display: none; }
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>QR-код Дмитрия Панибратского</h1>
+                            <p>Отсканируйте этот QR-код, чтобы сохранить контакты эксперта по управлению цепями поставок и цифровой трансформации</p>
+                            <img src="${dataUrl}" alt="QR-код">
+                            <p style="margin-top: 30px; font-size: 14px; color: #475569;">
+                                Дмитрий Панибратский<br>
+                                Эксперт по SCM и цифровой трансформации<br>
+                                Телефон: +7 (982) 228-29-49<br>
+                                Email: dmitriy.panibratskiy@yandex.ru<br>
+                                Сайт: https://965910-bit.github.io/Panibratsky-Dmitry/
+                            </p>
+                            <button onclick="window.print();" style="
+                                padding: 12px 24px;
+                                background-color: #d4af37;
+                                color: #0f172a;
+                                border: none;
+                                border-radius: 8px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                margin-top: 20px;
+                                font-size: 16px;
+                            ">
+                                <i class="fas fa-print"></i> Печать
+                            </button>
+                            <script>
+                                // Add print functionality
+                                const printBtn = document.querySelector('button');
+                                printBtn.addEventListener('click', function() {
+                                    window.print();
+                                });
+                                
+                                // Auto-print after a short delay
+                                setTimeout(function() {
+                                    window.print();
+                                }, 500);
+                            </script>
+                        </body>
+                    </html>
+                `);
+                printWindow.document.close();
+            }
+        }
     </script>
 </body>
 </html>
