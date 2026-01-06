@@ -3,1381 +3,1280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Опыт работы - Дмитрий Панибратский</title>
-    
-    <!-- Стили -->
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Опыт и проекты | Дмитрий Панибратский</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ДИЗАЙН-СИСТЕМА - Основа для всех страниц */
         :root {
-            /* Основная цветовая палитра */
-            --primary-dark: #0A142C;
-            --primary-color: #0F1C3F;
-            --primary-light: #1E2A4A;
-            --primary-lighter: #2A3655;
-            
-            /* Акцентные цвета по качествам */
-            --accent-innovation: #009B77;
-            --accent-strategy: #8B5FBF;
-            --accent-leadership: #D4AF37;
-            --accent-expert: #0F1C3F;
-            
-            /* Нейтральные цвета */
-            --text-primary: #0F1C3F;
-            --text-secondary: #5D6B8C;
-            --text-light: #8A96B2;
-            --bg-light: #F8F9FA;
-            --card-bg: #FFFFFF;
-            --border-light: #E8ECF2;
-            
-            /* Градиенты */
-            --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
-            --gradient-innovation: linear-gradient(135deg, var(--accent-innovation) 0%, #00C9A7 100%);
-            --gradient-strategy: linear-gradient(135deg, var(--accent-strategy) 0%, #9D71DE 100%);
-            --gradient-leadership: linear-gradient(135deg, var(--accent-leadership) 0%, #E8C352 100%);
-            
-            /* Тени */
-            --shadow-sm: 0 2px 8px rgba(15, 28, 63, 0.08);
-            --shadow-md: 0 4px 16px rgba(15, 28, 63, 0.12);
-            --shadow-lg: 0 8px 32px rgba(15, 28, 63, 0.16);
-            
-            /* Радиусы */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            
-            /* Отступы */
-            --space-xs: 8px;
-            --space-sm: 16px;
-            --space-md: 24px;
-            --space-lg: 32px;
-            --space-xl: 48px;
-            --space-xxl: 64px;
+            --primary-dark: #0f172a;
+            --primary-blue: #1e40af;
+            --primary-light: #3b82f6;
+            --accent-gold: #d4af37;
+            --accent-steel: #475569;
+            --neutral-dark: #1e293b;
+            --neutral-medium: #64748b;
+            --neutral-light: #f1f5f9;
+            --success-color: #10b981;
+            --border-radius-sm: 4px;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        /* Базовые стили */
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             line-height: 1.6;
-            color: var(--text-primary);
-            background-color: var(--bg-light);
+            color: var(--neutral-dark);
+            background-color: #ffffff;
+            font-weight: 400;
+            overflow-x: hidden;
         }
-
+        
         .container {
-            max-width: 1200px;
+            width: 100%;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 var(--space-md);
+            padding: 0 24px;
         }
-
-        /* Секции */
-        .section {
-            padding: var(--space-xl) 0;
-        }
-
-        .section h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: var(--space-lg);
-            text-align: center;
-            position: relative;
-        }
-
-        .section h1:after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: var(--accent-leadership);
-            border-radius: 2px;
-        }
-
-        /* HEADER - с фотографиями */
-        .header {
-            background: var(--gradient-primary);
-            color: white;
-            padding: var(--space-xl) 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header:before {
-            content: '';
-            position: absolute;
+        
+        /* Header */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            position: fixed;
             top: 0;
-            right: 0;
-            width: 300px;
-            height: 300px;
-            background: var(--accent-innovation);
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.1;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition);
         }
-
-        .header:after {
+        
+        .header-scrolled {
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid rgba(226, 232, 240, 1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-dot {
+            color: var(--accent-gold);
+            margin: 0 2px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 40px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--neutral-medium);
+            font-weight: 500;
+            font-size: 15px;
+            transition: var(--transition);
+            padding: 8px 0;
+            position: relative;
+            letter-spacing: 0.2px;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary-blue);
+        }
+        
+        nav ul li a.active {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+        
+        nav ul li a.active::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 200px;
-            height: 200px;
-            background: var(--accent-strategy);
-            border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.1;
-        }
-
-        .header-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .header-photos {
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: var(--space-lg);
-            align-items: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .header-photo-left,
-        .header-photo-right {
-            display: flex;
-            justify-content: center;
-        }
-
-        .photo-left-container,
-        .photo-right-container {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 4px solid var(--accent-leadership);
-            box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
-        }
-
-        .photo-left-container:hover,
-        .photo-right-container:hover {
-            transform: scale(1.05);
-            border-color: white;
-        }
-
-        .photo-left-container img,
-        .photo-right-container img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: 2px;
+            background-color: var(--accent-gold);
         }
-
-        .header-text-center {
-            text-align: center;
-            padding: 0 var(--space-md);
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary-dark);
+            cursor: pointer;
+            padding: 5px;
         }
-
-        .header-text-center h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: var(--space-sm);
-            background: linear-gradient(135deg, #FFFFFF 0%, #E8ECF2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header-subtitle {
-            font-size: 1.3rem;
-            font-weight: 400;
-            margin-bottom: var(--space-lg);
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.5;
-        }
-
-        .contact-badges {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-sm);
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .badge:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .header-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--space-md);
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-md);
-            padding: var(--space-md);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-4px);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: var(--space-xs);
-            background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        /* НАВИГАЦИЯ */
-        .navigation {
-            background: var(--card-bg);
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 3px solid var(--accent-leadership);
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            justify-content: center;
-            gap: 0;
-        }
-
-        .nav-links li {
-            margin: 0;
-        }
-
-        .nav-links a {
-            display: block;
-            padding: 20px 24px;
-            text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--accent-leadership);
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        /* EXPERIENCE HERO */
-        .experience-hero {
-            background: var(--gradient-primary);
-            color: white;
-            padding: var(--space-xxl) 0;
-            text-align: center;
+        
+        /* Hero Section */
+        .hero-section {
+            padding: 160px 0 80px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             position: relative;
             overflow: hidden;
         }
-
-        .experience-hero:before {
+        
+        .hero-section::before {
             content: '';
             position: absolute;
-            top: -100px;
-            right: -100px;
-            width: 300px;
-            height: 300px;
-            background: var(--accent-leadership);
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.1;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(30, 64, 175, 0) 100%);
+            z-index: 0;
         }
-
-        .experience-hero:after {
-            content: '';
-            position: absolute;
-            bottom: -100px;
-            left: -100px;
-            width: 300px;
-            height: 300px;
-            background: var(--accent-innovation);
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.1;
-        }
-
-        .experience-hero .container {
+        
+        .hero-content {
             position: relative;
-            z-index: 2;
+            z-index: 1;
+            max-width: 800px;
         }
-
-        .experience-hero h1 {
-            font-size: 3rem;
+        
+        .executive-tag {
+            display: inline-block;
+            background-color: var(--primary-blue);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        h1 {
+            font-size: 56px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--primary-dark);
             font-weight: 700;
-            margin-bottom: var(--space-md);
-            background: linear-gradient(135deg, #FFFFFF 0%, #E8ECF2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            letter-spacing: -1px;
         }
-
-        .experience-hero p {
-            font-size: 1.3rem;
-            opacity: 0.9;
-            max-width: 600px;
+        
+        .hero-title {
+            font-size: 20px;
+            color: var(--neutral-medium);
+            margin-bottom: 32px;
+            font-weight: 400;
+            max-width: 700px;
+        }
+        
+        /* Experience Timeline */
+        .experience-section {
+            padding: 100px 0;
+            background-color: white;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+        
+        .section-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--neutral-medium);
+            max-width: 700px;
             margin: 0 auto;
             line-height: 1.6;
         }
-
-        /* EXPERIENCE TIMELINE */
-        .experience-intro {
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto var(--space-xxl);
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: var(--text-secondary);
-            padding: 0 var(--space-md);
-        }
-
+        
         .timeline {
             position: relative;
             max-width: 1000px;
             margin: 0 auto;
         }
-
-        .timeline:before {
+        
+        .timeline::before {
             content: '';
             position: absolute;
             left: 50%;
             top: 0;
             bottom: 0;
             width: 2px;
-            background: var(--accent-leadership);
+            background-color: var(--neutral-light);
             transform: translateX(-50%);
         }
-
+        
         .timeline-item {
             display: flex;
-            justify-content: center;
-            margin-bottom: var(--space-xxl);
+            margin-bottom: 80px;
             position: relative;
         }
-
+        
         .timeline-item:nth-child(odd) {
             flex-direction: row;
         }
-
+        
         .timeline-item:nth-child(even) {
             flex-direction: row-reverse;
         }
-
+        
         .timeline-content {
             width: 45%;
-            background: var(--card-bg);
-            padding: var(--space-xl);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            position: relative;
-            border-left: 4px solid var(--accent-innovation);
-        }
-
-        .timeline-item:nth-child(even) .timeline-content {
-            border-left: none;
-            border-right: 4px solid var(--accent-strategy);
-        }
-
-        .timeline-year {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 80px;
-            height: 80px;
-            background: var(--gradient-leadership);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            z-index: 2;
-            box-shadow: var(--shadow-md);
-        }
-
-        .timeline-item:nth-child(odd) .timeline-year {
-            right: -40px;
-        }
-
-        .timeline-item:nth-child(even) .timeline-year {
-            left: -40px;
-        }
-
-        .timeline-content h3 {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-bottom: var(--space-sm);
-        }
-
-        .company {
-            color: var(--accent-innovation);
-            font-weight: 600;
-            margin-bottom: var(--space-sm);
-            font-size: 1.1rem;
-        }
-
-        .timeline-item:nth-child(even) .company {
-            color: var(--accent-strategy);
-        }
-
-        .position {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: var(--space-md);
-            font-size: 1.1rem;
-        }
-
-        .period {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: var(--space-md);
-            font-style: italic;
-        }
-
-        .responsibilities {
-            list-style: none;
-            margin-bottom: var(--space-lg);
-        }
-
-        .responsibilities li {
-            padding: var(--space-xs) 0;
-            color: var(--text-secondary);
-            position: relative;
-            padding-left: var(--space-md);
-            line-height: 1.5;
-        }
-
-        .responsibilities li:before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: var(--accent-innovation);
-            font-weight: bold;
-        }
-
-        .timeline-item:nth-child(even) .responsibilities li:before {
-            color: var(--accent-strategy);
-        }
-
-        .achievements {
-            background: var(--bg-light);
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
-            margin-top: var(--space-md);
-        }
-
-        .achievements h4 {
-            color: var(--primary-color);
-            margin-bottom: var(--space-sm);
-            font-size: 1rem;
-        }
-
-        .achievements ul {
-            list-style: none;
-        }
-
-        .achievements li {
-            padding: 4px 0;
-            color: var(--text-secondary);
-            position: relative;
-            padding-left: var(--space-md);
-            font-size: 0.95rem;
-        }
-
-        .achievements li:before {
-            content: '★';
-            position: absolute;
-            left: 0;
-            color: var(--accent-leadership);
-        }
-
-        /* EDUCATION SECTION */
-        .education-section {
-            margin-top: var(--space-xxl);
-        }
-
-        .education-timeline {
-            max-width: 900px;
-            margin: 0 auto;
+            padding: 40px;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: var(--transition);
             position: relative;
         }
-
-        .education-timeline:before {
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+        
+        .timeline-content::before {
             content: '';
             position: absolute;
-            left: 30px;
             top: 0;
-            bottom: 0;
-            width: 2px;
-            background: var(--accent-leadership);
-        }
-
-        .education-item {
-            display: flex;
-            margin-bottom: var(--space-xl);
-            position: relative;
-        }
-
-        .education-year {
-            width: 60px;
-            text-align: center;
-            font-weight: 700;
-            color: var(--accent-leadership);
-            font-size: 1.1rem;
-            margin-right: var(--space-md);
-            flex-shrink: 0;
-        }
-
-        .education-content {
-            flex: 1;
-            background: var(--card-bg);
-            padding: var(--space-lg);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            border-left: 4px solid var(--accent-innovation);
-        }
-
-        .education-content h3 {
-            color: var(--primary-color);
-            margin-bottom: var(--space-xs);
-            font-size: 1.3rem;
-        }
-
-        .education-institution {
-            color: var(--accent-innovation);
-            font-weight: 600;
-            margin-bottom: var(--space-xs);
-        }
-
-        .education-qualification {
-            color: var(--text-secondary);
-            margin-bottom: var(--space-sm);
-            font-style: italic;
-        }
-
-        .education-details {
-            background: var(--bg-light);
-            padding: var(--space-md);
-            border-radius: var(--radius-sm);
-            margin-top: var(--space-sm);
-        }
-
-        .education-details p {
-            margin: 0;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        /* SKILLS SECTION */
-        .skills-section {
-            margin-top: var(--space-xxl);
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--space-lg);
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .skill-category {
-            background: var(--card-bg);
-            padding: var(--space-xl);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .skill-category h3 {
-            color: var(--primary-color);
-            margin-bottom: var(--space-lg);
-            font-size: 1.3rem;
-            text-align: center;
-            padding-bottom: var(--space-sm);
-            border-bottom: 2px solid var(--border-light);
-        }
-
-        .skill-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-sm);
-        }
-
-        .skill-item {
-            background: var(--bg-light);
-            padding: var(--space-sm) var(--space-md);
-            border-radius: var(--radius-sm);
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            border-left: 4px solid var(--accent-innovation);
-        }
-
-        /* CAREER PROGRESS */
-        .career-progress {
-            background: var(--card-bg);
-            padding: var(--space-xl);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            margin: var(--space-xxl) auto;
-            max-width: 1000px;
-            text-align: center;
-        }
-
-        .career-progress h2 {
-            color: var(--primary-color);
-            margin-bottom: var(--space-xl);
-            font-size: 2rem;
-        }
-
-        .progress-steps {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin: var(--space-xl) 0;
-        }
-
-        .progress-steps::before {
-            content: '';
-            position: absolute;
-            top: 20px;
             left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--border-light);
-            z-index: 1;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
         }
-
-        .progress-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            flex: 1;
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
         }
-
-        .step-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--accent-leadership);
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: auto;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 50px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--accent-gold);
             border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            border: 4px solid white;
+            box-shadow: 0 0 0 2px var(--accent-gold);
+        }
+        
+        .company-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius);
+            margin-right: 20px;
+            object-fit: contain;
+            background-color: white;
+            padding: 8px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: var(--space-sm);
-            color: var(--primary-color);
-            font-weight: bold;
-            box-shadow: var(--shadow-md);
         }
-
-        .step-label {
+        
+        .company-logo img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .company-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+        
+        .company-info .position {
+            font-size: 18px;
+            color: var(--primary-blue);
             font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-            font-size: 0.9rem;
+            margin-bottom: 5px;
         }
-
-        .step-year {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
+        
+        .company-info .period {
+            font-size: 14px;
+            color: var(--neutral-medium);
+            font-weight: 500;
+        }
+        
+        .timeline-content ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+        
+        .timeline-content ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            display: flex;
+            align-items: flex-start;
+            color: var(--neutral-medium);
+        }
+        
+        .timeline-content ul li:last-child {
+            border-bottom: none;
+        }
+        
+        .timeline-content ul li i {
+            color: var(--accent-gold);
+            margin-right: 12px;
+            font-size: 14px;
             margin-top: 4px;
         }
-
-        /* FOOTER */
-        .footer {
-            background: var(--primary-dark);
-            color: white;
+        
+        .achievements {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: rgba(212, 175, 55, 0.05);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-gold);
+        }
+        
+        .achievements h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .achievements h4 i {
+            margin-right: 8px;
+            color: var(--accent-gold);
+        }
+        
+        .achievements ul {
+            margin-top: 0;
+        }
+        
+        .achievements ul li {
+            border-bottom: none;
+            padding: 8px 0;
+            font-size: 15px;
+        }
+        
+        /* Projects Section */
+        .projects-section {
+            padding: 100px 0;
+            background-color: var(--neutral-light);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .project-card {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .project-header {
+            padding: 30px 30px 20px;
+            position: relative;
+        }
+        
+        .project-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
+        }
+        
+        .project-type {
+            display: inline-block;
+            background-color: rgba(30, 64, 175, 0.1);
+            color: var(--primary-blue);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .project-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+        
+        .project-period {
+            font-size: 14px;
+            color: var(--neutral-medium);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .project-period i {
+            margin-right: 8px;
+            color: var(--accent-gold);
+        }
+        
+        .project-content {
+            padding: 0 30px 30px;
+        }
+        
+        .project-description {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .project-stat {
             text-align: center;
-            padding: var(--space-xl) 0;
-            margin-top: var(--space-xxl);
+            padding: 15px;
+            background-color: rgba(241, 245, 249, 0.5);
+            border-radius: var(--border-radius);
         }
-
-        /* Анимации */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .project-stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
         }
-
-        /* Адаптивность */
-        @media (max-width: 1024px) {
-            .header-photos {
-                grid-template-columns: 1fr 1.5fr 1fr;
-                gap: var(--space-md);
-            }
-            
-            .photo-left-container,
-            .photo-right-container {
-                width: 160px;
-                height: 160px;
-            }
-            
-            .header-text-center h1 {
-                font-size: 2.4rem;
-            }
+        
+        .project-stat-label {
+            font-size: 13px;
+            color: var(--neutral-medium);
+            font-weight: 500;
         }
-
-        @media (max-width: 768px) {
-            .header-photos {
-                grid-template-columns: 1fr;
-                gap: var(--space-lg);
-                text-align: center;
+        
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        
+        .tech-tag {
+            display: inline-block;
+            background-color: rgba(30, 64, 175, 0.1);
+            color: var(--primary-blue);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(30, 64, 175, 0.2);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 80px 0 40px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: white;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent-gold);
+        }
+        
+        .footer-column p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .footer-stats {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+        
+        .footer-stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 5px;
+        }
+        
+        .footer-stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 14px;
+        }
+        
+        .footer-column ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-column ul li a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .footer-column ul li i {
+            margin-right: 10px;
+            width: 20px;
+            color: var(--accent-gold);
+        }
+        
+        .footer-contact-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 28px;
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .footer-contact-btn:hover {
+            background-color: #c19b2c;
+            transform: translateY(-2px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 48px;
             }
             
-            .header-photo-left,
-            .header-photo-right {
-                display: none;
-            }
-            
-            .header-text-center h1 {
-                font-size: 2.2rem;
-            }
-            
-            .header-subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .experience-hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .timeline:before {
+            .timeline::before {
                 left: 30px;
             }
             
             .timeline-item {
                 flex-direction: row !important;
-                justify-content: flex-start;
+                margin-bottom: 60px;
             }
             
             .timeline-content {
                 width: calc(100% - 80px);
-                margin-left: 80px;
+                margin-left: 80px !important;
+                margin-right: 0 !important;
             }
             
-            .timeline-year {
-                left: 0 !important;
-                right: auto !important;
+            .timeline-dot {
+                left: 30px;
             }
             
-            .nav-links {
-                flex-wrap: wrap;
-            }
-            
-            .nav-links a {
-                padding: 15px 20px;
-            }
-
-            .education-timeline:before {
-                left: 25px;
-            }
-
-            .education-year {
-                width: 50px;
-                margin-right: var(--space-sm);
-            }
-            
-            .progress-steps {
-                flex-direction: column;
-                gap: var(--space-lg);
-            }
-            
-            .progress-steps::before {
-                display: none;
+            .projects-grid {
+                grid-template-columns: 1fr;
             }
         }
-
-        @media (max-width: 480px) {
-            .header-stats {
-                grid-template-columns: 1fr;
+        
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
             }
             
-            .contact-badges {
-                flex-direction: column;
-                align-items: center;
+            .mobile-menu-btn {
+                display: block;
             }
             
-            .badge {
-                width: 200px;
-                text-align: center;
+            h1 {
+                font-size: 40px;
             }
             
-            .experience-hero h1 {
-                font-size: 1.8rem;
+            .section-title {
+                font-size: 32px;
             }
             
-            .experience-hero p {
-                font-size: 1.1rem;
+            .hero-section {
+                padding: 140px 0 60px;
             }
-
+            
+            .experience-section, .projects-section {
+                padding: 70px 0;
+            }
+            
             .timeline-content {
-                padding: var(--space-lg);
+                padding: 30px 20px;
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
             }
-
-            .education-content {
-                padding: var(--space-md);
+            
+            .timeline-dot {
+                left: 20px;
             }
-
-            .skills-grid {
+            
+            .company-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .company-logo {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .footer-container {
                 grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 36px;
+            }
+            
+            .hero-title {
+                font-size: 18px;
+            }
+            
+            .company-info h3 {
+                font-size: 20px;
+            }
+            
+            .company-info .position {
+                font-size: 16px;
+            }
+            
+            .project-stat {
+                padding: 10px;
+            }
+            
+            .project-stat-number {
+                font-size: 24px;
+            }
+            
+            .container {
+                padding: 0 20px;
             }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="header-photos">
-                    <!-- Левое фото -->
-                    <div class="header-photo-left">
-                        <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" alt="Дмитрий Панибратский - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
-                    </div>
-                    
-                    <!-- Центральный текст -->
-                    <div class="header-text-center">
-                        <h1>Дмитрий Панибратский</h1>
-                        <p class="header-subtitle">Эксперт в управлении цепями поставок<br>и цифровой трансформации бизнеса</p>
-                        
-                        <div class="contact-badges">
-                            <span class="badge">Управление SCM</span>
-                            <span class="badge">Цифровая трансформация</span>
-                            <span class="badge">AI & Аналитика</span>
-                            <span class="badge">Управление закупками</span>
-                            <span class="badge">Технический контроль</span>
-                            <span class="badge">MBA Логистика</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Правое фото -->
-                    <div class="header-photo-right">
-                        <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" alt="Дмитрий Панибратский - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="header-stats">
-                    <div class="stat-card">
-                        <div class="stat-number">20+</div>
-                        <div class="stat-label">реализованных проектов</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">15</div>
-                        <div class="stat-label">лет в SCM</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">87k+</div>
-                        <div class="stat-label">SKU под управлением</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">успешная реализация</div>
-                    </div>
-                </div>
-            </div>
+    <header id="mainHeader">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
+            </a>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Стратегия</a></li>
+                    <li><a href="experience.html" class="active">Опыт</a></li>
+                    <li><a href="expertise.html">Экспертиза</a></li>
+                    <li><a href="contact.html">Контакты</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <!-- Navigation -->
-    <nav class="navigation">
-        <div class="container">
-            <ul class="nav-links">
-                <li><a href="index.html">Главная</a></li>
-                <li><a href="trends-logistics.html" class="active">Тренды логистики</a></li>
-                <li><a href="expertise.html">Экспертиза</a></li>
-                <li><a href="experience.html" class="active">Опыт</a></li>
-                <li><a href="projects.html">Проекты</a></li>
-                <li><a href="tools.html">Инструменты</a></li>
-                <li><a href="calculators.html">Калькуляторы</a></li>
-                <li><a href="certificates.html">Сертификаты</a></li>
-                <li><a href="wiki.html">Wiki</a></li>
-                <li><a href="contact.html">Контакты</a></li>
-            </ul>
-        </div>
-    </nav>
-
     <!-- Hero Section -->
-    <section class="experience-hero">
+    <section class="hero-section">
         <div class="container">
-            <h1>Профессиональный опыт</h1>
-            <p>Эволюция карьеры от специалиста по закупкам до руководителя цепями поставок международной компании</p>
-        </div>
-    </section>
-
-    <!-- Career Progress -->
-    <section class="career-progress">
-        <h2>Эволюция карьерного пути</h2>
-        <div class="progress-steps">
-            <div class="progress-step">
-                <div class="step-icon">1</div>
-                <div class="step-label">Руководитель департамента по закупкам</div>
-                <div class="step-year">2012-2013</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-icon">2</div>
-                <div class="step-label">Руководитель департамента логистики</div>
-                <div class="step-year">2013-2014</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-icon">3</div>
-                <div class="step-label">Директор филиала</div>
-                <div class="step-year">2014-2016</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-icon">4</div>
-                <div class="step-label">Начальник склада</div>
-                <div class="step-year">2018-2019</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-icon">5</div>
-                <div class="step-label">Менеджер цепи поставок</div>
-                <div class="step-year">2020-н.в.</div>
+            <div class="hero-content">
+                <span class="executive-tag">Карьерный путь</span>
+                <h1>Опыт и проекты</h1>
+                <p class="hero-title">15+ лет преобразования логистических операций в измеримые бизнес-результаты. От управления складскими операциями до стратегического руководства цепями поставок международной компании.</p>
             </div>
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="container">
-        <div class="experience-intro">
-            <p>За годы профессиональной деятельности прошел путь от специалиста до руководителя направлений, управляя сложными проектами цифровой трансформации и оптимизации цепей поставок в международных компаниях.</p>
-        </div>
-
-        <!-- Experience Timeline -->
-        <section class="experience-timeline">
+    <!-- Experience Timeline -->
+    <section class="experience-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Карьерная хронология</h2>
+                <p class="section-subtitle">Эволюция от специалиста по закупкам до стратегического руководителя цепями поставок с фокусом на цифровую трансформацию и AI-интеграцию.</p>
+            </div>
+            
             <div class="timeline">
-                <!-- Шаг 5: Менеджер цепи поставок (2020-н.в.) -->
+                <!-- Leroy Merlin -->
                 <div class="timeline-item">
+                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <h3>Менеджер цепи поставок</h3>
-                        <div class="company">ЛЕРУА МЕРЛЕН</div>
-                        <div class="position">Менеджер цепи поставок магазина</div>
-                        <div class="period">2020 — настоящее время</div>
+                        <div class="company-header">
+                            <div class="company-logo">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Logo_Leroy_Merlin.svg/1280px-Logo_Leroy_Merlin.svg.png" alt="Леруа Мерлен">
+                            </div>
+                            <div class="company-info">
+                                <h3>ЛЕРУА МЕРЛЕН</h3>
+                                <div class="position">Менеджер цепи поставок магазина</div>
+                                <div class="period">Март 2020 — Июль 2025 · 5 лет 5 месяцев</div>
+                            </div>
+                        </div>
                         
-                        <ul class="responsibilities">
-                            <li>Управление end-to-end цепями поставок для розничного магазина формата DIY</li>
-                            <li>Трансформация логистических процессов и руководство многопрофильной командой</li>
-                            <li>Операционное управление 87,000+ SKU с оптимизацией оборачиваемости</li>
-                            <li>Внедрение AI-решений для предиктивного прогнозирования спроса</li>
-                            <li>Цифровая трансформация процессов инвентаризации и отчетности</li>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Управление end-to-end цепями поставок для розничного магазина формата DIY (4000 м², 87,000 SKU)</li>
+                            <li><i class="fas fa-check"></i> Руководство многопрофильной командой из 79 специалистов</li>
+                            <li><i class="fas fa-check"></i> Внедрение AI-решений для предиктивного прогнозирования спроса и оптимизации запасов</li>
+                            <li><i class="fas fa-check"></i> Цифровая трансформация процессов инвентаризации и отчетности</li>
+                            <li><i class="fas fa-check"></i> Проведение тендеров по выбору транспортных компаний, оптимизация логистических затрат</li>
                         </ul>
                         
                         <div class="achievements">
-                            <h4>🏆 Ключевые достижения:</h4>
+                            <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
                             <ul>
-                                <li>Управление командой из 100+ человек across multiple functions</li>
-                                <li>Снижение транспортных расходов на 10% через редизайн маршрутов</li>
-                                <li>Достижение позиции #2 в стране по операционной эффективности</li>
-                                <li>Внедрение системы KPI Dashboard для мониторинга эффективности</li>
+                                <li><i class="fas fa-star"></i> Снижение транспортных расходов на 10% через редизайн маршрутов</li>
+                                <li><i class="fas fa-star"></i> Вывод команды приемки на 2-е место в стране по продуктивности</li>
+                                <li><i class="fas fa-star"></i> Внедрение системы мониторинга заказов с повышением корректности остатков на 8%</li>
+                                <li><i class="fas fa-star"></i> Достижение позиции магазина в ТОП-10 страны по CSat (Customer Satisfaction)</li>
+                                <li><i class="fas fa-star"></i> Организация равномерности поставок с показателя 70.3% до 91.2%</li>
                             </ul>
-                        </div>
-                    </div>
-                    <div class="timeline-year">2020<br>→</div>
-                </div>
-
-                <!-- Шаг 4: Начальник склада (2018-2019) -->
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>Начальник склада | Архитектор региональной экспансии</h3>
-                        <div class="company">ООО «ГРИНЛАЙТ» (Rossko)</div>
-                        <div class="position">Руководитель складских операций</div>
-                        <div class="period">2018 — 2019</div>
-                        
-                        <ul class="responsibilities">
-                            <li>Стратегическое руководство складскими операциями</li>
-                            <li>Развитие региональной сети поставок в условиях быстрого роста компании</li>
-                            <li>Управление командой из 24 высококвалифицированных специалистов</li>
-                            <li>Оптимизация управления 20,000+ SKU</li>
-                            <li>Внедрение lean-методологий для складских процессов</li>
-                        </ul>
-                        
-                        <div class="achievements">
-                            <h4>🏆 Ключевые достижения:</h4>
-                            <ul>
-                                <li>Успешный запуск 3 новых региональных филиалов в течение года</li>
-                                <li>Улучшение accuracy складских операций на 25%</li>
-                                <li>Расширение географического присутствия компании на 300%</li>
-                                <li>Разработка системы кросс-докинга для ускорения turnover</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="timeline-year">2018</div>
-                </div>
-
-                <!-- Шаг 3: Директор филиала (2014-2016) -->
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>Директор филиала</h3>
-                        <div class="company">АВТО-ПРИТЯЖЕНИЕ</div>
-                        <div class="position">Руководитель регионального подразделения</div>
-                        <div class="period">2014 — 2016</div>
-                        
-                        <ul class="responsibilities">
-                            <li>Полное управление региональным филиалом компании</li>
-                            <li>P&L ответственность, развитие бизнеса и построение операционной модели с нуля</li>
-                            <li>Формирование и развитие команды из 15 высокомотивированных специалистов</li>
-                            <li>Разработка и внедрение системы мониторинга KPI для филиальной сети</li>
-                            <li>Установление партнерских отношений с ключевыми региональными клиентами</li>
-                        </ul>
-                        
-                        <div class="achievements">
-                            <h4>🏆 Ключевые достижения:</h4>
-                            <ul>
-                                <li>Построение филиала с чистого листа до прибыльной бизнес-единицы</li>
-                                <li>Органический рост оборота на 30% за первый год работы</li>
-                                <li>Снижение операционных затрат на 15% через процессную оптимизацию</li>
-                                <li>Разработка системы управления эффективностью бизнеса</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="timeline-year">2014</div>
-                </div>
-
-                <!-- Шаг 2: Руководитель департамента логистики (2013-2014) -->
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>Руководитель департамента логистики</h3>
-                        <div class="company">ЮЛСАН</div>
-                        <div class="position">Руководитель отдела логистики</div>
-                        <div class="period">2013 — 2014</div>
-                        
-                        <ul class="responsibilities">
-                            <li>Реорганизация и управление логистическими процессами компании</li>
-                            <li>Создание эффективной системы управления транспортными потоками</li>
-                            <li>Внедрение TMS (Transportation Management System)</li>
-                            <li>Оптимизация маршрутов доставки и управление перевозчиками</li>
-                            <li>Разработка комплексной системы отчетности по логистическим KPI</li>
-                        </ul>
-                        
-                        <div class="achievements">
-                            <h4>🏆 Ключевые достижения:</h4>
-                            <ul>
-                                <li>Полная реорганизация логистических процессов компании</li>
-                                <li>Снижение логистических издержек на 15% через консолидацию перевозок</li>
-                                <li>Улучшение on-time delivery на 20%</li>
-                                <li>Внедрение системы претензионной работы с перевозчиками</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="timeline-year">2013</div>
-                </div>
-
-                <!-- Шаг 1: Руководитель департамента по закупкам (2012-2013) -->
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>Руководитель департамента по закупкам</h3>
-                        <div class="company">ЮГРАПРОМСЕРВИС</div>
-                        <div class="position">Менеджер по закупкам</div>
-                        <div class="period">2012 — 2013</div>
-                        
-                        <ul class="responsibilities">
-                            <li>Управление процессами закупок и развитие отношений с поставщиками</li>
-                            <li>Создание эффективной системы закупочной деятельности</li>
-                            <li>Внедрение системы оценки и ранжирования поставщиков</li>
-                            <li>Автоматизация процессов закупочной документации и отчетности</li>
-                            <li>Разработка стратегии dual-sourcing для критичных позиций</li>
-                        </ul>
-                        
-                        <div class="achievements">
-                            <h4>🏆 Ключевые достижения:</h4>
-                            <ul>
-                                <li>Оптимизация закупочных процессов с сокращением cycle time на 25%</li>
-                                <li>Снижение стоимости закупаемых товаров на 12% через переговоры</li>
-                                <li>Расширение пула поставщиков с улучшением quality score на 15%</li>
-                                <li>Создание системы управления закупочной деятельностью</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="timeline-year">2012</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Education Section -->
-        <section id="education" class="section education-section">
-            <h1>Образование и квалификация</h1>
-            
-            <div class="education-timeline">
-                <!-- MBA -->
-                <div class="education-item">
-                    <div class="education-year">2023</div>
-                    <div class="education-content">
-                        <h3>MBA "Логистика, снабжение, закупки"</h3>
-                        <p class="education-institution">Международный Центр Дистанционного Образования</p>
-                        <p class="education-qualification">Квалификация: Руководитель в сфере управления материально-техническим снабжением и закупками</p>
-                        <div class="education-details">
-                            <p><strong>Программа включала:</strong> Управление финансами, Маркетинг, Управление человеческими ресурсами, Менеджмент организации, Лидерство, Правовые основы предпринимательства</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Коммерческий директор -->
-                <div class="education-item">
-                    <div class="education-year">2023</div>
-                    <div class="education-content">
-                        <h3>Коммерческий директор</h3>
-                        <p class="education-institution">Институт профессионального образования</p>
-                        <p class="education-qualification">Профессиональная переподготовка</p>
-                    </div>
-                </div>
-                
-                <!-- Операционный логист -->
-                <div class="education-item">
-                    <div class="education-year">2020</div>
-                    <div class="education-content">
-                        <h3>Операционный логист</h3>
-                        <p class="education-institution">Карабинский техникум текстильной и других промышленности</p>
-                        <p class="education-qualification">Среднее профессиональное образование</p>
-                        <div class="education-details">
-                            <p><strong>Специальность:</strong> Операционная деятельность в логистике</p>
+                <!-- Rossko (Гринлайт) -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="company-header">
+                            <div class="company-logo">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Rossko_logo.png/320px-Rossko_logo.png" alt="Rossko (Гринлайт)">
+                            </div>
+                            <div class="company-info">
+                                <h3>ООО «ГРИНЛАЙТ» (Rossko)</h3>
+                                <div class="position">Начальник склада | Архитектор региональной экспансии</div>
+                                <div class="period">Май 2018 — Декабрь 2019 · 1 год 8 месяцев</div>
+                            </div>
+                        </div>
+                        
+                        <ul>
+                            <li><i class="fas fa-check"></i> Стратегическое руководство складскими операциями (500 м², 20,000 SKU)</li>
+                            <li><i class="fas fa-check"></i> Управление командой из 24 высококвалифицированных специалистов</li>
+                            <li><i class="fas fa-check"></i> Развитие региональной сети поставок в условиях быстрого роста компании</li>
+                            <li><i class="fas fa-check"></i> Внедрение lean-методологий для оптимизации складских процессов</li>
+                            <li><i class="fas fa-check"></i> Разработка системы кросс-докинга для ускорения товарооборота</li>
+                        </ul>
+                        
+                        <div class="achievements">
+                            <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
+                            <ul>
+                                <li><i class="fas fa-star"></i> Успешный запуск 3 новых региональных филиалов (Ноябрьск, Ханты-Мансийск, Нижневартовск)</li>
+                                <li><i class="fas fa-star"></i> Улучшение точности складских операций на 25%</li>
+                                <li><i class="fas fa-star"></i> Расширение географического присутствия компании на 300%</li>
+                                <li><i class="fas fa-star"></i> Создание группы по открытию новых филиалов и масштабированию бизнеса</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Технический контроль -->
-                <div class="education-item">
-                    <div class="education-year">2020</div>
-                    <div class="education-content">
-                        <h3>Контроль технического состояния АТС</h3>
-                        <p class="education-institution">Учебный центр «ПроиСтрой 2»</p>
-                        <p class="education-qualification">Дополнительная профессиональная переподготовка</p>
-                        <div class="education-details">
-                            <p><strong>Навыки:</strong> Технические требования к подвижному составу, Правила перевозки грузов, Нормативные требования к АТС</p>
+                <!-- Авто-Притяжение / Юлсан -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="company-header">
+                            <div class="company-logo">
+                                <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background-color: #1e40af; color: white; border-radius: var(--border-radius); font-weight: bold; font-size: 14px;">
+                                    АВТО
+                                </div>
+                            </div>
+                            <div class="company-info">
+                                <h3>АВТО-ПРИТЯЖЕНИЕ / ЮЛСАН</h3>
+                                <div class="position">Директор филиала / Руководитель департамента логистики</div>
+                                <div class="period">Декабрь 2014 — Февраль 2018 · 3 года 3 месяца</div>
+                            </div>
+                        </div>
+                        
+                        <ul>
+                            <li><i class="fas fa-check"></i> Полное управление региональным филиалом компании с P&L ответственностью</li>
+                            <li><i class="fas fa-check"></i> Построение операционной модели филиала с нуля до прибыльной бизнес-единицы</li>
+                            <li><i class="fas fa-check"></i> Реорганизация и управление логистическими процессами компании</li>
+                            <li><i class="fas fa-check"></i> Внедрение TMS (Transportation Management System)</li>
+                            <li><i class="fas fa-check"></i> Формирование и развитие команды из 15 высокомотивированных специалистов</li>
+                        </ul>
+                        
+                        <div class="achievements">
+                            <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
+                            <ul>
+                                <li><i class="fas fa-star"></i> Органический рост оборота на 30% за первый год работы филиала</li>
+                                <li><i class="fas fa-star"></i> Снижение логистических издержек на 15% через консолидацию перевозок</li>
+                                <li><i class="fas fa-star"></i> Улучшение показателя on-time delivery на 20%</li>
+                                <li><i class="fas fa-star"></i> Разработка и внедрение системы мониторинга KPI для филиальной сети</li>
+                                <li><i class="fas fa-star"></i> Снижение операционных затрат на 15% через процессную оптимизацию</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
                 
-                <!-- 1С-Битрикс -->
-                <div class="education-item">
-                    <div class="education-year">2018</div>
-                    <div class="education-content">
-                        <h3>Эксперт по 1С-Битрикс</h3>
-                        <p class="education-institution">1С-Битрикс</p>
-                        <p class="education-qualification">Сертифицированный эксперт</p>
-                        <div class="education-details">
-                            <p><strong>Программа:</strong> Администратор. Базовый</p>
+                <!-- Ресурс-Авто -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="company-header">
+                            <div class="company-logo">
+                                <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background-color: #dc2626; color: white; border-radius: var(--border-radius); font-weight: bold; font-size: 12px; text-align: center; padding: 5px;">
+                                    РЕСУРС-АВТО
+                                </div>
+                            </div>
+                            <div class="company-info">
+                                <h3>ООО «РЕСУРС-АВТО»</h3>
+                                <div class="position">Менеджер отдела логистики и контроля качества</div>
+                                <div class="period">Февраль 2013 — Сентябрь 2014 · 1 год 8 месяцев</div>
+                            </div>
+                        </div>
+                        
+                        <ul>
+                            <li><i class="fas fa-check"></i> Взаимодействие с транспортными компаниями, контроль сроков и качества перевозок</li>
+                            <li><i class="fas fa-check"></i> Работа с претензиями физических и юридических лиц, урегулирование спорных вопросов</li>
+                            <li><i class="fas fa-check"></i> Обработка заказов менеджеров, работа с каталогами автозапчастей</li>
+                            <li><i class="fas fa-check"></i> Составление ежедневных отчетов по возвратам и аналитика причин</li>
+                            <li><i class="fas fa-check"></i> Управление товарной матрицей и неликвидами на складах</li>
+                        </ul>
+                        
+                        <div class="achievements">
+                            <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
+                            <ul>
+                                <li><i class="fas fa-star"></i> Выбор оптимальных транспортных компаний, обеспечивающих качественную и своевременную доставку</li>
+                                <li><i class="fas fa-star"></i> Создание эффективной системы работы с претензиями и рекламациями</li>
+                                <li><i class="fas fa-star"></i> Разработка стандартов качества логистического обслуживания</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ГАЗ-Запчасть -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="company-header">
+                            <div class="company-logo">
+                                <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background-color: #0f172a; color: white; border-radius: var(--border-radius); font-weight: bold; font-size: 16px;">
+                                    ГАЗ
+                                </div>
+                            </div>
+                            <div class="company-info">
+                                <h3>ООО «ГАЗ-ЗАПЧАСТЬ»</h3>
+                                <div class="position">Менеджер по закупкам и снабжению</div>
+                                <div class="period">Октябрь 2014 — Май 2018 · 3 года 8 месяцев</div>
+                            </div>
+                        </div>
+                        
+                        <ul>
+                            <li><i class="fas fa-check"></i> Обеспечение своевременной доставки товара от поставщиков в соответствии с условиями контрактов</li>
+                            <li><i class="fas fa-check"></i> Составление заявок на товар, актов и заключений о качестве поступающего товара</li>
+                            <li><i class="fas fa-check"></i> Работа с клиентами и поставщиками, ведение переговоров</li>
+                            <li><i class="fas fa-check"></i> Осуществление приемки товара, проверка и оформление документации</li>
+                            <li><i class="fas fa-check"></i> Управление товарной матрицей и неликвидами на складах (50 м²)</li>
+                        </ul>
+                        
+                        <div class="achievements">
+                            <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
+                            <ul>
+                                <li><i class="fas fa-star"></i> Создание эффективной системы закупок и снабжения</li>
+                                <li><i class="fas fa-star"></i> Оптимизация работы с поставщиками и улучшение условий поставок</li>
+                                <li><i class="fas fa-star"></i> Разработка системы управления товарными запасами</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Skills Section -->
-        <section class="skills-section">
-            <h1>Ключевые навыки и компетенции</h1>
-            
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>SCM & Логистика</h3>
-                    <div class="skill-items">
-                        <span class="skill-item">Управление цепями поставок</span>
-                        <span class="skill-item">Складская логистика</span>
-                        <span class="skill-item">Транспортная логистика</span>
-                        <span class="skill-item">Управление запасами</span>
-                        <span class="skill-item">Таможенное оформление</span>
-                        <span class="skill-item">WMS/TMS системы</span>
-                        <span class="skill-item">KPI разработка</span>
-                        <span class="skill-item">Бюджетирование</span>
-                    </div>
-                </div>
-                
-                <div class="skill-category">
-                    <h3>Управление закупками</h3>
-                    <div class="skill-items">
-                        <span class="skill-item">Стратегические закупки</span>
-                        <span class="skill-item">Управление поставщиками</span>
-                        <span class="skill-item">Материально-техническое снабжение</span>
-                        <span class="skill-item">Cost reduction</span>
-                        <span class="skill-item">Контрактная работа</span>
-                        <span class="skill-item">Переговоры</span>
-                        <span class="skill-item">Бюджетирование закупок</span>
-                    </div>
-                </div>
-                
-                <div class="skill-category">
-                    <h3>Цифровая трансформация</h3>
-                    <div class="skill-items">
-                        <span class="skill-item">AI & Machine Learning</span>
-                        <span class="skill-item">Цифровые двойники</span>
-                        <span class="skill-item">RPA автоматизация</span>
-                        <span class="skill-item">BI системы</span>
-                        <span class="skill-item">ERP системы (SAP)</span>
-                        <span class="skill-item">Data Science</span>
-                        <span class="skill-item">Python программирование</span>
-                        <span class="skill-item">SQL</span>
-                    </div>
-                </div>
-                
-                <div class="skill-category">
-                    <h3>Технический контроль</h3>
-                    <div class="skill-items">
-                        <span class="skill-item">Контроль АТС</span>
-                        <span class="skill-item">Нормативные требования</span>
-                        <span class="skill-item">Эксплуатация транспорта</span>
-                        <span class="skill-item">Техническая документация</span>
-                        <span class="skill-item">Fleet management</span>
-                    </div>
-                </div>
-                
-                <div class="skill-category">
-                    <h3>Управление проектами</h3>
-                    <div class="skill-items">
-                        <span class="skill-item">Project Management</span>
-                        <span class="skill-item">Agile методологии</span>
-                        <span class="skill-item">Управление рисками</span>
-                        <span class="skill-item">Stakeholder management</span>
-                        <span class="skill-item">Бюджетирование проектов</span>
-                        <span class="skill-item">Управление командами</span>
-                    </div>
-                </div>
-                
-                <div class="skill-category">
-                    <h3>Бизнес-методологии</h3>
-                    <div class="skill-items">
-                        <span class="skill-item">Lean Six Sigma</span>
-                        <span class="skill-item">Business Process Management</span>
-                        <span class="skill-item">Change Management</span>
-                        <span class="skill-item">Strategic Planning</span>
-                        <span class="skill-item">Performance Management</span>
-                        <span class="skill-item">Financial Modeling</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
+    <!-- Projects Section -->
+    <section class="projects-section">
         <div class="container">
-            <p>&copy; 2024 Дмитрий Панибратский. Эксперт в управлении цепями поставок.</p>
+            <div class="section-header">
+                <h2 class="section-title">Ключевые проекты</h2>
+                <p class="section-subtitle">Реализованные решения в области цифровой трансформации SCM, масштабирования бизнеса и внедрения инновационных технологий.</p>
+            </div>
+            
+            <div class="projects-grid">
+                <!-- Проект 1 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-type">AI & Аналитика</span>
+                        <h3 class="project-title">Внедрение ИИ для прогнозирования спроса</h3>
+                        <div class="project-period">
+                            <i class="far fa-calendar"></i> 2022-2023 · ЛЕРУА МЕРЛЕН
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <p class="project-description">Разработка и внедрение системы искусственного интеллекта для точного прогнозирования спроса и оптимизации уровней запасов в розничной сети.</p>
+                        
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <div class="project-stat-number">-15%</div>
+                                <div class="project-stat-label">Снижение излишков</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">+8%</div>
+                                <div class="project-stat-label">Точность остатков</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">98.5%</div>
+                                <div class="project-stat-label">Оборачиваемость</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">#2</div>
+                                <div class="project-stat-label">В стране по CSat</div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-tech">
+                            <span class="tech-tag">Искусственный интеллект</span>
+                            <span class="tech-tag">Прогнозная аналитика</span>
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Data Science</span>
+                            <span class="tech-tag">KPI мониторинг</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Проект 2 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-type">Масштабирование</span>
+                        <h3 class="project-title">Региональная экспансия и масштабирование</h3>
+                        <div class="project-period">
+                            <i class="far fa-calendar"></i> 2018-2019 · ROSSKO
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <p class="project-description">Организация и запуск трех новых региональных филиалов с нуля, построение эффективной логистической сети для оптово-розничной продажи автозапчастей.</p>
+                        
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <div class="project-stat-number">3</div>
+                                <div class="project-stat-label">Новых города</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">24</div>
+                                <div class="project-stat-label">Человека в команде</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">20K</div>
+                                <div class="project-stat-label">SKU под контролем</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">1 год</div>
+                                <div class="project-stat-label">Срок реализации</div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-tech">
+                            <span class="tech-tag">Масштабирование</span>
+                            <span class="tech-tag">Управление филиалами</span>
+                            <span class="tech-tag">Логистика</span>
+                            <span class="tech-tag">Операционная эффективность</span>
+                            <span class="tech-tag">Командообразование</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Проект 3 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-type">Стартап</span>
+                        <h3 class="project-title">Создание прибыльного филиала с нуля</h3>
+                        <div class="project-period">
+                            <i class="far fa-calendar"></i> 2014-2016 · АВТО-ПРИТЯЖЕНИЕ
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <p class="project-description">Полный цикл создания и развития филиала компании от первоначального планирования до стабильной прибыльной работы с полной P&L ответственностью.</p>
+                        
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <div class="project-stat-number">+30%</div>
+                                <div class="project-stat-label">Рост оборота</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">-10%</div>
+                                <div class="project-stat-label">Снижение затрат</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">15</div>
+                                <div class="project-stat-label">Сотрудников</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">0→1</div>
+                                <div class="project-stat-label">Стартап с нуля</div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-tech">
+                            <span class="tech-tag">Стартап</span>
+                            <span class="tech-tag">Бизнес-развитие</span>
+                            <span class="tech-tag">Финансовый менеджмент</span>
+                            <span class="tech-tag">Управление командой</span>
+                            <span class="tech-tag">KPI системы</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Проект 4 -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-type">Оптимизация</span>
+                        <h3 class="project-title">Оптимизация логистических процессов</h3>
+                        <div class="project-period">
+                            <i class="far fa-calendar"></i> 2013-2014 · ЮЛСАН
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <p class="project-description">Реорганизация и оптимизация логистической системы компании, внедрение современных методов управления транспортом и TMS-системы.</p>
+                        
+                        <div class="project-stats">
+                            <div class="project-stat">
+                                <div class="project-stat-number">-15%</div>
+                                <div class="project-stat-label">Логистические издержки</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">+25%</div>
+                                <div class="project-stat-label">Эффективность маршрутов</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">100%</div>
+                                <div class="project-stat-label">Автоматизация отчетности</div>
+                            </div>
+                            <div class="project-stat">
+                                <div class="project-stat-number">24/7</div>
+                                <div class="project-stat-label">Мониторинг SLA</div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-tech">
+                            <span class="tech-tag">Оптимизация логистики</span>
+                            <span class="tech-tag">Управление транспортом</span>
+                            <span class="tech-tag">SLA мониторинг</span>
+                            <span class="tech-tag">Автоматизация</span>
+                            <span class="tech-tag">Аналитика затрат</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-column">
+                <h3>Дмитрий Панибратский</h3>
+                <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса. 15+ лет опыта преобразования логистических операций в измеримые бизнес-результаты.</p>
+                <div class="footer-stats">
+                    <div class="footer-stat-number" id="footerDownloadCounter">248</div>
+                    <div class="footer-stat-label">стратегических резюме скачано</div>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Навигация</h3>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия и философия</a></li>
+                    <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт и кейсы</a></li>
+                    <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза и инструменты</a></li>
+                    <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты и сотрудничество</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Контакты</h3>
+                <ul>
+                    <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
+                    <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> @LogisticaandSupplyChain</a></li>
+                    <li><a href="tel:+79822282949"><i class="fas fa-phone"></i> +7 (982) 228-29-49</a></li>
+                    <li><a href="tel:+79825810787"><i class="fas fa-phone"></i> +7 (982) 581-07-87</a></li>
+                </ul>
+                <a href="contact.html" class="footer-contact-btn">Обсудить сотрудничество</a>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Стратегическое сотрудничество</h3>
+                <p>Готов обсудить задачи цифровой трансформации SCM, разработку стратегий оптимизации цепей поставок и создание AI-решений для вашего бизнеса.</p>
+                <p style="margin-top: 20px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Форматы сотрудничества: консалтинг, проектная работа, стратегическое партнерство, контрактное управление.</p>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="copyright">
+                &copy; 2024 Дмитрий Панибратский. Стратегический лидер в SCM и цифровой трансформации. <span id="downloadCountDisplay">248 скачиваний резюме</span>
+            </div>
         </div>
     </footer>
 
     <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const nav = document.querySelector('nav ul');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            if (nav.style.display === 'flex') {
+                nav.style.display = 'none';
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            } else {
+                nav.style.display = 'flex';
+                nav.style.flexDirection = 'column';
+                nav.style.position = 'absolute';
+                nav.style.top = '100%';
+                nav.style.left = '0';
+                nav.style.width = '100%';
+                nav.style.backgroundColor = 'white';
+                nav.style.padding = '20px';
+                nav.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                nav.style.zIndex = '1000';
+                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            }
+        });
+        
+        // Header scroll effect
+        const header = document.getElementById('mainHeader');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                header.classList.add('header-scrolled');
+            } else {
+                header.classList.remove('header-scrolled');
+            }
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Initialize counter from localStorage
         document.addEventListener('DOMContentLoaded', function() {
-            // Анимация появления элементов при скролле
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            // Наблюдаем за элементами таймлайна
-            const timelineItems = document.querySelectorAll('.timeline-content');
-            timelineItems.forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(50px)';
-                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(item);
-            });
-
-            // Наблюдаем за элементами образования
-            const educationItems = document.querySelectorAll('.education-content');
-            educationItems.forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(-30px)';
-                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(item);
-            });
-
-            // Наблюдаем за категориями навыков
-            const skillCategories = document.querySelectorAll('.skill-category');
-            skillCategories.forEach(category => {
-                category.style.opacity = '0';
-                category.style.transform = 'translateY(30px)';
-                category.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(category);
-            });
-
-            // Анимация прогресс-шагов
-            const progressSteps = document.querySelectorAll('.progress-step');
-            const progressObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
-                        entry.target.style.opacity = '0';
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            progressSteps.forEach((step, index) => {
-                step.style.animationDelay = `${index * 0.2}s`;
-                progressObserver.observe(step);
-            });
-
-            // Плавная прокрутка для навигации
-            const anchorLinks = document.querySelectorAll('a[href^="#"]');
+            let downloadCount = localStorage.getItem('resumeDownloadCount');
+            if (!downloadCount) {
+                downloadCount = 248;
+                localStorage.setItem('resumeDownloadCount', downloadCount);
+            }
             
-            anchorLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
-                        
-                        const targetId = this.getAttribute('href');
-                        const targetElement = document.querySelector(targetId);
-                        
-                        if (targetElement) {
-                            const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 80;
-                            
-                            window.scrollTo({
-                                top: offsetTop,
-                                behavior: 'smooth'
-                            });
-                        }
-                    }
-                });
+            // Update counters on page
+            document.getElementById('footerDownloadCounter').textContent = downloadCount;
+            document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
+            
+            // Set current year in copyright
+            const yearElements = document.querySelectorAll('.copyright');
+            yearElements.forEach(element => {
+                const currentYear = new Date().getFullYear();
+                element.innerHTML = element.innerHTML.replace('2024', currentYear);
             });
         });
     </script>
