@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дмитрий Панибратский | Стратегический лидер в SCM и цифровой трансформации</title>
+    <title>Дмитрий Панибратский | Стратегия управления SCM и цифровой трансформацией</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -25,13 +25,13 @@
             --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             line-height: 1.6;
@@ -40,14 +40,14 @@
             font-weight: 400;
             overflow-x: hidden;
         }
-        
+
         .container {
             width: 100%;
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 24px;
         }
-        
+
         /* Header - Minimal & Professional */
         header {
             background-color: rgba(255, 255, 255, 0.95);
@@ -60,19 +60,19 @@
             z-index: 1000;
             transition: var(--transition);
         }
-        
+
         .header-scrolled {
             box-shadow: var(--shadow);
             border-bottom: 1px solid rgba(226, 232, 240, 1);
         }
-        
+
         .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
         }
-        
+
         .logo {
             font-size: 22px;
             font-weight: 700;
@@ -82,21 +82,21 @@
             display: flex;
             align-items: center;
         }
-        
+
         .logo-dot {
             color: var(--accent-gold);
             margin: 0 2px;
         }
-        
+
         nav ul {
             display: flex;
             list-style: none;
         }
-        
+
         nav ul li {
             margin-left: 40px;
         }
-        
+
         nav ul li a {
             text-decoration: none;
             color: var(--neutral-medium);
@@ -107,16 +107,16 @@
             position: relative;
             letter-spacing: 0.2px;
         }
-        
+
         nav ul li a:hover {
             color: var(--primary-blue);
         }
-        
+
         nav ul li a.active {
             color: var(--primary-blue);
             font-weight: 600;
         }
-        
+
         nav ul li a.active::after {
             content: '';
             position: absolute;
@@ -126,7 +126,7 @@
             height: 2px;
             background-color: var(--accent-gold);
         }
-        
+
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -136,15 +136,15 @@
             cursor: pointer;
             padding: 5px;
         }
-        
-        /* Hero Section - Executive Presence */
+
+        /* Hero Section - Strategic Introduction */
         .hero-section {
             padding: 160px 0 100px;
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-section::before {
             content: '';
             position: absolute;
@@ -155,7 +155,7 @@
             background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(30, 64, 175, 0) 100%);
             z-index: 0;
         }
-        
+
         .hero-container {
             display: flex;
             align-items: center;
@@ -163,18 +163,18 @@
             position: relative;
             z-index: 1;
         }
-        
+
         .hero-content {
             flex: 1;
         }
-        
+
         .hero-image {
             flex: 1;
             display: flex;
             justify-content: center;
             position: relative;
         }
-        
+
         .profile-photo {
             width: 380px;
             height: 380px;
@@ -185,7 +185,7 @@
             position: relative;
             z-index: 2;
         }
-        
+
         .photo-frame {
             position: absolute;
             width: 380px;
@@ -196,7 +196,7 @@
             z-index: 1;
             top: 0;
         }
-        
+
         .executive-tag {
             display: inline-block;
             background-color: var(--primary-blue);
@@ -209,7 +209,7 @@
             margin-bottom: 20px;
             text-transform: uppercase;
         }
-        
+
         h1 {
             font-size: 56px;
             line-height: 1.1;
@@ -218,7 +218,7 @@
             font-weight: 700;
             letter-spacing: -1px;
         }
-        
+
         .hero-title {
             font-size: 20px;
             color: var(--neutral-medium);
@@ -226,54 +226,144 @@
             font-weight: 400;
             max-width: 600px;
         }
-        
-        .philosophy-box {
-            background-color: white;
-            border-left: 4px solid var(--accent-gold);
-            padding: 28px;
-            margin: 40px 0;
-            box-shadow: var(--shadow);
-            border-radius: var(--border-radius);
-        }
-        
-        .philosophy-text {
-            font-size: 22px;
-            font-style: italic;
-            color: var(--primary-dark);
-            line-height: 1.5;
-            font-weight: 300;
-        }
-        
-        .philosophy-author {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            margin-top: 16px;
-            font-weight: 500;
-            text-align: right;
-        }
-        
-        /* Executive Stats */
-        .executive-stats {
-            padding: 80px 0;
+
+        /* Philosophy Section */
+        .philosophy-section {
+            padding: 100px 0;
             background-color: var(--neutral-light);
         }
-        
-        .stats-title {
-            text-align: center;
-            font-size: 32px;
+
+        .philosophy-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .philosophy-card {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: 60px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .philosophy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
+        }
+
+        .philosophy-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 40px;
+            font-size: 36px;
+        }
+
+        .philosophy-title {
+            font-size: 36px;
             font-weight: 700;
             color: var(--primary-dark);
-            margin-bottom: 60px;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .philosophy-content {
+            font-size: 20px;
+            color: var(--neutral-medium);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .philosophy-principles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .principle-card {
+            background-color: rgba(30, 64, 175, 0.03);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .principle-number {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background-color: var(--accent-gold);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .principle-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .principle-description {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            line-height: 1.6;
+        }
+
+        /* Strategic Results */
+        .results-section {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 16px;
             letter-spacing: -0.5px;
         }
-        
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 30px;
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--neutral-medium);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
-        
-        .stat-card {
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .result-card {
             background-color: white;
             border-radius: var(--border-radius);
             padding: 40px 30px;
@@ -282,258 +372,101 @@
             transition: var(--transition);
             border-top: 4px solid transparent;
         }
-        
-        .stat-card:hover {
+
+        .result-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-lg);
             border-top: 4px solid var(--accent-gold);
         }
-        
-        .stat-number {
+
+        .result-number {
             font-size: 52px;
             font-weight: 700;
             color: var(--primary-blue);
             margin-bottom: 12px;
             line-height: 1;
         }
-        
-        .stat-label {
+
+        .result-label {
             font-size: 16px;
             color: var(--neutral-medium);
             font-weight: 500;
         }
-        
-        .download-stat {
-            background-color: var(--primary-dark);
-            color: white;
-            padding: 40px 30px;
-        }
-        
-        .download-stat .stat-number {
-            color: var(--accent-gold);
-        }
-        
-        .download-stat .stat-label {
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 24px;
-            padding: 14px 28px;
-            background-color: var(--accent-gold);
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            letter-spacing: 0.3px;
-        }
-        
-        .download-btn:hover {
-            background-color: #c19b2c;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.2);
-        }
-        
-        .download-btn i {
-            margin-right: 10px;
-        }
-        
-        /* Expertise Section */
-        .expertise-section {
+
+        /* Certificates Section */
+        .certificates-section {
             padding: 100px 0;
-            background-color: white;
+            background-color: var(--neutral-light);
         }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 70px;
-        }
-        
-        .section-title {
-            font-size: 40px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
-        }
-        
-        .section-subtitle {
-            font-size: 18px;
-            color: var(--neutral-medium);
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-        
-        .expertise-grid {
+
+        .certificates-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
         }
-        
-        .expertise-card {
+
+        .certificate-card {
             background-color: white;
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
+            border-radius: var(--border-radius);
+            padding: 40px 30px;
             box-shadow: var(--shadow);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            text-align: center;
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
-        
-        .expertise-card:hover {
+
+        .certificate-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
-            border-color: var(--primary-light);
+            border-color: var(--accent-gold);
         }
-        
-        .expertise-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
-        }
-        
-        .expertise-icon {
-            width: 60px;
-            height: 60px;
+
+        .certificate-icon {
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background-color: rgba(30, 64, 175, 0.1);
             color: var(--primary-blue);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 28px;
-            font-size: 24px;
+            margin: 0 auto 20px;
+            font-size: 30px;
         }
-        
-        .expertise-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 20px;
-        }
-        
-        .expertise-list {
-            list-style: none;
-        }
-        
-        .expertise-list li {
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
-            display: flex;
-            align-items: center;
-            color: var(--neutral-medium);
-        }
-        
-        .expertise-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .expertise-list li i {
-            color: var(--accent-gold);
-            margin-right: 12px;
-            font-size: 14px;
-        }
-        
-        /* Leadership Section */
-        .leadership-section {
-            padding: 100px 0;
-            background-color: var(--neutral-light);
-        }
-        
-        .leadership-title {
-            text-align: center;
-            font-size: 40px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 70px;
-            letter-spacing: -0.5px;
-        }
-        
-        .leadership-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        
-        .leadership-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 40px 30px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        
-        .leadership-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .leadership-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-blue), #1e3a8a);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            font-size: 32px;
-            transition: var(--transition);
-        }
-        
-        .leadership-card:hover .leadership-icon {
-            transform: scale(1.05);
-        }
-        
-        .leadership-name {
+
+        .certificate-title {
             font-size: 20px;
             font-weight: 700;
             color: var(--primary-dark);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
-        
-        .leadership-desc {
-            font-size: 16px;
+
+        .certificate-issuer {
             color: var(--neutral-medium);
-            line-height: 1.6;
+            font-size: 16px;
+            margin-bottom: 15px;
         }
-        
-        /* Methodology Section */
-        .methodology-section {
+
+        .certificate-year {
+            color: var(--accent-steel);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Methodologies Section */
+        .methodologies-section {
             padding: 100px 0;
             background-color: white;
         }
-        
-        .methodology-title {
-            text-align: center;
-            font-size: 40px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 70px;
-            letter-spacing: -0.5px;
-        }
-        
-        .methodology-container {
+
+        .methodologies-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
+            margin-top: 50px;
         }
-        
+
         .methodology-card {
             display: flex;
             align-items: flex-start;
@@ -543,14 +476,15 @@
             box-shadow: var(--shadow);
             transition: var(--transition);
             border: 1px solid rgba(226, 232, 240, 0.8);
+            min-height: 220px;
         }
-        
+
         .methodology-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
             border-color: var(--accent-gold);
         }
-        
+
         .methodology-icon {
             width: 60px;
             height: 60px;
@@ -564,34 +498,81 @@
             flex-shrink: 0;
             font-size: 24px;
         }
-        
+
         .methodology-content h3 {
             font-size: 20px;
             font-weight: 700;
             color: var(--primary-dark);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            line-height: 1.3;
         }
-        
+
         .methodology-content p {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--neutral-medium);
             line-height: 1.6;
         }
-        
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e293b 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: white;
+        }
+
+        .cta-description {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 36px;
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 18px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button:hover {
+            background-color: #c19b2c;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
         /* Footer */
         footer {
             background-color: var(--primary-dark);
             color: white;
             padding: 80px 0 40px;
         }
-        
+
         .footer-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 50px;
             margin-bottom: 60px;
         }
-        
+
         .footer-column h3 {
             font-size: 20px;
             font-weight: 700;
@@ -600,7 +581,7 @@
             position: relative;
             padding-bottom: 12px;
         }
-        
+
         .footer-column h3::after {
             content: '';
             position: absolute;
@@ -610,40 +591,21 @@
             height: 3px;
             background-color: var(--accent-gold);
         }
-        
+
         .footer-column p {
             color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
             margin-bottom: 20px;
         }
-        
-        .footer-stats {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 24px;
-            border-radius: var(--border-radius);
-            margin-top: 20px;
-        }
-        
-        .footer-stat-number {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            margin-bottom: 5px;
-        }
-        
-        .footer-stat-label {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
+
         .footer-column ul {
             list-style: none;
         }
-        
+
         .footer-column ul li {
             margin-bottom: 14px;
         }
-        
+
         .footer-column ul li a {
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
@@ -652,38 +614,18 @@
             display: flex;
             align-items: center;
         }
-        
+
         .footer-column ul li a:hover {
             color: white;
             padding-left: 5px;
         }
-        
+
         .footer-column ul li i {
             margin-right: 10px;
             width: 20px;
             color: var(--accent-gold);
         }
-        
-        .footer-contact-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 14px 28px;
-            background-color: var(--accent-gold);
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .footer-contact-btn:hover {
-            background-color: #c19b2c;
-            transform: translateY(-2px);
-        }
-        
+
         .copyright {
             text-align: center;
             padding-top: 40px;
@@ -691,113 +633,150 @@
             color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
         }
-        
+
+        /* Tags styling */
+        .tag {
+            display: inline-block;
+            background-color: rgba(30, 64, 175, 0.1);
+            color: var(--primary-blue);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(30, 64, 175, 0.2);
+        }
+
         /* Responsive Styles */
         @media (max-width: 1200px) {
             .hero-container {
                 gap: 60px;
             }
-            
             .profile-photo, .photo-frame {
                 width: 340px;
                 height: 340px;
             }
         }
-        
+
         @media (max-width: 992px) {
             .hero-container {
                 flex-direction: column;
                 text-align: center;
                 gap: 50px;
             }
-            
             h1 {
                 font-size: 48px;
             }
-            
             .profile-photo, .photo-frame {
                 width: 320px;
                 height: 320px;
             }
-            
             .hero-section::before {
                 width: 100%;
                 height: 40%;
                 top: 0;
             }
-            
-            .expertise-grid {
-                grid-template-columns: 1fr;
+            .philosophy-card {
+                padding: 40px 30px;
+            }
+            .philosophy-title {
+                font-size: 32px;
+            }
+            .philosophy-content {
+                font-size: 18px;
+            }
+            .methodologies-container {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
-        
+
         @media (max-width: 768px) {
             nav ul {
                 display: none;
             }
-            
             .mobile-menu-btn {
                 display: block;
             }
-            
             h1 {
                 font-size: 40px;
             }
-            
             .hero-title {
                 font-size: 18px;
             }
-            
-            .philosophy-text {
-                font-size: 20px;
+            .philosophy-title {
+                font-size: 28px;
             }
-            
-            .section-title, .leadership-title, .methodology-title {
-                font-size: 32px;
+            .philosophy-content {
+                font-size: 16px;
             }
-            
-            .stat-number {
+            .philosophy-card {
+                padding: 30px 20px;
+            }
+            .result-number {
                 font-size: 44px;
             }
-            
             .hero-section {
                 padding: 140px 0 80px;
             }
-            
-            .executive-stats, .expertise-section, .leadership-section, .methodology-section {
+            .philosophy-section, .results-section, .certificates-section, .methodologies-section, .cta-section {
                 padding: 70px 0;
             }
-            
             .footer-container {
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
+            .cta-title {
+                font-size: 32px;
+            }
+            .cta-description {
+                font-size: 18px;
+            }
+            .methodologies-container {
+                grid-template-columns: 1fr;
+            }
+            .methodology-card {
+                padding: 25px 20px;
+            }
+            .methodology-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                margin-right: 20px;
+            }
+            .methodology-content h3 {
+                font-size: 18px;
+            }
+            .methodology-content p {
+                font-size: 14px;
+            }
         }
-        
+
         @media (max-width: 576px) {
             .hero-section {
                 padding: 120px 0 60px;
             }
-            
             .profile-photo, .photo-frame {
                 width: 280px;
                 height: 280px;
             }
-            
             h1 {
                 font-size: 36px;
             }
-            
-            .philosophy-box {
-                padding: 24px;
+            .philosophy-principles {
+                grid-template-columns: 1fr;
             }
-            
-            .stat-card, .expertise-card, .leadership-card, .methodology-card {
+            .result-card, .certificate-card, .methodology-card {
                 padding: 30px 20px;
             }
-            
             .container {
                 padding: 0 20px;
+            }
+            .section-title {
+                font-size: 32px;
+            }
+            .section-subtitle {
+                font-size: 16px;
             }
         }
     </style>
@@ -809,11 +788,9 @@
             <a href="index.html" class="logo">
                 ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
             </a>
-            
             <button class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
             </button>
-            
             <nav>
                 <ul>
                     <li><a href="index.html" class="active">Стратегия</a></li>
@@ -829,193 +806,205 @@
     <section class="hero-section">
         <div class="container hero-container">
             <div class="hero-content">
-                <span class="executive-tag">Стратегический лидер SCM</span>
-                <h1>Дмитрий Панибратский</h1>
-                <p class="hero-title">Преобразую операционные сложности в конкурентные преимущества через цифровую трансформацию, AI-стратегии и системную оптимизацию цепей поставок.</p>
-                
-                <div class="philosophy-box">
-                    <p class="philosophy-text">В условиях волатильности рынка не операционная эффективность, а стратегическая адаптивность определяет лидеров. Цифровая трансформация SCM — это не технологический проект, а фундаментальная перестройка бизнес-логики.</p>
-                    <div class="philosophy-author">— Дмитрий Панибратский</div>
-                </div>
-                
+                <span class="executive-tag">Философия управления SCM</span>
+                <h1>Моя стратегия преобразования цепей поставок</h1>
+                <p class="hero-title">15+ лет трансформирую операционные сложности в конкурентные преимущества через системный подход, цифровые технологии и стратегическое лидерство.</p>
                 <div class="hero-tags">
-                    <span class="tag">Стратегия SCM</span>
+                    <span class="tag">Стратегическое мышление</span>
                     <span class="tag">Цифровая трансформация</span>
-                    <span class="tag">AI-аналитика</span>
-                    <span class="tag">Управление закупками</span>
+                    <span class="tag">AI-интеграция</span>
+                    <span class="tag">Управление изменениями</span>
                 </div>
             </div>
-            
             <div class="hero-image">
                 <div class="photo-frame"></div>
-                <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
+                <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo"
+                     onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
             </div>
         </div>
     </section>
 
-    <!-- Executive Stats -->
-    <section class="executive-stats">
+    <!-- Philosophy Section -->
+    <section class="philosophy-section">
         <div class="container">
-            <h2 class="stats-title">Измеримые результаты стратегического управления</h2>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-number">15+</div>
-                    <div class="stat-label">лет стратегического опыта в SCM</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-number">143%</div>
-                    <div class="stat-label">рост операционной эффективности</div>
-                </div>
-                
-                <div class="stat-card download-stat">
-                    <div class="stat-number" id="downloadCounter">248</div>
-                    <div class="stat-label">скачиваний резюме стратега</div>
-                    <button class="download-btn" onclick="downloadResume()">
-                        <i class="fas fa-download"></i> Скачать стратегическое резюме
-                    </button>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-number">87k+</div>
-                    <div class="stat-label">SKU под стратегическим управлением</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Expertise Section -->
-    <section class="expertise-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Стратегические компетенции</h2>
-                <p class="section-subtitle">Комплексный подход к управлению цепями поставок, сочетающий технологическую экспертизу с бизнес-стратегией для создания устойчивых конкурентных преимуществ.</p>
-            </div>
-            
-            <div class="expertise-grid">
-                <div class="expertise-card">
-                    <div class="expertise-icon">
-                        <i class="fas fa-chess-board"></i>
-                    </div>
-                    <h3 class="expertise-title">Стратегия SCM</h3>
-                    <ul class="expertise-list">
-                        <li><i class="fas fa-check"></i> Разработка SCM-стратегии компании</li>
-                        <li><i class="fas fa-check"></i> Оптимизация сети распределения</li>
-                        <li><i class="fas fa-check"></i> Управление складской инфраструктурой</li>
-                        <li><i class="fas fa-check"></i> Планирование мощностей и ресурсов</li>
-                        <li><i class="fas fa-check"></i> Анализ рисков цепей поставок</li>
-                    </ul>
-                </div>
-                
-                <div class="expertise-card">
-                    <div class="expertise-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <h3 class="expertise-title">Цифровая трансформация</h3>
-                    <ul class="expertise-list">
-                        <li><i class="fas fa-check"></i> Внедрение AI и ML решений</li>
-                        <li><i class="fas fa-check"></i> Создание цифровых двойников</li>
-                        <li><i class="fas fa-check"></i> Автоматизация процессов (RPA)</li>
-                        <li><i class="fas fa-check"></i> BI системы и дашборды</li>
-                        <li><i class="fas fa-check"></i> ERP системы (SAP)</li>
-                    </ul>
-                </div>
-                
-                <div class="expertise-card">
-                    <div class="expertise-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3 class="expertise-title">Аналитика и оптимизация</h3>
-                    <ul class="expertise-list">
-                        <li><i class="fas fa-check"></i> Предиктивная аналитика</li>
-                        <li><i class="fas fa-check"></i> Data Science (Python, SQL)</li>
-                        <li><i class="fas fa-check"></i> Lean Six Sigma</li>
-                        <li><i class="fas fa-check"></i> Финансовое моделирование</li>
-                        <li><i class="fas fa-check"></i> KPI разработка и мониторинг</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Leadership Section -->
-    <section class="leadership-section">
-        <div class="container">
-            <h2 class="leadership-title">Стратегическое лидерство</h2>
-            
-            <div class="leadership-grid">
-                <div class="leadership-card">
-                    <div class="leadership-icon">
+            <div class="philosophy-container">
+                <div class="philosophy-card">
+                    <div class="philosophy-icon">
                         <i class="fas fa-chess-king"></i>
                     </div>
-                    <h3 class="leadership-name">Стратегическое видение</h3>
-                    <p class="leadership-desc">Преобразование операционных данных в долгосрочные стратегические решения, определяющие конкурентные преимущества компании.</p>
-                </div>
-                
-                <div class="leadership-card">
-                    <div class="leadership-icon">
-                        <i class="fas fa-project-diagram"></i>
+                    <h2 class="philosophy-title">Философия стратегического управления SCM</h2>
+                    <p class="philosophy-content">
+                        Управление цепями поставок — это не операционная задача, а стратегическая дисциплина, 
+                        определяющая конкурентные преимущества компании в цифровую эпоху. Моя философия строится 
+                        на принципе трансформации сложностей в возможности, где каждая операционная проблема 
+                        рассматривается как потенциал для создания уникального рыночного преимущества.
+                    </p>
+                    
+                    <div class="philosophy-principles">
+                        <div class="principle-card">
+                            <div class="principle-number">1</div>
+                            <h3 class="principle-title">Системность мышления</h3>
+                            <p class="principle-description">Рассматриваю SCM как единую экосистему, где каждое решение влияет на всю цепь создания стоимости</p>
+                        </div>
+                        <div class="principle-card">
+                            <div class="principle-number">2</div>
+                            <h3 class="principle-title">Адаптивность к изменениям</h3>
+                            <p class="principle-description">Создаю гибкие системы, способные адаптироваться к рыночной волатильности и технологическим сдвигам</p>
+                        </div>
+                        <div class="principle-card">
+                            <div class="principle-number">3</div>
+                            <h3 class="principle-title">Данные как актив</h3>
+                            <p class="principle-description">Преобразую операционные данные в стратегические инсайты для принятия обоснованных решений</p>
+                        </div>
+                        <div class="principle-card">
+                            <div class="principle-number">4</div>
+                            <h3 class="principle-title">Человекоцентричность</h3>
+                            <p class="principle-description">Строю процессы вокруг людей, создавая среды для роста и развития команд</p>
+                        </div>
                     </div>
-                    <h3 class="leadership-name">Системное мышление</h3>
-                    <p class="leadership-desc">Анализ взаимосвязей в сложных системах, выявление точек влияния и создание устойчивых архитектур бизнес-процессов.</p>
-                </div>
-                
-                <div class="leadership-card">
-                    <div class="leadership-icon">
-                        <i class="fas fa-users-cog"></i>
-                    </div>
-                    <h3 class="leadership-name">Управление трансформацией</h3>
-                    <p class="leadership-desc">Системное внедрение изменений, балансирование между технологическими возможностями и организационной готовностью.</p>
-                </div>
-                
-                <div class="leadership-card">
-                    <div class="leadership-icon">
-                        <i class="fas fa-handshake"></i>
-                    </div>
-                    <h3 class="leadership-name">Стейкхолдер-менеджмент</h3>
-                    <p class="leadership-desc">Выстраивание стратегических альянсов, управление ожиданиями и создание экосистемы взаимовыгодного сотрудничества.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Methodology Section -->
-    <section class="methodology-section">
+    <!-- Strategic Results -->
+    <section class="results-section">
         <div class="container">
-            <h2 class="methodology-title">Методологический фундамент</h2>
-            
-            <div class="methodology-container">
+            <div class="section-header">
+                <h2 class="section-title">Измеримые результаты стратегического подхода</h2>
+                <p class="section-subtitle">Конкретные бизнес-результаты, достигнутые через применение стратегического мышления к управлению цепями поставок</p>
+            </div>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-number">143%</div>
+                    <div class="result-label">рост операционной эффективности через цифровую трансформацию</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-number">25%</div>
+                    <div class="result-label">снижение логистических затрат через оптимизацию процессов</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-number">15+</div>
+                    <div class="result-label">успешно реализованных стратегических проектов</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-number">87k+</div>
+                    <div class="result-label">SKU под стратегическим управлением</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certificates Section -->
+    <section class="certificates-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Сертификаты и квалификации</h2>
+                <p class="section-subtitle">Формальное подтверждение экспертизы и непрерывного профессионального развития в области SCM и управления</p>
+            </div>
+            <div class="certificates-grid">
+                <div class="certificate-card">
+                    <div class="certificate-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="certificate-title">MBA "Логистика, снабжение, закупки"</h3>
+                    <p class="certificate-issuer">Международный Центр Дистанционного Образования</p>
+                    <div class="certificate-year">2023</div>
+                </div>
+                <div class="certificate-card">
+                    <div class="certificate-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="certificate-title">Операционный логист</h3>
+                    <p class="certificate-issuer">Карабинский техникум текстильной и других промышленности</p>
+                    <div class="certificate-year">2020</div>
+                </div>
+                <div class="certificate-card">
+                    <div class="certificate-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 class="certificate-title">Коммерческий директор</h3>
+                    <p class="certificate-issuer">Институт профессионального образования</p>
+                    <div class="certificate-year">2023</div>
+                </div>
+                <div class="certificate-card">
+                    <div class="certificate-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="certificate-title">Контроль технического состояния АТС</h3>
+                    <p class="certificate-issuer">Учебный центр «ПроиСтрой 2»</p>
+                    <div class="certificate-year">2020</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methodologies Section -->
+    <section class="methodologies-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Методологический фундамент</h2>
+                <p class="section-subtitle">Интеллектуальные системы и подходы, формирующие основу моего стратегического мышления и управленческой практики</p>
+            </div>
+            <div class="methodologies-container">
+                <!-- Методология Адизеса -->
                 <div class="methodology-card">
                     <div class="methodology-icon">
                         <i class="fas fa-sitemap"></i>
                     </div>
                     <div class="methodology-content">
                         <h3>Методология Адизеса</h3>
-                        <p>Стратегии управления организационными изменениями и корпоративной трансформацией на разных этапах жизненного цикла компании.</p>
+                        <p>Стратегии управления организационными изменениями и корпоративной трансформацией на разных этапах жизненного цикла компании. Интегрирую PAEI-модель для баланса функций управления и обеспечения устойчивого роста.</p>
                     </div>
                 </div>
                 
+                <!-- Игорь Манн -->
+                <div class="methodology-card">
+                    <div class="methodology-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="methodology-content">
+                        <h3>Игорь Манн</h3>
+                        <p>Принципы маркетинга, продаж и практического подхода к бизнесу. Использую концепции воронки продаж, клиентоцентричности и операционной эффективности для создания устойчивых бизнес-процессов.</p>
+                    </div>
+                </div>
+                
+                <!-- Владимир Сидоренко (Performia) -->
+                <div class="methodology-card">
+                    <div class="methodology-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="methodology-content">
+                        <h3>Владимир Сидоренко (Performia)</h3>
+                        <p>Система оценки и развития персонала, основанная на анализе поведения и мотивации. Применяю для формирования эффективных команд и повышения индивидуальной продуктивности сотрудников.</p>
+                    </div>
+                </div>
+                
+                <!-- Максим Батырев -->
                 <div class="methodology-card">
                     <div class="methodology-icon">
                         <i class="fas fa-tachometer-alt"></i>
                     </div>
                     <div class="methodology-content">
-                        <h3>Комбат-менеджмент</h3>
-                        <p>Принципы экстремальной эффективности бизнес-процессов и принятия решений в условиях ограниченных ресурсов и высокой неопределенности.</p>
-                    </div>
-                </div>
-                
-                <div class="methodology-card">
-                    <div class="methodology-icon">
-                        <i class="fas fa-bullseye"></i>
-                    </div>
-                    <div class="methodology-content">
-                        <h3>Управление по целям</h3>
-                        <p>Системное мышление и фокусировка на ключевых результатах, обеспечивающих стратегическое преимущество компании.</p>
+                        <h3>Максим Батырев</h3>
+                        <p>Комбат-менеджмент — принципы экстремальной эффективности бизнес-процессов и принятия решений в условиях ограниченных ресурсов и высокой неопределенности рынка.</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Готовы трансформировать ваши цепи поставок?</h2>
+            <p class="cta-description">
+                Давайте обсудим, как стратегический подход к управлению SCM может создать конкурентные преимущества 
+                для вашего бизнеса в эпоху цифровой трансформации.
+            </p>
+            <a href="contact.html" class="cta-button">
+                <i class="fas fa-handshake"></i> Обсудить стратегическое сотрудничество
+            </a>
         </div>
     </section>
 
@@ -1024,13 +1013,8 @@
         <div class="container footer-container">
             <div class="footer-column">
                 <h3>Дмитрий Панибратский</h3>
-                <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса. Создаю измеримые конкурентные преимущества через технологические инновации и системную оптимизацию.</p>
-                <div class="footer-stats">
-                    <div class="footer-stat-number" id="footerDownloadCounter">248</div>
-                    <div class="footer-stat-label">стратегических резюме скачано</div>
-                </div>
+                <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса. Специализируюсь на создании измеримых конкурентных преимуществ через технологические инновации и системную оптимизацию.</p>
             </div>
-            
             <div class="footer-column">
                 <h3>Навигация</h3>
                 <ul>
@@ -1040,7 +1024,6 @@
                     <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты и сотрудничество</a></li>
                 </ul>
             </div>
-            
             <div class="footer-column">
                 <h3>Контакты</h3>
                 <ul>
@@ -1049,19 +1032,16 @@
                     <li><a href="tel:+79822282949"><i class="fas fa-phone"></i> +7 (982) 228-29-49</a></li>
                     <li><a href="tel:+79825810787"><i class="fas fa-phone"></i> +7 (982) 581-07-87</a></li>
                 </ul>
-                <a href="contact.html" class="footer-contact-btn">Обсудить стратегию</a>
             </div>
-            
             <div class="footer-column">
                 <h3>Стратегическое сотрудничество</h3>
                 <p>Готов обсудить задачи цифровой трансформации SCM, разработку стратегий оптимизации цепей поставок и создание AI-решений для вашего бизнеса.</p>
                 <p style="margin-top: 20px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Форматы сотрудничества: консалтинг, проектная работа, стратегическое партнерство, контрактное управление.</p>
             </div>
         </div>
-        
         <div class="container">
             <div class="copyright">
-                &copy; 2024 Дмитрий Панибратский. Стратегический лидер в SCM и цифровой трансформации. <span id="downloadCountDisplay">248 скачиваний резюме</span>
+                &copy; 2024 Дмитрий Панибратский. Стратегический лидер в SCM и цифровой трансформации.
             </div>
         </div>
     </footer>
@@ -1089,10 +1069,9 @@
                 mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
             }
         });
-        
+
         // Header scroll effect
         const header = document.getElementById('mainHeader');
-        
         window.addEventListener('scroll', function() {
             if (window.scrollY > 50) {
                 header.classList.add('header-scrolled');
@@ -1100,7 +1079,7 @@
                 header.classList.remove('header-scrolled');
             }
         });
-        
+
         // Initialize tags styling
         const tags = document.querySelectorAll('.tag');
         tags.forEach(tag => {
@@ -1115,91 +1094,30 @@
             tag.style.fontWeight = '500';
             tag.style.border = '1px solid rgba(30, 64, 175, 0.2)';
         });
-        
-        // Функция для загрузки и подсчета скачиваний резюме
-        function downloadResume() {
-            // Получаем текущее количество скачиваний из localStorage
-            let downloadCount = localStorage.getItem('resumeDownloadCount');
-            if (!downloadCount) {
-                downloadCount = 248; // Начальное значение
-            } else {
-                downloadCount = parseInt(downloadCount);
-            }
-            
-            // Увеличиваем счетчик
-            downloadCount++;
-            
-            // Сохраняем новое значение в localStorage
-            localStorage.setItem('resumeDownloadCount', downloadCount);
-            
-            // Обновляем отображение счетчика на странице
-            document.getElementById('downloadCounter').textContent = downloadCount;
-            document.getElementById('footerDownloadCounter').textContent = downloadCount;
-            document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
-            
-            // Создаем ссылку для скачивания файла
-            const link = document.createElement('a');
-            link.href = 'resume/Дмитрий_Панибратский_CV.pdf';
-            link.download = 'Дмитрий_Панибратский_Стратегическое_резюме.pdf';
-            link.target = '_blank';
-            
-            // Добавляем ссылку на страницу и имитируем клик
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Показываем уведомление
-            showNotification('Стратегическое резюме успешно скачано! Благодарю за проявленный интерес.');
-        }
-        
-        // Функция для показа уведомления
-        function showNotification(message) {
-            // Создаем элемент уведомления
-            const notification = document.createElement('div');
-            notification.style.position = 'fixed';
-            notification.style.top = '30px';
-            notification.style.right = '30px';
-            notification.style.backgroundColor = 'var(--primary-dark)';
-            notification.style.color = 'white';
-            notification.style.padding = '20px 25px';
-            notification.style.borderRadius = 'var(--border-radius)';
-            notification.style.boxShadow = 'var(--shadow-lg)';
-            notification.style.zIndex = '9999';
-            notification.style.fontWeight = '500';
-            notification.style.borderLeft = '4px solid var(--accent-gold)';
-            notification.style.maxWidth = '350px';
-            notification.style.display = 'flex';
-            notification.style.alignItems = 'center';
-            notification.innerHTML = `
-                <i class="fas fa-check-circle" style="color: var(--accent-gold); margin-right: 15px; font-size: 20px;"></i>
-                <span>${message}</span>
-            `;
-            
-            // Добавляем уведомление на страницу
-            document.body.appendChild(notification);
-            
-            // Удаляем уведомление через 4 секунды
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 500);
-            }, 4000);
-        }
-        
-        // Инициализация счетчика скачиваний при загрузке страницы
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Set current year in copyright
         document.addEventListener('DOMContentLoaded', function() {
-            let downloadCount = localStorage.getItem('resumeDownloadCount');
-            if (!downloadCount) {
-                downloadCount = 248; // Начальное значение
-                localStorage.setItem('resumeDownloadCount', downloadCount);
-            }
-            
-            // Обновляем все счетчики на странице
-            document.getElementById('downloadCounter').textContent = downloadCount;
-            document.getElementById('footerDownloadCounter').textContent = downloadCount;
-            document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
+            const yearElements = document.querySelectorAll('.copyright');
+            yearElements.forEach(element => {
+                const currentYear = new Date().getFullYear();
+                element.innerHTML = element.innerHTML.replace('2024', currentYear);
+            });
         });
     </script>
 </body>
