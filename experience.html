@@ -25,13 +25,13 @@
             --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             line-height: 1.6;
@@ -40,14 +40,14 @@
             font-weight: 400;
             overflow-x: hidden;
         }
-        
+
         .container {
             width: 100%;
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 24px;
         }
-        
+
         /* Header */
         header {
             background-color: rgba(255, 255, 255, 0.95);
@@ -60,19 +60,19 @@
             z-index: 1000;
             transition: var(--transition);
         }
-        
+
         .header-scrolled {
             box-shadow: var(--shadow);
             border-bottom: 1px solid rgba(226, 232, 240, 1);
         }
-        
+
         .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
         }
-        
+
         .logo {
             font-size: 22px;
             font-weight: 700;
@@ -82,21 +82,21 @@
             display: flex;
             align-items: center;
         }
-        
+
         .logo-dot {
             color: var(--accent-gold);
             margin: 0 2px;
         }
-        
+
         nav ul {
             display: flex;
             list-style: none;
         }
-        
+
         nav ul li {
             margin-left: 40px;
         }
-        
+
         nav ul li a {
             text-decoration: none;
             color: var(--neutral-medium);
@@ -107,16 +107,16 @@
             position: relative;
             letter-spacing: 0.2px;
         }
-        
+
         nav ul li a:hover {
             color: var(--primary-blue);
         }
-        
+
         nav ul li a.active {
             color: var(--primary-blue);
             font-weight: 600;
         }
-        
+
         nav ul li a.active::after {
             content: '';
             position: absolute;
@@ -126,7 +126,7 @@
             height: 2px;
             background-color: var(--accent-gold);
         }
-        
+
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -136,15 +136,15 @@
             cursor: pointer;
             padding: 5px;
         }
-        
-        /* Hero Section */
+
+        /* Hero Section с фото справа */
         .hero-section {
             padding: 160px 0 80px;
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-section::before {
             content: '';
             position: absolute;
@@ -155,13 +155,49 @@
             background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(30, 64, 175, 0) 100%);
             z-index: 0;
         }
-        
-        .hero-content {
+
+        .hero-container {
+            display: flex;
+            align-items: center;
+            gap: 80px;
             position: relative;
             z-index: 1;
-            max-width: 800px;
         }
-        
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .profile-photo {
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        .photo-frame {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-gold);
+            transform: rotate(45deg);
+            z-index: 1;
+            top: 0;
+        }
+
         .executive-tag {
             display: inline-block;
             background-color: var(--primary-blue);
@@ -174,7 +210,7 @@
             margin-bottom: 20px;
             text-transform: uppercase;
         }
-        
+
         h1 {
             font-size: 56px;
             line-height: 1.1;
@@ -183,26 +219,176 @@
             font-weight: 700;
             letter-spacing: -1px;
         }
-        
+
         .hero-title {
             font-size: 20px;
             color: var(--neutral-medium);
             margin-bottom: 32px;
             font-weight: 400;
-            max-width: 700px;
+            max-width: 600px;
         }
-        
-        /* Experience Timeline */
-        .experience-section {
+
+        /* Философское высказывание */
+        .philosophy-quote {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--accent-gold);
+            max-width: 380px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .philosophy-quote::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 80px;
+            color: rgba(212, 175, 55, 0.2);
+            font-family: Georgia, serif;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .philosophy-text {
+            font-size: 18px;
+            font-style: italic;
+            color: var(--primary-dark);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .philosophy-author {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            font-weight: 500;
+            text-align: right;
+            padding-top: 15px;
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* Герой-статистика */
+        .hero-stats {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--neutral-medium);
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .download-experience-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 16px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        .download-experience-btn:hover {
+            background-color: #c19b2c;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .download-experience-btn i {
+            margin-right: 10px;
+        }
+
+        /* Experience Stats */
+        .experience-stats {
+            padding: 80px 0;
+            background-color: var(--neutral-light);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .stats-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stats-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: rgba(30, 64, 175, 0.1);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+        }
+
+        .stats-card-number {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .stats-card-label {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            font-weight: 500;
+        }
+
+        /* Timeline */
+        .timeline-section {
             padding: 100px 0;
             background-color: white;
         }
-        
+
         .section-header {
             text-align: center;
             margin-bottom: 70px;
         }
-        
+
         .section-title {
             font-size: 40px;
             font-weight: 700;
@@ -210,7 +396,7 @@
             margin-bottom: 16px;
             letter-spacing: -0.5px;
         }
-        
+
         .section-subtitle {
             font-size: 18px;
             color: var(--neutral-medium);
@@ -218,13 +404,13 @@
             margin: 0 auto;
             line-height: 1.6;
         }
-        
+
         .timeline {
             position: relative;
             max-width: 1000px;
             margin: 0 auto;
         }
-        
+
         .timeline::before {
             content: '';
             position: absolute;
@@ -235,21 +421,21 @@
             background-color: var(--neutral-light);
             transform: translateX(-50%);
         }
-        
+
         .timeline-item {
             display: flex;
             margin-bottom: 80px;
             position: relative;
         }
-        
+
         .timeline-item:nth-child(odd) {
             flex-direction: row;
         }
-        
+
         .timeline-item:nth-child(even) {
             flex-direction: row-reverse;
         }
-        
+
         .timeline-content {
             width: 45%;
             padding: 40px;
@@ -258,15 +444,14 @@
             box-shadow: var(--shadow);
             border: 1px solid rgba(226, 232, 240, 0.8);
             transition: var(--transition);
-            position: relative;
         }
-        
+
         .timeline-content:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary-light);
         }
-        
+
         .timeline-content::before {
             content: '';
             position: absolute;
@@ -277,15 +462,15 @@
             background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
             border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
         }
-        
+
         .timeline-item:nth-child(odd) .timeline-content {
             margin-left: auto;
         }
-        
+
         .timeline-item:nth-child(even) .timeline-content {
             margin-right: auto;
         }
-        
+
         .timeline-dot {
             position: absolute;
             left: 50%;
@@ -299,252 +484,283 @@
             border: 4px solid white;
             box-shadow: 0 0 0 2px var(--accent-gold);
         }
-        
+
         .company-header {
             display: flex;
-            align-items: center;
-            margin-bottom: 20px;
+            align-items: flex-start;
+            margin-bottom: 25px;
         }
-        
+
         .company-logo {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: var(--border-radius);
             margin-right: 20px;
             object-fit: contain;
             background-color: white;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid rgba(226, 232, 240, 0.8);
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
-        
+
         .company-logo img {
             max-width: 100%;
             max-height: 100%;
         }
-        
+
+        .company-info {
+            flex: 1;
+        }
+
         .company-info h3 {
             font-size: 24px;
             font-weight: 700;
             color: var(--primary-dark);
             margin-bottom: 5px;
+            line-height: 1.3;
         }
-        
+
         .company-info .position {
             font-size: 18px;
             color: var(--primary-blue);
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
-        
+
         .company-info .period {
             font-size: 14px;
             color: var(--neutral-medium);
             font-weight: 500;
+            display: flex;
+            align-items: center;
         }
-        
+
+        .company-info .period i {
+            margin-right: 8px;
+            color: var(--accent-gold);
+        }
+
         .timeline-content ul {
             list-style: none;
             margin-top: 20px;
         }
-        
+
         .timeline-content ul li {
-            padding: 10px 0;
+            padding: 12px 0;
             border-bottom: 1px solid rgba(226, 232, 240, 0.6);
             display: flex;
             align-items: flex-start;
-            color: var(--neutral-medium);
+            color: var(--neutral-dark);
+            font-size: 15px;
+            line-height: 1.6;
         }
-        
+
         .timeline-content ul li:last-child {
             border-bottom: none;
         }
-        
+
         .timeline-content ul li i {
             color: var(--accent-gold);
             margin-right: 12px;
             font-size: 14px;
             margin-top: 4px;
+            flex-shrink: 0;
         }
-        
+
         .achievements {
             margin-top: 25px;
-            padding: 20px;
+            padding: 25px;
             background-color: rgba(212, 175, 55, 0.05);
             border-radius: var(--border-radius);
             border-left: 4px solid var(--accent-gold);
         }
-        
+
         .achievements h4 {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--primary-dark);
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
         }
-        
+
         .achievements h4 i {
-            margin-right: 8px;
+            margin-right: 10px;
             color: var(--accent-gold);
         }
-        
+
         .achievements ul {
             margin-top: 0;
         }
-        
+
         .achievements ul li {
             border-bottom: none;
             padding: 8px 0;
             font-size: 15px;
+            color: var(--neutral-medium);
         }
-        
-        /* Projects Section */
-        .projects-section {
+
+        /* Skills Section */
+        .skills-section {
             padding: 100px 0;
             background-color: var(--neutral-light);
         }
-        
-        .projects-grid {
+
+        .skills-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
-            margin-top: 60px;
         }
-        
-        .project-card {
+
+        .skill-category {
             background-color: white;
-            border-radius: var(--border-radius-lg);
-            overflow: hidden;
+            border-radius: var(--border-radius);
+            padding: 40px 30px;
             box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(226, 232, 240, 0.8);
         }
-        
-        .project-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .project-header {
-            padding: 30px 30px 20px;
-            position: relative;
-        }
-        
-        .project-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
-        }
-        
-        .project-type {
-            display: inline-block;
-            background-color: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-        
-        .project-title {
+
+        .skill-category h3 {
             font-size: 24px;
             font-weight: 700;
             color: var(--primary-dark);
-            margin-bottom: 10px;
-        }
-        
-        .project-period {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            font-weight: 500;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
         }
-        
-        .project-period i {
-            margin-right: 8px;
+
+        .skill-category h3 i {
+            margin-right: 12px;
             color: var(--accent-gold);
         }
-        
-        .project-content {
-            padding: 0 30px 30px;
+
+        .skill-list {
+            list-style: none;
         }
-        
-        .project-description {
-            font-size: 16px;
-            color: var(--neutral-medium);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        
-        .project-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .project-stat {
-            text-align: center;
-            padding: 15px;
-            background-color: rgba(241, 245, 249, 0.5);
-            border-radius: var(--border-radius);
-        }
-        
-        .project-stat-number {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 5px;
-        }
-        
-        .project-stat-label {
-            font-size: 13px;
-            color: var(--neutral-medium);
-            font-weight: 500;
-        }
-        
-        .project-tech {
+
+        .skill-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 20px;
+            justify-content: space-between;
+            align-items: center;
         }
-        
-        .tech-tag {
-            display: inline-block;
-            background-color: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            font-size: 12px;
+
+        .skill-list li:last-child {
+            border-bottom: none;
+        }
+
+        .skill-name {
+            font-size: 16px;
+            color: var(--neutral-dark);
             font-weight: 500;
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(30, 64, 175, 0.2);
         }
-        
+
+        .skill-level {
+            display: flex;
+            align-items: center;
+        }
+
+        .skill-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .skill-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(226, 232, 240, 0.8);
+        }
+
+        .skill-dot.filled {
+            background-color: var(--accent-gold);
+        }
+
+        /* Download CTA */
+        .download-cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e293b 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .download-cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .download-cta h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: white;
+        }
+
+        .download-cta p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .download-counter-large {
+            font-size: 72px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin: 30px 0 10px;
+            line-height: 1;
+        }
+
+        .download-label {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+        }
+
+        .download-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 40px;
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 18px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-cta-btn:hover {
+            background-color: #c19b2c;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .download-cta-btn i {
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
         /* Footer */
         footer {
             background-color: var(--primary-dark);
             color: white;
             padding: 80px 0 40px;
         }
-        
+
         .footer-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 50px;
             margin-bottom: 60px;
         }
-        
+
         .footer-column h3 {
             font-size: 20px;
             font-weight: 700;
@@ -553,7 +769,7 @@
             position: relative;
             padding-bottom: 12px;
         }
-        
+
         .footer-column h3::after {
             content: '';
             position: absolute;
@@ -563,40 +779,40 @@
             height: 3px;
             background-color: var(--accent-gold);
         }
-        
+
         .footer-column p {
             color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
             margin-bottom: 20px;
         }
-        
+
         .footer-stats {
             background-color: rgba(255, 255, 255, 0.1);
             padding: 24px;
             border-radius: var(--border-radius);
             margin-top: 20px;
         }
-        
+
         .footer-stat-number {
             font-size: 36px;
             font-weight: 700;
             color: var(--accent-gold);
             margin-bottom: 5px;
         }
-        
+
         .footer-stat-label {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.8);
         }
-        
+
         .footer-column ul {
             list-style: none;
         }
-        
+
         .footer-column ul li {
             margin-bottom: 14px;
         }
-        
+
         .footer-column ul li a {
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
@@ -605,18 +821,18 @@
             display: flex;
             align-items: center;
         }
-        
+
         .footer-column ul li a:hover {
             color: white;
             padding-left: 5px;
         }
-        
+
         .footer-column ul li i {
             margin-right: 10px;
             width: 20px;
             color: var(--accent-gold);
         }
-        
+
         .footer-contact-btn {
             display: inline-block;
             margin-top: 20px;
@@ -631,12 +847,12 @@
             cursor: pointer;
             font-size: 16px;
         }
-        
+
         .footer-contact-btn:hover {
             background-color: #c19b2c;
             transform: translateY(-2px);
         }
-        
+
         .copyright {
             text-align: center;
             padding-top: 40px;
@@ -644,115 +860,159 @@
             color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
         }
-        
+
         /* Responsive Styles */
-        @media (max-width: 992px) {
+        @media (max-width: 1200px) {
             h1 {
                 font-size: 48px;
             }
-            
+            .hero-container {
+                gap: 60px;
+            }
+            .profile-photo, .photo-frame {
+                width: 340px;
+                height: 340px;
+            }
+            .philosophy-quote {
+                max-width: 340px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 42px;
+            }
+            .hero-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 50px;
+            }
+            .profile-photo, .photo-frame {
+                width: 320px;
+                height: 320px;
+            }
+            .hero-section::before {
+                width: 100%;
+                height: 40%;
+                top: 0;
+            }
             .timeline::before {
                 left: 30px;
             }
-            
             .timeline-item {
                 flex-direction: row !important;
                 margin-bottom: 60px;
             }
-            
             .timeline-content {
                 width: calc(100% - 80px);
                 margin-left: 80px !important;
                 margin-right: 0 !important;
             }
-            
             .timeline-dot {
                 left: 30px;
             }
-            
-            .projects-grid {
+            .skills-container {
                 grid-template-columns: 1fr;
             }
+            .philosophy-quote {
+                max-width: 320px;
+            }
         }
-        
+
         @media (max-width: 768px) {
             nav ul {
                 display: none;
             }
-            
             .mobile-menu-btn {
                 display: block;
             }
-            
             h1 {
-                font-size: 40px;
+                font-size: 36px;
             }
-            
+            .hero-title {
+                font-size: 18px;
+            }
             .section-title {
                 font-size: 32px;
             }
-            
             .hero-section {
                 padding: 140px 0 60px;
             }
-            
-            .experience-section, .projects-section {
+            .experience-stats, .timeline-section, .skills-section, .download-cta {
                 padding: 70px 0;
             }
-            
             .timeline-content {
                 padding: 30px 20px;
                 width: calc(100% - 60px);
                 margin-left: 60px !important;
             }
-            
             .timeline-dot {
                 left: 20px;
             }
-            
             .company-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            
             .company-logo {
                 margin-right: 0;
                 margin-bottom: 15px;
             }
-            
             .footer-container {
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
-        }
-        
-        @media (max-width: 576px) {
-            h1 {
-                font-size: 36px;
+            .download-cta h2 {
+                font-size: 32px;
             }
-            
-            .hero-title {
+            .download-counter-large {
+                font-size: 56px;
+            }
+            .download-cta p {
                 font-size: 18px;
             }
-            
+            .profile-photo, .photo-frame {
+                width: 280px;
+                height: 280px;
+            }
+            .philosophy-quote {
+                padding: 25px 20px;
+                max-width: 280px;
+            }
+            .philosophy-text {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 32px;
+            }
+            .hero-title {
+                font-size: 16px;
+            }
             .company-info h3 {
                 font-size: 20px;
             }
-            
             .company-info .position {
                 font-size: 16px;
             }
-            
-            .project-stat {
-                padding: 10px;
-            }
-            
-            .project-stat-number {
-                font-size: 24px;
-            }
-            
             .container {
                 padding: 0 20px;
+            }
+            .stat-number {
+                font-size: 36px;
+            }
+            .download-counter-large {
+                font-size: 48px;
+            }
+            .profile-photo, .photo-frame {
+                width: 250px;
+                height: 250px;
+            }
+            .philosophy-quote {
+                max-width: 250px;
+                padding: 20px;
+                margin-top: 30px;
             }
         }
     </style>
@@ -764,11 +1024,9 @@
             <a href="index.html" class="logo">
                 ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
             </a>
-            
             <button class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
             </button>
-            
             <nav>
                 <ul>
                     <li><a href="index.html">Стратегия</a></li>
@@ -780,19 +1038,85 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Section с фото справа и философским высказыванием -->
     <section class="hero-section">
-        <div class="container">
+        <div class="container hero-container">
             <div class="hero-content">
                 <span class="executive-tag">Карьерный путь</span>
-                <h1>Опыт и проекты</h1>
-                <p class="hero-title">15+ лет преобразования логистических операций в измеримые бизнес-результаты. От управления складскими операциями до стратегического руководства цепями поставок международной компании.</p>
+                <h1>Опыт и результаты</h1>
+                <p class="hero-title">15+ лет стратегического управления цепями поставок, цифровой трансформации и создания измеримых бизнес-результатов в ведущих российских и международных компаниях.</p>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">компаний</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">проектов</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">87k+</div>
+                        <div class="stat-label">SKU под управлением</div>
+                    </div>
+                </div>
+
+                <button class="download-experience-btn" onclick="downloadResume()">
+                    <i class="fas fa-download"></i> Скачать детальное резюме
+                </button>
+            </div>
+            
+            <div class="hero-image">
+                <div class="photo-frame"></div>
+                <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo"
+                     onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
+                
+                <div class="philosophy-quote">
+                    <p class="philosophy-text">В эпоху цифровой трансформации успех определяется не скоростью изменений, а способностью создавать устойчивые системы, которые превращают операционные сложности в стратегические преимущества.</p>
+                    <div class="philosophy-author">— Дмитрий Панибратский</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Experience Timeline -->
-    <section class="experience-section">
+    <!-- Experience Stats -->
+    <section class="experience-stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stats-card-number">143%</div>
+                    <div class="stats-card-label">Рост операционной эффективности</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stats-card-number">25%</div>
+                    <div class="stats-card-label">Снижение логистических затрат</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stats-card-number">79</div>
+                    <div class="stats-card-label">Человек в команде</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="stats-card-number">15+</div>
+                    <div class="stats-card-label">Реализованных проектов</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Карьерная хронология</h2>
@@ -811,31 +1135,31 @@
                             <div class="company-info">
                                 <h3>ЛЕРУА МЕРЛЕН</h3>
                                 <div class="position">Менеджер цепи поставок магазина</div>
-                                <div class="period">Март 2020 — Июль 2025 · 5 лет 5 месяцев</div>
+                                <div class="period"><i class="far fa-calendar"></i> Март 2020 — Июль 2025 · 5 лет 5 месяцев</div>
                             </div>
                         </div>
                         
                         <ul>
-                            <li><i class="fas fa-check"></i> Управление end-to-end цепями поставок для розничного магазина формата DIY (4000 м², 87,000 SKU)</li>
-                            <li><i class="fas fa-check"></i> Руководство многопрофильной командой из 79 специалистов</li>
-                            <li><i class="fas fa-check"></i> Внедрение AI-решений для предиктивного прогнозирования спроса и оптимизации запасов</li>
-                            <li><i class="fas fa-check"></i> Цифровая трансформация процессов инвентаризации и отчетности</li>
-                            <li><i class="fas fa-check"></i> Проведение тендеров по выбору транспортных компаний, оптимизация логистических затрат</li>
+                            <li><i class="fas fa-check"></i> <strong>Полное управление E2E цепями поставок</strong> для розничного магазина DIY формата (4000 м², 87,000 SKU)</li>
+                            <li><i class="fas fa-check"></i> <strong>Руководство многопрофильной командой</strong> из 79 специалистов (приемка, выкладка, replenishment, администрация)</li>
+                            <li><i class="fas fa-check"></i> <strong>Внедрение AI-решений</strong> для предиктивного прогнозирования спроса и оптимизации уровней запасов</li>
+                            <li><i class="fas fa-check"></i> <strong>Цифровая трансформация процессов</strong> инвентаризации, отчетности и мониторинга KPI</li>
+                            <li><i class="fas fa-check"></i> <strong>Управление бюджетом отдела</strong> (транспорт, хранение, обработка) и оптимизация затрат</li>
                         </ul>
                         
                         <div class="achievements">
                             <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
                             <ul>
-                                <li><i class="fas fa-star"></i> Снижение транспортных расходов на 10% через редизайн маршрутов</li>
-                                <li><i class="fas fa-star"></i> Вывод команды приемки на 2-е место в стране по продуктивности</li>
-                                <li><i class="fas fa-star"></i> Внедрение системы мониторинга заказов с повышением корректности остатков на 8%</li>
-                                <li><i class="fas fa-star"></i> Достижение позиции магазина в ТОП-10 страны по CSat (Customer Satisfaction)</li>
-                                <li><i class="fas fa-star"></i> Организация равномерности поставок с показателя 70.3% до 91.2%</li>
+                                <li><i class="fas fa-star"></i> <strong>Снижение транспортных расходов на 10%</strong> через редизайн маршрутов и консолидацию перевозок</li>
+                                <li><i class="fas fa-star"></i> <strong>Вывод команды приемки на 2-е место</strong> в стране по продуктивности (1,100 паллет/смену)</li>
+                                <li><i class="fas fa-star"></i> <strong>Внедрение системы мониторинга заказов</strong> с повышением корректности остатков на 8%</li>
+                                <li><i class="fas fa-star"></i> <strong>Достижение позиции магазина в ТОП-10</strong> страны по CSat (Customer Satisfaction)</li>
+                                <li><i class="fas fa-star"></i> <strong>Организация равномерности поставок</strong> с показателя 70.3% до 91.2%</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Rossko (Гринлайт) -->
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
@@ -847,135 +1171,63 @@
                             <div class="company-info">
                                 <h3>ООО «ГРИНЛАЙТ» (Rossko)</h3>
                                 <div class="position">Начальник склада | Архитектор региональной экспансии</div>
-                                <div class="period">Май 2018 — Декабрь 2019 · 1 год 8 месяцев</div>
+                                <div class="period"><i class="far fa-calendar"></i> Май 2018 — Декабрь 2019 · 1 год 8 месяцев</div>
                             </div>
                         </div>
                         
                         <ul>
-                            <li><i class="fas fa-check"></i> Стратегическое руководство складскими операциями (500 м², 20,000 SKU)</li>
-                            <li><i class="fas fa-check"></i> Управление командой из 24 высококвалифицированных специалистов</li>
-                            <li><i class="fas fa-check"></i> Развитие региональной сети поставок в условиях быстрого роста компании</li>
-                            <li><i class="fas fa-check"></i> Внедрение lean-методологий для оптимизации складских процессов</li>
-                            <li><i class="fas fa-check"></i> Разработка системы кросс-докинга для ускорения товарооборота</li>
+                            <li><i class="fas fa-check"></i> <strong>Стратегическое руководство складскими операциями</strong> (500 м², 20,000 SKU)</li>
+                            <li><i class="fas fa-check"></i> <strong>Управление командой</strong> из 24 высококвалифицированных специалистов</li>
+                            <li><i class="fas fa-check"></i> <strong>Развитие региональной сети поставок</strong> в условиях быстрого роста компании</li>
+                            <li><i class="fas fa-check"></i> <strong>Внедрение lean-методологий</strong> для оптимизации складских процессов</li>
+                            <li><i class="fas fa-check"></i> <strong>Разработка системы кросс-докинга</strong> для ускорения товарооборота</li>
                         </ul>
                         
                         <div class="achievements">
                             <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
                             <ul>
-                                <li><i class="fas fa-star"></i> Успешный запуск 3 новых региональных филиалов (Ноябрьск, Ханты-Мансийск, Нижневартовск)</li>
-                                <li><i class="fas fa-star"></i> Улучшение точности складских операций на 25%</li>
-                                <li><i class="fas fa-star"></i> Расширение географического присутствия компании на 300%</li>
-                                <li><i class="fas fa-star"></i> Создание группы по открытию новых филиалов и масштабированию бизнеса</li>
+                                <li><i class="fas fa-star"></i> <strong>Успешный запуск 3 новых региональных филиалов</strong> (Ноябрьск, Ханты-Мансийск, Нижневартовск)</li>
+                                <li><i class="fas fa-star"></i> <strong>Улучшение точности складских операций на 25%</strong> через внедрение WMS</li>
+                                <li><i class="fas fa-star"></i> <strong>Расширение географического присутствия</strong> компании на 300%</li>
+                                <li><i class="fas fa-star"></i> <strong>Создание группы по открытию новых филиалов</strong> и масштабированию бизнеса</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Авто-Притяжение / Юлсан -->
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                         <div class="company-header">
                             <div class="company-logo">
-                                <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background-color: #1e40af; color: white; border-radius: var(--border-radius); font-weight: bold; font-size: 14px;">
-                                    АВТО
+                                <div style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; background-color: #1e40af; color: white; border-radius: var(--border-radius); font-weight: bold; font-size: 14px; text-align: center; padding: 10px;">
+                                    АВТО<br>ПРИТЯЖЕНИЕ
                                 </div>
                             </div>
                             <div class="company-info">
                                 <h3>АВТО-ПРИТЯЖЕНИЕ / ЮЛСАН</h3>
                                 <div class="position">Директор филиала / Руководитель департамента логистики</div>
-                                <div class="period">Декабрь 2014 — Февраль 2018 · 3 года 3 месяца</div>
+                                <div class="period"><i class="far fa-calendar"></i> Декабрь 2014 — Февраль 2018 · 3 года 3 месяца</div>
                             </div>
                         </div>
                         
                         <ul>
-                            <li><i class="fas fa-check"></i> Полное управление региональным филиалом компании с P&L ответственностью</li>
-                            <li><i class="fas fa-check"></i> Построение операционной модели филиала с нуля до прибыльной бизнес-единицы</li>
-                            <li><i class="fas fa-check"></i> Реорганизация и управление логистическими процессами компании</li>
-                            <li><i class="fas fa-check"></i> Внедрение TMS (Transportation Management System)</li>
-                            <li><i class="fas fa-check"></i> Формирование и развитие команды из 15 высокомотивированных специалистов</li>
+                            <li><i class="fas fa-check"></i> <strong>Полное управление региональным филиалом</strong> компании с P&L ответственностью</li>
+                            <li><i class="fas fa-check"></i> <strong>Построение операционной модели филиала</strong> с нуля до прибыльной бизнес-единицы</li>
+                            <li><i class="fas fa-check"></i> <strong>Реорганизация и управление логистическими процессами</strong> компании</li>
+                            <li><i class="fas fa-check"></i> <strong>Внедрение TMS (Transportation Management System)</strong></li>
+                            <li><i class="fas fa-check"></i> <strong>Формирование и развитие команды</strong> из 15 высокомотивированных специалистов</li>
                         </ul>
                         
                         <div class="achievements">
                             <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
                             <ul>
-                                <li><i class="fas fa-star"></i> Органический рост оборота на 30% за первый год работы филиала</li>
-                                <li><i class="fas fa-star"></i> Снижение логистических издержек на 15% через консолидацию перевозок</li>
-                                <li><i class="fas fa-star"></i> Улучшение показателя on-time delivery на 20%</li>
-                                <li><i class="fas fa-star"></i> Разработка и внедрение системы мониторинга KPI для филиальной сети</li>
-                                <li><i class="fas fa-star"></i> Снижение операционных затрат на 15% через процессную оптимизацию</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Ресурс-Авто -->
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <div class="company-header">
-                            <div class="company-logo">
-                                <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background-color: #dc2626; color: white; border-radius: var(--border-radius); font-weight: bold; font-size: 12px; text-align: center; padding: 5px;">
-                                    РЕСУРС-АВТО
-                                </div>
-                            </div>
-                            <div class="company-info">
-                                <h3>ООО «РЕСУРС-АВТО»</h3>
-                                <div class="position">Менеджер отдела логистики и контроля качества</div>
-                                <div class="period">Февраль 2013 — Сентябрь 2014 · 1 год 8 месяцев</div>
-                            </div>
-                        </div>
-                        
-                        <ul>
-                            <li><i class="fas fa-check"></i> Взаимодействие с транспортными компаниями, контроль сроков и качества перевозок</li>
-                            <li><i class="fas fa-check"></i> Работа с претензиями физических и юридических лиц, урегулирование спорных вопросов</li>
-                            <li><i class="fas fa-check"></i> Обработка заказов менеджеров, работа с каталогами автозапчастей</li>
-                            <li><i class="fas fa-check"></i> Составление ежедневных отчетов по возвратам и аналитика причин</li>
-                            <li><i class="fas fa-check"></i> Управление товарной матрицей и неликвидами на складах</li>
-                        </ul>
-                        
-                        <div class="achievements">
-                            <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
-                            <ul>
-                                <li><i class="fas fa-star"></i> Выбор оптимальных транспортных компаний, обеспечивающих качественную и своевременную доставку</li>
-                                <li><i class="fas fa-star"></i> Создание эффективной системы работы с претензиями и рекламациями</li>
-                                <li><i class="fas fa-star"></i> Разработка стандартов качества логистического обслуживания</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ГАЗ-Запчасть -->
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <div class="company-header">
-                            <div class="company-logo">
-                                <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background-color: #0f172a; color: white; border-radius: var(--border-radius); font-weight: bold; font-size: 16px;">
-                                    ГАЗ
-                                </div>
-                            </div>
-                            <div class="company-info">
-                                <h3>ООО «ГАЗ-ЗАПЧАСТЬ»</h3>
-                                <div class="position">Менеджер по закупкам и снабжению</div>
-                                <div class="period">Октябрь 2014 — Май 2018 · 3 года 8 месяцев</div>
-                            </div>
-                        </div>
-                        
-                        <ul>
-                            <li><i class="fas fa-check"></i> Обеспечение своевременной доставки товара от поставщиков в соответствии с условиями контрактов</li>
-                            <li><i class="fas fa-check"></i> Составление заявок на товар, актов и заключений о качестве поступающего товара</li>
-                            <li><i class="fas fa-check"></i> Работа с клиентами и поставщиками, ведение переговоров</li>
-                            <li><i class="fas fa-check"></i> Осуществление приемки товара, проверка и оформление документации</li>
-                            <li><i class="fas fa-check"></i> Управление товарной матрицей и неликвидами на складах (50 м²)</li>
-                        </ul>
-                        
-                        <div class="achievements">
-                            <h4><i class="fas fa-trophy"></i> Ключевые достижения</h4>
-                            <ul>
-                                <li><i class="fas fa-star"></i> Создание эффективной системы закупок и снабжения</li>
-                                <li><i class="fas fa-star"></i> Оптимизация работы с поставщиками и улучшение условий поставок</li>
-                                <li><i class="fas fa-star"></i> Разработка системы управления товарными запасами</li>
+                                <li><i class="fas fa-star"></i> <strong>Органический рост оборота на 30%</strong> за первый год работы филиала</li>
+                                <li><i class="fas fa-star"></i> <strong>Снижение логистических издержек на 15%</strong> через консолидацию перевозок</li>
+                                <li><i class="fas fa-star"></i> <strong>Улучшение показателя on-time delivery на 20%</strong></li>
+                                <li><i class="fas fa-star"></i> <strong>Разработка и внедрение системы мониторинга KPI</strong> для филиальной сети</li>
+                                <li><i class="fas fa-star"></i> <strong>Снижение операционных затрат на 15%</strong> через процессную оптимизацию</li>
                             </ul>
                         </div>
                     </div>
@@ -984,178 +1236,193 @@
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section class="projects-section">
+    <!-- Skills Section -->
+    <section class="skills-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Ключевые проекты</h2>
-                <p class="section-subtitle">Реализованные решения в области цифровой трансформации SCM, масштабирования бизнеса и внедрения инновационных технологий.</p>
+                <h2 class="section-title">Ключевые компетенции</h2>
+                <p class="section-subtitle">Профессиональные навыки и экспертиза, накопленные за 15+ лет в управлении цепями поставок и цифровой трансформации.</p>
             </div>
             
-            <div class="projects-grid">
-                <!-- Проект 1 -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <span class="project-type">AI & Аналитика</span>
-                        <h3 class="project-title">Внедрение ИИ для прогнозирования спроса</h3>
-                        <div class="project-period">
-                            <i class="far fa-calendar"></i> 2022-2023 · ЛЕРУА МЕРЛЕН
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <p class="project-description">Разработка и внедрение системы искусственного интеллекта для точного прогнозирования спроса и оптимизации уровней запасов в розничной сети.</p>
-                        
-                        <div class="project-stats">
-                            <div class="project-stat">
-                                <div class="project-stat-number">-15%</div>
-                                <div class="project-stat-label">Снижение излишков</div>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3><i class="fas fa-chess-board"></i> Управление SCM</h3>
+                    <ul class="skill-list">
+                        <li>
+                            <span class="skill-name">Стратегия цепей поставок</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                </div>
                             </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">+8%</div>
-                                <div class="project-stat-label">Точность остатков</div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Оптимизация логистики</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                </div>
                             </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">98.5%</div>
-                                <div class="project-stat-label">Оборачиваемость</div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Управление запасами</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot"></div>
+                                </div>
                             </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">#2</div>
-                                <div class="project-stat-label">В стране по CSat</div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Управление закупками</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="project-tech">
-                            <span class="tech-tag">Искусственный интеллект</span>
-                            <span class="tech-tag">Прогнозная аналитика</span>
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">Data Science</span>
-                            <span class="tech-tag">KPI мониторинг</span>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
                 
-                <!-- Проект 2 -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <span class="project-type">Масштабирование</span>
-                        <h3 class="project-title">Региональная экспансия и масштабирование</h3>
-                        <div class="project-period">
-                            <i class="far fa-calendar"></i> 2018-2019 · ROSSKO
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <p class="project-description">Организация и запуск трех новых региональных филиалов с нуля, построение эффективной логистической сети для оптово-розничной продажи автозапчастей.</p>
-                        
-                        <div class="project-stats">
-                            <div class="project-stat">
-                                <div class="project-stat-number">3</div>
-                                <div class="project-stat-label">Новых города</div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-laptop-code"></i> Технологии</h3>
+                    <ul class="skill-list">
+                        <li>
+                            <span class="skill-name">SAP ERP</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot"></div>
+                                </div>
                             </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">24</div>
-                                <div class="project-stat-label">Человека в команде</div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Python & Data Science</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot"></div>
+                                    <div class="skill-dot"></div>
+                                </div>
                             </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">20K</div>
-                                <div class="project-stat-label">SKU под контролем</div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Tableau / BI системы</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot"></div>
+                                </div>
                             </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">1 год</div>
-                                <div class="project-stat-label">Срок реализации</div>
+                        </li>
+                        <li>
+                            <span class="skill-name">SQL & Базы данных</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot"></div>
+                                    <div class="skill-dot"></div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="project-tech">
-                            <span class="tech-tag">Масштабирование</span>
-                            <span class="tech-tag">Управление филиалами</span>
-                            <span class="tech-tag">Логистика</span>
-                            <span class="tech-tag">Операционная эффективность</span>
-                            <span class="tech-tag">Командообразование</span>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
                 
-                <!-- Проект 3 -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <span class="project-type">Стартап</span>
-                        <h3 class="project-title">Создание прибыльного филиала с нуля</h3>
-                        <div class="project-period">
-                            <i class="far fa-calendar"></i> 2014-2016 · АВТО-ПРИТЯЖЕНИЕ
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <p class="project-description">Полный цикл создания и развития филиала компании от первоначального планирования до стабильной прибыльной работы с полной P&L ответственностью.</p>
-                        
-                        <div class="project-stats">
-                            <div class="project-stat">
-                                <div class="project-stat-number">+30%</div>
-                                <div class="project-stat-label">Рост оборота</div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-users"></i> Лидерство</h3>
+                    <ul class="skill-list">
+                        <li>
+                            <span class="skill-name">Управление командами</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                </div>
                             </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">-10%</div>
-                                <div class="project-stat-label">Снижение затрат</div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Стратегическое планирование</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot"></div>
+                                </div>
                             </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">15</div>
-                                <div class="project-stat-label">Сотрудников</div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Управление изменениями</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                </div>
                             </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">0→1</div>
-                                <div class="project-stat-label">Стартап с нуля</div>
+                        </li>
+                        <li>
+                            <span class="skill-name">Коммуникация</span>
+                            <div class="skill-level">
+                                <div class="skill-dots">
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot filled"></div>
+                                    <div class="skill-dot"></div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="project-tech">
-                            <span class="tech-tag">Стартап</span>
-                            <span class="tech-tag">Бизнес-развитие</span>
-                            <span class="tech-tag">Финансовый менеджмент</span>
-                            <span class="tech-tag">Управление командой</span>
-                            <span class="tech-tag">KPI системы</span>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download CTA -->
+    <section class="download-cta">
+        <div class="container">
+            <div class="download-cta-content">
+                <h2>Готовы к деталям?</h2>
+                <p>Полное резюме с детальным описанием опыта, проектов и достижений доступно для скачивания. Уже <span id="dynamicCounter">248</span> профессионалов оценили глубину моего опыта.</p>
                 
-                <!-- Проект 4 -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <span class="project-type">Оптимизация</span>
-                        <h3 class="project-title">Оптимизация логистических процессов</h3>
-                        <div class="project-period">
-                            <i class="far fa-calendar"></i> 2013-2014 · ЮЛСАН
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <p class="project-description">Реорганизация и оптимизация логистической системы компании, внедрение современных методов управления транспортом и TMS-системы.</p>
-                        
-                        <div class="project-stats">
-                            <div class="project-stat">
-                                <div class="project-stat-number">-15%</div>
-                                <div class="project-stat-label">Логистические издержки</div>
-                            </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">+25%</div>
-                                <div class="project-stat-label">Эффективность маршрутов</div>
-                            </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">100%</div>
-                                <div class="project-stat-label">Автоматизация отчетности</div>
-                            </div>
-                            <div class="project-stat">
-                                <div class="project-stat-number">24/7</div>
-                                <div class="project-stat-label">Мониторинг SLA</div>
-                            </div>
-                        </div>
-                        
-                        <div class="project-tech">
-                            <span class="tech-tag">Оптимизация логистики</span>
-                            <span class="tech-tag">Управление транспортом</span>
-                            <span class="tech-tag">SLA мониторинг</span>
-                            <span class="tech-tag">Автоматизация</span>
-                            <span class="tech-tag">Аналитика затрат</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="download-counter-large" id="downloadCounterLarge">248</div>
+                <div class="download-label">резюме уже скачано</div>
+                
+                <button class="download-cta-btn" onclick="downloadResume()">
+                    <i class="fas fa-download"></i> Скачать полное резюме (PDF)
+                </button>
             </div>
         </div>
     </section>
@@ -1168,7 +1435,7 @@
                 <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса. 15+ лет опыта преобразования логистических операций в измеримые бизнес-результаты.</p>
                 <div class="footer-stats">
                     <div class="footer-stat-number" id="footerDownloadCounter">248</div>
-                    <div class="footer-stat-label">стратегических резюме скачано</div>
+                    <div class="footer-stat-label">скачиваний резюме</div>
                 </div>
             </div>
             
@@ -1202,7 +1469,8 @@
         
         <div class="container">
             <div class="copyright">
-                &copy; 2024 Дмитрий Панибратский. Стратегический лидер в SCM и цифровой трансформации. <span id="downloadCountDisplay">248 скачиваний резюме</span>
+                &copy; 2024 Дмитрий Панибратский. Стратегический лидер в SCM и цифровой трансформации. 
+                <span id="downloadCountDisplay">248 скачиваний резюме</span>
             </div>
         </div>
     </footer>
@@ -1230,10 +1498,9 @@
                 mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
             }
         });
-        
+
         // Header scroll effect
         const header = document.getElementById('mainHeader');
-        
         window.addEventListener('scroll', function() {
             if (window.scrollY > 50) {
                 header.classList.add('header-scrolled');
@@ -1241,42 +1508,150 @@
                 header.classList.remove('header-scrolled');
             }
         });
-        
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 100,
-                        behavior: 'smooth'
-                    });
+
+        // Функция для загрузки и подсчета скачиваний резюме
+        function downloadResume() {
+            // Получаем текущее количество скачиваний из localStorage
+            let downloadCount = localStorage.getItem('resumeDownloadCount');
+            if (!downloadCount) {
+                downloadCount = 248; // Начальное значение
+            } else {
+                downloadCount = parseInt(downloadCount);
+            }
+            
+            // Увеличиваем счетчик
+            downloadCount++;
+            
+            // Сохраняем новое значение в localStorage
+            localStorage.setItem('resumeDownloadCount', downloadCount);
+            
+            // Обновляем отображение счетчика на странице
+            updateDownloadCounters(downloadCount);
+            
+            // Создаем ссылку для скачивания файла
+            const link = document.createElement('a');
+            link.href = 'resume/Дмитрий_Панибратский_CV.pdf';
+            link.download = 'Дмитрий_Панибратский_Резюме_Опыт.pdf';
+            link.target = '_blank';
+            
+            // Добавляем ссылку на страницу и имитируем клик
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Показываем уведомление
+            showNotification('Резюме успешно скачано! Спасибо за интерес к моему опыту.');
+        }
+
+        // Функция для обновления всех счетчиков на странице
+        function updateDownloadCounters(count) {
+            const elements = [
+                'footerDownloadCounter',
+                'downloadCounterLarge',
+                'downloadCountDisplay',
+                'dynamicCounter'
+            ];
+            
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    if (id === 'downloadCountDisplay') {
+                        element.textContent = count + ' скачиваний резюме';
+                    } else if (id === 'dynamicCounter') {
+                        element.textContent = count;
+                    } else {
+                        element.textContent = count;
+                    }
                 }
             });
-        });
-        
-        // Initialize counter from localStorage
+        }
+
+        // Функция для показа уведомления
+        function showNotification(message) {
+            // Создаем элемент уведомления
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.top = '30px';
+            notification.style.right = '30px';
+            notification.style.backgroundColor = 'var(--primary-dark)';
+            notification.style.color = 'white';
+            notification.style.padding = '20px 25px';
+            notification.style.borderRadius = 'var(--border-radius)';
+            notification.style.boxShadow = 'var(--shadow-lg)';
+            notification.style.zIndex = '9999';
+            notification.style.fontWeight = '500';
+            notification.style.borderLeft = '4px solid var(--accent-gold)';
+            notification.style.maxWidth = '350px';
+            notification.style.display = 'flex';
+            notification.style.alignItems = 'center';
+            
+            notification.innerHTML = `
+                <i class="fas fa-check-circle" style="color: var(--accent-gold); margin-right: 15px; font-size: 20px;"></i>
+                <span>${message}</span>
+            `;
+            
+            // Добавляем уведомление на страницу
+            document.body.appendChild(notification);
+            
+            // Удаляем уведомление через 4 секунды
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 4000);
+        }
+
+        // Инициализация счетчика скачиваний при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             let downloadCount = localStorage.getItem('resumeDownloadCount');
             if (!downloadCount) {
-                downloadCount = 248;
+                downloadCount = 248; // Начальное значение
                 localStorage.setItem('resumeDownloadCount', downloadCount);
             }
             
-            // Update counters on page
-            document.getElementById('footerDownloadCounter').textContent = downloadCount;
-            document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
+            // Обновляем все счетчики на странице
+            updateDownloadCounters(downloadCount);
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
             
             // Set current year in copyright
             const yearElements = document.querySelectorAll('.copyright');
             yearElements.forEach(element => {
                 const currentYear = new Date().getFullYear();
                 element.innerHTML = element.innerHTML.replace('2024', currentYear);
+            });
+            
+            // Animate numbers in stats section
+            const statNumbers = document.querySelectorAll('.stat-number, .stats-card-number');
+            statNumbers.forEach(stat => {
+                const finalValue = parseInt(stat.textContent);
+                let currentValue = 0;
+                const increment = finalValue / 50;
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        stat.textContent = finalValue + (stat.textContent.includes('+') ? '+' : '');
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(currentValue) + (stat.textContent.includes('+') ? '+' : '');
+                    }
+                }, 30);
             });
         });
     </script>
