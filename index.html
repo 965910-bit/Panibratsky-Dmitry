@@ -227,6 +227,17 @@
             max-width: 600px;
         }
 
+        .hero-subtitle {
+            font-size: 18px;
+            font-style: italic;
+            color: var(--accent-steel);
+            margin-top: 20px;
+            line-height: 1.6;
+            border-left: 3px solid var(--accent-gold);
+            padding-left: 15px;
+            max-width: 800px;
+        }
+
         /* Philosophy Section */
         .philosophy-section {
             padding: 100px 0;
@@ -234,7 +245,7 @@
         }
 
         .philosophy-container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -289,6 +300,65 @@
             font-weight: 300;
         }
 
+        .philosophy-insight {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin: 40px 0;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .philosophy-insight h3 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .philosophy-insight ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 15px 0;
+        }
+
+        .philosophy-insight li {
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .philosophy-insight li:before {
+            content: "•";
+            color: var(--accent-gold);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .strategic-academy {
+            background: rgba(30, 64, 175, 0.05);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .strategic-academy h4 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .strategic-academy p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
         .philosophy-principles {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -301,6 +371,12 @@
             border-radius: var(--border-radius);
             padding: 30px;
             border-left: 4px solid var(--accent-gold);
+            transition: var(--transition);
+        }
+
+        .principle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
         }
 
         .principle-number {
@@ -327,6 +403,60 @@
             font-size: 16px;
             color: var(--neutral-medium);
             line-height: 1.6;
+        }
+
+        /* Book Announcement */
+        .book-announcement {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(30, 64, 175, 0.02) 100%);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin: 40px 0;
+            border-left: 4px solid var(--accent-gold);
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+        }
+
+        .book-cover {
+            flex-shrink: 0;
+            width: 220px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-info {
+            flex: 1;
+        }
+
+        .book-announcement .book-title {
+            font-size: 24px;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .book-announcement .book-description {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .book-announcement .book-status {
+            margin-top: 20px;
         }
 
         /* Strategic Results */
@@ -513,6 +643,90 @@
             line-height: 1.6;
         }
 
+        /* Leadership Philosophy Section */
+        .leadership-philosophy {
+            padding: 100px 0;
+            background-color: var(--neutral-light);
+        }
+
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .philosophy-item {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .philosophy-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .philosophy-item .philosophy-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(30, 64, 175, 0.1);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .philosophy-item h3 {
+            font-size: 22px;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+        }
+
+        .philosophy-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .philosophy-item li {
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .philosophy-item li:before {
+            content: "•";
+            color: var(--accent-gold);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .philosophy-quote {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(30, 64, 175, 0) 100%);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-gold);
+            border-right: 4px solid var(--primary-blue);
+        }
+
+        .philosophy-quote p {
+            font-size: 20px;
+            font-style: italic;
+            color: var(--primary-dark);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         /* CTA Section */
         .cta-section {
             padding: 100px 0;
@@ -657,6 +871,10 @@
                 width: 340px;
                 height: 340px;
             }
+            .book-cover {
+                width: 180px;
+                height: 250px;
+            }
         }
 
         @media (max-width: 992px) {
@@ -689,6 +907,19 @@
             .methodologies-container {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .philosophy-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .book-announcement {
+                flex-direction: column;
+                text-align: center;
+                gap: 25px;
+            }
+            .book-cover {
+                margin: 0 auto;
+                width: 200px;
+                height: 280px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -703,6 +934,9 @@
             }
             .hero-title {
                 font-size: 18px;
+            }
+            .hero-subtitle {
+                font-size: 16px;
             }
             .philosophy-title {
                 font-size: 28px;
@@ -719,7 +953,7 @@
             .hero-section {
                 padding: 140px 0 80px;
             }
-            .philosophy-section, .results-section, .certificates-section, .methodologies-section, .cta-section {
+            .philosophy-section, .results-section, .certificates-section, .methodologies-section, .cta-section, .leadership-philosophy {
                 padding: 70px 0;
             }
             .footer-container {
@@ -733,6 +967,9 @@
                 font-size: 18px;
             }
             .methodologies-container {
+                grid-template-columns: 1fr;
+            }
+            .philosophy-grid {
                 grid-template-columns: 1fr;
             }
             .methodology-card {
@@ -749,6 +986,13 @@
             }
             .methodology-content p {
                 font-size: 14px;
+            }
+            .philosophy-quote p {
+                font-size: 18px;
+            }
+            .book-cover {
+                width: 180px;
+                height: 250px;
             }
         }
 
@@ -777,6 +1021,10 @@
             }
             .section-subtitle {
                 font-size: 16px;
+            }
+            .book-cover {
+                width: 160px;
+                height: 220px;
             }
         }
     </style>
@@ -809,11 +1057,18 @@
                 <span class="executive-tag">Философия управления SCM</span>
                 <h1>Моя стратегия преобразования цепей поставок</h1>
                 <p class="hero-title">15+ лет трансформирую операционные сложности в конкурентные преимущества через системный подход, цифровые технологии и стратегическое лидерство.</p>
+                
+                <p class="hero-subtitle">
+                    "Нет неэффективного бизнеса — есть непроработанная стратегия и цели. Цепь поставок — это материализованная мысль: сначала вы выбираете философию, затем она строит за вас цепь."
+                </p>
+                
                 <div class="hero-tags">
                     <span class="tag">Стратегическое мышление</span>
                     <span class="tag">Цифровая трансформация</span>
                     <span class="tag">AI-интеграция</span>
                     <span class="tag">Управление изменениями</span>
+                    <span class="tag">Философия лидерства</span>
+                    <span class="tag">Академия SCM</span>
                 </div>
             </div>
             <div class="hero-image">
@@ -839,6 +1094,55 @@
                         на принципе трансформации сложностей в возможности, где каждая операционная проблема 
                         рассматривается как потенциал для создания уникального рыночного преимущества.
                     </p>
+                    
+                    <div class="philosophy-insight">
+                        <h3><i class="fas fa-brain"></i> Стратегическая парадигма управления</h3>
+                        <p style="font-size: 17px; line-height: 1.7; color: var(--neutral-dark);">
+                            Современный руководитель УЦП — это "архитектор философий", который гибридизирует подходы:
+                        </p>
+                        <ul>
+                            <li><strong>Бережливость (Lean)</strong> для стабильных процессов</li>
+                            <li><strong>Гибкость (Agile)</strong> для волатильного спроса</li>
+                            <li><strong>Устойчивость (Resilient)</strong> для критичных узлов</li>
+                            <li><strong>Цифровая трансформация</strong> как основа всех решений</li>
+                        </ul>
+                        
+                        <div class="strategic-academy">
+                            <h4><i class="fas fa-graduation-cap"></i> Философия Академии Цепи Поставок</h4>
+                            <p>
+                                В условиях дефицита кадров стратегически важно закладывать стратегию Академии Цепи Поставок. 
+                                Человеческий ресурс — самый дорогой, а квалифицированный и опытный — бесценен.
+                            </p>
+                            <p style="font-style: italic; color: var(--neutral-medium);">
+                                "Академия — это не центр затрат, а 'фабрика будущего' компании, где выращивают не носителей навыков, 
+                                а носителей философии системного мышления и адаптивности."
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="book-announcement">
+                        <div class="book-cover">
+                            <img src="images/scm-book-screenshot.png" alt="Обложка книги 'Стратегическое управление SCM в эпоху цифровой трансформации'">
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title">Готовлю к изданию книгу</h3>
+                            <p class="book-description">
+                                <strong>"Стратегическое управление SCM в эпоху цифровой трансформации"</strong><br><br>
+                                В книге систематизирован 15-летний опыт преобразования цепей поставок, 
+                                практические кейсы внедрения AI и методологии создания конкурентных преимуществ 
+                                через технологическую интеграцию. Книга станет практическим руководством для руководителей, 
+                                стремящихся превратить свои цепи поставок в стратегическое конкурентное преимущество.
+                            </p>
+                            <div class="book-status">
+                                <span class="tag">В процессе написания</span>
+                                <span class="tag">Планируемый выход: 2026</span>
+                                <span class="tag">Практические кейсы</span>
+                                <span class="tag">AI-интеграция</span>
+                                <span class="tag">Стратегическое мышление</span>
+                                <span class="tag">Философия управления</span>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="philosophy-principles">
                         <div class="principle-card">
@@ -994,13 +1298,89 @@
         </div>
     </section>
 
+    <!-- Leadership Philosophy Section -->
+    <section class="leadership-philosophy">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Философия стратегического лидерства в SCM</h2>
+                <p class="section-subtitle">От управления процессами к архитектуре ценности и экосистем</p>
+            </div>
+            
+            <div class="philosophy-grid">
+                <div class="philosophy-item">
+                    <div class="philosophy-icon">
+                        <i class="fas fa-chess-queen"></i>
+                    </div>
+                    <h3>Три парадигмы руководителя</h3>
+                    <ul>
+                        <li><strong>Архитектор ценности:</strong> Управляю не издержками, а системой доставки ценности</li>
+                        <li><strong>Стратег-интегратор:</strong> Превращаю УЦП в конкурентное преимущество</li>
+                        <li><strong>Лидер-наставник:</strong> Создаю среду для принятия осмысленных решений</li>
+                    </ul>
+                </div>
+                
+                <div class="philosophy-item">
+                    <div class="philosophy-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h3>Баланс философий</h3>
+                    <p>Грамотный руководитель осознанно балансирует:</p>
+                    <ul>
+                        <li><strong>Маржинальность vs Безубыточность</strong> — краткосрочная прибыль vs долгосрочная жизнеспособность</li>
+                        <li><strong>Эффективность vs Устойчивость</strong> — оптимизация затрат vs способность поглощать шоки</li>
+                        <li><strong>Глобализация vs Локализация</strong> — масштаб vs управляемость рисков</li>
+                    </ul>
+                </div>
+
+                <div class="philosophy-item">
+                    <div class="philosophy-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Мета-навыки руководителя</h3>
+                    <ul>
+                        <li><strong>Синтетическое мышление:</strong> Видеть цепь поставок как часть финансовой модели, экосистемы рынка и глобальной логистической карты</li>
+                        <li><strong>Диалектическое мышление:</strong> Удерживать и разрешать противоречия: Lean vs Resilient, AI vs люди</li>
+                        <li><strong>Эпистемологическая скромность:</strong> Понимать пределы своего знания и готовность сказать "есть 30% неизвестного"</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="philosophy-quote">
+                <p>
+                    "Управление цепями поставок сегодня — это управление философиями. Ваш главный выбор — 
+                    какая философия станет вашей 'супер-идеей', и как вы будете гибридизировать противоречивые 
+                    подходы на разных участках цепи."
+                </p>
+            </div>
+
+            <div class="philosophy-principles" style="margin-top: 50px;">
+                <div class="principle-card">
+                    <div class="principle-number">1</div>
+                    <h3 class="principle-title">Философия цифровой трансформации</h3>
+                    <p class="principle-description">Данные и алгоритмы — новый стратегический актив. Цель — создание гибридной виртуально-физической системы, способной к самообучению и самооптимизации.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-number">2</div>
+                    <h3 class="principle-title">Философия устойчивого развития</h3>
+                    <p class="principle-description">Экологические и социальные издержки должны быть частью общей стоимости цепи. Проектирование замкнутых циклов вместо линейных цепочек.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-number">3</div>
+                    <h3 class="principle-title">Философия Академии SCM</h3>
+                    <p class="principle-description">Инвестиции в человеческий капитал — самый ценный актив. Создание "фабрики будущего", где выращивают носителей философии, а не просто исполнителей процессов.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
             <h2 class="cta-title">Готовы трансформировать ваши цепи поставок?</h2>
             <p class="cta-description">
                 Давайте обсудим, как стратегический подход к управлению SCM может создать конкурентные преимущества 
-                для вашего бизнеса в эпоху цифровой трансформации.
+                для вашего бизнеса в эпоху цифровой трансформации. Вместе мы построим не просто эффективную цепь поставок, 
+                а философию управления, которая станет вашим главным конкурентным преимуществом.
             </p>
             <a href="contact.html" class="cta-button">
                 <i class="fas fa-handshake"></i> Обсудить стратегическое сотрудничество
@@ -1014,6 +1394,9 @@
             <div class="footer-column">
                 <h3>Дмитрий Панибратский</h3>
                 <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса. Специализируюсь на создании измеримых конкурентных преимуществ через технологические инновации и системную оптимизацию.</p>
+                <p style="margin-top: 15px; font-style: italic; color: rgba(255, 255, 255, 0.7);">
+                    "Нет неэффективного бизнеса — есть непроработанная стратегия и цели."
+                </p>
             </div>
             <div class="footer-column">
                 <h3>Навигация</h3>
@@ -1036,7 +1419,7 @@
             <div class="footer-column">
                 <h3>Стратегическое сотрудничество</h3>
                 <p>Готов обсудить задачи цифровой трансформации SCM, разработку стратегий оптимизации цепей поставок и создание AI-решений для вашего бизнеса.</p>
-                <p style="margin-top: 20px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Форматы сотрудничества: консалтинг, проектная работа, стратегическое партнерство, контрактное управление.</p>
+                <p style="margin-top: 20px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Форматы сотрудничества: стратегический консалтинг, создание Академии Цепи Поставок, цифровая трансформация, проектная работа.</p>
             </div>
         </div>
         <div class="container">
@@ -1117,6 +1500,12 @@
             yearElements.forEach(element => {
                 const currentYear = new Date().getFullYear();
                 element.innerHTML = element.innerHTML.replace('2024', currentYear);
+            });
+
+            // Add animation to principle cards
+            const principleCards = document.querySelectorAll('.principle-card');
+            principleCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
             });
         });
     </script>
