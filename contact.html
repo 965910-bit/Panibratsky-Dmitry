@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Контакты и сотрудничество | Дмитрий Панибратский</title>
+    <title>Дмитрий Панибратский | Контакты и сотрудничество в управлении SCM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Библиотека для генерации QR-кода -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary-dark: #0f172a;
@@ -27,13 +25,13 @@
             --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             line-height: 1.6;
@@ -42,15 +40,15 @@
             font-weight: 400;
             overflow-x: hidden;
         }
-        
+
         .container {
             width: 100%;
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 24px;
         }
-        
-        /* Header */
+
+        /* Header - Minimal & Professional */
         header {
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -62,19 +60,19 @@
             z-index: 1000;
             transition: var(--transition);
         }
-        
+
         .header-scrolled {
             box-shadow: var(--shadow);
             border-bottom: 1px solid rgba(226, 232, 240, 1);
         }
-        
+
         .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
         }
-        
+
         .logo {
             font-size: 22px;
             font-weight: 700;
@@ -84,21 +82,21 @@
             display: flex;
             align-items: center;
         }
-        
+
         .logo-dot {
             color: var(--accent-gold);
             margin: 0 2px;
         }
-        
+
         nav ul {
             display: flex;
             list-style: none;
         }
-        
+
         nav ul li {
             margin-left: 40px;
         }
-        
+
         nav ul li a {
             text-decoration: none;
             color: var(--neutral-medium);
@@ -109,16 +107,16 @@
             position: relative;
             letter-spacing: 0.2px;
         }
-        
+
         nav ul li a:hover {
             color: var(--primary-blue);
         }
-        
+
         nav ul li a.active {
             color: var(--primary-blue);
             font-weight: 600;
         }
-        
+
         nav ul li a.active::after {
             content: '';
             position: absolute;
@@ -128,7 +126,7 @@
             height: 2px;
             background-color: var(--accent-gold);
         }
-        
+
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -138,16 +136,16 @@
             cursor: pointer;
             padding: 5px;
         }
-        
-        /* Hero Section */
-        .hero-section {
-            padding: 160px 0 80px;
+
+        /* Hero Section - Contacts */
+        .hero-contacts {
+            padding: 160px 0 100px;
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             position: relative;
             overflow: hidden;
         }
-        
-        .hero-section::before {
+
+        .hero-contacts::before {
             content: '';
             position: absolute;
             top: 0;
@@ -157,7 +155,7 @@
             background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(30, 64, 175, 0) 100%);
             z-index: 0;
         }
-        
+
         .hero-container {
             display: flex;
             align-items: center;
@@ -165,41 +163,41 @@
             position: relative;
             z-index: 1;
         }
-        
+
         .hero-content {
             flex: 1;
         }
-        
+
         .hero-image {
             flex: 1;
             display: flex;
             justify-content: center;
             position: relative;
         }
-        
-        .profile-photo {
+
+        .contact-photo {
             width: 380px;
             height: 380px;
-            border-radius: 50%;
+            border-radius: var(--border-radius-lg);
             object-fit: cover;
             border: 1px solid rgba(226, 232, 240, 0.8);
             box-shadow: var(--shadow-lg);
             position: relative;
             z-index: 2;
         }
-        
-        .photo-frame {
+
+        .contact-frame {
             position: absolute;
             width: 380px;
             height: 380px;
-            border-radius: 50%;
+            border-radius: var(--border-radius-lg);
             border: 2px solid var(--accent-gold);
-            transform: rotate(45deg);
+            transform: rotate(3deg);
             z-index: 1;
             top: 0;
         }
-        
-        .executive-tag {
+
+        .contact-tag {
             display: inline-block;
             background-color: var(--primary-blue);
             color: white;
@@ -211,7 +209,7 @@
             margin-bottom: 20px;
             text-transform: uppercase;
         }
-        
+
         h1 {
             font-size: 56px;
             line-height: 1.1;
@@ -220,26 +218,32 @@
             font-weight: 700;
             letter-spacing: -1px;
         }
-        
-        .hero-title {
+
+        .hero-subtitle {
             font-size: 20px;
             color: var(--neutral-medium);
             margin-bottom: 32px;
             font-weight: 400;
             max-width: 600px;
         }
-        
-        /* Contact Sections */
-        .contact-sections {
-            padding: 100px 0;
-            background-color: white;
+
+        .hero-quote {
+            font-size: 18px;
+            font-style: italic;
+            color: var(--accent-steel);
+            margin-top: 20px;
+            line-height: 1.6;
+            border-left: 3px solid var(--accent-gold);
+            padding-left: 15px;
+            max-width: 800px;
         }
-        
+
+        /* Section Common Styles */
         .section-header {
             text-align: center;
             margin-bottom: 70px;
         }
-        
+
         .section-title {
             font-size: 40px;
             font-weight: 700;
@@ -247,7 +251,7 @@
             margin-bottom: 16px;
             letter-spacing: -0.5px;
         }
-        
+
         .section-subtitle {
             font-size: 18px;
             color: var(--neutral-medium);
@@ -255,486 +259,376 @@
             margin: 0 auto;
             line-height: 1.6;
         }
-        
-        /* Contact Grid */
+
+        /* Contact Information Section */
+        .contact-info-section {
+            padding: 100px 0;
+            background-color: var(--neutral-light);
+        }
+
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            margin-bottom: 80px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
         }
-        
+
         .contact-card {
-            background-color: white;
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 35px;
             box-shadow: var(--shadow);
-            border: 1px solid rgba(226, 232, 240, 0.8);
             transition: var(--transition);
             text-align: center;
-            position: relative;
+            border-top: 4px solid transparent;
         }
-        
+
         .contact-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-lg);
+            border-top-color: var(--accent-gold);
         }
-        
-        .contact-card::before {
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(30, 64, 175, 0.1);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 32px;
+        }
+
+        .contact-title {
+            font-size: 22px;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .contact-details {
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--neutral-medium);
+        }
+
+        .contact-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .contact-link:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
+        /* QR Codes Section */
+        .qr-section {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .qr-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .qr-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .qr-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-gold);
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            background: white;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-title {
+            font-size: 18px;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .qr-description {
+            color: var(--neutral-medium);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Philosophy of Cooperation */
+        .cooperation-section {
+            padding: 100px 0;
+            background-color: var(--neutral-light);
+        }
+
+        .cooperation-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .cooperation-card {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: 50px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cooperation-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
+            height: 6px;
             background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
-            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
         }
-        
-        .contact-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 25px;
-            font-size: 32px;
-        }
-        
-        .contact-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 20px;
-        }
-        
-        .contact-info {
+
+        .cooperation-content {
             font-size: 18px;
             color: var(--neutral-medium);
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-        
-        .contact-info a {
-            color: var(--primary-blue);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .contact-info a:hover {
-            color: var(--accent-gold);
-            text-decoration: underline;
-        }
-        
-        .contact-btn {
-            display: inline-block;
-            padding: 14px 28px;
-            background-color: var(--accent-gold);
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .contact-btn:hover {
-            background-color: #c19b2c;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.2);
-        }
-        
-        .contact-btn i {
-            margin-right: 8px;
-        }
-        
-        /* QR Code Section */
-        .qrcode-section {
-            padding: 100px 0;
-            background-color: var(--neutral-light);
-        }
-        
-        .qrcode-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .qrcode-card {
-            background-color: white;
-            border-radius: var(--border-radius-lg);
-            padding: 50px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            text-align: center;
-        }
-        
-        .qrcode-header {
+            line-height: 1.8;
             margin-bottom: 40px;
         }
-        
-        .qrcode-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: rgba(212, 175, 55, 0.1);
-            color: var(--accent-gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 25px;
-            font-size: 32px;
-        }
-        
-        .qrcode-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 15px;
-        }
-        
-        .qrcode-subtitle {
-            font-size: 18px;
-            color: var(--neutral-medium);
-            line-height: 1.6;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .qrcode-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 60px;
-            margin-bottom: 40px;
-        }
-        
-        .qrcode-display {
-            flex: 1;
-            min-width: 300px;
-            text-align: center;
-        }
-        
-        .qrcode-info {
-            flex: 1;
-            min-width: 300px;
-            text-align: left;
-        }
-        
-        #qrcode {
-            display: inline-block;
-            padding: 20px;
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-        }
-        
-        .qrcode-desc {
-            font-size: 16px;
-            color: var(--neutral-medium);
-            margin-bottom: 25px;
-        }
-        
-        .qrcode-features {
-            list-style: none;
-            margin-bottom: 30px;
-        }
-        
-        .qrcode-features li {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
-            display: flex;
-            align-items: center;
-            color: var(--neutral-medium);
-        }
-        
-        .qrcode-features li:last-child {
-            border-bottom: none;
-        }
-        
-        .qrcode-features li i {
-            color: var(--accent-gold);
-            margin-right: 12px;
-            font-size: 16px;
-        }
-        
-        .qrcode-actions {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        /* Audience Section */
-        .audience-section {
-            padding: 100px 0;
-            background-color: white;
-        }
-        
-        .audience-grid {
+
+        .cooperation-principles {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
         }
-        
-        .audience-card {
-            background-color: white;
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+
+        .principle-card {
+            background: rgba(30, 64, 175, 0.03);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border-left: 4px solid var(--accent-gold);
             transition: var(--transition);
-            position: relative;
         }
-        
-        .audience-card:hover {
+
+        .principle-card:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow);
         }
-        
-        .audience-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        
-        .audience-icon {
+
+        .principle-icon {
             width: 60px;
             height: 60px;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
             border-radius: 50%;
-            background-color: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 20px;
+            margin-bottom: 20px;
             font-size: 24px;
         }
-        
-        .audience-title {
-            font-size: 24px;
-            font-weight: 700;
+
+        .principle-title {
+            font-size: 20px;
             color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-weight: 700;
         }
-        
-        .audience-content {
+
+        .principle-description {
             color: var(--neutral-medium);
             line-height: 1.6;
-            margin-bottom: 25px;
         }
-        
-        .audience-list {
-            list-style: none;
-        }
-        
-        .audience-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
-            display: flex;
-            align-items: center;
-            color: var(--neutral-medium);
-        }
-        
-        .audience-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .audience-list li i {
-            color: var(--accent-gold);
-            margin-right: 12px;
-            font-size: 14px;
-        }
-        
-        /* Contact Form Section */
-        .form-section {
+
+        /* Cooperation Formats */
+        .formats-section {
             padding: 100px 0;
             background-color: white;
         }
-        
-        .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .form-card {
-            background-color: white;
-            border-radius: var(--border-radius-lg);
-            padding: 50px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
-        
-        .form-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .form-subtitle {
-            font-size: 18px;
-            color: var(--neutral-medium);
-            margin-bottom: 40px;
-            text-align: center;
-            line-height: 1.6;
-        }
-        
-        .contact-form {
-            margin-top: 30px;
-        }
-        
-        .form-row {
+
+        .formats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
         }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--neutral-dark);
-            margin-bottom: 8px;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid rgba(226, 232, 240, 0.8);
+
+        .format-card {
+            background: white;
             border-radius: var(--border-radius);
-            font-size: 16px;
+            padding: 35px;
+            box-shadow: var(--shadow);
             transition: var(--transition);
-            font-family: 'Inter', sans-serif;
+            border-top: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+
+        .format-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-top-color: var(--accent-gold);
         }
-        
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
+
+        .format-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-light));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
         }
-        
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            background-color: var(--accent-gold);
-            color: var(--primary-dark);
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-top: 20px;
-        }
-        
-        .submit-btn:hover {
-            background-color: #c19b2c;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.2);
-        }
-        
-        .submit-btn i {
-            margin-right: 10px;
-        }
-        
-        .form-notice {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            text-align: center;
-            margin-top: 25px;
-            line-height: 1.6;
-        }
-        
-        /* Social Links */
-        .social-section {
-            padding: 80px 0;
-            background-color: var(--neutral-light);
-        }
-        
-        .social-container {
-            text-align: center;
-        }
-        
-        .social-title {
-            font-size: 32px;
-            font-weight: 700;
+
+        .format-title {
+            font-size: 22px;
             color: var(--primary-dark);
             margin-bottom: 15px;
+            font-weight: 700;
         }
-        
-        .social-subtitle {
-            font-size: 18px;
+
+        .format-description {
             color: var(--neutral-medium);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .format-features {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 20px;
+        }
+
+        .format-features li {
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+            color: var(--neutral-medium);
+        }
+
+        .format-features li:before {
+            content: "✓";
+            color: var(--success-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e293b 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: white;
+        }
+
+        .cta-description {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 40px;
-            max-width: 600px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
             line-height: 1.6;
         }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 40px;
-        }
-        
-        .social-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: white;
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 36px;
+            background-color: var(--accent-gold);
             color: var(--primary-dark);
-            font-size: 24px;
             text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 18px;
             transition: var(--transition);
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
         }
-        
-        .social-link:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-            background-color: var(--primary-blue);
-            color: white;
+
+        .cta-button:hover {
+            background-color: #c19b2c;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
         }
-        
+
+        /* Tags styling */
+        .tag {
+            display: inline-block;
+            background-color: rgba(30, 64, 175, 0.1);
+            color: var(--primary-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(30, 64, 175, 0.2);
+        }
+
         /* Footer */
         footer {
             background-color: var(--primary-dark);
             color: white;
             padding: 80px 0 40px;
         }
-        
+
         .footer-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 50px;
             margin-bottom: 60px;
         }
-        
+
         .footer-column h3 {
             font-size: 20px;
             font-weight: 700;
@@ -743,7 +637,7 @@
             position: relative;
             padding-bottom: 12px;
         }
-        
+
         .footer-column h3::after {
             content: '';
             position: absolute;
@@ -753,40 +647,21 @@
             height: 3px;
             background-color: var(--accent-gold);
         }
-        
+
         .footer-column p {
             color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
             margin-bottom: 20px;
         }
-        
-        .footer-stats {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 24px;
-            border-radius: var(--border-radius);
-            margin-top: 20px;
-        }
-        
-        .footer-stat-number {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            margin-bottom: 5px;
-        }
-        
-        .footer-stat-label {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
+
         .footer-column ul {
             list-style: none;
         }
-        
+
         .footer-column ul li {
             margin-bottom: 14px;
         }
-        
+
         .footer-column ul li a {
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
@@ -795,38 +670,18 @@
             display: flex;
             align-items: center;
         }
-        
+
         .footer-column ul li a:hover {
             color: white;
             padding-left: 5px;
         }
-        
+
         .footer-column ul li i {
             margin-right: 10px;
             width: 20px;
             color: var(--accent-gold);
         }
-        
-        .footer-contact-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 14px 28px;
-            background-color: var(--accent-gold);
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .footer-contact-btn:hover {
-            background-color: #c19b2c;
-            transform: translateY(-2px);
-        }
-        
+
         .copyright {
             text-align: center;
             padding-top: 40px;
@@ -834,134 +689,125 @@
             color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
         }
-        
+
         /* Responsive Styles */
         @media (max-width: 1200px) {
             .hero-container {
                 gap: 60px;
             }
-            
-            .profile-photo, .photo-frame {
+            .contact-photo, .contact-frame {
                 width: 340px;
                 height: 340px;
             }
         }
-        
+
         @media (max-width: 992px) {
             .hero-container {
                 flex-direction: column;
                 text-align: center;
                 gap: 50px;
             }
-            
             h1 {
                 font-size: 48px;
             }
-            
-            .profile-photo, .photo-frame {
+            .contact-photo, .contact-frame {
                 width: 320px;
                 height: 320px;
             }
-            
-            .hero-section::before {
+            .hero-contacts::before {
                 width: 100%;
                 height: 40%;
                 top: 0;
             }
-            
-            .contact-grid, .audience-grid {
-                grid-template-columns: 1fr;
+            .cooperation-card {
+                padding: 40px 30px;
             }
-            
-            .qrcode-content {
-                flex-direction: column;
-                gap: 40px;
+            .cooperation-principles {
+                grid-template-columns: repeat(2, 1fr);
             }
-            
-            .qrcode-info {
-                text-align: center;
+            .formats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .qr-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
-        
+
         @media (max-width: 768px) {
             nav ul {
                 display: none;
             }
-            
             .mobile-menu-btn {
                 display: block;
             }
-            
             h1 {
                 font-size: 40px;
             }
-            
-            .hero-title {
+            .hero-subtitle {
                 font-size: 18px;
             }
-            
+            .hero-quote {
+                font-size: 16px;
+            }
             .section-title {
                 font-size: 32px;
             }
-            
-            .hero-section {
-                padding: 140px 0 60px;
+            .section-subtitle {
+                font-size: 16px;
             }
-            
-            .contact-sections, .qrcode-section, .audience-section, .form-section, .social-section {
+            .hero-contacts {
+                padding: 140px 0 80px;
+            }
+            .contact-info-section, .qr-section, .cooperation-section, .formats-section, .cta-section {
                 padding: 70px 0;
             }
-            
-            .form-card, .qrcode-card {
-                padding: 30px;
-            }
-            
-            .contact-card, .audience-card {
-                padding: 30px;
-            }
-            
             .footer-container {
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
-        }
-        
-        @media (max-width: 576px) {
-            .hero-section {
-                padding: 120px 0 40px;
+            .cta-title {
+                font-size: 32px;
             }
-            
-            .profile-photo, .photo-frame {
+            .cta-description {
+                font-size: 18px;
+            }
+            .cooperation-principles {
+                grid-template-columns: 1fr;
+            }
+            .formats-grid {
+                grid-template-columns: 1fr;
+            }
+            .qr-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-contacts {
+                padding: 120px 0 60px;
+            }
+            .contact-photo, .contact-frame {
                 width: 280px;
                 height: 280px;
             }
-            
             h1 {
                 font-size: 36px;
             }
-            
             .container {
                 padding: 0 20px;
             }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 0;
+            .contact-card, .qr-card, .format-card, .principle-card {
+                padding: 25px 20px;
             }
-            
-            .social-links {
-                gap: 15px;
+            .cooperation-card {
+                padding: 30px 20px;
             }
-            
-            .social-link {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-            }
-            
-            .qrcode-actions {
-                flex-direction: column;
-                gap: 15px;
+            .qr-code {
+                width: 150px;
+                height: 150px;
             }
         }
     </style>
@@ -973,11 +819,9 @@
             <a href="index.html" class="logo">
                 ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
             </a>
-            
             <button class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
             </button>
-            
             <nav>
                 <ul>
                     <li><a href="index.html">Стратегия</a></li>
@@ -989,288 +833,345 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
+    <!-- Hero Contacts Section -->
+    <section class="hero-contacts">
         <div class="container hero-container">
             <div class="hero-content">
-                <span class="executive-tag">Готов к сотрудничеству</span>
-                <h1>Контакты и сотрудничество</h1>
-                <p class="hero-title">Готов обсудить ваши задачи по оптимизации цепей поставок и цифровой трансформации бизнеса. Открыт к консультациям, проектной работе и стратегическому партнерству.</p>
+                <span class="contact-tag">Стратегическое сотрудничество</span>
+                <h1>Давайте создадим ценность вместе</h1>
+                <p class="hero-subtitle">Готов обсудить ваши задачи по управлению цепями поставок, цифровой трансформации и созданию стратегических конкурентных преимуществ.</p>
                 
-                <div class="hero-tags">
-                    <span class="tag">Консультации SCM</span>
+                <p class="hero-quote">
+                    "Сотрудничество — это не просто обмен услугами, а совместное проектирование будущего. 
+                    Самые значимые результаты рождаются на стыке глубокой экспертизы и уникальных бизнес-задач."
+                </p>
+                
+                <div class="hero-tags" style="margin-top: 30px;">
+                    <span class="tag">Консалтинг</span>
+                    <span class="tag">Стратегическое партнёрство</span>
                     <span class="tag">Проектная работа</span>
-                    <span class="tag">Стратегическое партнерство</span>
-                    <span class="tag">Контрактное управление</span>
+                    <span class="tag">Академия SCM</span>
+                    <span class="tag">Цифровая трансформация</span>
                 </div>
             </div>
-            
             <div class="hero-image">
-                <div class="photo-frame"></div>
-                <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
+                <div class="contact-frame"></div>
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Стратегическое сотрудничество" class="contact-photo">
             </div>
         </div>
     </section>
 
-    <!-- Contact Sections -->
-    <section class="contact-sections">
+    <!-- Contact Information Section -->
+    <section class="contact-info-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Свяжитесь со мной</h2>
-                <p class="section-subtitle">Выберите удобный способ связи для обсуждения ваших задач по цифровой трансформации SCM, оптимизации цепей поставок или консультации.</p>
+                <h2 class="section-title">Способы связи</h2>
+                <p class="section-subtitle">Выберите удобный формат для обсуждения ваших задач и возможностей сотрудничества</p>
             </div>
             
             <div class="contact-grid">
+                <!-- Phone -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h3 class="contact-title">Телефон</h3>
+                    <p>Для срочных вопросов и предварительного обсуждения</p>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <a href="tel:+79822282949" class="contact-link">+7 (982) 228-29-49</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <a href="tel:+79825810787" class="contact-link">+7 (982) 581-07-87</a>
+                        </div>
+                        <div class="contact-item" style="font-size: 14px; color: var(--neutral-medium);">
+                            <i class="far fa-clock"></i>
+                            По предварительной договорённости
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Email -->
                 <div class="contact-card">
                     <div class="contact-icon">
                         <i class="fas fa-envelope"></i>
                     </div>
                     <h3 class="contact-title">Электронная почта</h3>
-                    <p class="contact-info">
-                        <a href="mailto:dmitriy.panibratskiy@yandex.ru">dmitriy.panibratskiy@yandex.ru</a>
-                    </p>
-                    <p style="font-size: 14px; color: var(--neutral-medium); margin-bottom: 25px;">Отвечаю в течение 24 часов</p>
-                    <a href="mailto:dmitriy.panibratskiy@yandex.ru" class="contact-btn">
-                        <i class="fas fa-paper-plane"></i> Написать письмо
-                    </a>
-                </div>
-                
-                <div class="contact-card">
-                    <div class="contact-icon">
-                        <i class="fab fa-telegram"></i>
-                    </div>
-                    <h3 class="contact-title">Telegram</h3>
-                    <p class="contact-info">
-                        <a href="https://t.me/LogisticaandSupplyChain" target="_blank">@LogisticaandSupplyChain</a>
-                    </p>
-                    <p style="font-size: 14px; color: var(--neutral-medium); margin-bottom: 25px;">Экспертный канал и личные сообщения</p>
-                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="contact-btn">
-                        <i class="fab fa-telegram"></i> Перейти в Telegram
-                    </a>
-                </div>
-                
-                <div class="contact-card">
-                    <div class="contact-icon">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <h3 class="contact-title">Телефон</h3>
-                    <p class="contact-info">
-                        <a href="tel:+79822282949">+7 (982) 228-29-49</a><br>
-                        <a href="tel:+79825810787">+7 (982) 581-07-87</a>
-                    </p>
-                    <p style="font-size: 14px; color: var(--neutral-medium); margin-bottom: 25px;">По предварительной договорённости</p>
-                    <a href="tel:+79822282949" class="contact-btn">
-                        <i class="fas fa-phone"></i> Позвонить
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- QR Code Section -->
-    <section class="qrcode-section" id="qrcodeSection">
-        <div class="container qrcode-container">
-            <div class="qrcode-card">
-                <div class="qrcode-header">
-                    <div class="qrcode-icon">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <h2 class="qrcode-title">QR-код для быстрой связи</h2>
-                    <p class="qrcode-subtitle">Отсканируйте QR-код смартфоном, чтобы мгновенно сохранить мои контактные данные, перейти на сайт или написать сообщение</p>
-                </div>
-                
-                <div class="qrcode-content">
-                    <div class="qrcode-display">
-                        <div id="qrcode"></div>
-                        <p class="qrcode-desc">QR-код содержит все контакты и ссылки</p>
-                    </div>
+                    <p>Для детальных предложений, документации и не срочных вопросов</p>
                     
-                    <div class="qrcode-info">
-                        <p class="qrcode-desc">Этот QR-код содержит полную контактную информацию, которую можно мгновенно сохранить в телефон:</p>
-                        
-                        <ul class="qrcode-features">
-                            <li><i class="fas fa-mobile-alt"></i> Телефонные номера для быстрого набора</li>
-                            <li><i class="fas fa-envelope"></i> Электронную почту для отправки писем</li>
-                            <li><i class="fab fa-telegram"></i> Ссылку на Telegram-канал и чат</li>
-                            <li><i class="fas fa-globe"></i> Ссылку на персональный сайт</li>
-                            <li><i class="fas fa-user-tie"></i> Полное имя и должность</li>
-                        </ul>
-                        
-                        <p class="qrcode-desc">Используйте камеру телефона или приложение для сканирования QR-кодов</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-at"></i>
+                            <a href="mailto:dmitriy.panibratskiy@yandex.ru" class="contact-link">dmitriy.panibratskiy@yandex.ru</a>
+                        </div>
+                        <div class="contact-item" style="font-size: 14px; color: var(--neutral-medium);">
+                            <i class="far fa-clock"></i>
+                            Ответ в течение 24 часов
+                        </div>
                     </div>
                 </div>
                 
-                <div class="qrcode-actions">
-                    <button class="contact-btn" onclick="downloadQRCode()">
-                        <i class="fas fa-download"></i> Скачать QR-код
-                    </button>
-                    <button class="contact-btn" onclick="shareQRCode()">
-                        <i class="fas fa-share-alt"></i> Поделиться
-                    </button>
-                    <button class="contact-btn" onclick="printQRCode()">
-                        <i class="fas fa-print"></i> Распечатать
-                    </button>
+                <!-- Messengers -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <h3 class="contact-title">Мессенджеры</h3>
+                    <p>Для быстрого обсуждения и оперативной связи</p>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fab fa-telegram" style="color: #0088cc;"></i>
+                            <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="contact-link">@LogisticaandSupplyChain</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+                            <a href="https://wa.me/79822282949" target="_blank" class="contact-link">WhatsApp</a>
+                        </div>
+                        <div class="contact-item" style="font-size: 14px; color: var(--neutral-medium);">
+                            <i class="fas fa-info-circle"></i>
+                            Наиболее оперативный способ связи
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Audience Section -->
-    <section class="audience-section">
+    <!-- QR Codes Section -->
+    <section class="qr-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Для кого моя экспертиза</h2>
-                <p class="section-subtitle">Специализированные решения для разных аудиторий: от рекрутеров и HR-специалистов до коллег по индустрии и стратегических партнеров.</p>
+                <h2 class="section-title">QR-коды для быстрой связи</h2>
+                <p class="section-subtitle">Отсканируйте для мгновенного добавления контактов или перехода в мессенджеры</p>
             </div>
             
-            <div class="audience-grid">
-                <div class="audience-card">
-                    <div class="audience-header">
-                        <div class="audience-icon">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <h3 class="audience-title">Для рекрутеров</h3>
-                    </div>
-                    <p class="audience-content">Ищу возможности в компаниях, готовых к цифровой трансформации. Приношу measurable результаты через внедрение современных технологий и оптимизацию процессов.</p>
-                    <ul class="audience-list">
-                        <li><i class="fas fa-check"></i> Открыт к предложениям на руководящие позиции</li>
-                        <li><i class="fas fa-check"></i> Готовность к удаленной и гибридной работе</li>
-                        <li><i class="fas fa-check"></i> Гибкие форматы сотрудничества</li>
-                    </ul>
-                    <div style="margin-top: 25px;">
-                        <a href="resume/Дмитрий_Панибратский_CV.pdf" download class="contact-btn" onclick="downloadResume()">
-                            <i class="fas fa-download"></i> Скачать резюме
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="audience-card">
-                    <div class="audience-header">
-                        <div class="audience-icon">
-                            <i class="fas fa-handshake"></i>
-                        </div>
-                        <h3 class="audience-title">Для коллег</h3>
-                    </div>
-                    <p class="audience-content">Рад приветствовать профессионалов индустрии! Делюсь практическим опытом в цифровой трансформации SCM и создании эффективных бизнес-решений.</p>
-                    <ul class="audience-list">
-                        <li><i class="fas fa-check"></i> Обмен опытом и лучшими практиками</li>
-                        <li><i class="fas fa-check"></i> Совместные исследования и проекты</li>
-                        <li><i class="fas fa-check"></i> Обсуждение трендов в SCM и цифровизации</li>
-                    </ul>
-                    <div style="margin-top: 25px;">
-                        <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="contact-btn">
-                            <i class="fab fa-telegram"></i> Присоединиться к каналу
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="audience-card">
-                    <div class="audience-header">
-                        <div class="audience-icon">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <h3 class="audience-title">Для партнеров</h3>
-                    </div>
-                    <p class="audience-content">Создаем эффективные бизнес-решения через синергию экспертиз. Мои компетенции в цифровой трансформации могут усилить ваши проекты и принести measurable результаты.</p>
-                    <ul class="audience-list">
-                        <li><i class="fas fa-check"></i> Консалтинг по цифровой трансформации SCM</li>
-                        <li><i class="fas fa-check"></i> Внедрение AI-решений для оптимизации</li>
-                        <li><i class="fas fa-check"></i> Создание цифровых двойников процессов</li>
-                    </ul>
-                    <div style="margin-top: 25px;">
-                        <button class="contact-btn" onclick="scrollToForm()">
-                            <i class="fas fa-comments"></i> Обсудить проект
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Form Section -->
-    <section class="form-section" id="contactForm">
-        <div class="container">
-            <div class="form-container">
-                <div class="form-card">
-                    <h2 class="form-title">Обсудить проект</h2>
-                    <p class="form-subtitle">Опишите вашу задачу, и я свяжусь с вами для обсуждения возможных решений и форматов сотрудничества.</p>
-                    
-                    <form class="contact-form" id="projectForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="name">Ваше имя *</label>
-                                <input type="text" id="name" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="company">Компания</label>
-                                <input type="text" id="company" class="form-control">
+            <div class="qr-container">
+                <div class="qr-grid">
+                    <!-- Telegram QR -->
+                    <div class="qr-card">
+                        <div class="qr-code">
+                            <!-- Вставьте реальный QR-код для Telegram -->
+                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f8fafc; border-radius: 4px;">
+                                <div style="text-align: center;">
+                                    <i class="fab fa-telegram" style="font-size: 60px; color: #0088cc;"></i>
+                                    <div style="margin-top: 10px; font-weight: 600; color: var(--primary-dark);">@LogisticaandSupplyChain</div>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="email">Электронная почта *</label>
-                                <input type="email" id="email" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Телефон</label>
-                                <input type="tel" id="phone" class="form-control">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="audience">Вы представляете *</label>
-                            <select id="audience" class="form-control" required>
-                                <option value="">Выберите вариант</option>
-                                <option value="recruiter">Рекрутер / HR-специалист</option>
-                                <option value="colleague">Коллега по индустрии</option>
-                                <option value="partner">Потенциальный партнер / клиент</option>
-                                <option value="student">Студент / исследователь</option>
-                                <option value="other">Другое</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message">Описание задачи или проекта *</label>
-                            <textarea id="message" class="form-control" required placeholder="Опишите вашу задачу, цели проекта, текущие вызовы и ожидаемые результаты..."></textarea>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn">
-                            <i class="fas fa-paper-plane"></i> Отправить сообщение
-                        </button>
-                        
-                        <p class="form-notice">
-                            Нажимая кнопку, вы соглашаетесь с обработкой персональных данных. Я свяжусь с вами в течение 24 часов.
+                        <h3 class="qr-title">Telegram группа</h3>
+                        <p class="qr-description">
+                            Присоединяйтесь к группе для обсуждения вопросов логистики и управления цепями поставок
                         </p>
-                    </form>
+                    </div>
+                    
+                    <!-- WhatsApp QR -->
+                    <div class="qr-card">
+                        <div class="qr-code">
+                            <!-- Вставьте реальный QR-код для WhatsApp -->
+                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f8fafc; border-radius: 4px;">
+                                <div style="text-align: center;">
+                                    <i class="fab fa-whatsapp" style="font-size: 60px; color: #25D366;"></i>
+                                    <div style="margin-top: 10px; font-weight: 600; color: var(--primary-dark);">+7 (982) 228-29-49</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="qr-title">WhatsApp</h3>
+                        <p class="qr-description">
+                            Для быстрой связи и обсуждения проектов. Работаю в WhatsApp Business
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px; padding: 20px; background: rgba(30, 64, 175, 0.05); border-radius: var(--border-radius);">
+                    <p style="color: var(--neutral-medium); font-size: 14px;">
+                        <i class="fas fa-info-circle" style="color: var(--primary-blue); margin-right: 8px;"></i>
+                        <strong>Рекомендация:</strong> Для обсуждения сложных проектов лучше использовать телефон или личную встречу. 
+                        Для оперативных вопросов — мессенджеры. Для документации и детальных предложений — электронную почту.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Social Links Section -->
-    <section class="social-section">
-        <div class="container social-container">
-            <h2 class="social-title">Социальные сети и ресурсы</h2>
-            <p class="social-subtitle">Следите за моими публикациями, исследованиями и актуальными трендами в управлении цепями поставок и цифровой трансформации.</p>
-            
-            <div class="social-links">
-                <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="social-link" title="Telegram канал">
-                    <i class="fab fa-telegram"></i>
-                </a>
-                <a href="https://vk.com/djdemansurgu" target="_blank" class="social-link" title="ВКонтакте">
-                    <i class="fab fa-vk"></i>
-                </a>
-                <a href="https://max.ru/u/f9LHodD0cQJWkmqphqMLwYEjE-cp3srsPoVUGFmORIOYMMftRb7FCciSpE" target="_blank" class="social-link" title="Max">
-                    <i class="fas fa-user"></i>
-                </a>
-                <a href="https://set.ki/EYUBwz5" target="_blank" class="social-link" title="Setki">
-                    <i class="fas fa-link"></i>
-                </a>
-                <a href="https://965910-bit.github.io/Panibratsky-Dmitry/" target="_blank" class="social-link" title="Персональный сайт">
-                    <i class="fas fa-globe"></i>
-                </a>
+    <!-- Philosophy of Cooperation -->
+    <section class="cooperation-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Философия сотрудничества</h2>
+                <p class="section-subtitle">Как мы будем работать вместе и какие принципы лежат в основе успешного партнёрства</p>
             </div>
+            
+            <div class="cooperation-container">
+                <div class="cooperation-card">
+                    <div class="cooperation-content">
+                        <p>
+                            Моё сотрудничество с клиентами строится не на транзакционной модели "услуга-оплата", 
+                            а на <strong>стратегическом партнёрстве</strong>, где мы вместе проектируем будущее вашего бизнеса 
+                            через трансформацию цепей поставок.
+                        </p>
+                        
+                        <div style="background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(30, 64, 175, 0.02) 100%); 
+                                    border-radius: var(--border-radius); padding: 25px; margin: 30px 0; border-left: 4px solid var(--accent-gold);">
+                            <h3 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 20px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-handshake"></i> Ключевой принцип сотрудничества:
+                            </h3>
+                            <p>
+                                "Я не просто выполняю работу — я инвестирую в успех вашего бизнеса. 
+                                Поэтому мой подход основан на глубоком понимании ваших стратегических целей, 
+                                а не только на решении тактических задач. Мы строим не просто эффективную цепь поставок, 
+                                а создаём устойчивое конкурентное преимущество."
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="cooperation-principles">
+                        <div class="principle-card">
+                            <div class="principle-icon">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <h3 class="principle-title">Принцип "Садовника"</h3>
+                            <p class="principle-description">
+                                Я не просто "чиню" проблемы — я помогаю выращивать устойчивые, самообучающиеся системы. 
+                                Как садовник создаёт условия для роста растений, так и я создаю условия для эволюции вашей цепи поставок.
+                            </p>
+                        </div>
+                        
+                        <div class="principle-card">
+                            <div class="principle-icon">
+                                <i class="fas fa-puzzle-piece"></i>
+                            </div>
+                            <h3 class="principle-title">Принцип экосистемного мышления</h3>
+                            <p class="principle-description">
+                                Ваша цепь поставок — часть более крупной экосистемы. Я помогаю выстраивать взаимовыгодные 
+                                связи с поставщиками, клиентами и партнёрами, превращая линейные цепочки в ценностные сети.
+                            </p>
+                        </div>
+                        
+                        <div class="principle-card">
+                            <div class="principle-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3 class="principle-title">Принцип передачи философии</h3>
+                            <p class="principle-description">
+                                Моя цель — не просто дать решение, а передать философские принципы и системное мышление, 
+                                чтобы ваша команда могла самостоятельно развивать и совершенствовать систему дальше.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cooperation Formats Section -->
+    <section class="formats-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Форматы сотрудничества</h2>
+                <p class="section-subtitle">Различные варианты работы в зависимости от масштаба, сложности и целей вашего проекта</p>
+            </div>
+            
+            <div class="formats-grid">
+                <!-- Format 1 -->
+                <div class="format-card">
+                    <div class="format-icon">
+                        <i class="fas fa-chess-board"></i>
+                    </div>
+                    <h3 class="format-title">Стратегический консалтинг</h3>
+                    <p class="format-description">
+                        Разработка стратегии трансформации цепи поставок, выбор и адаптация философских подходов, 
+                        создание дорожной карты изменений.
+                    </p>
+                    
+                    <ul class="format-features">
+                        <li>Аудит текущего состояния SCM</li>
+                        <li>Разработка стратегии трансформации</li>
+                        <li>Выбор и гибридизация философских подходов</li>
+                        <li>Создание дорожной карты реализации</li>
+                        <li>Подбор и внедрение KPI системы</li>
+                    </ul>
+                    
+                    <div style="margin-top: 20px;">
+                        <span class="tag">От 2 недель</span>
+                        <span class="tag">Стратегический уровень</span>
+                        <span class="tag">Для топ-менеджмента</span>
+                    </div>
+                </div>
+                
+                <!-- Format 2 -->
+                <div class="format-card">
+                    <div class="format-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="format-title">Создание Академии SCM</h3>
+                    <p class="format-description">
+                        Построение системы развития кадрового резерва, обучение не только навыкам, но и философии 
+                        системного мышления в управлении цепями поставок.
+                    </p>
+                    
+                    <ul class="format-features">
+                        <li>Разработка программы обучения</li>
+                        <li>Создание системы менторства</li>
+                        <li>Обучение философии управления</li>
+                        <li>Формирование кадрового резерва</li>
+                        <li>Система преемственности знаний</li>
+                    </ul>
+                    
+                    <div style="margin-top: 20px;">
+                        <span class="tag">От 1 месяца</span>
+                        <span class="tag">Кадровое развитие</span>
+                        <span class="tag">Долгосрочный эффект</span>
+                    </div>
+                </div>
+                
+                <!-- Format 3 -->
+                <div class="format-card">
+                    <div class="format-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3 class="format-title">Цифровая трансформация</h3>
+                    <p class="format-description">
+                        Внедрение цифровых технологий, AI-решений, создание цифровых двойников и систем 
+                        предиктивной аналитики для управления цепями поставок.
+                    </p>
+                    
+                    <ul class="format-features">
+                        <li>Анализ и выбор технологий</li>
+                        <li>Внедрение AI-решений</li>
+                        <li>Создание цифровых двойников</li>
+                        <li>Разработка систем аналитики</li>
+                        <li>Интеграция с существующими системами</li>
+                    </ul>
+                    
+                    <div style="margin-top: 20px;">
+                        <span class="tag">От 3 месяцев</span>
+                        <span class="tag">Технологический проект</span>
+                        <span class="tag">Измеримые результаты</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Готовы начать сотрудничество?</h2>
+            <p class="cta-description">
+                Давайте обсудим ваши задачи и найдём оптимальный формат работы. Первая консультация — бесплатно. 
+                Вместе мы определим, как трансформация цепей поставок может создать максимальную ценность для вашего бизнеса.
+            </p>
+            <a href="mailto:dmitriy.panibratskiy@yandex.ru" class="cta-button">
+                <i class="fas fa-paper-plane"></i> Написать письмо
+            </a>
+            <a href="tel:+79822282949" class="cta-button" style="margin-left: 20px; background: transparent; border: 2px solid var(--accent-gold); color: white;">
+                <i class="fas fa-phone-alt"></i> Позвонить
+            </a>
         </div>
     </section>
 
@@ -1279,13 +1180,11 @@
         <div class="container footer-container">
             <div class="footer-column">
                 <h3>Дмитрий Панибратский</h3>
-                <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса. 15+ лет опыта преобразования логистических операций в измеримые бизнес-результаты.</p>
-                <div class="footer-stats">
-                    <div class="footer-stat-number" id="footerDownloadCounter">248</div>
-                    <div class="footer-stat-label">стратегических резюме скачано</div>
-                </div>
+                <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса. Специализируюсь на создании измеримых конкурентных преимуществ через технологические инновации и системную оптимизацию.</p>
+                <p style="margin-top: 15px; font-style: italic; color: rgba(255, 255, 255, 0.7);">
+                    "Самые значимые результаты рождаются на стыке экспертизы и уникальных бизнес-задач."
+                </p>
             </div>
-            
             <div class="footer-column">
                 <h3>Навигация</h3>
                 <ul>
@@ -1295,7 +1194,6 @@
                     <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты и сотрудничество</a></li>
                 </ul>
             </div>
-            
             <div class="footer-column">
                 <h3>Контакты</h3>
                 <ul>
@@ -1304,21 +1202,16 @@
                     <li><a href="tel:+79822282949"><i class="fas fa-phone"></i> +7 (982) 228-29-49</a></li>
                     <li><a href="tel:+79825810787"><i class="fas fa-phone"></i> +7 (982) 581-07-87</a></li>
                 </ul>
-                <button class="footer-contact-btn" onclick="scrollToForm()">
-                    Обсудить сотрудничество
-                </button>
             </div>
-            
             <div class="footer-column">
-                <h3>Локация и доступность</h3>
-                <p>Проживаю в Сургуте, работаю по всей России удалённо и с выездом на объекты. Готов к командировкам и гибридным форматам сотрудничества.</p>
-                <p style="margin-top: 20px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Гражданство: Россия<br>Не готов к переезду, готов к командировкам</p>
+                <h3>Стратегическое сотрудничество</h3>
+                <p>Готов обсудить задачи цифровой трансформации SCM, разработку стратегий оптимизации цепей поставок и создание AI-решений для вашего бизнеса.</p>
+                <p style="margin-top: 20px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">Форматы сотрудничества: стратегический консалтинг, создание Академии Цепи Поставок, цифровая трансформация, проектная работа.</p>
             </div>
         </div>
-        
         <div class="container">
             <div class="copyright">
-                &copy; 2024 Дмитрий Панибратский. Стратегический лидер в SCM и цифровой трансформации. <span id="downloadCountDisplay">248 скачиваний резюме</span>
+                &copy; 2024 Дмитрий Панибратский. Стратегический лидер в SCM и цифровой трансформации.
             </div>
         </div>
     </footer>
@@ -1346,10 +1239,9 @@
                 mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
             }
         });
-        
+
         // Header scroll effect
         const header = document.getElementById('mainHeader');
-        
         window.addEventListener('scroll', function() {
             if (window.scrollY > 50) {
                 header.classList.add('header-scrolled');
@@ -1357,300 +1249,51 @@
                 header.classList.remove('header-scrolled');
             }
         });
-        
-        // Initialize tags styling
-        const tags = document.querySelectorAll('.tag');
-        tags.forEach(tag => {
-            tag.style.display = 'inline-block';
-            tag.style.backgroundColor = 'rgba(30, 64, 175, 0.1)';
-            tag.style.color = 'var(--primary-blue)';
-            tag.style.padding = '8px 16px';
-            tag.style.borderRadius = '20px';
-            tag.style.marginRight = '10px';
-            tag.style.marginBottom = '10px';
-            tag.style.fontSize = '14px';
-            tag.style.fontWeight = '500';
-            tag.style.border = '1px solid rgba(30, 64, 175, 0.2)';
-        });
-        
-        // Contact form submission
-        document.getElementById('projectForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form values
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const audience = document.getElementById('audience').value;
-            const message = document.getElementById('message').value;
-            
-            // In a real implementation, you would send this data to a server
-            // For now, we'll simulate a successful submission
-            
-            // Show success message
-            const form = document.getElementById('projectForm');
-            form.innerHTML = `
-                <div style="text-align: center; padding: 40px 20px;">
-                    <div style="width: 80px; height: 80px; border-radius: 50%; background-color: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; font-size: 32px;">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <h3 style="font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 15px;">Сообщение отправлено!</h3>
-                    <p style="font-size: 16px; color: var(--neutral-medium); line-height: 1.6; margin-bottom: 25px;">
-                        Спасибо за ваше сообщение, ${name}!<br>
-                        Я свяжусь с вами в ближайшее время для обсуждения вашего проекта.
-                    </p>
-                    <button class="contact-btn" onclick="location.reload()" style="margin-top: 20px;">
-                        <i class="fas fa-redo"></i> Отправить новое сообщение
-                    </button>
-                </div>
-            `;
-            
-            // Scroll to form
-            setTimeout(() => {
-                document.getElementById('contactForm').scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        });
-        
-        // Function to scroll to contact form
-        function scrollToForm() {
-            document.getElementById('contactForm').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // Function to scroll to QR code section
-        function scrollToQRCode() {
-            document.getElementById('qrcodeSection').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // Function to download resume
-        function downloadResume() {
-            let downloadCount = localStorage.getItem('resumeDownloadCount');
-            if (!downloadCount) {
-                downloadCount = 248;
-            } else {
-                downloadCount = parseInt(downloadCount);
-            }
-            
-            downloadCount++;
-            localStorage.setItem('resumeDownloadCount', downloadCount);
-            
-            document.getElementById('footerDownloadCounter').textContent = downloadCount;
-            document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
-            
-            const link = document.createElement('a');
-            link.href = 'resume/Дмитрий_Панибратский_CV.pdf';
-            link.download = 'Дмитрий_Панибратский_Стратегическое_резюме.pdf';
-            link.target = '_blank';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Show notification
-            showNotification('Стратегическое резюме успешно скачано! Благодарю за проявленный интерес.');
-        }
-        
-        // Function to show notification
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.style.position = 'fixed';
-            notification.style.top = '30px';
-            notification.style.right = '30px';
-            notification.style.backgroundColor = 'var(--primary-dark)';
-            notification.style.color = 'white';
-            notification.style.padding = '20px 25px';
-            notification.style.borderRadius = 'var(--border-radius)';
-            notification.style.boxShadow = 'var(--shadow-lg)';
-            notification.style.zIndex = '9999';
-            notification.style.fontWeight = '500';
-            notification.style.borderLeft = '4px solid var(--accent-gold)';
-            notification.style.maxWidth = '350px';
-            notification.style.display = 'flex';
-            notification.style.alignItems = 'center';
-            notification.innerHTML = `
-                <i class="fas fa-check-circle" style="color: var(--accent-gold); margin-right: 15px; font-size: 20px;"></i>
-                <span>${message}</span>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 500);
-            }, 4000);
-        }
-        
-        // Initialize counters from localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            let downloadCount = localStorage.getItem('resumeDownloadCount');
-            if (!downloadCount) {
-                downloadCount = 248;
-                localStorage.setItem('resumeDownloadCount', downloadCount);
-            }
-            
-            document.getElementById('footerDownloadCounter').textContent = downloadCount;
-            document.getElementById('downloadCountDisplay').textContent = downloadCount + ' скачиваний резюме';
-            
-            // Generate QR Code
-            generateQRCode();
-        });
-        
-        // QR Code Functions
-        function generateQRCode() {
-            // Clear previous QR code
-            document.getElementById('qrcode').innerHTML = '';
-            
-            // Create QR code data
-            const qrData = `BEGIN:VCARD
-VERSION:3.0
-N:Панибратский;Дмитрий;;;
-FN:Дмитрий Панибратский
-ORG:Эксперт по SCM и цифровой трансформации
-TITLE:Стратегический лидер в управлении цепями поставок
-TEL;TYPE=CELL,VOICE:+79822282949
-TEL;TYPE=CELL,VOICE:+79825810787
-EMAIL;TYPE=INTERNET:dmitriy.panibratskiy@yandex.ru
-URL:https://965910-bit.github.io/Panibratsky-Dmitry/
-URL:https://t.me/LogisticaandSupplyChain
-NOTE:15+ лет опыта в управлении цепями поставок. Цифровая трансформация SCM, AI-решения, оптимизация процессов.
-END:VCARD`;
-            
-            // Generate QR code
-            new QRCode(document.getElementById('qrcode'), {
-                text: qrData,
-                width: 250,
-                height: 250,
-                colorDark: "#0f172a",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
-        
-        function downloadQRCode() {
-            const canvas = document.querySelector('#qrcode canvas');
-            if (canvas) {
-                const link = document.createElement('a');
-                link.download = 'Дмитрий_Панибратский_QR_код.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                
-                showNotification('QR-код успешно скачан!');
-            } else {
-                showNotification('Ошибка при создании QR-кода. Попробуйте обновить страницу.');
-            }
-        }
-        
-        function shareQRCode() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Контакты Дмитрия Панибратского',
-                    text: 'QR-код с контактами эксперта по SCM и цифровой трансформации',
-                    url: window.location.href + '#qrcodeSection'
-                })
-                .then(() => console.log('Успешный шаринг'))
-                .catch((error) => console.log('Ошибка шаринга:', error));
-            } else {
-                // Fallback for browsers that don't support Web Share API
-                const canvas = document.querySelector('#qrcode canvas');
-                if (canvas) {
-                    canvas.toBlob(function(blob) {
-                        const file = new File([blob], 'Дмитрий_Панибратский_QR_код.png', { type: 'image/png' });
-                        const data = {
-                            files: [file],
-                            title: 'QR-код Дмитрия Панибратского',
-                            text: 'Контакты эксперта по SCM и цифровой трансформации'
-                        };
-                        
-                        if (navigator.canShare && navigator.canShare(data)) {
-                            navigator.share(data);
-                        } else {
-                            showNotification('Функция "Поделиться" не поддерживается в вашем браузере. Вы можете скачать QR-код и отправить его вручную.');
-                        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
                     });
                 }
-            }
-        }
-        
-        function printQRCode() {
-            const canvas = document.querySelector('#qrcode canvas');
-            if (canvas) {
-                const dataUrl = canvas.toDataURL('image/png');
-                const printWindow = window.open('', '_blank');
-                printWindow.document.write(`
-                    <html>
-                        <head>
-                            <title>Печать QR-кода</title>
-                            <style>
-                                body { 
-                                    font-family: Arial, sans-serif; 
-                                    text-align: center; 
-                                    padding: 40px;
-                                }
-                                h1 { 
-                                    color: #0f172a; 
-                                    margin-bottom: 20px;
-                                }
-                                p { 
-                                    color: #64748b; 
-                                    margin-bottom: 30px;
-                                    max-width: 500px;
-                                    margin-left: auto;
-                                    margin-right: auto;
-                                }
-                                img { 
-                                    max-width: 300px; 
-                                    height: auto;
-                                    margin: 20px 0;
-                                    border: 2px solid #d4af37;
-                                    border-radius: 12px;
-                                }
-                                @media print {
-                                    button { display: none; }
-                                }
-                            </style>
-                        </head>
-                        <body>
-                            <h1>QR-код Дмитрия Панибратского</h1>
-                            <p>Отсканируйте этот QR-код, чтобы сохранить контакты эксперта по управлению цепями поставок и цифровой трансформации</p>
-                            <img src="${dataUrl}" alt="QR-код">
-                            <p style="margin-top: 30px; font-size: 14px; color: #475569;">
-                                Дмитрий Панибратский<br>
-                                Эксперт по SCM и цифровой трансформации<br>
-                                Телефон: +7 (982) 228-29-49<br>
-                                Email: dmitriy.panibratskiy@yandex.ru<br>
-                                Сайт: https://965910-bit.github.io/Panibratsky-Dmitry/
-                            </p>
-                            <button onclick="window.print();" style="
-                                padding: 12px 24px;
-                                background-color: #d4af37;
-                                color: #0f172a;
-                                border: none;
-                                border-radius: 8px;
-                                font-weight: 600;
-                                cursor: pointer;
-                                margin-top: 20px;
-                                font-size: 16px;
-                            ">
-                                <i class="fas fa-print"></i> Печать
-                            </button>
-                            <script>
-                                // Add print functionality
-                                const printBtn = document.querySelector('button');
-                                printBtn.addEventListener('click', function() {
-                                    window.print();
-                                });
-                                
-                                // Auto-print after a short delay
-                                setTimeout(function() {
-                                    window.print();
-                                }, 500);
-                            </script>
-                        </body>
-                    </html>
-                `);
-                printWindow.document.close();
-            }
-        }
+            });
+        });
+
+        // Set current year in copyright
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearElements = document.querySelectorAll('.copyright');
+            yearElements.forEach(element => {
+                const currentYear = new Date().getFullYear();
+                element.innerHTML = element.innerHTML.replace('2024', currentYear);
+            });
+
+            // Animate cards on scroll
+            const cards = document.querySelectorAll('.contact-card, .qr-card, .principle-card, .format-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
     </script>
 </body>
 </html>
