@@ -192,10 +192,113 @@
             max-width: 700px;
         }
         
+        /* Philosophy Section with Photo */
+        .philosophy-section {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .philosophy-container {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+        }
+        
+        .philosophy-image {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .profile-photo {
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .photo-frame {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-gold);
+            transform: rotate(45deg);
+            z-index: 1;
+            top: 0;
+        }
+        
+        .philosophy-quote {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--accent-gold);
+            max-width: 380px;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .philosophy-quote::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 80px;
+            color: rgba(212, 175, 55, 0.2);
+            font-family: Georgia, serif;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .philosophy-text {
+            font-size: 18px;
+            font-style: italic;
+            color: var(--primary-dark);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+        
+        .philosophy-author {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            font-weight: 500;
+            text-align: right;
+            padding-top: 15px;
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .philosophy-content {
+            flex: 1;
+        }
+        
+        .philosophy-content h2 {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+        
+        .philosophy-content p {
+            font-size: 18px;
+            color: var(--neutral-medium);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
         /* Tabs Navigation */
         .tabs-section {
-            padding: 100px 0 50px;
-            background-color: white;
+            padding: 80px 0 50px;
+            background-color: var(--neutral-light);
         }
         
         .tabs-container {
@@ -209,7 +312,7 @@
             flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 60px;
-            border-bottom: 2px solid var(--neutral-light);
+            border-bottom: 2px solid rgba(226, 232, 240, 0.8);
             padding-bottom: 20px;
         }
         
@@ -542,71 +645,6 @@
             color: var(--neutral-medium);
         }
         
-        /* Certificates Section */
-        .certificates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-        
-        .certificate-card {
-            background-color: white;
-            border-radius: var(--border-radius-lg);
-            padding: 35px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            transition: var(--transition);
-            display: flex;
-            align-items: flex-start;
-        }
-        
-        .certificate-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .certificate-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: rgba(212, 175, 55, 0.1);
-            color: var(--accent-gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 20px;
-            flex-shrink: 0;
-            font-size: 24px;
-        }
-        
-        .certificate-content h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-        }
-        
-        .certificate-content .institution {
-            font-size: 16px;
-            color: var(--primary-blue);
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .certificate-content .year {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-        
-        .certificate-content .description {
-            font-size: 15px;
-            color: var(--neutral-medium);
-            line-height: 1.6;
-        }
-        
         /* Article Section */
         .article-card {
             background-color: white;
@@ -838,9 +876,50 @@
         }
         
         /* Responsive Styles */
-        @media (max-width: 992px) {
+        @media (max-width: 1200px) {
             h1 {
                 font-size: 48px;
+            }
+            
+            .philosophy-container {
+                gap: 60px;
+            }
+            
+            .profile-photo, .photo-frame {
+                width: 340px;
+                height: 340px;
+            }
+            
+            .philosophy-quote {
+                max-width: 340px;
+            }
+            
+            .philosophy-content h2 {
+                font-size: 36px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 42px;
+            }
+            
+            .philosophy-container {
+                flex-direction: column;
+                gap: 50px;
+            }
+            
+            .profile-photo, .photo-frame {
+                width: 320px;
+                height: 320px;
+            }
+            
+            .philosophy-content {
+                text-align: center;
+            }
+            
+            .philosophy-content h2 {
+                font-size: 32px;
             }
             
             .tabs-navigation {
@@ -881,8 +960,12 @@
                 padding: 140px 0 60px;
             }
             
+            .philosophy-section {
+                padding: 60px 0;
+            }
+            
             .tabs-section {
-                padding: 70px 0 30px;
+                padding: 60px 0 30px;
             }
             
             .tool-category, .calculator-card, .knowledge-card, .certificate-card {
@@ -911,6 +994,20 @@
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
+            
+            .profile-photo, .photo-frame {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .philosophy-quote {
+                padding: 25px 20px;
+                max-width: 280px;
+            }
+            
+            .philosophy-text {
+                font-size: 16px;
+            }
         }
         
         @media (max-width: 576px) {
@@ -933,6 +1030,17 @@
             
             .stats-box {
                 grid-template-columns: 1fr;
+            }
+            
+            .profile-photo, .photo-frame {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .philosophy-quote {
+                max-width: 250px;
+                padding: 20px;
+                margin-top: 30px;
             }
         }
     </style>
@@ -971,6 +1079,29 @@
         </div>
     </section>
 
+    <!-- Philosophy Section with Photo -->
+    <section class="philosophy-section">
+        <div class="container philosophy-container">
+            <div class="philosophy-content">
+                <h2>Философия экспертизы</h2>
+                <p>За 15+ лет управления сложными цепями поставок я пришел к выводу, что настоящая эффективность рождается на стыке технологий, процессов и человеческого опыта. Цифровая трансформация — это не просто внедрение новых систем, а фундаментальное переосмысление того, как бизнес создает ценность.</p>
+                <p>Мой подход основан на трех ключевых принципах: измеримость результатов, практическая применимость инструментов и адаптивность решений к уникальным бизнес-контекстам. Каждая методология, каждый инструмент в моем арсенале прошел проверку реальными проектами и доказал свою эффективность в повышении операционной эффективности.</p>
+                <p>В современном мире успех определяется не только знаниями, но и способностью превращать сложные данные в простые решения, а технологические возможности — в конкретные бизнес-результаты. Именно этот подход позволяет создавать устойчивые конкурентные преимущества в условиях постоянных изменений.</p>
+            </div>
+            
+            <div class="philosophy-image">
+                <div class="photo-frame"></div>
+                <img src="images/photo.jpg" alt="Дмитрий Панибратский" class="profile-photo"
+                     onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
+                
+                <div class="philosophy-quote">
+                    <p class="philosophy-text">Эффективное управление цепями поставок — это искусство превращать сложность в ясность, а данные — в действия. Истинная цифровая трансформация начинается не с технологий, а с изменения мышления.</p>
+                    <div class="philosophy-author">— Дмитрий Панибратский</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Tabs Navigation -->
     <section class="tabs-section">
         <div class="container tabs-container">
@@ -983,9 +1114,6 @@
                 </button>
                 <button class="tab-btn" data-tab="knowledge">
                     <i class="fas fa-book"></i> База знаний
-                </button>
-                <button class="tab-btn" data-tab="certificates">
-                    <i class="fas fa-certificate"></i> Сертификаты
                 </button>
                 <button class="tab-btn" data-tab="article">
                     <i class="fas fa-chart-line"></i> Аналитика и тренды
@@ -1211,63 +1339,6 @@
                                 <div class="knowledge-stat-number">25%</div>
                                 <div class="knowledge-stat-label">Снижение рисков</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Certificates Tab -->
-            <div id="certificates" class="tab-content">
-                <div class="certificates-grid">
-                    <!-- Сертификат 1 -->
-                    <div class="certificate-card">
-                        <div class="certificate-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="certificate-content">
-                            <h3>MBA "Логистика, снабжение, закупки"</h3>
-                            <div class="institution">Международный центр дистанционного образования</div>
-                            <div class="year">2023</div>
-                            <p class="description">Профессиональная переподготовка с присвоением квалификации "Руководитель в сфере управления материально-техническим снабжением и закупками".</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Сертификат 2 -->
-                    <div class="certificate-card">
-                        <div class="certificate-icon">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="certificate-content">
-                            <h3>Коммерческий директор</h3>
-                            <div class="institution">Институт профессионального образования</div>
-                            <div class="year">2023</div>
-                            <p class="description">Профессиональная переподготовка по программе "Коммерческий директор" с присвоением квалификации.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Сертификат 3 -->
-                    <div class="certificate-card">
-                        <div class="certificate-icon">
-                            <i class="fas fa-truck"></i>
-                        </div>
-                        <div class="certificate-content">
-                            <h3>Контроль технического состояния АТС</h3>
-                            <div class="institution">Учебный центр «ПроиСтрой 2»</div>
-                            <div class="year">2020</div>
-                            <p class="description">Дополнительная профессиональная переподготовка по программе "Контрольно технического состояния автотранспортных средств".</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Сертификат 4 -->
-                    <div class="certificate-card">
-                        <div class="certificate-icon">
-                            <i class="fas fa-laptop-code"></i>
-                        </div>
-                        <div class="certificate-content">
-                            <h3>Эксперт по 1С-Битрикс</h3>
-                            <div class="institution">1С-Битрикс</div>
-                            <div class="year">2016</div>
-                            <p class="description">Сертификат эксперта по продукту «1С-Битрикс: Управление сайтом», успешно прошедшего проверочные тесты по программе «Администратор. Базовый».</p>
                         </div>
                     </div>
                 </div>
