@@ -180,6 +180,7 @@
             height: 300px;
             border-radius: var(--border-radius-lg);
             object-fit: cover;
+            object-position: center;
             border: 1px solid rgba(226, 232, 240, 0.8);
             box-shadow: var(--shadow-lg);
             position: relative;
@@ -671,6 +672,17 @@
             border-color: rgba(16, 185, 129, 0.2);
         }
 
+        /* Fallback image style */
+        .img-fallback {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
         /* Footer */
         footer {
             background-color: var(--primary-dark);
@@ -950,8 +962,10 @@
             </div>
             <div class="hero-image">
                 <div class="experience-frame"></div>
-                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                     alt="Управление цепями поставок на практике" class="experience-photo">
+                <img src="images/photo.jpg" 
+                     alt="Дмитрий Панибратский - специалист по управлению цепями поставок" 
+                     class="experience-photo"
+                     onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'; this.alt='Управление цепями поставок на практике';">
             </div>
         </div>
     </section>
@@ -1135,8 +1149,9 @@
             <div class="cases-grid">
                 <!-- Case 1 -->
                 <div class="case-card" data-category="digital strategy">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                         alt="Цифровая трансформация SCM" class="case-image">
+                    <div class="case-image img-fallback">
+                        Цифровая трансформация SCM
+                    </div>
                     <div class="case-content">
                         <div class="case-tags">
                             <span class="tag tag-philosophy">Цифровая трансформация</span>
@@ -1168,8 +1183,9 @@
                 
                 <!-- Case 2 -->
                 <div class="case-card" data-category="optimization">
-                    <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                         alt="Оптимизация складской сети" class="case-image">
+                    <div class="case-image img-fallback">
+                        Оптимизация складской сети
+                    </div>
                     <div class="case-content">
                         <div class="case-tags">
                             <span class="tag tag-philosophy">Lean оптимизация</span>
@@ -1201,8 +1217,9 @@
                 
                 <!-- Case 3 -->
                 <div class="case-card" data-category="strategy academy">
-                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                         alt="Создание Академии SCM" class="case-image">
+                    <div class="case-image img-fallback">
+                        Создание Академии SCM
+                    </div>
                     <div class="case-content">
                         <div class="case-tags">
                             <span class="tag tag-philosophy">Академия SCM</span>
