@@ -835,9 +835,11 @@
         }
 
         .counter-number {
-            font-size: 20px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--accent-gold);
+            min-width: 40px;
+            text-align: center;
         }
 
         /* Responsive Styles */
@@ -952,7 +954,8 @@
                 padding: 24px 20px;
             }
             .footer-counters {
-                flex-direction: column;
+                flex-direction: row;
+                justify-content: space-around;
                 gap: 10px;
                 align-items: center;
             }
@@ -1001,6 +1004,9 @@
             }
             .resume-card {
                 padding: 30px 20px;
+            }
+            .counter-number {
+                font-size: 24px;
             }
         }
         
@@ -1506,11 +1512,9 @@
             <div class="footer-counters">
                 <div class="counter-item">
                     <span class="counter-number" id="visit-counter">0</span>
-                    <span>Посещений сайта</span>
                 </div>
                 <div class="counter-item">
                     <span class="counter-number" id="resume-download-counter">0</span>
-                    <span>Скачиваний резюме</span>
                 </div>
             </div>
             
