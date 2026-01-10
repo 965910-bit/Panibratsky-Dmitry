@@ -1003,6 +1003,40 @@
                 padding: 30px 20px;
             }
         }
+        
+        /* Фоллбэк для фото */
+        .photo-fallback {
+            width: 300px;
+            height: 300px;
+            border-radius: var(--border-radius-lg);
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-gold));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .photo-fallback i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .photo-fallback-text {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .photo-fallback-subtext {
+            font-size: 14px;
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
@@ -1050,8 +1084,17 @@
             </div>
             <div class="hero-image">
                 <div class="experience-frame"></div>
-                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                     alt="Опыт работы в управлении цепями поставок" class="experience-photo">
+                <!-- Исправлено: фото загружается из локальной папки images/photo.jpg -->
+                <img src="images/photo.jpg" 
+                     alt="Дмитрий Панибратский - опыт работы в управлении цепями поставок" 
+                     class="experience-photo"
+                     onerror="this.style.display='none'; document.getElementById('photo-fallback').style.display='flex';">
+                <!-- Фоллбэк если фото не загрузится -->
+                <div id="photo-fallback" class="photo-fallback" style="display: none;">
+                    <i class="fas fa-user-tie"></i>
+                    <div class="photo-fallback-text">Дмитрий Панибратский</div>
+                    <div class="photo-fallback-subtext">Руководитель SCM</div>
+                </div>
             </div>
         </div>
     </section>
@@ -1092,7 +1135,7 @@
                 </div>
                 
                 <div style="margin: 40px 0;">
-                    <a href="/resume/Дмитрий_Панибратский_CV.pdf" class="download-button" id="resume-download">
+                    <a href="resume/Дмитрий_Панибратский_CV.pdf" class="download-button" id="resume-download" download>
                         <i class="fas fa-download"></i> Скачать резюме (PDF)
                     </a>
                     <a href="contact.html" class="download-button download-button-secondary">
@@ -1647,6 +1690,18 @@
                 resumeCard.style.transform = 'translateY(30px)';
                 resumeCard.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
                 resumeObserver.observe(resumeCard);
+            }
+            
+            // Check if photo loaded successfully
+            const photo = document.querySelector('.experience-photo');
+            if (photo) {
+                photo.onload = function() {
+                    console.log('Фото успешно загружено');
+                };
+                
+                photo.onerror = function() {
+                    console.log('Фото не загрузилось, показываем фоллбэк');
+                };
             }
         });
     </script>
