@@ -526,7 +526,7 @@
             font-weight: 500;
         }
 
-        /* Certificates Section */
+        /* Certificates Section - UPDATED */
         .certificates-section {
             padding: 70px 0;
             background-color: var(--neutral-light);
@@ -534,7 +534,7 @@
 
         .certificates-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 24px;
             margin-top: 40px;
         }
@@ -542,15 +542,19 @@
         .certificate-card {
             background-color: white;
             border-radius: var(--border-radius);
-            padding: 30px 20px;
+            padding: 25px;
             box-shadow: var(--shadow);
-            text-align: center;
             transition: var(--transition);
             border: 1px solid rgba(226, 232, 240, 0.8);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
         }
 
         .certificate-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-6px);
             box-shadow: var(--shadow-lg);
             border-color: var(--accent-gold);
         }
@@ -569,22 +573,123 @@
         }
 
         .certificate-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--primary-dark);
-            margin-bottom: 8px;
-        }
-
-        .certificate-issuer {
-            color: var(--neutral-medium);
-            font-size: 14px;
             margin-bottom: 12px;
+            line-height: 1.4;
+            text-align: center;
+            flex-grow: 1;
         }
 
-        .certificate-year {
-            color: var(--accent-steel);
-            font-size: 13px;
-            font-weight: 500;
+        .certificate-filename {
+            color: var(--neutral-medium);
+            font-size: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+            word-break: break-word;
+            font-family: monospace;
+            background: rgba(0,0,0,0.02);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .certificate-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 10px 16px;
+            border-radius: var(--border-radius-sm);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: auto;
+        }
+
+        .certificate-download:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* PDF Preview Styles */
+        .pdf-preview-container {
+            margin-top: 50px;
+        }
+
+        .pdf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .pdf-item {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .pdf-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pdf-preview {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pdf-icon {
+            font-size: 60px;
+            color: var(--primary-blue);
+            opacity: 0.7;
+        }
+
+        .pdf-info {
+            padding: 20px;
+        }
+
+        .pdf-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .pdf-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            padding: 10px 20px;
+            border-radius: var(--border-radius-sm);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .pdf-download-btn:hover {
+            background-color: #c19b2c;
+            transform: translateY(-2px);
         }
 
         /* Methodologies Section */
@@ -948,6 +1053,9 @@
                 width: 180px;
                 height: 250px;
             }
+            .certificates-grid, .pdf-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
@@ -1027,6 +1135,9 @@
                 gap: 10px;
                 align-items: center;
             }
+            .certificates-grid, .pdf-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1043,8 +1154,8 @@
             .philosophy-principles {
                 grid-template-columns: 1fr;
             }
-            .result-card, .certificate-card, .methodology-card {
-                padding: 24px 16px;
+            .result-card, .certificate-card, .methodology-card, .pdf-item {
+                padding: 20px 16px;
             }
             .container {
                 padding: 0 16px;
@@ -1232,46 +1343,15 @@
         </div>
     </section>
 
-    <!-- Certificates Section -->
+    <!-- Certificates Section - UPDATED -->
     <section class="certificates-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Сертификаты и квалификации</h2>
-                <p class="section-subtitle">Формальное подтверждение экспертизы и непрерывного профессионального развития в области SCM и управления</p>
+                <h2 class="section-title">Сертификаты, дипломы и материалы</h2>
+                <p class="section-subtitle">Все подтверждающие документы и материалы профессионального развития в области SCM и управления</p>
             </div>
-            <div class="certificates-grid">
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3 class="certificate-title">MBA "Логистика, снабжение, закупки"</h3>
-                    <p class="certificate-issuer">Международный Центр Дистанционного Образования</p>
-                    <div class="certificate-year">2023</div>
-                </div>
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <i class="fas fa-certificate"></i>
-                    </div>
-                    <h3 class="certificate-title">Операционный логист</h3>
-                    <p class="certificate-issuer">Карабинский техникум текстильной и других промышленности</p>
-                    <div class="certificate-year">2020</div>
-                </div>
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <i class="fas fa-user-tie"></i>
-                    </div>
-                    <h3 class="certificate-title">Коммерческий директор</h3>
-                    <p class="certificate-issuer">Институт профессионального образования</p>
-                    <div class="certificate-year">2023</div>
-                </div>
-                <div class="certificate-card">
-                    <div class="certificate-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <h3 class="certificate-title">Контроль технического состояния АТС</h3>
-                    <p class="certificate-issuer">Учебный центр «ПроиСтрой 2»</p>
-                    <div class="certificate-year">2020</div>
-                </div>
+            <div class="certificates-grid" id="certificates-container">
+                <!-- Динамически генерируемые карточки сертификатов -->
             </div>
         </div>
     </section>
@@ -1581,6 +1661,63 @@
                     downloadCount++;
                     localStorage.setItem('downloadCount', downloadCount);
                     downloadCounter.textContent = downloadCount;
+                });
+            }
+            
+            // Generate certificate cards dynamically
+            const certificatesContainer = document.getElementById('certificates-container');
+            const certificateFiles = [
+                { name: "7 привычек высокоэффективных людей", file: "7-habits-effective-people.pdf", type: "Книга" },
+                { name: "7 законов развития", file: "7-laws-development.pdf", type: "Книга" },
+                { name: "13 столпов методологии Адизеса", file: "adizes-13-pillars.pdf", type: "Методология" },
+                { name: "45 татуировок менеджера", file: "batyrev-45-tattoos.pdf", type: "Книга" },
+                { name: "Корпоративный жизненный цикл", file: "corporate-lifecycle.pdf", type: "Методология" },
+                { name: "Принцип кураторства", file: "curatorship-principle.pdf", type: "Методология" },
+                { name: "Диплом Коммерческий директор", file: "diplom-commercial-director.pdf", type: "Диплом" },
+                { name: "Гарвардские переговоры", file: "harvard-negotiations.pdf", type: "Книга" },
+                { name: "Менеджмент 21 века", file: "management-21-century.pdf", type: "Книга" },
+                { name: "Менеджмент спецназа", file: "management-special-forces.pdf", type: "Книга" },
+                { name: "Инструменты McKinsey", file: "mckinsey-tools.pdf", type: "Методология" },
+                { name: "Практика продаж", file: "sales-practice.pdf", type: "Книга" },
+                { name: "Аудит управления временем", file: "time-management-audit.pdf", type: "Методология" },
+                { name: "Делегирование в тайм-менеджменте", file: "time-management-delegation.pdf", type: "Методология" },
+                { name: "Исполнение в тайм-менеджменте", file: "time-management-execution.pdf", type: "Методология" },
+                { name: "Приоритизация в тайм-менеджменте", file: "time-management-prioritization.pdf", type: "Методология" },
+                { name: "Поиск призвания", file: "vocation-finding.pdf", type: "Книга" }
+            ];
+            
+            if (certificatesContainer) {
+                certificateFiles.forEach(cert => {
+                    const card = document.createElement('a');
+                    card.href = `files/${cert.file}`;
+                    card.target = '_blank';
+                    card.className = 'certificate-card';
+                    
+                    // Determine icon based on type
+                    let iconClass = 'fas fa-file-pdf';
+                    if (cert.type === 'Диплом') iconClass = 'fas fa-graduation-cap';
+                    if (cert.type === 'Методология') iconClass = 'fas fa-sitemap';
+                    if (cert.type === 'Книга') iconClass = 'fas fa-book';
+                    
+                    card.innerHTML = `
+                        <div class="certificate-icon">
+                            <i class="${iconClass}"></i>
+                        </div>
+                        <h3 class="certificate-title">${cert.name}</h3>
+                        <div class="certificate-filename">${cert.file}</div>
+                        <div class="certificate-download">
+                            <i class="fas fa-download"></i> Открыть PDF
+                        </div>
+                    `;
+                    
+                    certificatesContainer.appendChild(card);
+                    
+                    // Add download tracking
+                    card.addEventListener('click', function() {
+                        downloadCount++;
+                        localStorage.setItem('downloadCount', downloadCount);
+                        downloadCounter.textContent = downloadCount;
+                    });
                 });
             }
         });
