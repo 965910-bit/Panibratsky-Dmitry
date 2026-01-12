@@ -836,6 +836,148 @@
             margin: 0 auto;
         }
 
+        /* Academy Section */
+        .academy-section {
+            padding: 70px 0;
+            background-color: white;
+        }
+
+        .academy-section .academy-card {
+            background: linear-gradient(135deg, rgba(0, 82, 204, 0.05) 0%, rgba(0, 184, 217, 0.05) 100%);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .academy-section .academy-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .academy-section .academy-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: rgba(30, 64, 175, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .academy-section .academy-icon i {
+            font-size: 32px;
+            color: var(--primary-blue);
+        }
+
+        .academy-section .academy-title {
+            font-size: 26px;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        .academy-section .academy-subtitle {
+            color: var(--neutral-medium);
+        }
+
+        .academy-section .academy-mission {
+            margin: 30px 0;
+        }
+
+        .academy-section .academy-mission h3 {
+            color: var(--primary-blue);
+            margin-bottom: 16px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .academy-section .academy-mission p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--neutral-dark);
+        }
+
+        .academy-section .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .academy-section .program-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+            text-align: center;
+        }
+
+        .academy-section .program-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-top: 4px solid var(--accent-gold);
+        }
+
+        .academy-section .program-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 20px;
+        }
+
+        .academy-section .program-card h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+        }
+
+        .academy-section .program-card p {
+            font-size: 14px;
+            color: var(--neutral-medium);
+            line-height: 1.5;
+        }
+
+        .academy-section .academy-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .academy-section .academy-link .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 16px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .academy-section .academy-link .cta-button:hover {
+            background-color: #c19b2c;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
         /* CTA Section */
         .cta-section {
             padding: 70px 0;
@@ -1056,6 +1198,14 @@
             .certificates-grid, .pdf-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .academy-section .academy-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            .academy-section .programs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
@@ -1089,7 +1239,7 @@
             .hero-section {
                 padding: 110px 0 50px;
             }
-            .philosophy-section, .results-section, .certificates-section, .methodologies-section, .cta-section, .leadership-philosophy {
+            .philosophy-section, .results-section, .certificates-section, .methodologies-section, .cta-section, .leadership-philosophy, .academy-section {
                 padding: 50px 0;
             }
             .footer-container {
@@ -1138,6 +1288,12 @@
             .certificates-grid, .pdf-grid {
                 grid-template-columns: 1fr;
             }
+            .academy-section .programs-grid {
+                grid-template-columns: 1fr;
+            }
+            .academy-section .academy-card {
+                padding: 30px 20px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1169,6 +1325,9 @@
             .book-cover {
                 width: 140px;
                 height: 190px;
+            }
+            .academy-section .academy-title {
+                font-size: 22px;
             }
         }
     </style>
@@ -1481,6 +1640,75 @@
                     <div class="principle-number">3</div>
                     <h3 class="principle-title">Философия Академии SCM</h3>
                     <p class="principle-description">Инвестиции в человеческий капитал — самый ценный актив. Создание "фабрики будущего", где выращивают носителей философии, а не просто исполнителей процессов.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Academy Section -->
+    <section class="academy-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Академия Управления Цепями Поставок</h2>
+                <p class="section-subtitle">Образовательная платформа, где рождаются лидеры, способные строить цепочки, создающие ценность и конкурентные преимущества</p>
+            </div>
+            
+            <div class="academy-card">
+                <div class="academy-header">
+                    <div class="academy-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h3 class="academy-title">Основатель и идеолог</h3>
+                        <p class="academy-subtitle">Дмитрий Панибратский создал Академию как точку сборки нового логистического мышления</p>
+                    </div>
+                </div>
+                
+                <div class="academy-mission">
+                    <h3><i class="fas fa-bullseye"></i> Миссия Академии</h3>
+                    <p>"Академия управления цепями поставок — это не просто учебное заведение, а точка сборки нового логистического мышления, где рождаются лидеры, способные строить цепочки, которые не просто доставляют товары, но и создают ценность, устойчивость и конкурентные преимущества в мире постоянных изменений."</p>
+                </div>
+                
+                <div class="programs-grid">
+                    <div class="program-card">
+                        <div class="program-icon">
+                            <i class="fas fa-campground"></i>
+                        </div>
+                        <h4>SCM Base Camp</h4>
+                        <p>Формирование фундаментального понимания цепей поставок как единой системы. Для начинающих и специалистов смежных областей.</p>
+                    </div>
+                    
+                    <div class="program-card">
+                        <div class="program-icon">
+                            <i class="fas fa-stream"></i>
+                        </div>
+                        <h4>Professional SCM Stream</h4>
+                        <p>Глубокое погружение в стратегию, цифровизацию и оптимизацию. Развитие навыков управления комплексными трансформациями.</p>
+                    </div>
+                    
+                    <div class="program-card">
+                        <div class="program-icon">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <h4>Leaders Lab</h4>
+                        <p>Закрытый клуб для топ-менеджеров. Фокус на стратегическом лидерстве, инновациях и формировании отраслевых стандартов.</p>
+                    </div>
+                </div>
+                
+                <div class="academy-mission" style="margin-top: 40px;">
+                    <h3><i class="fas fa-lightbulb"></i> Три основы нового мышления</h3>
+                    <p>Мы трансформируем подход к управлению цепями поставок через:</p>
+                    <ul>
+                        <li><strong>Мышление вместо шаблонов:</strong> Развиваем способность видеть систему целиком, прогнозировать изменения и создавать уникальные решения</li>
+                        <li><strong>Цепочки как актив:</strong> Учим рассматривать SCM не как затратный центр, а как стратегический актив, способный генерировать устойчивые конкурентные преимущества</li>
+                        <li><strong>Сообщество лидеров:</strong> Создаем среду для обмена глубинным опытом, совместных проектов и формирования нового качества профессиональных связей</li>
+                    </ul>
+                </div>
+                
+                <div class="academy-link">
+                    <a href="https://965910-bit.github.io/Panibratsky-Dmitry/academy.html" target="_blank" class="cta-button">
+                        <i class="fas fa-external-link-alt"></i> Посетить полный сайт Академии
+                    </a>
                 </div>
             </div>
         </div>
