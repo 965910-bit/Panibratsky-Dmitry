@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLTD-Р | Панибратский Дмитрий Сергеевич</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #5a2e3c; /* тёмно-бордовый */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .certificate {
+            max-width: 1000px;
+            width: 100%;
+            background: #fdfaf3;
+            background-image: linear-gradient(rgba(166,124,78,0.08) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(166,124,78,0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            padding: 40px 50px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid #c9b28b;
+            border-radius: 20px;
+        }
+        .certificate-inner {
+            border: 3px double #a67c4e;
+            padding: 30px 35px;
+            background: rgba(255,250,240,0.85);
+            border-radius: 15px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .logo-left, .logo-right {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #3b2e1e;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #a67c4e;
+            padding-bottom: 5px;
+        }
+        .main-title {
+            text-align: center;
+            margin: 20px 0 10px;
+        }
+        .main-title h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #5a2e3c;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 0 rgba(166,124,78,0.2);
+            margin-bottom: 5px;
+        }
+        .main-title h2 {
+            font-size: 1.9rem;
+            font-weight: 400;
+            color: #4a3f2f;
+            border-top: 1px solid #c9b28b;
+            border-bottom: 1px solid #c9b28b;
+            display: inline-block;
+            padding: 10px 40px;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.4rem;
+            color: #5e4b34;
+            margin: 15px 0 30px;
+            font-style: italic;
+        }
+        .recipient {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+        .recipient .name {
+            font-size: 3.2rem;
+            font-weight: bold;
+            color: #5a2e3c;
+            margin: 10px 0 5px;
+            border-bottom: 3px double #a67c4e;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        .description {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin: 20px 0 30px;
+            line-height: 1.6;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .details-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+            margin: 40px 0;
+            border-top: 1px dashed #a67c4e;
+            border-bottom: 1px dashed #a67c4e;
+            padding: 30px 0;
+        }
+        .detail-item {
+            flex: 1 1 200px;
+            text-align: center;
+        }
+        .detail-item .detail-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #7e5d38;
+            letter-spacing: 1px;
+        }
+        .detail-item .detail-value {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #5a2e3c;
+            margin-top: 8px;
+        }
+        .signatures {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 40px 0 20px;
+        }
+        .signature-block {
+            text-align: center;
+            min-width: 200px;
+        }
+        .signature-line {
+            width: 250px;
+            height: 1px;
+            border-top: 2px solid #4a3f2f;
+            margin: 10px auto 5px;
+        }
+        .signature-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #5a2e3c;
+        }
+        .signature-title {
+            font-size: 0.9rem;
+            color: #6b4f2b;
+        }
+        .footer-note {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #4f3e28;
+        }
+        .qr-placeholder {
+            width: 70px;
+            height: 70px;
+            background: repeating-linear-gradient(45deg, #ccc 0px, #ccc 5px, #eee 5px, #eee 10px);
+            border: 1px solid #a67c4e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #333;
+        }
+        .registry-link {
+            color: #5a2e3c;
+            text-decoration: none;
+            border-bottom: 1px dashed #5a2e3c;
+        }
+        .cert-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .cert-nav a {
+            background: #5a2e3c;
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-family: sans-serif;
+            transition: background 0.3s;
+            border: 1px solid #a67c4e;
+        }
+        .cert-nav a:hover {
+            background: #3b1e2a;
+        }
+        .print-button {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .print-button button {
+            background: #5a2e3c;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border: 1px solid #a67c4e;
+        }
+        .print-button button:hover {
+            background: #3b1e2a;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .certificate { box-shadow: none; border: 1px solid #ccc; padding: 20px; }
+            .print-button, .cert-nav { display: none; }
+        }
+        @media (max-width: 700px) {
+            .certificate { padding: 15px; }
+            .certificate-inner { padding: 15px; }
+            .main-title h1 { font-size: 2.5rem; }
+            .main-title h2 { font-size: 1.4rem; }
+            .recipient .name { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate">
+        <div class="certificate-inner">
+            <div class="header">
+                <div class="logo-left">Академия SCM</div>
+                <div class="logo-right">ТК 490</div>
+            </div>
+            <div class="main-title">
+                <h1>CLTD-Р</h1>
+                <h2>Certified in Logistics, Transportation<br>and Distribution - Russia</h2>
+            </div>
+            <div class="subtitle">Настоящим удостоверяется, что</div>
+            <div class="recipient">
+                <div class="name">Панибратский Дмитрий Сергеевич</div>
+            </div>
+            <div class="description">
+                успешно сдал квалификационный экзамен и выполнил все требования программы<br>
+                <strong>«Сертифицированный специалист по транспорту и дистрибуции»</strong>
+            </div>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Регистрационный номер</div>
+                    <div class="detail-value">CLTD-RU-2021-00567</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Дата выдачи</div>
+                    <div class="detail-value">20 августа 2021 г.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Срок действия</div>
+                    <div class="detail-value">20 августа 2026 г.</div>
+                </div>
+            </div>
+            <div class="signatures">
+                <div class="signature-block">
+                    <div class="signature-line"></div>
+                    <div class="signature-name">А.В. Иванов</div>
+                    <div class="signature-title">Председатель ТК 490</div>
+                </div>
+                <div class="signature-block">
+                    <div class="signature-line"></div>
+                    <div class="signature-name">С.П. Петров</div>
+                    <div class="signature-title">Президент АРЭ</div>
+                </div>
+            </div>
+            <div class="footer-note">
+                <div class="qr-placeholder">QR-код</div>
+                <div>
+                    * Данные внесены в <a href="https://965910-bit.github.io/academy-scm-landing/registry.html" class="registry-link" target="_blank">Реестр Академии SCM</a>
+                </div>
+            </div>
+            <div class="cert-nav">
+                <a href="cpl-panibratsky.html">CPL</a>
+                <a href="cltd-panibratsky.html">CLTD-Р</a>
+                <a href="cscp-panibratsky.html">CSCP-Р</a>
+                <a href="ctsc-panibratsky.html">CTSC-Р</a>
+            </div>
+            <div class="print-button">
+                <button onclick="window.print()">Печать / Сохранить в PDF</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
