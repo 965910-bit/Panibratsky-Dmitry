@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лидер цифровой трансформации | Панибратский Дмитрий Сергеевич</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b1424;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        /* Основной контейнер — техногенная эстетика */
+        .digital-leader {
+            max-width: 1000px;
+            width: 100%;
+            background: #0c1630;
+            border-radius: 32px;
+            padding: 30px;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(0, 255, 255, 0.2) inset, 0 0 20px rgba(0, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Цифровой фоновый паттерн (имитация кода/сетки) */
+        .digital-leader::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Второй слой — неоновые акценты */
+        .digital-leader::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, transparent, #00ffff, #ffd700, #00ffff, transparent);
+            filter: blur(3px);
+            z-index: 2;
+        }
+
+        .digital-inner {
+            position: relative;
+            z-index: 10;
+            background: rgba(8, 20, 40, 0.85);
+            backdrop-filter: blur(5px);
+            border: 2px solid #00ffff;
+            border-radius: 24px;
+            padding: 40px 45px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 255, 255, 0.1);
+        }
+
+        /* Хедер с holographic эффектом */
+        .digital-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #00ffff;
+            padding-bottom: 20px;
+        }
+
+        .digital-logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #001a33, #003366);
+            border: 2px solid #ffd700;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ffd700;
+            box-shadow: 0 0 20px #00ffff;
+        }
+
+        .digital-org h2 {
+            font-size: 1.3rem;
+            color: #ffffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .digital-org p {
+            font-size: 0.8rem;
+            color: #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .digital-badge {
+            background: linear-gradient(145deg, #001a33, #003366);
+            border: 2px solid #ffd700;
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: #ffd700;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Заголовок */
+        .digital-title {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .digital-title h1 {
+            font-size: 4.2rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+        }
+
+        .digital-title h2 {
+            font-size: 2rem;
+            color: #ffd700;
+            font-weight: 400;
+            border-bottom: 2px solid #00ffff;
+            border-top: 2px solid #00ffff;
+            display: inline-block;
+            padding: 12px 40px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .digital-russian {
+            font-size: 1.5rem;
+            color: #00ffff;
+            margin-top: 20px;
+            font-style: normal;
+            font-weight: 400;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        /* Получатель */
+        .digital-recipient {
+            text-align: center;
+            margin: 50px 0;
+            background: rgba(0, 50, 100, 0.3);
+            border: 2px solid #00ffff;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+        }
+
+        .digital-recipient .label {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            color: #ffd700;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+
+        .digital-recipient .name {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 20px 0;
+            text-shadow: 0 0 15px #00ffff;
+            border-bottom: 3px double #00ffff;
+            border-top: 3px double #00ffff;
+            display: inline-block;
+            padding: 15px 30px;
+        }
+
+        .digital-recipient .desc {
+            font-size: 1.2rem;
+            color: #e0e0ff;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Детали — карточки с цифровым дизайном */
+        .digital-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 50px 0;
+            padding: 20px 0;
+        }
+
+        .digital-card {
+            background: rgba(0, 30, 60, 0.7);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 25px 15px;
+            text-align: center;
+            backdrop-filter: blur(2px);
+            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .digital-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 50px #00ffff;
+            border-color: #00ffff;
+        }
+
+        .digital-card .card-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #00ffff;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .digital-card .card-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffd700;
+            margin-top: 12px;
+            word-break: break-word;
+        }
+
+        /* Подписи */
+        .digital-signatures {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin: 40px 0 30px;
+            gap: 20px;
+        }
+
+        .digital-signature-block {
+            text-align: center;
+            flex: 1;
+        }
+
+        .digital-signature-line {
+            width: 180px;
+            border-bottom: 4px solid #00ffff;
+            margin: 10px auto 10px;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        .digital-signature-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 10px;
+        }
+
+        .digital-signature-title {
+            font-size: 0.9rem;
+            color: #00ffff;
+            font-style: italic;
+        }
+
+        .digital-qr {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #001a33, #003366);
+            border: 3px solid #ffd700;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffd700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Футер */
+        .digital-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            border-top: 2px solid #00ffff;
+            padding-top: 20px;
+            font-size: 0.9rem;
+            color: #a0b0ff;
+        }
+
+        .digital-verify {
+            color: #ffd700;
+            text-decoration: none;
+            border-bottom: 2px dashed #00ffff;
+            padding-bottom: 3px;
+            font-weight: 600;
+        }
+
+        /* Панель управления — кнопки внизу */
+        .action-panel {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: linear-gradient(145deg, #001a33, #003366);
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            padding: 12px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .action-btn:hover {
+            background: #ffd700;
+            color: #001a33;
+            border-color: #00ffff;
+            box-shadow: 0 0 40px #00ffff;
+            transform: scale(1.05);
+        }
+
+        /* Настройки для печати на A4 */
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        @media print {
+            body { 
+                background: white; 
+                padding: 0;
+                margin: 0;
+                display: block;
+            }
+            .digital-leader { 
+                box-shadow: none; 
+                background: white; 
+                border: none;
+                padding: 0;
+                max-width: 100%;
+                width: 100%;
+                margin: 0;
+            }
+            .digital-leader::before,
+            .digital-leader::after {
+                display: none;
+            }
+            .digital-inner { 
+                background: white; 
+                border-color: #000; 
+                box-shadow: none;
+                padding: 10mm;
+            }
+            .digital-title h1 { 
+                color: #000; 
+                text-shadow: none; 
+            }
+            .digital-title h2 {
+                color: #333;
+                border-color: #333;
+            }
+            .digital-russian {
+                color: #333;
+                text-shadow: none;
+            }
+            .digital-recipient {
+                background: #f5f5f5;
+                border-color: #333;
+                box-shadow: none;
+                padding: 20px;
+            }
+            .digital-recipient .name {
+                color: #000;
+                text-shadow: none;
+                border-color: #333;
+            }
+            .digital-card {
+                background: #f5f5f5;
+                border-color: #333;
+                box-shadow: none;
+            }
+            .digital-card .card-label {
+                color: #333;
+            }
+            .digital-card .card-value {
+                color: #000;
+            }
+            .digital-signature-line {
+                border-color: #333;
+                box-shadow: none;
+            }
+            .digital-signature-name {
+                color: #000;
+            }
+            .digital-signature-title {
+                color: #333;
+            }
+            .digital-footer {
+                border-color: #333;
+                color: #333;
+            }
+            .digital-verify {
+                color: #000;
+                border-color: #333;
+            }
+            .action-panel {
+                display: none;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .digital-details { grid-template-columns: 1fr; }
+            .digital-signatures { flex-direction: column; align-items: center; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="digital-leader" id="certificate">
+        <div class="digital-inner">
+            <!-- Шапка -->
+            <div class="digital-header">
+                <div class="digital-logo">
+                    <div class="logo-icon">AI</div>
+                    <div class="digital-org">
+                        <h2>АКАДЕМИЯ ЦИФРОВОЙ ТРАНСФОРМАЦИИ</h2>
+                        <p>Передовые цифровые технологии · Индустрия 4.0</p>
+                    </div>
+                </div>
+                <div class="digital-badge">CDTO · DTG</div>
+            </div>
+
+            <!-- Заголовок -->
+            <div class="digital-title">
+                <h1>CDTL</h1>
+                <h2>Chief Digital Transformation Leader</h2>
+                <div class="digital-russian">Лидер цифровой трансформации и цифровых двойников</div>
+            </div>
+
+            <!-- Получатель -->
+            <div class="digital-recipient">
+                <div class="label">НАСТОЯЩИМ УДОСТОВЕРЯЕТСЯ</div>
+                <div class="name">Панибратский Дмитрий Сергеевич</div>
+                <div class="desc">успешно освоил программу подготовки лидеров цифровой трансформации, овладел методологией создания и внедрения цифровых двойников, подтвердил компетенции в области стратегического управления цифровым развитием предприятия</div>
+            </div>
+
+            <!-- Детали -->
+            <div class="digital-details">
+                <div class="digital-card">
+                    <div class="card-label">РЕГИСТРАЦИОННЫЙ НОМЕР</div>
+                    <div class="card-value">CDTL-RU-2025-00128</div>
+                </div>
+                <div class="digital-card">
+                    <div class="card-label">ДАТА ВЫДАЧИ</div>
+                    <div class="card-value">15 марта 2025 г.</div>
+                </div>
+                <div class="digital-card">
+                    <div class="card-label">СРОК ДЕЙСТВИЯ</div>
+                    <div class="card-value">15 марта 2028 г.</div>
+                </div>
+                <div class="digital-card">
+                    <div class="card-label">КВАЛИФИКАЦИЯ</div>
+                    <div class="card-value">Chief Digital Transformation Officer</div>
+                </div>
+                <div class="digital-card">
+                    <div class="card-label">СПЕЦИАЛИЗАЦИЯ</div>
+                    <div class="card-value">Цифровые двойники · Промышленный метавселенные</div>
+                </div>
+                <div class="digital-card">
+                    <div class="card-label">ПРОГРАММА</div>
+                    <div class="card-value">EMBA Digital Leadership · 520 часов</div>
+                </div>
+            </div>
+
+            <!-- Подписи -->
+            <div class="digital-signatures">
+                <div class="digital-signature-block">
+                    <div class="digital-signature-line"></div>
+                    <div class="digital-signature-name">А.В. Боровков</div>
+                    <div class="digital-signature-title">Проректор по цифровой трансформации, д.т.н.</div>
+                </div>
+                <div class="digital-signature-block">
+                    <div class="digital-signature-line"></div>
+                    <div class="digital-signature-name">О.Ю. Колосова</div>
+                    <div class="digital-signature-title">Руководитель программы, профессор</div>
+                </div>
+                <div class="digital-signature-block">
+                    <div class="digital-qr">DIGITAL<br>SEAL</div>
+                </div>
+            </div>
+
+            <!-- Футер (ССЫЛКА НА РЕЕСТР АКАДЕМИИ) -->
+            <div class="digital-footer">
+                <span>🔐 Верифицировано в реестре цифровых лидеров</span>
+                <a href="https://965910-bit.github.io/academy-scm-landing/реестр/registry.html" target="_blank" class="digital-verify">Перейти в реестр Академии SCM</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Панель управления — кнопки внизу -->
+    <div class="action-panel">
+        <button class="action-btn" onclick="window.print()">🖨️ Печать / Сохранить PDF (A4)</button>
+        <button class="action-btn" onclick="saveAsPNG()">📸 Сохранить как PNG</button>
+    </div>
+
+    <script>
+        function saveAsPNG() {
+            const element = document.getElementById('certificate');
+            html2canvas(element, {
+                scale: 2,
+                backgroundColor: '#0c1630',
+                allowTaint: false,
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'CDTL_Panibratsky_Dmitry.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(error => {
+                console.error('Ошибка при сохранении PNG:', error);
+                alert('Не удалось сохранить изображение. Попробуйте другой браузер.');
+            });
+        }
+    </script>
+</body>
+</html>
