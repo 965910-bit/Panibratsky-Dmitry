@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский | Опыт работы в управлении цепями поставок</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Preconnect for fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-dark: #0f172a;
@@ -48,7 +51,7 @@
             padding: 0 20px;
         }
 
-        /* Header - Minimal & Professional */
+        /* Header */
         header {
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -91,6 +94,7 @@
         nav ul {
             display: flex;
             list-style: none;
+            transition: var(--transition);
         }
 
         nav ul li {
@@ -137,7 +141,31 @@
             padding: 5px;
         }
 
-        /* Hero Section - Experience */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 16px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                z-index: 1000;
+                flex-direction: column;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            nav ul li {
+                margin: 0 0 12px 0;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* Hero Experience Section */
         .hero-experience {
             padding: 130px 0 60px;
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -211,7 +239,7 @@
         }
 
         h1 {
-            font-size: 44px;
+            font-size: clamp(32px, 5vw, 44px);
             line-height: 1.1;
             margin-bottom: 20px;
             color: var(--primary-dark);
@@ -236,6 +264,19 @@
             border-left: 3px solid var(--accent-gold);
             padding-left: 15px;
             max-width: 800px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: rgba(30, 64, 175, 0.1);
+            color: var(--primary-blue);
+            padding: 6px 12px;
+            border-radius: 16px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(30, 64, 175, 0.2);
         }
 
         /* Resume Download Section */
@@ -355,14 +396,14 @@
             border-color: var(--accent-gold);
         }
 
-        /* Section Common Styles */
+        /* Section Common */
         .section-header {
             text-align: center;
             margin-bottom: 50px;
         }
 
         .section-title {
-            font-size: 34px;
+            font-size: clamp(28px, 4vw, 34px);
             font-weight: 700;
             color: var(--primary-dark);
             margin-bottom: 12px;
@@ -377,7 +418,7 @@
             line-height: 1.5;
         }
 
-        /* Timeline Section */
+        /* Timeline */
         .timeline-section {
             padding: 70px 0;
             background-color: white;
@@ -405,12 +446,21 @@
             padding-right: 50%;
             position: relative;
             margin-bottom: 60px;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
         .timeline-item:nth-child(even) {
             justify-content: flex-start;
             padding-right: 0;
             padding-left: 50%;
+            transform: translateX(-50px);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .timeline-content {
@@ -681,6 +731,76 @@
             font-weight: 500;
         }
 
+        /* Certificates */
+        .certificates-block {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .certificate-card {
+            background: #f9fafc;
+            border-radius: 12px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .certificate-card.cdtl {
+            background: #f0f7ff;
+            border: 1px solid #00aaff;
+            box-shadow: 0 5px 15px rgba(0,150,255,0.2);
+        }
+        .certificate-code {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        .certificate-name {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+        .certificate-year {
+            font-size: 0.9rem;
+            color: #0a1e3c;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .certificate-link {
+            display: inline-block;
+            background: #5a4a3c;
+            color: white;
+            padding: 8px 25px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .certificate-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        .certificate-link.cdtl-link {
+            background: #0066cc;
+            box-shadow: 0 0 10px #00aaff;
+        }
+
         /* CTA Section */
         .cta-section {
             padding: 70px 0;
@@ -690,7 +810,7 @@
         }
 
         .cta-title {
-            font-size: 36px;
+            font-size: clamp(28px, 5vw, 36px);
             font-weight: 700;
             margin-bottom: 20px;
             color: white;
@@ -725,20 +845,6 @@
             background-color: #c19b2c;
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        /* Tags styling */
-        .tag {
-            display: inline-block;
-            background-color: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            padding: 6px 12px;
-            border-radius: 16px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-size: 12px;
-            font-weight: 500;
-            border: 1px solid rgba(30, 64, 175, 0.2);
         }
 
         /* Footer */
@@ -810,15 +916,6 @@
             color: var(--accent-gold);
         }
 
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 13px;
-        }
-
-        /* Footer Counters */
         .footer-counters {
             display: flex;
             justify-content: space-between;
@@ -842,17 +939,49 @@
             text-align: center;
         }
 
-        /* Responsive Styles */
-        @media (max-width: 1200px) {
-            .hero-container {
-                gap: 50px;
-            }
-            .experience-photo, .experience-frame {
-                width: 280px;
-                height: 280px;
-            }
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
         }
 
+        /* Photo fallback */
+        .photo-fallback {
+            width: 300px;
+            height: 300px;
+            border-radius: var(--border-radius-lg);
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-gold));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .photo-fallback i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .photo-fallback-text {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .photo-fallback-subtext {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
         @media (max-width: 992px) {
             .hero-container {
                 flex-direction: column;
@@ -870,9 +999,6 @@
                 width: 100%;
                 height: 35%;
                 top: 0;
-            }
-            .section-title {
-                font-size: 30px;
             }
             .timeline::before {
                 left: 30px;
@@ -910,11 +1036,8 @@
         }
 
         @media (max-width: 768px) {
-            nav ul {
-                display: none;
-            }
-            .mobile-menu-btn {
-                display: block;
+            .hero-experience {
+                padding: 110px 0 50px;
             }
             h1 {
                 font-size: 36px;
@@ -930,22 +1053,6 @@
             }
             .section-subtitle {
                 font-size: 14px;
-            }
-            .hero-experience {
-                padding: 110px 0 50px;
-            }
-            .timeline-section, .skills-section, .education-section, .resume-download-section, .cta-section {
-                padding: 50px 0;
-            }
-            .footer-container {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .cta-title {
-                font-size: 28px;
-            }
-            .cta-description {
-                font-size: 16px;
             }
             .skills-categories, .education-grid {
                 grid-template-columns: 1fr;
@@ -1009,54 +1116,19 @@
                 font-size: 24px;
             }
         }
-        
-        /* Фоллбэк для фото */
-        .photo-fallback {
-            width: 300px;
-            height: 300px;
-            border-radius: var(--border-radius-lg);
-            background: linear-gradient(135deg, var(--primary-blue), var(--accent-gold));
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
-            padding: 30px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .photo-fallback i {
-            font-size: 60px;
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
-        
-        .photo-fallback-text {
-            font-weight: 600;
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        
-        .photo-fallback-subtext {
-            font-size: 14px;
-            opacity: 0.9;
-        }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header id="mainHeader">
         <div class="container nav-container">
             <a href="index.html" class="logo">
                 ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
             </a>
-            <button class="mobile-menu-btn">
+            <button class="mobile-menu-btn" aria-label="Меню">
                 <i class="fas fa-bars"></i>
             </button>
             <nav>
-                <ul>
+                <ul id="nav-menu">
                     <li><a href="index.html">Стратегия</a></li>
                     <li><a href="experience.html" class="active">Опыт</a></li>
                     <li><a href="expertise.html">Экспертиза</a></li>
@@ -1090,12 +1162,15 @@
             </div>
             <div class="hero-image">
                 <div class="experience-frame"></div>
-                <!-- Исправлено: фото загружается из локальной папки images/photo.jpg -->
-                <img src="images/photo.jpg" 
-                     alt="Дмитрий Панибратский - опыт работы в управлении цепями поставок" 
-                     class="experience-photo"
-                     onerror="this.style.display='none'; document.getElementById('photo-fallback').style.display='flex';">
-                <!-- Фоллбэк если фото не загрузится -->
+                <picture>
+                    <source srcset="images/photo.webp" type="image/webp">
+                    <img src="images/photo.jpg" 
+                         alt="Дмитрий Панибратский - опыт работы в управлении цепями поставок" 
+                         class="experience-photo"
+                         width="300" height="300"
+                         loading="eager"
+                         onerror="this.style.display='none'; document.getElementById('photo-fallback').style.display='flex';">
+                </picture>
                 <div id="photo-fallback" class="photo-fallback" style="display: none;">
                     <i class="fas fa-user-tie"></i>
                     <div class="photo-fallback-text">Дмитрий Панибратский</div>
@@ -1490,47 +1565,47 @@
                 </div>
             </div>
 
-            <!-- ========== НАЧАЛО БЛОКА: Профессиональные сертификаты ========== -->
-            <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e2e8f0;">
+            <!-- Certificates Block -->
+            <div class="certificates-block">
                 <h3 style="font-size: 1.8rem; color: #0a1e3c; margin-bottom: 20px; font-weight: 600;">Профессиональные сертификаты</h3>
                 <p style="font-size: 1.1rem; color: #4a5568; margin-bottom: 30px; line-height: 1.5;">
                     Автор и первый обладатель национальных сертификатов в области управления цепями поставок, разработанных на базе Академии SCM и ТК 490 (2020–2025).
                 </p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 20px;">
-                    <!-- CPL (2020) -->
-                    <div style="background: #f9fafc; border-radius: 12px; padding: 25px 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-                        <div style="font-size: 2.2rem; font-weight: 800; color: #5a4a3c; margin-bottom: 5px;">CPL</div>
-                        <div style="font-size: 0.85rem; color: #718096; margin-bottom: 10px;">Certified in Russian Logistics</div>
-                        <div style="font-size: 0.9rem; color: #0a1e3c; font-weight: 500; margin-bottom: 20px;">2020 (базовый)</div>
-                        <a href="files/cpl-panibratsky.html" target="_blank" style="display: inline-block; background: #5a4a3c; color: white; padding: 8px 25px; border-radius: 40px; text-decoration: none; font-size: 0.9rem; font-weight: 500;">Открыть →</a>
+                <div class="certificates-grid">
+                    <!-- CPL -->
+                    <div class="certificate-card">
+                        <div class="certificate-code" style="color: #5a4a3c;">CPL</div>
+                        <div class="certificate-name">Certified in Russian Logistics</div>
+                        <div class="certificate-year">2020 (базовый)</div>
+                        <a href="files/cpl-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
                     </div>
-                    <!-- CLTD-Р (2021) -->
-                    <div style="background: #f9fafc; border-radius: 12px; padding: 25px 20px; text-align: center;">
-                        <div style="font-size: 2.2rem; font-weight: 800; color: #5a2e3c; margin-bottom: 5px;">CLTD-Р</div>
-                        <div style="font-size: 0.85rem; color: #718096; margin-bottom: 10px;">Certified in Logistics, Transportation and Distribution - Russia</div>
-                        <div style="font-size: 0.9rem; color: #0a1e3c; font-weight: 500; margin-bottom: 20px;">2021</div>
-                        <a href="files/cltd-panibratsky.html" target="_blank" style="display: inline-block; background: #5a2e3c; color: white; padding: 8px 25px; border-radius: 40px; text-decoration: none; font-size: 0.9rem; font-weight: 500;">Открыть →</a>
+                    <!-- CLTD-Р -->
+                    <div class="certificate-card">
+                        <div class="certificate-code" style="color: #5a2e3c;">CLTD-Р</div>
+                        <div class="certificate-name">Certified in Logistics, Transportation and Distribution - Russia</div>
+                        <div class="certificate-year">2021</div>
+                        <a href="files/cltd-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
                     </div>
-                    <!-- CSCP-Р (2022) -->
-                    <div style="background: #f9fafc; border-radius: 12px; padding: 25px 20px; text-align: center;">
-                        <div style="font-size: 2.2rem; font-weight: 800; color: #1e4a3c; margin-bottom: 5px;">CSCP-Р</div>
-                        <div style="font-size: 0.85rem; color: #718096; margin-bottom: 10px;">Certified Supply Chain Professional - Russia</div>
-                        <div style="font-size: 0.9rem; color: #0a1e3c; font-weight: 500; margin-bottom: 20px;">2022 (продвинутый)</div>
-                        <a href="files/cscp-panibratsky.html" target="_blank" style="display: inline-block; background: #1e4a3c; color: white; padding: 8px 25px; border-radius: 40px; text-decoration: none; font-size: 0.9rem; font-weight: 500;">Открыть →</a>
+                    <!-- CSCP-Р -->
+                    <div class="certificate-card">
+                        <div class="certificate-code" style="color: #1e4a3c;">CSCP-Р</div>
+                        <div class="certificate-name">Certified Supply Chain Professional - Russia</div>
+                        <div class="certificate-year">2022 (продвинутый)</div>
+                        <a href="files/cscp-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
                     </div>
-                    <!-- CTSC-Р (2023) -->
-                    <div style="background: #f9fafc; border-radius: 12px; padding: 25px 20px; text-align: center;">
-                        <div style="font-size: 2.2rem; font-weight: 800; color: #1e3c5a; margin-bottom: 5px;">CTSC-Р</div>
-                        <div style="font-size: 0.85rem; color: #718096; margin-bottom: 10px;">Certified in Transformation for Supply Chain - Russia</div>
-                        <div style="font-size: 0.9rem; color: #0a1e3c; font-weight: 500; margin-bottom: 20px;">2023 (стратегический)</div>
-                        <a href="files/ctsc-panibratsky.html" target="_blank" style="display: inline-block; background: #1e3c5a; color: white; padding: 8px 25px; border-radius: 40px; text-decoration: none; font-size: 0.9rem; font-weight: 500;">Открыть →</a>
+                    <!-- CTSC-Р -->
+                    <div class="certificate-card">
+                        <div class="certificate-code" style="color: #1e3c5a;">CTSC-Р</div>
+                        <div class="certificate-name">Certified in Transformation for Supply Chain - Russia</div>
+                        <div class="certificate-year">2023 (стратегический)</div>
+                        <a href="files/ctsc-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
                     </div>
-                    <!-- CDTL (2025) — НОВЫЙ ЦИФРОВОЙ СЕРТИФИКАТ -->
-                    <div style="background: #f0f7ff; border-radius: 12px; padding: 25px 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,150,255,0.2); border: 1px solid #00aaff;">
-                        <div style="font-size: 2.2rem; font-weight: 800; color: #0066cc; margin-bottom: 5px; text-shadow: 0 0 5px #00aaff;">CDTL</div>
-                        <div style="font-size: 0.85rem; color: #2c3e50; margin-bottom: 10px;">Chief Digital Transformation Leader</div>
-                        <div style="font-size: 0.9rem; color: #0a1e3c; font-weight: 500; margin-bottom: 20px;">2025 (цифровая трансформация)</div>
-                        <a href="files/cdtl-panibratsky.html" target="_blank" style="display: inline-block; background: #0066cc; color: white; padding: 8px 25px; border-radius: 40px; text-decoration: none; font-size: 0.9rem; font-weight: 500; box-shadow: 0 0 10px #00aaff;">Открыть →</a>
+                    <!-- CDTL (новый) -->
+                    <div class="certificate-card cdtl">
+                        <div class="certificate-code" style="color: #0066cc;">CDTL</div>
+                        <div class="certificate-name">Chief Digital Transformation Leader</div>
+                        <div class="certificate-year">2025 (цифровая трансформация)</div>
+                        <a href="files/cdtl-panibratsky.html" target="_blank" class="certificate-link cdtl-link">Открыть →</a>
                     </div>
                 </div>
                 <p style="text-align: center; margin-top: 25px; font-size: 0.95rem; color: #718096;">
@@ -1538,8 +1613,6 @@
                     <a href="https://965910-bit.github.io/academy-scm-landing/реестр/registry.html" target="_blank" style="color: #0a1e3c; text-decoration: underline; font-weight: 500;">Реестре Академии SCM</a>.
                 </p>
             </div>
-            <!-- ========== КОНЕЦ БЛОКА ========== -->
-
         </div>
     </section>
 
@@ -1562,10 +1635,10 @@
         <div class="container">
             <div class="footer-counters">
                 <div class="counter-item">
-                    <span class="counter-number" id="visit-counter">0</span>
+                    <span class="counter-number" id="visit-counter">0</span> посещений
                 </div>
                 <div class="counter-item">
-                    <span class="counter-number" id="resume-download-counter">0</span>
+                    <span class="counter-number" id="resume-download-counter">0</span> скачиваний резюме
                 </div>
             </div>
             
@@ -1610,37 +1683,20 @@
     </footer>
 
     <script>
-        // Mobile menu toggle
+        // Mobile menu
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const nav = document.querySelector('nav ul');
-        
+        const navMenu = document.getElementById('nav-menu');
         mobileMenuBtn.addEventListener('click', function() {
-            if (nav.style.display === 'flex') {
-                nav.style.display = 'none';
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            } else {
-                nav.style.display = 'flex';
-                nav.style.flexDirection = 'column';
-                nav.style.position = 'absolute';
-                nav.style.top = '100%';
-                nav.style.left = '0';
-                nav.style.width = '100%';
-                nav.style.backgroundColor = 'white';
-                nav.style.padding = '16px';
-                nav.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
-                nav.style.zIndex = '1000';
-                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-            }
+            navMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
         });
 
         // Header scroll effect
         const header = document.getElementById('mainHeader');
         window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
-                header.classList.add('header-scrolled');
-            } else {
-                header.classList.remove('header-scrolled');
-            }
+            header.classList.toggle('header-scrolled', window.scrollY > 50);
         });
 
         // Smooth scroll for anchor links
@@ -1659,106 +1715,86 @@
             });
         });
 
-        // Set current year in copyright
+        // Set current year and counters
         document.addEventListener('DOMContentLoaded', function() {
-            // Set current year
-            const currentYear = new Date().getFullYear();
-            document.getElementById('current-year').textContent = currentYear;
+            document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            // Counter functionality
-            const visitCounter = document.getElementById('visit-counter');
-            const resumeDownloadCounter = document.getElementById('resume-download-counter');
-            
-            // Initialize counters from localStorage or set to 0
+            // Visit counter
             let visitCount = localStorage.getItem('visitCount') || 0;
-            let resumeDownloadCount = localStorage.getItem('resumeDownloadCount') || 0;
-            
-            // Increment visit counter on page load
             visitCount++;
             localStorage.setItem('visitCount', visitCount);
-            visitCounter.textContent = visitCount;
-            resumeDownloadCounter.textContent = resumeDownloadCount;
-            
-            // Add download counter functionality to resume download link
-            const resumeDownloadLink = document.getElementById('resume-download');
-            if (resumeDownloadLink) {
-                resumeDownloadLink.addEventListener('click', function(e) {
-                    // Allow the download to proceed normally
-                    // Count the download
+            document.getElementById('visit-counter').textContent = visitCount;
+
+            // Resume download counter
+            let resumeDownloadCount = localStorage.getItem('resumeDownloadCount') || 0;
+            document.getElementById('resume-download-counter').textContent = resumeDownloadCount;
+
+            const resumeLink = document.getElementById('resume-download');
+            if (resumeLink) {
+                resumeLink.addEventListener('click', function() {
                     resumeDownloadCount++;
                     localStorage.setItem('resumeDownloadCount', resumeDownloadCount);
-                    resumeDownloadCounter.textContent = resumeDownloadCount;
-                    
-                    // Optional: track in analytics or console
-                    console.log('Резюме скачано. Всего скачиваний:', resumeDownloadCount);
+                    document.getElementById('resume-download-counter').textContent = resumeDownloadCount;
                 });
             }
-            
-            // For demo: also count clicks on the contact page link
-            const contactLink = document.querySelector('a[href="contact.html"]');
-            if (contactLink && !window.location.href.includes('contact.html')) {
-                contactLink.addEventListener('click', function() {
-                    // Optional: could track contact page clicks separately
-                });
-            }
-            
+
             // Animate timeline items on scroll
             const timelineItems = document.querySelectorAll('.timeline-item');
-            const timelineObserver = new IntersectionObserver((entries) => {
-                entries.forEach((entry, index) => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateX(0)';
-                        }, index * 200);
+                        entry.target.classList.add('visible');
                     }
                 });
             }, { threshold: 0.1 });
-            
-            timelineItems.forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(50px)';
-                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                timelineObserver.observe(item);
-            });
-            
-            // Animate even timeline items from opposite direction
-            timelineItems.forEach((item, index) => {
-                if (index % 2 !== 0) {
-                    item.style.transform = 'translateX(-50px)';
-                }
-            });
-            
-            // Animate resume card on scroll
-            const resumeCard = document.querySelector('.resume-card');
-            if (resumeCard) {
-                const resumeObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateY(0)';
-                        }
-                    });
-                }, { threshold: 0.1 });
-                
-                resumeCard.style.opacity = '0';
-                resumeCard.style.transform = 'translateY(30px)';
-                resumeCard.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                resumeObserver.observe(resumeCard);
-            }
-            
-            // Check if photo loaded successfully
+            timelineItems.forEach(item => observer.observe(item));
+
+            // Check photo error
             const photo = document.querySelector('.experience-photo');
             if (photo) {
-                photo.onload = function() {
-                    console.log('Фото успешно загружено');
-                };
-                
                 photo.onerror = function() {
-                    console.log('Фото не загрузилось, показываем фоллбэк');
+                    photo.style.display = 'none';
+                    document.getElementById('photo-fallback').style.display = 'flex';
                 };
             }
         });
+    </script>
+
+    <!-- Microdata -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "name": "Опыт работы Дмитрия Панибратского",
+        "description": "Карьерный путь и достижения в управлении цепями поставок",
+        "mainEntity": {
+            "@type": "Person",
+            "name": "Дмитрий Панибратский",
+            "jobTitle": "Руководитель по управлению цепями поставок",
+            "hasOccupation": {
+                "@type": "Occupation",
+                "name": "Менеджер цепи поставок",
+                "occupationLocation": {
+                    "@type": "City",
+                    "name": "Сургут"
+                }
+            },
+            "worksFor": [
+                {
+                    "@type": "Organization",
+                    "name": "Леруа Мерлен",
+                    "startDate": "2020-03",
+                    "endDate": "2025-07"
+                },
+                {
+                    "@type": "Organization",
+                    "name": "ГРИНЛАЙТ (Rossko)",
+                    "startDate": "2018-05",
+                    "endDate": "2019-12"
+                }
+            ]
+        }
+    }
     </script>
 </body>
 </html>
