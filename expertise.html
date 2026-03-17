@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский | Экспертиза в SCM и цифровой трансформации</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Preconnect for fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-dark: #0f172a;
@@ -91,6 +94,7 @@
         nav ul {
             display: flex;
             list-style: none;
+            transition: var(--transition);
         }
 
         nav ul li {
@@ -135,6 +139,30 @@
             color: var(--primary-dark);
             cursor: pointer;
             padding: 5px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 16px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                z-index: 1000;
+                flex-direction: column;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            nav ul li {
+                margin: 0 0 12px 0;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
         }
 
         /* Hero Expertise Section */
@@ -225,7 +253,7 @@
         }
 
         h1 {
-            font-size: 44px;
+            font-size: clamp(32px, 5vw, 44px);
             line-height: 1.1;
             margin-bottom: 20px;
             color: var(--primary-dark);
@@ -259,7 +287,7 @@
         }
 
         .section-title {
-            font-size: 34px;
+            font-size: clamp(28px, 4vw, 34px);
             font-weight: 700;
             color: var(--primary-dark);
             margin-bottom: 12px;
@@ -803,7 +831,7 @@
         }
 
         .cta-title {
-            font-size: 36px;
+            font-size: clamp(28px, 5vw, 36px);
             font-weight: 700;
             margin-bottom: 20px;
             color: white;
@@ -993,11 +1021,8 @@
         }
 
         @media (max-width: 768px) {
-            nav ul {
-                display: none;
-            }
-            .mobile-menu-btn {
-                display: block;
+            .hero-expertise {
+                padding: 110px 0 60px;
             }
             h1 {
                 font-size: 36px;
@@ -1013,9 +1038,6 @@
             }
             .section-subtitle {
                 font-size: 14px;
-            }
-            .hero-expertise {
-                padding: 110px 0 60px;
             }
             .methodologies-section, .tools-section, .process-section, .academy-section, .cases-section, .cta-section {
                 padding: 60px 0;
@@ -1101,17 +1123,16 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header id="mainHeader">
         <div class="container nav-container">
             <a href="index.html" class="logo">
                 ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
             </a>
-            <button class="mobile-menu-btn">
+            <button class="mobile-menu-btn" aria-label="Меню">
                 <i class="fas fa-bars"></i>
             </button>
             <nav>
-                <ul>
+                <ul id="nav-menu">
                     <li><a href="index.html">Стратегия</a></li>
                     <li><a href="experience.html">Опыт</a></li>
                     <li><a href="expertise.html" class="active">Экспертиза</a></li>
@@ -1683,10 +1704,10 @@
         <div class="container">
             <div class="footer-counters">
                 <div class="counter-item">
-                    <span class="counter-number" id="visit-counter">0</span>
+                    <span class="counter-number" id="visit-counter">0</span> посещений
                 </div>
                 <div class="counter-item">
-                    <span class="counter-number" id="resume-download-counter">0</span>
+                    <span class="counter-number" id="resume-download-counter">0</span> скачиваний резюме
                 </div>
             </div>
             
@@ -1735,37 +1756,20 @@
     </footer>
 
     <script>
-        // Mobile menu toggle
+        // Mobile menu
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const nav = document.querySelector('nav ul');
-        
+        const navMenu = document.getElementById('nav-menu');
         mobileMenuBtn.addEventListener('click', function() {
-            if (nav.style.display === 'flex') {
-                nav.style.display = 'none';
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            } else {
-                nav.style.display = 'flex';
-                nav.style.flexDirection = 'column';
-                nav.style.position = 'absolute';
-                nav.style.top = '100%';
-                nav.style.left = '0';
-                nav.style.width = '100%';
-                nav.style.backgroundColor = 'white';
-                nav.style.padding = '16px';
-                nav.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
-                nav.style.zIndex = '1000';
-                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-            }
+            navMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
         });
 
         // Header scroll effect
         const header = document.getElementById('mainHeader');
         window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
-                header.classList.add('header-scrolled');
-            } else {
-                header.classList.remove('header-scrolled');
-            }
+            header.classList.toggle('header-scrolled', window.scrollY > 50);
         });
 
         // Smooth scroll for anchor links
@@ -1784,84 +1788,45 @@
             });
         });
 
-        // Set current year in copyright
+        // Set current year and counters
         document.addEventListener('DOMContentLoaded', function() {
-            // Set current year
-            const currentYear = new Date().getFullYear();
-            document.getElementById('current-year').textContent = currentYear;
+            document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            // Counter functionality (same as other pages)
-            const visitCounter = document.getElementById('visit-counter');
-            const resumeDownloadCounter = document.getElementById('resume-download-counter');
-            
-            // Initialize counters from localStorage or set to 0
+            // Visit counter
             let visitCount = localStorage.getItem('visitCount') || 0;
-            let resumeDownloadCount = localStorage.getItem('resumeDownloadCount') || 0;
-            
-            // Increment visit counter on page load
             visitCount++;
             localStorage.setItem('visitCount', visitCount);
-            visitCounter.textContent = visitCount;
-            resumeDownloadCounter.textContent = resumeDownloadCount;
-            
+            document.getElementById('visit-counter').textContent = visitCount;
+
+            // Resume download counter (shared across pages)
+            let resumeDownloadCount = localStorage.getItem('resumeDownloadCount') || 0;
+            document.getElementById('resume-download-counter').textContent = resumeDownloadCount;
+
             // Animate cards on scroll
-            const methodologyCards = document.querySelectorAll('.methodology-card');
-            const toolCategories = document.querySelectorAll('.tool-category');
-            const caseCards = document.querySelectorAll('.case-card');
-            const thesisCards = document.querySelectorAll('.thesis-card');
-            
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
+            const cards = document.querySelectorAll('.methodology-card, .tool-category, .case-card, .thesis-card');
+            const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -20px 0px' };
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry, index) => {
+                entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateY(0)';
-                        }, index * 100);
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
                     }
                 });
             }, observerOptions);
-            
-            // Set initial state for animated elements
-            methodologyCards.forEach(card => {
+
+            cards.forEach(card => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(30px)';
                 card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 observer.observe(card);
             });
-            
-            toolCategories.forEach(category => {
-                category.style.opacity = '0';
-                category.style.transform = 'translateY(30px)';
-                category.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(category);
-            });
-            
-            caseCards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
-            });
-            
-            thesisCards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
-            });
-            
+
             // Animate process steps
-            const processSteps = document.querySelectorAll('.process-step');
-            processSteps.forEach((step, index) => {
+            const steps = document.querySelectorAll('.process-step');
+            steps.forEach((step, index) => {
                 step.style.opacity = '0';
                 step.style.transform = 'translateX(30px)';
                 step.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                
                 const stepObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -1872,17 +1837,15 @@
                         }
                     });
                 }, observerOptions);
-                
                 stepObserver.observe(step);
             });
-            
+
             // Animate academy stats
-            const academyStats = document.querySelectorAll('.academy-stat');
-            academyStats.forEach((stat, index) => {
+            const stats = document.querySelectorAll('.academy-stat');
+            stats.forEach((stat, index) => {
                 stat.style.opacity = '0';
                 stat.style.transform = 'translateY(20px)';
                 stat.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                
                 const statObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -1893,10 +1856,39 @@
                         }
                     });
                 }, observerOptions);
-                
                 statObserver.observe(stat);
             });
         });
+    </script>
+
+    <!-- Microdata -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Экспертиза Дмитрия Панибратского в SCM",
+        "description": "Методологии и инструменты управления цепями поставок: бережливое производство, ABC-XYZ анализ, цифровая трансформация, образовательная платформа.",
+        "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Бережливое производство (Lean)"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "ABC-XYZ анализ"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": "Управление бизнес-процессами"
+                }
+            ]
+        }
+    }
     </script>
 </body>
 </html>
