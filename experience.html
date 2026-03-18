@@ -731,75 +731,33 @@
             font-weight: 500;
         }
 
-        /* Certificates */
-        .certificates-block {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 2px solid #e2e8f0;
+        /* ========== MODERN CERTIFICATES STYLES ========== */
+        .cert-card-modern {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .cert-card-modern:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.15) !important;
         }
 
-        .certificates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            margin-bottom: 20px;
-        }
-
-        .certificate-card {
-            background: #f9fafc;
-            border-radius: 12px;
-            padding: 25px 20px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
+        /* Modal window */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
-        .certificate-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        .modal.active {
+            display: flex;
         }
-        .certificate-card.cdtl {
-            background: #f0f7ff;
-            border: 1px solid #00aaff;
-            box-shadow: 0 5px 15px rgba(0,150,255,0.2);
-        }
-        .certificate-code {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
-        .certificate-name {
-            font-size: 0.85rem;
-            color: #718096;
-            margin-bottom: 10px;
-        }
-        .certificate-year {
-            font-size: 0.9rem;
-            color: #0a1e3c;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-        .certificate-link {
-            display: inline-block;
-            background: #5a4a3c;
-            color: white;
-            padding: 8px 25px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-        .certificate-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-        }
-        .certificate-link.cdtl-link {
-            background: #0066cc;
-            box-shadow: 0 0 10px #00aaff;
-        }
+        /* ============================================== */
 
         /* CTA Section */
         .cta-section {
@@ -1565,47 +1523,52 @@
                 </div>
             </div>
 
-            <!-- Certificates Block -->
-            <div class="certificates-block">
+            <!-- MODERN CERTIFICATES BLOCK -->
+            <div class="modern-certificates" style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e2e8f0;">
                 <h3 style="font-size: 1.8rem; color: #0a1e3c; margin-bottom: 20px; font-weight: 600;">Профессиональные сертификаты</h3>
                 <p style="font-size: 1.1rem; color: #4a5568; margin-bottom: 30px; line-height: 1.5;">
                     Автор и первый обладатель национальных сертификатов в области управления цепями поставок, разработанных на базе Академии SCM и ТК 490 (2020–2025).
                 </p>
-                <div class="certificates-grid">
+                <div class="cert-grid-modern" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px;">
                     <!-- CPL -->
-                    <div class="certificate-card">
-                        <div class="certificate-code" style="color: #5a4a3c;">CPL</div>
-                        <div class="certificate-name">Certified in Russian Logistics</div>
-                        <div class="certificate-year">2020 (базовый)</div>
-                        <a href="files/cpl-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
+                    <div class="cert-card-modern" onclick="openModal('files/cpl-panibratsky.pdf', 'images/cpl-large.png')" style="background: white; border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center;">
+                        <img src="images/cpl-thumb.png" alt="CPL сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <div style="font-size: 1.4rem; font-weight: 700; color: #5a4a3c;">CPL</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">Certified in Russian Logistics</div>
+                        <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Сертифицированный специалист по логистике (Россия)</div>
+                        <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2020 (базовый)</div>
                     </div>
                     <!-- CLTD-Р -->
-                    <div class="certificate-card">
-                        <div class="certificate-code" style="color: #5a2e3c;">CLTD-Р</div>
-                        <div class="certificate-name">Certified in Logistics, Transportation and Distribution - Russia</div>
-                        <div class="certificate-year">2021</div>
-                        <a href="files/cltd-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
+                    <div class="cert-card-modern" onclick="openModal('files/cltd-panibratsky.pdf', 'images/cltd-large.png')" style="background: white; border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center;">
+                        <img src="images/cltd-thumb.png" alt="CLTD сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px;">
+                        <div style="font-size: 1.4rem; font-weight: 700; color: #5a2e3c;">CLTD-Р</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">Certified in Logistics, Transportation and Distribution - Russia</div>
+                        <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Сертифицированный специалист по логистике, транспорту и дистрибуции (Россия)</div>
+                        <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2021</div>
                     </div>
                     <!-- CSCP-Р -->
-                    <div class="certificate-card">
-                        <div class="certificate-code" style="color: #1e4a3c;">CSCP-Р</div>
-                        <div class="certificate-name">Certified Supply Chain Professional - Russia</div>
-                        <div class="certificate-year">2022 (продвинутый)</div>
-                        <a href="files/cscp-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
+                    <div class="cert-card-modern" onclick="openModal('files/cscp-panibratsky.pdf', 'images/cscp-large.png')" style="background: white; border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center;">
+                        <img src="images/cscp-thumb.png" alt="CSCP сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px;">
+                        <div style="font-size: 1.4rem; font-weight: 700; color: #1e4a3c;">CSCP-Р</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">Certified Supply Chain Professional - Russia</div>
+                        <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Сертифицированный профессионал цепи поставок (Россия)</div>
+                        <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2022 (продвинутый)</div>
                     </div>
                     <!-- CTSC-Р -->
-                    <div class="certificate-card">
-                        <div class="certificate-code" style="color: #1e3c5a;">CTSC-Р</div>
-                        <div class="certificate-name">Certified in Transformation for Supply Chain - Russia</div>
-                        <div class="certificate-year">2023 (стратегический)</div>
-                        <a href="files/ctsc-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
+                    <div class="cert-card-modern" onclick="openModal('files/ctsc-panibratsky.pdf', 'images/ctsc-large.png')" style="background: white; border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center;">
+                        <img src="images/ctsc-thumb.png" alt="CTSC сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px;">
+                        <div style="font-size: 1.4rem; font-weight: 700; color: #1e3c5a;">CTSC-Р</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">Certified in Transformation for Supply Chain - Russia</div>
+                        <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Сертифицированный специалист по трансформации цепей поставок (Россия)</div>
+                        <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2023 (стратегический)</div>
                     </div>
-                    <!-- CDTL (новый) -->
-                    <div class="certificate-card cdtl">
-                        <div class="certificate-code" style="color: #0066cc;">CDTL</div>
-                        <div class="certificate-name">Chief Digital Transformation Leader</div>
-                        <div class="certificate-year">2025 (цифровая трансформация)</div>
-                        <a href="files/cdtl-panibratsky.html" target="_blank" class="certificate-link cdtl-link">Открыть →</a>
+                    <!-- CDTL -->
+                    <div class="cert-card-modern" onclick="openModal('files/cdtl-panibratsky.pdf', 'images/cdtl-large.png')" style="background: linear-gradient(145deg, #f0f7ff, #ffffff); border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,150,255,0.1); border: 1px solid #00aaff; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center;">
+                        <img src="images/cdtl-thumb.png" alt="CDTL сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px;">
+                        <div style="font-size: 1.4rem; font-weight: 700; color: #0066cc;">CDTL</div>
+                        <div style="font-size: 0.8rem; color: #2c3e50;">Chief Digital Transformation Leader</div>
+                        <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Руководитель цифровой трансформации</div>
+                        <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2025 (цифровая трансформация)</div>
                     </div>
                 </div>
                 <p style="text-align: center; margin-top: 25px; font-size: 0.95rem; color: #718096;">
@@ -1681,6 +1644,13 @@
             </div>
         </div>
     </footer>
+
+    <!-- MODAL WINDOW FOR CERTIFICATES -->
+    <div id="certModal" class="modal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column;">
+        <span onclick="closeModal()" style="position: absolute; top: 20px; right: 30px; color: white; font-size: 50px; font-weight: bold; cursor: pointer;">&times;</span>
+        <img id="modalImage" style="max-width: 90%; max-height: 80%; border-radius: 8px; box-shadow: 0 0 20px white;">
+        <a id="downloadLink" href="#" download style="margin-top: 20px; padding: 10px 25px; background: #d4af37; color: #0f172a; text-decoration: none; border-radius: 30px; font-weight: 600; font-size: 16px;">Скачать PDF</a>
+    </div>
 
     <script>
         // Mobile menu
@@ -1758,6 +1728,23 @@
                 };
             }
         });
+
+        // MODAL FUNCTIONS
+        function openModal(pdfUrl, imgUrl) {
+            document.getElementById('modalImage').src = imgUrl;
+            document.getElementById('downloadLink').href = pdfUrl;
+            document.getElementById('certModal').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('certModal').style.display = 'none';
+        }
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            var modal = document.getElementById('certModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
 
     <!-- Microdata -->
