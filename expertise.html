@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- все стили остаются без изменений (копируем из исходного expertise.html) --- */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -197,47 +196,33 @@
             flex: 1;
         }
 
-        .expertise-visual {
+        .expertise-image {
             flex: 1;
             display: flex;
             justify-content: center;
-            align-items: center;
             position: relative;
         }
 
-        .expertise-visual-circle {
-            width: 320px;
-            height: 320px;
+        .profile-photo {
+            width: 300px;
+            height: 300px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-gold) 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
-            padding: 40px;
+            object-fit: cover;
+            border: 1px solid rgba(226, 232, 240, 0.8);
             box-shadow: var(--shadow-lg);
             position: relative;
             z-index: 2;
         }
 
-        .expertise-visual-circle::before {
-            content: '';
+        .photo-frame {
             position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
+            width: 300px;
+            height: 300px;
             border-radius: 50%;
-            background: linear-gradient(135deg, transparent 0%, rgba(30, 64, 175, 0.2) 100%);
+            border: 2px solid var(--accent-gold);
+            transform: rotate(45deg);
             z-index: 1;
-        }
-
-        .expertise-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            opacity: 0.9;
+            top: 0;
         }
 
         .expertise-tag {
@@ -808,16 +793,6 @@
         }
 
         /* Responsive Styles */
-        @media (max-width: 1200px) {
-            .expertise-container {
-                gap: 50px;
-            }
-            .expertise-visual-circle {
-                width: 300px;
-                height: 300px;
-            }
-        }
-
         @media (max-width: 992px) {
             .expertise-container {
                 flex-direction: column;
@@ -827,9 +802,9 @@
             h1 {
                 font-size: 40px;
             }
-            .expertise-visual-circle {
-                width: 280px;
-                height: 280px;
+            .profile-photo, .photo-frame {
+                width: 260px;
+                height: 260px;
             }
             .hero-expertise::before {
                 width: 100%;
@@ -896,9 +871,9 @@
             .hero-expertise {
                 padding: 100px 0 50px;
             }
-            .expertise-visual-circle {
-                width: 250px;
-                height: 250px;
+            .profile-photo, .photo-frame {
+                width: 220px;
+                height: 220px;
             }
             h1 {
                 font-size: 32px;
@@ -911,9 +886,6 @@
             }
             .counter-number {
                 font-size: 24px;
-            }
-            .expertise-icon {
-                font-size: 40px;
             }
         }
     </style>
@@ -963,16 +935,14 @@
                     <span class="tag">Академия цепей поставок</span>
                 </div>
             </div>
-            <div class="expertise-visual">
-                <div class="expertise-visual-circle">
-                    <div class="expertise-icon">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <h3 style="color: white; margin-bottom: 10px; font-size: 22px;">Системный подход</h3>
-                    <p style="color: rgba(255, 255, 255, 0.9); font-size: 14px; line-height: 1.4;">
-                        Комбинация проверенных методологий и современных технологий для трансформации SCM
-                    </p>
-                </div>
+            <div class="expertise-image">
+                <div class="photo-frame"></div>
+                <picture>
+                    <source srcset="images/profile.webp" type="image/webp">
+                    <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo"
+                         width="300" height="300" loading="eager"
+                         onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
+                </picture>
             </div>
         </div>
     </section>
@@ -1362,11 +1332,11 @@
                 <div class="footer-column">
                     <h3>Навигация</h3>
                     <ul>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия и философия</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт и кейсы</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
+                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
                         <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
-                        <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза и инструменты</a></li>
-                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты и сотрудничество</a></li>
+                        <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -1411,22 +1381,6 @@
         const header = document.getElementById('mainHeader');
         window.addEventListener('scroll', function() {
             header.classList.toggle('header-scrolled', window.scrollY > 50);
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
         });
 
         // Set current year and counters
