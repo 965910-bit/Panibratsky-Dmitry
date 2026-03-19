@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* --- все стили остаются без изменений (копируем из исходного experience.html) --- */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -731,78 +732,75 @@
             font-weight: 500;
         }
 
-        /* ========== MODERN CERTIFICATES STYLES ========== */
-        .cert-card-modern {
-            position: relative;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .cert-card-modern:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 30px rgba(0,0,0,0.15) !important;
-        }
-        .info-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 28px;
-            height: 28px;
-            background: rgba(255,255,255,0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            color: var(--primary-blue);
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: all 0.2s;
-            z-index: 5;
-        }
-        .info-icon:hover {
-            background: var(--primary-blue);
-            color: white;
-            transform: scale(1.1);
+        /* Certificates */
+        .certificates-block {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
         }
 
-        /* Modal windows */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 20px;
         }
-        .modal.active {
+
+        .certificate-card {
+            background: #f9fafc;
+            border-radius: 12px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
             display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 30px;
-            cursor: pointer;
-            color: var(--neutral-medium);
+        .certificate-card.cdtl {
+            background: #f0f7ff;
+            border: 1px solid #00aaff;
+            box-shadow: 0 5px 15px rgba(0,150,255,0.2);
         }
-        .modal-close:hover {
-            color: var(--primary-dark);
+        .certificate-code {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
         }
-        /* ============================================== */
+        .certificate-name {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+        .certificate-year {
+            font-size: 0.9rem;
+            color: #0a1e3c;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .certificate-link {
+            display: inline-block;
+            background: #5a4a3c;
+            color: white;
+            padding: 8px 25px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .certificate-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        .certificate-link.cdtl-link {
+            background: #0066cc;
+            box-shadow: 0 0 10px #00aaff;
+        }
 
         /* CTA Section */
         .cta-section {
@@ -1134,6 +1132,7 @@
                 <ul id="nav-menu">
                     <li><a href="index.html">Стратегия</a></li>
                     <li><a href="experience.html" class="active">Опыт</a></li>
+                    <li><a href="about.html">Обо мне</a></li>
                     <li><a href="expertise.html">Экспертиза</a></li>
                     <li><a href="contact.html">Контакты</a></li>
                 </ul>
@@ -1568,74 +1567,49 @@
                 </div>
             </div>
 
-            <!-- MODERN CERTIFICATES BLOCK (with WebP images and info button) -->
-            <div class="modern-certificates" style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e2e8f0;">
+            <!-- Certificates Block -->
+            <div class="certificates-block">
                 <h3 style="font-size: 1.8rem; color: #0a1e3c; margin-bottom: 20px; font-weight: 600;">Профессиональные сертификаты</h3>
                 <p style="font-size: 1.1rem; color: #4a5568; margin-bottom: 30px; line-height: 1.5;">
                     Автор и первый обладатель национальных сертификатов в области управления цепями поставок, разработанных на базе Академии SCM и ТК 490 (2020–2025).
+                    <br>Подробнее о моей философии и ценностях читайте на странице <a href="about.html" style="color: #1e40af; text-decoration: underline;">«Обо мне»</a>.
                 </p>
-                <div class="cert-grid-modern" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px;">
-                    
+                <div class="certificates-grid">
                     <!-- CPL -->
-                    <div class="cert-card-modern" style="background: white; border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center; position: relative;">
-                        <div class="info-icon" onclick="event.stopPropagation(); showInfo('cpl')">ⓘ</div>
-                        <div onclick="openModal('files/cpl-panibratsky.pdf', 'images/cpl-large.webp')">
-                            <img src="images/cpl-thumb.webp" alt="CPL сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                            <div style="font-size: 1.4rem; font-weight: 700; color: #5a4a3c;">CPL</div>
-                            <div style="font-size: 0.8rem; color: #64748b;">Certified in Russian Logistics</div>
-                            <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Сертифицированный специалист по логистике (Россия)</div>
-                            <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2020 (базовый)</div>
-                        </div>
+                    <div class="certificate-card">
+                        <div class="certificate-code" style="color: #5a4a3c;">CPL</div>
+                        <div class="certificate-name">Certified in Russian Logistics</div>
+                        <div class="certificate-year">2020 (базовый)</div>
+                        <a href="files/cpl-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
                     </div>
-
                     <!-- CLTD-Р -->
-                    <div class="cert-card-modern" style="background: white; border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center; position: relative;">
-                        <div class="info-icon" onclick="event.stopPropagation(); showInfo('cltd')">ⓘ</div>
-                        <div onclick="openModal('files/cltd-panibratsky.pdf', 'images/cltd-large.webp')">
-                            <img src="images/cltd-thumb.webp" alt="CLTD сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px;">
-                            <div style="font-size: 1.4rem; font-weight: 700; color: #5a2e3c;">CLTD-Р</div>
-                            <div style="font-size: 0.8rem; color: #64748b;">Certified in Logistics, Transportation and Distribution - Russia</div>
-                            <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Сертифицированный специалист по логистике, транспорту и дистрибуции (Россия)</div>
-                            <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2021</div>
-                        </div>
+                    <div class="certificate-card">
+                        <div class="certificate-code" style="color: #5a2e3c;">CLTD-Р</div>
+                        <div class="certificate-name">Certified in Logistics, Transportation and Distribution - Russia</div>
+                        <div class="certificate-year">2021</div>
+                        <a href="files/cltd-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
                     </div>
-
                     <!-- CSCP-Р -->
-                    <div class="cert-card-modern" style="background: white; border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center; position: relative;">
-                        <div class="info-icon" onclick="event.stopPropagation(); showInfo('cscp')">ⓘ</div>
-                        <div onclick="openModal('files/cscp-panibratsky.pdf', 'images/cscp-large.webp')">
-                            <img src="images/cscp-thumb.webp" alt="CSCP сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px;">
-                            <div style="font-size: 1.4rem; font-weight: 700; color: #1e4a3c;">CSCP-Р</div>
-                            <div style="font-size: 0.8rem; color: #64748b;">Certified Supply Chain Professional - Russia</div>
-                            <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Сертифицированный профессионал цепи поставок (Россия)</div>
-                            <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2022 (продвинутый)</div>
-                        </div>
+                    <div class="certificate-card">
+                        <div class="certificate-code" style="color: #1e4a3c;">CSCP-Р</div>
+                        <div class="certificate-name">Certified Supply Chain Professional - Russia</div>
+                        <div class="certificate-year">2022 (продвинутый)</div>
+                        <a href="files/cscp-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
                     </div>
-
                     <!-- CTSC-Р -->
-                    <div class="cert-card-modern" style="background: white; border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center; position: relative;">
-                        <div class="info-icon" onclick="event.stopPropagation(); showInfo('ctsc')">ⓘ</div>
-                        <div onclick="openModal('files/ctsc-panibratsky.pdf', 'images/ctsc-large.webp')">
-                            <img src="images/ctsc-thumb.webp" alt="CTSC сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px;">
-                            <div style="font-size: 1.4rem; font-weight: 700; color: #1e3c5a;">CTSC-Р</div>
-                            <div style="font-size: 0.8rem; color: #64748b;">Certified in Transformation for Supply Chain - Russia</div>
-                            <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Сертифицированный специалист по трансформации цепей поставок (Россия)</div>
-                            <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2023 (стратегический)</div>
-                        </div>
+                    <div class="certificate-card">
+                        <div class="certificate-code" style="color: #1e3c5a;">CTSC-Р</div>
+                        <div class="certificate-name">Certified in Transformation for Supply Chain - Russia</div>
+                        <div class="certificate-year">2023 (стратегический)</div>
+                        <a href="files/ctsc-panibratsky.html" target="_blank" class="certificate-link">Открыть →</a>
                     </div>
-
-                    <!-- CDTL -->
-                    <div class="cert-card-modern" style="background: linear-gradient(145deg, #f0f7ff, #ffffff); border-radius: 16px; padding: 15px; box-shadow: 0 10px 20px rgba(0,150,255,0.1); border: 1px solid #00aaff; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-align: center; position: relative;">
-                        <div class="info-icon" onclick="event.stopPropagation(); showInfo('cdtl')">ⓘ</div>
-                        <div onclick="openModal('files/cdtl-panibratsky.pdf', 'images/cdtl-large.webp')">
-                            <img src="images/cdtl-thumb.webp" alt="CDTL сертификат" style="width: 100%; border-radius: 12px; margin-bottom: 12px;">
-                            <div style="font-size: 1.4rem; font-weight: 700; color: #0066cc;">CDTL</div>
-                            <div style="font-size: 0.8rem; color: #2c3e50;">Chief Digital Transformation Leader</div>
-                            <div style="font-size: 0.8rem; color: #4a5568; font-style: italic;">Руководитель цифровой трансформации</div>
-                            <div style="font-size: 0.9rem; color: #0f172a; font-weight: 600; margin-top: 5px;">2025 (цифровая трансформация)</div>
-                        </div>
+                    <!-- CDTL (новый) -->
+                    <div class="certificate-card cdtl">
+                        <div class="certificate-code" style="color: #0066cc;">CDTL</div>
+                        <div class="certificate-name">Chief Digital Transformation Leader</div>
+                        <div class="certificate-year">2025 (цифровая трансформация)</div>
+                        <a href="files/cdtl-panibratsky.html" target="_blank" class="certificate-link cdtl-link">Открыть →</a>
                     </div>
-
                 </div>
                 <p style="text-align: center; margin-top: 25px; font-size: 0.95rem; color: #718096;">
                     * Подлинность сертификатов можно проверить в 
@@ -1682,10 +1656,11 @@
                 <div class="footer-column">
                     <h3>Навигация</h3>
                     <ul>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия и философия</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт и кейсы</a></li>
-                        <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза и инструменты</a></li>
-                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты и сотрудничество</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
+                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
+                        <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -1710,21 +1685,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- MODAL WINDOW FOR CERTIFICATE DETAILS -->
-    <div id="infoModal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center;">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeInfoModal()">&times;</span>
-            <div id="infoContent"></div>
-        </div>
-    </div>
-
-    <!-- MODAL WINDOW FOR CERTIFICATE VIEWER -->
-    <div id="certModal" class="modal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column;">
-        <span onclick="closeModal()" style="position: absolute; top: 20px; right: 30px; color: white; font-size: 50px; font-weight: bold; cursor: pointer;">&times;</span>
-        <img id="modalImage" style="max-width: 90%; max-height: 80%; border-radius: 8px; box-shadow: 0 0 20px white;">
-        <a id="downloadLink" href="#" download style="margin-top: 20px; padding: 10px 25px; background: #d4af37; color: #0f172a; text-decoration: none; border-radius: 30px; font-weight: 600; font-size: 16px;">Скачать PDF</a>
-    </div>
 
     <script>
         // Mobile menu
@@ -1802,92 +1762,6 @@
                 };
             }
         });
-
-        // Certificate data for info modal
-        const certData = {
-            cpl: {
-                title: 'CPL — Certified in Russian Logistics',
-                rus: 'Сертифицированный специалист по логистике (Россия)',
-                year: '2020 (базовый)',
-                description: 'Фундаментальные знания в области логистики и управления цепями поставок: основы транспортной и складской логистики, документооборот и таможенное оформление, базовые принципы управления запасами, взаимодействие с перевозчиками и поставщиками.',
-                developer: 'Академия SCM совместно с Техническим комитетом 490 «Управление цепями поставок» (Росстандарт).',
-                recognition: 'Первый национальный сертификат в области логистики, признанный профессиональным сообществом России.'
-            },
-            cltd: {
-                title: 'CLTD-Р — Certified in Logistics, Transportation and Distribution – Russia',
-                rus: 'Сертифицированный специалист по логистике, транспорту и дистрибуции (Россия)',
-                year: '2021',
-                description: 'Углублённые компетенции в управлении транспортом и дистрибуцией: планирование и оптимизация маршрутов, управление автопарком и транспортными расходами, выбор перевозчиков и тендерные процедуры, международные перевозки и мультимодальные решения, дистрибутивные сети и управление каналами сбыта.',
-                developer: 'Академия SCM, ТК 490.',
-                recognition: 'Адаптация международных стандартов CLTD (APICS) под российскую специфику. Единственный сертификат в РФ, покрывающий полный цикл транспортной логистики.'
-            },
-            cscp: {
-                title: 'CSCP-Р — Certified Supply Chain Professional – Russia',
-                rus: 'Сертифицированный профессионал цепи поставок (Россия)',
-                year: '2022 (продвинутый)',
-                description: 'Стратегическое видение и управление цепями поставок как единым организмом: проектирование цепей поставок (SCOR-модель), управление взаимоотношениями с поставщиками и клиентами, управление рисками и устойчивое развитие, интеграция бизнес-процессов внутри компании и между партнёрами, финансовые аспекты SCM (оборачиваемость, TCO, ROI).',
-                developer: 'Академия SCM, ТК 490.',
-                recognition: 'Аналог международного CSCP (APICS) с учётом российских реалий. Требует не менее 3–5 лет практического опыта.'
-            },
-            ctsc: {
-                title: 'CTSC-Р — Certified in Transformation for Supply Chain – Russia',
-                rus: 'Сертифицированный специалист по трансформации цепей поставок (Россия)',
-                year: '2023 (стратегический)',
-                description: 'Способность проводить глубокие изменения в цепях поставок, внедрять инновации и управлять сложными проектами: диагностика и аудит текущих процессов, разработка дорожных карт трансформации, управление изменениями и работа с сопротивлением, цифровая трансформация и внедрение новых технологий, построение устойчивых (resilient) цепей поставок.',
-                developer: 'Академия SCM, ТК 490.',
-                recognition: 'Высший уровень сертификации для руководителей, отвечающих за стратегию и развитие SCM. Требует подтверждённого опыта реализации проектов.'
-            },
-            cdtl: {
-                title: 'CDTL — Chief Digital Transformation Leader',
-                rus: 'Руководитель цифровой трансформации',
-                year: '2025 (цифровая трансформация)',
-                description: 'Компетенции на стыке управления цепями поставок и современных цифровых технологий: внедрение искусственного интеллекта в прогнозирование и планирование, цифровые двойники (Digital Twins) складов и цепей поставок, использование интернета вещей (IoT) для мониторинга грузов, роботизация процессов (RPA) и автономные системы, построение стратегии цифровой трансформации компании, управление данными как активом (Data Driven SCM).',
-                developer: 'Академия SCM.',
-                recognition: 'Уникальный сертификат, разработанный специально для российского рынка с учётом глобальных трендов (AI, IoT, Digital Twins). Ориентирован на топ-менеджеров, которые формируют будущее логистики.'
-            }
-        };
-
-        // Show info modal
-        function showInfo(certId) {
-            const data = certData[certId];
-            if (!data) return;
-            
-            const infoDiv = document.getElementById('infoContent');
-            infoDiv.innerHTML = `
-                <h3 style="font-size: 1.6rem; color: #0f172a; margin-bottom: 10px;">${data.title}</h3>
-                <p style="font-size: 1rem; color: #1e40af; font-weight: 600; margin-bottom: 5px;">${data.rus}</p>
-                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">${data.year}</p>
-                <p style="font-size: 0.95rem; color: #1e293b; line-height: 1.6; margin-bottom: 15px;">${data.description}</p>
-                <p style="font-size: 0.9rem; color: #475569;"><strong>Разработчик:</strong> ${data.developer}</p>
-                <p style="font-size: 0.9rem; color: #475569;"><strong>Признание:</strong> ${data.recognition}</p>
-            `;
-            document.getElementById('infoModal').style.display = 'flex';
-        }
-
-        function closeInfoModal() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
-
-        // Modal functions for certificate viewer
-        function openModal(pdfUrl, imgUrl) {
-            document.getElementById('modalImage').src = imgUrl;
-            document.getElementById('downloadLink').href = pdfUrl;
-            document.getElementById('certModal').style.display = 'flex';
-        }
-        function closeModal() {
-            document.getElementById('certModal').style.display = 'none';
-        }
-        // Close modal when clicking outside the image
-        window.onclick = function(event) {
-            var modal = document.getElementById('certModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-            var infoModal = document.getElementById('infoModal');
-            if (event.target == infoModal) {
-                infoModal.style.display = 'none';
-            }
-        }
     </script>
 
     <!-- Microdata -->
