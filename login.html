@@ -6,11 +6,6 @@
     <title>Вход в личный кабинет</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #0f172a, #1e293b);
@@ -29,16 +24,8 @@
             box-shadow: 0 20px 30px rgba(0,0,0,0.3);
             color: #0f172a;
         }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        p {
-            color: #64748b;
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        h1 { font-size: 24px; margin-bottom: 10px; text-align: center; }
+        p { color: #64748b; text-align: center; margin-bottom: 30px; }
         input {
             width: 100%;
             padding: 12px;
@@ -58,22 +45,16 @@
             font-weight: 600;
             cursor: pointer;
         }
-        button:hover {
-            background: #0f172a;
-        }
-        .error {
-            color: #e74c3c;
-            text-align: center;
-            margin-top: 10px;
-        }
+        button:hover { background: #0f172a; }
+        .error { color: #e74c3c; text-align: center; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="login-card">
         <h1>Вход в личный кабинет</h1>
         <p>Только для владельца сайта</p>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Пароль">
+        <input type="email" id="email" placeholder="Email" value="965910@bk.ru">
+        <input type="password" id="password" placeholder="Пароль" value="Osen2023">
         <button onclick="login()">Войти</button>
         <div class="error" id="error"></div>
     </div>
@@ -96,12 +77,8 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    window.location.href = 'admin.html';
-                })
-                .catch(error => {
-                    document.getElementById('error').textContent = error.message;
-                });
+                .then(() => { window.location.href = 'admin.html'; })
+                .catch(error => { document.getElementById('error').textContent = error.message; });
         }
     </script>
 </body>
