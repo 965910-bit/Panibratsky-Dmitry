@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в личный кабинет</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+            color: #0f172a;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        p {
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0f172a;
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h1>Вход в личный кабинет</h1>
+        <p>Только для владельца сайта</p>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Пароль">
+        <button onclick="login()">Войти</button>
+        <div class="error" id="error"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgr8mgQxBTTTGvmf70VkuEiELcNdiAR9U",
+            authDomain: "my-portfolio-analytics-d36ff.firebaseapp.com",
+            projectId: "my-portfolio-analytics-d36ff",
+            storageBucket: "my-portfolio-analytics-d36ff.firebasestorage.app",
+            messagingSenderId: "321281212756",
+            appId: "1:321281212756:web:87a10f3e5f352fcdf608c1"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    window.location.href = 'admin.html';
+                })
+                .catch(error => {
+                    document.getElementById('error').textContent = error.message;
+                });
+        }
+    </script>
+</body>
+</html>
