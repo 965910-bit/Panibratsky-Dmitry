@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* --- все ваши стили без изменений (копируем из исходного contact.html) --- */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -532,10 +533,44 @@
             color: var(--neutral-medium);
         }
 
-        /* Request Form Section (новый) */
+        /* Request Section (новая) */
         .request-section {
             padding: 70px 0;
             background-color: white;
+        }
+
+        .request-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .request-form input, .request-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .request-form button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .request-form button:hover {
+            background: #0f172a;
+        }
+
+        .request-status {
+            margin-top: 15px;
+            font-size: 14px;
         }
 
         /* CTA Section */
@@ -930,23 +965,23 @@
         </div>
     </section>
 
-    <!-- Request Form Section -->
+    <!-- Request Section (форма запроса материалов) -->
     <section class="request-section">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Запросить информацию</h2>
                 <p class="section-subtitle">Оставьте email, и я пришлю резюме, презентацию и сопроводительное письмо</p>
             </div>
-            <div style="max-width: 600px; margin: 0 auto;">
+            <div class="request-form">
                 <form id="requestForm">
-                    <input type="text" id="requestName" placeholder="Ваше имя" required style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #e2e8f0; border-radius:8px;">
-                    <input type="email" id="requestEmail" placeholder="Ваш email" required style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #e2e8f0; border-radius:8px;">
-                    <input type="text" id="requestCompany" placeholder="Компания (необязательно)" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #e2e8f0; border-radius:8px;">
+                    <input type="text" id="requestName" placeholder="Ваше имя" required>
+                    <input type="email" id="requestEmail" placeholder="Ваш email" required>
+                    <input type="text" id="requestCompany" placeholder="Компания (необязательно)">
                     <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                         <input type="checkbox" id="consent" required> Я даю согласие на обработку персональных данных
                     </label>
-                    <button type="submit" style="background:#1e40af; color:white; border:none; padding:14px 30px; border-radius:8px; font-weight:600; cursor:pointer;">Отправить запрос</button>
-                    <div id="requestStatus" style="margin-top:15px;"></div>
+                    <button type="submit">Отправить запрос</button>
+                    <div id="requestStatus" class="request-status"></div>
                 </form>
             </div>
         </div>
@@ -979,7 +1014,6 @@
                     <span class="counter-number" id="download-counter">0</span> скачиваний
                 </div>
             </div>
-            
             <div class="footer-container">
                 <div class="footer-column">
                     <h3>Дмитрий Панибратский</h3>
@@ -1010,13 +1044,14 @@
         </div>
     </footer>
 
-    <!-- Firebase + EmailJS + аналитика -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <!-- EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        // Firebase config
+        // Конфигурация Firebase (ваша)
         const firebaseConfig = {
             apiKey: "AIzaSyDgr8mgQxBTTTGvmf70VkuEiELcNdiAR9U",
             authDomain: "my-portfolio-analytics-d36ff.firebaseapp.com",
@@ -1029,14 +1064,14 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // Сессия
+        // Генерация или получение sessionId
         let sessionId = localStorage.getItem('sessionId');
         if (!sessionId) {
             sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('sessionId', sessionId);
         }
 
-        // Логирование просмотра страницы
+        // Функции логирования
         function logPageView(pagePath) {
             db.collection('pageViews').add({
                 page: pagePath,
@@ -1044,9 +1079,27 @@
                 sessionId: sessionId
             }).catch(console.error);
         }
+        function logDownload(fileName) {
+            db.collection('downloads').add({
+                fileName: fileName,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                sessionId: sessionId
+            }).catch(console.error);
+        }
+
+        // Логируем текущую страницу
         logPageView(window.location.pathname);
 
-        // Инициализация EmailJS (замените на свои ключи)
+        // Отслеживаем скачивания (если появятся ссылки с download)
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a[download]');
+            if (link) {
+                const fileName = link.getAttribute('download') || link.href.split('/').pop();
+                logDownload(fileName);
+            }
+        });
+
+        // EmailJS (замените на свои данные!)
         emailjs.init("YOUR_PUBLIC_KEY"); // <-- ЗАМЕНИТЬ
 
         // Обработка формы запроса
@@ -1056,11 +1109,12 @@
             const email = document.getElementById('requestEmail').value;
             const company = document.getElementById('requestCompany').value;
 
+            // Ссылки на файлы (проверьте, что файлы лежат по этим путям)
             const resumeLink = 'https://965910-bit.github.io/Panibratsky-Dmitry/resume/Дмитрий_Панибратский_CV.pdf';
             const presentationLink = 'https://965910-bit.github.io/Panibratsky-Dmitry/files/presentation.pdf';
             const coverLetterLink = 'https://965910-bit.github.io/Panibratsky-Dmitry/files/cover-letter.pdf';
 
-            // Сохраняем запрос в Firestore
+            // Сохраняем запрос в Firebase
             db.collection('requests').add({
                 name: name,
                 email: email,
@@ -1068,8 +1122,8 @@
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 status: 'new'
             }).then(() => {
-                // Отправляем письмо через EmailJS
-                return emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', { // <-- ЗАМЕНИТЬ
+                // Отправляем письмо через EmailJS (замените SERVICE_ID и TEMPLATE_ID)
+                return emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
                     to_email: email,
                     to_name: name,
                     company: company,
@@ -1085,14 +1139,35 @@
                 document.getElementById('requestStatus').innerHTML = '<span style="color: #e74c3c;">Ошибка. Попробуйте позже.</span>';
             });
         });
+    </script>
 
-        // Счётчики в футере
+    <!-- Ваши существующие скрипты (мобильное меню, счётчики) -->
+    <script>
+        // Mobile menu
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        mobileMenuBtn.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Header scroll effect
+        const header = document.getElementById('mainHeader');
+        window.addEventListener('scroll', function() {
+            header.classList.toggle('header-scrolled', window.scrollY > 50);
+        });
+
+        // Set current year and counters
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('current-year').textContent = new Date().getFullYear();
+
             let visitCount = localStorage.getItem('visitCount') || 0;
             visitCount++;
             localStorage.setItem('visitCount', visitCount);
             document.getElementById('visit-counter').textContent = visitCount;
+
             let downloadCount = localStorage.getItem('downloadCount') || 0;
             document.getElementById('download-counter').textContent = downloadCount;
         });
