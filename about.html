@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* --- все ваши стили без изменений (скопированы из исходного файла) --- */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -51,7 +52,7 @@
             padding: 0 20px;
         }
 
-        /* Header */
+        /* Header (код как в исходном) */
         header {
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -470,7 +471,6 @@
             width: 100%;
             border-radius: 12px;
             box-shadow: 0 20px 30px rgba(0,0,0,0.15);
-            /* запрет на скачивание через контекстное меню */
             pointer-events: auto;
         }
 
@@ -722,12 +722,8 @@
 <body>
     <header id="mainHeader">
         <div class="container nav-container">
-            <a href="index.html" class="logo">
-                ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
-            </a>
-            <button class="mobile-menu-btn" aria-label="Меню">
-                <i class="fas fa-bars"></i>
-            </button>
+            <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
+            <button class="mobile-menu-btn" aria-label="Меню"><i class="fas fa-bars"></i></button>
             <nav>
                 <ul id="nav-menu">
                     <li><a href="index.html">Стратегия</a></li>
@@ -885,22 +881,19 @@
         </div>
     </section>
 
-    <!-- Video Section with visible counter and download disabled -->
+    <!-- Video Section -->
     <section class="video-section">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Видео-приветствие</h2>
             </div>
             <div class="video-container">
-                <!-- атрибут controlslist="nodownload" отключает кнопку скачивания в поддерживаемых браузерах -->
                 <video id="myVideo" controls controlslist="nodownload" preload="metadata" oncontextmenu="return false;">
                     <source src="videos/about.mp4" type="video/mp4">
                     Ваш браузер не поддерживает видео.
                 </video>
-                <!-- блок со счётчиком просмотров -->
                 <div class="video-stats">
                     <span class="view-counter"><i class="fas fa-eye"></i> Просмотров: <span id="videoViewCountDisplay">0</span></span>
-                    <!-- можно добавить другие элементы, например дату -->
                 </div>
             </div>
         </div>
@@ -982,8 +975,78 @@
         </div>
     </footer>
 
+    <!-- Firebase SDK + аналитика -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script>
-        // Mobile menu
+        // Конфигурация Firebase (ваша)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgr8mgQxBTTTGvmf70VkuEiELcNdiAR9U",
+            authDomain: "my-portfolio-analytics-d36ff.firebaseapp.com",
+            projectId: "my-portfolio-analytics-d36ff",
+            storageBucket: "my-portfolio-analytics-d36ff.firebasestorage.app",
+            messagingSenderId: "321281212756",
+            appId: "1:321281212756:web:87a10f3e5f352fcdf608c1"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Генерация или получение sessionId
+        let sessionId = localStorage.getItem('sessionId');
+        if (!sessionId) {
+            sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('sessionId', sessionId);
+        }
+
+        // Функции логирования
+        function logPageView(pagePath) {
+            db.collection('pageViews').add({
+                page: pagePath,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                sessionId: sessionId
+            }).catch(console.error);
+        }
+        function logVideoView(videoName) {
+            db.collection('videoViews').add({
+                videoName: videoName,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                sessionId: sessionId
+            }).catch(console.error);
+        }
+        function logDownload(fileName) {
+            db.collection('downloads').add({
+                fileName: fileName,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                sessionId: sessionId
+            }).catch(console.error);
+        }
+
+        // Логируем текущую страницу
+        logPageView(window.location.pathname);
+
+        // Отслеживаем запуск видео (Firebase + localStorage)
+        const video = document.getElementById('myVideo');
+        if (video) {
+            video.addEventListener('play', () => {
+                logVideoView('about_video');
+            });
+        }
+
+        // Отслеживаем клики по ссылкам с атрибутом download (если появятся)
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a[download]');
+            if (link) {
+                const fileName = link.getAttribute('download') || link.href.split('/').pop();
+                logDownload(fileName);
+            }
+        });
+    </script>
+
+    <!-- Остальные ваши скрипты (мобильное меню, анимации, счётчики) остаются без изменений -->
+    <script>
+        // Mobile menu (был в исходном)
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         mobileMenuBtn.addEventListener('click', function() {
@@ -999,22 +1062,20 @@
             header.classList.toggle('header-scrolled', window.scrollY > 50);
         });
 
-        // Set current year and counters
+        // Set current year and counters (локальные)
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            // Visit counter
             let visitCount = localStorage.getItem('visitCount') || 0;
             visitCount++;
             localStorage.setItem('visitCount', visitCount);
             document.getElementById('visit-counter').textContent = visitCount;
 
-            // Download counter
             let downloadCount = localStorage.getItem('downloadCount') || 0;
             document.getElementById('download-counter').textContent = downloadCount;
         });
 
-        // Hidden video view counter (localStorage) with visible display
+        // Видимый счётчик просмотров видео (локальный)
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('myVideo');
             if (!video) return;
@@ -1023,20 +1084,15 @@
             let videoViews = localStorage.getItem(VIEW_STORAGE_KEY) ? parseInt(localStorage.getItem(VIEW_STORAGE_KEY)) : 0;
             let alreadyCounted = false;
 
-            // Обновляем отображение счётчика при загрузке
             const viewDisplay = document.getElementById('videoViewCountDisplay');
-            if (viewDisplay) {
-                viewDisplay.textContent = videoViews;
-            }
+            if (viewDisplay) viewDisplay.textContent = videoViews;
 
             video.addEventListener('play', function() {
                 if (!alreadyCounted) {
                     videoViews++;
                     localStorage.setItem(VIEW_STORAGE_KEY, videoViews);
                     alreadyCounted = true;
-                    if (viewDisplay) {
-                        viewDisplay.textContent = videoViews;
-                    }
+                    if (viewDisplay) viewDisplay.textContent = videoViews;
                 }
             });
 
