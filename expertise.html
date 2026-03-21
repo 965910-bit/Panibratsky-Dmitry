@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский | Экспертиза в SCM и цифровой трансформации</title>
-    <!-- Preconnect for fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- все ваши стили без изменений (скопированы из исходного файла) --- */
+        /* --- все ваши стили (скопированы из исходного expertise.html) --- */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -52,7 +51,7 @@
             padding: 0 20px;
         }
 
-        /* Header (код из исходного) */
+        /* Header */
         header {
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -1367,120 +1366,17 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK + аналитика -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/analytics.js"></script>
     <script>
-        // Конфигурация Firebase (ваша)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgr8mgQxBTTTGvmf70VkuEiELcNdiAR9U",
-            authDomain: "my-portfolio-analytics-d36ff.firebaseapp.com",
-            projectId: "my-portfolio-analytics-d36ff",
-            storageBucket: "my-portfolio-analytics-d36ff.firebasestorage.app",
-            messagingSenderId: "321281212756",
-            appId: "1:321281212756:web:87a10f3e5f352fcdf608c1"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
+        let visitCount = localStorage.getItem('visitCount') || 0;
+        visitCount++;
+        localStorage.setItem('visitCount', visitCount);
+        document.getElementById('visit-counter').textContent = visitCount;
 
-        // Генерация или получение sessionId
-        let sessionId = localStorage.getItem('sessionId');
-        if (!sessionId) {
-            sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('sessionId', sessionId);
-        }
+        let downloadCount = localStorage.getItem('downloadCount') || 0;
+        document.getElementById('download-counter').textContent = downloadCount;
 
-        // Функции логирования
-        function logPageView(pagePath) {
-            db.collection('pageViews').add({
-                page: pagePath,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                sessionId: sessionId
-            }).catch(console.error);
-        }
-        function logDownload(fileName) {
-            db.collection('downloads').add({
-                fileName: fileName,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                sessionId: sessionId
-            }).catch(console.error);
-        }
-
-        // Логируем текущую страницу
-        logPageView(window.location.pathname);
-
-        // Отслеживаем клики по ссылкам с атрибутом download (если появятся)
-        document.addEventListener('click', function(e) {
-            const link = e.target.closest('a[download]');
-            if (link) {
-                const fileName = link.getAttribute('download') || link.href.split('/').pop();
-                logDownload(fileName);
-            }
-        });
-    </script>
-
-    <!-- Остальные ваши скрипты (мобильное меню, анимации, счётчики) остаются без изменений -->
-    <script>
-        // Mobile menu (был в исходном)
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navMenu = document.getElementById('nav-menu');
-        mobileMenuBtn.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
-        });
-
-        // Header scroll effect
-        const header = document.getElementById('mainHeader');
-        window.addEventListener('scroll', function() {
-            header.classList.toggle('header-scrolled', window.scrollY > 50);
-        });
-
-        // Set current year and counters
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            let visitCount = localStorage.getItem('visitCount') || 0;
-            visitCount++;
-            localStorage.setItem('visitCount', visitCount);
-            document.getElementById('visit-counter').textContent = visitCount;
-
-            let downloadCount = localStorage.getItem('downloadCount') || 0;
-            document.getElementById('download-counter').textContent = downloadCount;
-        });
-    </script>
-
-    <!-- Microdata -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        "name": "Экспертиза Дмитрия Панибратского в SCM",
-        "description": "Методологии и инструменты управления цепями поставок: бережливое производство, ABC-XYZ анализ, цифровая трансформация, образовательная платформа.",
-        "mainEntity": {
-            "@type": "ItemList",
-            "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Бережливое производство (Lean)"
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "ABC-XYZ анализ"
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 3,
-                    "name": "Управление бизнес-процессами"
-                }
-            ]
-        }
-    }
+        document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
