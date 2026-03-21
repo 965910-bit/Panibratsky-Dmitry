@@ -23,6 +23,7 @@
         if (link) {
             const fileName = link.getAttribute('download') || link.href.split('/').pop();
             saveEvent('downloads', { fileName: fileName });
+            console.log('Скачивание зафиксировано:', fileName);
         }
     });
 
@@ -31,7 +32,10 @@
     if (video) {
         video.addEventListener('play', () => {
             saveEvent('videoViews', { videoName: 'about_video' });
+            console.log('Видео запущено, событие сохранено');
         });
+    } else {
+        console.log('Элемент с id="myVideo" не найден');
     }
 
     // Форма обратной связи
