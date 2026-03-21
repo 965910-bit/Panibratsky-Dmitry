@@ -1,6 +1,6 @@
-// js/analytics.js
+// js/analytics.js – расширенная версия
 (function() {
-    // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+    // Универсальная функция сохранения события
     function saveEvent(collection, data) {
         let events = localStorage.getItem(collection);
         try {
@@ -12,47 +12,53 @@
         events.push({
             ...data,
             timestamp: new Date().toISOString(),
-            sessionId: localStorage.getItem('sessionId') || (() => {
-                let id = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('sessionId', id);
-                return id;
-            })()
+            sessionId: getSessionId()
         });
         localStorage.setItem(collection, JSON.stringify(events));
-        // console.log(`Событие сохранено: ${collection}`, data); // опционально
+        console.log(`Событие сохранено: ${collection}`, data);
     }
 
-    // ========== МЕТАДАННЫЕ СЕССИИ ==========
-    if (!localStorage.getItem('sessionId')) {
-        const sessionId = localStorage.getItem('sessionId');
-        const sessionData = {
-            sessionId: sessionId,
-            startTime: new Date().toISOString(),
-            referrer: document.referrer || 'direct',
-            userAgent: navigator.userAgent,
-            screenSize: `${screen.width}x${screen.height}`,
-            language: navigator.language
-        };
-        let sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
-        sessions.push(sessionData);
-        localStorage.setItem('sessions', JSON.stringify(sessions));
+    // Получение или создание sessionId
+    function getSessionId() {
+        let id = localStorage.getItem('sessionId');
+        if (!id) {
+            id = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('sessionId', id);
+            // Сохраняем метаданные сессии при первом визите
+            const sessionMeta = {
+                sessionId: id,
+                startTime: new Date().toISOString(),
+                referrer: document.referrer || 'direct',
+                userAgent: navigator.userAgent,
+                screenSize: `${screen.width}x${screen.height}`,
+                language: navigator.language,
+                firstPage: window.location.pathname
+            };
+            let sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
+            sessions.push(sessionMeta);
+            localStorage.setItem('sessions', JSON.stringify(sessions));
+        }
+        return id;
     }
 
-    // ========== ВРЕМЯ НА СТРАНИЦЕ ==========
+    // Функция для вычисления времени на странице
     let pageStartTime = Date.now();
     window.addEventListener('beforeunload', () => {
-        const duration = Date.now() - pageStartTime;
-        saveEvent('pageDurations', {
-            page: window.location.pathname,
-            duration: duration
-        });
+        const duration = Math.round((Date.now() - pageStartTime) / 1000); // в секундах
+        if (duration > 0) {
+            saveEvent('pageDurations', {
+                page: window.location.pathname,
+                duration: duration
+            });
+        }
     });
 
-    // ========== ГЛУБИНА ПРОКРУТКИ ==========
+    // Функция для отслеживания глубины прокрутки (один раз за страницу)
     let sentDepths = [];
     window.addEventListener('scroll', () => {
         const scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight * 100;
-        [25, 50, 75, 100].forEach(threshold => {
+        const thresholds = [25, 50, 75, 100];
+        thresholds.forEach(threshold => {
             if (scrollPercent >= threshold && !sentDepths.includes(threshold)) {
                 sentDepths.push(threshold);
                 saveEvent('scrollDepth', {
@@ -63,7 +69,7 @@
         });
     });
 
-    // ========== СТАНДАРТНЫЕ СОБЫТИЯ ==========
+    // === События, которые уже были (просмотр, скачивания, видео, форма) ===
     document.addEventListener('DOMContentLoaded', function() {
         // Просмотр страницы
         saveEvent('pageViews', { page: window.location.pathname });
@@ -74,6 +80,7 @@
             if (link) {
                 const fileName = link.getAttribute('download') || link.href.split('/').pop();
                 saveEvent('downloads', { fileName: fileName });
+                console.log('Скачивание зафиксировано:', fileName);
             }
         });
 
@@ -82,7 +89,8 @@
         if (video) {
             video.addEventListener('play', () => {
                 saveEvent('videoViews', { videoName: 'about_video' });
-                // обновляем отображаемый счётчик, если есть
+                console.log('Видео запущено, событие сохранено');
+                // Обновляем отображаемый счётчик на странице (если есть)
                 const viewDisplay = document.getElementById('videoViewCountDisplay');
                 if (viewDisplay) {
                     let views = localStorage.getItem('videoViews') ? (() => {
@@ -94,6 +102,9 @@
                     viewDisplay.textContent = views;
                 }
             });
+            console.log('Видео найдено, обработчик добавлен');
+        } else {
+            console.log('Элемент с id="myVideo" не найден');
         }
 
         // Форма обратной связи
