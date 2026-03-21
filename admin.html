@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панибратский | Аналитический центр</title>
+    <title>Аналитический центр | Панибратский</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,7 +50,6 @@
             display: flex;
             gap: 12px;
             align-items: center;
-            flex-wrap: wrap;
         }
         .last-update {
             background: white;
@@ -62,27 +61,6 @@
             align-items: center;
             gap: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .period-selector {
-            background: white;
-            border-radius: 40px;
-            padding: 4px;
-            display: flex;
-            gap: 4px;
-        }
-        .period-btn {
-            background: transparent;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .period-btn.active {
-            background: #1e40af;
-            color: white;
         }
         .refresh-btn, .export-btn {
             background: #1e40af;
@@ -98,7 +76,13 @@
             gap: 8px;
             transition: all 0.2s;
         }
-        .refresh-btn:hover, .export-btn:hover {
+        .export-btn {
+            background: #10b981;
+        }
+        .export-btn:hover {
+            background: #059669;
+        }
+        .refresh-btn:hover {
             background: #0f172a;
             transform: translateY(-2px);
         }
@@ -127,26 +111,27 @@
             gap: 10px;
             margin-bottom: 30px;
             border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
         }
         .tab-btn {
             background: none;
             border: none;
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 8px 20px;
+            font-size: 14px;
             font-weight: 600;
             color: #64748b;
             cursor: pointer;
+            border-radius: 30px;
             transition: all 0.2s;
-            border-bottom: 2px solid transparent;
         }
         .tab-btn.active {
-            color: #1e40af;
-            border-bottom-color: #1e40af;
+            background: #1e40af;
+            color: white;
         }
-        .tab-pane {
+        .tab-content {
             display: none;
         }
-        .tab-pane.active {
+        .tab-content.active {
             display: block;
         }
 
@@ -185,18 +170,13 @@
         }
 
         /* Графики */
-        .charts-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
         .chart-card {
             background: white;
             border-radius: 24px;
             padding: 24px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
         }
         .chart-card h3 {
             font-size: 18px;
@@ -219,7 +199,7 @@
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
             overflow-x: auto;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         .table-card h3 {
             font-size: 18px;
@@ -257,9 +237,6 @@
         }
 
         @media (max-width: 768px) {
-            .charts-section {
-                grid-template-columns: 1fr;
-            }
             .header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -269,7 +246,7 @@
                 justify-content: space-between;
             }
             .tabs {
-                overflow-x: auto;
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -283,19 +260,14 @@
                 <span style="font-size: 12px; background: #e2e8f0; padding: 4px 12px; border-radius: 30px;">расширенная версия</span>
             </h1>
             <div class="header-actions">
-                <div class="period-selector" id="periodSelector">
-                    <button class="period-btn" data-days="7">7 дней</button>
-                    <button class="period-btn active" data-days="14">14 дней</button>
-                    <button class="period-btn" data-days="30">30 дней</button>
-                </div>
                 <div class="last-update" id="lastUpdate">
                     <i class="fas fa-clock"></i> Обновлено: --:--:--
                 </div>
-                <button class="refresh-btn" onclick="refreshAll()">
-                    <i class="fas fa-sync-alt"></i> Обновить
-                </button>
                 <button class="export-btn" onclick="exportToCSV()">
                     <i class="fas fa-download"></i> Экспорт CSV
+                </button>
+                <button class="refresh-btn" onclick="refreshAll()">
+                    <i class="fas fa-sync-alt"></i> Обновить
                 </button>
                 <button class="clear-btn" onclick="clearAllData()">
                     <i class="fas fa-trash-alt"></i> Очистить
@@ -303,304 +275,103 @@
             </div>
         </div>
 
+        <!-- Вкладки -->
         <div class="tabs">
             <button class="tab-btn active" data-tab="overview">Обзор</button>
             <button class="tab-btn" data-tab="sessions">Сессии</button>
             <button class="tab-btn" data-tab="content">Контент</button>
+            <button class="tab-btn" data-tab="events">События</button>
         </div>
 
-        <!-- Вкладка "Обзор" -->
-        <div id="overview" class="tab-pane active">
+        <!-- Вкладка Обзор -->
+        <div id="overview" class="tab-content active">
             <div class="stats-grid" id="statsGrid"></div>
-
-            <div class="charts-section">
-                <div class="chart-card">
-                    <h3><i class="fas fa-calendar-week" style="color:#1e40af;"></i> Посещения по дням</h3>
-                    <div class="chart-container">
-                        <canvas id="viewsChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <h3><i class="fas fa-chart-bar" style="color:#3b82f6;"></i> Популярность страниц</h3>
-                    <div class="chart-container">
-                        <canvas id="pagesChart"></canvas>
-                    </div>
+            <div class="chart-card">
+                <h3><i class="fas fa-calendar-week" style="color:#1e40af;"></i> Посещения по дням</h3>
+                <div class="chart-container">
+                    <canvas id="viewsChart"></canvas>
                 </div>
             </div>
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-bar" style="color:#3b82f6;"></i> Популярность страниц</h3>
+                <div class="chart-container">
+                    <canvas id="pagesChart"></canvas>
+                </div>
+            </div>
+        </div>
 
+        <!-- Вкладка Сессии -->
+        <div id="sessions" class="tab-content">
             <div class="table-card">
-                <h3><i class="fas fa-envelope" style="color:#ef4444;"></i> Последние сообщения</h3>
+                <h3><i class="fas fa-users"></i> Список сессий</h3>
+                <table id="sessionsTable">
+                    <thead>
+                        <tr>
+                            <th>Дата начала</th>
+                            <th>Источник</th>
+                            <th>Устройство</th>
+                            <th>Размер экрана</th>
+                            <th>Язык</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Вкладка Контент -->
+        <div id="content" class="tab-content">
+            <div class="chart-card">
+                <h3><i class="fas fa-clock"></i> Среднее время на странице (сек)</h3>
+                <div class="chart-container">
+                    <canvas id="durationChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3><i class="fas fa-arrow-down"></i> Глубина прокрутки (достигнутый %)</h3>
+                <div class="chart-container">
+                    <canvas id="scrollChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка События -->
+        <div id="events" class="tab-content">
+            <div class="table-card">
+                <h3><i class="fas fa-envelope"></i> Последние сообщения</h3>
                 <table id="messagesTable">
                     <thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div class="table-card">
-                <h3><i class="fas fa-download" style="color:#f59e0b;"></i> Недавние скачивания</h3>
+                <h3><i class="fas fa-download"></i> Недавние скачивания</h3>
                 <table id="downloadsTable">
                     <thead><tr><th>Дата</th><th>Файл</th><th>Сессия</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- Вкладка "Сессии" -->
-        <div id="sessions" class="tab-pane">
             <div class="table-card">
-                <h3><i class="fas fa-users"></i> Все сессии</h3>
-                <table id="sessionsTable">
-                    <thead><tr><th>Дата начала</th><th>Источник</th><th>Устройство</th><th>Разрешение</th><th>Язык</th></tr></thead>
+                <h3><i class="fas fa-video"></i> Запуски видео</h3>
+                <table id="videoTable">
+                    <thead><tr><th>Дата</th><th>Видео</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- Вкладка "Контент" -->
-        <div id="content" class="tab-pane">
-            <div class="charts-section">
-                <div class="chart-card">
-                    <h3><i class="fas fa-hourglass-half"></i> Среднее время на странице (топ-5)</h3>
-                    <div class="chart-container">
-                        <canvas id="durationChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <h3><i class="fas fa-scroll"></i> Глубина прокрутки</h3>
-                    <div class="chart-container">
-                        <canvas id="scrollDepthChart"></canvas>
-                    </div>
-                </div>
+            <div class="table-card">
+                <h3><i class="fas fa-chart-line"></i> Просмотры страниц</h3>
+                <table id="pageViewsTable">
+                    <thead><tr><th>Дата</th><th>Страница</th><th>Сессия</th></tr></thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+        // ========== Утилиты ==========
         function getData(key) {
-            try {
-                let val = localStorage.getItem(key);
-                if (!val) return [];
-                let parsed = JSON.parse(val);
-                return Array.isArray(parsed) ? parsed : [];
-            } catch(e) {
-                return [];
-            }
-        }
-
-        function clearAllData() {
-            if (confirm('Удалить все данные аналитики? Это действие необратимо.')) {
-                localStorage.removeItem('pageViews');
-                localStorage.removeItem('downloads');
-                localStorage.removeItem('messages');
-                localStorage.removeItem('videoViews');
-                localStorage.removeItem('pageDurations');
-                localStorage.removeItem('scrollDepth');
-                localStorage.removeItem('sessions');
-                localStorage.removeItem('visitCount');
-                localStorage.removeItem('downloadCount');
-                localStorage.removeItem('sessionId');
-                refreshAll();
-            }
-        }
-
-        function updateLastUpdate() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.querySelector('#lastUpdate').innerHTML = `<i class="fas fa-clock"></i> Обновлено: ${timeString}`;
-        }
-
-        // ========== ОБЗОР ==========
-        let viewsChart, pagesChart;
-
-        function renderStats() {
-            const pageViews = getData('pageViews');
-            const downloads = getData('downloads');
-            const messages = getData('messages');
-            const videoViews = getData('videoViews');
-
-            document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViews.length}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloads.length}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div><div class="stat-number">${messages.length}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-video"></i> Запусков видео</div><div class="stat-number">${videoViews.length}</div></div>
-            `;
-        }
-
-        function renderViewsChart(days = 14) {
-            const pageViews = getData('pageViews');
-            const lastDays = [...Array(days)].map((_, i) => {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                return d.toISOString().split('T')[0];
-            }).reverse();
-            const counts = lastDays.map(day => pageViews.filter(p => p.timestamp && p.timestamp.slice(0,10) === day).length);
-
-            const ctx = document.getElementById('viewsChart').getContext('2d');
-            if (viewsChart) viewsChart.destroy();
-            viewsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: lastDays.map(d => d.slice(5)),
-                    datasets: [{ label: 'Просмотры', data: counts, backgroundColor: '#1e40af', borderRadius: 8 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
-        }
-
-        function renderPagesChart() {
-            const pageViews = getData('pageViews');
-            const pageCounts = {};
-            pageViews.forEach(v => {
-                const page = v.page || 'unknown';
-                pageCounts[page] = (pageCounts[page] || 0) + 1;
-            });
-            const sorted = Object.entries(pageCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
-            const ctx = document.getElementById('pagesChart').getContext('2d');
-            if (pagesChart) pagesChart.destroy();
-            pagesChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: sorted.map(p => p[0].split('/').pop() || p[0]),
-                    datasets: [{ label: 'Просмотры', data: sorted.map(p => p[1]), backgroundColor: '#3b82f6', borderRadius: 8 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        function renderMessages() {
-            const messages = getData('messages');
-            const tbody = document.querySelector('#messagesTable tbody');
-            tbody.innerHTML = messages.slice(-20).reverse().map(m => `
-                <tr><td>${new Date(m.timestamp).toLocaleString()}</td><td>${escapeHtml(m.name || '')}</td><td>${escapeHtml(m.email || '')}</td><td style="max-width:250px; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(m.message || '')}</td></tr>
-            `).join('');
-        }
-
-        function renderDownloads() {
-            const downloads = getData('downloads');
-            const tbody = document.querySelector('#downloadsTable tbody');
-            tbody.innerHTML = downloads.slice(-20).reverse().map(d => `
-                <tr><td>${new Date(d.timestamp).toLocaleString()}</td><td><span class="badge">${escapeHtml(d.fileName || '')}</span></td><td><small>${d.sessionId?.slice(-8) || '—'}</small></td></tr>
-            `).join('');
-        }
-
-        // ========== СЕССИИ ==========
-        function renderSessions() {
-            const sessions = getData('sessions');
-            const tbody = document.querySelector('#sessionsTable tbody');
-            tbody.innerHTML = sessions.slice(-50).reverse().map(s => `
-                <tr>
-                    <td>${new Date(s.startTime).toLocaleString()}</td>
-                    <td>${escapeHtml(s.referrer || 'direct')}</td>
-                    <td>${escapeHtml(s.userAgent?.split(' ')[0] || 'unknown')}</td>
-                    <td>${s.screenSize || '—'}</td>
-                    <td>${s.language || '—'}</td>
-                </tr>
-            `).join('');
-        }
-
-        // ========== КОНТЕНТ ==========
-        let durationChart, scrollDepthChart;
-
-        function renderDurationChart() {
-            const durations = getData('pageDurations');
-            const pageDurations = {};
-            durations.forEach(d => {
-                if (!pageDurations[d.page]) pageDurations[d.page] = { sum: 0, count: 0 };
-                pageDurations[d.page].sum += d.duration;
-                pageDurations[d.page].count++;
-            });
-            const avg = Object.entries(pageDurations).map(([page, data]) => ({
-                page: page.split('/').pop() || page,
-                avg: data.sum / data.count / 1000 // секунды
-            })).sort((a,b) => b.avg - a.avg).slice(0,5);
-
-            const ctx = document.getElementById('durationChart').getContext('2d');
-            if (durationChart) durationChart.destroy();
-            durationChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: avg.map(p => p.page),
-                    datasets: [{ label: 'Среднее время (сек)', data: avg.map(p => p.avg.toFixed(1)), backgroundColor: '#10b981', borderRadius: 8 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        function renderScrollDepthChart() {
-            const depths = getData('scrollDepth');
-            const pageDepthCount = {};
-            depths.forEach(d => {
-                const key = `${d.page} - ${d.depth}%`;
-                pageDepthCount[key] = (pageDepthCount[key] || 0) + 1;
-            });
-            const sorted = Object.entries(pageDepthCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
-            const ctx = document.getElementById('scrollDepthChart').getContext('2d');
-            if (scrollDepthChart) scrollDepthChart.destroy();
-            scrollDepthChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: sorted.map(s => s[0]),
-                    datasets: [{ label: 'Количество достижений', data: sorted.map(s => s[1]), backgroundColor: '#f59e0b', borderRadius: 8 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        // ========== ОБЩАЯ ЗАГРУЗКА ==========
-        let currentDays = 14;
-
-        function refreshAll() {
-            renderStats();
-            renderViewsChart(currentDays);
-            renderPagesChart();
-            renderMessages();
-            renderDownloads();
-            renderSessions();
-            renderDurationChart();
-            renderScrollDepthChart();
-            updateLastUpdate();
-        }
-
-        // Переключение периода
-        document.querySelectorAll('.period-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentDays = parseInt(btn.dataset.days);
-                renderViewsChart(currentDays);
-            });
-        });
-
-        // Переключение вкладок
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabId = btn.dataset.tab;
-                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-                document.getElementById(tabId).classList.add('active');
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                // если переключились на контент, перерисуем графики (на случай новых данных)
-                if (tabId === 'content') {
-                    renderDurationChart();
-                    renderScrollDepthChart();
-                }
-            });
-        });
-
-        // Экспорт в CSV
-        function exportToCSV() {
-            const collections = ['pageViews', 'downloads', 'messages', 'videoViews', 'pageDurations', 'scrollDepth', 'sessions'];
-            let allData = {};
-            collections.forEach(key => { allData[key] = getData(key); });
-            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `analytics_${new Date().toISOString().slice(0,19)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            return JSON.parse(localStorage.getItem(key) || '[]');
         }
 
         function escapeHtml(str) {
@@ -613,9 +384,219 @@
             });
         }
 
-        window.addEventListener('load', () => {
-            refreshAll();
+        // ========== Экспорт в CSV ==========
+        function exportToCSV() {
+            const collections = {
+                'sessions': getData('sessions'),
+                'pageViews': getData('pageViews'),
+                'downloads': getData('downloads'),
+                'videoViews': getData('videoViews'),
+                'messages': getData('messages'),
+                'pageDurations': getData('pageDurations'),
+                'scrollDepth': getData('scrollDepth')
+            };
+            let csvRows = [];
+            for (const [name, data] of Object.entries(collections)) {
+                if (data.length === 0) continue;
+                csvRows.push(`\n\n=== ${name.toUpperCase()} ===`);
+                const headers = Object.keys(data[0]);
+                csvRows.push(headers.join(','));
+                for (const row of data) {
+                    const values = headers.map(header => {
+                        let val = row[header];
+                        if (val && typeof val === 'object') val = JSON.stringify(val);
+                        return `"${String(val).replace(/"/g, '""')}"`;
+                    });
+                    csvRows.push(values.join(','));
+                }
+            }
+            const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.setAttribute('download', `analytics_${new Date().toISOString().slice(0,19)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // ========== Отрисовка вкладки Обзор ==========
+        let viewsChart, pagesChart, durationChart, scrollChart;
+
+        function renderOverview() {
+            const pageViews = getData('pageViews');
+            const downloads = getData('downloads');
+            const messages = getData('messages');
+            const videoViews = getData('videoViews');
+
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViews.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloads.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div><div class="stat-number">${messages.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-video"></i> Запусков видео</div><div class="stat-number">${videoViews.length}</div></div>
+            `;
+
+            // График посещений по дням
+            const last14Days = [...Array(14)].map((_, i) => {
+                const d = new Date(); d.setDate(d.getDate() - i); return d.toISOString().split('T')[0];
+            }).reverse();
+            const counts = last14Days.map(day => pageViews.filter(p => p.timestamp && p.timestamp.slice(0,10) === day).length);
+            const ctx = document.getElementById('viewsChart').getContext('2d');
+            if (viewsChart) viewsChart.destroy();
+            viewsChart = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: last14Days.map(d => d.slice(5)), datasets: [{ label: 'Просмотры', data: counts, backgroundColor: '#1e40af', borderRadius: 8 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            // Популярность страниц
+            const pageCounts = {};
+            pageViews.forEach(v => { const page = v.page || 'unknown'; pageCounts[page] = (pageCounts[page] || 0) + 1; });
+            const sortedPages = Object.entries(pageCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+            const ctx2 = document.getElementById('pagesChart').getContext('2d');
+            if (pagesChart) pagesChart.destroy();
+            pagesChart = new Chart(ctx2, {
+                type: 'bar',
+                data: { labels: sortedPages.map(p => p[0].split('/').pop() || p[0]), datasets: [{ label: 'Просмотры', data: sortedPages.map(p => p[1]), backgroundColor: '#3b82f6', borderRadius: 8 }] },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // ========== Вкладка Сессии ==========
+        function renderSessions() {
+            const sessions = getData('sessions');
+            const tbody = document.querySelector('#sessionsTable tbody');
+            tbody.innerHTML = sessions.slice().reverse().map(s => `
+                <tr>
+                    <td>${new Date(s.startTime).toLocaleString()}</td>
+                    <td>${escapeHtml(s.referrer)}</td>
+                    <td>${escapeHtml(s.userAgent?.split(' ')[0] || '')}</td>
+                    <td>${s.screenSize || ''}</td>
+                    <td>${s.language || ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ========== Вкладка Контент ==========
+        function renderContent() {
+            const durations = getData('pageDurations');
+            const scrolls = getData('scrollDepth');
+
+            // Среднее время по страницам
+            const pageDurationAvg = {};
+            durations.forEach(d => {
+                if (!pageDurationAvg[d.page]) pageDurationAvg[d.page] = { total: 0, count: 0 };
+                pageDurationAvg[d.page].total += d.duration;
+                pageDurationAvg[d.page].count++;
+            });
+            const durationLabels = Object.keys(pageDurationAvg);
+            const durationData = durationLabels.map(p => Math.round(pageDurationAvg[p].total / pageDurationAvg[p].count));
+            const ctxDur = document.getElementById('durationChart').getContext('2d');
+            if (durationChart) durationChart.destroy();
+            durationChart = new Chart(ctxDur, {
+                type: 'bar',
+                data: { labels: durationLabels.map(p => p.split('/').pop() || p), datasets: [{ label: 'Среднее время (сек)', data: durationData, backgroundColor: '#10b981' }] },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Глубина прокрутки – процент достижения для каждой страницы
+            const scrollCounts = {};
+            scrolls.forEach(s => {
+                if (!scrollCounts[s.page]) scrollCounts[s.page] = {};
+                scrollCounts[s.page][s.depth] = (scrollCounts[s.page][s.depth] || 0) + 1;
+            });
+            const pages = Object.keys(scrollCounts);
+            const thresholds = [25, 50, 75, 100];
+            const datasets = thresholds.map(t => ({
+                label: `${t}%`,
+                data: pages.map(p => (scrollCounts[p][t] || 0)),
+                backgroundColor: `hsl(${200 + t}, 70%, 60%)`
+            }));
+            const ctxScroll = document.getElementById('scrollChart').getContext('2d');
+            if (scrollChart) scrollChart.destroy();
+            scrollChart = new Chart(ctxScroll, {
+                type: 'bar',
+                data: { labels: pages.map(p => p.split('/').pop() || p), datasets: datasets },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } }
+            });
+        }
+
+        // ========== Вкладка События ==========
+        function renderEvents() {
+            const messages = getData('messages');
+            const downloads = getData('downloads');
+            const videoViews = getData('videoViews');
+            const pageViews = getData('pageViews');
+
+            document.querySelector('#messagesTable tbody').innerHTML = messages.slice(-20).reverse().map(m => `
+                <tr>
+                    <td>${new Date(m.timestamp).toLocaleString()}</td>
+                    <td>${escapeHtml(m.name || '')}</td>
+                    <td>${escapeHtml(m.email || '')}</td>
+                    <td style="max-width:250px;">${escapeHtml(m.message || '')}</td>
+                </tr>
+            `).join('');
+
+            document.querySelector('#downloadsTable tbody').innerHTML = downloads.slice(-20).reverse().map(d => `
+                <tr>
+                    <td>${new Date(d.timestamp).toLocaleString()}</td>
+                    <td><span class="badge">${escapeHtml(d.fileName || '')}</span></td>
+                    <td><small>${d.sessionId?.slice(-8) || '—'}</small></td>
+                </tr>
+            `).join('');
+
+            document.querySelector('#videoTable tbody').innerHTML = videoViews.slice(-20).reverse().map(v => `
+                <tr>
+                    <td>${new Date(v.timestamp).toLocaleString()}</td>
+                    <td>${escapeHtml(v.videoName || '')}</td>
+                </tr>
+            `).join('');
+
+            document.querySelector('#pageViewsTable tbody').innerHTML = pageViews.slice(-20).reverse().map(pv => `
+                <tr>
+                    <td>${new Date(pv.timestamp).toLocaleString()}</td>
+                    <td>${escapeHtml(pv.page)}</td>
+                    <td><small>${pv.sessionId?.slice(-8) || '—'}</small></td>
+                </tr>
+            `).join('');
+        }
+
+        // ========== Общая функция обновления ==========
+        function refreshAll() {
+            renderOverview();
+            renderSessions();
+            renderContent();
+            renderEvents();
+            updateLastUpdate();
+        }
+
+        function updateLastUpdate() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.querySelector('#lastUpdate').innerHTML = `<i class="fas fa-clock"></i> Обновлено: ${timeString}`;
+        }
+
+        function clearAllData() {
+            if (confirm('Удалить все данные аналитики? Это действие необратимо.')) {
+                const keys = ['pageViews', 'downloads', 'messages', 'videoViews', 'sessions', 'pageDurations', 'scrollDepth', 'visitCount', 'downloadCount', 'sessionId'];
+                keys.forEach(k => localStorage.removeItem(k));
+                refreshAll();
+            }
+        }
+
+        // Переключение вкладок
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+            });
         });
+
+        window.addEventListener('load', refreshAll);
     </script>
 </body>
 </html>
