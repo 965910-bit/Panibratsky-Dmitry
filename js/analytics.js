@@ -1,7 +1,13 @@
 // js/analytics.js
 (function() {
     function saveEvent(collection, data) {
-        let events = JSON.parse(localStorage.getItem(collection) || '[]');
+        let events = localStorage.getItem(collection);
+        try {
+            events = JSON.parse(events);
+            if (!Array.isArray(events)) events = [];
+        } catch(e) {
+            events = [];
+        }
         events.push({
             ...data,
             timestamp: new Date().toISOString(),
@@ -15,12 +21,9 @@
         console.log(`Событие сохранено: ${collection}`, data);
     }
 
-    // Ждём загрузки DOM перед поиском элементов
     document.addEventListener('DOMContentLoaded', function() {
-        // Просмотр страницы (можно вызывать сразу, он не зависит от DOM)
         saveEvent('pageViews', { page: window.location.pathname });
 
-        // Скачивания
         document.addEventListener('click', function(e) {
             const link = e.target.closest('a[download]');
             if (link) {
@@ -30,25 +33,27 @@
             }
         });
 
-        // Видео
         const video = document.getElementById('myVideo');
         if (video) {
             video.addEventListener('play', () => {
                 saveEvent('videoViews', { videoName: 'about_video' });
                 console.log('Видео запущено, событие сохранено');
-                // Обновляем отображаемый счётчик на странице (если он есть)
                 const viewDisplay = document.getElementById('videoViewCountDisplay');
                 if (viewDisplay) {
-                    let views = localStorage.getItem('videoViews') ? JSON.parse(localStorage.getItem('videoViews')).length : 0;
+                    let views = localStorage.getItem('videoViews') ? (() => {
+                        try {
+                            let arr = JSON.parse(localStorage.getItem('videoViews'));
+                            return Array.isArray(arr) ? arr.length : 0;
+                        } catch(e) { return 0; }
+                    })() : 0;
                     viewDisplay.textContent = views;
                 }
             });
             console.log('Видео найдено, обработчик добавлен');
         } else {
-            console.error('Элемент с id="myVideo" не найден в DOM');
+            console.log('Элемент с id="myVideo" не найден');
         }
 
-        // Форма обратной связи
         const feedbackForm = document.getElementById('feedbackForm');
         if (feedbackForm) {
             feedbackForm.addEventListener('submit', function(e) {
