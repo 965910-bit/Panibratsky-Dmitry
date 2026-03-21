@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- все ваши стили без изменений (копируем из исходного contact.html) --- */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -533,44 +532,10 @@
             color: var(--neutral-medium);
         }
 
-        /* Request Section (новая) */
-        .request-section {
+        /* Feedback Form Section */
+        .feedback-section {
             padding: 70px 0;
-            background-color: white;
-        }
-
-        .request-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .request-form input, .request-form textarea {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        .request-form button {
-            background: #1e40af;
-            color: white;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .request-form button:hover {
-            background: #0f172a;
-        }
-
-        .request-status {
-            margin-top: 15px;
-            font-size: 14px;
+            background: white;
         }
 
         /* CTA Section */
@@ -965,23 +930,26 @@
         </div>
     </section>
 
-    <!-- Request Section (форма запроса материалов) -->
-    <section class="request-section">
+    <!-- Feedback Form Section -->
+    <section class="feedback-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Запросить информацию</h2>
-                <p class="section-subtitle">Оставьте email, и я пришлю резюме, презентацию и сопроводительное письмо</p>
+                <h2 class="section-title">Напишите мне</h2>
+                <p class="section-subtitle">Оставьте сообщение, и я свяжусь с вами</p>
             </div>
-            <div class="request-form">
-                <form id="requestForm">
-                    <input type="text" id="requestName" placeholder="Ваше имя" required>
-                    <input type="email" id="requestEmail" placeholder="Ваш email" required>
-                    <input type="text" id="requestCompany" placeholder="Компания (необязательно)">
-                    <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                        <input type="checkbox" id="consent" required> Я даю согласие на обработку персональных данных
-                    </label>
-                    <button type="submit">Отправить запрос</button>
-                    <div id="requestStatus" class="request-status"></div>
+            <div style="max-width: 600px; margin: 0 auto;">
+                <form id="feedbackForm">
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" id="feedbackName" placeholder="Ваше имя" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <input type="email" id="feedbackEmail" placeholder="Ваш email" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <textarea id="feedbackMessage" placeholder="Сообщение" rows="5" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;"></textarea>
+                    </div>
+                    <button type="submit" style="background: #1e40af; color: white; border: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">Отправить</button>
+                    <div id="feedbackStatus" style="margin-top: 15px;"></div>
                 </form>
             </div>
         </div>
@@ -1014,6 +982,7 @@
                     <span class="counter-number" id="download-counter">0</span> скачиваний
                 </div>
             </div>
+            
             <div class="footer-container">
                 <div class="footer-column">
                     <h3>Дмитрий Панибратский</h3>
@@ -1044,12 +1013,10 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK + аналитика -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <!-- EmailJS -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
         // Конфигурация Firebase (ваша)
         const firebaseConfig = {
@@ -1090,7 +1057,7 @@
         // Логируем текущую страницу
         logPageView(window.location.pathname);
 
-        // Отслеживаем скачивания (если появятся ссылки с download)
+        // Отслеживаем клики по ссылкам с атрибутом download (если появятся)
         document.addEventListener('click', function(e) {
             const link = e.target.closest('a[download]');
             if (link) {
@@ -1098,50 +1065,38 @@
                 logDownload(fileName);
             }
         });
-
-        // EmailJS (замените на свои данные!)
-        emailjs.init("YOUR_PUBLIC_KEY"); // <-- ЗАМЕНИТЬ
-
-        // Обработка формы запроса
-        document.getElementById('requestForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('requestName').value;
-            const email = document.getElementById('requestEmail').value;
-            const company = document.getElementById('requestCompany').value;
-
-            // Ссылки на файлы (проверьте, что файлы лежат по этим путям)
-            const resumeLink = 'https://965910-bit.github.io/Panibratsky-Dmitry/resume/Дмитрий_Панибратский_CV.pdf';
-            const presentationLink = 'https://965910-bit.github.io/Panibratsky-Dmitry/files/presentation.pdf';
-            const coverLetterLink = 'https://965910-bit.github.io/Panibratsky-Dmitry/files/cover-letter.pdf';
-
-            // Сохраняем запрос в Firebase
-            db.collection('requests').add({
-                name: name,
-                email: email,
-                company: company,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                status: 'new'
-            }).then(() => {
-                // Отправляем письмо через EmailJS (замените SERVICE_ID и TEMPLATE_ID)
-                return emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
-                    to_email: email,
-                    to_name: name,
-                    company: company,
-                    resume_link: resumeLink,
-                    presentation_link: presentationLink,
-                    cover_letter_link: coverLetterLink
-                });
-            }).then(() => {
-                document.getElementById('requestStatus').innerHTML = '<span style="color: #10b981;">Спасибо! Письмо отправлено. Проверьте почту.</span>';
-                document.getElementById('requestForm').reset();
-            }).catch(error => {
-                console.error(error);
-                document.getElementById('requestStatus').innerHTML = '<span style="color: #e74c3c;">Ошибка. Попробуйте позже.</span>';
-            });
-        });
     </script>
 
-    <!-- Ваши существующие скрипты (мобильное меню, счётчики) -->
+    <!-- Обработка формы обратной связи -->
+    <script>
+        const feedbackForm = document.getElementById('feedbackForm');
+        if (feedbackForm) {
+            feedbackForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('feedbackName').value;
+                const email = document.getElementById('feedbackEmail').value;
+                const message = document.getElementById('feedbackMessage').value;
+
+                db.collection('messages').add({
+                    name: name,
+                    email: email,
+                    message: message,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    sessionId: sessionId
+                })
+                .then(() => {
+                    document.getElementById('feedbackStatus').innerHTML = '<span style="color: #10b981;">Сообщение отправлено! Я свяжусь с вами в ближайшее время.</span>';
+                    feedbackForm.reset();
+                })
+                .catch(error => {
+                    console.error('Ошибка отправки:', error);
+                    document.getElementById('feedbackStatus').innerHTML = '<span style="color: #e74c3c;">Ошибка. Попробуйте позже.</span>';
+                });
+            });
+        }
+    </script>
+
+    <!-- Остальные скрипты (мобильное меню, анимации, счётчики) -->
     <script>
         // Mobile menu
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
