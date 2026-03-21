@@ -16,32 +16,14 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #eef2f6 100%);
+            background: #f0f2f5;
             color: #1e293b;
-            min-height: 100vh;
+            padding: 30px 20px;
         }
 
-        /* Анимации */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .dashboard {
+        .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 30px 20px;
         }
 
         /* Шапка */
@@ -52,24 +34,17 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
             gap: 15px;
-            animation: fadeInUp 0.5s ease;
         }
         .header h1 {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
-            background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-        .header h1 i {
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            gap: 10px;
         }
         .header-actions {
             display: flex;
@@ -77,18 +52,18 @@
             align-items: center;
         }
         .last-update {
-            font-size: 13px;
-            color: #64748b;
             background: white;
             padding: 8px 16px;
             border-radius: 40px;
+            font-size: 13px;
+            color: #475569;
             display: flex;
             align-items: center;
             gap: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .refresh-btn {
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            background: #1e40af;
             color: white;
             border: none;
             padding: 8px 20px;
@@ -96,18 +71,17 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 2px 8px rgba(30,64,175,0.3);
+            transition: all 0.2s;
         }
         .refresh-btn:hover {
+            background: #0f172a;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30,64,175,0.4);
         }
-        .logout-btn {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+        .clear-btn {
+            background: #ef4444;
             color: white;
             border: none;
             padding: 8px 20px;
@@ -115,47 +89,14 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.2s;
         }
-        .logout-btn:hover {
+        .clear-btn:hover {
+            background: #dc2626;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(239,68,68,0.4);
-        }
-
-        /* Спиннер */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .loading-spinner {
-            background: white;
-            padding: 30px 40px;
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        .loading-spinner i {
-            font-size: 48px;
-            color: #1e40af;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
 
         /* Карточки статистики */
@@ -167,36 +108,23 @@
         }
         .stat-card {
             background: white;
-            border-radius: 28px;
+            border-radius: 24px;
             padding: 24px 20px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-            border: 1px solid rgba(226,232,240,0.6);
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.5s ease;
-        }
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
         }
         .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
         }
         .stat-title {
             font-size: 14px;
-            font-weight: 500;
             color: #64748b;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .stat-number {
             font-size: 42px;
@@ -204,13 +132,8 @@
             color: #1e40af;
             line-height: 1;
         }
-        .stat-trend {
-            font-size: 12px;
-            margin-top: 8px;
-            color: #10b981;
-        }
 
-        /* Секции графиков */
+        /* Графики */
         .charts-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
@@ -219,16 +142,10 @@
         }
         .chart-card {
             background: white;
-            border-radius: 28px;
+            border-radius: 24px;
             padding: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-            border: 1px solid rgba(226,232,240,0.6);
-            transition: all 0.3s;
-            animation: fadeInUp 0.5s ease;
-        }
-        .chart-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
         }
         .chart-card h3 {
             font-size: 18px;
@@ -236,32 +153,11 @@
             margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: #1e293b;
+            gap: 8px;
         }
         .chart-container {
             position: relative;
             height: 300px;
-        }
-
-        .period-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .period-btn {
-            background: #f1f5f9;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .period-btn.active {
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            color: white;
         }
 
         /* Таблицы */
@@ -273,20 +169,19 @@
         }
         .table-card {
             background: white;
-            border-radius: 28px;
+            border-radius: 24px;
             padding: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-            border: 1px solid rgba(226,232,240,0.6);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
             overflow-x: auto;
-            animation: fadeInUp 0.5s ease;
         }
         .table-card h3 {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         table {
             width: 100%;
@@ -294,7 +189,7 @@
             font-size: 14px;
         }
         th, td {
-            padding: 12px 10px;
+            padding: 12px 8px;
             text-align: left;
             border-bottom: 1px solid #e2e8f0;
         }
@@ -307,20 +202,14 @@
             background: #f8fafc;
         }
         .badge {
-            background: linear-gradient(135deg, #d4af37, #f59e0b);
+            background: #d4af37;
             color: #0f172a;
-            padding: 4px 12px;
-            border-radius: 30px;
+            padding: 2px 8px;
+            border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
-            display: inline-block;
-        }
-        .badge-new {
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
         }
 
-        /* Адаптивность */
         @media (max-width: 768px) {
             .charts-section, .tables-section {
                 grid-template-columns: 1fr;
@@ -337,87 +226,55 @@
     </style>
 </head>
 <body>
-    <div class="dashboard">
+    <div class="container">
         <div class="header">
             <h1>
                 <i class="fas fa-chart-line"></i>
                 Аналитический центр
-                <span style="font-size: 14px; background: #e2e8f0; padding: 4px 12px; border-radius: 30px; font-weight: 500;">v2.0</span>
+                <span style="font-size: 12px; background: #e2e8f0; padding: 4px 12px; border-radius: 30px;">локальная версия</span>
             </h1>
             <div class="header-actions">
                 <div class="last-update" id="lastUpdate">
-                    <i class="fas fa-clock"></i>
-                    <span>Обновлено: --:--:--</span>
+                    <i class="fas fa-clock"></i> Обновлено: --:--:--
                 </div>
-                <button class="refresh-btn" id="refreshBtn" onclick="refreshAllData()">
+                <button class="refresh-btn" onclick="refreshAll()">
                     <i class="fas fa-sync-alt"></i> Обновить
                 </button>
-                <button class="logout-btn" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Выйти
+                <button class="clear-btn" onclick="clearAllData()">
+                    <i class="fas fa-trash-alt"></i> Очистить
                 </button>
             </div>
         </div>
 
-        <!-- Оверлей загрузки -->
-        <div id="loadingOverlay" class="loading-overlay">
-            <div class="loading-spinner">
-                <i class="fas fa-chart-line"></i>
-                <span style="font-weight: 500;">Загрузка аналитики...</span>
-            </div>
-        </div>
-
-        <!-- Карточки статистики -->
         <div class="stats-grid" id="statsGrid"></div>
 
-        <!-- Графики -->
         <div class="charts-section">
             <div class="chart-card">
-                <h3><i class="fas fa-calendar-week" style="color: #1e40af;"></i> Посещения по дням</h3>
-                <div class="period-selector">
-                    <button class="period-btn" data-days="7">7 дней</button>
-                    <button class="period-btn active" data-days="14">14 дней</button>
-                    <button class="period-btn" data-days="30">30 дней</button>
-                </div>
+                <h3><i class="fas fa-calendar-week" style="color:#1e40af;"></i> Посещения по дням (последние 14 дней)</h3>
                 <div class="chart-container">
                     <canvas id="viewsChart"></canvas>
                 </div>
             </div>
             <div class="chart-card">
-                <h3><i class="fas fa-chart-bar" style="color: #3b82f6;"></i> Популярность страниц</h3>
+                <h3><i class="fas fa-chart-bar" style="color:#3b82f6;"></i> Популярность страниц</h3>
                 <div class="chart-container">
                     <canvas id="pagesChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="charts-section">
-            <div class="chart-card">
-                <h3><i class="fas fa-download" style="color: #f59e0b;"></i> Скачивания по файлам</h3>
-                <div class="chart-container">
-                    <canvas id="downloadsChart"></canvas>
-                </div>
-            </div>
-            <div class="chart-card">
-                <h3><i class="fas fa-clock" style="color: #10b981;"></i> Активность по часам</h3>
-                <div class="chart-container">
-                    <canvas id="hourlyChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Таблицы -->
         <div class="tables-section">
             <div class="table-card">
-                <h3><i class="fas fa-envelope" style="color: #ef4444;"></i> Последние сообщения</h3>
+                <h3><i class="fas fa-envelope" style="color:#ef4444;"></i> Последние сообщения</h3>
                 <table id="messagesTable">
-                    <thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></thead>
+                    <thead>发展<th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div class="table-card">
-                <h3><i class="fas fa-file-pdf" style="color: #d4af37;"></i> Запросы материалов</h3>
-                <table id="requestsTable">
-                    <thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Компания</th><th>Статус</th></thead>
+                <h3><i class="fas fa-download" style="color:#f59e0b;"></i> Недавние скачивания</h3>
+                <table id="downloadsTable">
+                    <thead>发展<th>Дата</th><th>Файл</th><th>Сессия</th></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -425,250 +282,181 @@
 
         <div class="tables-section">
             <div class="table-card">
-                <h3><i class="fas fa-download" style="color: #8b5cf6;"></i> Недавние скачивания</h3>
-                <table id="downloadsTable">
-                    <thead><tr><th>Дата</th><th>Файл</th><th>Сессия</th></thead>
+                <h3><i class="fas fa-video" style="color:#10b981;"></i> Запуски видео</h3>
+                <table id="videoTable">
+                    <thead>发展<th>Дата</th><th>Видео</th></thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div class="table-card">
-                <h3><i class="fas fa-users" style="color: #06b6d4;"></i> Активные сессии</h3>
+                <h3><i class="fas fa-users" style="color:#06b6d4;"></i> Активные сессии</h3>
                 <table id="sessionsTable">
-                    <thead><tr><th>Сессия</th><th>Действий</th><th>Последняя активность</th></thead>
+                    <thead>发展<th>Сессия</th><th>Действий</th><th>Последняя активность</th></thead>
                     <tbody></tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script>
-        // Конфигурация Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgr8mgQxBTTTGvmf70VkuEiELcNdiAR9U",
-            authDomain: "my-portfolio-analytics-d36ff.firebaseapp.com",
-            projectId: "my-portfolio-analytics-d36ff",
-            storageBucket: "my-portfolio-analytics-d36ff.firebasestorage.app",
-            messagingSenderId: "321281212756",
-            appId: "1:321281212756:web:87a10f3e5f352fcdf608c1"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-
-        // Проверка аутентификации
-        auth.onAuthStateChanged(user => {
-            if (!user) {
-                window.location.href = 'login.html';
-            } else {
-                refreshAllData();
-            }
-        });
-
-        function logout() {
-            auth.signOut().then(() => window.location.href = 'login.html');
+        // Функции работы с localStorage
+        function getData(key) {
+            return JSON.parse(localStorage.getItem(key) || '[]');
         }
 
-        // Глобальные переменные
-        let viewsChart, pagesChart, downloadsChart, hourlyChart;
-        let currentDays = 14;
-        let isLoading = false;
-
-        function updateLastUpdateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.querySelector('#lastUpdate span').innerHTML = `Обновлено: ${timeString}`;
-        }
-
-        function showLoading() {
-            isLoading = true;
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        }
-
-        function hideLoading() {
-            isLoading = false;
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-
-        async function refreshAllData() {
-            if (isLoading) return;
-            showLoading();
-            try {
-                await Promise.all([
-                    loadStats(),
-                    loadViewsChart(currentDays),
-                    loadPagesChart(),
-                    loadDownloadsChart(),
-                    loadHourlyChart(),
-                    loadMessages(),
-                    loadRequests(),
-                    loadDownloads(),
-                    loadSessions()
-                ]);
-                updateLastUpdateTime();
-            } catch (error) {
-                console.error('Ошибка загрузки данных:', error);
-            } finally {
-                hideLoading();
+        function clearAllData() {
+            if (confirm('Удалить все данные аналитики? Это действие необратимо.')) {
+                localStorage.removeItem('pageViews');
+                localStorage.removeItem('downloads');
+                localStorage.removeItem('messages');
+                localStorage.removeItem('videoViews');
+                localStorage.removeItem('visitCount');
+                localStorage.removeItem('downloadCount');
+                localStorage.removeItem('sessionId');
+                refreshAll();
             }
         }
 
-        async function loadStats() {
-            const [pageViewsSnap, videoViewsSnap, downloadsSnap, requestsSnap, messagesSnap] = await Promise.all([
-                db.collection('pageViews').get(),
-                db.collection('videoViews').get(),
-                db.collection('downloads').get(),
-                db.collection('requests').get(),
-                db.collection('messages').get()
-            ]);
+        // Рендер статистики
+        let viewsChart, pagesChart;
+
+        function renderStats() {
+            const pageViews = getData('pageViews');
+            const downloads = getData('downloads');
+            const messages = getData('messages');
+            const videoViews = getData('videoViews');
+
             document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViewsSnap.size}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-video"></i> Запуски видео</div><div class="stat-number">${videoViewsSnap.size}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloadsSnap.size}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div><div class="stat-number">${messagesSnap.size}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-file-signature"></i> Запросов</div><div class="stat-number">${requestsSnap.size}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViews.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloads.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div><div class="stat-number">${messages.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-video"></i> Запусков видео</div><div class="stat-number">${videoViews.length}</div></div>
             `;
-        }
 
-        async function loadViewsChart(days) {
-            const snap = await db.collection('pageViews').orderBy('timestamp', 'desc').get();
-            const views = snap.docs.map(d => d.data());
-            const dateCounts = {};
-            const now = new Date();
-            for (let i = 0; i < days; i++) {
-                const d = new Date(now);
-                d.setDate(now.getDate() - i);
-                const key = d.toISOString().split('T')[0];
-                dateCounts[key] = 0;
-            }
-            views.forEach(v => {
-                if (v.timestamp) {
-                    const date = v.timestamp.toDate().toISOString().split('T')[0];
-                    if (dateCounts[date] !== undefined) dateCounts[date]++;
-                }
+            // График посещений по дням (последние 14 дней)
+            const last14Days = [...Array(14)].map((_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                return d.toISOString().split('T')[0];
+            }).reverse();
+            const counts = last14Days.map(day => {
+                return pageViews.filter(p => p.timestamp && p.timestamp.slice(0,10) === day).length;
             });
-            const labels = Object.keys(dateCounts).sort();
-            const data = labels.map(l => dateCounts[l]);
-            if (viewsChart) viewsChart.destroy();
+
             const ctx = document.getElementById('viewsChart').getContext('2d');
+            if (viewsChart) viewsChart.destroy();
             viewsChart = new Chart(ctx, {
                 type: 'bar',
-                data: { labels: labels.map(l => l.slice(5)), datasets: [{ label: 'Просмотры', data: data, backgroundColor: '#1e40af', borderRadius: 8 }] },
+                data: {
+                    labels: last14Days.map(d => d.slice(5)),
+                    datasets: [{ label: 'Просмотры', data: counts, backgroundColor: '#1e40af', borderRadius: 8 }]
+                },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
-        }
 
-        async function loadPagesChart() {
-            const snap = await db.collection('pageViews').get();
-            const pages = {};
-            snap.docs.forEach(d => {
-                const page = d.data().page || 'unknown';
-                pages[page] = (pages[page] || 0) + 1;
+            // Популярность страниц
+            const pageCounts = {};
+            pageViews.forEach(v => {
+                const page = v.page || 'unknown';
+                pageCounts[page] = (pageCounts[page] || 0) + 1;
             });
-            const sorted = Object.entries(pages).sort((a,b) => b[1] - a[1]).slice(0, 8);
+            const sortedPages = Object.entries(pageCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+            const ctx2 = document.getElementById('pagesChart').getContext('2d');
             if (pagesChart) pagesChart.destroy();
-            const ctx = document.getElementById('pagesChart').getContext('2d');
-            pagesChart = new Chart(ctx, {
+            pagesChart = new Chart(ctx2, {
                 type: 'bar',
-                data: { labels: sorted.map(p => p[0].split('/').pop() || p[0]), datasets: [{ label: 'Просмотры', data: sorted.map(p => p[1]), backgroundColor: '#3b82f6', borderRadius: 8 }] },
+                data: {
+                    labels: sortedPages.map(p => p[0].split('/').pop() || p[0]),
+                    datasets: [{ label: 'Просмотры', data: sortedPages.map(p => p[1]), backgroundColor: '#3b82f6', borderRadius: 8 }]
+                },
                 options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
-        async function loadDownloadsChart() {
-            const snap = await db.collection('downloads').get();
-            const files = {};
-            snap.docs.forEach(d => {
-                const file = d.data().fileName || 'unknown';
-                files[file] = (files[file] || 0) + 1;
-            });
-            const sorted = Object.entries(files).sort((a,b) => b[1] - a[1]).slice(0, 6);
-            if (downloadsChart) downloadsChart.destroy();
-            const ctx = document.getElementById('downloadsChart').getContext('2d');
-            downloadsChart = new Chart(ctx, {
-                type: 'pie',
-                data: { labels: sorted.map(f => f[0]), datasets: [{ data: sorted.map(f => f[1]), backgroundColor: ['#1e40af', '#3b82f6', '#60a5fa', '#d4af37', '#10b981', '#f59e0b'] }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+        // Таблицы
+        function renderTables() {
+            const messages = getData('messages');
+            const downloads = getData('downloads');
+            const videoViews = getData('videoViews');
+            const pageViews = getData('pageViews');
 
-        async function loadHourlyChart() {
-            const snap = await db.collection('pageViews').get();
-            const hours = Array(24).fill(0);
-            snap.docs.forEach(d => {
-                if (d.data().timestamp) {
-                    const hour = d.data().timestamp.toDate().getHours();
-                    hours[hour]++;
-                }
-            });
-            if (hourlyChart) hourlyChart.destroy();
-            const ctx = document.getElementById('hourlyChart').getContext('2d');
-            hourlyChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels: Array.from({length:24}, (_,i) => `${i}:00`), datasets: [{ label: 'Просмотры', data: hours, borderColor: '#10b981', tension: 0.3, fill: true, backgroundColor: 'rgba(16,185,129,0.1)' }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
+            // Сообщения
+            const messagesTbody = document.querySelector('#messagesTable tbody');
+            messagesTbody.innerHTML = messages.slice(-20).reverse().map(m => `
+                <tr>
+                    <td>${new Date(m.timestamp).toLocaleString()}</td>
+                    <td>${escapeHtml(m.name || '')}</td>
+                    <td>${escapeHtml(m.email || '')}</td>
+                    <td style="max-width:250px; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(m.message || '')}</td>
+                </tr>
+            `).join('');
 
-        async function loadMessages() {
-            const snap = await db.collection('messages').orderBy('timestamp', 'desc').limit(20).get();
-            const tbody = document.querySelector('#messagesTable tbody');
-            tbody.innerHTML = snap.docs.map(d => {
-                const data = d.data();
-                return `<tr><td>${data.timestamp ? data.timestamp.toDate().toLocaleString() : '—'}</td><td>${data.name || '—'}</td><td>${data.email || '—'}</td><td style="max-width:250px; overflow:hidden; text-overflow:ellipsis;">${data.message || '—'}</td></tr>`;
-            }).join('');
-        }
+            // Скачивания
+            const downloadsTbody = document.querySelector('#downloadsTable tbody');
+            downloadsTbody.innerHTML = downloads.slice(-20).reverse().map(d => `
+                <tr>
+                    <td>${new Date(d.timestamp).toLocaleString()}</td>
+                    <td><span class="badge">${escapeHtml(d.fileName || '')}</span></td>
+                    <td><small>${d.sessionId?.slice(-8) || '—'}</small></td>
+                </tr>
+            `).join('');
 
-        async function loadRequests() {
-            const snap = await db.collection('requests').orderBy('timestamp', 'desc').limit(20).get();
-            const tbody = document.querySelector('#requestsTable tbody');
-            tbody.innerHTML = snap.docs.map(d => {
-                const data = d.data();
-                return `<tr><td>${data.timestamp ? data.timestamp.toDate().toLocaleString() : '—'}</td><td>${data.name || '—'}</td><td>${data.email || '—'}</td><td>${data.company || '—'}</td><td><span class="badge ${data.status === 'new' ? 'badge-new' : ''}">${data.status || 'new'}</span></td></tr>`;
-            }).join('');
-        }
+            // Видео
+            const videoTbody = document.querySelector('#videoTable tbody');
+            videoTbody.innerHTML = videoViews.slice(-20).reverse().map(v => `
+                <tr>
+                    <td>${new Date(v.timestamp).toLocaleString()}</td>
+                    <td>${escapeHtml(v.videoName || '')}</td>
+                </tr>
+            `).join('');
 
-        async function loadDownloads() {
-            const snap = await db.collection('downloads').orderBy('timestamp', 'desc').limit(20).get();
-            const tbody = document.querySelector('#downloadsTable tbody');
-            tbody.innerHTML = snap.docs.map(d => {
-                const data = d.data();
-                return `<tr><td>${data.timestamp ? data.timestamp.toDate().toLocaleString() : '—'}</td><td><span class="badge">${data.fileName || '—'}</span></td><td><small>${data.sessionId?.slice(-8) || '—'}</small></td></tr>`;
-            }).join('');
-        }
-
-        async function loadSessions() {
-            const viewsSnap = await db.collection('pageViews').get();
+            // Активные сессии
             const sessions = {};
-            viewsSnap.docs.forEach(d => {
-                const data = d.data();
-                if (data.sessionId) {
-                    if (!sessions[data.sessionId]) sessions[data.sessionId] = { count: 0, last: data.timestamp };
-                    sessions[data.sessionId].count++;
-                    if (data.timestamp && (!sessions[data.sessionId].last || data.timestamp.toDate() > sessions[data.sessionId].last.toDate())) {
-                        sessions[data.sessionId].last = data.timestamp;
+            pageViews.forEach(v => {
+                if (v.sessionId) {
+                    if (!sessions[v.sessionId]) sessions[v.sessionId] = { count: 0, last: v.timestamp };
+                    sessions[v.sessionId].count++;
+                    if (v.timestamp && (!sessions[v.sessionId].last || v.timestamp > sessions[v.sessionId].last)) {
+                        sessions[v.sessionId].last = v.timestamp;
                     }
                 }
             });
-            const sorted = Object.entries(sessions).sort((a,b) => b[1].count - a[1].count).slice(0, 10);
-            const tbody = document.querySelector('#sessionsTable tbody');
-            tbody.innerHTML = sorted.map(([id, data]) => `<tr><td><small>${id.slice(-12)}</small></td><td><strong>${data.count}</strong></td><td>${data.last ? data.last.toDate().toLocaleString() : '—'}</td></tr>`).join('');
+            const sortedSessions = Object.entries(sessions).sort((a,b) => b[1].count - a[1].count).slice(0, 10);
+            const sessionsTbody = document.querySelector('#sessionsTable tbody');
+            sessionsTbody.innerHTML = sortedSessions.map(([id, data]) => `
+                <tr>
+                    <td><small>${id.slice(-12)}</small></td>
+                    <td><strong>${data.count}</strong></td>
+                    <td>${data.last ? new Date(data.last).toLocaleString() : '—'}</td>
+                </tr>
+            `).join('');
         }
 
-        // Переключение периода
-        document.querySelectorAll('.period-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentDays = parseInt(btn.dataset.days);
-                await loadViewsChart(currentDays);
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
             });
-        });
+        }
 
-        window.addEventListener('load', () => updateLastUpdateTime());
+        function updateLastUpdate() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.querySelector('#lastUpdate').innerHTML = `<i class="fas fa-clock"></i> Обновлено: ${timeString}`;
+        }
+
+        function refreshAll() {
+            renderStats();
+            renderTables();
+            updateLastUpdate();
+        }
+
+        window.addEventListener('load', () => {
+            refreshAll();
+        });
     </script>
 </body>
 </html>
