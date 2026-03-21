@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панибратский | Личный кабинет аналитики</title>
+    <title>Панибратский | Аналитический центр</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,8 +16,26 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #f5f7fa 0%, #eef2f6 100%);
             color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .dashboard {
@@ -26,6 +44,7 @@
             padding: 30px 20px;
         }
 
+        /* Шапка */
         .header {
             display: flex;
             justify-content: space-between;
@@ -33,10 +52,20 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
             gap: 15px;
+            animation: fadeInUp 0.5s ease;
         }
         .header h1 {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header h1 i {
             background: linear-gradient(135deg, #1e40af, #3b82f6);
             -webkit-background-clip: text;
             background-clip: text;
@@ -44,7 +73,7 @@
         }
         .header-actions {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
         }
         .last-update {
@@ -52,68 +81,59 @@
             color: #64748b;
             background: white;
             padding: 8px 16px;
-            border-radius: 30px;
+            border-radius: 40px;
             display: flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .refresh-btn {
-            background: #1e40af;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
             color: white;
             border: none;
             padding: 8px 20px;
-            border-radius: 30px;
+            border-radius: 40px;
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(30,64,175,0.3);
+        }
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30,64,175,0.4);
+        }
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .refresh-btn:hover {
-            background: #1e3a8a;
-            transform: translateY(-2px);
-        }
-        .refresh-btn:active {
-            transform: translateY(0);
-        }
-        .logout-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
         .logout-btn:hover {
-            background: #dc2626;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239,68,68,0.4);
         }
 
         /* Спиннер */
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -121,19 +141,24 @@
         }
         .loading-spinner {
             background: white;
-            padding: 20px;
-            border-radius: 16px;
+            padding: 30px 40px;
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
         .loading-spinner i {
-            font-size: 32px;
+            font-size: 48px;
             color: #1e40af;
             animation: spin 1s linear infinite;
         }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
+        /* Карточки статистики */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -142,31 +167,50 @@
         }
         .stat-card {
             background: white;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            transition: all 0.2s;
-            border: 1px solid #e2e8f0;
+            border-radius: 28px;
+            padding: 24px 20px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid rgba(226,232,240,0.6);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
         }
         .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.1);
         }
         .stat-title {
             font-size: 14px;
+            font-weight: 500;
             color: #64748b;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
         .stat-number {
-            font-size: 36px;
+            font-size: 42px;
             font-weight: 800;
             color: #1e40af;
-            line-height: 1.2;
+            line-height: 1;
+        }
+        .stat-trend {
+            font-size: 12px;
+            margin-top: 8px;
+            color: #10b981;
         }
 
+        /* Секции графиков */
         .charts-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
@@ -175,10 +219,16 @@
         }
         .chart-card {
             background: white;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(226,232,240,0.6);
+            transition: all 0.3s;
+            animation: fadeInUp 0.5s ease;
+        }
+        .chart-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.1);
         }
         .chart-card h3 {
             font-size: 18px;
@@ -186,7 +236,8 @@
             margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            color: #1e293b;
         }
         .chart-container {
             position: relative;
@@ -196,23 +247,24 @@
         .period-selector {
             display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         .period-btn {
             background: #f1f5f9;
             border: none;
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 6px 16px;
+            border-radius: 30px;
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
             transition: all 0.2s;
         }
         .period-btn.active {
-            background: #1e40af;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
             color: white;
         }
 
+        /* Таблицы */
         .tables-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
@@ -221,19 +273,20 @@
         }
         .table-card {
             background: white;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(226,232,240,0.6);
             overflow-x: auto;
+            animation: fadeInUp 0.5s ease;
         }
         .table-card h3 {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         table {
             width: 100%;
@@ -241,23 +294,33 @@
             font-size: 14px;
         }
         th, td {
-            padding: 12px 8px;
+            padding: 12px 10px;
             text-align: left;
             border-bottom: 1px solid #e2e8f0;
         }
         th {
             font-weight: 600;
             color: #475569;
+            background: #f8fafc;
+        }
+        tr:hover {
+            background: #f8fafc;
         }
         .badge {
-            background: #d4af37;
+            background: linear-gradient(135deg, #d4af37, #f59e0b);
             color: #0f172a;
-            padding: 2px 8px;
-            border-radius: 20px;
+            padding: 4px 12px;
+            border-radius: 30px;
             font-size: 11px;
             font-weight: 600;
+            display: inline-block;
+        }
+        .badge-new {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
         }
 
+        /* Адаптивность */
         @media (max-width: 768px) {
             .charts-section, .tables-section {
                 grid-template-columns: 1fr;
@@ -266,13 +329,21 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
         }
     </style>
 </head>
 <body>
     <div class="dashboard">
         <div class="header">
-            <h1><i class="fas fa-chart-line"></i> Личный кабинет аналитики</h1>
+            <h1>
+                <i class="fas fa-chart-line"></i>
+                Аналитический центр
+                <span style="font-size: 14px; background: #e2e8f0; padding: 4px 12px; border-radius: 30px; font-weight: 500;">v2.0</span>
+            </h1>
             <div class="header-actions">
                 <div class="last-update" id="lastUpdate">
                     <i class="fas fa-clock"></i>
@@ -290,8 +361,8 @@
         <!-- Оверлей загрузки -->
         <div id="loadingOverlay" class="loading-overlay">
             <div class="loading-spinner">
-                <i class="fas fa-spinner"></i>
-                <span>Загрузка данных...</span>
+                <i class="fas fa-chart-line"></i>
+                <span style="font-weight: 500;">Загрузка аналитики...</span>
             </div>
         </div>
 
@@ -301,7 +372,7 @@
         <!-- Графики -->
         <div class="charts-section">
             <div class="chart-card">
-                <h3><i class="fas fa-calendar-week"></i> Посещения по дням</h3>
+                <h3><i class="fas fa-calendar-week" style="color: #1e40af;"></i> Посещения по дням</h3>
                 <div class="period-selector">
                     <button class="period-btn" data-days="7">7 дней</button>
                     <button class="period-btn active" data-days="14">14 дней</button>
@@ -312,7 +383,7 @@
                 </div>
             </div>
             <div class="chart-card">
-                <h3><i class="fas fa-chart-bar"></i> Популярность страниц</h3>
+                <h3><i class="fas fa-chart-bar" style="color: #3b82f6;"></i> Популярность страниц</h3>
                 <div class="chart-container">
                     <canvas id="pagesChart"></canvas>
                 </div>
@@ -321,13 +392,13 @@
 
         <div class="charts-section">
             <div class="chart-card">
-                <h3><i class="fas fa-download"></i> Скачивания по файлам</h3>
+                <h3><i class="fas fa-download" style="color: #f59e0b;"></i> Скачивания по файлам</h3>
                 <div class="chart-container">
                     <canvas id="downloadsChart"></canvas>
                 </div>
             </div>
             <div class="chart-card">
-                <h3><i class="fas fa-clock"></i> Активность по часам</h3>
+                <h3><i class="fas fa-clock" style="color: #10b981;"></i> Активность по часам</h3>
                 <div class="chart-container">
                     <canvas id="hourlyChart"></canvas>
                 </div>
@@ -337,16 +408,16 @@
         <!-- Таблицы -->
         <div class="tables-section">
             <div class="table-card">
-                <h3><i class="fas fa-envelope"></i> Последние сообщения</h3>
+                <h3><i class="fas fa-envelope" style="color: #ef4444;"></i> Последние сообщения</h3>
                 <table id="messagesTable">
-                    <thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></tr></thead>
+                    <thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div class="table-card">
-                <h3><i class="fas fa-file-pdf"></i> Запросы материалов</h3>
+                <h3><i class="fas fa-file-pdf" style="color: #d4af37;"></i> Запросы материалов</h3>
                 <table id="requestsTable">
-                    <thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Компания</th><th>Статус</th></tr></thead>
+                    <thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Компания</th><th>Статус</th></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -354,16 +425,16 @@
 
         <div class="tables-section">
             <div class="table-card">
-                <h3><i class="fas fa-download"></i> Недавние скачивания</h3>
+                <h3><i class="fas fa-download" style="color: #8b5cf6;"></i> Недавние скачивания</h3>
                 <table id="downloadsTable">
-                    <thead><tr><th>Дата</th><th>Файл</th><th>Сессия</th></tr></thead>
+                    <thead><tr><th>Дата</th><th>Файл</th><th>Сессия</th></thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div class="table-card">
-                <h3><i class="fas fa-chart-simple"></i> Топ активных сессий</h3>
+                <h3><i class="fas fa-users" style="color: #06b6d4;"></i> Активные сессии</h3>
                 <table id="sessionsTable">
-                    <thead><tr><th>Сессия</th><th>Действий</th><th>Последняя активность</th></tr></thead>
+                    <thead><tr><th>Сессия</th><th>Действий</th><th>Последняя активность</th></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -406,14 +477,12 @@
         let currentDays = 14;
         let isLoading = false;
 
-        // Обновление времени последнего обновления
         function updateLastUpdateTime() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             document.querySelector('#lastUpdate span').innerHTML = `Обновлено: ${timeString}`;
         }
 
-        // Показать/скрыть загрузку
         function showLoading() {
             isLoading = true;
             document.getElementById('loadingOverlay').style.display = 'flex';
@@ -424,7 +493,6 @@
             document.getElementById('loadingOverlay').style.display = 'none';
         }
 
-        // Обновление всех данных
         async function refreshAllData() {
             if (isLoading) return;
             showLoading();
@@ -448,7 +516,6 @@
             }
         }
 
-        // Карточки статистики
         async function loadStats() {
             const [pageViewsSnap, videoViewsSnap, downloadsSnap, requestsSnap, messagesSnap] = await Promise.all([
                 db.collection('pageViews').get(),
@@ -458,15 +525,14 @@
                 db.collection('messages').get()
             ]);
             document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры</div><div class="stat-number">${pageViewsSnap.size}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViewsSnap.size}</div></div>
                 <div class="stat-card"><div class="stat-title"><i class="fas fa-video"></i> Запуски видео</div><div class="stat-number">${videoViewsSnap.size}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачивания</div><div class="stat-number">${downloadsSnap.size}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщения</div><div class="stat-number">${messagesSnap.size}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-file-signature"></i> Запросы</div><div class="stat-number">${requestsSnap.size}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloadsSnap.size}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div><div class="stat-number">${messagesSnap.size}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-file-signature"></i> Запросов</div><div class="stat-number">${requestsSnap.size}</div></div>
             `;
         }
 
-        // График посещений по дням
         async function loadViewsChart(days) {
             const snap = await db.collection('pageViews').orderBy('timestamp', 'desc').get();
             const views = snap.docs.map(d => d.data());
@@ -490,12 +556,11 @@
             const ctx = document.getElementById('viewsChart').getContext('2d');
             viewsChart = new Chart(ctx, {
                 type: 'bar',
-                data: { labels: labels.map(l => l.slice(5)), datasets: [{ label: 'Просмотры', data: data, backgroundColor: '#1e40af', borderRadius: 6 }] },
+                data: { labels: labels.map(l => l.slice(5)), datasets: [{ label: 'Просмотры', data: data, backgroundColor: '#1e40af', borderRadius: 8 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
-        // Популярность страниц
         async function loadPagesChart() {
             const snap = await db.collection('pageViews').get();
             const pages = {};
@@ -508,12 +573,11 @@
             const ctx = document.getElementById('pagesChart').getContext('2d');
             pagesChart = new Chart(ctx, {
                 type: 'bar',
-                data: { labels: sorted.map(p => p[0].split('/').pop() || p[0]), datasets: [{ label: 'Просмотры', data: sorted.map(p => p[1]), backgroundColor: '#3b82f6' }] },
+                data: { labels: sorted.map(p => p[0].split('/').pop() || p[0]), datasets: [{ label: 'Просмотры', data: sorted.map(p => p[1]), backgroundColor: '#3b82f6', borderRadius: 8 }] },
                 options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
-        // Скачивания по файлам
         async function loadDownloadsChart() {
             const snap = await db.collection('downloads').get();
             const files = {};
@@ -531,7 +595,6 @@
             });
         }
 
-        // Активность по часам
         async function loadHourlyChart() {
             const snap = await db.collection('pageViews').get();
             const hours = Array(24).fill(0);
@@ -545,18 +608,17 @@
             const ctx = document.getElementById('hourlyChart').getContext('2d');
             hourlyChart = new Chart(ctx, {
                 type: 'line',
-                data: { labels: Array.from({length:24}, (_,i) => `${i}:00`), datasets: [{ label: 'Просмотры', data: hours, borderColor: '#1e40af', tension: 0.3, fill: true, backgroundColor: 'rgba(30,64,175,0.1)' }] },
+                data: { labels: Array.from({length:24}, (_,i) => `${i}:00`), datasets: [{ label: 'Просмотры', data: hours, borderColor: '#10b981', tension: 0.3, fill: true, backgroundColor: 'rgba(16,185,129,0.1)' }] },
                 options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
-        // Таблицы
         async function loadMessages() {
             const snap = await db.collection('messages').orderBy('timestamp', 'desc').limit(20).get();
             const tbody = document.querySelector('#messagesTable tbody');
             tbody.innerHTML = snap.docs.map(d => {
                 const data = d.data();
-                return `<tr><td>${data.timestamp ? data.timestamp.toDate().toLocaleString() : '—'}</td><td>${data.name || '—'}</td><td>${data.email || '—'}</td><td style="max-width:200px; overflow:hidden; text-overflow:ellipsis;">${data.message || '—'}</td></tr>`;
+                return `<tr><td>${data.timestamp ? data.timestamp.toDate().toLocaleString() : '—'}</td><td>${data.name || '—'}</td><td>${data.email || '—'}</td><td style="max-width:250px; overflow:hidden; text-overflow:ellipsis;">${data.message || '—'}</td></tr>`;
             }).join('');
         }
 
@@ -565,7 +627,7 @@
             const tbody = document.querySelector('#requestsTable tbody');
             tbody.innerHTML = snap.docs.map(d => {
                 const data = d.data();
-                return `<tr><td>${data.timestamp ? data.timestamp.toDate().toLocaleString() : '—'}</td><td>${data.name || '—'}</td><td>${data.email || '—'}</td><td>${data.company || '—'}</td><td><span class="badge">${data.status || 'new'}</span></td></tr>`;
+                return `<tr><td>${data.timestamp ? data.timestamp.toDate().toLocaleString() : '—'}</td><td>${data.name || '—'}</td><td>${data.email || '—'}</td><td>${data.company || '—'}</td><td><span class="badge ${data.status === 'new' ? 'badge-new' : ''}">${data.status || 'new'}</span></td></tr>`;
             }).join('');
         }
 
@@ -593,12 +655,12 @@
             });
             const sorted = Object.entries(sessions).sort((a,b) => b[1].count - a[1].count).slice(0, 10);
             const tbody = document.querySelector('#sessionsTable tbody');
-            tbody.innerHTML = sorted.map(([id, data]) => `<tr><td><small>${id.slice(-12)}</small></td><td>${data.count}</td><td>${data.last ? data.last.toDate().toLocaleString() : '—'}</td></tr>`).join('');
+            tbody.innerHTML = sorted.map(([id, data]) => `<tr><td><small>${id.slice(-12)}</small></td><td><strong>${data.count}</strong></td><td>${data.last ? data.last.toDate().toLocaleString() : '—'}</td></tr>`).join('');
         }
 
         // Переключение периода
         document.querySelectorAll('.period-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
+            btn.addEventListener('click', async () => {
                 document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentDays = parseInt(btn.dataset.days);
@@ -606,10 +668,7 @@
             });
         });
 
-        // Обновление времени при загрузке страницы
-        window.addEventListener('load', () => {
-            updateLastUpdateTime();
-        });
+        window.addEventListener('load', () => updateLastUpdateTime());
     </script>
 </body>
 </html>
