@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский | Обо мне</title>
-    <!-- Preconnect for fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- все ваши стили (скопированы из исходного about.html) --- */
+        /* все ваши стили из исходного about.html (я их сохранил) */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -979,6 +978,7 @@
         </div>
     </footer>
 
+    <!-- Analytics script -->
     <script src="js/analytics.js"></script>
     <script>
         // Локальные счётчики
@@ -995,10 +995,8 @@
         if (video) {
             const viewDisplay = document.getElementById('videoViewCountDisplay');
             if (viewDisplay) {
-                // Инициализация: считаем события videoViews в localStorage
                 let videoViews = localStorage.getItem('videoViews') ? JSON.parse(localStorage.getItem('videoViews')).length : 0;
                 viewDisplay.textContent = videoViews;
-                // При воспроизведении обновляем после того, как analytics.js сохранит событие
                 video.addEventListener('play', () => {
                     setTimeout(() => {
                         let views = localStorage.getItem('videoViews') ? JSON.parse(localStorage.getItem('videoViews')).length : 0;
