@@ -12,48 +12,59 @@
             })()
         });
         localStorage.setItem(collection, JSON.stringify(events));
+        console.log(`Событие сохранено: ${collection}`, data);
     }
 
-    // Просмотр страницы
-    saveEvent('pageViews', { page: window.location.pathname });
+    // Ждём загрузки DOM перед поиском элементов
+    document.addEventListener('DOMContentLoaded', function() {
+        // Просмотр страницы (можно вызывать сразу, он не зависит от DOM)
+        saveEvent('pageViews', { page: window.location.pathname });
 
-    // Скачивания
-    document.addEventListener('click', function(e) {
-        const link = e.target.closest('a[download]');
-        if (link) {
-            const fileName = link.getAttribute('download') || link.href.split('/').pop();
-            saveEvent('downloads', { fileName: fileName });
-            console.log('Скачивание зафиксировано:', fileName);
+        // Скачивания
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a[download]');
+            if (link) {
+                const fileName = link.getAttribute('download') || link.href.split('/').pop();
+                saveEvent('downloads', { fileName: fileName });
+                console.log('Скачивание зафиксировано:', fileName);
+            }
+        });
+
+        // Видео
+        const video = document.getElementById('myVideo');
+        if (video) {
+            video.addEventListener('play', () => {
+                saveEvent('videoViews', { videoName: 'about_video' });
+                console.log('Видео запущено, событие сохранено');
+                // Обновляем отображаемый счётчик на странице (если он есть)
+                const viewDisplay = document.getElementById('videoViewCountDisplay');
+                if (viewDisplay) {
+                    let views = localStorage.getItem('videoViews') ? JSON.parse(localStorage.getItem('videoViews')).length : 0;
+                    viewDisplay.textContent = views;
+                }
+            });
+            console.log('Видео найдено, обработчик добавлен');
+        } else {
+            console.error('Элемент с id="myVideo" не найден в DOM');
+        }
+
+        // Форма обратной связи
+        const feedbackForm = document.getElementById('feedbackForm');
+        if (feedbackForm) {
+            feedbackForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('feedbackName').value;
+                const email = document.getElementById('feedbackEmail').value;
+                const message = document.getElementById('feedbackMessage').value;
+                saveEvent('messages', { name, email, message });
+                const statusDiv = document.getElementById('feedbackStatus');
+                if (statusDiv) {
+                    statusDiv.innerHTML = '<span style="color: #10b981;">Сообщение отправлено!</span>';
+                } else {
+                    alert('Сообщение отправлено!');
+                }
+                feedbackForm.reset();
+            });
         }
     });
-
-    // Видео
-    const video = document.getElementById('myVideo');
-    if (video) {
-        video.addEventListener('play', () => {
-            saveEvent('videoViews', { videoName: 'about_video' });
-            console.log('Видео запущено, событие сохранено');
-        });
-    } else {
-        console.log('Элемент с id="myVideo" не найден');
-    }
-
-    // Форма обратной связи
-    const feedbackForm = document.getElementById('feedbackForm');
-    if (feedbackForm) {
-        feedbackForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('feedbackName').value;
-            const email = document.getElementById('feedbackEmail').value;
-            const message = document.getElementById('feedbackMessage').value;
-            saveEvent('messages', { name, email, message });
-            const statusDiv = document.getElementById('feedbackStatus');
-            if (statusDiv) {
-                statusDiv.innerHTML = '<span style="color: #10b981;">Сообщение отправлено!</span>';
-            } else {
-                alert('Сообщение отправлено!');
-            }
-            feedbackForm.reset();
-        });
-    }
 })();
