@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- все ваши стили (сохранены полностью) --- */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -1227,7 +1226,7 @@
                 
                 <p style="color: var(--neutral-medium); font-size: 14px; margin-top: 20px;">
                     <i class="fas fa-info-circle" style="color: var(--accent-gold); margin-right: 8px;"></i>
-                    Резюме обновлено: <span id="resume-date">10 января 2026</span> | Формат: PDF | Размер: 6 страниц
+                    Резюме обновлено: <span id="resume-date"></span> | Формат: PDF | Размер: 6 страниц
                 </p>
             </div>
         </div>
@@ -1685,184 +1684,33 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK + аналитика -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/analytics.js"></script>
     <script>
-        // Конфигурация Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgr8mgQxBTTTGvmf70VkuEiELcNdiAR9U",
-            authDomain: "my-portfolio-analytics-d36ff.firebaseapp.com",
-            projectId: "my-portfolio-analytics-d36ff",
-            storageBucket: "my-portfolio-analytics-d36ff.firebasestorage.app",
-            messagingSenderId: "321281212756",
-            appId: "1:321281212756:web:87a10f3e5f352fcdf608c1"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-
-        // Генерация или получение sessionId
-        let sessionId = localStorage.getItem('sessionId');
-        if (!sessionId) {
-            sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('sessionId', sessionId);
-        }
-
-        // Функции логирования
-        function logPageView(pagePath) {
-            db.collection('pageViews').add({
-                page: pagePath,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                sessionId: sessionId
-            }).catch(console.error);
-        }
-        function logDownload(fileName) {
-            db.collection('downloads').add({
-                fileName: fileName,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                sessionId: sessionId
-            }).catch(console.error);
-        }
-
-        // Логируем текущую страницу
-        logPageView(window.location.pathname);
-
-        // Отслеживаем клики по ссылкам с атрибутом download
-        document.addEventListener('click', function(e) {
-            const link = e.target.closest('a[download]');
-            if (link) {
-                const fileName = link.getAttribute('download') || link.href.split('/').pop();
-                logDownload(fileName);
-                console.log('Скачивание зафиксировано:', fileName);
-            }
-        });
-
-        // Автоматическое обновление даты в блоке резюме
+        // Автоматическая дата резюме
         const today = new Date();
-        const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-        const formattedDate = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
-        const dateSpan = document.getElementById('resume-date');
-        if (dateSpan) {
-            dateSpan.textContent = formattedDate;
-        }
-    </script>
+        const formattedDate = today.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+        document.getElementById('resume-date').textContent = formattedDate;
 
-    <!-- Остальные скрипты (мобильное меню, анимации, счётчики) -->
-    <script>
-        // Mobile menu
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navMenu = document.getElementById('nav-menu');
-        mobileMenuBtn.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
-        });
+        // Локальные счётчики
+        let visitCount = localStorage.getItem('visitCount') || 0;
+        visitCount++;
+        localStorage.setItem('visitCount', visitCount);
+        document.getElementById('visit-counter').textContent = visitCount;
 
-        // Header scroll effect
-        const header = document.getElementById('mainHeader');
-        window.addEventListener('scroll', function() {
-            header.classList.toggle('header-scrolled', window.scrollY > 50);
-        });
+        let resumeDownloadCount = localStorage.getItem('resumeDownloadCount') || 0;
+        document.getElementById('resume-download-counter').textContent = resumeDownloadCount;
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
+        const resumeLink = document.getElementById('resume-download');
+        if (resumeLink) {
+            resumeLink.addEventListener('click', function() {
+                let count = localStorage.getItem('resumeDownloadCount') || 0;
+                count++;
+                localStorage.setItem('resumeDownloadCount', count);
+                document.getElementById('resume-download-counter').textContent = count;
             });
-        });
-
-        // Set current year and counters
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // Visit counter
-            let visitCount = localStorage.getItem('visitCount') || 0;
-            visitCount++;
-            localStorage.setItem('visitCount', visitCount);
-            document.getElementById('visit-counter').textContent = visitCount;
-
-            // Resume download counter
-            let resumeDownloadCount = localStorage.getItem('resumeDownloadCount') || 0;
-            document.getElementById('resume-download-counter').textContent = resumeDownloadCount;
-
-            const resumeLink = document.getElementById('resume-download');
-            if (resumeLink) {
-                resumeLink.addEventListener('click', function() {
-                    resumeDownloadCount++;
-                    localStorage.setItem('resumeDownloadCount', resumeDownloadCount);
-                    document.getElementById('resume-download-counter').textContent = resumeDownloadCount;
-                });
-            }
-
-            // Animate timeline items on scroll
-            const timelineItems = document.querySelectorAll('.timeline-item');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-            timelineItems.forEach(item => observer.observe(item));
-
-            // Check photo error
-            const photo = document.querySelector('.experience-photo');
-            if (photo) {
-                photo.onerror = function() {
-                    photo.style.display = 'none';
-                    document.getElementById('photo-fallback').style.display = 'flex';
-                };
-            }
-        });
-    </script>
-
-    <!-- Microdata -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "ProfilePage",
-        "name": "Опыт работы Дмитрия Панибратского",
-        "description": "Карьерный путь и достижения в управлении цепями поставок",
-        "mainEntity": {
-            "@type": "Person",
-            "name": "Дмитрий Панибратский",
-            "jobTitle": "Руководитель по управлению цепями поставок",
-            "hasOccupation": {
-                "@type": "Occupation",
-                "name": "Менеджер цепи поставок",
-                "occupationLocation": {
-                    "@type": "City",
-                    "name": "Сургут"
-                }
-            },
-            "worksFor": [
-                {
-                    "@type": "Organization",
-                    "name": "Леруа Мерлен",
-                    "startDate": "2020-03",
-                    "endDate": "2025-07"
-                },
-                {
-                    "@type": "Organization",
-                    "name": "ГРИНЛАЙТ (Rossko)",
-                    "startDate": "2018-05",
-                    "endDate": "2019-12"
-                }
-            ]
         }
-    }
+
+        document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
