@@ -1,5 +1,6 @@
 // js/analytics.js
 (function() {
+    // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
     function saveEvent(collection, data) {
         let events = localStorage.getItem(collection);
         try {
@@ -18,26 +19,70 @@
             })()
         });
         localStorage.setItem(collection, JSON.stringify(events));
-        console.log(`Событие сохранено: ${collection}`, data);
+        // console.log(`Событие сохранено: ${collection}`, data); // опционально
     }
 
+    // ========== МЕТАДАННЫЕ СЕССИИ ==========
+    if (!localStorage.getItem('sessionId')) {
+        const sessionId = localStorage.getItem('sessionId');
+        const sessionData = {
+            sessionId: sessionId,
+            startTime: new Date().toISOString(),
+            referrer: document.referrer || 'direct',
+            userAgent: navigator.userAgent,
+            screenSize: `${screen.width}x${screen.height}`,
+            language: navigator.language
+        };
+        let sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
+        sessions.push(sessionData);
+        localStorage.setItem('sessions', JSON.stringify(sessions));
+    }
+
+    // ========== ВРЕМЯ НА СТРАНИЦЕ ==========
+    let pageStartTime = Date.now();
+    window.addEventListener('beforeunload', () => {
+        const duration = Date.now() - pageStartTime;
+        saveEvent('pageDurations', {
+            page: window.location.pathname,
+            duration: duration
+        });
+    });
+
+    // ========== ГЛУБИНА ПРОКРУТКИ ==========
+    let sentDepths = [];
+    window.addEventListener('scroll', () => {
+        const scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight * 100;
+        [25, 50, 75, 100].forEach(threshold => {
+            if (scrollPercent >= threshold && !sentDepths.includes(threshold)) {
+                sentDepths.push(threshold);
+                saveEvent('scrollDepth', {
+                    page: window.location.pathname,
+                    depth: threshold
+                });
+            }
+        });
+    });
+
+    // ========== СТАНДАРТНЫЕ СОБЫТИЯ ==========
     document.addEventListener('DOMContentLoaded', function() {
+        // Просмотр страницы
         saveEvent('pageViews', { page: window.location.pathname });
 
+        // Скачивания
         document.addEventListener('click', function(e) {
             const link = e.target.closest('a[download]');
             if (link) {
                 const fileName = link.getAttribute('download') || link.href.split('/').pop();
                 saveEvent('downloads', { fileName: fileName });
-                console.log('Скачивание зафиксировано:', fileName);
             }
         });
 
+        // Видео
         const video = document.getElementById('myVideo');
         if (video) {
             video.addEventListener('play', () => {
                 saveEvent('videoViews', { videoName: 'about_video' });
-                console.log('Видео запущено, событие сохранено');
+                // обновляем отображаемый счётчик, если есть
                 const viewDisplay = document.getElementById('videoViewCountDisplay');
                 if (viewDisplay) {
                     let views = localStorage.getItem('videoViews') ? (() => {
@@ -49,11 +94,9 @@
                     viewDisplay.textContent = views;
                 }
             });
-            console.log('Видео найдено, обработчик добавлен');
-        } else {
-            console.log('Элемент с id="myVideo" не найден');
         }
 
+        // Форма обратной связи
         const feedbackForm = document.getElementById('feedbackForm');
         if (feedbackForm) {
             feedbackForm.addEventListener('submit', function(e) {
