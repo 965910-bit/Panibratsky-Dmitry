@@ -14,8 +14,10 @@
         localStorage.setItem(collection, JSON.stringify(events));
     }
 
+    // Просмотр страницы
     saveEvent('pageViews', { page: window.location.pathname });
 
+    // Скачивания
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a[download]');
         if (link) {
@@ -24,6 +26,7 @@
         }
     });
 
+    // Видео
     const video = document.getElementById('myVideo');
     if (video) {
         video.addEventListener('play', () => {
@@ -31,6 +34,7 @@
         });
     }
 
+    // Форма обратной связи
     const feedbackForm = document.getElementById('feedbackForm');
     if (feedbackForm) {
         feedbackForm.addEventListener('submit', function(e) {
