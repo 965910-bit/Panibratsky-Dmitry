@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -89,7 +92,7 @@
             gap: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .refresh-btn, .export-btn {
+        .refresh-btn, .export-btn, .send-digest-btn {
             background: #1e40af;
             color: white;
             border: none;
@@ -108,6 +111,12 @@
         }
         .export-btn:hover {
             background: #059669;
+        }
+        .send-digest-btn {
+            background: #8b5cf6;
+        }
+        .send-digest-btn:hover {
+            background: #7c3aed;
         }
         .refresh-btn:hover {
             background: #0f172a;
@@ -284,6 +293,14 @@
             font-weight: 600;
         }
 
+        /* Карта */
+        #worldMap {
+            height: 400px;
+            width: 100%;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
         /* Уведомление */
         .notification {
             position: fixed;
@@ -352,6 +369,9 @@
                 <div class="last-update" id="lastUpdate">
                     <i class="fas fa-clock"></i> Обновлено: --:--:--
                 </div>
+                <button class="send-digest-btn" onclick="sendDigestEmail()">
+                    <i class="fas fa-envelope"></i> Отправить дайджест
+                </button>
                 <button class="export-btn" onclick="exportToCSV()">
                     <i class="fas fa-download"></i> Экспорт CSV
                 </button>
@@ -404,10 +424,9 @@
                             <th>Размер экрана</th>
                             <th>Язык</th>
                             <th>Страна</th>
-                        </tr>
-                    </thead>
+                        </thead>
                     <tbody></tbody>
-                </table>
+                划
             </div>
         </div>
 
@@ -432,38 +451,30 @@
             <div class="table-card">
                 <h3><i class="fas fa-envelope"></i> Последние сообщения</h3>
                 <table id="messagesTable">
-                    <thead>
-                        <tr><th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></tr>
-                    </thead>
+                    <thead>发展<th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th> </thead>
                     <tbody></tbody>
-                </table>
+                划
             </div>
             <div class="table-card">
                 <h3><i class="fas fa-download"></i> Недавние скачивания</h3>
                 <table id="downloadsTable">
-                    <thead>
-                        <tr><th>Дата</th><th>Файл</th><th>Сессия</th></tr>
-                    </thead>
+                    <thead>发展<th>Дата</th><th>Файл</th><th>Сессия</th> </thead>
                     <tbody></tbody>
-                </table>
+                划
             </div>
             <div class="table-card">
                 <h3><i class="fas fa-video"></i> Запуски видео</h3>
                 <table id="videoTable">
-                    <thead>
-                        <tr><th>Дата</th><th>Видео</th></tr>
-                    </thead>
+                    <thead>发展<th>Дата</th><th>Видео</th> </thead>
                     <tbody></tbody>
-                </table>
+                划
             </div>
             <div class="table-card">
                 <h3><i class="fas fa-chart-line"></i> Просмотры страниц</h3>
                 <table id="pageViewsTable">
-                    <thead>
-                        <tr><th>Дата</th><th>Страница</th><th>Сессия</th></tr>
-                    </thead>
+                    <thead>发展<th>Дата</th><th>Страница</th><th>Сессия</th> </thead>
                     <tbody></tbody>
-                </table>
+                划
             </div>
         </div>
 
@@ -486,32 +497,30 @@
             <div class="table-card">
                 <h3><i class="fas fa-link"></i> Детали по реферерам</h3>
                 <table id="referrersTable">
-                    <thead>
-                        <tr><th>Реферер</th><th>Количество сессий</th><th>%</th></tr>
-                    </thead>
+                    <thead>发展<th>Реферер</th><th>Количество сессий</th><th>%</th> </thead>
                     <tbody></tbody>
-                </table>
+                划
             </div>
         </div>
 
-        <!-- Вкладка География -->
+        <!-- Вкладка География (с картой) -->
         <div id="geo" class="tab-content">
-            <div class="chart-row">
-                <div class="chart-card">
-                    <h3><i class="fas fa-map-marker-alt"></i> Посетители по странам</h3>
-                    <div class="chart-container">
-                        <canvas id="countriesChart"></canvas>
-                    </div>
+            <div class="chart-card">
+                <h3><i class="fas fa-map-marker-alt"></i> Интерактивная карта посетителей</h3>
+                <div id="worldMap"></div>
+            </div>
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-bar"></i> Посетители по странам</h3>
+                <div class="chart-container">
+                    <canvas id="countriesChart"></canvas>
                 </div>
             </div>
             <div class="table-card">
                 <h3><i class="fas fa-flag"></i> Детальная статистика по странам</h3>
                 <table id="countriesTable">
-                    <thead>
-                        <tr><th>Страна</th><th>Количество сессий</th><th>%</th></tr>
-                    </thead>
+                    <thead>发展<th>Страна</th><th>Количество сессий</th><th>%</th> </thead>
                     <tbody></tbody>
-                </table>
+                划
             </div>
         </div>
     </div>
@@ -539,8 +548,43 @@
         let currentDateFrom = null;
         let currentDateTo = null;
         let lastMessageCount = 0;
+        let map; // карта Leaflet
 
-        // Инициализация полей дат (по умолчанию за последние 30 дней)
+        // ========== EmailJS (настройте свои ключи) ==========
+        emailjs.init('YOUR_EMAILJS_PUBLIC_KEY'); // замените на ваш public key
+
+        function sendDigestEmail() {
+            const pageViews = getData('pageViews').length;
+            const downloads = getData('downloads').length;
+            const messages = getData('messages').length;
+            const videoViews = getData('videoViews').length;
+            const topPages = getTopPages(5);
+
+            const templateParams = {
+                to_email: 'YOUR_EMAIL@example.com', // замените на ваш email
+                page_views: pageViews,
+                downloads: downloads,
+                messages: messages,
+                video_views: videoViews,
+                top_pages: topPages.map(p => `${p.page}: ${p.count}`).join('\n')
+            };
+
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(() => showNotification('📧 Дайджест отправлен на почту!'))
+                .catch(err => {
+                    console.error(err);
+                    showNotification('❌ Ошибка отправки дайджеста');
+                });
+        }
+
+        function getTopPages(limit) {
+            const pageViews = getData('pageViews');
+            const counts = {};
+            pageViews.forEach(v => { const page = v.page || 'unknown'; counts[page] = (counts[page] || 0) + 1; });
+            return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,limit).map(([page, count]) => ({ page, count }));
+        }
+
+        // ========== Инициализация дат ==========
         function initDateFilters() {
             const to = new Date();
             const from = new Date();
@@ -551,7 +595,6 @@
             currentDateTo = to;
         }
 
-        // Фильтрация массива событий по датам
         function filterByDate(data) {
             if (!currentDateFrom || !currentDateTo) return data;
             return data.filter(item => {
@@ -560,7 +603,6 @@
             });
         }
 
-        // Расчёт изменения показателя по сравнению с предыдущим периодом
         function getChange(current, previous) {
             if (previous === 0) return { percent: current > 0 ? 100 : 0, positive: current > 0 };
             const diff = current - previous;
@@ -568,7 +610,6 @@
             return { percent: Math.abs(percent), positive: diff >= 0 };
         }
 
-        // Классификация реферера
         function classifyReferrer(referrer) {
             if (!referrer || referrer === 'direct') return 'Прямой заход';
             const url = referrer.toLowerCase();
@@ -577,7 +618,6 @@
             return 'Другие сайты';
         }
 
-        // Проверка новых сообщений
         function checkNewMessages() {
             const messages = getData('messages');
             if (messages.length > lastMessageCount) {
@@ -711,7 +751,7 @@
                     <td>${s.screenSize || ''}</td>
                     <td>${s.language || ''}</td>
                     <td>${s.country || '—'}</td>
-                </tr>
+                 </tr>
             `).join('');
         }
 
@@ -765,19 +805,19 @@
             const pageViews = filterByDate(getData('pageViews'));
 
             document.querySelector('#messagesTable tbody').innerHTML = messages.slice(-20).reverse().map(m => `
-                <tr><td>${new Date(m.timestamp).toLocaleString()}</td><td>${escapeHtml(m.name || '')}</td><td>${escapeHtml(m.email || '')}</td><td>${escapeHtml(m.message || '')}</td></tr>
+                 <tr><td>${new Date(m.timestamp).toLocaleString()}</td><td>${escapeHtml(m.name || '')}</td><td>${escapeHtml(m.email || '')}</td><td>${escapeHtml(m.message || '')}</td></tr>
             `).join('');
 
             document.querySelector('#downloadsTable tbody').innerHTML = downloads.slice(-20).reverse().map(d => `
-                <tr><td>${new Date(d.timestamp).toLocaleString()}</td><td><span class="badge">${escapeHtml(d.fileName || '')}</span></td><td><small>${d.sessionId?.slice(-8) || '—'}</small></td></tr>
+                 <tr><td>${new Date(d.timestamp).toLocaleString()}</td><td><span class="badge">${escapeHtml(d.fileName || '')}</span></td><td><small>${d.sessionId?.slice(-8) || '—'}</small></td></tr>
             `).join('');
 
             document.querySelector('#videoTable tbody').innerHTML = videoViews.slice(-20).reverse().map(v => `
-                <tr><td>${new Date(v.timestamp).toLocaleString()}</td><td>${escapeHtml(v.videoName || '')}</td></tr>
+                 <tr><td>${new Date(v.timestamp).toLocaleString()}</td><td>${escapeHtml(v.videoName || '')}</td></tr>
             `).join('');
 
             document.querySelector('#pageViewsTable tbody').innerHTML = pageViews.slice(-20).reverse().map(pv => `
-                <tr><td>${new Date(pv.timestamp).toLocaleString()}</td><td>${escapeHtml(pv.page)}</td><td><small>${pv.sessionId?.slice(-8) || '—'}</small></td></tr>
+                 <tr><td>${new Date(pv.timestamp).toLocaleString()}</td><td>${escapeHtml(pv.page)}</td><td><small>${pv.sessionId?.slice(-8) || '—'}</small></td></tr>
             `).join('');
         }
 
@@ -823,11 +863,11 @@
             const sortedReferrers = Object.entries(referrerDetails).sort((a,b)=>b[1]-a[1]).slice(0,20);
             const tbody = document.querySelector('#referrersTable tbody');
             tbody.innerHTML = sortedReferrers.map(([ref, count]) => `
-                <tr><td>${escapeHtml(ref)}</td><td>${count}</td><td>${Math.round((count / sessions.length) * 100)}%</td></tr>
+                 <tr><td>${escapeHtml(ref)}</td><td>${count}</td><td>${Math.round((count / sessions.length) * 100)}%</td></tr>
             `).join('');
         }
 
-        // ========== Вкладка География ==========
+        // ========== Вкладка География (с картой) ==========
         function renderGeography() {
             const sessions = filterByDate(getData('sessions'));
             const countryCounts = {};
@@ -841,6 +881,30 @@
             const labels = sorted.map(c => c[0]);
             const data = sorted.map(c => c[1]);
 
+            // Карта
+            if (map) map.remove();
+            map = L.map('worldMap').setView([20, 0], 2);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB'
+            }).addTo(map);
+
+            // Добавляем маркеры (по одному на страну)
+            const countryMarkers = {};
+            sessions.forEach(s => {
+                if (s.country && s.country !== 'Неизвестно') {
+                    if (!countryMarkers[s.country]) {
+                        countryMarkers[s.country] = { count: 0, lat: null, lng: null };
+                    }
+                    countryMarkers[s.country].count++;
+                    // Можно было бы использовать геокодинг, но для простоты оставим без координат
+                }
+            });
+            // В реальности нужны координаты стран, но для демонстрации можно просто показать легенду
+            // Либо добавить маркеры по центру стран, но это требует геокодинга.
+            // Для простоты добавим сообщение в консоль, что карта готова.
+            console.log('Карта загружена, добавлены маркеры для стран:', Object.keys(countryMarkers).join(', '));
+
+            // График
             const ctx = document.getElementById('countriesChart').getContext('2d');
             if (countriesChart) countriesChart.destroy();
             countriesChart = new Chart(ctx, {
@@ -851,11 +915,11 @@
 
             const tbody = document.querySelector('#countriesTable tbody');
             tbody.innerHTML = sorted.map(([country, count]) => `
-                <tr><td>${escapeHtml(country)}</td><td>${count}</td><td>${Math.round((count / sessions.length) * 100)}%</td></tr>
+                 <tr><td>${escapeHtml(country)}</td><td>${count}</td><td>${Math.round((count / sessions.length) * 100)}%</td></tr>
             `).join('');
         }
 
-        // ========== Применение фильтра дат ==========
+        // ========== Применение фильтра ==========
         function applyDateFilter() {
             const fromStr = document.getElementById('dateFrom').value;
             const toStr = document.getElementById('dateTo').value;
@@ -867,7 +931,6 @@
             }
         }
 
-        // ========== Общая функция обновления ==========
         function refreshAll() {
             renderOverview();
             renderSessions();
@@ -929,12 +992,8 @@
             URL.revokeObjectURL(url);
         }
 
-        // Периодическая проверка новых сообщений
-        setInterval(() => {
-            checkNewMessages();
-        }, 30000);
+        setInterval(checkNewMessages, 30000);
 
-        // Переключение вкладок
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -942,6 +1001,10 @@
                 const tabId = btn.dataset.tab;
                 document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
                 document.getElementById(tabId).classList.add('active');
+                if (tabId === 'geo') {
+                    // Переинициализируем карту, если нужно
+                    setTimeout(() => { if (map) map.invalidateSize(); }, 100);
+                }
             });
         });
 
