@@ -1,5 +1,10 @@
-// js/analytics.js – расширенная версия с геолокацией
+// js/analytics.js – расширенная версия с геолокацией и Telegram-уведомлениями
 (function() {
+    // ========== КОНФИГУРАЦИЯ ==========
+    // Замените на свой токен бота и chat_id (получите у @BotFather и @userinfobot)
+    const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN';
+    const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';
+
     // Универсальная функция сохранения события
     function saveEvent(collection, data) {
         let events = localStorage.getItem(collection);
@@ -44,7 +49,6 @@
                 .then(res => res.json())
                 .then(data => {
                     const country = data.country_name || data.country || 'Unknown';
-                    // Обновляем последнюю сессию
                     let sessions2 = JSON.parse(localStorage.getItem('sessions') || '[]');
                     if (sessions2.length > 0) {
                         sessions2[sessions2.length - 1].country = country;
@@ -57,10 +61,25 @@
         return id;
     }
 
+    // Отправка уведомления в Telegram
+    function sendTelegramNotification(message) {
+        if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN') return;
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        }).catch(err => console.warn('Telegram уведомление не отправлено:', err));
+    }
+
     // Функция для вычисления времени на странице
     let pageStartTime = Date.now();
     window.addEventListener('beforeunload', () => {
-        const duration = Math.round((Date.now() - pageStartTime) / 1000); // в секундах
+        const duration = Math.round((Date.now() - pageStartTime) / 1000);
         if (duration > 0) {
             saveEvent('pageDurations', {
                 page: window.location.pathname,
@@ -69,7 +88,7 @@
         }
     });
 
-    // Функция для отслеживания глубины прокрутки (один раз за страницу)
+    // Функция для отслеживания глубины прокрутки
     let sentDepths = [];
     window.addEventListener('scroll', () => {
         const scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight * 100;
@@ -85,7 +104,7 @@
         });
     });
 
-    // === События, которые уже были (просмотр, скачивания, видео, форма) ===
+    // === Основные события ===
     document.addEventListener('DOMContentLoaded', function() {
         // Просмотр страницы
         saveEvent('pageViews', { page: window.location.pathname });
@@ -106,7 +125,6 @@
             video.addEventListener('play', () => {
                 saveEvent('videoViews', { videoName: 'about_video' });
                 console.log('Видео запущено, событие сохранено');
-                // Обновляем отображаемый счётчик на странице (если есть)
                 const viewDisplay = document.getElementById('videoViewCountDisplay');
                 if (viewDisplay) {
                     let views = localStorage.getItem('videoViews') ? (() => {
@@ -139,7 +157,22 @@
                     alert('Сообщение отправлено!');
                 }
                 feedbackForm.reset();
+
+                // Отправляем уведомление в Telegram
+                const msg = `📩 <b>Новое сообщение с сайта</b>\n👤 Имя: ${escapeHtml(name)}\n📧 Email: ${escapeHtml(email)}\n💬 Сообщение: ${escapeHtml(message)}`;
+                sendTelegramNotification(msg);
             });
         }
     });
+
+    // Вспомогательная функция для экранирования HTML (для сообщения в Telegram)
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
 })();
