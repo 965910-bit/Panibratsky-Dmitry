@@ -1,4 +1,4 @@
-// js/analytics.js – расширенная версия
+// js/analytics.js – расширенная версия с геолокацией
 (function() {
     // Универсальная функция сохранения события
     function saveEvent(collection, data) {
@@ -37,6 +37,21 @@
             let sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
             sessions.push(sessionMeta);
             localStorage.setItem('sessions', JSON.stringify(sessions));
+
+            // Асинхронно получаем геолокацию (страну) и обновляем последнюю сессию
+            fetch('https://ipapi.co/json/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.country_name) {
+                        let sessions2 = JSON.parse(localStorage.getItem('sessions') || '[]');
+                        if (sessions2.length > 0) {
+                            sessions2[sessions2.length - 1].country = data.country_name;
+                            sessions2[sessions2.length - 1].country_code = data.country_code;
+                            localStorage.setItem('sessions', JSON.stringify(sessions2));
+                        }
+                    }
+                })
+                .catch(err => console.log('Геолокация не доступна', err));
         }
         return id;
     }
@@ -44,7 +59,7 @@
     // Функция для вычисления времени на странице
     let pageStartTime = Date.now();
     window.addEventListener('beforeunload', () => {
-        const duration = Math.round((Date.now() - pageStartTime) / 1000); // в секундах
+        const duration = Math.round((Date.now() - pageStartTime) / 1000);
         if (duration > 0) {
             saveEvent('pageDurations', {
                 page: window.location.pathname,
@@ -53,7 +68,7 @@
         }
     });
 
-    // Функция для отслеживания глубины прокрутки (один раз за страницу)
+    // Функция для отслеживания глубины прокрутки
     let sentDepths = [];
     window.addEventListener('scroll', () => {
         const scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight * 100;
@@ -69,12 +84,10 @@
         });
     });
 
-    // === События, которые уже были (просмотр, скачивания, видео, форма) ===
+    // === События, которые уже были ===
     document.addEventListener('DOMContentLoaded', function() {
-        // Просмотр страницы
         saveEvent('pageViews', { page: window.location.pathname });
 
-        // Скачивания
         document.addEventListener('click', function(e) {
             const link = e.target.closest('a[download]');
             if (link) {
@@ -84,13 +97,11 @@
             }
         });
 
-        // Видео
         const video = document.getElementById('myVideo');
         if (video) {
             video.addEventListener('play', () => {
                 saveEvent('videoViews', { videoName: 'about_video' });
                 console.log('Видео запущено, событие сохранено');
-                // Обновляем отображаемый счётчик на странице (если есть)
                 const viewDisplay = document.getElementById('videoViewCountDisplay');
                 if (viewDisplay) {
                     let views = localStorage.getItem('videoViews') ? (() => {
@@ -107,7 +118,6 @@
             console.log('Элемент с id="myVideo" не найден');
         }
 
-        // Форма обратной связи
         const feedbackForm = document.getElementById('feedbackForm');
         if (feedbackForm) {
             feedbackForm.addEventListener('submit', function(e) {
