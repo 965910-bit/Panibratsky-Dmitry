@@ -24,7 +24,7 @@
         if (!id) {
             id = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('sessionId', id);
-            // Сохраняем метаданные сессии при первом визите
+            // Сохраняем метаданные сессии асинхронно, с геолокацией
             const sessionMeta = {
                 sessionId: id,
                 startTime: new Date().toISOString(),
@@ -32,26 +32,27 @@
                 userAgent: navigator.userAgent,
                 screenSize: `${screen.width}x${screen.height}`,
                 language: navigator.language,
-                firstPage: window.location.pathname
+                firstPage: window.location.pathname,
+                country: null // будет заполнено позже
             };
             let sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
             sessions.push(sessionMeta);
             localStorage.setItem('sessions', JSON.stringify(sessions));
 
-            // Асинхронно получаем геолокацию (страну) и обновляем последнюю сессию
+            // Асинхронно получаем страну по IP
             fetch('https://ipapi.co/json/')
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
-                    if (data.country_name) {
-                        let sessions2 = JSON.parse(localStorage.getItem('sessions') || '[]');
-                        if (sessions2.length > 0) {
-                            sessions2[sessions2.length - 1].country = data.country_name;
-                            sessions2[sessions2.length - 1].country_code = data.country_code;
-                            localStorage.setItem('sessions', JSON.stringify(sessions2));
-                        }
+                    const country = data.country_name || data.country || 'Unknown';
+                    // Обновляем последнюю сессию
+                    let sessions2 = JSON.parse(localStorage.getItem('sessions') || '[]');
+                    if (sessions2.length > 0) {
+                        sessions2[sessions2.length - 1].country = country;
+                        localStorage.setItem('sessions', JSON.stringify(sessions2));
+                        console.log('Страна определена:', country);
                     }
                 })
-                .catch(err => console.log('Геолокация не доступна', err));
+                .catch(err => console.warn('Не удалось определить страну:', err));
         }
         return id;
     }
@@ -59,7 +60,7 @@
     // Функция для вычисления времени на странице
     let pageStartTime = Date.now();
     window.addEventListener('beforeunload', () => {
-        const duration = Math.round((Date.now() - pageStartTime) / 1000);
+        const duration = Math.round((Date.now() - pageStartTime) / 1000); // в секундах
         if (duration > 0) {
             saveEvent('pageDurations', {
                 page: window.location.pathname,
@@ -68,7 +69,7 @@
         }
     });
 
-    // Функция для отслеживания глубины прокрутки
+    // Функция для отслеживания глубины прокрутки (один раз за страницу)
     let sentDepths = [];
     window.addEventListener('scroll', () => {
         const scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight * 100;
@@ -84,10 +85,12 @@
         });
     });
 
-    // === События, которые уже были ===
+    // === События, которые уже были (просмотр, скачивания, видео, форма) ===
     document.addEventListener('DOMContentLoaded', function() {
+        // Просмотр страницы
         saveEvent('pageViews', { page: window.location.pathname });
 
+        // Скачивания
         document.addEventListener('click', function(e) {
             const link = e.target.closest('a[download]');
             if (link) {
@@ -97,11 +100,13 @@
             }
         });
 
+        // Видео
         const video = document.getElementById('myVideo');
         if (video) {
             video.addEventListener('play', () => {
                 saveEvent('videoViews', { videoName: 'about_video' });
                 console.log('Видео запущено, событие сохранено');
+                // Обновляем отображаемый счётчик на странице (если есть)
                 const viewDisplay = document.getElementById('videoViewCountDisplay');
                 if (viewDisplay) {
                     let views = localStorage.getItem('videoViews') ? (() => {
@@ -118,6 +123,7 @@
             console.log('Элемент с id="myVideo" не найден');
         }
 
+        // Форма обратной связи
         const feedbackForm = document.getElementById('feedbackForm');
         if (feedbackForm) {
             feedbackForm.addEventListener('submit', function(e) {
