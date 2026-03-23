@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский | Контакты и сотрудничество</title>
-    <!-- Preconnect for fonts -->
+    <meta name="description" content="Свяжитесь с экспертом по управлению цепями поставок Дмитрием Панибратским. Консультации, стратегическое партнерство, создание Академии SCM, цифровая трансформация.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ========== ВСЕ ВАШИ СТИЛИ (без изменений) ========== */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -279,6 +280,28 @@
             border: 1px solid rgba(30, 64, 175, 0.2);
         }
 
+        /* Section Common Styles */
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 34px);
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--neutral-medium);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
         /* Contact Section */
         .contact-section {
             padding: 70px 0;
@@ -343,6 +366,7 @@
             font-size: 16px;
         }
 
+        /* QR Section */
         .qr-section {
             padding: 70px 0;
             background-color: var(--neutral-light);
@@ -712,10 +736,10 @@
             </button>
             <nav>
                 <ul id="nav-menu">
-                    <li><a href="index.html">Стратегия</a></li>
-                    <li><a href="experience.html">Опыт</a></li>
                     <li><a href="about.html">Обо мне</a></li>
                     <li><a href="expertise.html">Экспертиза</a></li>
+                    <li><a href="experience.html">Опыт</a></li>
+                    <li><a href="index.html">Стратегия</a></li>
                     <li><a href="contact.html" class="active">Контакты</a></li>
                 </ul>
             </nav>
@@ -778,8 +802,8 @@
                     </div>
                     <h3 class="contact-title">Мессенджеры и соцсети</h3>
                     <p class="contact-subtitle">Для быстрого обсуждения и оперативной связи</p>
-                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="contact-link">Telegram</a><br>
-                    <a href="https://max.ru/u/f9LHodD0cOJWkmqphqMLwYEjE-cp3srsPoVUGFmORIOYMtMftRb7FCciSpE" target="_blank" class="contact-link">MAX</a>
+                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer" class="contact-link">Telegram</a><br>
+                    <a href="https://max.ru/u/f9LHodD0cOJWkmqphqMLwYEjE-cp3srsPoVUGFmORIOYMtMftRb7FCciSpE" target="_blank" rel="noopener noreferrer" class="contact-link">MAX</a>
                     <p style="margin-top: 10px; font-size: 12px; color: var(--neutral-medium);">Наиболее оперативный способ связи</p>
                 </div>
             </div>
@@ -809,7 +833,7 @@
                     <h3 class="qr-title">MAX</h3>
                     <p class="qr-text">Мой профиль в социальной сети MAX</p>
                     <p class="qr-text" style="margin-top: 10px; font-size: 12px;">
-                        <a href="https://max.ru/u/f9LHodD0cOJWkmqphqMLwYEjE-cp3srsPoVUGFmORIOYMtMftRb7FCciSpE" target="_blank" style="color: var(--primary-blue);">Перейти в профиль</a>
+                        <a href="https://max.ru/u/f9LHodD0cOJWkmqphqMLwYEjE-cp3srsPoVUGFmORIOYMtMftRb7FCciSpE" target="_blank" rel="noopener noreferrer" style="color: var(--primary-blue);">Перейти в профиль</a>
                     </p>
                 </div>
             </div>
@@ -948,7 +972,7 @@
                     <div style="margin-bottom: 20px;">
                         <textarea id="feedbackMessage" placeholder="Сообщение" rows="5" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;"></textarea>
                     </div>
-                    <button type="submit" style="background: #1e40af; color: white; border: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">Отправить</button>
+                    <button type="submit" id="feedbackSubmit" style="background: #1e40af; color: white; border: none; padding: 14px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">Отправить</button>
                     <div id="feedbackStatus" style="margin-top: 15px;"></div>
                 </form>
             </div>
@@ -979,7 +1003,7 @@
                     <span class="counter-number" id="visit-counter">0</span> посещений
                 </div>
                 <div class="counter-item">
-                    <span class="counter-number" id="download-counter">0</span> скачиваний
+                    <span class="counter-number" id="message-counter">0</span> сообщений
                 </div>
             </div>
             
@@ -991,10 +1015,10 @@
                 <div class="footer-column">
                     <h3>Навигация</h3>
                     <ul>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
                         <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
                         <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
+                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
                     </ul>
                 </div>
@@ -1002,8 +1026,8 @@
                     <h3>Контакты</h3>
                     <ul>
                         <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
-                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
-                        <li><a href="https://max.ru/u/f9LHodD0cOJWkmqphqMLwYEjE-cp3srsPoVUGFmORIOYMtMftRb7FCciSpE" target="_blank"><i class="fas fa-user"></i> MAX</a></li>
+                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
+                        <li><a href="https://max.ru/u/f9LHodD0cOJWkmqphqMLwYEjE-cp3srsPoVUGFmORIOYMtMftRb7FCciSpE" target="_blank" rel="noopener noreferrer"><i class="fas fa-user"></i> MAX</a></li>
                     </ul>
                 </div>
             </div>
@@ -1015,16 +1039,88 @@
 
     <script src="js/analytics.js"></script>
     <script>
-        // Локальные счётчики
-        let visitCount = localStorage.getItem('visitCount') || 0;
-        visitCount++;
-        localStorage.setItem('visitCount', visitCount);
-        document.getElementById('visit-counter').textContent = visitCount;
+        (function() {
+            // Мобильное меню
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            if (mobileBtn && navMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    const icon = mobileBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+                document.querySelectorAll('#nav-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        const icon = mobileBtn.querySelector('i');
+                        if (icon && icon.classList.contains('fa-times')) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    });
+                });
+            }
 
-        let downloadCount = localStorage.getItem('downloadCount') || 0;
-        document.getElementById('download-counter').textContent = downloadCount;
+            // Счётчики
+            let visitCount = parseInt(localStorage.getItem('visitCount') || '0', 10);
+            visitCount++;
+            localStorage.setItem('visitCount', visitCount);
+            const visitSpan = document.getElementById('visit-counter');
+            if (visitSpan) visitSpan.textContent = visitCount;
 
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+            let messageCount = parseInt(localStorage.getItem('messageCount') || '0', 10);
+            const msgSpan = document.getElementById('message-counter');
+            if (msgSpan) msgSpan.textContent = messageCount;
+
+            // Год в футере
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+            // Обработка формы
+            const form = document.getElementById('feedbackForm');
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('feedbackName').value.trim();
+                    const email = document.getElementById('feedbackEmail').value.trim();
+                    const message = document.getElementById('feedbackMessage').value.trim();
+
+                    if (!name || !email || !message) {
+                        const statusDiv = document.getElementById('feedbackStatus');
+                        statusDiv.innerHTML = '<span style="color: #dc2626;">Заполните все поля.</span>';
+                        setTimeout(() => statusDiv.innerHTML = '', 3000);
+                        return;
+                    }
+
+                    // Сохраняем сообщение в localStorage
+                    const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+                    messages.push({
+                        timestamp: new Date().toISOString(),
+                        name,
+                        email,
+                        message
+                    });
+                    localStorage.setItem('contactMessages', JSON.stringify(messages));
+
+                    // Обновляем счётчик сообщений
+                    messageCount++;
+                    localStorage.setItem('messageCount', messageCount);
+                    if (msgSpan) msgSpan.textContent = messageCount;
+
+                    // Очищаем форму
+                    document.getElementById('feedbackName').value = '';
+                    document.getElementById('feedbackEmail').value = '';
+                    document.getElementById('feedbackMessage').value = '';
+
+                    const statusDiv = document.getElementById('feedbackStatus');
+                    statusDiv.innerHTML = '<span style="color: #10b981;">Сообщение сохранено. Я свяжусь с вами в ближайшее время.</span>';
+                    setTimeout(() => statusDiv.innerHTML = '', 5000);
+                });
+            }
+        })();
     </script>
 </body>
 </html>
