@@ -1,78 +1,614 @@
-// js/analytics.js – минимальная версия для сбора сессий и просмотров
-(function() {
-    function saveEvent(collection, data) {
-        let events = localStorage.getItem(collection);
-        try {
-            events = JSON.parse(events);
-            if (!Array.isArray(events)) events = [];
-        } catch(e) {
-            events = [];
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналитический центр | Панибратский</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        events.push({
-            ...data,
-            timestamp: new Date().toISOString(),
-            sessionId: getSessionId()
-        });
-        localStorage.setItem(collection, JSON.stringify(events));
-        console.log(`Событие сохранено: ${collection}`, data);
-    }
 
-    let sessionId = null;
-
-    function getSessionId() {
-        if (!sessionId) {
-            sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f2f5;
+            color: #1e293b;
+            padding: 20px;
         }
-        return sessionId;
-    }
 
-    function createSession() {
-        const id = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        sessionId = id;
-        const sessionMeta = {
-            sessionId: id,
-            startTime: new Date().toISOString(),
-            referrer: document.referrer || 'direct',
-            userAgent: navigator.userAgent,
-            screenSize: `${screen.width}x${screen.height}`,
-            language: navigator.language,
-            firstPage: window.location.pathname,
-            country: null,
-            region: null,
-            city: null,
-            lat: null,
-            lon: null
-        };
-        let sessions = JSON.parse(localStorage.getItem('sessions') || '[]');
-        sessions.push(sessionMeta);
-        localStorage.setItem('sessions', JSON.stringify(sessions));
-        console.log('Новая сессия создана:', sessionMeta);
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-        // Получаем геолокацию
-        fetch('https://ipapi.co/json/')
-            .then(res => res.json())
-            .then(data => {
-                const country = data.country_name || data.country || 'Unknown';
-                const region = data.region || '';
-                const city = data.city || '';
-                const lat = data.latitude;
-                const lon = data.longitude;
-                let sessions2 = JSON.parse(localStorage.getItem('sessions') || '[]');
-                if (sessions2.length > 0) {
-                    sessions2[sessions2.length - 1].country = country;
-                    sessions2[sessions2.length - 1].region = region;
-                    sessions2[sessions2.length - 1].city = city;
-                    sessions2[sessions2.length - 1].lat = lat;
-                    sessions2[sessions2.length - 1].lon = lon;
-                    localStorage.setItem('sessions', JSON.stringify(sessions2));
-                    console.log('Геоданные обновлены:', { country, region, city, lat, lon });
+        /* Шапка */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .date-range input {
+            border: none;
+            padding: 6px 8px;
+            font-size: 13px;
+            border-radius: 20px;
+            background: #f1f5f9;
+            font-family: inherit;
+        }
+        .apply-date {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .last-update {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .refresh-btn, .export-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .export-btn {
+            background: #10b981;
+        }
+        .export-btn:hover {
+            background: #059669;
+        }
+        .refresh-btn:hover {
+            background: #0f172a;
+            transform: translateY(-2px);
+        }
+        .clear-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .clear-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        /* Карточки статистики */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+        .stat-title {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .stat-number {
+            font-size: 42px;
+            font-weight: 800;
+            color: #1e40af;
+            line-height: 1;
+        }
+
+        /* Таблицы */
+        .table-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+        .table-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 600px;
+        }
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+        th {
+            font-weight: 600;
+            color: #475569;
+            background: #f8fafc;
+        }
+        tr:hover {
+            background: #f8fafc;
+        }
+        .badge {
+            background: #d4af37;
+            color: #0f172a;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Карта */
+        #russiaMap {
+            height: 500px;
+            width: 100%;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .date-range {
+                width: 100%;
+                justify-content: space-between;
+            }
+            table {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 8px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> Аналитический центр <span style="font-size: 12px; background: #e2e8f0; padding: 4px 12px; border-radius: 30px;">профессиональная версия</span></h1>
+            <div class="header-actions">
+                <div class="date-range">
+                    <span>📅 с</span>
+                    <input type="date" id="dateFrom" value="">
+                    <span>по</span>
+                    <input type="date" id="dateTo" value="">
+                    <button class="apply-date" onclick="applyDateFilter()">Применить</button>
+                </div>
+                <div class="last-update" id="lastUpdate"><i class="fas fa-clock"></i> Обновлено: --:--:--</div>
+                <button class="export-btn" onclick="exportToCSV()"><i class="fas fa-download"></i> Экспорт CSV</button>
+                <button class="refresh-btn" onclick="refreshAll()"><i class="fas fa-sync-alt"></i> Обновить</button>
+                <button class="clear-btn" onclick="clearAllData()"><i class="fas fa-trash-alt"></i> Очистить</button>
+            </div>
+        </div>
+
+        <!-- Карточки статистики -->
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <!-- Карта России -->
+        <div class="table-card">
+            <h3><i class="fas fa-map-marker-alt"></i> Карта России (города посетителей)</h3>
+            <div id="russiaMap"></div>
+        </div>
+
+        <!-- Таблица городов -->
+        <div class="table-card">
+            <h3><i class="fas fa-city"></i> Города посетителей</h3>
+            <table id="citiesTable">
+                <thead>
+                    <tr>
+                        <th>Город</th>
+                        <th>Регион</th>
+                        <th>Посещений</th>
+                        <th>Координаты</th>
+                    </thead>
+                <tbody></tbody>
+            划
+        </div>
+
+        <!-- Сессии -->
+        <div class="table-card">
+            <h3><i class="fas fa-users"></i> Список сессий</h3>
+            <table id="sessionsTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Источник</th>
+                        <th>Устройство</th>
+                        <th>Страна</th>
+                        <th>Город</th>
+                    </thead>
+                <tbody></tbody>
+            划
+        </div>
+
+        <!-- Сообщения -->
+        <div class="table-card">
+            <h3><i class="fas fa-envelope"></i> Последние сообщения</h3>
+            <table id="messagesTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Сообщение</th>
+                    </thead>
+                <tbody></tbody>
+            划
+        </div>
+
+        <!-- Скачивания -->
+        <div class="table-card">
+            <h3><i class="fas fa-download"></i> Недавние скачивания</h3>
+            <table id="downloadsTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Файл</th>
+                        <th>Сессия</th>
+                    </thead>
+                <tbody></tbody>
+            划
+        </div>
+
+        <!-- Видео -->
+        <div class="table-card">
+            <h3><i class="fas fa-video"></i> Запуски видео</h3>
+            <table id="videoTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Видео</th>
+                    </thead>
+                <tbody></tbody>
+            划
+        </div>
+
+        <!-- Просмотры страниц -->
+        <div class="table-card">
+            <h3><i class="fas fa-chart-line"></i> Просмотры страниц</h3>
+            <table id="pageViewsTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Страница</th>
+                        <th>Сессия</th>
+                    </thead>
+                <tbody></tbody>
+            划
+        </div>
+    </div>
+
+    <script>
+        // ========== Утилиты ==========
+        function getData(key) {
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        let currentDateFrom = null, currentDateTo = null;
+        let russiaMap, markerCluster;
+
+        // Инициализация дат (последние 30 дней)
+        function initDateFilters() {
+            const to = new Date();
+            const from = new Date();
+            from.setDate(to.getDate() - 30);
+            document.getElementById('dateFrom').value = from.toISOString().slice(0,10);
+            document.getElementById('dateTo').value = to.toISOString().slice(0,10);
+            currentDateFrom = from;
+            currentDateTo = to;
+        }
+
+        function filterByDate(data) {
+            if (!currentDateFrom || !currentDateTo) return data;
+            return data.filter(item => {
+                const date = new Date(item.timestamp);
+                return date >= currentDateFrom && date <= currentDateTo;
+            });
+        }
+
+        // ========== Статистика ==========
+        function renderStats() {
+            const pageViews = getData('pageViews');
+            const downloads = getData('downloads');
+            const messages = getData('messages');
+            const videoViews = getData('videoViews');
+
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViews.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloads.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div><div class="stat-number">${messages.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-video"></i> Запусков видео</div><div class="stat-number">${videoViews.length}</div></div>
+            `;
+        }
+
+        // ========== Сессии ==========
+        function renderSessions() {
+            const sessions = getData('sessions');
+            const tbody = document.querySelector('#sessionsTable tbody');
+            tbody.innerHTML = sessions.slice().reverse().map(s => {
+                let date = s.startTime ? new Date(s.startTime).toLocaleString() : '—';
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${escapeHtml(s.referrer)}</td>
+                        <td>${escapeHtml((s.userAgent || '').split(' ')[0])}</td>
+                        <td>${s.country || '—'}</td>
+                        <td>${s.city || '—'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ========== Сообщения ==========
+        function renderMessages() {
+            const messages = filterByDate(getData('messages'));
+            const tbody = document.querySelector('#messagesTable tbody');
+            tbody.innerHTML = messages.slice(-20).reverse().map(m => `
+                <tr>
+                    <td>${new Date(m.timestamp).toLocaleString()}</td>
+                    <td>${escapeHtml(m.name || '')}</td>
+                    <td>${escapeHtml(m.email || '')}</td>
+                    <td>${escapeHtml(m.message || '')}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ========== Скачивания ==========
+        function renderDownloads() {
+            const downloads = filterByDate(getData('downloads'));
+            const tbody = document.querySelector('#downloadsTable tbody');
+            tbody.innerHTML = downloads.slice(-20).reverse().map(d => `
+                <tr>
+                    <td>${new Date(d.timestamp).toLocaleString()}</td>
+                    <td><span class="badge">${escapeHtml(d.fileName || '')}</span></td>
+                    <td><small>${d.sessionId?.slice(-8) || '—'}</small></td>
+                </tr>
+            `).join('');
+        }
+
+        // ========== Видео ==========
+        function renderVideo() {
+            const videoViews = filterByDate(getData('videoViews'));
+            const tbody = document.querySelector('#videoTable tbody');
+            tbody.innerHTML = videoViews.slice(-20).reverse().map(v => `
+                <tr>
+                    <td>${new Date(v.timestamp).toLocaleString()}</td>
+                    <td>${escapeHtml(v.videoName || '')}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ========== Просмотры страниц ==========
+        function renderPageViews() {
+            const pageViews = filterByDate(getData('pageViews'));
+            const tbody = document.querySelector('#pageViewsTable tbody');
+            tbody.innerHTML = pageViews.slice(-20).reverse().map(pv => `
+                <tr>
+                    <td>${new Date(pv.timestamp).toLocaleString()}</td>
+                    <td>${escapeHtml(pv.page)}</td>
+                    <td><small>${pv.sessionId?.slice(-8) || '—'}</small></td>
+                </tr>
+            `).join('');
+        }
+
+        // ========== Карта России ==========
+        function renderRussiaMap() {
+            const sessions = getData('sessions');
+            const citiesMap = new Map(); // key: city, value: { count, region, lat, lon }
+
+            sessions.forEach(s => {
+                if (s.city && s.lat && s.lon) {
+                    const key = s.city;
+                    if (!citiesMap.has(key)) {
+                        citiesMap.set(key, { count: 0, region: s.region, lat: s.lat, lon: s.lon });
+                    }
+                    citiesMap.get(key).count++;
+                } else if (s.city && !s.lat && !s.lon && s.region) {
+                    const key = s.city;
+                    if (!citiesMap.has(key)) {
+                        citiesMap.set(key, { count: 0, region: s.region, lat: null, lon: null });
+                    }
+                    citiesMap.get(key).count++;
                 }
-            })
-            .catch(err => console.warn('Не удалось определить геолокацию:', err));
-    }
+            });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        createSession();
-        saveEvent('pageViews', { page: window.location.pathname });
-    });
-})();
+            const cities = Array.from(citiesMap.entries()).map(([name, data]) => ({ name, ...data })).sort((a,b)=>b.count - a.count);
+
+            // Таблица городов
+            const cityTableBody = document.querySelector('#citiesTable tbody');
+            cityTableBody.innerHTML = cities.map(c => `
+                <tr>
+                    <td>${escapeHtml(c.name)}</td>
+                    <td>${escapeHtml(c.region || '—')}</td>
+                    <td>${c.count}</td>
+                    <td>${c.lat && c.lon ? `${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}` : '—'}</td>
+                </tr>
+            `).join('');
+
+            // Карта
+            if (russiaMap) russiaMap.remove();
+            russiaMap = L.map('russiaMap').setView([64, 100], 4);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB'
+            }).addTo(russiaMap);
+            if (markerCluster) markerCluster.clearLayers();
+            markerCluster = L.markerClusterGroup();
+            cities.forEach(city => {
+                if (city.lat && city.lon) {
+                    const marker = L.marker([city.lat, city.lon]);
+                    marker.bindPopup(`<b>${city.name}</b><br>Посещений: ${city.count}<br>Регион: ${city.region || '—'}`);
+                    markerCluster.addLayer(marker);
+                }
+            });
+            russiaMap.addLayer(markerCluster);
+        }
+
+        // ========== Обновление ==========
+        function refreshAll() {
+            renderStats();
+            renderSessions();
+            renderMessages();
+            renderDownloads();
+            renderVideo();
+            renderPageViews();
+            renderRussiaMap();
+            updateLastUpdate();
+        }
+
+        function updateLastUpdate() {
+            document.querySelector('#lastUpdate').innerHTML = `<i class="fas fa-clock"></i> Обновлено: ${new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
+        }
+
+        function applyDateFilter() {
+            const fromStr = document.getElementById('dateFrom').value;
+            const toStr = document.getElementById('dateTo').value;
+            if (fromStr && toStr) {
+                currentDateFrom = new Date(fromStr);
+                currentDateTo = new Date(toStr);
+                currentDateTo.setHours(23,59,59,999);
+                refreshAll();
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('Удалить все данные аналитики? Это действие необратимо.')) {
+                const keys = ['pageViews','downloads','messages','videoViews','sessions','pageDurations','scrollDepth','visitCount','downloadCount','sessionId'];
+                keys.forEach(k => localStorage.removeItem(k));
+                refreshAll();
+            }
+        }
+
+        function exportToCSV() {
+            const collections = {
+                'sessions': getData('sessions'),
+                'pageViews': filterByDate(getData('pageViews')),
+                'downloads': filterByDate(getData('downloads')),
+                'videoViews': filterByDate(getData('videoViews')),
+                'messages': filterByDate(getData('messages'))
+            };
+            let csvRows = [];
+            for (const [name, data] of Object.entries(collections)) {
+                if (data.length === 0) continue;
+                csvRows.push(`\n\n=== ${name.toUpperCase()} ===`);
+                const headers = Object.keys(data[0]);
+                csvRows.push(headers.join(','));
+                for (const row of data) {
+                    const values = headers.map(header => {
+                        let val = row[header];
+                        if (val && typeof val === 'object') val = JSON.stringify(val);
+                        return `"${String(val).replace(/"/g, '""')}"`;
+                    });
+                    csvRows.push(values.join(','));
+                }
+            }
+            const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.setAttribute('download', `analytics_${new Date().toISOString().slice(0,19)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        window.addEventListener('load', () => {
+            initDateFilters();
+            refreshAll();
+        });
+    </script>
+</body>
+</html>
