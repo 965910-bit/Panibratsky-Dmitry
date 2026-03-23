@@ -1,4 +1,4 @@
-// js/analytics.js – с сохранением города и координат
+// js/analytics.js – минимальная версия для сбора сессий и просмотров
 (function() {
     function saveEvent(collection, data) {
         let events = localStorage.getItem(collection);
@@ -48,7 +48,7 @@
         localStorage.setItem('sessions', JSON.stringify(sessions));
         console.log('Новая сессия создана:', sessionMeta);
 
-        // Асинхронное определение геолокации (страна, регион, город, координаты)
+        // Получаем геолокацию
         fetch('https://ipapi.co/json/')
             .then(res => res.json())
             .then(data => {
@@ -75,6 +75,4 @@
         createSession();
         saveEvent('pageViews', { page: window.location.pathname });
     });
-
-    // ... (остальные функции без изменений) ...
 })();
