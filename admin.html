@@ -358,7 +358,7 @@
         <div id="sessions" class="tab-content">
             <div class="table-card"><h3><i class="fas fa-users"></i> Список сессий</h3>
                 <table id="sessionsTable">
-                    <thead><tr><th>Дата начала</th><th>Источник</th><th>Устройство</th><th>Размер экрана</th><th>Язык</th><th>Страна</th></tr></thead>
+                    <thead> <tr><th>Дата начала</th><th>Источник</th><th>Устройство</th><th>Размер экрана</th><th>Язык</th><th>Страна</th></tr> </thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -537,7 +537,7 @@
             map = L.map('worldMap').setView([20,0],2);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB' }).addTo(map);
             if (sessions.length) {
-                const countryPoints = { Россия: [61, 90], США: [38, -97], Германия: [51, 10], Китай: [35, 105] }; // пример
+                const countryPoints = { Россия: [61, 90], США: [38, -97], Германия: [51, 10], Китай: [35, 105] };
                 sessions.forEach(s => { if (s.country && countryPoints[s.country]) L.marker(countryPoints[s.country]).addTo(map).bindPopup(`${s.country}: 1 сессия`); });
             }
         }
