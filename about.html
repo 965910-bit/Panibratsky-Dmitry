@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* все ваши стили из исходного about.html (я их сохранил) */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -271,6 +270,46 @@
             border: 1px solid rgba(30, 64, 175, 0.2);
         }
 
+        /* Video Section */
+        .video-section {
+            padding: 70px 0;
+            background-color: white;
+        }
+
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .video-container video {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+            pointer-events: auto;
+        }
+
+        .video-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            color: var(--neutral-medium);
+            font-size: 14px;
+        }
+
+        .view-counter {
+            background: var(--neutral-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: var(--primary-blue);
+        }
+
+        .view-counter i {
+            margin-right: 5px;
+            color: var(--accent-gold);
+        }
+
         /* Philosophy Principles */
         .philosophy-section {
             padding: 70px 0;
@@ -453,46 +492,6 @@
             font-size: 14px;
             color: var(--neutral-medium);
             font-weight: 500;
-        }
-
-        /* Video Section */
-        .video-section {
-            padding: 70px 0;
-            background-color: white;
-        }
-
-        .video-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .video-container video {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 20px 30px rgba(0,0,0,0.15);
-            pointer-events: auto;
-        }
-
-        .video-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            color: var(--neutral-medium);
-            font-size: 14px;
-        }
-
-        .view-counter {
-            background: var(--neutral-light);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 500;
-            color: var(--primary-blue);
-        }
-
-        .view-counter i {
-            margin-right: 5px;
-            color: var(--accent-gold);
         }
 
         /* Book & Academy */
@@ -721,7 +720,7 @@
 <body>
     <header id="mainHeader">
         <div class="container nav-container">
-            <a href="index.html" class="logo">
+            <a href="about.html" class="logo">
                 ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
             </a>
             <button class="mobile-menu-btn" aria-label="Меню">
@@ -729,10 +728,10 @@
             </button>
             <nav>
                 <ul id="nav-menu">
-                    <li><a href="index.html">Стратегия</a></li>
-                    <li><a href="experience.html">Опыт</a></li>
                     <li><a href="about.html" class="active">Обо мне</a></li>
                     <li><a href="expertise.html">Экспертиза</a></li>
+                    <li><a href="experience.html">Опыт</a></li>
+                    <li><a href="index.html">Стратегия</a></li>
                     <li><a href="contact.html">Контакты</a></li>
                 </ul>
             </nav>
@@ -764,6 +763,24 @@
                     <source srcset="images/profile.webp" type="image/webp">
                     <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="about-photo" width="300" height="300" loading="eager">
                 </picture>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section (перенесено наверх) -->
+    <section class="video-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Видео-приветствие</h2>
+            </div>
+            <div class="video-container">
+                <video id="myVideo" controls controlslist="nodownload" preload="metadata" oncontextmenu="return false;">
+                    <source src="videos/about.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+                <div class="video-stats">
+                    <span class="view-counter"><i class="fas fa-eye"></i> Просмотров: <span id="videoViewCountDisplay">0</span></span>
+                </div>
             </div>
         </div>
     </section>
@@ -884,24 +901,6 @@
         </div>
     </section>
 
-    <!-- Video Section with visible counter and download disabled -->
-    <section class="video-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Видео-приветствие</h2>
-            </div>
-            <div class="video-container">
-                <video id="myVideo" controls controlslist="nodownload" preload="metadata" oncontextmenu="return false;">
-                    <source src="videos/about.mp4" type="video/mp4">
-                    Ваш браузер не поддерживает видео.
-                </video>
-                <div class="video-stats">
-                    <span class="view-counter"><i class="fas fa-eye"></i> Просмотров: <span id="videoViewCountDisplay">0</span></span>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Book & Academy -->
     <section class="book-academy">
         <div class="container book-academy-container">
@@ -956,10 +955,10 @@
                 <div class="footer-column">
                     <h3>Навигация</h3>
                     <ul>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
                         <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
                         <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
+                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
                     </ul>
                 </div>
@@ -978,7 +977,6 @@
         </div>
     </footer>
 
-    <!-- Analytics script -->
     <script src="js/analytics.js"></script>
     <script>
         // Локальные счётчики
