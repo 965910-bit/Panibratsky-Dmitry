@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский | Экспертиза в SCM и цифровой трансформации</title>
-    <meta name="description" content="Методологии и инструменты управления цепями поставок: Lean, ABC-XYZ анализ, цифровая трансформация, внедрение AI, WMS/TMS. Кейсы и подходы.">
+    <meta name="description" content="Методологии и инструменты управления цепями поставок: Lean, ABC-XYZ анализ, цифровая трансформация, внедрение AI, WMS/TMS. Кейсы оптимизации склада, транспортной логистики и предиктивной аналитики.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -62,11 +62,6 @@
             width: 100%;
             z-index: 1000;
             transition: var(--transition);
-        }
-
-        .header-scrolled {
-            box-shadow: var(--shadow);
-            border-bottom: 1px solid rgba(226, 232, 240, 1);
         }
 
         .nav-container {
@@ -539,7 +534,7 @@
             line-height: 1.6;
         }
 
-        /* Academy short section (ссылка на about) */
+        /* Academy short section */
         .academy-short {
             padding: 70px 0;
             background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
@@ -792,7 +787,7 @@
             font-size: 13px;
         }
 
-        /* Responsive Styles */
+        /* Responsive */
         @media (max-width: 992px) {
             .expertise-container {
                 flex-direction: column;
@@ -1199,7 +1194,7 @@
         </div>
     </section>
 
-    <!-- Academy short section (ссылка на about) -->
+    <!-- Academy short section -->
     <section class="academy-short">
         <div class="container" style="text-align: center;">
             <h2 class="section-title">Академия цепей поставок</h2>
@@ -1381,7 +1376,6 @@
                         icon.classList.toggle('fa-times');
                     }
                 });
-                // Закрытие при клике на ссылку
                 document.querySelectorAll('#nav-menu a').forEach(link => {
                     link.addEventListener('click', () => {
                         navMenu.classList.remove('active');
@@ -1405,7 +1399,6 @@
             const downloadSpan = document.getElementById('download-counter');
             if (downloadSpan) downloadSpan.textContent = downloadCount;
 
-            // Год в футере
             const yearSpan = document.getElementById('current-year');
             if (yearSpan) yearSpan.textContent = new Date().getFullYear();
         })();
