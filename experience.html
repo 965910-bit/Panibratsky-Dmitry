@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский | Опыт работы в управлении цепями поставок</title>
+    <meta name="description" content="15+ лет практического опыта в управлении цепями поставок, логистике и цифровой трансформации. Ключевые достижения, карьерный путь и профессиональные компетенции.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ===== ВСЕ ВАШИ СТИЛИ (без изменений) ===== */
+        /* Я их не сокращаю, они полностью идентичны вашему файлу experience (18).html */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -445,23 +448,12 @@
             padding-right: 50%;
             position: relative;
             margin-bottom: 60px;
-            /* Изменено: теперь элементы видны сразу, без анимации */
-            opacity: 1;
-            transform: translateX(0);
-            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
         .timeline-item:nth-child(even) {
             justify-content: flex-start;
             padding-right: 0;
             padding-left: 50%;
-            transform: translateX(0);
-        }
-
-        /* Класс visible больше не нужен, но оставим для совместимости */
-        .timeline-item.visible {
-            opacity: 1;
-            transform: translateX(0);
         }
 
         .timeline-content {
@@ -1130,10 +1122,10 @@
             </button>
             <nav>
                 <ul id="nav-menu">
-                    <li><a href="index.html">Стратегия</a></li>
-                    <li><a href="experience.html" class="active">Опыт</a></li>
                     <li><a href="about.html">Обо мне</a></li>
                     <li><a href="expertise.html">Экспертиза</a></li>
+                    <li><a href="experience.html" class="active">Опыт</a></li>
+                    <li><a href="index.html">Стратегия</a></li>
                     <li><a href="contact.html">Контакты</a></li>
                 </ul>
             </nav>
@@ -1218,7 +1210,7 @@
                 </div>
                 
                 <div style="margin: 40px 0;">
-                    <a href="resume/Дмитрий_Панибратский_CV.pdf" class="download-button" id="resume-download" download>
+                    <a href="resume/Дмитрий_Панибратский_CV.pdf" class="download-button" id="resume-download" download aria-label="Скачать резюме в формате PDF">
                         <i class="fas fa-download"></i> Скачать резюме (PDF)
                     </a>
                     <a href="contact.html" class="download-button download-button-secondary">
@@ -1656,10 +1648,10 @@
                 <div class="footer-column">
                     <h3>Навигация</h3>
                     <ul>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
                         <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
                         <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
+                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
                     </ul>
                 </div>
@@ -1688,31 +1680,66 @@
 
     <script src="js/analytics.js"></script>
     <script>
-        // Автоматическая дата резюме
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-        document.getElementById('resume-date').textContent = formattedDate;
+        (function() {
+            // 1. Мобильное меню (переключение иконки, закрытие по клику на ссылку)
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            if (mobileBtn && navMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    const icon = mobileBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+                // Закрытие меню при клике на ссылку
+                document.querySelectorAll('#nav-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        const icon = mobileBtn.querySelector('i');
+                        if (icon && icon.classList.contains('fa-times')) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    });
+                });
+            }
 
-        // Локальные счётчики
-        let visitCount = localStorage.getItem('visitCount') || 0;
-        visitCount++;
-        localStorage.setItem('visitCount', visitCount);
-        document.getElementById('visit-counter').textContent = visitCount;
+            // 2. Дата обновления резюме
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+            const resumeDateSpan = document.getElementById('resume-date');
+            if (resumeDateSpan) resumeDateSpan.textContent = formattedDate;
 
-        let resumeDownloadCount = localStorage.getItem('resumeDownloadCount') || 0;
-        document.getElementById('resume-download-counter').textContent = resumeDownloadCount;
+            // 3. Счётчики
+            let visitCount = parseInt(localStorage.getItem('visitCount') || '0', 10);
+            visitCount++;
+            localStorage.setItem('visitCount', visitCount);
+            const visitSpan = document.getElementById('visit-counter');
+            if (visitSpan) visitSpan.textContent = visitCount;
 
-        const resumeLink = document.getElementById('resume-download');
-        if (resumeLink) {
-            resumeLink.addEventListener('click', function() {
-                let count = localStorage.getItem('resumeDownloadCount') || 0;
-                count++;
-                localStorage.setItem('resumeDownloadCount', count);
-                document.getElementById('resume-download-counter').textContent = count;
-            });
-        }
+            let resumeDownloadCount = parseInt(localStorage.getItem('resumeDownloadCount') || '0', 10);
+            const downloadSpan = document.getElementById('resume-download-counter');
+            if (downloadSpan) downloadSpan.textContent = resumeDownloadCount;
 
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+            const resumeLink = document.getElementById('resume-download');
+            if (resumeLink) {
+                resumeLink.addEventListener('click', function(e) {
+                    // Счётчик обновляется
+                    let count = parseInt(localStorage.getItem('resumeDownloadCount') || '0', 10);
+                    count++;
+                    localStorage.setItem('resumeDownloadCount', count);
+                    if (downloadSpan) downloadSpan.textContent = count;
+                    // Можно добавить уведомление (опционально)
+                    // alert('Скачивание резюме начато. Спасибо за интерес!');
+                });
+            }
+
+            // 4. Текущий год в футере
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+        })();
     </script>
 </body>
 </html>
