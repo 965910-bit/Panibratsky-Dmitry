@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Аналитический центр | Панибратский</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -13,460 +12,100 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
     <style>
-        /* Все стили как в предыдущей версии */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f0f2f5;
-            color: #1e293b;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .header h1 {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .header-actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .date-range {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: white;
-            padding: 5px 12px;
-            border-radius: 40px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .date-range input {
-            border: none;
-            padding: 6px 8px;
-            font-size: 13px;
-            border-radius: 20px;
-            background: #f1f5f9;
-            font-family: inherit;
-        }
-        .apply-date {
-            background: #1e40af;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .last-update {
-            background: white;
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-size: 13px;
-            color: #475569;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .refresh-btn, .export-btn {
-            background: #1e40af;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-        .export-btn {
-            background: #10b981;
-        }
-        .export-btn:hover {
-            background: #059669;
-        }
-        .refresh-btn:hover {
-            background: #0f172a;
-            transform: translateY(-2px);
-        }
-        .clear-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-        .clear-btn:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 10px;
-            flex-wrap: wrap;
-        }
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 8px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #64748b;
-            cursor: pointer;
-            border-radius: 30px;
-            transition: all 0.2s;
-        }
-        .tab-btn.active {
-            background: #1e40af;
-            color: white;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 24px;
-            padding: 24px 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s;
-        }
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
-        }
-        .stat-title {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .stat-number {
-            font-size: 42px;
-            font-weight: 800;
-            color: #1e40af;
-            line-height: 1;
-        }
-        .stat-change {
-            font-size: 12px;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .positive {
-            color: #10b981;
-        }
-        .negative {
-            color: #ef4444;
-        }
-
-        .chart-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-        .chart-card {
-            background: white;
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-        }
-        .chart-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-        .no-data {
-            text-align: center;
-            color: #94a3b8;
-            padding: 80px 20px;
-            font-size: 14px;
-        }
-
-        .table-card {
-            background: white;
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-            overflow-x: auto;
-            margin-bottom: 30px;
-        }
-        .table-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            min-width: 600px;
-        }
-        th, td {
-            padding: 12px 8px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-            white-space: nowrap;
-        }
-        th {
-            font-weight: 600;
-            color: #475569;
-            background: #f8fafc;
-        }
-        tr:hover {
-            background: #f8fafc;
-        }
-        .badge {
-            background: #d4af37;
-            color: #0f172a;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        #russiaMap {
-            height: 500px;
-            width: 100%;
-            border-radius: 16px;
-            margin-bottom: 20px;
-        }
-
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #1e40af;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 40px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
-            font-size: 14px;
-            z-index: 1000;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 15px; }
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .header-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-            .date-range {
-                width: 100%;
-                justify-content: space-between;
-            }
-            .chart-row {
-                grid-template-columns: 1fr;
-            }
-            .chart-card .chart-container {
-                height: 250px;
-            }
-            table {
-                font-size: 12px;
-            }
-            th, td {
-                padding: 8px 6px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; color: #1e293b; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+        .header h1 { font-size: 24px; font-weight: 800; background: linear-gradient(135deg, #1e40af, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .header-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .date-range { background: white; padding: 5px 12px; border-radius: 40px; display: flex; gap: 8px; align-items: center; }
+        .date-range input { border: none; padding: 6px 8px; background: #f1f5f9; border-radius: 20px; }
+        .apply-date { background: #1e40af; color: white; border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer; }
+        .last-update { background: white; padding: 8px 16px; border-radius: 40px; font-size: 13px; }
+        .refresh-btn, .clear-btn { background: #1e40af; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-weight: 600; }
+        .clear-btn { background: #ef4444; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; flex-wrap: wrap; }
+        .tab-btn { background: none; border: none; padding: 8px 20px; font-weight: 600; color: #64748b; cursor: pointer; border-radius: 30px; }
+        .tab-btn.active { background: #1e40af; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; border-radius: 24px; padding: 24px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .stat-title { font-size: 14px; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .stat-number { font-size: 42px; font-weight: 800; color: #1e40af; line-height: 1; }
+        .stat-change { font-size: 12px; margin-top: 8px; color: #10b981; }
+        .table-card { background: white; border-radius: 24px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; overflow-x: auto; margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; }
+        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; font-weight: 600; }
+        #russiaMap { height: 500px; width: 100%; border-radius: 16px; margin-bottom: 20px; }
+        @media (max-width: 768px) { .header { flex-direction: column; align-items: flex-start; } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-chart-line"></i> Аналитический центр <span style="font-size: 12px; background: #e2e8f0; padding: 4px 12px; border-radius: 30px;">профессиональная версия</span></h1>
+            <h1>Аналитический центр</h1>
             <div class="header-actions">
                 <div class="date-range">
-                    <span>📅 с</span>
-                    <input type="date" id="dateFrom" value="">
+                    <span>с</span>
+                    <input type="date" id="dateFrom">
                     <span>по</span>
-                    <input type="date" id="dateTo" value="">
+                    <input type="date" id="dateTo">
                     <button class="apply-date" onclick="applyDateFilter()">Применить</button>
                 </div>
-                <div class="last-update" id="lastUpdate"><i class="fas fa-clock"></i> Обновлено: --:--:--</div>
-                <button class="export-btn" onclick="exportToCSV()"><i class="fas fa-download"></i> Экспорт CSV</button>
-                <button class="refresh-btn" onclick="refreshAll()"><i class="fas fa-sync-alt"></i> Обновить</button>
-                <button class="clear-btn" onclick="clearAllData()"><i class="fas fa-trash-alt"></i> Очистить</button>
+                <div class="last-update" id="lastUpdate"></div>
+                <button class="refresh-btn" onclick="refreshAll()">Обновить</button>
+                <button class="clear-btn" onclick="clearAllData()">Очистить</button>
             </div>
         </div>
 
         <div class="tabs">
             <button class="tab-btn active" data-tab="overview">Обзор</button>
             <button class="tab-btn" data-tab="sessions">Сессии</button>
-            <button class="tab-btn" data-tab="content">Контент</button>
-            <button class="tab-btn" data-tab="events">События</button>
-            <button class="tab-btn" data-tab="sources">Источники</button>
-            <button class="tab-btn" data-tab="geo">География</button>
             <button class="tab-btn" data-tab="russia">Россия</button>
         </div>
 
-        <!-- Вкладка Обзор (оставляем как есть, без изменений) -->
         <div id="overview" class="tab-content active">
             <div class="stats-grid" id="statsGrid"></div>
-            <div class="chart-card"><h3><i class="fas fa-calendar-week"></i> Посещения по дням</h3><div class="chart-container"><canvas id="viewsChart"></canvas></div></div>
-            <div class="chart-card"><h3><i class="fas fa-chart-bar"></i> Популярность страниц</h3><div class="chart-container"><canvas id="pagesChart"></canvas></div></div>
         </div>
 
-        <!-- Вкладка Сессии -->
         <div id="sessions" class="tab-content">
-            <div class="table-card"><h3><i class="fas fa-users"></i> Список сессий</h3>
+            <div class="table-card">
+                <h3>Список сессий</h3>
                 <table id="sessionsTable">
                     <thead>
-                        <tr><th>Дата начала</th><th>Источник</th><th>Устройство</th><th>Размер экрана</th><th>Язык</th><th>Страна</th></thead>
+                        <tr><th>Дата</th><th>Источник</th><th>Устройство</th><th>Страна</th><th>Город</th></thead>
                     <tbody></tbody>
                 划
             </div>
         </div>
 
-        <!-- Вкладка Контент -->
-        <div id="content" class="tab-content">
-            <div class="chart-card"><h3><i class="fas fa-clock"></i> Среднее время на странице (сек)</h3><div class="chart-container"><canvas id="durationChart"></canvas></div></div>
-            <div class="chart-card"><h3><i class="fas fa-arrow-down"></i> Глубина прокрутки (достигнутый %)</h3><div class="chart-container"><canvas id="scrollChart"></canvas></div></div>
-        </div>
-
-        <!-- Вкладка События -->
-        <div id="events" class="tab-content">
-            <div class="table-card"><h3><i class="fas fa-envelope"></i> Последние сообщения</h3><table id="messagesTable"><thead>发展<th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th> </thead><tbody></tbody></table></div>
-            <div class="table-card"><h3><i class="fas fa-download"></i> Недавние скачивания</h3><table id="downloadsTable"><thead>发展<th>Дата</th><th>Файл</th><th>Сессия</th> </thead><tbody></tbody></table></div>
-            <div class="table-card"><h3><i class="fas fa-video"></i> Запуски видео</h3><table id="videoTable"><thead>发展<th>Дата</th><th>Видео</th> </thead><tbody></tbody></table></div>
-            <div class="table-card"><h3><i class="fas fa-chart-line"></i> Просмотры страниц</h3><table id="pageViewsTable"><thead>发展<th>Дата</th><th>Страница</th><th>Сессия</th> </thead><tbody></tbody></table></div>
-        </div>
-
-        <!-- Вкладка Источники -->
-        <div id="sources" class="tab-content">
-            <div class="chart-row">
-                <div class="chart-card"><h3><i class="fas fa-globe"></i> Источники трафика</h3><div class="chart-container"><canvas id="sourcesChart"></canvas></div></div>
-                <div class="chart-card"><h3><i class="fas fa-language"></i> Языки посетителей</h3><div class="chart-container"><canvas id="languagesChart"></canvas></div></div>
-            </div>
-            <div class="table-card"><h3><i class="fas fa-link"></i> Детали по реферерам</h3><table id="referrersTable"><thead>发展<th>Реферер</th><th>Количество сессий</th><th>%</th> </thead><tbody></tbody></table></div>
-        </div>
-
-        <!-- Вкладка География (мировая карта) -->
-        <div id="geo" class="tab-content">
-            <div class="chart-card"><h3><i class="fas fa-map-marker-alt"></i> Интерактивная карта мира</h3><div id="worldMap"></div></div>
-            <div class="chart-card"><h3><i class="fas fa-chart-bar"></i> Посетители по странам</h3><div class="chart-container"><canvas id="countriesChart"></canvas></div></div>
-            <div class="table-card"><h3><i class="fas fa-flag"></i> Детальная статистика по странам</h3><table id="countriesTable"><thead>发展<th>Страна</th><th>Количество сессий</th><th>%</th> </thead><tbody></tbody></table></div>
-        </div>
-
-        <!-- Вкладка Россия -->
         <div id="russia" class="tab-content">
-            <div class="chart-card">
-                <h3><i class="fas fa-map-marker-alt"></i> Карта России (города посетителей)</h3>
+            <div class="table-card">
+                <h3>Карта России</h3>
                 <div id="russiaMap"></div>
             </div>
             <div class="table-card">
-                <h3><i class="fas fa-city"></i> Детализация по городам России</h3>
+                <h3>Города посетителей</h3>
                 <table id="citiesTable">
                     <thead>
-                        <tr><th>Город</th><th>Регион</th><th>Количество сессий</th><th>Координаты</th></thead>
+                        <tr><th>Город</th><th>Регион</th><th>Посещений</th><th>Координаты</th></thead>
                     <tbody></tbody>
                 划
             </div>
         </div>
     </div>
 
-    <div id="notification" class="notification"></div>
-
     <script>
-        // ========== Утилиты ==========
-        function getData(key) {
-            return JSON.parse(localStorage.getItem(key) || '[]');
-        }
+        function getData(key) { return JSON.parse(localStorage.getItem(key) || '[]'); }
+        function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
+        let currentDateFrom = null, currentDateTo = null, russiaMap = null, markerCluster = null;
 
-        // Глобальные переменные
-        let viewsChart, pagesChart, durationChart, scrollChart, sourcesChart, languagesChart, countriesChart, worldMap, russiaMap, markerCluster;
-        let currentDateFrom = null, currentDateTo = null, lastMessageCount = 0;
-
-        // Инициализация дат (последние 30 дней)
         function initDateFilters() {
             const to = new Date();
-            const from = new Date();
-            from.setDate(to.getDate() - 30);
+            const from = new Date(); from.setDate(to.getDate() - 30);
             document.getElementById('dateFrom').value = from.toISOString().slice(0,10);
             document.getElementById('dateTo').value = to.toISOString().slice(0,10);
             currentDateFrom = from;
@@ -476,113 +115,26 @@
         function filterByDate(data) {
             if (!currentDateFrom || !currentDateTo) return data;
             return data.filter(item => {
-                const date = new Date(item.timestamp);
+                const date = new Date(item.timestamp || item.startTime);
                 return date >= currentDateFrom && date <= currentDateTo;
             });
         }
 
-        function getChange(current, previous) {
-            if (previous === 0) return { percent: current > 0 ? 100 : 0, positive: current > 0 };
-            const diff = current - previous;
-            const percent = Math.round((diff / previous) * 100);
-            return { percent: Math.abs(percent), positive: diff >= 0 };
-        }
-
-        function classifyReferrer(referrer) {
-            if (!referrer || referrer === 'direct') return 'Прямой заход';
-            const url = referrer.toLowerCase();
-            if (url.includes('google.') || url.includes('yandex.') || url.includes('bing.') || url.includes('yahoo.')) return 'Поисковики';
-            if (url.includes('facebook.') || url.includes('vk.') || url.includes('t.me') || url.includes('instagram.') || url.includes('twitter.')) return 'Социальные сети';
-            return 'Другие сайты';
-        }
-
-        function showNotification(text) {
-            const notif = document.getElementById('notification');
-            notif.textContent = text;
-            notif.style.display = 'block';
-            setTimeout(() => notif.style.display = 'none', 5000);
-        }
-
-        // ========== Рендер вкладок (сокращённые версии) ==========
         function renderOverview() {
-            const allPageViews = getData('pageViews');
-            const allDownloads = getData('downloads');
-            const allMessages = getData('messages');
-            const allVideoViews = getData('videoViews');
-
-            const pageViews = filterByDate(allPageViews);
-            const downloads = filterByDate(allDownloads);
-            const messages = filterByDate(allMessages);
-            const videoViews = filterByDate(allVideoViews);
-
-            const periodDays = Math.ceil((currentDateTo - currentDateFrom) / (1000*60*60*24));
-            const prevFrom = new Date(currentDateFrom);
-            prevFrom.setDate(prevFrom.getDate() - periodDays);
-            const prevTo = new Date(currentDateFrom);
-            prevTo.setDate(prevTo.getDate() - 1);
-
-            const prevPageViews = allPageViews.filter(item => {
-                const d = new Date(item.timestamp);
-                return d >= prevFrom && d <= prevTo;
-            });
-            const prevDownloads = allDownloads.filter(item => {
-                const d = new Date(item.timestamp);
-                return d >= prevFrom && d <= prevTo;
-            });
-            const prevMessages = allMessages.filter(item => {
-                const d = new Date(item.timestamp);
-                return d >= prevFrom && d <= prevTo;
-            });
-            const prevVideoViews = allVideoViews.filter(item => {
-                const d = new Date(item.timestamp);
-                return d >= prevFrom && d <= prevTo;
-            });
-
-            const changeViews = getChange(pageViews.length, prevPageViews.length);
-            const changeDownloads = getChange(downloads.length, prevDownloads.length);
-            const changeMessages = getChange(messages.length, prevMessages.length);
-            const changeVideo = getChange(videoViews.length, prevVideoViews.length);
-
+            const pageViews = getData('pageViews');
+            const downloads = getData('downloads');
+            const messages = getData('messages');
+            const videoViews = getData('videoViews');
             document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViews.length}</div><div class="stat-change ${changeViews.positive?'positive':'negative'}">${changeViews.positive?'↑':'↓'} ${changeViews.percent}% за период</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloads.length}</div><div class="stat-change ${changeDownloads.positive?'positive':'negative'}">${changeDownloads.positive?'↑':'↓'} ${changeDownloads.percent}% за период</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div><div class="stat-number">${messages.length}</div><div class="stat-change ${changeMessages.positive?'positive':'negative'}">${changeMessages.positive?'↑':'↓'} ${changeMessages.percent}% за период</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-video"></i> Запусков видео</div><div class="stat-number">${videoViews.length}</div><div class="stat-change ${changeVideo.positive?'positive':'negative'}">${changeVideo.positive?'↑':'↓'} ${changeVideo.percent}% за период</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViews.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloads.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div><div class="stat-number">${messages.length}</div></div>
+                <div class="stat-card"><div class="stat-title"><i class="fas fa-video"></i> Запусков видео</div><div class="stat-number">${videoViews.length}</div></div>
             `;
-
-            // График посещений по дням
-            const days = [], counts = [];
-            let cur = new Date(currentDateFrom);
-            while (cur <= currentDateTo) {
-                const dayStr = cur.toISOString().slice(0,10);
-                days.push(dayStr.slice(5));
-                const count = pageViews.filter(p => p.timestamp.slice(0,10) === dayStr).length;
-                counts.push(count);
-                cur.setDate(cur.getDate() + 1);
-            }
-            const ctx = document.getElementById('viewsChart').getContext('2d');
-            if (viewsChart) viewsChart.destroy();
-            viewsChart = new Chart(ctx, {
-                type: 'bar',
-                data: { labels: days, datasets: [{ label: 'Просмотры', data: counts, backgroundColor: '#1e40af', borderRadius: 8 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
-
-            // Популярность страниц
-            const pageCounts = {};
-            pageViews.forEach(v => { const page = v.page || 'unknown'; pageCounts[page] = (pageCounts[page] || 0) + 1; });
-            const sortedPages = Object.entries(pageCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
-            const ctx2 = document.getElementById('pagesChart').getContext('2d');
-            if (pagesChart) pagesChart.destroy();
-            pagesChart = new Chart(ctx2, {
-                type: 'bar',
-                data: { labels: sortedPages.map(p => p[0].split('/').pop() || p[0]), datasets: [{ label: 'Просмотры', data: sortedPages.map(p => p[1]), backgroundColor: '#3b82f6', borderRadius: 8 }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
         }
 
         function renderSessions() {
-            const sessions = getData('sessions');
+            const sessions = filterByDate(getData('sessions'));
             const tbody = document.querySelector('#sessionsTable tbody');
             tbody.innerHTML = sessions.slice().reverse().map(s => {
                 let date = s.startTime ? new Date(s.startTime).toLocaleString() : '—';
@@ -590,154 +142,31 @@
                     <td>${date}</td>
                     <td>${escapeHtml(s.referrer)}</td>
                     <td>${escapeHtml((s.userAgent || '').split(' ')[0])}</td>
-                    <td>${s.screenSize || ''}</td>
-                    <td>${s.language || ''}</td>
-                    <td>${s.country || '—'}</td>
+                    <td>${escapeHtml(s.country || '—')}</td>
+                    <td>${escapeHtml(s.city || '—')}</td>
                 发展`;
             }).join('');
         }
 
-        function renderContent() {
-            const durations = filterByDate(getData('pageDurations'));
-            const scrolls = filterByDate(getData('scrollDepth'));
-
-            const pageDurationAvg = {};
-            durations.forEach(d => {
-                if (!pageDurationAvg[d.page]) pageDurationAvg[d.page] = { total: 0, count: 0 };
-                pageDurationAvg[d.page].total += d.duration;
-                pageDurationAvg[d.page].count++;
-            });
-            const durationLabels = Object.keys(pageDurationAvg);
-            const durationData = durationLabels.map(p => Math.round(pageDurationAvg[p].total / pageDurationAvg[p].count));
-            const ctxDur = document.getElementById('durationChart').getContext('2d');
-            if (durationChart) durationChart.destroy();
-            durationChart = new Chart(ctxDur, {
-                type: 'bar',
-                data: { labels: durationLabels.map(p => p.split('/').pop() || p), datasets: [{ label: 'Среднее время (сек)', data: durationData, backgroundColor: '#10b981' }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-
-            const scrollCounts = {};
-            scrolls.forEach(s => {
-                if (!scrollCounts[s.page]) scrollCounts[s.page] = {};
-                scrollCounts[s.page][s.depth] = (scrollCounts[s.page][s.depth] || 0) + 1;
-            });
-            const pages = Object.keys(scrollCounts);
-            const thresholds = [25,50,75,100];
-            const datasets = thresholds.map(t => ({
-                label: `${t}%`,
-                data: pages.map(p => (scrollCounts[p][t] || 0)),
-                backgroundColor: `hsl(${200 + t}, 70%, 60%)`
-            }));
-            const ctxScroll = document.getElementById('scrollChart').getContext('2d');
-            if (scrollChart) scrollChart.destroy();
-            scrollChart = new Chart(ctxScroll, {
-                type: 'bar',
-                data: { labels: pages.map(p => p.split('/').pop() || p), datasets: datasets },
-                options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } }
-            });
-        }
-
-        function renderEvents() {
-            const messages = filterByDate(getData('messages'));
-            const downloads = filterByDate(getData('downloads'));
-            const videoViews = filterByDate(getData('videoViews'));
-            const pageViews = filterByDate(getData('pageViews'));
-
-            document.querySelector('#messagesTable tbody').innerHTML = messages.slice(-20).reverse().map(m => `发展<td>${new Date(m.timestamp).toLocaleString()}</td><td>${escapeHtml(m.name || '')}</td><td>${escapeHtml(m.email || '')}</td><td>${escapeHtml(m.message || '')}</td>发展`).join('');
-            document.querySelector('#downloadsTable tbody').innerHTML = downloads.slice(-20).reverse().map(d => `发展<td>${new Date(d.timestamp).toLocaleString()}</td><td><span class="badge">${escapeHtml(d.fileName || '')}</span></td><td><small>${d.sessionId?.slice(-8) || '—'}</small></td>发展`).join('');
-            document.querySelector('#videoTable tbody').innerHTML = videoViews.slice(-20).reverse().map(v => `发展<td>${new Date(v.timestamp).toLocaleString()}</td><td>${escapeHtml(v.videoName || '')}</td>发展`).join('');
-            document.querySelector('#pageViewsTable tbody').innerHTML = pageViews.slice(-20).reverse().map(pv => `发展<td>${new Date(pv.timestamp).toLocaleString()}</td><td>${escapeHtml(pv.page)}</td><td><small>${pv.sessionId?.slice(-8) || '—'}</small></td>发展`).join('');
-        }
-
-        function renderSources() {
-            const sessions = filterByDate(getData('sessions'));
-            const referrerCategories = { 'Прямой заход':0, 'Поисковики':0, 'Социальные сети':0, 'Другие сайты':0 };
-            const languageCounts = {}, referrerDetails = {};
-            sessions.forEach(s => {
-                const cat = classifyReferrer(s.referrer);
-                referrerCategories[cat]++;
-                if (s.language) languageCounts[s.language] = (languageCounts[s.language]||0)+1;
-                const ref = s.referrer || 'direct';
-                referrerDetails[ref] = (referrerDetails[ref]||0)+1;
-            });
-            const sourceLabels = Object.keys(referrerCategories);
-            const sourceData = sourceLabels.map(k => referrerCategories[k]);
-            const ctxSrc = document.getElementById('sourcesChart').getContext('2d');
-            if (sourcesChart) sourcesChart.destroy();
-            sourcesChart = new Chart(ctxSrc, {
-                type: 'pie',
-                data: { labels: sourceLabels, datasets: [{ data: sourceData, backgroundColor: ['#1e40af','#3b82f6','#60a5fa','#d4af37'] }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-            const langLabels = Object.keys(languageCounts).sort((a,b)=>languageCounts[b]-languageCounts[a]).slice(0,8);
-            const langData = langLabels.map(l => languageCounts[l]);
-            const ctxLang = document.getElementById('languagesChart').getContext('2d');
-            if (languagesChart) languagesChart.destroy();
-            languagesChart = new Chart(ctxLang, {
-                type: 'bar',
-                data: { labels: langLabels, datasets: [{ label: 'Сессии', data: langData, backgroundColor: '#10b981' }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-            const sortedReferrers = Object.entries(referrerDetails).sort((a,b)=>b[1]-a[1]).slice(0,20);
-            document.querySelector('#referrersTable tbody').innerHTML = sortedReferrers.map(([ref,count]) => `发展<td>${escapeHtml(ref)}</td><td>${count}</td><td>${Math.round((count/sessions.length)*100)}%</td>发展`).join('');
-        }
-
-        function renderGeography() {
-            const sessions = filterByDate(getData('sessions'));
-            const countryCounts = {};
-            sessions.forEach(s => { const c = s.country || 'Неизвестно'; countryCounts[c] = (countryCounts[c]||0)+1; });
-            const sorted = Object.entries(countryCounts).sort((a,b)=>b[1]-a[1]);
-            const labels = sorted.map(c=>c[0]), data = sorted.map(c=>c[1]);
-            const ctx = document.getElementById('countriesChart').getContext('2d');
-            if (countriesChart) countriesChart.destroy();
-            countriesChart = new Chart(ctx, {
-                type: 'bar',
-                data: { labels: labels, datasets: [{ label: 'Сессии', data: data, backgroundColor: '#f59e0b' }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-            document.querySelector('#countriesTable tbody').innerHTML = sorted.map(([c,count]) => `发展<td>${escapeHtml(c)}</td><td>${count}</td><td>${Math.round((count/sessions.length)*100)}%</td>发展`).join('');
-            if (worldMap) worldMap.remove();
-            worldMap = L.map('worldMap').setView([20,0],2);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB' }).addTo(worldMap);
-            sessions.forEach(s => {
-                if (s.country && s.lat && s.lon) {
-                    L.marker([s.lat, s.lon]).addTo(worldMap).bindPopup(`${s.city || s.country}<br>Сессия: ${new Date(s.startTime).toLocaleString()}`);
-                }
-            });
-        }
-
         function renderRussia() {
             const sessions = getData('sessions');
-            const russianSessions = sessions.filter(s => s.country === 'Russia' || s.country === 'Россия' || (s.city && s.lat && s.lon));
-            const cityMap = new Map(); // key: city, value: { count, region, lat, lon }
-            russianSessions.forEach(s => {
-                if (s.city && s.lat && s.lon) {
-                    const key = s.city;
-                    if (!cityMap.has(key)) {
-                        cityMap.set(key, { count: 0, region: s.region, lat: s.lat, lon: s.lon });
+            const cities = new Map();
+            sessions.forEach(s => {
+                if (s.country === 'Russia' || s.country === 'Россия' || (s.city && (s.lat || s.lon))) {
+                    const city = s.city || 'Неизвестный город';
+                    if (!cities.has(city)) {
+                        cities.set(city, { count: 0, region: s.region, lat: s.lat, lon: s.lon });
                     }
-                    cityMap.get(key).count++;
-                } else if (s.city && !s.lat && !s.lon && s.region) {
-                    // Если координат нет, но есть город – добавим без маркера, только в таблицу
-                    const key = s.city;
-                    if (!cityMap.has(key)) {
-                        cityMap.set(key, { count: 0, region: s.region, lat: null, lon: null });
-                    }
-                    cityMap.get(key).count++;
+                    cities.get(city).count++;
                 }
             });
-            const cities = Array.from(cityMap.entries()).map(([name, data]) => ({ name, ...data })).sort((a,b)=>b.count - a.count);
-
-            // Карта России
+            const citiesArray = Array.from(cities.entries()).map(([name, data]) => ({ name, ...data })).sort((a,b)=>b.count - a.count);
             if (russiaMap) russiaMap.remove();
             russiaMap = L.map('russiaMap').setView([64, 100], 4);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB'
-            }).addTo(russiaMap);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap' }).addTo(russiaMap);
             if (markerCluster) markerCluster.clearLayers();
             markerCluster = L.markerClusterGroup();
-            cities.forEach(city => {
+            citiesArray.forEach(city => {
                 if (city.lat && city.lon) {
                     const marker = L.marker([city.lat, city.lon]);
                     marker.bindPopup(`<b>${city.name}</b><br>Посещений: ${city.count}<br>Регион: ${city.region || '—'}`);
@@ -745,114 +174,59 @@
                 }
             });
             russiaMap.addLayer(markerCluster);
-
-            // Таблица городов
             const tbody = document.querySelector('#citiesTable tbody');
-            tbody.innerHTML = cities.map(c => `
-                <tr>
+            tbody.innerHTML = citiesArray.map(c => `
+                发展
                     <td>${escapeHtml(c.name)}</td>
                     <td>${escapeHtml(c.region || '—')}</td>
                     <td>${c.count}</td>
                     <td>${c.lat && c.lon ? `${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}` : '—'}</td>
-                </tr>
+                发展
             `).join('');
-        }
-
-        // ========== Общие функции ==========
-        function applyDateFilter() {
-            const fromStr = document.getElementById('dateFrom').value;
-            const toStr = document.getElementById('dateTo').value;
-            if (fromStr && toStr) {
-                currentDateFrom = new Date(fromStr);
-                currentDateTo = new Date(toStr);
-                currentDateTo.setHours(23,59,59,999);
-                refreshAll();
-            }
         }
 
         function refreshAll() {
             renderOverview();
             renderSessions();
-            renderContent();
-            renderEvents();
-            renderSources();
-            renderGeography();
             renderRussia();
             updateLastUpdate();
         }
 
         function updateLastUpdate() {
-            document.querySelector('#lastUpdate').innerHTML = `<i class="fas fa-clock"></i> Обновлено: ${new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
+            document.getElementById('lastUpdate').innerHTML = `Обновлено: ${new Date().toLocaleTimeString('ru-RU')}`;
         }
 
-        function clearAllData() {
-            if (confirm('Удалить все данные аналитики? Это действие необратимо.')) {
-                const keys = ['pageViews','downloads','messages','videoViews','sessions','pageDurations','scrollDepth','visitCount','downloadCount','sessionId'];
-                keys.forEach(k => localStorage.removeItem(k));
-                lastMessageCount = 0;
+        function applyDateFilter() {
+            const from = document.getElementById('dateFrom').value;
+            const to = document.getElementById('dateTo').value;
+            if (from && to) {
+                currentDateFrom = new Date(from);
+                currentDateTo = new Date(to);
+                currentDateTo.setHours(23,59,59,999);
                 refreshAll();
             }
         }
 
-        function exportToCSV() {
-            const collections = {
-                'sessions': filterByDate(getData('sessions')),
-                'pageViews': filterByDate(getData('pageViews')),
-                'downloads': filterByDate(getData('downloads')),
-                'videoViews': filterByDate(getData('videoViews')),
-                'messages': filterByDate(getData('messages')),
-                'pageDurations': filterByDate(getData('pageDurations')),
-                'scrollDepth': filterByDate(getData('scrollDepth'))
-            };
-            let csvRows = [];
-            for (const [name, data] of Object.entries(collections)) {
-                if (data.length === 0) continue;
-                csvRows.push(`\n\n=== ${name.toUpperCase()} ===`);
-                const headers = Object.keys(data[0]);
-                csvRows.push(headers.join(','));
-                for (const row of data) {
-                    const values = headers.map(header => {
-                        let val = row[header];
-                        if (val && typeof val === 'object') val = JSON.stringify(val);
-                        return `"${String(val).replace(/"/g, '""')}"`;
-                    });
-                    csvRows.push(values.join(','));
-                }
+        function clearAllData() {
+            if (confirm('Удалить все данные аналитики?')) {
+                ['pageViews','downloads','messages','videoViews','sessions','pageDurations','scrollDepth','visitCount','downloadCount','sessionId'].forEach(k => localStorage.removeItem(k));
+                refreshAll();
             }
-            const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.href = url;
-            link.setAttribute('download', `analytics_${new Date().toISOString().slice(0,19)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
         }
-
-        setInterval(() => {
-            const messages = getData('messages');
-            if (messages.length > lastMessageCount) {
-                showNotification(`📩 Новое сообщение! (${messages.length - lastMessageCount})`);
-                lastMessageCount = messages.length;
-            }
-        }, 30000);
 
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                const tabId = btn.dataset.tab;
+                const tab = btn.dataset.tab;
                 document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                document.getElementById(tabId).classList.add('active');
-                if (tabId === 'geo') setTimeout(() => worldMap?.invalidateSize(), 100);
-                if (tabId === 'russia') setTimeout(() => russiaMap?.invalidateSize(), 100);
+                document.getElementById(tab).classList.add('active');
+                if (tab === 'russia') setTimeout(() => russiaMap?.invalidateSize(), 100);
             });
         });
 
         window.addEventListener('load', () => {
             initDateFilters();
-            lastMessageCount = getData('messages').length;
             refreshAll();
         });
     </script>
