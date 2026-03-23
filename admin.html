@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -27,7 +28,6 @@
             margin: 0 auto;
         }
 
-        /* Шапка */
         .header {
             display: flex;
             justify-content: space-between;
@@ -90,7 +90,7 @@
             gap: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .refresh-btn, .export-btn {
+        .refresh-btn, .export-btn, .digest-btn {
             background: #1e40af;
             color: white;
             border: none;
@@ -107,11 +107,10 @@
         .export-btn {
             background: #10b981;
         }
-        .export-btn:hover {
-            background: #059669;
+        .digest-btn {
+            background: #8b5cf6;
         }
-        .refresh-btn:hover {
-            background: #0f172a;
+        .export-btn:hover, .digest-btn:hover, .refresh-btn:hover {
             transform: translateY(-2px);
         }
         .clear-btn {
@@ -133,7 +132,6 @@
             transform: translateY(-2px);
         }
 
-        /* Карточки статистики */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -166,8 +164,34 @@
             color: #1e40af;
             line-height: 1;
         }
+        .stat-change {
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        .positive { color: #10b981; }
+        .negative { color: #ef4444; }
 
-        /* Таблицы */
+        .chart-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+        .chart-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
         .table-card {
             background: white;
             border-radius: 24px;
@@ -202,9 +226,6 @@
             color: #475569;
             background: #f8fafc;
         }
-        tr:hover {
-            background: #f8fafc;
-        }
         .badge {
             background: #d4af37;
             color: #0f172a;
@@ -214,12 +235,29 @@
             font-weight: 600;
         }
 
-        /* Карта */
         #russiaMap {
             height: 500px;
             width: 100%;
             border-radius: 16px;
             margin-bottom: 20px;
+        }
+
+        .insight-block {
+            background: linear-gradient(135deg, #fef9e3, #fff);
+            border-left: 4px solid #d4af37;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+        .insight-block h3 {
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        .insight-block ul {
+            padding-left: 20px;
+        }
+        .insight-block li {
+            margin-bottom: 8px;
         }
 
         @media (max-width: 768px) {
@@ -235,12 +273,6 @@
             .date-range {
                 width: 100%;
                 justify-content: space-between;
-            }
-            table {
-                font-size: 12px;
-            }
-            th, td {
-                padding: 8px 6px;
             }
         }
     </style>
@@ -258,106 +290,85 @@
                     <button class="apply-date" onclick="applyDateFilter()">Применить</button>
                 </div>
                 <div class="last-update" id="lastUpdate"><i class="fas fa-clock"></i> Обновлено: --:--:--</div>
+                <button class="digest-btn" onclick="sendDigest()"><i class="fas fa-envelope"></i> Дайджест</button>
                 <button class="export-btn" onclick="exportToCSV()"><i class="fas fa-download"></i> Экспорт CSV</button>
                 <button class="refresh-btn" onclick="refreshAll()"><i class="fas fa-sync-alt"></i> Обновить</button>
                 <button class="clear-btn" onclick="clearAllData()"><i class="fas fa-trash-alt"></i> Очистить</button>
             </div>
         </div>
 
-        <!-- Карточки статистики -->
         <div class="stats-grid" id="statsGrid"></div>
 
-        <!-- Карта России -->
+        <div class="chart-card">
+            <h3><i class="fas fa-chart-line"></i> Посещения по дням (с прогнозом на 7 дней)</h3>
+            <div class="chart-container">
+                <canvas id="viewsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3><i class="fas fa-calendar-alt"></i> Активность по дням недели и часам</h3>
+            <div class="chart-container" id="heatmapContainer" style="height: auto; min-height: 300px;">
+                <div id="heatmap"></div>
+            </div>
+        </div>
+
+        <div class="insight-block" id="insightsBlock">
+            <h3><i class="fas fa-lightbulb"></i> Инсайты и рекомендации</h3>
+            <ul id="insightsList"></ul>
+        </div>
+
         <div class="table-card">
             <h3><i class="fas fa-map-marker-alt"></i> Карта России (города посетителей)</h3>
             <div id="russiaMap"></div>
         </div>
 
-        <!-- Таблица городов -->
         <div class="table-card">
             <h3><i class="fas fa-city"></i> Города посетителей</h3>
             <table id="citiesTable">
-                <thead>
-                    <tr>
-                        <th>Город</th>
-                        <th>Регион</th>
-                        <th>Посещений</th>
-                        <th>Координаты</th>
-                    </thead>
+                <thead><tr><th>Город</th><th>Регион</th><th>Посещений</th><th>Координаты</th></tr></thead>
                 <tbody></tbody>
-            划
+            </table>
         </div>
 
-        <!-- Сессии -->
         <div class="table-card">
             <h3><i class="fas fa-users"></i> Список сессий</h3>
             <table id="sessionsTable">
-                <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Источник</th>
-                        <th>Устройство</th>
-                        <th>Страна</th>
-                        <th>Город</th>
-                    </thead>
+                <thead><tr><th>Дата</th><th>Источник</th><th>Устройство</th><th>Страна</th><th>Город</th></tr></thead>
                 <tbody></tbody>
-            划
+            </table>
         </div>
 
-        <!-- Сообщения -->
         <div class="table-card">
             <h3><i class="fas fa-envelope"></i> Последние сообщения</h3>
             <table id="messagesTable">
-                <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Имя</th>
-                        <th>Email</th>
-                        <th>Сообщение</th>
-                    </thead>
+                <thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></tr></thead>
                 <tbody></tbody>
-            划
+            </table>
         </div>
 
-        <!-- Скачивания -->
         <div class="table-card">
             <h3><i class="fas fa-download"></i> Недавние скачивания</h3>
             <table id="downloadsTable">
-                <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Файл</th>
-                        <th>Сессия</th>
-                    </thead>
+                <thead><tr><th>Дата</th><th>Файл</th><th>Сессия</th></tr></thead>
                 <tbody></tbody>
-            划
+            </table>
         </div>
 
-        <!-- Видео -->
         <div class="table-card">
             <h3><i class="fas fa-video"></i> Запуски видео</h3>
             <table id="videoTable">
-                <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Видео</th>
-                    </thead>
+                <thead><tr><th>Дата</th><th>Видео</th></tr></thead>
                 <tbody></tbody>
-            划
+            </table>
         </div>
 
-        <!-- Просмотры страниц -->
         <div class="table-card">
             <h3><i class="fas fa-chart-line"></i> Просмотры страниц</h3>
             <table id="pageViewsTable">
-                <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Страница</th>
-                        <th>Сессия</th>
-                    </thead>
+                <thead><tr><th>Дата</th><th>Страница</th><th>Сессия</th></tr></thead>
                 <tbody></tbody>
-            划
+            </table>
         </div>
     </div>
 
@@ -379,6 +390,7 @@
 
         let currentDateFrom = null, currentDateTo = null;
         let russiaMap, markerCluster;
+        let viewsChart;
 
         // Инициализация дат (последние 30 дней)
         function initDateFilters() {
@@ -399,40 +411,203 @@
             });
         }
 
-        // ========== Статистика ==========
+        // ========== Статистика и изменения ==========
+        function getChange(current, previous) {
+            if (previous === 0) return { percent: current > 0 ? 100 : 0, positive: current > 0 };
+            const diff = current - previous;
+            const percent = Math.round((diff / previous) * 100);
+            return { percent: Math.abs(percent), positive: diff >= 0 };
+        }
+
         function renderStats() {
-            const pageViews = getData('pageViews');
-            const downloads = getData('downloads');
-            const messages = getData('messages');
-            const videoViews = getData('videoViews');
+            const allPageViews = getData('pageViews');
+            const allDownloads = getData('downloads');
+            const allMessages = getData('messages');
+            const allVideoViews = getData('videoViews');
+
+            const pageViews = filterByDate(allPageViews);
+            const downloads = filterByDate(allDownloads);
+            const messages = filterByDate(allMessages);
+            const videoViews = filterByDate(allVideoViews);
+
+            const periodDays = Math.ceil((currentDateTo - currentDateFrom) / (1000*60*60*24));
+            const prevFrom = new Date(currentDateFrom);
+            prevFrom.setDate(prevFrom.getDate() - periodDays);
+            const prevTo = new Date(currentDateFrom);
+            prevTo.setDate(prevTo.getDate() - 1);
+
+            const prevPageViews = allPageViews.filter(item => {
+                const d = new Date(item.timestamp);
+                return d >= prevFrom && d <= prevTo;
+            });
+            const prevDownloads = allDownloads.filter(item => {
+                const d = new Date(item.timestamp);
+                return d >= prevFrom && d <= prevTo;
+            });
+            const prevMessages = allMessages.filter(item => {
+                const d = new Date(item.timestamp);
+                return d >= prevFrom && d <= prevTo;
+            });
+            const prevVideoViews = allVideoViews.filter(item => {
+                const d = new Date(item.timestamp);
+                return d >= prevFrom && d <= prevTo;
+            });
+
+            const changeViews = getChange(pageViews.length, prevPageViews.length);
+            const changeDownloads = getChange(downloads.length, prevDownloads.length);
+            const changeMessages = getChange(messages.length, prevMessages.length);
+            const changeVideo = getChange(videoViews.length, prevVideoViews.length);
 
             document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViews.length}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloads.length}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div><div class="stat-number">${messages.length}</div></div>
-                <div class="stat-card"><div class="stat-title"><i class="fas fa-video"></i> Запусков видео</div><div class="stat-number">${videoViews.length}</div></div>
+                <div class="stat-card">
+                    <div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div>
+                    <div class="stat-number">${pageViews.length}</div>
+                    <div class="stat-change ${changeViews.positive ? 'positive' : 'negative'}">${changeViews.positive ? '↑' : '↓'} ${changeViews.percent}%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div>
+                    <div class="stat-number">${downloads.length}</div>
+                    <div class="stat-change ${changeDownloads.positive ? 'positive' : 'negative'}">${changeDownloads.positive ? '↑' : '↓'} ${changeDownloads.percent}%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title"><i class="fas fa-envelope"></i> Сообщений</div>
+                    <div class="stat-number">${messages.length}</div>
+                    <div class="stat-change ${changeMessages.positive ? 'positive' : 'negative'}">${changeMessages.positive ? '↑' : '↓'} ${changeMessages.percent}%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title"><i class="fas fa-video"></i> Запусков видео</div>
+                    <div class="stat-number">${videoViews.length}</div>
+                    <div class="stat-change ${changeVideo.positive ? 'positive' : 'negative'}">${changeVideo.positive ? '↑' : '↓'} ${changeVideo.percent}%</div>
+                </div>
             `;
         }
 
-        // ========== Сессии ==========
+        // ========== График с прогнозом ==========
+        function linearRegression(y) {
+            const n = y.length;
+            let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+            for (let i = 0; i < n; i++) {
+                sumX += i;
+                sumY += y[i];
+                sumXY += i * y[i];
+                sumX2 += i * i;
+            }
+            const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+            const intercept = (sumY - slope * sumX) / n;
+            return (x) => slope * x + intercept;
+        }
+
+        function renderChartWithForecast() {
+            const pageViews = filterByDate(getData('pageViews'));
+            const days = [];
+            const counts = [];
+            let cur = new Date(currentDateFrom);
+            while (cur <= currentDateTo) {
+                const dayStr = cur.toISOString().slice(0,10);
+                days.push(dayStr.slice(5));
+                const count = pageViews.filter(p => p.timestamp.slice(0,10) === dayStr).length;
+                counts.push(count);
+                cur.setDate(cur.getDate() + 1);
+            }
+            // прогноз на 7 дней вперёд, если данных достаточно
+            let forecast = [];
+            if (counts.length >= 7) {
+                const predict = linearRegression(counts);
+                for (let i = 1; i <= 7; i++) {
+                    forecast.push(predict(counts.length - 1 + i));
+                }
+            }
+            const ctx = document.getElementById('viewsChart').getContext('2d');
+            if (viewsChart) viewsChart.destroy();
+            viewsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [...days, ...Array.from({length: forecast.length}, (_,i) => `+${i+1}д`)],
+                    datasets: [
+                        { label: 'Просмотры', data: counts, borderColor: '#1e40af', backgroundColor: 'rgba(30,64,175,0.1)', fill: true, tension: 0.3 },
+                        { label: 'Прогноз', data: [...Array(counts.length).fill(null), ...forecast], borderColor: '#f59e0b', borderDash: [5,5], fill: false }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // ========== Тепловая карта активности ==========
+        function renderHeatmap() {
+            const pageViews = filterByDate(getData('pageViews'));
+            const activity = Array(7).fill().map(() => Array(24).fill(0));
+            pageViews.forEach(pv => {
+                const d = new Date(pv.timestamp);
+                const day = d.getDay();
+                const hour = d.getHours();
+                activity[day][hour]++;
+            });
+            const maxVal = Math.max(...activity.flat());
+            const daysOfWeek = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+            const hours = Array.from({length:24}, (_,i) => `${i}:00`);
+            let html = '<table style="width:100%; border-collapse:collapse;">';
+            html += '<tr><th></th>' + hours.map(h => `<th style="padding:4px; font-size:11px;">${h}</th>`).join('') + '</tr>';
+            for (let d = 0; d < 7; d++) {
+                html += `<tr><td style="font-weight:600; padding:4px;">${daysOfWeek[d]}</td>`;
+                for (let h = 0; h < 24; h++) {
+                    const val = activity[d][h];
+                    const intensity = maxVal ? Math.round((val / maxVal) * 100) : 0;
+                    const color = `hsl(220, 70%, ${Math.max(30, 80 - intensity/2)}%)`;
+                    html += `<td style="background-color:${color}; text-align:center; padding:4px; font-size:11px;">${val || ''}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            document.getElementById('heatmap').innerHTML = html;
+        }
+
+        // ========== Инсайты ==========
+        function generateInsights() {
+            const pageViews = filterByDate(getData('pageViews'));
+            const downloads = filterByDate(getData('downloads'));
+            const messages = filterByDate(getData('messages'));
+            const sessions = getData('sessions');
+
+            const pageCounts = {};
+            pageViews.forEach(v => { const page = v.page || 'unknown'; pageCounts[page] = (pageCounts[page] || 0) + 1; });
+            const sortedPages = Object.entries(pageCounts).sort((a,b)=>b[1]-a[1]);
+            const topPage = sortedPages[0] ? sortedPages[0][0] : null;
+
+            const insights = [];
+            if (downloads.length > 5) {
+                insights.push('📄 Резюме скачивают активно – это хороший сигнал. Разместите ссылку на главной странице для большего охвата.');
+            }
+            if (messages.length === 0 && pageViews.some(p => p.page.includes('contact'))) {
+                insights.push('✉️ Посетители смотрят страницу контактов, но не пишут. Проверьте, работает ли форма обратной связи, или добавьте более заметный призыв к действию.');
+            }
+            if (topPage && topPage.includes('experience')) {
+                insights.push('🏆 Страница опыта самая популярная. Добавьте больше кейсов и видеоотзывов, чтобы повысить вовлечение.');
+            }
+            const mobileSessions = sessions.filter(s => s.userAgent && (s.userAgent.includes('Mobile') || s.userAgent.includes('Android') || s.userAgent.includes('iPhone')));
+            if (mobileSessions.length / sessions.length > 0.5) {
+                insights.push('📱 Более 50% посетителей с мобильных устройств. Убедитесь, что сайт адаптирован для телефонов.');
+            }
+            if (insights.length === 0) {
+                insights.push('📊 Данных пока недостаточно для анализа. Продолжайте привлекать посетителей.');
+            }
+            document.getElementById('insightsList').innerHTML = insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // ========== Таблицы ==========
         function renderSessions() {
             const sessions = getData('sessions');
             const tbody = document.querySelector('#sessionsTable tbody');
-            tbody.innerHTML = sessions.slice().reverse().map(s => {
-                let date = s.startTime ? new Date(s.startTime).toLocaleString() : '—';
-                return `
-                    <tr>
-                        <td>${date}</td>
-                        <td>${escapeHtml(s.referrer)}</td>
-                        <td>${escapeHtml((s.userAgent || '').split(' ')[0])}</td>
-                        <td>${s.country || '—'}</td>
-                        <td>${s.city || '—'}</td>
-                    </tr>
-                `;
-            }).join('');
+            tbody.innerHTML = sessions.slice().reverse().map(s => `
+                <tr>
+                    <td>${s.startTime ? new Date(s.startTime).toLocaleString() : '—'}</td>
+                    <td>${escapeHtml(s.referrer)}</td>
+                    <td>${escapeHtml((s.userAgent || '').split(' ')[0])}</td>
+                    <td>${s.country || '—'}</td>
+                    <td>${s.city || '—'}</td>
+                </tr>
+            `).join('');
         }
 
-        // ========== Сообщения ==========
         function renderMessages() {
             const messages = filterByDate(getData('messages'));
             const tbody = document.querySelector('#messagesTable tbody');
@@ -446,7 +621,6 @@
             `).join('');
         }
 
-        // ========== Скачивания ==========
         function renderDownloads() {
             const downloads = filterByDate(getData('downloads'));
             const tbody = document.querySelector('#downloadsTable tbody');
@@ -459,7 +633,6 @@
             `).join('');
         }
 
-        // ========== Видео ==========
         function renderVideo() {
             const videoViews = filterByDate(getData('videoViews'));
             const tbody = document.querySelector('#videoTable tbody');
@@ -471,7 +644,6 @@
             `).join('');
         }
 
-        // ========== Просмотры страниц ==========
         function renderPageViews() {
             const pageViews = filterByDate(getData('pageViews'));
             const tbody = document.querySelector('#pageViewsTable tbody');
@@ -487,8 +659,7 @@
         // ========== Карта России ==========
         function renderRussiaMap() {
             const sessions = getData('sessions');
-            const citiesMap = new Map(); // key: city, value: { count, region, lat, lon }
-
+            const citiesMap = new Map();
             sessions.forEach(s => {
                 if (s.city && s.lat && s.lon) {
                     const key = s.city;
@@ -504,10 +675,8 @@
                     citiesMap.get(key).count++;
                 }
             });
-
             const cities = Array.from(citiesMap.entries()).map(([name, data]) => ({ name, ...data })).sort((a,b)=>b.count - a.count);
 
-            // Таблица городов
             const cityTableBody = document.querySelector('#citiesTable tbody');
             cityTableBody.innerHTML = cities.map(c => `
                 <tr>
@@ -518,7 +687,6 @@
                 </tr>
             `).join('');
 
-            // Карта
             if (russiaMap) russiaMap.remove();
             russiaMap = L.map('russiaMap').setView([64, 100], 4);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -536,9 +704,22 @@
             russiaMap.addLayer(markerCluster);
         }
 
+        // ========== Дайджест (кнопка) ==========
+        function sendDigest() {
+            const pageViews = filterByDate(getData('pageViews')).length;
+            const downloads = filterByDate(getData('downloads')).length;
+            const messages = filterByDate(getData('messages')).length;
+            const videoViews = filterByDate(getData('videoViews')).length;
+            const msg = `📊 Дайджест за период ${currentDateFrom.toLocaleDateString()} – ${currentDateTo.toLocaleDateString()}:\nПросмотры: ${pageViews}\nСкачивания: ${downloads}\nСообщения: ${messages}\nЗапуски видео: ${videoViews}`;
+            alert(msg); // Пока просто алерт, можно расширить до отправки на email
+        }
+
         // ========== Обновление ==========
         function refreshAll() {
             renderStats();
+            renderChartWithForecast();
+            renderHeatmap();
+            generateInsights();
             renderSessions();
             renderMessages();
             renderDownloads();
