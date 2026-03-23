@@ -9,8 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Полные стили из вашего исходного index.html – они здесь (я их не сокращаю) */
-        /* (все ваши стили, которые были в файле, который вы прислали, полностью копируются) */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -1930,15 +1928,172 @@
 
     <script src="js/analytics.js"></script>
     <script>
-        let visitCount = localStorage.getItem('visitCount') || 0;
-        visitCount++;
-        localStorage.setItem('visitCount', visitCount);
-        document.getElementById('visit-counter').textContent = visitCount;
+        (function() {
+            // 1. Мобильное меню (улучшенное)
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            if (mobileBtn && navMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    const icon = mobileBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+            }
 
-        let downloadCount = localStorage.getItem('downloadCount') || 0;
-        document.getElementById('download-counter').textContent = downloadCount;
+            // 2. Анимация счётчиков в таймлайне (Intersection Observer)
+            const timelineSection = document.querySelector('.vision-2036');
+            let countersAnimated = false;
 
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+            function animateCounters() {
+                if (countersAnimated) return;
+                const counters = document.querySelectorAll('.timeline-item .counter');
+                counters.forEach(counter => {
+                    const target = parseInt(counter.getAttribute('data-target'), 10);
+                    let current = 0;
+                    const increment = Math.ceil(target / 30);
+                    const update = () => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = target;
+                            return;
+                        }
+                        counter.textContent = current;
+                        requestAnimationFrame(update);
+                    };
+                    update();
+                });
+                countersAnimated = true;
+            }
+
+            if (timelineSection) {
+                const observer = new IntersectionObserver(entries => {
+                    if (entries[0].isIntersecting) {
+                        animateCounters();
+                        observer.disconnect();
+                    }
+                }, { threshold: 0.3 });
+                observer.observe(timelineSection);
+            }
+
+            // 3. Модальное окно Tech Radar
+            const modal = document.getElementById('tech-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+            const closeBtn = modal ? modal.querySelector('.close') : null;
+
+            if (modal && modalTitle && modalDesc) {
+                document.querySelectorAll('.radar-segment').forEach(seg => {
+                    seg.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const tech = seg.getAttribute('data-tech');
+                        const desc = seg.getAttribute('data-desc');
+                        if (tech && desc) {
+                            modalTitle.textContent = tech;
+                            modalDesc.textContent = desc;
+                            modal.style.display = 'block';
+                        }
+                    });
+                });
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        modal.style.display = 'none';
+                    });
+                }
+                window.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.style.display = 'none';
+                });
+            }
+
+            // 4. Кнопки предзаписи
+            document.querySelectorAll('.preorder-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const card = btn.closest('.flip-card');
+                    let programName = '';
+                    if (card) {
+                        const front = card.querySelector('.flip-front h3');
+                        if (front) programName = front.innerText.trim();
+                    }
+                    alert(`Спасибо за интерес к программе "${programName || 'Академии SCM'}"! Скоро мы свяжемся с вами.`);
+                    window.location.href = 'contact.html';
+                });
+            });
+
+            // 5. Счётчики посещений и скачиваний
+            if (!localStorage.getItem('visitCount')) {
+                localStorage.setItem('visitCount', '0');
+            }
+            let visitCount = parseInt(localStorage.getItem('visitCount'), 10) + 1;
+            localStorage.setItem('visitCount', visitCount);
+            const visitCounterSpan = document.getElementById('visit-counter');
+            if (visitCounterSpan) visitCounterSpan.textContent = visitCount;
+
+            const downloadCounterSpan = document.getElementById('download-counter');
+            if (downloadCounterSpan) {
+                let downloadCount = localStorage.getItem('downloadCount') || '0';
+                downloadCounterSpan.textContent = downloadCount;
+            }
+
+            // 6. Текущий год
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+            // 7. ESG дашборд (интерактивность)
+            const esgData = {
+                2026: { co2: 120, renew: 25, circ: 40 },
+                2030: { co2: 85, renew: 45, circ: 55 },
+                2036: { co2: 40, renew: 80, circ: 75 }
+            };
+
+            function updateESGDashboard(year) {
+                const data = esgData[year];
+                if (!data) return;
+                document.getElementById('co2-value').innerText = data.co2;
+                document.getElementById('renew-value').innerText = data.renew;
+                document.getElementById('circ-value').innerText = data.circ;
+                const co2Chart = document.getElementById('chart-co2');
+                const renewChart = document.getElementById('chart-renew');
+                const circChart = document.getElementById('chart-circ');
+                if (co2Chart) co2Chart.style.background = `conic-gradient(#e74c3c 0% ${data.co2/2}%, #ecf0f1 ${data.co2/2}% 100%)`;
+                if (renewChart) renewChart.style.background = `conic-gradient(#f1c40f 0% ${data.renew}%, #ecf0f1 ${data.renew}% 100%)`;
+                if (circChart) circChart.style.background = `conic-gradient(#2ecc71 0% ${data.circ}%, #ecf0f1 ${data.circ}% 100%)`;
+            }
+
+            document.querySelectorAll('.year-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateESGDashboard(btn.dataset.year);
+                });
+            });
+            updateESGDashboard('2026');
+
+            // 8. Динамическая генерация сертификатов
+            const certificates = [
+                { title: "Диплом о профессиональной переподготовке", file: "files/diploma.pdf", filename: "diploma.pdf" },
+                { title: "Сертификат Академии Цепей Поставок (базовый)", file: "files/scm-basic-cert.pdf", filename: "scm-basic-cert.pdf" },
+                { title: "Сертификат Академии Цепей Поставок (продвинутый)", file: "files/scm-advanced-cert.pdf", filename: "scm-advanced-cert.pdf" },
+                { title: "Сертификат Академии Цепей Поставок (стратегический)", file: "files/scm-strategic-cert.pdf", filename: "scm-strategic-cert.pdf" },
+                { title: "Сертификат курса 'Цифровая трансформация SCM'", file: "files/digital-scm-cert.pdf", filename: "digital-scm-cert.pdf" },
+                { title: "Удостоверение о повышении квалификации", file: "files/advanced-training.pdf", filename: "advanced-training.pdf" }
+            ];
+            const container = document.getElementById('certificates-container');
+            if (container) {
+                container.innerHTML = certificates.map(cert => `
+                    <div class="certificate-card" onclick="location.href='${cert.file}'">
+                        <div class="certificate-icon"><i class="fas fa-file-alt"></i></div>
+                        <h3 class="certificate-title">${cert.title}</h3>
+                        <div class="certificate-filename">${cert.filename}</div>
+                        <div class="certificate-download" onclick="event.stopPropagation(); location.href='${cert.file}'">
+                            <i class="fas fa-download"></i> Скачать
+                        </div>
+                    </div>
+                `).join('');
+            }
+        })();
     </script>
 </body>
 </html>
