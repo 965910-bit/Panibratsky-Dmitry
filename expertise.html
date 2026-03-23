@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский | Экспертиза в SCM и цифровой трансформации</title>
+    <meta name="description" content="Методологии и инструменты управления цепями поставок: Lean, ABC-XYZ анализ, цифровая трансформация, внедрение AI, WMS/TMS. Кейсы и подходы.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ========== ВСЕ СТИЛИ ИЗ ВАШЕГО ИСХОДНОГО expertise.html ========== */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -901,10 +901,10 @@
             </button>
             <nav>
                 <ul id="nav-menu">
-                    <li><a href="index.html">Стратегия</a></li>
-                    <li><a href="experience.html">Опыт</a></li>
                     <li><a href="about.html">Обо мне</a></li>
                     <li><a href="expertise.html" class="active">Экспертиза</a></li>
+                    <li><a href="experience.html">Опыт</a></li>
+                    <li><a href="index.html">Стратегия</a></li>
                     <li><a href="contact.html">Контакты</a></li>
                 </ul>
             </nav>
@@ -1332,10 +1332,10 @@
                 <div class="footer-column">
                     <h3>Навигация</h3>
                     <ul>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
                         <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
                         <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
+                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
                     </ul>
                 </div>
@@ -1343,7 +1343,7 @@
                     <h3>Контакты</h3>
                     <ul>
                         <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
-                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> @LogisticaandSupplyChain</a></li>
+                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i> @LogisticaandSupplyChain</a></li>
                         <li><a href="tel:+79822282949"><i class="fas fa-phone"></i> +7 (982) 228-29-49</a></li>
                         <li><a href="tel:+79825810787"><i class="fas fa-phone"></i> +7 (982) 581-07-87</a></li>
                     </ul>
@@ -1353,7 +1353,7 @@
                     <p><strong>Образовательная платформа</strong><br>Вебинары, мастер-классы и разбор кейсов для профессионалов SCM</p>
                     <p><strong>Профессиональное сообщество</strong><br>Обмен опытом и развитие стандартов в управлении цепями поставок</p>
                     <p><strong>Менторство</strong><br>Передача практического опыта следующему поколению руководителей</p>
-                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" style="color: var(--accent-gold); text-decoration: none; font-size: 14px; margin-top: 10px; display: inline-block;">
+                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer" style="color: var(--accent-gold); text-decoration: none; font-size: 14px; margin-top: 10px; display: inline-block;">
                         <i class="fab fa-telegram"></i> Присоединиться в Telegram
                     </a>
                 </div>
@@ -1368,16 +1368,47 @@
 
     <script src="js/analytics.js"></script>
     <script>
-        // Локальные счётчики
-        let visitCount = localStorage.getItem('visitCount') || 0;
-        visitCount++;
-        localStorage.setItem('visitCount', visitCount);
-        document.getElementById('visit-counter').textContent = visitCount;
+        (function() {
+            // Мобильное меню
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            if (mobileBtn && navMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    const icon = mobileBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+                // Закрытие при клике на ссылку
+                document.querySelectorAll('#nav-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        const icon = mobileBtn.querySelector('i');
+                        if (icon && icon.classList.contains('fa-times')) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    });
+                });
+            }
 
-        let downloadCount = localStorage.getItem('downloadCount') || 0;
-        document.getElementById('download-counter').textContent = downloadCount;
+            // Счётчики
+            let visitCount = parseInt(localStorage.getItem('visitCount') || '0', 10);
+            visitCount++;
+            localStorage.setItem('visitCount', visitCount);
+            const visitSpan = document.getElementById('visit-counter');
+            if (visitSpan) visitSpan.textContent = visitCount;
 
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+            let downloadCount = parseInt(localStorage.getItem('downloadCount') || '0', 10);
+            const downloadSpan = document.getElementById('download-counter');
+            if (downloadSpan) downloadSpan.textContent = downloadCount;
+
+            // Год в футере
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+        })();
     </script>
 </body>
 </html>
