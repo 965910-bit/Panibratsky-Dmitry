@@ -27,6 +27,7 @@
             margin: 0 auto;
         }
 
+        /* Шапка */
         .header {
             display: flex;
             justify-content: space-between;
@@ -132,6 +133,7 @@
             transform: translateY(-2px);
         }
 
+        /* Карточки статистики */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -165,6 +167,7 @@
             line-height: 1;
         }
 
+        /* Таблицы */
         .table-card {
             background: white;
             border-radius: 24px;
@@ -211,6 +214,7 @@
             font-weight: 600;
         }
 
+        /* Карта */
         #russiaMap {
             height: 500px;
             width: 100%;
@@ -274,7 +278,12 @@
             <h3><i class="fas fa-city"></i> Города посетителей</h3>
             <table id="citiesTable">
                 <thead>
-                    <tr><th>Город</th><th>Регион</th><th>Посещений</th><th>Координаты</th> </thead>
+                    <tr>
+                        <th>Город</th>
+                        <th>Регион</th>
+                        <th>Посещений</th>
+                        <th>Координаты</th>
+                    </thead>
                 <tbody></tbody>
             划
         </div>
@@ -283,7 +292,14 @@
         <div class="table-card">
             <h3><i class="fas fa-users"></i> Список сессий</h3>
             <table id="sessionsTable">
-                <thead> <tr><th>Дата</th><th>Источник</th><th>Устройство</th><th>Страна</th><th>Город</th></tr> </thead>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Источник</th>
+                        <th>Устройство</th>
+                        <th>Страна</th>
+                        <th>Город</th>
+                    </thead>
                 <tbody></tbody>
             划
         </div>
@@ -292,7 +308,13 @@
         <div class="table-card">
             <h3><i class="fas fa-envelope"></i> Последние сообщения</h3>
             <table id="messagesTable">
-                <thead> <tr><th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></tr> </thead>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Сообщение</th>
+                    </thead>
                 <tbody></tbody>
             划
         </div>
@@ -301,7 +323,12 @@
         <div class="table-card">
             <h3><i class="fas fa-download"></i> Недавние скачивания</h3>
             <table id="downloadsTable">
-                <thead> <tr><th>Дата</th><th>Файл</th><th>Сессия</th></tr> </thead>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Файл</th>
+                        <th>Сессия</th>
+                    </thead>
                 <tbody></tbody>
             划
         </div>
@@ -310,7 +337,11 @@
         <div class="table-card">
             <h3><i class="fas fa-video"></i> Запуски видео</h3>
             <table id="videoTable">
-                <thead> <tr><th>Дата</th><th>Видео</th></tr> </thead>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Видео</th>
+                    </thead>
                 <tbody></tbody>
             划
         </div>
@@ -319,7 +350,12 @@
         <div class="table-card">
             <h3><i class="fas fa-chart-line"></i> Просмотры страниц</h3>
             <table id="pageViewsTable">
-                <thead> <tr><th>Дата</th><th>Страница</th><th>Сессия</th></tr> </thead>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Страница</th>
+                        <th>Сессия</th>
+                    </thead>
                 <tbody></tbody>
             划
         </div>
@@ -344,6 +380,7 @@
         let currentDateFrom = null, currentDateTo = null;
         let russiaMap, markerCluster;
 
+        // Инициализация дат (последние 30 дней)
         function initDateFilters() {
             const to = new Date();
             const from = new Date();
@@ -368,6 +405,7 @@
             const downloads = getData('downloads');
             const messages = getData('messages');
             const videoViews = getData('videoViews');
+
             document.getElementById('statsGrid').innerHTML = `
                 <div class="stat-card"><div class="stat-title"><i class="fas fa-eye"></i> Просмотры страниц</div><div class="stat-number">${pageViews.length}</div></div>
                 <div class="stat-card"><div class="stat-title"><i class="fas fa-download"></i> Скачиваний</div><div class="stat-number">${downloads.length}</div></div>
@@ -382,13 +420,15 @@
             const tbody = document.querySelector('#sessionsTable tbody');
             tbody.innerHTML = sessions.slice().reverse().map(s => {
                 let date = s.startTime ? new Date(s.startTime).toLocaleString() : '—';
-                return `发展
-                    <td>${date}</td>
-                    <td>${escapeHtml(s.referrer)}</td>
-                    <td>${escapeHtml((s.userAgent || '').split(' ')[0])}</td>
-                    <td>${s.country || '—'}</td>
-                    <td>${s.city || '—'}</td>
-                发展`;
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${escapeHtml(s.referrer)}</td>
+                        <td>${escapeHtml((s.userAgent || '').split(' ')[0])}</td>
+                        <td>${s.country || '—'}</td>
+                        <td>${s.city || '—'}</td>
+                    </tr>
+                `;
             }).join('');
         }
 
@@ -397,12 +437,12 @@
             const messages = filterByDate(getData('messages'));
             const tbody = document.querySelector('#messagesTable tbody');
             tbody.innerHTML = messages.slice(-20).reverse().map(m => `
-                发展
+                <tr>
                     <td>${new Date(m.timestamp).toLocaleString()}</td>
                     <td>${escapeHtml(m.name || '')}</td>
                     <td>${escapeHtml(m.email || '')}</td>
                     <td>${escapeHtml(m.message || '')}</td>
-                发展
+                </tr>
             `).join('');
         }
 
@@ -410,15 +450,13 @@
         function renderDownloads() {
             const downloads = filterByDate(getData('downloads'));
             const tbody = document.querySelector('#downloadsTable tbody');
-            tbody.innerHTML = downloads.slice(-20).reverse().map(d => {
-                let fileName = d.fileName || '';
-                try { fileName = decodeURIComponent(fileName); } catch(e) {}
-                return `发展
+            tbody.innerHTML = downloads.slice(-20).reverse().map(d => `
+                <tr>
                     <td>${new Date(d.timestamp).toLocaleString()}</td>
-                    <td><span class="badge">${escapeHtml(fileName)}</span></td>
+                    <td><span class="badge">${escapeHtml(d.fileName || '')}</span></td>
                     <td><small>${d.sessionId?.slice(-8) || '—'}</small></td>
-                发展`;
-            }).join('');
+                </tr>
+            `).join('');
         }
 
         // ========== Видео ==========
@@ -426,10 +464,10 @@
             const videoViews = filterByDate(getData('videoViews'));
             const tbody = document.querySelector('#videoTable tbody');
             tbody.innerHTML = videoViews.slice(-20).reverse().map(v => `
-                发展
+                <tr>
                     <td>${new Date(v.timestamp).toLocaleString()}</td>
                     <td>${escapeHtml(v.videoName || '')}</td>
-                发展
+                </tr>
             `).join('');
         }
 
@@ -438,18 +476,18 @@
             const pageViews = filterByDate(getData('pageViews'));
             const tbody = document.querySelector('#pageViewsTable tbody');
             tbody.innerHTML = pageViews.slice(-20).reverse().map(pv => `
-                发展
+                <tr>
                     <td>${new Date(pv.timestamp).toLocaleString()}</td>
                     <td>${escapeHtml(pv.page)}</td>
                     <td><small>${pv.sessionId?.slice(-8) || '—'}</small></td>
-                发展
+                </tr>
             `).join('');
         }
 
         // ========== Карта России ==========
         function renderRussiaMap() {
             const sessions = getData('sessions');
-            const citiesMap = new Map();
+            const citiesMap = new Map(); // key: city, value: { count, region, lat, lon }
 
             sessions.forEach(s => {
                 if (s.city && s.lat && s.lon) {
@@ -469,16 +507,18 @@
 
             const cities = Array.from(citiesMap.entries()).map(([name, data]) => ({ name, ...data })).sort((a,b)=>b.count - a.count);
 
+            // Таблица городов
             const cityTableBody = document.querySelector('#citiesTable tbody');
             cityTableBody.innerHTML = cities.map(c => `
-                发展
+                <tr>
                     <td>${escapeHtml(c.name)}</td>
                     <td>${escapeHtml(c.region || '—')}</td>
                     <td>${c.count}</td>
                     <td>${c.lat && c.lon ? `${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}` : '—'}</td>
-                发展
+                </tr>
             `).join('');
 
+            // Карта
             if (russiaMap) russiaMap.remove();
             russiaMap = L.map('russiaMap').setView([64, 100], 4);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
