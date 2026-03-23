@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский | Опыт работы в управлении цепями поставок</title>
-    <meta name="description" content="15+ лет практического опыта в управлении цепями поставок, логистике и цифровой трансформации. Ключевые достижения, карьерный путь и профессиональные компетенции.">
+    <meta name="description" content="15+ лет практического опыта в управлении цепями поставок. Леруа Мерлен, Rossko, запуск филиалов, управление командами  79 человек, снижение затрат на 10%, рост оборота на 30%. Полное резюме.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== ВСЕ ВАШИ СТИЛИ (без изменений) ===== */
-        /* Я их не сокращаю, они полностью идентичны вашему файлу experience (18).html */
+        /* ========== ВСЕ СТИЛИ (полностью из финальной версии experience.html) ========== */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -64,11 +63,6 @@
             width: 100%;
             z-index: 1000;
             transition: var(--transition);
-        }
-
-        .header-scrolled {
-            box-shadow: var(--shadow);
-            border-bottom: 1px solid rgba(226, 232, 240, 1);
         }
 
         .nav-container {
@@ -1681,7 +1675,7 @@
     <script src="js/analytics.js"></script>
     <script>
         (function() {
-            // 1. Мобильное меню (переключение иконки, закрытие по клику на ссылку)
+            // Мобильное меню
             const mobileBtn = document.querySelector('.mobile-menu-btn');
             const navMenu = document.getElementById('nav-menu');
             if (mobileBtn && navMenu) {
@@ -1693,7 +1687,6 @@
                         icon.classList.toggle('fa-times');
                     }
                 });
-                // Закрытие меню при клике на ссылку
                 document.querySelectorAll('#nav-menu a').forEach(link => {
                     link.addEventListener('click', () => {
                         navMenu.classList.remove('active');
@@ -1706,13 +1699,13 @@
                 });
             }
 
-            // 2. Дата обновления резюме
+            // Дата обновления резюме
             const today = new Date();
             const formattedDate = today.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
             const resumeDateSpan = document.getElementById('resume-date');
             if (resumeDateSpan) resumeDateSpan.textContent = formattedDate;
 
-            // 3. Счётчики
+            // Счётчики
             let visitCount = parseInt(localStorage.getItem('visitCount') || '0', 10);
             visitCount++;
             localStorage.setItem('visitCount', visitCount);
@@ -1725,18 +1718,14 @@
 
             const resumeLink = document.getElementById('resume-download');
             if (resumeLink) {
-                resumeLink.addEventListener('click', function(e) {
-                    // Счётчик обновляется
+                resumeLink.addEventListener('click', function() {
                     let count = parseInt(localStorage.getItem('resumeDownloadCount') || '0', 10);
                     count++;
                     localStorage.setItem('resumeDownloadCount', count);
                     if (downloadSpan) downloadSpan.textContent = count;
-                    // Можно добавить уведомление (опционально)
-                    // alert('Скачивание резюме начато. Спасибо за интерес!');
                 });
             }
 
-            // 4. Текущий год в футере
             const yearSpan = document.getElementById('current-year');
             if (yearSpan) yearSpan.textContent = new Date().getFullYear();
         })();
