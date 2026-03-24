@@ -953,8 +953,7 @@
             }
         });
     }
-
-    function bindButtons() {
+         function bindButtons() {
         document.getElementById('addPageBtn').onclick = () => { let pages = JSON.parse(localStorage.getItem(STORAGE.seoPages)); pages.push({ url:'new.html', title:'Новая страница', description:'Описание' }); localStorage.setItem(STORAGE.seoPages, JSON.stringify(pages)); renderSeo(); };
         document.getElementById('addTrafficBtn').onclick = () => { let data = JSON.parse(localStorage.getItem(STORAGE.trafficData)); data.push({ date:new Date().toISOString().slice(0,10), visits:0, views:0 }); localStorage.setItem(STORAGE.trafficData, JSON.stringify(data)); renderTraffic(); };
         document.getElementById('addKeywordBtn').onclick = () => { let word = document.getElementById('newKeyword').value.trim(); if(!word) return; let keywords = JSON.parse(localStorage.getItem(STORAGE.keywords)); keywords.push({ word, positions:[], dates:[] }); localStorage.setItem(STORAGE.keywords, JSON.stringify(keywords)); renderKeywords(); document.getElementById('newKeyword').value=''; };
