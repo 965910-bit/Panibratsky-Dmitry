@@ -372,7 +372,7 @@
         <div id="seo" class="tab-pane active">
             <div class="card">
                 <div class="card-title"><i class="fas fa-search"></i> Мета-теги страниц</div>
-                <table id="seoTable"><thead> <tr><th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th></tr> </thead><tbody></tbody></table>
+                <table id="seoTable"><thead> <tr><th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th> </thead><tbody></tbody> </table>
                 <div class="flex-between"><button id="addPageBtn">+ Добавить страницу</button><button id="checkSeoBtn" class="secondary">Проверить SEO</button></div>
                 <div id="seoChecklist" style="margin-top: 20px; display: none;"></div>
             </div>
@@ -382,7 +382,7 @@
         <div id="traffic" class="tab-pane">
             <div class="stats-grid" id="trafficStats"></div>
             <div class="card"><div class="card-title"><i class="fas fa-chart-line"></i> Динамика посещений</div><canvas id="trafficChart"></canvas></div>
-            <div class="card"><div class="card-title"><i class="fas fa-table"></i> Ввод данных</div><table id="trafficDataTable"><thead><tr><th>Дата</th><th>Посещения</th><th>Просмотры</th><th></th></tr></thead><tbody></tbody></table><button id="addTrafficBtn">+ Добавить запись</button></div>
+            <div class="card"><div class="card-title"><i class="fas fa-table"></i> Ввод данных</div><table id="trafficDataTable"><thead> <tr><th>Дата</th><th>Посещения</th><th>Просмотры</th><th></th></tr> </thead><tbody></tbody> </table><button id="addTrafficBtn">+ Добавить запись</button></div>
         </div>
 
         <!-- Ключевые слова -->
@@ -390,7 +390,7 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-chart-simple"></i> Отслеживание позиций</div>
                 <div class="flex-between" style="margin-bottom: 15px;"><input type="text" id="newKeyword" placeholder="Ключевое слово"><button id="addKeywordBtn">+ Добавить</button></div>
-                <table id="keywordsTable"><thead><tr><th>Ключевое слово</th><th>Текущая позиция</th><th>Предыдущая</th><th>История (последние 5)</th><th></th></tr></thead><tbody></tbody></table>
+                <table id="keywordsTable"><thead> <tr><th>Ключевое слово</th><th>Текущая позиция</th><th>Предыдущая</th><th>История (последние 5)</th><th></th></tr> </thead><tbody></tbody> </table>
                 <div class="card-title" style="margin-top: 20px;"><i class="fas fa-chart-line"></i> График динамики</div>
                 <select id="keywordSelect"></select>
                 <canvas id="keywordChart"></canvas>
@@ -402,7 +402,7 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-users"></i> База лидов</div>
                 <div class="flex-between"><button id="addLeadBtn">+ Добавить лида</button><button id="importLeadsBtn" class="secondary">Импорт CSV</button><button id="exportLeadsBtn" class="secondary">Экспорт CSV</button><button id="sendLeadsToCRM" class="secondary">Отправить в CRM</button></div>
-                <table id="leadsTable"><thead><tr><th>Имя</th><th>Email</th><th>Источник</th><th>Дата</th><th>Статус</th><th></th></tr></thead><tbody></tbody></table>
+                <table id="leadsTable"><thead> <tr><th>Имя</th><th>Email</th><th>Источник</th><th>Дата</th><th>Статус</th><th></th></tr> </thead><tbody></tbody> </table>
             </div>
         </div>
 
@@ -411,7 +411,7 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-crown"></i> Authority Capture (Gitpage + Skool)</div>
                 <div class="flex-between"><button id="addAuthorityBtn">+ Новая инициатива</button><button id="viewTemplateBtn" class="secondary">Шаблон страницы</button></div>
-                <table id="authorityTable"><thead><tr><th>Название</th><th>Gitpage ссылка</th><th>Skool ссылка</th><th>Статус</th><th>Трафик (мес)</th><th></th></tr></thead><tbody></tbody></table>
+                <table id="authorityTable"><thead> <tr><th>Название</th><th>Gitpage ссылка</th><th>Skool ссылка</th><th>Статус</th><th>Трафик (мес)</th><th></th></tr> </thead><tbody></tbody> </table>
                 <div id="templateModal" style="display:none; position:fixed; top:20%; left:20%; background:white; padding:20px; border-radius:20px; z-index:1000; max-width:600px;"><pre id="templateCode"></pre><button onclick="document.getElementById('templateModal').style.display='none'">Закрыть</button></div>
             </div>
         </div>
@@ -440,12 +440,12 @@
             <div class="chart-card"><h3><i class="fas fa-calendar-alt"></i> Активность по дням недели и часам</h3><div id="heatmap"></div></div>
             <div class="insight-block" id="insightsBlock"><h3><i class="fas fa-lightbulb"></i> Инсайты и рекомендации</h3><ul id="insightsList"></ul></div>
             <div class="table-card"><h3><i class="fas fa-map-marker-alt"></i> Карта России</h3><div id="russiaMap"></div></div>
-            <div class="table-card"><h3><i class="fas fa-city"></i> Города посетителей</h3><table id="citiesTable"><thead><tr><th>Город</th><th>Регион</th><th>Посещений</th><th>Координаты</th></tr></thead><tbody></tbody></table></div>
-            <div class="table-card"><h3><i class="fas fa-users"></i> Сессии</h3><table id="sessionsTable"><thead><tr><th>Дата</th><th>Источник</th><th>Устройство</th><th>Страна</th><th>Город</th></tr></thead><tbody></tbody></table></div>
-            <div class="table-card"><h3><i class="fas fa-envelope"></i> Сообщения</h3><table id="messagesTable"><thead><tr><th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></tr></thead><tbody></tbody></table></div>
-            <div class="table-card"><h3><i class="fas fa-download"></i> Скачивания</h3><table id="downloadsTable"><thead><tr><th>Дата</th><th>Файл</th><th>Сессия</th></tr></thead><tbody></tbody></table></div>
-            <div class="table-card"><h3><i class="fas fa-video"></i> Видео</h3><table id="videoTable"><thead><tr><th>Дата</th><th>Видео</th></tr></thead><tbody></tbody></table></div>
-            <div class="table-card"><h3><i class="fas fa-chart-line"></i> Просмотры страниц</h3><table id="pageViewsTable"><thead><tr><th>Дата</th><th>Страница</th><th>Сессия</th></tr></thead><tbody></tbody></table></div>
+            <div class="table-card"><h3><i class="fas fa-city"></i> Города посетителей</h3><table id="citiesTable"><thead> <tr><th>Город</th><th>Регион</th><th>Посещений</th><th>Координаты</th></tr> </thead><tbody></tbody> </table></div>
+            <div class="table-card"><h3><i class="fas fa-users"></i> Сессии</h3><table id="sessionsTable"><thead> <tr><th>Дата</th><th>Источник</th><th>Устройство</th><th>Страна</th><th>Город</th></tr> </thead><tbody></tbody> </table></div>
+            <div class="table-card"><h3><i class="fas fa-envelope"></i> Сообщения</h3><table id="messagesTable"><thead> <tr><th>Дата</th><th>Имя</th><th>Email</th><th>Сообщение</th></tr> </thead><tbody></tbody> </table></div>
+            <div class="table-card"><h3><i class="fas fa-download"></i> Скачивания</h3><table id="downloadsTable"><thead> <tr><th>Дата</th><th>Файл</th><th>Сессия</th></tr> </thead><tbody></tbody> </table></div>
+            <div class="table-card"><h3><i class="fas fa-video"></i> Видео</h3><table id="videoTable"><thead> <tr><th>Дата</th><th>Видео</th></tr> </thead><tbody></tbody> </table></div>
+            <div class="table-card"><h3><i class="fas fa-chart-line"></i> Просмотры страниц</h3><table id="pageViewsTable"><thead> <tr><th>Дата</th><th>Страница</th><th>Сессия</th></tr> </thead><tbody></tbody> </table></div>
             <div class="flex-between">
                 <div><span>📅 с</span><input type="date" id="analyticsDateFrom"><span>по</span><input type="date" id="analyticsDateTo"><button id="applyAnalyticsDate">Применить</button></div>
                 <div id="lastUpdateAnalytics"></div>
@@ -478,7 +478,7 @@
             <div class="backlink-card">
                 <div class="backlink-title"><i class="fas fa-link"></i><h3>Управление обратными ссылками</h3></div>
                 <div class="flex-between"><button id="addBacklinkBtn">+ Добавить ссылку</button><button id="importBacklinksBtn" class="secondary">Импорт CSV</button><button id="exportBacklinksBtn" class="secondary">Экспорт CSV</button></div>
-                <table id="backlinksTable"><thead><tr><th>Домен</th><th>Анкор</th><th>Дата получения</th><th>DR (0-100)</th><th></th></tr></thead><tbody></tbody></table>
+                <table id="backlinksTable"><thead> <tr><th>Домен</th><th>Анкор</th><th>Дата получения</th><th>DR (0-100)</th><th></th></tr> </thead><tbody></tbody> </table>
             </div>
         </div>
 
@@ -487,7 +487,7 @@
             <div class="competitor-card">
                 <div class="competitor-title"><i class="fas fa-chart-line"></i><h3>Анализ конкурентов</h3></div>
                 <div class="flex-between"><input type="text" id="competitorUrl" placeholder="URL конкурента"><button id="addCompetitorBtn">Добавить</button></div>
-                <table id="competitorsTable"><thead><tr><th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th></tr></thead><tbody></tbody></table>
+                <table id="competitorsTable"><thead> <tr><th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th></tr> </thead><tbody></tbody> </table>
             </div>
         </div>
 
@@ -515,6 +515,7 @@
         </div>
     </div>
 </div>
+
 <script>
     // ==================== Глобальные переменные ====================
     const PASSWORD = "admin";
@@ -953,7 +954,8 @@
             }
         });
     }
-         function bindButtons() {
+
+    function bindButtons() {
         document.getElementById('addPageBtn').onclick = () => { let pages = JSON.parse(localStorage.getItem(STORAGE.seoPages)); pages.push({ url:'new.html', title:'Новая страница', description:'Описание' }); localStorage.setItem(STORAGE.seoPages, JSON.stringify(pages)); renderSeo(); };
         document.getElementById('addTrafficBtn').onclick = () => { let data = JSON.parse(localStorage.getItem(STORAGE.trafficData)); data.push({ date:new Date().toISOString().slice(0,10), visits:0, views:0 }); localStorage.setItem(STORAGE.trafficData, JSON.stringify(data)); renderTraffic(); };
         document.getElementById('addKeywordBtn').onclick = () => { let word = document.getElementById('newKeyword').value.trim(); if(!word) return; let keywords = JSON.parse(localStorage.getItem(STORAGE.keywords)); keywords.push({ word, positions:[], dates:[] }); localStorage.setItem(STORAGE.keywords, JSON.stringify(keywords)); renderKeywords(); document.getElementById('newKeyword').value=''; };
