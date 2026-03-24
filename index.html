@@ -7,6 +7,7 @@
     <meta name="description" content="Стратегический лидер в управлении цепями поставок. 15+ лет опыта в SCM, цифровой трансформации, внедрении AI и создании Академии цепей поставок. Оптимизация логистики и рост эффективности бизнеса.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
+    <link rel="icon" href="/1favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1268,7 +1269,6 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero-section">
         <div class="container hero-container">
             <div class="hero-content">
@@ -1299,7 +1299,6 @@
         </div>
     </section>
 
-    <!-- Philosophy Section -->
     <section class="philosophy-section">
         <div class="container">
             <div class="philosophy-container">
@@ -1396,7 +1395,6 @@
         </div>
     </section>
 
-    <!-- Vision 2036 Timeline -->
     <section class="vision-2036">
         <div class="container">
             <h2 class="section-title" style="color: white;">🚀 Эволюция SCM до 2036</h2>
@@ -1446,7 +1444,6 @@
         </div>
     </section>
 
-    <!-- Strategic Results -->
     <section class="results-section">
         <div class="container">
             <div class="section-header">
@@ -1474,7 +1471,6 @@
         </div>
     </section>
 
-    <!-- ESG Dashboard -->
     <section class="esg-dashboard">
         <div class="container">
             <div class="section-header">
@@ -1510,7 +1506,6 @@
         </div>
     </section>
 
-    <!-- Certificates Section -->
     <section class="certificates-section">
         <div class="container">
             <div class="section-header">
@@ -1521,7 +1516,6 @@
         </div>
     </section>
 
-    <!-- Methodologies Section -->
     <section class="methodologies-section">
         <div class="container">
             <div class="section-header">
@@ -1561,7 +1555,6 @@
         </div>
     </section>
 
-    <!-- Tech Radar -->
     <section class="tech-radar">
         <div class="container">
             <h2 class="section-title" style="color: white;">📡 Технологический радар SCM 2036</h2>
@@ -1596,7 +1589,6 @@
         </div>
     </section>
 
-    <!-- Leadership Philosophy -->
     <section class="leadership-philosophy">
         <div class="container">
             <div class="section-header">
@@ -1638,7 +1630,6 @@
         </div>
     </section>
 
-    <!-- Academy Section with Flip Cards -->
     <section class="academy-section">
         <div class="container">
             <div class="section-header">
@@ -1707,7 +1698,6 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
             <h2 class="cta-title">Готовы трансформировать ваши цепи поставок?</h2>
@@ -1721,7 +1711,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-counters">
@@ -1765,7 +1754,6 @@
     <script src="js/analytics.js"></script>
     <script>
         (function() {
-            // Мобильное меню
             const mobileBtn = document.querySelector('.mobile-menu-btn');
             const navMenu = document.getElementById('nav-menu');
             if (mobileBtn && navMenu) {
@@ -1789,7 +1777,6 @@
                 });
             }
 
-            // Анимация счётчиков в таймлайне
             const timelineSection = document.querySelector('.vision-2036');
             let countersAnimated = false;
             function animateCounters() {
@@ -1822,7 +1809,6 @@
                 observer.observe(timelineSection);
             }
 
-            // Модальное окно Tech Radar
             const modal = document.getElementById('tech-modal');
             const modalTitle = document.getElementById('modal-title');
             const modalDesc = document.getElementById('modal-desc');
@@ -1850,7 +1836,6 @@
                 });
             }
 
-            // Кнопки предзаписи
             document.querySelectorAll('.preorder-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1865,7 +1850,6 @@
                 });
             });
 
-            // Счётчики
             if (!localStorage.getItem('visitCount')) localStorage.setItem('visitCount', '0');
             let visitCount = parseInt(localStorage.getItem('visitCount'), 10) + 1;
             localStorage.setItem('visitCount', visitCount);
@@ -1878,11 +1862,9 @@
                 downloadSpan.textContent = downloadCount;
             }
 
-            // Текущий год
             const yearSpan = document.getElementById('current-year');
             if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-            // ESG дашборд
             const esgData = {
                 2026: { co2: 120, renew: 25, circ: 40 },
                 2030: { co2: 85, renew: 45, circ: 55 },
@@ -1910,7 +1892,6 @@
             });
             updateESGDashboard('2026');
 
-            // Сертификаты
             const certificates = [
                 { title: "Диплом о профессиональной переподготовке", file: "files/diploma.pdf", filename: "diploma.pdf" },
                 { title: "Сертификат Академии Цепей Поставок (базовый)", file: "files/scm-basic-cert.pdf", filename: "scm-basic-cert.pdf" },
