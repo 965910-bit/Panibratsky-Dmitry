@@ -1056,33 +1056,22 @@
     <section class="cta-section">
         <div class="container">
             <h2 class="cta-title">Готовы трансформировать вашу логистику?</h2>
-            <p class="cta-description">
-                Давайте обсудим, как современные методологии и цифровые инструменты могут оптимизировать ваши цепочки поставок, 
-                сократить издержки и повысить операционную эффективность.
-            </p>
-            <a href="contact.html" class="cta-button">
-                <i class="fas fa-handshake"></i> Обсудить сотрудничество
-            </a>
+            <p class="cta-description">Давайте обсудим, как современные методологии и цифровые инструменты могут оптимизировать ваши цепочки поставок, сократить издержки и повысить операционную эффективность.</p>
+            <a href="contact.html" class="cta-button"><i class="fas fa-handshake"></i> Обсудить сотрудничество</a>
         </div>
     </section>
 
     <footer>
         <div class="container">
             <div class="footer-counters">
-                <div class="counter-item">
-                    <span class="counter-number" id="visit-counter">0</span> посещений
-                </div>
-                <div class="counter-item">
-                    <span class="counter-number" id="download-counter">0</span> скачиваний
-                </div>
+                <div class="counter-item"><span class="counter-number" id="visit-counter">0</span> посещений</div>
+                <div class="counter-item"><span class="counter-number" id="download-counter">0</span> скачиваний</div>
             </div>
             <div class="footer-container">
                 <div class="footer-column">
                     <h3>Дмитрий Панибратский</h3>
                     <p>Эксперт в области управления цепями поставок и цифровой трансформации логистики. Специализируюсь на внедрении современных методологий и технологий для достижения операционного превосходства.</p>
-                    <p style="margin-top: 12px; font-style: italic; color: rgba(255, 255, 255, 0.7); font-size: 13px;">
-                        "Истинная экспертиза — это умение адаптировать методологии под уникальные бизнес-процессы."
-                    </p>
+                    <p style="margin-top: 12px; font-style: italic; color: rgba(255, 255, 255, 0.7); font-size: 13px;">"Истинная экспертиза — это умение адаптировать методологии под уникальные бизнес-процессы."</p>
                 </div>
                 <div class="footer-column">
                     <h3>Навигация</h3>
@@ -1108,16 +1097,12 @@
                     <p><strong>Образовательная платформа</strong><br>Вебинары, мастер-классы и разбор кейсов для профессионалов SCM</p>
                     <p><strong>Профессиональное сообщество</strong><br>Обмен опытом и развитие стандартов в управлении цепями поставок</p>
                     <p><strong>Менторство</strong><br>Передача практического опыта следующему поколению руководителей</p>
-                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer" style="color: var(--accent-gold); text-decoration: none; font-size: 14px; margin-top: 10px; display: inline-block;">
-                        <i class="fab fa-telegram"></i> Присоединиться в Telegram
-                    </a>
+                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer" style="color: var(--accent-gold); text-decoration: none; font-size: 14px; margin-top: 10px; display: inline-block;"><i class="fab fa-telegram"></i> Присоединиться в Telegram</a>
                 </div>
             </div>
         </div>
         <div class="container">
-            <div class="copyright">
-                &copy; <span id="current-year">2024</span> Дмитрий Панибратский. Эксперт в SCM и цифровой трансформации.
-            </div>
+            <div class="copyright">&copy; <span id="current-year">2024</span> Дмитрий Панибратский. Эксперт в SCM и цифровой трансформации.</div>
         </div>
     </footer>
 
@@ -1146,17 +1131,14 @@
                     });
                 });
             }
-
             let visitCount = parseInt(localStorage.getItem('visitCount') || '0', 10);
             visitCount++;
             localStorage.setItem('visitCount', visitCount);
             const visitSpan = document.getElementById('visit-counter');
             if (visitSpan) visitSpan.textContent = visitCount;
-
             let downloadCount = parseInt(localStorage.getItem('downloadCount') || '0', 10);
             const downloadSpan = document.getElementById('download-counter');
             if (downloadSpan) downloadSpan.textContent = downloadCount;
-
             const yearSpan = document.getElementById('current-year');
             if (yearSpan) yearSpan.textContent = new Date().getFullYear();
         })();
