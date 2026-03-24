@@ -292,13 +292,13 @@
             border-radius: var(--border-radius);
             margin-bottom: 20px;
         }
-        .video-wrapper iframe {
+        .video-wrapper video {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
+            object-fit: cover;
         }
         .video-stats {
             color: var(--neutral-medium);
@@ -851,12 +851,10 @@
             <div class="video-card">
                 <h2 class="section-title">Видео-приветствие</h2>
                 <div class="video-wrapper">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                            title="Видео-приветствие Дмитрия Панибратского" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                    </iframe>
+                    <video controls preload="metadata">
+                        <source src="/Panibratsky-Dmitry/videos/about.mp4" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
                 </div>
                 <div class="video-stats">
                     <i class="fas fa-eye"></i> Просмотров: <span id="video-views">0</span>
@@ -1099,9 +1097,9 @@
             let videoViews = parseInt(localStorage.getItem('videoViews') || '0', 10);
             const videoSpan = document.getElementById('video-views');
             if (videoSpan) videoSpan.textContent = videoViews;
-            const videoIframe = document.querySelector('.video-wrapper iframe');
-            if (videoIframe) {
-                videoIframe.addEventListener('load', () => {
+            const videoElement = document.querySelector('.video-wrapper video');
+            if (videoElement) {
+                videoElement.addEventListener('play', () => {
                     videoViews++;
                     localStorage.setItem('videoViews', videoViews);
                     if (videoSpan) videoSpan.textContent = videoViews;
