@@ -309,10 +309,15 @@
             const container = document.getElementById('newsContainer');
             container.innerHTML = '<div class="loading">Загрузка новостей...</div>';
             try {
-                // Путь к JSON-файлу в репозитории
                 const response = await fetch('/Panibratsky-Dmitry/data/news.json');
                 if (!response.ok) throw new Error('Не удалось загрузить новости');
                 const data = await response.json();
+                // Сортировка: русские выше, затем английские, внутри по дате
+                data.sort((a, b) => {
+                    if (a.lang === 'ru' && b.lang !== 'ru') return -1;
+                    if (a.lang !== 'ru' && b.lang === 'ru') return 1;
+                    return new Date(b.pubDate) - new Date(a.pubDate);
+                });
                 allNewsData = data;
                 renderNewsByCategory(activeCategory);
             } catch (err) {
