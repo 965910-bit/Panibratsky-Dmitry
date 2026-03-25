@@ -1806,6 +1806,7 @@
                         <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
                         <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
+                        <li><a href="/Panibratsky-Dmitry/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -1816,6 +1817,16 @@
                         <li><a href="tel:+79822282949"><i class="fas fa-phone"></i> +7 (982) 228-29-49</a></li>
                     </ul>
                 </div>
+                <!-- Подписка на новости -->
+                <div class="footer-column">
+                    <h3>Подписка на новости</h3>
+                    <p>Получайте дайджест новых статей и событий SCM</p>
+                    <form id="subscribeForm" style="margin-top: 15px;">
+                        <input type="email" id="subscribeEmail" placeholder="Ваш email" required style="width: 100%; padding: 8px 12px; border: none; border-radius: 8px; margin-bottom: 10px;">
+                        <button type="submit" style="background: var(--accent-gold); color: var(--primary-dark); border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer;">Подписаться</button>
+                    </form>
+                    <div id="subscribeStatus" style="margin-top: 10px; font-size: 12px;"></div>
+                </div>
             </div>
             <div class="copyright">
                 &copy; <span id="current-year">2024</span> Дмитрий Панибратский.
@@ -1824,6 +1835,7 @@
     </footer>
 
     <script src="js/analytics.js"></script>
+    <script src="js/subscribe.js"></script>
     <script>
         (function() {
             // Мобильное меню
@@ -1996,19 +2008,20 @@
 
             // Виджет новостей
             const sources = [
-                { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss' },
-                { name: 'Logistics Management', url: 'https://www.logisticsmgmt.com/rss' },
-                { name: 'The Loadstar', url: 'https://theloadstar.com/feed/' },
-                { name: 'Supply Chain Management Review', url: 'https://www.scmr.com/rss' },
-                { name: 'DC Velocity', url: 'https://www.dcvelocity.com/rss' }
+                { name: 'Logirus', url: 'https://logirus.ru/rss', lang: 'ru' },
+                { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', lang: 'ru' },
+                { name: 'Retail & Logistics', url: 'https://retail-loyalty.org/rss/', lang: 'ru' }
             ];
-
             const newsContainer = document.getElementById('homeNewsGrid');
 
-            async function fetchRSS(source) {
+            async function fetchRSS(source, timeoutMs = 5000) {
                 const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
                 try {
-                    const response = await fetch(apiUrl);
+                    const response = await fetch(apiUrl, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const data = await response.json();
                     if (data.status === 'ok' && data.items && data.items.length) {
                         return data.items.map(item => ({
@@ -2016,7 +2029,8 @@
                             link: item.link,
                             pubDate: new Date(item.pubDate),
                             description: item.description.replace(/<[^>]*>/g, '').slice(0, 150),
-                            source: source.name
+                            source: source.name,
+                            lang: source.lang
                         }));
                     }
                     return [];
@@ -2028,7 +2042,7 @@
 
             async function loadNewsWidget() {
                 newsContainer.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
-                const allNews = [];
+                let allNews = [];
                 for (const src of sources) {
                     const items = await fetchRSS(src);
                     allNews.push(...items);
@@ -2044,6 +2058,7 @@
                 function formatDate(date) {
                     return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
                 }
+
                 function escapeHtml(str) {
                     return str.replace(/[&<>]/g, function(m) {
                         if (m === '&') return '&amp;';
@@ -2057,7 +2072,7 @@
                     <div class="news-card">
                         <div class="news-date">
                             <span>${formatDate(news.pubDate)}</span>
-                            <span class="news-source">${escapeHtml(news.source)}</span>
+                            <span class="news-source">${escapeHtml(news.source)}${news.lang === 'en' ? ' <span class="lang-badge">EN</span>' : ''}</span>
                         </div>
                         <h3 class="news-title">${escapeHtml(news.title)}</h3>
                         <p class="news-excerpt">${escapeHtml(news.description)}</p>
