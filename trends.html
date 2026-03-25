@@ -137,6 +137,25 @@
             margin: 0 auto;
         }
 
+        .toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .translate-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .translate-btn:hover {
+            background: #0f172a;
+        }
+
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -189,6 +208,14 @@
             align-items: center;
             gap: 6px;
         }
+        .lang-badge {
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
         .loading, .error {
             text-align: center;
             padding: 40px;
@@ -205,6 +232,7 @@
         @media (max-width: 768px) {
             .page-header h1 { font-size: 32px; }
             .news-grid { grid-template-columns: 1fr; }
+            .toolbar { justify-content: center; }
         }
     </style>
 </head>
@@ -234,6 +262,9 @@
     </div>
 
     <div class="container">
+        <div class="toolbar">
+            <button id="translatePageBtn" class="translate-btn"><i class="fas fa-language"></i> Перевести страницу</button>
+        </div>
         <div id="newsContainer" class="news-grid">
             <div class="loading">Загрузка новостей...</div>
         </div>
@@ -247,20 +278,33 @@
 
     <script>
         (function() {
-            const sources = [
-                { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss' },
-                { name: 'Logistics Management', url: 'https://www.logisticsmgmt.com/rss' },
-                { name: 'The Loadstar', url: 'https://theloadstar.com/feed/' },
-                { name: 'Supply Chain Management Review', url: 'https://www.scmr.com/rss' },
-                { name: 'DC Velocity', url: 'https://www.dcvelocity.com/rss' }
+            // ---------- RSS ИСТОЧНИКИ ----------
+            // Русскоязычные (приоритетные)
+            const ruSources = [
+                { name: 'Logirus', url: 'https://logirus.ru/rss', lang: 'ru' },
+                { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', lang: 'ru' },
+                { name: 'Retail & Logistics', url: 'https://retail-loyalty.org/rss/', lang: 'ru' }
+            ];
+            // Англоязычные (запасные)
+            const enSources = [
+                { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss', lang: 'en' },
+                { name: 'Logistics Management', url: 'https://www.logisticsmgmt.com/rss', lang: 'en' },
+                { name: 'The Loadstar', url: 'https://theloadstar.com/feed/', lang: 'en' }
             ];
 
             const container = document.getElementById('newsContainer');
+            const CACHE_KEY = 'scm_news_cache';
+            const CACHE_TIME_KEY = 'scm_news_cache_time';
+            const CACHE_TTL = 30 * 60 * 1000; // 30 минут
 
-            async function fetchRSS(source) {
+            async function fetchRSS(source, timeoutMs = 5000) {
                 const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
                 try {
-                    const response = await fetch(apiUrl);
+                    const response = await fetch(apiUrl, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const data = await response.json();
                     if (data.status === 'ok' && data.items && data.items.length) {
                         return data.items.map(item => ({
@@ -268,7 +312,8 @@
                             link: item.link,
                             pubDate: new Date(item.pubDate),
                             description: item.description.replace(/<[^>]*>/g, '').slice(0, 200),
-                            source: source.name
+                            source: source.name,
+                            lang: source.lang
                         }));
                     }
                     return [];
@@ -280,15 +325,37 @@
 
             async function loadAllNews() {
                 container.innerHTML = '<div class="loading">Загрузка новостей...</div>';
-                const allNews = [];
-                for (const src of sources) {
+                let allNews = [];
+
+                // Пробуем загрузить русскоязычные
+                for (const src of ruSources) {
                     const items = await fetchRSS(src);
                     allNews.push(...items);
                 }
-                allNews.sort((a, b) => b.pubDate - a.pubDate);
 
+                // Если нет ни одной русской новости, подгружаем английские
                 if (allNews.length === 0) {
-                    container.innerHTML = '<div class="error">Не удалось загрузить новости. Попробуйте позже.</div>';
+                    for (const src of enSources) {
+                        const items = await fetchRSS(src);
+                        allNews.push(...items);
+                    }
+                }
+
+                // Сортируем по дате
+                allNews.sort((a, b) => b.pubDate - a.pubDate);
+                // Берём последние 24 новости
+                const latest = allNews.slice(0, 24);
+
+                if (latest.length === 0) {
+                    // Пытаемся показать кэш
+                    const cached = localStorage.getItem(CACHE_KEY);
+                    const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
+                    if (cached && cacheTime && (Date.now() - parseInt(cacheTime)) < 12 * 3600 * 1000) {
+                        container.innerHTML = cached;
+                        container.innerHTML += '<div class="error" style="margin-top:20px;">⚠️ Показаны сохранённые новости. Свежие не удалось загрузить.</div>';
+                    } else {
+                        container.innerHTML = '<div class="error">Не удалось загрузить новости. Проверьте соединение или попробуйте позже.</div>';
+                    }
                     return;
                 }
 
@@ -305,17 +372,22 @@
                     });
                 }
 
-                container.innerHTML = allNews.map(news => `
+                const html = latest.map(news => `
                     <div class="news-card">
                         <div class="news-date">
                             <span>${formatDate(news.pubDate)}</span>
-                            <span class="news-source">${escapeHtml(news.source)}</span>
+                            <span class="news-source">${escapeHtml(news.source)}${news.lang === 'en' ? ' <span class="lang-badge">EN</span>' : ''}</span>
                         </div>
                         <h3 class="news-title">${escapeHtml(news.title)}</h3>
                         <p class="news-excerpt">${escapeHtml(news.description)}</p>
                         <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="news-link">Читать на источнике →</a>
                     </div>
                 `).join('');
+
+                container.innerHTML = html;
+                // Сохраняем в кэш
+                localStorage.setItem(CACHE_KEY, html);
+                localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
             }
 
             loadAllNews();
@@ -341,6 +413,40 @@
                             icon.classList.add('fa-bars');
                         }
                     });
+                });
+            }
+
+            // Кнопка перевода страницы (Google Translate)
+            const translateBtn = document.getElementById('translatePageBtn');
+            if (translateBtn) {
+                translateBtn.addEventListener('click', () => {
+                    // Добавляем Google Translate виджет, если его нет
+                    if (!document.getElementById('google_translate_element')) {
+                        const script = document.createElement('script');
+                        script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+                        document.head.appendChild(script);
+                        window.googleTranslateElementInit = function() {
+                            new google.translate.TranslateElement({
+                                pageLanguage: 'ru',
+                                includedLanguages: 'ru,en',
+                                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                            }, 'google_translate_element');
+                        };
+                        // Показываем панель перевода
+                        const panel = document.createElement('div');
+                        panel.id = 'google_translate_element';
+                        panel.style.position = 'fixed';
+                        panel.style.bottom = '20px';
+                        panel.style.right = '20px';
+                        panel.style.zIndex = '1000';
+                        panel.style.background = 'white';
+                        panel.style.padding = '10px';
+                        panel.style.borderRadius = '8px';
+                        panel.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                        document.body.appendChild(panel);
+                    } else {
+                        alert('Панель перевода уже открыта. Выберите язык в нижнем правом углу.');
+                    }
                 });
             }
         })();
