@@ -297,75 +297,28 @@
 
     <footer>
         <div class="container">
-            <p>© 2026 Дмитрий Панибратский. Новости собираются автоматически из открытых источников.</p>
+            <p>© 2026 Дмитрий Панибратский. Новости обновляются автоматически каждые 6 часов.</p>
         </div>
     </footer>
 
     <script>
-        // -------- RSS ИСТОЧНИКИ (ПРИОРИТЕТ РУССКИМ) --------
-        const ruSources = [
-            { name: 'Logirus', url: 'https://logirus.ru/rss', cat: 'logistics', lang: 'ru' },
-            { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', cat: 'logistics', lang: 'ru' },
-            { name: 'Zakupki.gov.ru', url: 'https://zakupki.gov.ru/epz/main/public/rss', cat: 'tenders', lang: 'ru' },
-            { name: 'Retail & Logistics', url: 'https://retail-loyalty.org/rss/', cat: 'logistics', lang: 'ru' },
-            { name: 'Склад & Логистика', url: 'https://logistics.ru/rss', cat: 'warehouse', lang: 'ru' },
-            { name: 'MarketInfo', url: 'https://marketinfo.pro/rss', cat: 'marketplace', lang: 'ru' }
-        ];
-
-        const enSources = [
-            { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss', cat: 'tech', lang: 'en' },
-            { name: 'CIO SCM', url: 'https://www.cio.com/rss', cat: 'tech', lang: 'en' }
-        ];
-
-        let activeCategory = 'all';
         let allNewsData = [];
+        let activeCategory = 'all';
 
-        async function fetchRSS(source, timeout = 5000) {
-            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), timeout);
-            try {
-                const res = await fetch(apiUrl, { signal: controller.signal });
-                clearTimeout(id);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-                if (data.status === 'ok' && data.items) {
-                    return data.items.map(item => ({
-                        title: item.title,
-                        link: item.link,
-                        pubDate: new Date(item.pubDate),
-                        description: item.description.replace(/<[^>]*>/g, '').slice(0, 250),
-                        source: source.name,
-                        lang: source.lang,
-                        category: source.cat
-                    }));
-                }
-                return [];
-            } catch (err) {
-                console.warn(`Ошибка загрузки ${source.name}:`, err);
-                return [];
-            }
-        }
-
-        async function loadAllNews() {
+        async function loadNewsFromJSON() {
             const container = document.getElementById('newsContainer');
             container.innerHTML = '<div class="loading">Загрузка новостей...</div>';
-            let allNews = [];
-            // Сначала загружаем русские источники
-            for (const src of ruSources) {
-                const items = await fetchRSS(src);
-                allNews.push(...items);
+            try {
+                // Путь к JSON-файлу в репозитории
+                const response = await fetch('/Panibratsky-Dmitry/data/news.json');
+                if (!response.ok) throw new Error('Не удалось загрузить новости');
+                const data = await response.json();
+                allNewsData = data;
+                renderNewsByCategory(activeCategory);
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div class="error">Ошибка загрузки новостей. Попробуйте позже.</div>';
             }
-            // Если русских новостей нет, пробуем английские
-            if (allNews.length === 0) {
-                for (const src of enSources) {
-                    const items = await fetchRSS(src);
-                    allNews.push(...items);
-                }
-            }
-            allNews.sort((a,b) => b.pubDate - a.pubDate);
-            allNewsData = allNews;
-            renderNewsByCategory(activeCategory);
         }
 
         function renderNewsByCategory(category) {
@@ -375,13 +328,13 @@
                 filtered = allNewsData.filter(item => item.category === category);
             }
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="error">Новостей в этой категории пока нет. Попробуйте позже.</div>';
+                container.innerHTML = '<div class="error">Новостей в этой категории пока нет.</div>';
                 return;
             }
             const html = filtered.slice(0, 30).map(news => `
                 <div class="news-card">
                     <div class="news-date">
-                        <span>${news.pubDate.toLocaleDateString('ru-RU')}</span>
+                        <span>${formatDate(news.pubDate)}</span>
                         <span class="news-source">${escapeHtml(news.source)}${news.lang === 'en' ? ' <span class="lang-badge">EN</span>' : ''}</span>
                     </div>
                     <h3 class="news-title">${escapeHtml(news.title)}</h3>
@@ -390,7 +343,6 @@
                 </div>
             `).join('');
             container.innerHTML = html;
-            // Обновляем активную кнопку
             document.querySelectorAll('.cat-btn').forEach(btn => {
                 if (btn.dataset.cat === category) btn.classList.add('active');
                 else btn.classList.remove('active');
@@ -419,6 +371,11 @@
             });
         }
 
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
         function escapeHtml(str) {
             return str.replace(/[&<>]/g, function(m) {
                 if (m === '&') return '&amp;';
@@ -428,7 +385,6 @@
             });
         }
 
-        // Кнопка перевода страницы (Google Translate)
         function addTranslateButton() {
             const toolbar = document.getElementById('toolbar');
             if (!toolbar) return;
@@ -477,7 +433,7 @@
 
         createFilterPanel();
         addTranslateButton();
-        loadAllNews();
+        loadNewsFromJSON();
     </script>
 </body>
 </html>
