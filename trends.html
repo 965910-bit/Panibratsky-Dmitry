@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мировые новости и тренды SCM | Дмитрий Панибратский</title>
+    <meta name="description" content="Актуальные новости, тренды и исследования в области управления цепями поставок, логистики, цифровой трансформации.">
+    <meta name="yandex-verification" content="108fc8ce05da4c6d" />
+    <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
+    <link rel="icon" href="/1favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Яндекс.Метрика -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(105620027, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-C5X9R6HPQY');
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #0f172a;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: none;
+        }
+        .logo-dot {
+            color: #d4af37;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: #1e40af;
+        }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 16px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                flex-direction: column;
+                gap: 12px;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        .page-header {
+            padding: 120px 0 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #f8fafc, #ffffff);
+        }
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+        .page-header p {
+            color: #64748b;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 40px 0;
+        }
+        .news-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+        .news-date {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .news-source {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+        .news-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .news-excerpt {
+            color: #475569;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .news-link {
+            color: #1e40af;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .loading, .error {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        footer {
+            background: #0f172a;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 32px; }
+            .news-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
+            <button class="mobile-menu-btn" aria-label="Меню"><i class="fas fa-bars"></i></button>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="about.html">Обо мне</a></li>
+                    <li><a href="expertise.html">Экспертиза</a></li>
+                    <li><a href="experience.html">Опыт</a></li>
+                    <li><a href="index.html">Стратегия</a></li>
+                    <li><a href="trends.html" class="active">Новости SCM</a></li>
+                    <li><a href="contact.html">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>🌍 Мировые новости и тренды SCM</h1>
+            <p>Актуальные события, исследования и аналитика в управлении цепями поставок, логистике и цифровой трансформации</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="newsContainer" class="news-grid">
+            <div class="loading">Загрузка новостей...</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Дмитрий Панибратский. Новости собираются автоматически из открытых источников.</p>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            const sources = [
+                { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss' },
+                { name: 'Logistics Management', url: 'https://www.logisticsmgmt.com/rss' },
+                { name: 'The Loadstar', url: 'https://theloadstar.com/feed/' },
+                { name: 'Supply Chain Management Review', url: 'https://www.scmr.com/rss' },
+                { name: 'DC Velocity', url: 'https://www.dcvelocity.com/rss' }
+            ];
+
+            const container = document.getElementById('newsContainer');
+
+            async function fetchRSS(source) {
+                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+                try {
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+                    if (data.status === 'ok' && data.items && data.items.length) {
+                        return data.items.map(item => ({
+                            title: item.title,
+                            link: item.link,
+                            pubDate: new Date(item.pubDate),
+                            description: item.description.replace(/<[^>]*>/g, '').slice(0, 200),
+                            source: source.name
+                        }));
+                    }
+                    return [];
+                } catch (error) {
+                    console.warn(`Ошибка загрузки ${source.name}:`, error);
+                    return [];
+                }
+            }
+
+            async function loadAllNews() {
+                container.innerHTML = '<div class="loading">Загрузка новостей...</div>';
+                const allNews = [];
+                for (const src of sources) {
+                    const items = await fetchRSS(src);
+                    allNews.push(...items);
+                }
+                allNews.sort((a, b) => b.pubDate - a.pubDate);
+
+                if (allNews.length === 0) {
+                    container.innerHTML = '<div class="error">Не удалось загрузить новости. Попробуйте позже.</div>';
+                    return;
+                }
+
+                function formatDate(date) {
+                    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+
+                function escapeHtml(str) {
+                    return str.replace(/[&<>]/g, function(m) {
+                        if (m === '&') return '&amp;';
+                        if (m === '<') return '&lt;';
+                        if (m === '>') return '&gt;';
+                        return m;
+                    });
+                }
+
+                container.innerHTML = allNews.map(news => `
+                    <div class="news-card">
+                        <div class="news-date">
+                            <span>${formatDate(news.pubDate)}</span>
+                            <span class="news-source">${escapeHtml(news.source)}</span>
+                        </div>
+                        <h3 class="news-title">${escapeHtml(news.title)}</h3>
+                        <p class="news-excerpt">${escapeHtml(news.description)}</p>
+                        <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="news-link">Читать на источнике →</a>
+                    </div>
+                `).join('');
+            }
+
+            loadAllNews();
+
+            // Мобильное меню
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            if (mobileBtn && navMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    const icon = mobileBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+                document.querySelectorAll('#nav-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        const icon = mobileBtn.querySelector('i');
+                        if (icon && icon.classList.contains('fa-times')) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    });
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
