@@ -1018,6 +1018,7 @@
                     <li><a href="expertise.html">Экспертиза</a></li>
                     <li><a href="experience.html" class="active">Опыт</a></li>
                     <li><a href="index.html">Стратегия</a></li>
+                    <li><a href="trends.html">Новости SCM</a></li>
                     <li><a href="contact.html">Контакты</a></li>
                 </ul>
             </nav>
@@ -1341,7 +1342,9 @@
                         <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
                         <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
                         <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
+                        <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
+                        <li><a href="/Panibratsky-Dmitry/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -1352,6 +1355,15 @@
                         <li><a href="tel:+79822282949"><i class="fas fa-phone"></i> +7 (982) 228-29-49</a></li>
                         <li><a href="tel:+79825810787"><i class="fas fa-phone"></i> +7 (982) 581-07-87</a></li>
                     </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Подписка на новости</h3>
+                    <p>Получайте дайджест новых статей и событий SCM</p>
+                    <form id="subscribeForm" style="margin-top: 15px;">
+                        <input type="email" id="subscribeEmail" placeholder="Ваш email" required style="width: 100%; padding: 8px 12px; border: none; border-radius: 8px; margin-bottom: 10px;">
+                        <button type="submit" style="background: var(--accent-gold); color: var(--primary-dark); border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer;">Подписаться</button>
+                    </form>
+                    <div id="subscribeStatus" style="margin-top: 10px; font-size: 12px;"></div>
                 </div>
                 <div class="footer-column">
                     <h3>Рекомендации</h3>
@@ -1366,6 +1378,7 @@
     </footer>
 
     <script src="js/analytics.js"></script>
+    <script src="js/subscribe.js"></script>
     <script>
         (function() {
             const mobileBtn = document.querySelector('.mobile-menu-btn');
