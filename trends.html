@@ -137,6 +137,25 @@
             margin: 0 auto;
         }
 
+        .toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .translate-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .translate-btn:hover {
+            background: #0f172a;
+        }
+
         .filter-panel {
             display: flex;
             flex-wrap: wrap;
@@ -239,6 +258,7 @@
         @media (max-width: 768px) {
             .page-header h1 { font-size: 32px; }
             .news-grid { grid-template-columns: 1fr; }
+            .toolbar { justify-content: center; }
         }
     </style>
 </head>
@@ -268,6 +288,7 @@
     </div>
 
     <div class="container">
+        <div class="toolbar" id="toolbar"></div>
         <div id="filterPanel"></div>
         <div id="newsContainer" class="news-grid">
             <div class="loading">Загрузка новостей...</div>
@@ -281,22 +302,19 @@
     </footer>
 
     <script>
-        // -------- RSS ИСТОЧНИКИ С КАТЕГОРИЯМИ --------
-        const sources = [
-            { name: 'Zakupki.gov.ru', url: 'https://zakupki.gov.ru/epz/main/public/rss', cat: 'tenders', lang: 'ru' },
-            { name: 'TenderGuru', url: 'https://www.tenderguru.ru/rss', cat: 'tenders', lang: 'ru' },
+        // -------- RSS ИСТОЧНИКИ (ПРИОРИТЕТ РУССКИМ) --------
+        const ruSources = [
             { name: 'Logirus', url: 'https://logirus.ru/rss', cat: 'logistics', lang: 'ru' },
             { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', cat: 'logistics', lang: 'ru' },
-            { name: 'ATI.SU', url: 'https://www.ati.su/rss', cat: 'logistics', lang: 'ru' },
-            { name: 'Logistics.ru', url: 'https://logistics.ru/rss', cat: 'warehouse', lang: 'ru' },
-            { name: 'SkladForum', url: 'https://www.skladforum.ru/rss/', cat: 'warehouse', lang: 'ru' },
-            { name: 'MarketInfo', url: 'https://marketinfo.pro/rss', cat: 'marketplace', lang: 'ru' },
-            { name: 'E-Pepper', url: 'https://e-pepper.ru/news/rss/', cat: 'marketplace', lang: 'ru' },
+            { name: 'Zakupki.gov.ru', url: 'https://zakupki.gov.ru/epz/main/public/rss', cat: 'tenders', lang: 'ru' },
+            { name: 'Retail & Logistics', url: 'https://retail-loyalty.org/rss/', cat: 'logistics', lang: 'ru' },
+            { name: 'Склад & Логистика', url: 'https://logistics.ru/rss', cat: 'warehouse', lang: 'ru' },
+            { name: 'MarketInfo', url: 'https://marketinfo.pro/rss', cat: 'marketplace', lang: 'ru' }
+        ];
+
+        const enSources = [
             { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss', cat: 'tech', lang: 'en' },
-            { name: 'CIO SCM', url: 'https://www.cio.com/rss', cat: 'tech', lang: 'en' },
-            { name: 'hh.ru', url: 'https://hh.ru/rss', cat: 'hr', lang: 'ru' },
-            { name: 'CDP', url: 'https://www.cdp.net/rss', cat: 'esg', lang: 'en' },
-            { name: 'Минэкономразвития', url: 'https://www.economy.gov.ru/rss', cat: 'regulation', lang: 'ru' }
+            { name: 'CIO SCM', url: 'https://www.cio.com/rss', cat: 'tech', lang: 'en' }
         ];
 
         let activeCategory = 'all';
@@ -333,9 +351,17 @@
             const container = document.getElementById('newsContainer');
             container.innerHTML = '<div class="loading">Загрузка новостей...</div>';
             let allNews = [];
-            for (const src of sources) {
+            // Сначала загружаем русские источники
+            for (const src of ruSources) {
                 const items = await fetchRSS(src);
                 allNews.push(...items);
+            }
+            // Если русских новостей нет, пробуем английские
+            if (allNews.length === 0) {
+                for (const src of enSources) {
+                    const items = await fetchRSS(src);
+                    allNews.push(...items);
+                }
             }
             allNews.sort((a,b) => b.pubDate - a.pubDate);
             allNewsData = allNews;
@@ -349,7 +375,7 @@
                 filtered = allNewsData.filter(item => item.category === category);
             }
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="error">Новостей в этой категории пока нет.</div>';
+                container.innerHTML = '<div class="error">Новостей в этой категории пока нет. Попробуйте позже.</div>';
                 return;
             }
             const html = filtered.slice(0, 30).map(news => `
@@ -364,6 +390,7 @@
                 </div>
             `).join('');
             container.innerHTML = html;
+            // Обновляем активную кнопку
             document.querySelectorAll('.cat-btn').forEach(btn => {
                 if (btn.dataset.cat === category) btn.classList.add('active');
                 else btn.classList.remove('active');
@@ -377,10 +404,7 @@
                 { id: 'logistics', name: 'Логистика' },
                 { id: 'warehouse', name: 'Склад' },
                 { id: 'marketplace', name: 'Маркетплейсы' },
-                { id: 'tech', name: 'Технологии / Цифровые двойники' },
-                { id: 'hr', name: 'Кадры' },
-                { id: 'esg', name: 'ESG' },
-                { id: 'regulation', name: 'Регуляторика' }
+                { id: 'tech', name: 'Технологии / Цифровые двойники' }
             ];
             const filterDiv = document.getElementById('filterPanel');
             if (!filterDiv) return;
@@ -404,6 +428,43 @@
             });
         }
 
+        // Кнопка перевода страницы (Google Translate)
+        function addTranslateButton() {
+            const toolbar = document.getElementById('toolbar');
+            if (!toolbar) return;
+            const btn = document.createElement('button');
+            btn.className = 'translate-btn';
+            btn.innerHTML = '<i class="fas fa-language"></i> Перевести страницу';
+            btn.onclick = () => {
+                if (!document.getElementById('google_translate_element')) {
+                    const script = document.createElement('script');
+                    script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+                    document.head.appendChild(script);
+                    window.googleTranslateElementInit = function() {
+                        new google.translate.TranslateElement({
+                            pageLanguage: 'ru',
+                            includedLanguages: 'ru,en,zh-CN',
+                            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                        }, 'google_translate_element');
+                    };
+                    const panel = document.createElement('div');
+                    panel.id = 'google_translate_element';
+                    panel.style.position = 'fixed';
+                    panel.style.bottom = '20px';
+                    panel.style.right = '20px';
+                    panel.style.zIndex = '1000';
+                    panel.style.background = 'white';
+                    panel.style.padding = '10px';
+                    panel.style.borderRadius = '8px';
+                    panel.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                    document.body.appendChild(panel);
+                } else {
+                    alert('Панель перевода уже открыта. Выберите язык в нижнем правом углу.');
+                }
+            };
+            toolbar.appendChild(btn);
+        }
+
         // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
@@ -415,6 +476,7 @@
         }
 
         createFilterPanel();
+        addTranslateButton();
         loadAllNews();
     </script>
 </body>
