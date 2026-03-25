@@ -1204,6 +1204,81 @@
             color: rgba(255, 255, 255, 0.6);
             font-size: 13px;
         }
+        /* Стили для блока новостей */
+        .news-section {
+            padding: 60px 0;
+            background: var(--neutral-light);
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .news-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+        .news-date {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .news-source {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+        .news-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .news-excerpt {
+            color: #475569;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .news-link {
+            color: #1e40af;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-all-news {
+            display: inline-block;
+            background: var(--primary-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .btn-all-news:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .news-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
         @media (max-width: 992px) {
             .hero-container {
                 flex-direction: column;
@@ -1249,6 +1324,9 @@
                 gap: 10px;
                 align-items: center;
             }
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -1263,12 +1341,14 @@
                     <li><a href="expertise.html">Экспертиза</a></li>
                     <li><a href="experience.html">Опыт</a></li>
                     <li><a href="index.html" class="active">Стратегия</a></li>
+                    <li><a href="trends.html">Новости SCM</a></li>
                     <li><a href="contact.html">Контакты</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
+    <!-- Hero Section -->
     <section class="hero-section">
         <div class="container hero-container">
             <div class="hero-content">
@@ -1299,6 +1379,7 @@
         </div>
     </section>
 
+    <!-- Philosophy Section -->
     <section class="philosophy-section">
         <div class="container">
             <div class="philosophy-container">
@@ -1395,6 +1476,7 @@
         </div>
     </section>
 
+    <!-- Vision 2036 Timeline -->
     <section class="vision-2036">
         <div class="container">
             <h2 class="section-title" style="color: white;">🚀 Эволюция SCM до 2036</h2>
@@ -1444,6 +1526,7 @@
         </div>
     </section>
 
+    <!-- Strategic Results -->
     <section class="results-section">
         <div class="container">
             <div class="section-header">
@@ -1471,41 +1554,23 @@
         </div>
     </section>
 
-    <section class="esg-dashboard">
+    <!-- Widget мировых новостей -->
+    <section class="news-section" id="worldNewsWidget">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">🌍 ESG-метрики в реальном времени</h2>
-                <p class="section-subtitle">Как устойчивость влияет на операционную эффективность (прогнозные данные до 2036 года)</p>
+                <h2 class="section-title">🌍 Последние новости SCM</h2>
+                <p class="section-subtitle">Актуальные события и тренды в управлении цепями поставок</p>
             </div>
-            <div class="year-selector">
-                <button class="year-btn active" data-year="2026">2026</button>
-                <button class="year-btn" data-year="2030">2030</button>
-                <button class="year-btn" data-year="2036">2036</button>
+            <div id="homeNewsGrid" class="news-grid">
+                <div class="news-card news-loading">Загрузка новостей...</div>
             </div>
-            <div class="dashboard-grid" id="esg-dashboard">
-                <div class="dashboard-card">
-                    <h3>Углеродный след</h3>
-                    <div class="chart" id="chart-co2"></div>
-                    <div class="value" id="co2-value">120</div>
-                    <div class="unit">т CO₂/млн руб.</div>
-                </div>
-                <div class="dashboard-card">
-                    <h3>Доля возобновляемой энергии</h3>
-                    <div class="chart" id="chart-renew"></div>
-                    <div class="value" id="renew-value">25</div>
-                    <div class="unit">%</div>
-                </div>
-                <div class="dashboard-card">
-                    <h3>Индекс циркулярности</h3>
-                    <div class="chart" id="chart-circ"></div>
-                    <div class="value" id="circ-value">40</div>
-                    <div class="unit">%</div>
-                </div>
+            <div class="news-footer">
+                <a href="trends.html" class="btn-all-news">Все новости →</a>
             </div>
-            <p class="dashboard-note" style="text-align: center; margin-top: 2rem; color: var(--neutral-medium);">* Данные основаны на моделировании трендов до 2036 года.</p>
         </div>
     </section>
 
+    <!-- Certificates Section -->
     <section class="certificates-section">
         <div class="container">
             <div class="section-header">
@@ -1516,6 +1581,7 @@
         </div>
     </section>
 
+    <!-- Methodologies Section -->
     <section class="methodologies-section">
         <div class="container">
             <div class="section-header">
@@ -1555,6 +1621,7 @@
         </div>
     </section>
 
+    <!-- Tech Radar -->
     <section class="tech-radar">
         <div class="container">
             <h2 class="section-title" style="color: white;">📡 Технологический радар SCM 2036</h2>
@@ -1589,6 +1656,7 @@
         </div>
     </section>
 
+    <!-- Leadership Philosophy -->
     <section class="leadership-philosophy">
         <div class="container">
             <div class="section-header">
@@ -1630,6 +1698,7 @@
         </div>
     </section>
 
+    <!-- Academy Section with Flip Cards -->
     <section class="academy-section">
         <div class="container">
             <div class="section-header">
@@ -1698,6 +1767,7 @@
         </div>
     </section>
 
+    <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
             <h2 class="cta-title">Готовы трансформировать ваши цепи поставок?</h2>
@@ -1711,6 +1781,7 @@
         </div>
     </section>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-counters">
@@ -1733,6 +1804,7 @@
                         <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
                         <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
                         <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
+                        <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
                     </ul>
                 </div>
@@ -1754,6 +1826,7 @@
     <script src="js/analytics.js"></script>
     <script>
         (function() {
+            // Мобильное меню
             const mobileBtn = document.querySelector('.mobile-menu-btn');
             const navMenu = document.getElementById('nav-menu');
             if (mobileBtn && navMenu) {
@@ -1777,6 +1850,7 @@
                 });
             }
 
+            // Анимация счётчиков в таймлайне
             const timelineSection = document.querySelector('.vision-2036');
             let countersAnimated = false;
             function animateCounters() {
@@ -1809,6 +1883,7 @@
                 observer.observe(timelineSection);
             }
 
+            // Модальное окно Tech Radar
             const modal = document.getElementById('tech-modal');
             const modalTitle = document.getElementById('modal-title');
             const modalDesc = document.getElementById('modal-desc');
@@ -1836,6 +1911,7 @@
                 });
             }
 
+            // Кнопки предзаписи
             document.querySelectorAll('.preorder-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1850,6 +1926,7 @@
                 });
             });
 
+            // Счётчики
             if (!localStorage.getItem('visitCount')) localStorage.setItem('visitCount', '0');
             let visitCount = parseInt(localStorage.getItem('visitCount'), 10) + 1;
             localStorage.setItem('visitCount', visitCount);
@@ -1862,9 +1939,11 @@
                 downloadSpan.textContent = downloadCount;
             }
 
+            // Текущий год
             const yearSpan = document.getElementById('current-year');
             if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
+            // ESG дашборд
             const esgData = {
                 2026: { co2: 120, renew: 25, circ: 40 },
                 2030: { co2: 85, renew: 45, circ: 55 },
@@ -1892,6 +1971,7 @@
             });
             updateESGDashboard('2026');
 
+            // Сертификаты
             const certificates = [
                 { title: "Диплом о профессиональной переподготовке", file: "files/diploma.pdf", filename: "diploma.pdf" },
                 { title: "Сертификат Академии Цепей Поставок (базовый)", file: "files/scm-basic-cert.pdf", filename: "scm-basic-cert.pdf" },
@@ -1913,6 +1993,80 @@
                     </div>
                 `).join('');
             }
+
+            // Виджет новостей
+            const sources = [
+                { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss' },
+                { name: 'Logistics Management', url: 'https://www.logisticsmgmt.com/rss' },
+                { name: 'The Loadstar', url: 'https://theloadstar.com/feed/' },
+                { name: 'Supply Chain Management Review', url: 'https://www.scmr.com/rss' },
+                { name: 'DC Velocity', url: 'https://www.dcvelocity.com/rss' }
+            ];
+
+            const newsContainer = document.getElementById('homeNewsGrid');
+
+            async function fetchRSS(source) {
+                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+                try {
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+                    if (data.status === 'ok' && data.items && data.items.length) {
+                        return data.items.map(item => ({
+                            title: item.title,
+                            link: item.link,
+                            pubDate: new Date(item.pubDate),
+                            description: item.description.replace(/<[^>]*>/g, '').slice(0, 150),
+                            source: source.name
+                        }));
+                    }
+                    return [];
+                } catch (error) {
+                    console.warn(`Ошибка загрузки ${source.name}:`, error);
+                    return [];
+                }
+            }
+
+            async function loadNewsWidget() {
+                newsContainer.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
+                const allNews = [];
+                for (const src of sources) {
+                    const items = await fetchRSS(src);
+                    allNews.push(...items);
+                }
+                allNews.sort((a, b) => b.pubDate - a.pubDate);
+                const latest = allNews.slice(0, 4);
+
+                if (latest.length === 0) {
+                    newsContainer.innerHTML = '<div class="news-card news-loading">Не удалось загрузить новости. Попробуйте позже.</div>';
+                    return;
+                }
+
+                function formatDate(date) {
+                    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+                function escapeHtml(str) {
+                    return str.replace(/[&<>]/g, function(m) {
+                        if (m === '&') return '&amp;';
+                        if (m === '<') return '&lt;';
+                        if (m === '>') return '&gt;';
+                        return m;
+                    });
+                }
+
+                newsContainer.innerHTML = latest.map(news => `
+                    <div class="news-card">
+                        <div class="news-date">
+                            <span>${formatDate(news.pubDate)}</span>
+                            <span class="news-source">${escapeHtml(news.source)}</span>
+                        </div>
+                        <h3 class="news-title">${escapeHtml(news.title)}</h3>
+                        <p class="news-excerpt">${escapeHtml(news.description)}</p>
+                        <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="news-link">Читать на источнике →</a>
+                    </div>
+                `).join('');
+            }
+
+            loadNewsWidget();
         })();
     </script>
 </body>
