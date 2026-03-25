@@ -1817,7 +1817,6 @@
                         <li><a href="tel:+79822282949"><i class="fas fa-phone"></i> +7 (982) 228-29-49</a></li>
                     </ul>
                 </div>
-                <!-- Подписка на новости -->
                 <div class="footer-column">
                     <h3>Подписка на новости</h3>
                     <p>Получайте дайджест новых статей и событий SCM</p>
@@ -2012,6 +2011,7 @@
                 { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', lang: 'ru' },
                 { name: 'Retail & Logistics', url: 'https://retail-loyalty.org/rss/', lang: 'ru' }
             ];
+
             const newsContainer = document.getElementById('homeNewsGrid');
 
             async function fetchRSS(source, timeoutMs = 5000) {
@@ -2058,7 +2058,6 @@
                 function formatDate(date) {
                     return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
                 }
-
                 function escapeHtml(str) {
                     return str.replace(/[&<>]/g, function(m) {
                         if (m === '&') return '&amp;';
