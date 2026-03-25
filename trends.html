@@ -137,23 +137,30 @@
             margin: 0 auto;
         }
 
-        .toolbar {
+        .filter-panel {
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 30px;
+            justify-content: center;
         }
-        .translate-btn {
+        .cat-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e293b;
+        }
+        .cat-btn.active {
             background: #1e40af;
             color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
         }
-        .translate-btn:hover {
-            background: #0f172a;
+        .cat-btn:hover:not(.active) {
+            background: #e2e8f0;
         }
 
         .news-grid {
@@ -232,7 +239,6 @@
         @media (max-width: 768px) {
             .page-header h1 { font-size: 32px; }
             .news-grid { grid-template-columns: 1fr; }
-            .toolbar { justify-content: center; }
         }
     </style>
 </head>
@@ -262,9 +268,7 @@
     </div>
 
     <div class="container">
-        <div class="toolbar">
-            <button id="translatePageBtn" class="translate-btn"><i class="fas fa-language"></i> Перевести страницу</button>
-        </div>
+        <div id="filterPanel"></div>
         <div id="newsContainer" class="news-grid">
             <div class="loading">Загрузка новостей...</div>
         </div>
@@ -277,179 +281,141 @@
     </footer>
 
     <script>
-        (function() {
-            // ---------- RSS ИСТОЧНИКИ ----------
-            // Русскоязычные (приоритетные)
-            const ruSources = [
-                { name: 'Logirus', url: 'https://logirus.ru/rss', lang: 'ru' },
-                { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', lang: 'ru' },
-                { name: 'Retail & Logistics', url: 'https://retail-loyalty.org/rss/', lang: 'ru' }
-            ];
-            // Англоязычные (запасные)
-            const enSources = [
-                { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss', lang: 'en' },
-                { name: 'Logistics Management', url: 'https://www.logisticsmgmt.com/rss', lang: 'en' },
-                { name: 'The Loadstar', url: 'https://theloadstar.com/feed/', lang: 'en' }
-            ];
+        // -------- RSS ИСТОЧНИКИ С КАТЕГОРИЯМИ --------
+        const sources = [
+            { name: 'Zakupki.gov.ru', url: 'https://zakupki.gov.ru/epz/main/public/rss', cat: 'tenders', lang: 'ru' },
+            { name: 'TenderGuru', url: 'https://www.tenderguru.ru/rss', cat: 'tenders', lang: 'ru' },
+            { name: 'Logirus', url: 'https://logirus.ru/rss', cat: 'logistics', lang: 'ru' },
+            { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', cat: 'logistics', lang: 'ru' },
+            { name: 'ATI.SU', url: 'https://www.ati.su/rss', cat: 'logistics', lang: 'ru' },
+            { name: 'Logistics.ru', url: 'https://logistics.ru/rss', cat: 'warehouse', lang: 'ru' },
+            { name: 'SkladForum', url: 'https://www.skladforum.ru/rss/', cat: 'warehouse', lang: 'ru' },
+            { name: 'MarketInfo', url: 'https://marketinfo.pro/rss', cat: 'marketplace', lang: 'ru' },
+            { name: 'E-Pepper', url: 'https://e-pepper.ru/news/rss/', cat: 'marketplace', lang: 'ru' },
+            { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss', cat: 'tech', lang: 'en' },
+            { name: 'CIO SCM', url: 'https://www.cio.com/rss', cat: 'tech', lang: 'en' },
+            { name: 'hh.ru', url: 'https://hh.ru/rss', cat: 'hr', lang: 'ru' },
+            { name: 'CDP', url: 'https://www.cdp.net/rss', cat: 'esg', lang: 'en' },
+            { name: 'Минэкономразвития', url: 'https://www.economy.gov.ru/rss', cat: 'regulation', lang: 'ru' }
+        ];
 
+        let activeCategory = 'all';
+        let allNewsData = [];
+
+        async function fetchRSS(source, timeout = 5000) {
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const res = await fetch(apiUrl, { signal: controller.signal });
+                clearTimeout(id);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                if (data.status === 'ok' && data.items) {
+                    return data.items.map(item => ({
+                        title: item.title,
+                        link: item.link,
+                        pubDate: new Date(item.pubDate),
+                        description: item.description.replace(/<[^>]*>/g, '').slice(0, 250),
+                        source: source.name,
+                        lang: source.lang,
+                        category: source.cat
+                    }));
+                }
+                return [];
+            } catch (err) {
+                console.warn(`Ошибка загрузки ${source.name}:`, err);
+                return [];
+            }
+        }
+
+        async function loadAllNews() {
             const container = document.getElementById('newsContainer');
-            const CACHE_KEY = 'scm_news_cache';
-            const CACHE_TIME_KEY = 'scm_news_cache_time';
-            const CACHE_TTL = 30 * 60 * 1000; // 30 минут
-
-            async function fetchRSS(source, timeoutMs = 5000) {
-                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-                try {
-                    const response = await fetch(apiUrl, { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const data = await response.json();
-                    if (data.status === 'ok' && data.items && data.items.length) {
-                        return data.items.map(item => ({
-                            title: item.title,
-                            link: item.link,
-                            pubDate: new Date(item.pubDate),
-                            description: item.description.replace(/<[^>]*>/g, '').slice(0, 200),
-                            source: source.name,
-                            lang: source.lang
-                        }));
-                    }
-                    return [];
-                } catch (error) {
-                    console.warn(`Ошибка загрузки ${source.name}:`, error);
-                    return [];
-                }
+            container.innerHTML = '<div class="loading">Загрузка новостей...</div>';
+            let allNews = [];
+            for (const src of sources) {
+                const items = await fetchRSS(src);
+                allNews.push(...items);
             }
+            allNews.sort((a,b) => b.pubDate - a.pubDate);
+            allNewsData = allNews;
+            renderNewsByCategory(activeCategory);
+        }
 
-            async function loadAllNews() {
-                container.innerHTML = '<div class="loading">Загрузка новостей...</div>';
-                let allNews = [];
-
-                // Пробуем загрузить русскоязычные
-                for (const src of ruSources) {
-                    const items = await fetchRSS(src);
-                    allNews.push(...items);
-                }
-
-                // Если нет ни одной русской новости, подгружаем английские
-                if (allNews.length === 0) {
-                    for (const src of enSources) {
-                        const items = await fetchRSS(src);
-                        allNews.push(...items);
-                    }
-                }
-
-                // Сортируем по дате
-                allNews.sort((a, b) => b.pubDate - a.pubDate);
-                // Берём последние 24 новости
-                const latest = allNews.slice(0, 24);
-
-                if (latest.length === 0) {
-                    // Пытаемся показать кэш
-                    const cached = localStorage.getItem(CACHE_KEY);
-                    const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
-                    if (cached && cacheTime && (Date.now() - parseInt(cacheTime)) < 12 * 3600 * 1000) {
-                        container.innerHTML = cached;
-                        container.innerHTML += '<div class="error" style="margin-top:20px;">⚠️ Показаны сохранённые новости. Свежие не удалось загрузить.</div>';
-                    } else {
-                        container.innerHTML = '<div class="error">Не удалось загрузить новости. Проверьте соединение или попробуйте позже.</div>';
-                    }
-                    return;
-                }
-
-                function formatDate(date) {
-                    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-                }
-
-                function escapeHtml(str) {
-                    return str.replace(/[&<>]/g, function(m) {
-                        if (m === '&') return '&amp;';
-                        if (m === '<') return '&lt;';
-                        if (m === '>') return '&gt;';
-                        return m;
-                    });
-                }
-
-                const html = latest.map(news => `
-                    <div class="news-card">
-                        <div class="news-date">
-                            <span>${formatDate(news.pubDate)}</span>
-                            <span class="news-source">${escapeHtml(news.source)}${news.lang === 'en' ? ' <span class="lang-badge">EN</span>' : ''}</span>
-                        </div>
-                        <h3 class="news-title">${escapeHtml(news.title)}</h3>
-                        <p class="news-excerpt">${escapeHtml(news.description)}</p>
-                        <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="news-link">Читать на источнике →</a>
+        function renderNewsByCategory(category) {
+            const container = document.getElementById('newsContainer');
+            let filtered = allNewsData;
+            if (category !== 'all') {
+                filtered = allNewsData.filter(item => item.category === category);
+            }
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="error">Новостей в этой категории пока нет.</div>';
+                return;
+            }
+            const html = filtered.slice(0, 30).map(news => `
+                <div class="news-card">
+                    <div class="news-date">
+                        <span>${news.pubDate.toLocaleDateString('ru-RU')}</span>
+                        <span class="news-source">${escapeHtml(news.source)}${news.lang === 'en' ? ' <span class="lang-badge">EN</span>' : ''}</span>
                     </div>
-                `).join('');
+                    <h3 class="news-title">${escapeHtml(news.title)}</h3>
+                    <p class="news-excerpt">${escapeHtml(news.description)}</p>
+                    <a href="${news.link}" target="_blank" rel="noopener" class="news-link">Читать →</a>
+                </div>
+            `).join('');
+            container.innerHTML = html;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === category) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+        }
 
-                container.innerHTML = html;
-                // Сохраняем в кэш
-                localStorage.setItem(CACHE_KEY, html);
-                localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
-            }
-
-            loadAllNews();
-
-            // Мобильное меню
-            const mobileBtn = document.querySelector('.mobile-menu-btn');
-            const navMenu = document.getElementById('nav-menu');
-            if (mobileBtn && navMenu) {
-                mobileBtn.addEventListener('click', () => {
-                    navMenu.classList.toggle('active');
-                    const icon = mobileBtn.querySelector('i');
-                    if (icon) {
-                        icon.classList.toggle('fa-bars');
-                        icon.classList.toggle('fa-times');
-                    }
+        function createFilterPanel() {
+            const categories = [
+                { id: 'all', name: 'Все новости' },
+                { id: 'tenders', name: 'Тендеры и закупки' },
+                { id: 'logistics', name: 'Логистика' },
+                { id: 'warehouse', name: 'Склад' },
+                { id: 'marketplace', name: 'Маркетплейсы' },
+                { id: 'tech', name: 'Технологии / Цифровые двойники' },
+                { id: 'hr', name: 'Кадры' },
+                { id: 'esg', name: 'ESG' },
+                { id: 'regulation', name: 'Регуляторика' }
+            ];
+            const filterDiv = document.getElementById('filterPanel');
+            if (!filterDiv) return;
+            filterDiv.innerHTML = categories.map(cat => `
+                <button class="cat-btn ${cat.id === 'all' ? 'active' : ''}" data-cat="${cat.id}">${cat.name}</button>
+            `).join('');
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeCategory = btn.dataset.cat;
+                    renderNewsByCategory(activeCategory);
                 });
-                document.querySelectorAll('#nav-menu a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navMenu.classList.remove('active');
-                        const icon = mobileBtn.querySelector('i');
-                        if (icon && icon.classList.contains('fa-times')) {
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
-                        }
-                    });
-                });
-            }
+            });
+        }
 
-            // Кнопка перевода страницы (Google Translate)
-            const translateBtn = document.getElementById('translatePageBtn');
-            if (translateBtn) {
-                translateBtn.addEventListener('click', () => {
-                    // Добавляем Google Translate виджет, если его нет
-                    if (!document.getElementById('google_translate_element')) {
-                        const script = document.createElement('script');
-                        script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-                        document.head.appendChild(script);
-                        window.googleTranslateElementInit = function() {
-                            new google.translate.TranslateElement({
-                                pageLanguage: 'ru',
-                                includedLanguages: 'ru,en',
-                                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-                            }, 'google_translate_element');
-                        };
-                        // Показываем панель перевода
-                        const panel = document.createElement('div');
-                        panel.id = 'google_translate_element';
-                        panel.style.position = 'fixed';
-                        panel.style.bottom = '20px';
-                        panel.style.right = '20px';
-                        panel.style.zIndex = '1000';
-                        panel.style.background = 'white';
-                        panel.style.padding = '10px';
-                        panel.style.borderRadius = '8px';
-                        panel.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-                        document.body.appendChild(panel);
-                    } else {
-                        alert('Панель перевода уже открыта. Выберите язык в нижнем правом углу.');
-                    }
-                });
-            }
-        })();
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Мобильное меню
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        if (mobileBtn && navMenu) {
+            mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+            document.querySelectorAll('#nav-menu a').forEach(link => {
+                link.addEventListener('click', () => navMenu.classList.remove('active'));
+            });
+        }
+
+        createFilterPanel();
+        loadAllNews();
     </script>
 </body>
 </html>
