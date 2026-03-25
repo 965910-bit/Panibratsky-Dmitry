@@ -1204,7 +1204,6 @@
             color: rgba(255, 255, 255, 0.6);
             font-size: 13px;
         }
-        /* Стили для блока новостей */
         .news-section {
             padding: 60px 0;
             background: var(--neutral-light);
@@ -1554,7 +1553,7 @@
         </div>
     </section>
 
-    <!-- Widget мировых новостей -->
+    <!-- Widget мировых новостей (расширенный) -->
     <section class="news-section" id="worldNewsWidget">
         <div class="container">
             <div class="section-header">
@@ -2005,14 +2004,15 @@
                 `).join('');
             }
 
-            // Виджет новостей
+            // ---------- РАСШИРЕННЫЙ ВИДЖЕТ НОВОСТЕЙ (ГЛАВНАЯ) ----------
             const sources = [
+                { name: 'Zakupki.gov.ru', url: 'https://zakupki.gov.ru/epz/main/public/rss', lang: 'ru' },
                 { name: 'Logirus', url: 'https://logirus.ru/rss', lang: 'ru' },
                 { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', lang: 'ru' },
-                { name: 'Retail & Logistics', url: 'https://retail-loyalty.org/rss/', lang: 'ru' }
+                { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss', lang: 'en' },
+                { name: 'ATI.SU', url: 'https://www.ati.su/rss', lang: 'ru' },
+                { name: 'MarketInfo', url: 'https://marketinfo.pro/rss', lang: 'ru' }
             ];
-
-            const newsContainer = document.getElementById('homeNewsGrid');
 
             async function fetchRSS(source, timeoutMs = 5000) {
                 const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
@@ -2041,6 +2041,7 @@
             }
 
             async function loadNewsWidget() {
+                const newsContainer = document.getElementById('homeNewsGrid');
                 newsContainer.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
                 let allNews = [];
                 for (const src of sources) {
@@ -2048,7 +2049,7 @@
                     allNews.push(...items);
                 }
                 allNews.sort((a, b) => b.pubDate - a.pubDate);
-                const latest = allNews.slice(0, 4);
+                const latest = allNews.slice(0, 6);
 
                 if (latest.length === 0) {
                     newsContainer.innerHTML = '<div class="news-card news-loading">Не удалось загрузить новости. Попробуйте позже.</div>';
