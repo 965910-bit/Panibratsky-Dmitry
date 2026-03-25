@@ -557,141 +557,6 @@
         .imperative-card:hover .hover-effect {
             bottom: 0;
         }
-        .esg-dashboard {
-            padding: 4rem 0;
-            background: var(--neutral-light);
-        }
-        .year-selector {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 2rem 0;
-        }
-        .year-btn {
-            background: white;
-            border: 1px solid #ccc;
-            padding: 0.5rem 2rem;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .year-btn.active {
-            background: var(--primary-blue);
-            color: white;
-            border-color: var(--primary-blue);
-        }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-        .dashboard-card {
-            background: white;
-            border-radius: 30px;
-            padding: 2rem;
-            box-shadow: 0 20px 30px rgba(0,0,0,0.05);
-            text-align: center;
-            transition: transform 0.3s;
-        }
-        .dashboard-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 40px rgba(0,0,0,0.1);
-        }
-        .chart {
-            width: 120px;
-            height: 120px;
-            margin: 1rem auto;
-            border-radius: 50%;
-            background: conic-gradient(#2ecc71 0% 75%, #ecf0f1 75% 100%);
-        }
-        .value {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-        }
-        .unit {
-            color: #7f8c8d;
-        }
-        .tech-radar {
-            background: #0b1c2f;
-            color: white;
-            padding: 3rem;
-            border-radius: 40px;
-            margin: 2rem 0;
-        }
-        .radar-container {
-            display: flex;
-            justify-content: center;
-            margin: 3rem 0;
-            position: relative;
-        }
-        .radar-circle {
-            position: relative;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: #1a2a3a;
-            border: 2px solid #2c3e50;
-        }
-        .radar-segment {
-            position: absolute;
-            cursor: pointer;
-        }
-        .dot {
-            display: block;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--accent-gold);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(212,175,55,0); }
-        }
-        .label {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            white-space: nowrap;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            display: none;
-        }
-        .radar-segment:hover .label {
-            display: block;
-        }
-        .adopt { top: 20%; left: 30%; }
-        .trial { top: 50%; left: 60%; }
-        .assess { top: 70%; left: 20%; }
-        .hold { top: 30%; left: 70%; }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-        }
-        .modal-content {
-            background: white;
-            margin: 15% auto;
-            padding: 2rem;
-            width: 400px;
-            border-radius: 30px;
-            color: var(--neutral-dark);
-        }
-        .close {
-            float: right;
-            font-size: 2rem;
-            cursor: pointer;
-        }
         .results-section {
             padding: 70px 0;
             background-color: white;
@@ -1260,6 +1125,14 @@
             align-items: center;
             gap: 6px;
         }
+        .lang-badge {
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
         .btn-all-news {
             display: inline-block;
             background: var(--primary-blue);
@@ -1297,10 +1170,6 @@
             .book-cover {
                 margin: 0 auto;
             }
-            .radar-circle {
-                width: 400px;
-                height: 400px;
-            }
         }
         @media (max-width: 768px) {
             .hero-section {
@@ -1310,14 +1179,6 @@
                 width: 220px;
                 height: 220px;
             }
-            .radar-circle {
-                width: 300px;
-                height: 300px;
-            }
-            .adopt { top: 10%; left: 20%; }
-            .trial { top: 40%; left: 50%; }
-            .assess { top: 60%; left: 15%; }
-            .hold { top: 25%; left: 70%; }
             .footer-counters {
                 flex-direction: column;
                 gap: 10px;
@@ -1553,7 +1414,7 @@
         </div>
     </section>
 
-    <!-- Widget мировых новостей (расширенный) -->
+    <!-- Widget мировых новостей (обновлённый) -->
     <section class="news-section" id="worldNewsWidget">
         <div class="container">
             <div class="section-header">
@@ -1620,41 +1481,6 @@
         </div>
     </section>
 
-    <!-- Tech Radar -->
-    <section class="tech-radar">
-        <div class="container">
-            <h2 class="section-title" style="color: white;">📡 Технологический радар SCM 2036</h2>
-            <p style="color: rgba(255,255,255,0.8);">Нажмите на элемент, чтобы узнать детали.</p>
-            <div class="radar-container">
-                <div class="radar-circle">
-                    <div class="radar-segment adopt" data-tech="Цифровые двойники" data-desc="Полная виртуальная копия цепи поставок, прогнозирование сбоев за 72 часа.">
-                        <span class="dot"></span>
-                        <span class="label">Цифровые двойники</span>
-                    </div>
-                    <div class="radar-segment trial" data-tech="Автономные роботы" data-desc="AMR для складов, дроны доставки.">
-                        <span class="dot"></span>
-                        <span class="label">AMR</span>
-                    </div>
-                    <div class="radar-segment assess" data-tech="Квантовые вычисления" data-desc="Оптимизация маршрутов с использованием квантовых алгоритмов.">
-                        <span class="dot"></span>
-                        <span class="label">Квантовые</span>
-                    </div>
-                    <div class="radar-segment hold" data-tech="Блокчейн" data-desc="Полная прозрачность цепочки поставок.">
-                        <span class="dot"></span>
-                        <span class="label">Блокчейн</span>
-                    </div>
-                </div>
-            </div>
-            <div id="tech-modal" class="modal">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h3 id="modal-title"></h3>
-                    <p id="modal-desc"></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Leadership Philosophy -->
     <section class="leadership-philosophy">
         <div class="container">
@@ -1697,7 +1523,7 @@
         </div>
     </section>
 
-    <!-- Academy Section with Flip Cards -->
+    <!-- Academy Section -->
     <section class="academy-section">
         <div class="container">
             <div class="section-header">
@@ -1835,240 +1661,141 @@
     <script src="js/analytics.js"></script>
     <script src="js/subscribe.js"></script>
     <script>
-        (function() {
-            // Мобильное меню
-            const mobileBtn = document.querySelector('.mobile-menu-btn');
-            const navMenu = document.getElementById('nav-menu');
-            if (mobileBtn && navMenu) {
-                mobileBtn.addEventListener('click', () => {
-                    navMenu.classList.toggle('active');
+        // Мобильное меню
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        if (mobileBtn && navMenu) {
+            mobileBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                const icon = mobileBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                }
+            });
+            document.querySelectorAll('#nav-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
                     const icon = mobileBtn.querySelector('i');
-                    if (icon) {
-                        icon.classList.toggle('fa-bars');
-                        icon.classList.toggle('fa-times');
+                    if (icon && icon.classList.contains('fa-times')) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
                     }
                 });
-                document.querySelectorAll('#nav-menu a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navMenu.classList.remove('active');
-                        const icon = mobileBtn.querySelector('i');
-                        if (icon && icon.classList.contains('fa-times')) {
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
-                        }
-                    });
-                });
-            }
+            });
+        }
 
-            // Анимация счётчиков в таймлайне
-            const timelineSection = document.querySelector('.vision-2036');
-            let countersAnimated = false;
-            function animateCounters() {
-                if (countersAnimated) return;
-                const counters = document.querySelectorAll('.timeline-item .counter');
-                counters.forEach(counter => {
-                    const target = parseInt(counter.getAttribute('data-target'), 10);
-                    let current = 0;
-                    const increment = Math.ceil(target / 30);
-                    const update = () => {
-                        current += increment;
-                        if (current >= target) {
-                            counter.textContent = target;
-                            return;
-                        }
-                        counter.textContent = current;
-                        requestAnimationFrame(update);
-                    };
-                    update();
-                });
-                countersAnimated = true;
-            }
-            if (timelineSection) {
-                const observer = new IntersectionObserver(entries => {
-                    if (entries[0].isIntersecting) {
-                        animateCounters();
-                        observer.disconnect();
+        // Анимация счётчиков в таймлайне
+        const timelineSection = document.querySelector('.vision-2036');
+        let countersAnimated = false;
+        function animateCounters() {
+            if (countersAnimated) return;
+            const counters = document.querySelectorAll('.timeline-item .counter');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'), 10);
+                let current = 0;
+                const increment = Math.ceil(target / 30);
+                const update = () => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        return;
                     }
-                }, { threshold: 0.3 });
-                observer.observe(timelineSection);
-            }
-
-            // Модальное окно Tech Radar
-            const modal = document.getElementById('tech-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalDesc = document.getElementById('modal-desc');
-            const closeBtn = modal ? modal.querySelector('.close') : null;
-            if (modal && modalTitle && modalDesc) {
-                document.querySelectorAll('.radar-segment').forEach(seg => {
-                    seg.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const tech = seg.getAttribute('data-tech');
-                        const desc = seg.getAttribute('data-desc');
-                        if (tech && desc) {
-                            modalTitle.textContent = tech;
-                            modalDesc.textContent = desc;
-                            modal.style.display = 'block';
-                        }
-                    });
-                });
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', () => {
-                        modal.style.display = 'none';
-                    });
+                    counter.textContent = current;
+                    requestAnimationFrame(update);
+                };
+                update();
+            });
+            countersAnimated = true;
+        }
+        if (timelineSection) {
+            const observer = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    animateCounters();
+                    observer.disconnect();
                 }
-                window.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.style.display = 'none';
-                });
-            }
+            }, { threshold: 0.3 });
+            observer.observe(timelineSection);
+        }
 
-            // Кнопки предзаписи
-            document.querySelectorAll('.preorder-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const card = btn.closest('.flip-card');
-                    let programName = '';
-                    if (card) {
-                        const front = card.querySelector('.flip-front h3');
-                        if (front) programName = front.innerText.trim();
-                    }
-                    alert(`Спасибо за интерес к программе "${programName || 'Академии SCM'}"! Скоро мы свяжемся с вами.`);
-                    window.location.href = 'contact.html';
-                });
+        // Кнопки предзаписи
+        document.querySelectorAll('.preorder-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const card = btn.closest('.flip-card');
+                let programName = '';
+                if (card) {
+                    const front = card.querySelector('.flip-front h3');
+                    if (front) programName = front.innerText.trim();
+                }
+                alert(`Спасибо за интерес к программе "${programName || 'Академии SCM'}"! Скоро мы свяжемся с вами.`);
+                window.location.href = 'contact.html';
             });
+        });
 
-            // Счётчики
-            if (!localStorage.getItem('visitCount')) localStorage.setItem('visitCount', '0');
-            let visitCount = parseInt(localStorage.getItem('visitCount'), 10) + 1;
-            localStorage.setItem('visitCount', visitCount);
-            const visitSpan = document.getElementById('visit-counter');
-            if (visitSpan) visitSpan.textContent = visitCount;
+        // Счётчики
+        if (!localStorage.getItem('visitCount')) localStorage.setItem('visitCount', '0');
+        let visitCount = parseInt(localStorage.getItem('visitCount'), 10) + 1;
+        localStorage.setItem('visitCount', visitCount);
+        const visitSpan = document.getElementById('visit-counter');
+        if (visitSpan) visitSpan.textContent = visitCount;
 
-            const downloadSpan = document.getElementById('download-counter');
-            if (downloadSpan) {
-                let downloadCount = localStorage.getItem('downloadCount') || '0';
-                downloadSpan.textContent = downloadCount;
-            }
+        const downloadSpan = document.getElementById('download-counter');
+        if (downloadSpan) {
+            let downloadCount = localStorage.getItem('downloadCount') || '0';
+            downloadSpan.textContent = downloadCount;
+        }
 
-            // Текущий год
-            const yearSpan = document.getElementById('current-year');
-            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+        // Текущий год
+        const yearSpan = document.getElementById('current-year');
+        if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-            // ESG дашборд
-            const esgData = {
-                2026: { co2: 120, renew: 25, circ: 40 },
-                2030: { co2: 85, renew: 45, circ: 55 },
-                2036: { co2: 40, renew: 80, circ: 75 }
-            };
-            function updateESGDashboard(year) {
-                const data = esgData[year];
-                if (!data) return;
-                document.getElementById('co2-value').innerText = data.co2;
-                document.getElementById('renew-value').innerText = data.renew;
-                document.getElementById('circ-value').innerText = data.circ;
-                const co2Chart = document.getElementById('chart-co2');
-                const renewChart = document.getElementById('chart-renew');
-                const circChart = document.getElementById('chart-circ');
-                if (co2Chart) co2Chart.style.background = `conic-gradient(#e74c3c 0% ${data.co2/2}%, #ecf0f1 ${data.co2/2}% 100%)`;
-                if (renewChart) renewChart.style.background = `conic-gradient(#f1c40f 0% ${data.renew}%, #ecf0f1 ${data.renew}% 100%)`;
-                if (circChart) circChart.style.background = `conic-gradient(#2ecc71 0% ${data.circ}%, #ecf0f1 ${data.circ}% 100%)`;
-            }
-            document.querySelectorAll('.year-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    updateESGDashboard(btn.dataset.year);
-                });
-            });
-            updateESGDashboard('2026');
-
-            // Сертификаты
-            const certificates = [
-                { title: "Диплом о профессиональной переподготовке", file: "files/diploma.pdf", filename: "diploma.pdf" },
-                { title: "Сертификат Академии Цепей Поставок (базовый)", file: "files/scm-basic-cert.pdf", filename: "scm-basic-cert.pdf" },
-                { title: "Сертификат Академии Цепей Поставок (продвинутый)", file: "files/scm-advanced-cert.pdf", filename: "scm-advanced-cert.pdf" },
-                { title: "Сертификат Академии Цепей Поставок (стратегический)", file: "files/scm-strategic-cert.pdf", filename: "scm-strategic-cert.pdf" },
-                { title: "Сертификат курса 'Цифровая трансформация SCM'", file: "files/digital-scm-cert.pdf", filename: "digital-scm-cert.pdf" },
-                { title: "Удостоверение о повышении квалификации", file: "files/advanced-training.pdf", filename: "advanced-training.pdf" }
-            ];
-            const container = document.getElementById('certificates-container');
-            if (container) {
-                container.innerHTML = certificates.map(cert => `
-                    <div class="certificate-card" onclick="location.href='${cert.file}'">
-                        <div class="certificate-icon"><i class="fas fa-file-alt"></i></div>
-                        <h3 class="certificate-title">${cert.title}</h3>
-                        <div class="certificate-filename">${cert.filename}</div>
-                        <div class="certificate-download" onclick="event.stopPropagation(); location.href='${cert.file}'">
-                            <i class="fas fa-download"></i> Скачать
-                        </div>
+        // Сертификаты
+        const certificates = [
+            { title: "Диплом о профессиональной переподготовке", file: "files/diploma.pdf", filename: "diploma.pdf" },
+            { title: "Сертификат Академии Цепей Поставок (базовый)", file: "files/scm-basic-cert.pdf", filename: "scm-basic-cert.pdf" },
+            { title: "Сертификат Академии Цепей Поставок (продвинутый)", file: "files/scm-advanced-cert.pdf", filename: "scm-advanced-cert.pdf" },
+            { title: "Сертификат Академии Цепей Поставок (стратегический)", file: "files/scm-strategic-cert.pdf", filename: "scm-strategic-cert.pdf" },
+            { title: "Сертификат курса 'Цифровая трансформация SCM'", file: "files/digital-scm-cert.pdf", filename: "digital-scm-cert.pdf" },
+            { title: "Удостоверение о повышении квалификации", file: "files/advanced-training.pdf", filename: "advanced-training.pdf" }
+        ];
+        const container = document.getElementById('certificates-container');
+        if (container) {
+            container.innerHTML = certificates.map(cert => `
+                <div class="certificate-card" onclick="location.href='${cert.file}'">
+                    <div class="certificate-icon"><i class="fas fa-file-alt"></i></div>
+                    <h3 class="certificate-title">${cert.title}</h3>
+                    <div class="certificate-filename">${cert.filename}</div>
+                    <div class="certificate-download" onclick="event.stopPropagation(); location.href='${cert.file}'">
+                        <i class="fas fa-download"></i> Скачать
                     </div>
-                `).join('');
-            }
+                </div>
+            `).join('');
+        }
 
-            // ---------- РАСШИРЕННЫЙ ВИДЖЕТ НОВОСТЕЙ (ГЛАВНАЯ) ----------
-            const sources = [
-                { name: 'Zakupki.gov.ru', url: 'https://zakupki.gov.ru/epz/main/public/rss', lang: 'ru' },
-                { name: 'Logirus', url: 'https://logirus.ru/rss', lang: 'ru' },
-                { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', lang: 'ru' },
-                { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss', lang: 'en' },
-                { name: 'ATI.SU', url: 'https://www.ati.su/rss', lang: 'ru' },
-                { name: 'MarketInfo', url: 'https://marketinfo.pro/rss', lang: 'ru' }
-            ];
-
-            async function fetchRSS(source, timeoutMs = 5000) {
-                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-                try {
-                    const response = await fetch(apiUrl, { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const data = await response.json();
-                    if (data.status === 'ok' && data.items && data.items.length) {
-                        return data.items.map(item => ({
-                            title: item.title,
-                            link: item.link,
-                            pubDate: new Date(item.pubDate),
-                            description: item.description.replace(/<[^>]*>/g, '').slice(0, 150),
-                            source: source.name,
-                            lang: source.lang
-                        }));
-                    }
-                    return [];
-                } catch (error) {
-                    console.warn(`Ошибка загрузки ${source.name}:`, error);
-                    return [];
-                }
-            }
-
-            async function loadNewsWidget() {
-                const newsContainer = document.getElementById('homeNewsGrid');
-                newsContainer.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
-                let allNews = [];
-                for (const src of sources) {
-                    const items = await fetchRSS(src);
-                    allNews.push(...items);
-                }
-                allNews.sort((a, b) => b.pubDate - a.pubDate);
+        // ---------- НОВОСТНОЙ ВИДЖЕТ (ЧИТАЕТ JSON) ----------
+        async function loadHomeNews() {
+            const container = document.getElementById('homeNewsGrid');
+            if (!container) return;
+            container.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
+            try {
+                const res = await fetch('/Panibratsky-Dmitry/data/news.json');
+                if (!res.ok) throw new Error('Не удалось загрузить новости');
+                const allNews = await res.json();
+                // Сортировка: русские выше, затем английские, по дате
+                allNews.sort((a, b) => {
+                    if (a.lang === 'ru' && b.lang !== 'ru') return -1;
+                    if (a.lang !== 'ru' && b.lang === 'ru') return 1;
+                    return new Date(b.pubDate) - new Date(a.pubDate);
+                });
                 const latest = allNews.slice(0, 6);
-
                 if (latest.length === 0) {
-                    newsContainer.innerHTML = '<div class="news-card news-loading">Не удалось загрузить новости. Попробуйте позже.</div>';
+                    container.innerHTML = '<div class="news-card">Новости временно недоступны</div>';
                     return;
                 }
-
-                function formatDate(date) {
-                    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-                }
-                function escapeHtml(str) {
-                    return str.replace(/[&<>]/g, function(m) {
-                        if (m === '&') return '&amp;';
-                        if (m === '<') return '&lt;';
-                        if (m === '>') return '&gt;';
-                        return m;
-                    });
-                }
-
-                newsContainer.innerHTML = latest.map(news => `
+                function formatDate(d) { return new Date(d).toLocaleDateString('ru-RU'); }
+                function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&')return'&amp;';if(m==='<')return'&lt;';if(m==='>')return'&gt;';return m;}); }
+                container.innerHTML = latest.map(news => `
                     <div class="news-card">
                         <div class="news-date">
                             <span>${formatDate(news.pubDate)}</span>
@@ -2076,13 +1803,15 @@
                         </div>
                         <h3 class="news-title">${escapeHtml(news.title)}</h3>
                         <p class="news-excerpt">${escapeHtml(news.description)}</p>
-                        <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="news-link">Читать на источнике →</a>
+                        <a href="${news.link}" target="_blank" class="news-link">Читать →</a>
                     </div>
                 `).join('');
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div class="news-card">Не удалось загрузить новости</div>';
             }
-
-            loadNewsWidget();
-        })();
+        }
+        loadHomeNews();
     </script>
 </body>
 </html>
