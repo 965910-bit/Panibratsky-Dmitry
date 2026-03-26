@@ -105,7 +105,6 @@
                 display: block;
             }
         }
-
         .page-hero {
             background: linear-gradient(135deg, #f8fafc, #ffffff);
             padding: 120px 0 60px;
@@ -121,7 +120,6 @@
             max-width: 700px;
             margin: 0 auto;
         }
-
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -209,7 +207,6 @@
         }
         .success { color: #10b981; }
         .error { color: #dc2626; }
-
         footer {
             background: var(--primary-dark);
             color: white;
@@ -262,7 +259,6 @@
             color: rgba(255,255,255,0.6);
             font-size: 13px;
         }
-
         @media (max-width: 768px) {
             .contact-grid {
                 grid-template-columns: 1fr;
@@ -424,7 +420,9 @@
             const statusDiv = document.getElementById('status');
 
             if (!name || !email || !message) {
-                showStatus('Заполните обязательные поля', 'error', statusDiv);
+                statusDiv.innerHTML = 'Заполните обязательные поля';
+                statusDiv.className = 'status error';
+                setTimeout(() => { statusDiv.innerHTML = ''; }, 5000);
                 return;
             }
 
@@ -446,19 +444,16 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-                showStatus('✅ Заявка отправлена. Я свяжусь с вами!', 'success', statusDiv);
+                statusDiv.innerHTML = '✅ Заявка отправлена. Я свяжусь с вами!';
+                statusDiv.className = 'status success';
                 document.getElementById('leadForm').reset();
             } catch (err) {
                 console.error(err);
-                showStatus('❌ Ошибка отправки. Попробуйте позже.', 'error', statusDiv);
+                statusDiv.innerHTML = '❌ Ошибка отправки. Попробуйте позже.';
+                statusDiv.className = 'status error';
             }
+            setTimeout(() => { statusDiv.innerHTML = ''; }, 5000);
         });
-
-        function showStatus(msg, type, el) {
-            el.innerHTML = msg;
-            el.className = `status ${type}`;
-            setTimeout(() => { el.innerHTML = ''; }, 5000);
-        }
 
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
