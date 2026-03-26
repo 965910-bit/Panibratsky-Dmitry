@@ -1,6 +1,3 @@
-// js/subscribe.js
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxuYKb225VXL6q28tmnngM9YqSzTyivPjt0A6awgbKmzJanXrpiutlGSFMUmL7H8G_qSaw/exec';
-
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('subscribeForm');
     const statusDiv = document.getElementById('subscribeStatus');
@@ -23,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
             emailInput.value = '';
             return;
         }
+
         const newSubscriber = {
             type: 'subscriber',
             email: email,
@@ -32,16 +30,19 @@ document.addEventListener('DOMContentLoaded', function() {
         subscribers.push(newSubscriber);
         localStorage.setItem('subscribers', JSON.stringify(subscribers));
 
-        try {
-            await fetch(BACKEND_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newSubscriber)
-            });
-            console.log('Подписчик отправлен на сервер');
-        } catch (err) {
-            console.error('Ошибка отправки на сервер:', err);
+        // Используем BACKEND_URL, объявленный на странице (в contact.html)
+        if (typeof BACKEND_URL !== 'undefined') {
+            try {
+                await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newSubscriber)
+                });
+                console.log('Подписчик отправлен на сервер');
+            } catch (err) {
+                console.error('Ошибка отправки на сервер:', err);
+            }
         }
 
         showStatus('✅ Спасибо! Вы подписаны на новости.', 'success');
