@@ -1,5 +1,5 @@
-// ⚠️ ЗАМЕНИТЕ ЭТУ СТРОКУ НА СВОЙ URL ВЕБ-ПРИЛОЖЕНИЯ
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzYy1VSd7mK-l90BJ7Rb2I3D6EGqz3dQPtwi6Tjb7ERDsGMictAwCPP_QgJs1vaT1NI/exec';
+// js/subscribe.js
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxuYKb225VXL6q28tmnngM9YqSzTyivPjt0A6awgbKmzJanXrpiutlGSFMUmL7H8G_qSaw/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('subscribeForm');
@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Сохраняем в localStorage (для кабинета)
         let subscribers = JSON.parse(localStorage.getItem('subscribers') || '[]');
         if (subscribers.some(s => s.email === email)) {
             showStatus('✅ Вы уже подписаны на новости!', 'success');
@@ -33,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
         subscribers.push(newSubscriber);
         localStorage.setItem('subscribers', JSON.stringify(subscribers));
 
-        // Отправляем в Google Sheets (бэкенд)
         try {
             await fetch(BACKEND_URL, {
                 method: 'POST',
