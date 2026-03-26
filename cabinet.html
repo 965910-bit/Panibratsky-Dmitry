@@ -257,8 +257,8 @@
             <button class="tab-btn" data-tab="content">Контент-план</button>
             <button class="tab-btn" data-tab="competitors">Конкуренты</button>
             <button class="tab-btn" data-tab="crm">Уведомления</button>
-            <button class="tab-btn" data-tab="max">MAX: каналы и подписчики</button>
-            <button class="tab-btn" data-tab="subscribers">📧 Подписчики (email)</button>
+            <button class="tab-btn" data-tab="subscribers">📧 Подписчики</button>
+            <button class="tab-btn" data-tab="max">📱 MAX (каналы)</button>
             <button class="tab-btn" data-tab="import">Импорт/Экспорт</button>
         </div>
 
@@ -266,7 +266,8 @@
         <div id="seo" class="tab-pane active">
             <div class="card">
                 <div class="card-title"><i class="fas fa-search"></i> Мета-теги страниц</div>
-                <table id="seoTable"><thead>  </thead><tbody></tbody>  </table>
+                <table id="seoTable"><thead>   \\
+<th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th> </thead><tbody></tbody> </table>
                 <div class="flex-between"><button id="addPageBtn">+ Добавить страницу</button><button id="checkSeoBtn" class="secondary">Проверить SEO</button></div>
                 <div id="seoChecklist" style="margin-top: 20px; display: none;"></div>
             </div>
@@ -282,7 +283,18 @@
         <div id="content" class="tab-pane">
             <div class="card">
                 <div class="card-title"><i class="fas fa-calendar-alt"></i> Календарь публикаций</div>
-                <div class="flex-between"><input type="text" id="eventTitle" placeholder="Название события"><input type="date" id="eventDate"><select id="eventType"><option>Пост в Telegram</option><option>Пост в MAX</option><option>Статья</option><option>Видео</option><option>Рассылка</option></select><button id="addEventBtn">Добавить</button></div>
+                <div class="flex-between">
+                    <input type="text" id="eventTitle" placeholder="Название события">
+                    <input type="date" id="eventDate">
+                    <select id="eventType">
+                        <option>Пост в Telegram</option>
+                        <option>Пост в MAX</option>
+                        <option>Статья</option>
+                        <option>Видео</option>
+                        <option>Рассылка</option>
+                    </select>
+                    <button id="addEventBtn">Добавить</button>
+                </div>
                 <div id="calendarGrid" class="calendar-grid"></div>
                 <div class="card-title" style="margin-top:20px"><i class="fab fa-telegram"></i> Telegram-бот</div>
                 <div class="flex-between"><input type="text" id="botToken" placeholder="Токен бота"><input type="text" id="chatId" placeholder="Chat ID"><button id="sendTelegramBtn" class="secondary">Отправить тест</button></div>
@@ -295,7 +307,7 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-chart-line"></i> Анализ конкурентов</div>
                 <div class="flex-between"><input type="text" id="competitorUrl" placeholder="URL конкурента"><button id="addCompetitorBtn">Добавить</button></div>
-                <table id="competitorsTable"><thead>  </thead><tbody></tbody>  </table>
+                <table id="competitorsTable"><thead><tr><th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
@@ -303,34 +315,17 @@
         <div id="crm" class="tab-pane">
             <div class="card">
                 <div class="card-title"><i class="fas fa-bell"></i> Настройка уведомлений</div>
-                <label><input type="checkbox" id="notifyNewSubscriber"> Новый email-подписчик</label><br>
-                <label><input type="checkbox" id="notifyNewMaxSubscriber"> Новый подписчик в MAX</label><br>
+                <label><input type="checkbox" id="notifyNewSubscriber"> Новый подписчик</label><br>
                 <label><input type="checkbox" id="notifyCrawlErrors"> Ошибки индексации (из вебмастеров) – заглушка</label><br>
                 <div class="flex-between" style="margin-top:15px"><button id="testTelegramNotify" class="secondary">Отправить тест в Telegram</button><div id="telegramNotifyStatus"></div></div>
             </div>
         </div>
 
-        <!-- MAX: каналы и подписчики -->
-        <div id="max" class="tab-pane">
-            <div class="card">
-                <div class="card-title"><i class="fab fa-max"></i> Мои каналы в MAX</div>
-                <div class="flex-between"><button id="addChannelBtn">+ Добавить канал</button><button id="exportChannelsBtn" class="secondary">Экспорт каналов (JSON)</button><button id="importChannelsBtn" class="secondary" onclick="document.getElementById('importChannelsFile').click()">Импорт каналов</button><input type="file" id="importChannelsFile" accept=".json" style="display:none"></div>
-                <div id="channelsList" style="margin-top: 20px;"></div>
-                <div id="channelsStats" class="stats-grid" style="margin-top: 20px;"></div>
-            </div>
-            <div class="card">
-                <div class="card-title"><i class="fas fa-users"></i> Подписчики каналов MAX</div>
-                <p>Список подписчиков (email или ID). Можно вести вручную или импортировать.</p>
-                <div class="flex-between"><button id="addMaxSubscriberBtn">+ Добавить подписчика</button><button id="exportMaxSubscribersBtn" class="secondary">Экспорт CSV</button><button id="exportMaxSubscribersJsonBtn" class="secondary">Экспорт JSON</button><label for="importMaxSubscribersFile" class="secondary" style="background:#e2e8f0; padding:8px 16px; border-radius:30px; cursor:pointer;">Импорт JSON</label><input type="file" id="importMaxSubscribersFile" accept=".json" style="display:none;"><button id="clearMaxSubscribersBtn" class="danger">Очистить список</button></div>
-                <div id="maxSubscribersList" style="margin-top: 20px; max-height: 300px; overflow-y: auto;"></div>
-                <div id="maxSubscribersStats" class="stats-grid" style="margin-top: 20px;"></div>
-            </div>
-        </div>
-
-        <!-- Подписчики email -->
+        <!-- Подписчики (email) -->
         <div id="subscribers" class="tab-pane">
             <div class="card">
                 <div class="card-title"><i class="fas fa-envelope-open-text"></i> Управление email-подписчиками</div>
+                <p>Здесь отображаются email-адреса, оставленные через форму подписки на сайте.</p>
                 <div class="flex-between">
                     <button id="exportSubscribersBtn" class="secondary">Экспорт CSV</button>
                     <button id="exportSubscribersJsonBtn" class="secondary">Экспорт JSON</button>
@@ -340,6 +335,34 @@
                 </div>
                 <div id="subscribersList" style="margin-top: 20px; max-height: 400px; overflow-y: auto;"></div>
                 <div id="subscribersStats" class="stats-grid" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- MAX: каналы и подписчики -->
+        <div id="max" class="tab-pane">
+            <div class="card">
+                <div class="card-title"><i class="fab fa-vk"></i> Каналы в MAX</div>
+                <div class="flex-between">
+                    <button id="addMaxChannelBtn">+ Добавить канал</button>
+                    <button id="exportMaxChannelsBtn" class="secondary">Экспорт каналов (CSV)</button>
+                    <label for="importMaxChannelsFile" class="secondary" style="background:#e2e8f0; padding:8px 16px; border-radius:30px; cursor:pointer;">Импорт каналов (JSON)</label>
+                    <input type="file" id="importMaxChannelsFile" accept=".json" style="display:none;">
+                </div>
+                <div id="maxChannelsList" style="margin-top: 20px;"></div>
+            </div>
+            <div class="card">
+                <div class="card-title"><i class="fas fa-users"></i> Подписчики MAX</div>
+                <p>Вы можете вести список подписчиков ваших каналов в MAX (импорт/экспорт).</p>
+                <div class="flex-between">
+                    <button id="addMaxSubscriberBtn">+ Добавить подписчика</button>
+                    <button id="exportMaxSubscribersBtn" class="secondary">Экспорт подписчиков (CSV)</button>
+                    <button id="exportMaxSubscribersJsonBtn" class="secondary">Экспорт подписчиков (JSON)</button>
+                    <label for="importMaxSubscribersFile" class="secondary" style="background:#e2e8f0; padding:8px 16px; border-radius:30px; cursor:pointer;">Импорт подписчиков (JSON)</label>
+                    <input type="file" id="importMaxSubscribersFile" accept=".json" style="display:none;">
+                    <button id="clearMaxSubscribersBtn" class="danger">Очистить список</button>
+                </div>
+                <div id="maxSubscribersList" style="margin-top: 20px; max-height: 400px; overflow-y: auto;"></div>
+                <div id="maxSubscribersStats" class="stats-grid" style="margin-top: 20px;"></div>
             </div>
         </div>
 
@@ -391,7 +414,6 @@
         document.getElementById('testTelegramNotify').onclick = () => { sendTelegramMessage('Тестовое уведомление из кабинета').then(ok => { document.getElementById('telegramNotifyStatus').innerHTML = ok ? '✅ Отправлено' : '❌ Ошибка'; setTimeout(()=>document.getElementById('telegramNotifyStatus').innerHTML='',3000); }); };
         document.getElementById('sendTelegramBtn').onclick = () => { let token = document.getElementById('botToken').value; let chatId = document.getElementById('chatId').value; if(token && chatId) { localStorage.setItem(STORAGE.telegramBot, JSON.stringify({ token, chatId })); sendTelegramMessage('Тестовое сообщение').then(ok => { document.getElementById('telegramStatus').innerHTML = ok ? '✅ Отправлено' : '❌ Ошибка'; setTimeout(()=>document.getElementById('telegramStatus').innerHTML='',3000); }); } };
         document.getElementById('notifyNewSubscriber').addEventListener('change', e => localStorage.setItem('notifyNewSubscriber', e.target.checked));
-        document.getElementById('notifyNewMaxSubscriber').addEventListener('change', e => localStorage.setItem('notifyNewMaxSubscriber', e.target.checked));
     }
 
     function initSeoData() {
@@ -407,9 +429,7 @@
     function initEventsData() { if (!localStorage.getItem(STORAGE.events)) localStorage.setItem(STORAGE.events, JSON.stringify([])); }
     function initSubscribersData() { if (!localStorage.getItem(STORAGE.subscribers)) localStorage.setItem(STORAGE.subscribers, JSON.stringify([])); }
     function initMaxData() {
-        if (!localStorage.getItem(STORAGE.maxChannels)) localStorage.setItem(STORAGE.maxChannels, JSON.stringify([
-            { name: 'SCM Эксперт', link: 'https://max.ru/example', subscribers: 0, created: new Date().toISOString().slice(0,10), desc: 'Канал про управление цепями поставок' }
-        ]));
+        if (!localStorage.getItem(STORAGE.maxChannels)) localStorage.setItem(STORAGE.maxChannels, JSON.stringify([]));
         if (!localStorage.getItem(STORAGE.maxSubscribers)) localStorage.setItem(STORAGE.maxSubscribers, JSON.stringify([]));
     }
 
@@ -417,6 +437,7 @@
     function downloadFile(filename, content) { const a = document.createElement('a'); const blob = new Blob([content], {type: 'text/plain'}); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); URL.revokeObjectURL(a.href); }
     function getData(key) { return JSON.parse(localStorage.getItem(key) || '[]'); }
 
+    // ==================== SEO ====================
     function renderSeo() {
         const pages = JSON.parse(localStorage.getItem(STORAGE.seoPages));
         const tbody = document.querySelector('#seoTable tbody');
@@ -427,7 +448,7 @@
                 <td data-label="Description"><input type="text" class="seo-desc" data-idx="${idx}" value="${escapeHtml(p.description)}"></td>
                 <td data-label="Длина">${p.title.length + p.description.length}</td>
                 <td data-label="Действия"><button class="del-page secondary" data-idx="${idx}">Удалить</button></td>
-             </tr>
+            </tr>
         `).join('');
         document.querySelectorAll('.seo-url, .seo-title, .seo-desc').forEach(inp => inp.addEventListener('change', e => {
             const idx = e.target.dataset.idx;
@@ -444,6 +465,19 @@
         }));
     }
 
+    function checkSeo() {
+        const pages = JSON.parse(localStorage.getItem(STORAGE.seoPages));
+        let issues = [];
+        pages.forEach(p => {
+            if(p.title.length<30 || p.title.length>70) issues.push(`${p.url}: длина title (${p.title.length}) не в норме 30–70.`);
+            if(p.description.length<120 || p.description.length>160) issues.push(`${p.url}: длина description (${p.description.length}) не в норме 120–160.`);
+        });
+        const checklistDiv = document.getElementById('seoChecklist');
+        checklistDiv.innerHTML = issues.length ? `<div class="card"><strong>Рекомендации:</strong><ul>${issues.map(i=>`<li>${i}</li>`).join('')}</ul></div>` : '<div class="card">✅ Все мета-теги в норме!</div>';
+        checklistDiv.style.display = 'block';
+    }
+
+    // ==================== Конкуренты ====================
     function renderCompetitors() {
         const comps = getData(STORAGE.competitors);
         const tbody = document.querySelector('#competitorsTable tbody');
@@ -454,7 +488,7 @@
                 <td data-label="Описание"><input type="text" class="comp-desc" data-idx="${idx}" value="${escapeHtml(c.desc || '')}"></td>
                 <td data-label="Ключевые слова"><input type="text" class="comp-kw" data-idx="${idx}" value="${escapeHtml(c.keywords || '')}"></td>
                 <td data-label="Действия"><button class="del-comp secondary" data-idx="${idx}">Удалить</button></td>
-             </tr>
+            </tr>
         `).join('');
         document.querySelectorAll('.comp-url, .comp-title, .comp-desc, .comp-kw').forEach(inp => inp.addEventListener('change', e => {
             const idx = e.target.dataset.idx;
@@ -467,6 +501,7 @@
         document.querySelectorAll('.del-comp').forEach(btn => btn.addEventListener('click', e => { comps.splice(e.target.dataset.idx,1); localStorage.setItem(STORAGE.competitors, JSON.stringify(comps)); renderCompetitors(); }));
     }
 
+    // ==================== Контент-план ====================
     function renderEvents() {
         const events = getData(STORAGE.events);
         const today = new Date();
@@ -492,7 +527,7 @@
         });
     }
 
-    // Email подписчики
+    // ==================== Email подписчики (исправленная версия) ====================
     function renderSubscribers() {
         const subscribers = getData(STORAGE.subscribers);
         const container = document.getElementById('subscribersList');
@@ -500,15 +535,25 @@
         if (subscribers.length === 0) {
             container.innerHTML = '<p>Нет подписчиков.</p>';
         } else {
-            container.innerHTML = subscribers.map((sub, idx) => `
-                <div class="subscriber-item">
-                    <div>
-                        <strong>${escapeHtml(sub.email)}</strong><br>
-                        <small>Подписался: ${new Date(sub.timestamp).toLocaleString()}</small>
+            container.innerHTML = subscribers.map((sub, idx) => {
+                const email = sub.email || sub.userId || sub.phone || 'неизвестный email';
+                let dateStr = 'дата неизвестна';
+                if (sub.timestamp) {
+                    const date = new Date(sub.timestamp);
+                    if (!isNaN(date.getTime())) {
+                        dateStr = date.toLocaleString();
+                    }
+                }
+                return `
+                    <div class="subscriber-item">
+                        <div>
+                            <strong>${escapeHtml(email)}</strong><br>
+                            <small>Подписался: ${dateStr}</small>
+                        </div>
+                        <button class="delete-subscriber secondary danger" data-idx="${idx}">Удалить</button>
                     </div>
-                    <button class="delete-subscriber secondary danger" data-idx="${idx}">Удалить</button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             document.querySelectorAll('.delete-subscriber').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const idx = e.currentTarget.dataset.idx;
@@ -520,17 +565,25 @@
                 });
             });
         }
+        const validTimestamps = subscribers.filter(s => s.timestamp && !isNaN(new Date(s.timestamp).getTime()));
+        const lastDate = validTimestamps.length > 0
+            ? new Date(validTimestamps[validTimestamps.length-1].timestamp).toLocaleDateString()
+            : '—';
         const statsHtml = `
             <div class="stat-card"><div class="stat-number">${subscribers.length}</div><div>Всего email-подписчиков</div></div>
-            <div class="stat-card"><div class="stat-number">${subscribers.length > 0 ? new Date(subscribers[subscribers.length-1].timestamp).toLocaleDateString() : '—'}</div><div>Последняя подписка</div></div>
+            <div class="stat-card"><div class="stat-number">${lastDate}</div><div>Последняя подписка</div></div>
         `;
         document.getElementById('subscribersStats').innerHTML = statsHtml;
     }
 
     function exportSubscribersCSV() {
         const subs = getData(STORAGE.subscribers);
-        const csvRows = [['Email', 'Дата подписки']];
-        subs.forEach(s => csvRows.push([s.email, new Date(s.timestamp).toISOString()]));
+        const csvRows = [['Email', 'Дата подписки', 'Источник']];
+        subs.forEach(s => {
+            const email = s.email || s.userId || '';
+            const date = s.timestamp ? new Date(s.timestamp).toISOString() : '';
+            csvRows.push([email, date, s.source || '']);
+        });
         const csv = csvRows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
         downloadFile('subscribers.csv', csv);
     }
@@ -560,91 +613,85 @@
         }
     }
 
-    // MAX каналы
+    // ==================== MAX каналы ====================
     function renderMaxChannels() {
         const channels = getData(STORAGE.maxChannels);
-        const container = document.getElementById('channelsList');
+        const container = document.getElementById('maxChannelsList');
         if (!container) return;
         if (channels.length === 0) {
-            container.innerHTML = '<p>Нет каналов. Добавьте первый.</p>';
+            container.innerHTML = '<p>Нет каналов в MAX. Нажмите «+ Добавить канал».</p>';
         } else {
             container.innerHTML = channels.map((ch, idx) => `
                 <div class="channel-item">
                     <div>
                         <strong>${escapeHtml(ch.name)}</strong><br>
-                        Ссылка: <a href="${escapeHtml(ch.link)}" target="_blank">${escapeHtml(ch.link)}</a><br>
-                        Подписчиков: ${ch.subscribers || 0}<br>
-                        Создан: ${ch.created || '—'}<br>
-                        Описание: ${escapeHtml(ch.desc || '')}
+                        <small>Ссылка: ${escapeHtml(ch.url)}</small><br>
+                        <small>Подписчиков: ${ch.subscribers || 0} | Дата создания: ${ch.createdDate || '—'}</small>
                     </div>
                     <div>
-                        <button class="edit-channel secondary" data-idx="${idx}">Редактировать</button>
-                        <button class="delete-channel secondary danger" data-idx="${idx}">Удалить</button>
+                        <button class="edit-channel secondary" data-idx="${idx}">✏️</button>
+                        <button class="delete-channel secondary danger" data-idx="${idx}">🗑️</button>
                     </div>
                 </div>
             `).join('');
             document.querySelectorAll('.edit-channel').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const idx = e.currentTarget.dataset.idx;
-                    editChannel(idx);
+                    editMaxChannel(idx);
                 });
             });
             document.querySelectorAll('.delete-channel').forEach(btn => {
                 btn.addEventListener('click', (e) => {
+                    const idx = e.currentTarget.dataset.idx;
                     if (confirm('Удалить канал?')) {
-                        channels.splice(e.currentTarget.dataset.idx, 1);
+                        channels.splice(idx, 1);
                         localStorage.setItem(STORAGE.maxChannels, JSON.stringify(channels));
                         renderMaxChannels();
                     }
                 });
             });
         }
-        const totalSubs = channels.reduce((sum, ch) => sum + (ch.subscribers || 0), 0);
-        const statsHtml = `
-            <div class="stat-card"><div class="stat-number">${channels.length}</div><div>Всего каналов</div></div>
-            <div class="stat-card"><div class="stat-number">${totalSubs}</div><div>Суммарно подписчиков</div></div>
-        `;
-        document.getElementById('channelsStats').innerHTML = statsHtml;
     }
 
-    function editChannel(idx) {
+    function editMaxChannel(idx) {
         const channels = getData(STORAGE.maxChannels);
         const ch = channels[idx];
         const newName = prompt('Название канала', ch.name);
         if (newName === null) return;
-        const newLink = prompt('Ссылка на канал', ch.link);
-        if (newLink === null) return;
-        const newSubs = parseInt(prompt('Количество подписчиков', ch.subscribers || 0), 10);
-        if (isNaN(newSubs)) return;
-        const newCreated = prompt('Дата создания (ГГГГ-ММ-ДД)', ch.created || new Date().toISOString().slice(0,10));
-        if (newCreated === null) return;
-        const newDesc = prompt('Описание', ch.desc || '');
-        if (newDesc === null) return;
-        channels[idx] = { ...ch, name: newName, link: newLink, subscribers: newSubs, created: newCreated, desc: newDesc };
+        const newUrl = prompt('Ссылка на канал (URL)', ch.url);
+        if (newUrl === null) return;
+        const newSubscribers = prompt('Количество подписчиков', ch.subscribers || 0);
+        const newCreated = prompt('Дата создания (ГГГГ-ММ-ДД)', ch.createdDate || '');
+        ch.name = newName;
+        ch.url = newUrl;
+        ch.subscribers = parseInt(newSubscribers) || 0;
+        ch.createdDate = newCreated;
         localStorage.setItem(STORAGE.maxChannels, JSON.stringify(channels));
         renderMaxChannels();
     }
 
-    function addChannel() {
+    function addMaxChannel() {
         const name = prompt('Название канала');
         if (!name) return;
-        const link = prompt('Ссылка на канал (URL)');
-        if (!link) return;
-        const subscribers = parseInt(prompt('Количество подписчиков (0)', '0'), 10);
-        const created = prompt('Дата создания (ГГГГ-ММ-ДД)', new Date().toISOString().slice(0,10));
-        const desc = prompt('Описание', '');
+        const url = prompt('Ссылка на канал (например, https://max.ru/... )');
+        if (!url) return;
+        const subscribers = prompt('Количество подписчиков (число)', 0);
+        const createdDate = prompt('Дата создания (ГГГГ-ММ-ДД)', new Date().toISOString().slice(0,10));
         const channels = getData(STORAGE.maxChannels);
-        channels.push({ name, link, subscribers: isNaN(subscribers) ? 0 : subscribers, created: created || new Date().toISOString().slice(0,10), desc: desc || '' });
+        channels.push({ name, url, subscribers: parseInt(subscribers)||0, createdDate });
         localStorage.setItem(STORAGE.maxChannels, JSON.stringify(channels));
         renderMaxChannels();
     }
 
-    function exportChannels() {
+    function exportMaxChannelsCSV() {
         const channels = getData(STORAGE.maxChannels);
-        downloadFile('max_channels.json', JSON.stringify(channels, null, 2));
+        const csvRows = [['Название', 'Ссылка', 'Подписчики', 'Дата создания']];
+        channels.forEach(ch => csvRows.push([ch.name, ch.url, ch.subscribers, ch.createdDate]));
+        const csv = csvRows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+        downloadFile('max_channels.csv', csv);
     }
 
-    function importChannels(file) {
+    function importMaxChannels(file) {
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
@@ -660,27 +707,36 @@
         reader.readAsText(file);
     }
 
-    // MAX подписчики
+    // ==================== MAX подписчики ====================
     function renderMaxSubscribers() {
         const subscribers = getData(STORAGE.maxSubscribers);
         const container = document.getElementById('maxSubscribersList');
         if (!container) return;
         if (subscribers.length === 0) {
-            container.innerHTML = '<p>Нет подписчиков.</p>';
+            container.innerHTML = '<p>Нет подписчиков MAX.</p>';
         } else {
-            container.innerHTML = subscribers.map((sub, idx) => `
-                <div class="subscriber-item">
-                    <div>
-                        <strong>${escapeHtml(sub.email || sub.id || '')}</strong><br>
-                        <small>Подписался: ${sub.timestamp ? new Date(sub.timestamp).toLocaleString() : '—'}</small>
+            container.innerHTML = subscribers.map((sub, idx) => {
+                let identifier = sub.userId || sub.email || sub.phone || 'неизвестный идентификатор';
+                let dateStr = 'дата неизвестна';
+                if (sub.timestamp) {
+                    const date = new Date(sub.timestamp);
+                    if (!isNaN(date.getTime())) dateStr = date.toLocaleString();
+                }
+                return `
+                    <div class="subscriber-item">
+                        <div>
+                            <strong>${escapeHtml(identifier)}</strong><br>
+                            <small>Подписался: ${dateStr}</small>
+                            ${sub.channel ? `<br><small>Канал: ${escapeHtml(sub.channel)}</small>` : ''}
+                        </div>
+                        <button class="delete-max-subscriber secondary danger" data-idx="${idx}">Удалить</button>
                     </div>
-                    <button class="delete-max-subscriber secondary danger" data-idx="${idx}">Удалить</button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             document.querySelectorAll('.delete-max-subscriber').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const idx = e.currentTarget.dataset.idx;
-                    if (confirm('Удалить этого подписчика?')) {
+                    if (confirm('Удалить подписчика?')) {
                         subscribers.splice(idx, 1);
                         localStorage.setItem(STORAGE.maxSubscribers, JSON.stringify(subscribers));
                         renderMaxSubscribers();
@@ -688,25 +744,31 @@
                 });
             });
         }
-        const statsHtml = `<div class="stat-card"><div class="stat-number">${subscribers.length}</div><div>Всего подписчиков MAX</div></div>`;
+        const validTimestamps = subscribers.filter(s => s.timestamp && !isNaN(new Date(s.timestamp).getTime()));
+        const lastDate = validTimestamps.length > 0
+            ? new Date(validTimestamps[validTimestamps.length-1].timestamp).toLocaleDateString()
+            : '—';
+        const statsHtml = `
+            <div class="stat-card"><div class="stat-number">${subscribers.length}</div><div>Всего подписчиков MAX</div></div>
+            <div class="stat-card"><div class="stat-number">${lastDate}</div><div>Последняя подписка</div></div>
+        `;
         document.getElementById('maxSubscribersStats').innerHTML = statsHtml;
     }
 
     function addMaxSubscriber() {
-        const email = prompt('Введите email или ID подписчика');
-        if (!email) return;
+        const identifier = prompt('Введите идентификатор (email, телефон или ID пользователя MAX)');
+        if (!identifier) return;
+        const channel = prompt('К какому каналу относится подписчик? (название канала)', '');
         const subscribers = getData(STORAGE.maxSubscribers);
-        subscribers.push({ email, timestamp: new Date().toISOString() });
+        subscribers.push({ userId: identifier, channel, timestamp: new Date().toISOString() });
         localStorage.setItem(STORAGE.maxSubscribers, JSON.stringify(subscribers));
         renderMaxSubscribers();
-        const notify = localStorage.getItem('notifyNewMaxSubscriber') === 'true';
-        if (notify) sendTelegramMessage(`📢 Новый подписчик MAX: ${email}`);
     }
 
     function exportMaxSubscribersCSV() {
         const subs = getData(STORAGE.maxSubscribers);
-        const csvRows = [['Email/ID', 'Дата подписки']];
-        subs.forEach(s => csvRows.push([s.email || s.id || '', s.timestamp ? new Date(s.timestamp).toISOString() : '']));
+        const csvRows = [['Идентификатор', 'Канал', 'Дата подписки']];
+        subs.forEach(s => csvRows.push([s.userId || s.email || s.phone, s.channel || '', s.timestamp || '']));
         const csv = csvRows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
         downloadFile('max_subscribers.csv', csv);
     }
@@ -739,31 +801,7 @@
         }
     }
 
-    function checkSeo() {
-        const pages = JSON.parse(localStorage.getItem(STORAGE.seoPages));
-        let issues = [];
-        pages.forEach(p => {
-            if(p.title.length<30 || p.title.length>70) issues.push(`${p.url}: длина title (${p.title.length}) не в норме 30–70.`);
-            if(p.description.length<120 || p.description.length>160) issues.push(`${p.url}: длина description (${p.description.length}) не в норме 120–160.`);
-        });
-        const checklistDiv = document.getElementById('seoChecklist');
-        checklistDiv.innerHTML = issues.length ? `<div class="card"><strong>Рекомендации:</strong><ul>${issues.map(i=>`<li>${i}</li>`).join('')}</ul></div>` : '<div class="card">✅ Все мета-теги в норме!</div>';
-        checklistDiv.style.display = 'block';
-    }
-
-    async function sendTelegramMessage(text) {
-        const botData = JSON.parse(localStorage.getItem(STORAGE.telegramBot) || '{}');
-        if(!botData.token || !botData.chatId) return false;
-        try {
-            const resp = await fetch(`https://api.telegram.org/bot${botData.token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: botData.chatId, text })
-            });
-            return resp.ok;
-        } catch(e) { return false; }
-    }
-
+    // ==================== Общие кнопки ====================
     function bindButtons() {
         document.getElementById('addPageBtn').onclick = () => { let pages = JSON.parse(localStorage.getItem(STORAGE.seoPages)); pages.push({ url:'new.html', title:'Новая страница', description:'Описание' }); localStorage.setItem(STORAGE.seoPages, JSON.stringify(pages)); renderSeo(); };
         document.getElementById('addCompetitorBtn').onclick = () => { let url = document.getElementById('competitorUrl').value.trim(); if(!url) return; let comps = getData(STORAGE.competitors); comps.push({ url, title:'', desc:'', keywords:'' }); localStorage.setItem(STORAGE.competitors, JSON.stringify(comps)); renderCompetitors(); document.getElementById('competitorUrl').value=''; };
@@ -776,11 +814,11 @@
         document.getElementById('exportSubscribersJsonBtn')?.addEventListener('click', exportSubscribersJSON);
         document.getElementById('importSubscribersFile')?.addEventListener('change', (e) => { if(e.target.files.length) importSubscribers(e.target.files[0]); e.target.value = ''; });
         document.getElementById('clearSubscribersBtn')?.addEventListener('click', clearSubscribers);
-        // MAX каналы и подписчики
-        document.getElementById('addChannelBtn')?.addEventListener('click', addChannel);
-        document.getElementById('exportChannelsBtn')?.addEventListener('click', exportChannels);
-        document.getElementById('importChannelsBtn')?.addEventListener('click', () => document.getElementById('importChannelsFile').click());
-        document.getElementById('importChannelsFile')?.addEventListener('change', (e) => { if(e.target.files.length) importChannels(e.target.files[0]); e.target.value = ''; });
+        // MAX каналы
+        document.getElementById('addMaxChannelBtn')?.addEventListener('click', addMaxChannel);
+        document.getElementById('exportMaxChannelsBtn')?.addEventListener('click', exportMaxChannelsCSV);
+        document.getElementById('importMaxChannelsFile')?.addEventListener('change', (e) => { if(e.target.files.length) importMaxChannels(e.target.files[0]); e.target.value = ''; });
+        // MAX подписчики
         document.getElementById('addMaxSubscriberBtn')?.addEventListener('click', addMaxSubscriber);
         document.getElementById('exportMaxSubscribersBtn')?.addEventListener('click', exportMaxSubscribersCSV);
         document.getElementById('exportMaxSubscribersJsonBtn')?.addEventListener('click', exportMaxSubscribersJSON);
@@ -833,6 +871,20 @@
     }
     setupCsvImport('yandexCsvDrop', 'yandexCsvFile', processYandexCSV);
     setupCsvImport('googleCsvDrop', 'googleCsvFile', processGoogleCSV);
+
+    // ==================== Telegram ====================
+    async function sendTelegramMessage(text) {
+        const botData = JSON.parse(localStorage.getItem(STORAGE.telegramBot) || '{}');
+        if(!botData.token || !botData.chatId) return false;
+        try {
+            const resp = await fetch(`https://api.telegram.org/bot${botData.token}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: botData.chatId, text })
+            });
+            return resp.ok;
+        } catch(e) { return false; }
+    }
 
     // ==================== Авторизация ====================
     function checkAuth() {
