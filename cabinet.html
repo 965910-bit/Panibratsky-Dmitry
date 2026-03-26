@@ -267,8 +267,7 @@
         <div id="seo" class="tab-pane active">
             <div class="card">
                 <div class="card-title"><i class="fas fa-search"></i> Мета-теги страниц</div>
-                <table id="seoTable"><thead>  \\
-<th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th> </thead><tbody></tbody>  </table>
+                <table id="seoTable"><thead><tr><th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th></tr></thead><tbody></tbody></table>
                 <div class="flex-between"><button id="addPageBtn">+ Добавить страницу</button><button id="checkSeoBtn" class="secondary">Проверить SEO</button></div>
                 <div id="seoChecklist" style="margin-top: 20px; display: none;"></div>
             </div>
@@ -308,8 +307,7 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-chart-line"></i> Анализ конкурентов</div>
                 <div class="flex-between"><input type="text" id="competitorUrl" placeholder="URL конкурента"><button id="addCompetitorBtn">Добавить</button></div>
-                <table id="competitorsTable"><thead>  \\
-<th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th> </thead><tbody></tbody>  </table>
+                <table id="competitorsTable"><thead><tr><th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
@@ -469,7 +467,7 @@
                 <td data-label="Description"><input type="text" class="seo-desc" data-idx="${idx}" value="${escapeHtml(p.description)}"></td>
                 <td data-label="Длина">${p.title.length + p.description.length}</td>
                 <td data-label="Действия"><button class="del-page secondary" data-idx="${idx}">Удалить</button></td>
-             </tr>
+            </tr>
         `).join('');
         document.querySelectorAll('.seo-url, .seo-title, .seo-desc').forEach(inp => inp.addEventListener('change', e => {
             const idx = e.target.dataset.idx;
@@ -509,7 +507,7 @@
                 <td data-label="Описание"><input type="text" class="comp-desc" data-idx="${idx}" value="${escapeHtml(c.desc || '')}"></td>
                 <td data-label="Ключевые слова"><input type="text" class="comp-kw" data-idx="${idx}" value="${escapeHtml(c.keywords || '')}"></td>
                 <td data-label="Действия"><button class="del-comp secondary" data-idx="${idx}">Удалить</button></td>
-             </tr>
+            </tr>
         `).join('');
         document.querySelectorAll('.comp-url, .comp-title, .comp-desc, .comp-kw').forEach(inp => inp.addEventListener('change', e => {
             const idx = e.target.dataset.idx;
@@ -548,7 +546,7 @@
         });
     }
 
-    // ==================== Email подписчики (с синхронизацией с бэкендом) ====================
+    // ==================== Email подписчики ====================
     async function syncSubscribersFromBackend() {
         try {
             const response = await fetch(`${BACKEND_URL}?type=subscribers`);
@@ -663,6 +661,7 @@
             if (Array.isArray(data)) {
                 localStorage.setItem(STORAGE.leads, JSON.stringify(data));
                 renderLeads();
+                console.log(`Загружено ${data.length} заявок из Google Sheets`);
             }
         } catch (err) {
             console.error('Ошибка загрузки заявок:', err);
