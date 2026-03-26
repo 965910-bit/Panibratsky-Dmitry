@@ -419,8 +419,8 @@
 
     <script src="js/subscribe.js"></script>
     <script>
-        // ==================== Обработка заявок (русский тип) ====================
-        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzYy1VSd7mK-l90BJ7Rb2I3D6EGqz3dQPtwi6Tjb7ERDsGMictAwCPP_QgJs1vaT1NI/exec';
+        // ==================== НОВЫЙ URL (версия 3) ====================
+        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxuYKb225VXL6q28tmnngM9YqSzTyivPjt0A6awgbKmzJanXrpiutlGSFMUmL7H8G_qSaw/exec';
 
         document.getElementById('leadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -448,7 +448,6 @@
                 status: 'новый'
             };
 
-            // Показываем сообщение о отправке
             showStatus('⏳ Отправка...', 'sending', statusDiv);
             submitBtn.disabled = true;
 
@@ -459,7 +458,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-                // Даже если ответ не прочитан, считаем отправку успешной
                 showStatus('✅ Заявка отправлена. Я свяжусь с вами!', 'success', statusDiv);
                 document.getElementById('leadForm').reset();
             } catch (err) {
@@ -467,11 +465,8 @@
                 showStatus('❌ Ошибка отправки. Попробуйте позже.', 'error', statusDiv);
             } finally {
                 submitBtn.disabled = false;
-                // Скрыть сообщение через 5 секунд
                 setTimeout(() => {
-                    if (statusDiv.innerHTML !== '⏳ Отправка...') {
-                        statusDiv.innerHTML = '';
-                    }
+                    if (statusDiv.innerHTML === '⏳ Отправка...') statusDiv.innerHTML = '';
                 }, 5000);
             }
         });
@@ -481,14 +476,11 @@
             el.className = `status ${type}`;
             if (type !== 'sending') {
                 setTimeout(() => {
-                    if (el.innerHTML === msg) {
-                        el.innerHTML = '';
-                    }
+                    if (el.innerHTML === msg) el.innerHTML = '';
                 }, 5000);
             }
         }
 
-        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
