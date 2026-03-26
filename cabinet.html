@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        /* Все стили остаются без изменений (как в предыдущей версии) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -259,6 +258,7 @@
             <button class="tab-btn" data-tab="competitors">Конкуренты</button>
             <button class="tab-btn" data-tab="crm">Уведомления</button>
             <button class="tab-btn" data-tab="subscribers">📧 Подписчики</button>
+            <button class="tab-btn" data-tab="leads">📋 Заявки</button>
             <button class="tab-btn" data-tab="max">📱 MAX (каналы)</button>
             <button class="tab-btn" data-tab="import">Импорт/Экспорт</button>
         </div>
@@ -267,7 +267,8 @@
         <div id="seo" class="tab-pane active">
             <div class="card">
                 <div class="card-title"><i class="fas fa-search"></i> Мета-теги страниц</div>
-                <table id="seoTable"><thead> <tr><th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th></tr> </thead><tbody></tbody> </table>
+                <table id="seoTable"><thead>  \\
+<th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th> </thead><tbody></tbody>  </table>
                 <div class="flex-between"><button id="addPageBtn">+ Добавить страницу</button><button id="checkSeoBtn" class="secondary">Проверить SEO</button></div>
                 <div id="seoChecklist" style="margin-top: 20px; display: none;"></div>
             </div>
@@ -307,7 +308,8 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-chart-line"></i> Анализ конкурентов</div>
                 <div class="flex-between"><input type="text" id="competitorUrl" placeholder="URL конкурента"><button id="addCompetitorBtn">Добавить</button></div>
-                <table id="competitorsTable"><thead> <tr><th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th></tr> </thead><tbody></tbody> </table>
+                <table id="competitorsTable"><thead>  \\
+<th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th> </thead><tbody></tbody>  </table>
             </div>
         </div>
 
@@ -335,6 +337,20 @@
                 </div>
                 <div id="subscribersList" style="margin-top: 20px; max-height: 400px; overflow-y: auto;"></div>
                 <div id="subscribersStats" class="stats-grid" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- Заявки -->
+        <div id="leads" class="tab-pane">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-handshake"></i> Заявки на сотрудничество и HR</div>
+                <p>Здесь отображаются заявки, оставленные через форму на сайте.</p>
+                <div class="flex-between">
+                    <button id="exportLeadsBtn" class="secondary">Экспорт CSV</button>
+                    <button id="clearLeadsBtn" class="danger">Очистить список</button>
+                </div>
+                <div id="leadsList" style="margin-top: 20px; max-height: 400px; overflow-y: auto;"></div>
+                <div id="leadsStats" class="stats-grid" style="margin-top: 20px;"></div>
             </div>
         </div>
 
@@ -380,13 +396,14 @@
 
 <script>
     const PASSWORD = "admin";
-    const BACKEND_URL = 'https://script.google.com/macros/s/ВАШ_ИДЕНТИФИКАТОР/exec'; // ⚠️ Замените на свой URL
+    const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzYy1VSd7mK-l90BJ7Rb2I3D6EGqz3dQPtwi6Tjb7ERDsGMictAwCPP_QgJs1vaT1NI/exec';
     const STORAGE = {
         seoPages: 'promo_seoPages',
         competitors: 'promo_competitors',
         events: 'promo_events',
         telegramBot: 'promo_telegramBot',
         subscribers: 'subscribers',
+        leads: 'promo_leads',
         maxChannels: 'max_channels',
         maxSubscribers: 'max_subscribers'
     };
@@ -398,12 +415,13 @@
         initCompetitorsData();
         initEventsData();
         initSubscribersData();
+        initLeadsData();
         initMaxData();
         renderSeo();
         renderCompetitors();
         renderEvents();
         renderSubscribers();
-        syncSubscribersFromBackend(); // Загружаем из Google Sheets и синхронизируем
+        loadLeadsFromBackend();
         renderMaxChannels();
         renderMaxSubscribers();
         bindButtons();
@@ -430,6 +448,7 @@
     function initCompetitorsData() { if (!localStorage.getItem(STORAGE.competitors)) localStorage.setItem(STORAGE.competitors, JSON.stringify([])); }
     function initEventsData() { if (!localStorage.getItem(STORAGE.events)) localStorage.setItem(STORAGE.events, JSON.stringify([])); }
     function initSubscribersData() { if (!localStorage.getItem(STORAGE.subscribers)) localStorage.setItem(STORAGE.subscribers, JSON.stringify([])); }
+    function initLeadsData() { if (!localStorage.getItem(STORAGE.leads)) localStorage.setItem(STORAGE.leads, JSON.stringify([])); }
     function initMaxData() {
         if (!localStorage.getItem(STORAGE.maxChannels)) localStorage.setItem(STORAGE.maxChannels, JSON.stringify([]));
         if (!localStorage.getItem(STORAGE.maxSubscribers)) localStorage.setItem(STORAGE.maxSubscribers, JSON.stringify([]));
@@ -450,7 +469,7 @@
                 <td data-label="Description"><input type="text" class="seo-desc" data-idx="${idx}" value="${escapeHtml(p.description)}"></td>
                 <td data-label="Длина">${p.title.length + p.description.length}</td>
                 <td data-label="Действия"><button class="del-page secondary" data-idx="${idx}">Удалить</button></td>
-            </tr>
+             </tr>
         `).join('');
         document.querySelectorAll('.seo-url, .seo-title, .seo-desc').forEach(inp => inp.addEventListener('change', e => {
             const idx = e.target.dataset.idx;
@@ -490,7 +509,7 @@
                 <td data-label="Описание"><input type="text" class="comp-desc" data-idx="${idx}" value="${escapeHtml(c.desc || '')}"></td>
                 <td data-label="Ключевые слова"><input type="text" class="comp-kw" data-idx="${idx}" value="${escapeHtml(c.keywords || '')}"></td>
                 <td data-label="Действия"><button class="del-comp secondary" data-idx="${idx}">Удалить</button></td>
-            </tr>
+             </tr>
         `).join('');
         document.querySelectorAll('.comp-url, .comp-title, .comp-desc, .comp-kw').forEach(inp => inp.addEventListener('change', e => {
             const idx = e.target.dataset.idx;
@@ -532,7 +551,7 @@
     // ==================== Email подписчики (с синхронизацией с бэкендом) ====================
     async function syncSubscribersFromBackend() {
         try {
-            const response = await fetch(BACKEND_URL);
+            const response = await fetch(`${BACKEND_URL}?type=subscribers`);
             if (!response.ok) throw new Error('HTTP error');
             const data = await response.json();
             if (Array.isArray(data)) {
@@ -632,6 +651,88 @@
         if (confirm('Удалить всех email-подписчиков?')) {
             localStorage.setItem(STORAGE.subscribers, JSON.stringify([]));
             renderSubscribers();
+        }
+    }
+
+    // ==================== Заявки ====================
+    async function loadLeadsFromBackend() {
+        try {
+            const response = await fetch(`${BACKEND_URL}?type=leads`);
+            if (!response.ok) throw new Error('HTTP error');
+            const data = await response.json();
+            if (Array.isArray(data)) {
+                localStorage.setItem(STORAGE.leads, JSON.stringify(data));
+                renderLeads();
+            }
+        } catch (err) {
+            console.error('Ошибка загрузки заявок:', err);
+        }
+    }
+
+    function renderLeads() {
+        const leads = getData(STORAGE.leads);
+        const container = document.getElementById('leadsList');
+        if (!container) return;
+        if (leads.length === 0) {
+            container.innerHTML = '<p>Нет заявок.</p>';
+        } else {
+            container.innerHTML = leads.map((lead, idx) => `
+                <div class="subscriber-item">
+                    <div>
+                        <strong>${escapeHtml(lead.name)}</strong> (${escapeHtml(lead.email)})<br>
+                        <small>Тип: ${escapeHtml(lead.type)}</small><br>
+                        <small>Дата: ${lead.timestamp ? new Date(lead.timestamp).toLocaleString() : '—'}</small><br>
+                        <small>Сообщение: ${escapeHtml(lead.message)}</small>
+                    </div>
+                    <div>
+                        <select class="lead-status" data-idx="${idx}" style="width: auto;">
+                            <option ${lead.status === 'новый' ? 'selected' : ''}>новый</option>
+                            <option ${lead.status === 'в работе' ? 'selected' : ''}>в работе</option>
+                            <option ${lead.status === 'закрыто' ? 'selected' : ''}>закрыто</option>
+                        </select>
+                        <button class="delete-lead secondary danger" data-idx="${idx}">Удалить</button>
+                    </div>
+                </div>
+            `).join('');
+            document.querySelectorAll('.lead-status').forEach(select => {
+                select.addEventListener('change', (e) => {
+                    const idx = e.currentTarget.dataset.idx;
+                    leads[idx].status = e.target.value;
+                    localStorage.setItem(STORAGE.leads, JSON.stringify(leads));
+                });
+            });
+            document.querySelectorAll('.delete-lead').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = e.currentTarget.dataset.idx;
+                    if (confirm('Удалить заявку?')) {
+                        leads.splice(idx, 1);
+                        localStorage.setItem(STORAGE.leads, JSON.stringify(leads));
+                        renderLeads();
+                    }
+                });
+            });
+        }
+        const statsHtml = `
+            <div class="stat-card"><div class="stat-number">${leads.length}</div><div>Всего заявок</div></div>
+            <div class="stat-card"><div class="stat-number">${leads.filter(l => l.status === 'новый').length}</div><div>Новых</div></div>
+        `;
+        document.getElementById('leadsStats').innerHTML = statsHtml;
+    }
+
+    function exportLeadsCSV() {
+        const leads = getData(STORAGE.leads);
+        const csvRows = [['Имя', 'Email', 'Телефон', 'Тип', 'Сообщение', 'Дата', 'Статус']];
+        leads.forEach(l => {
+            csvRows.push([l.name, l.email, l.phone || '', l.type, l.message, l.timestamp, l.status]);
+        });
+        const csv = csvRows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+        downloadFile('leads.csv', csv);
+    }
+
+    function clearLeads() {
+        if (confirm('Удалить все заявки?')) {
+            localStorage.setItem(STORAGE.leads, JSON.stringify([]));
+            renderLeads();
         }
     }
 
@@ -836,6 +937,9 @@
         document.getElementById('exportSubscribersJsonBtn')?.addEventListener('click', exportSubscribersJSON);
         document.getElementById('importSubscribersFile')?.addEventListener('change', (e) => { if(e.target.files.length) importSubscribers(e.target.files[0]); e.target.value = ''; });
         document.getElementById('clearSubscribersBtn')?.addEventListener('click', clearSubscribers);
+        // Заявки
+        document.getElementById('exportLeadsBtn')?.addEventListener('click', exportLeadsCSV);
+        document.getElementById('clearLeadsBtn')?.addEventListener('click', clearLeads);
         // MAX каналы
         document.getElementById('addMaxChannelBtn')?.addEventListener('click', addMaxChannel);
         document.getElementById('exportMaxChannelsBtn')?.addEventListener('click', exportMaxChannelsCSV);
@@ -894,7 +998,7 @@
     setupCsvImport('yandexCsvDrop', 'yandexCsvFile', processYandexCSV);
     setupCsvImport('googleCsvDrop', 'googleCsvFile', processGoogleCSV);
 
-    // ==================== Telegram ====================
+    // ==================== Telegram (опционально) ====================
     async function sendTelegramMessage(text) {
         const botData = JSON.parse(localStorage.getItem(STORAGE.telegramBot) || '{}');
         if(!botData.token || !botData.chatId) return false;
