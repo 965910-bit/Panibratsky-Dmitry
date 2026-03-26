@@ -38,6 +38,7 @@
             margin: 0 auto;
             padding: 0 20px;
         }
+        /* Header */
         header {
             background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -105,6 +106,8 @@
                 display: block;
             }
         }
+
+        /* Hero */
         .page-hero {
             background: linear-gradient(135deg, #f8fafc, #ffffff);
             padding: 120px 0 60px;
@@ -120,6 +123,8 @@
             max-width: 700px;
             margin: 0 auto;
         }
+
+        /* Contact layout */
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -207,6 +212,8 @@
         }
         .success { color: #10b981; }
         .error { color: #dc2626; }
+
+        /* Footer */
         footer {
             background: var(--primary-dark);
             color: white;
@@ -259,6 +266,7 @@
             color: rgba(255,255,255,0.6);
             font-size: 13px;
         }
+
         @media (max-width: 768px) {
             .contact-grid {
                 grid-template-columns: 1fr;
@@ -296,6 +304,7 @@
 
     <div class="container">
         <div class="contact-grid">
+            <!-- Контактная информация -->
             <div class="contact-info">
                 <h2>Контакты</h2>
                 <div class="contact-detail">
@@ -328,6 +337,7 @@
                 </div>
             </div>
 
+            <!-- Форма заявки на сотрудничество (русские типы) -->
             <div class="contact-form">
                 <h2>🤝 Заявка на сотрудничество</h2>
                 <p>Оставьте заявку, и я свяжусь с вами в ближайшее время.</p>
@@ -408,6 +418,7 @@
 
     <script src="js/subscribe.js"></script>
     <script>
+        // ==================== Обработка заявок (русский тип) ====================
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzYy1VSd7mK-l90BJ7Rb2I3D6EGqz3dQPtwi6Tjb7ERDsGMictAwCPP_QgJs1vaT1NI/exec';
 
         document.getElementById('leadForm').addEventListener('submit', async (e) => {
@@ -420,9 +431,7 @@
             const statusDiv = document.getElementById('status');
 
             if (!name || !email || !message) {
-                statusDiv.innerHTML = 'Заполните обязательные поля';
-                statusDiv.className = 'status error';
-                setTimeout(() => { statusDiv.innerHTML = ''; }, 5000);
+                showStatus('Заполните обязательные поля', 'error', statusDiv);
                 return;
             }
 
@@ -444,17 +453,21 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-                statusDiv.innerHTML = '✅ Заявка отправлена. Я свяжусь с вами!';
-                statusDiv.className = 'status success';
+                showStatus('✅ Заявка отправлена. Я свяжусь с вами!', 'success', statusDiv);
                 document.getElementById('leadForm').reset();
             } catch (err) {
                 console.error(err);
-                statusDiv.innerHTML = '❌ Ошибка отправки. Попробуйте позже.';
-                statusDiv.className = 'status error';
+                showStatus('❌ Ошибка отправки. Попробуйте позже.', 'error', statusDiv);
             }
-            setTimeout(() => { statusDiv.innerHTML = ''; }, 5000);
         });
 
+        function showStatus(msg, type, el) {
+            el.innerHTML = msg;
+            el.className = `status ${type}`;
+            setTimeout(() => { el.innerHTML = ''; }, 5000);
+        }
+
+        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
