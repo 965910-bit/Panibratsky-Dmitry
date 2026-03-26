@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        /* Все стили остаются как в предыдущей версии – я их не меняю */
+        /* Все стили остаются без изменений (как в предыдущей полной версии) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -293,7 +293,7 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-search"></i> Мета-теги страниц</div>
                 <table id="seoTable"><thead>   \\
-<th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th> </thead><tbody></tbody>  </table>
+<th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th> </thead><tbody></tbody>   </table>
                 <div class="flex-between"><button id="addPageBtn">+ Добавить страницу</button><button id="checkSeoBtn" class="secondary">Проверить SEO</button></div>
                 <div id="seoChecklist" style="margin-top: 20px; display: none;"></div>
             </div>
@@ -334,7 +334,7 @@
                 <div class="card-title"><i class="fas fa-chart-line"></i> Анализ конкурентов</div>
                 <div class="flex-between"><input type="text" id="competitorUrl" placeholder="URL конкурента"><button id="addCompetitorBtn">Добавить</button></div>
                 <table id="competitorsTable"><thead>   \\
-<th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th> </thead><tbody></tbody>  </table>
+<th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th> </thead><tbody></tbody>   </table>
             </div>
         </div>
 
@@ -789,7 +789,7 @@
         }
     }
 
-    // ==================== MAX каналы и подписчики (сокращённо) ====================
+    // ==================== MAX каналы и подписчики ====================
     function renderMaxChannels() {
         const channels = getData(STORAGE.maxChannels);
         const container = document.getElementById('maxChannelsList');
@@ -1155,8 +1155,40 @@
         dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.style.borderColor = '#cbd5e1'; const file = e.dataTransfer.files[0]; if(file && file.name.endsWith('.csv')) processor(file); else alert('Пожалуйста, загрузите CSV файл'); });
         fileInput.addEventListener('change', e => { if(e.target.files[0]) processor(e.target.files[0]); });
     }
-    function processYandexCSV(file) { ... } // оставляем как было
-    function processGoogleCSV(file) { ... } // оставляем как было
+    function processYandexCSV(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const text = e.target.result; const rows = text.split('\n').map(r => r.split(',')); if(rows.length<2){ alert('Некорректный CSV'); return; }
+            const headers = rows[0].map(h => h.replace(/"/g,'').trim()); const dataRows = rows.slice(1).filter(r => r.length >= headers.length);
+            const impressionsIdx = headers.findIndex(h => h.toLowerCase().includes('показ')); const clicksIdx = headers.findIndex(h => h.toLowerCase().includes('клик'));
+            if(impressionsIdx===-1 || clicksIdx===-1){ alert('CSV не содержит нужных колонок (показы, клики)'); return; }
+            let totalImpressions=0, totalClicks=0, totalCTR=0, totalPosition=0; const ctrIdx = headers.findIndex(h => h.toLowerCase().includes('ctr')); const positionIdx = headers.findIndex(h => h.toLowerCase().includes('позиц'));
+            dataRows.forEach(row => { totalImpressions += parseInt(row[impressionsIdx]||0); totalClicks += parseInt(row[clicksIdx]||0); if(ctrIdx!==-1) totalCTR += parseFloat(row[ctrIdx]||0); if(positionIdx!==-1) totalPosition += parseFloat(row[positionIdx]||0); });
+            const avgCTR = totalCTR/(dataRows.length||1); const avgPosition = totalPosition/(dataRows.length||1);
+            document.getElementById('yandexMetrics').innerHTML = `<div class="stat-card"><div class="stat-number">${totalImpressions}</div><div>Показов</div></div><div class="stat-card"><div class="stat-number">${totalClicks}</div><div>Кликов</div></div><div class="stat-card"><div class="stat-number">${avgCTR.toFixed(2)}%</div><div>Средний CTR</div></div><div class="stat-card"><div class="stat-number">${avgPosition.toFixed(1)}</div><div>Средняя позиция</div></div>`;
+            const dates = dataRows.map(r => r[0]?.slice(0,10)); const impressionsData = dataRows.map(r => parseInt(r[impressionsIdx]||0));
+            const ctx = document.getElementById('yandexChart').getContext('2d'); if(yandexChart) yandexChart.destroy(); yandexChart = new Chart(ctx, { type:'line', data:{ labels:dates, datasets:[{ label:'Показы', data:impressionsData, borderColor:'#1e40af' }] }, options:{ responsive:true } });
+            document.getElementById('yandexStats').style.display = 'block';
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
+    function processGoogleCSV(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const text = e.target.result; const rows = text.split('\n').map(r => r.split(',')); if(rows.length<2){ alert('Некорректный CSV'); return; }
+            const headers = rows[0].map(h => h.replace(/"/g,'').trim()); const dataRows = rows.slice(1).filter(r => r.length >= headers.length);
+            const impressionsIdx = headers.findIndex(h => h.toLowerCase().includes('impression')); const clicksIdx = headers.findIndex(h => h.toLowerCase().includes('click'));
+            if(impressionsIdx===-1 || clicksIdx===-1){ alert('CSV не содержит нужных колонок (impressions, clicks)'); return; }
+            let totalImpressions=0, totalClicks=0, totalCTR=0, totalPosition=0; const ctrIdx = headers.findIndex(h => h.toLowerCase().includes('ctr')); const positionIdx = headers.findIndex(h => h.toLowerCase().includes('position'));
+            dataRows.forEach(row => { totalImpressions += parseInt(row[impressionsIdx]||0); totalClicks += parseInt(row[clicksIdx]||0); if(ctrIdx!==-1) totalCTR += parseFloat(row[ctrIdx]||0); if(positionIdx!==-1) totalPosition += parseFloat(row[positionIdx]||0); });
+            const avgCTR = totalCTR/(dataRows.length||1); const avgPosition = totalPosition/(dataRows.length||1);
+            document.getElementById('googleMetrics').innerHTML = `<div class="stat-card"><div class="stat-number">${totalImpressions}</div><div>Показов</div></div><div class="stat-card"><div class="stat-number">${totalClicks}</div><div>Кликов</div></div><div class="stat-card"><div class="stat-number">${avgCTR.toFixed(2)}%</div><div>Средний CTR</div></div><div class="stat-card"><div class="stat-number">${avgPosition.toFixed(1)}</div><div>Средняя позиция</div></div>`;
+            const dates = dataRows.map(r => r[0]?.slice(0,10)); const impressionsData = dataRows.map(r => parseInt(r[impressionsIdx]||0));
+            const ctx = document.getElementById('googleChart').getContext('2d'); if(googleChart) googleChart.destroy(); googleChart = new Chart(ctx, { type:'line', data:{ labels:dates, datasets:[{ label:'Показы', data:impressionsData, borderColor:'#ea4335' }] }, options:{ responsive:true } });
+            document.getElementById('googleStats').style.display = 'block';
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
     setupCsvImport('yandexCsvDrop', 'yandexCsvFile', processYandexCSV);
     setupCsvImport('googleCsvDrop', 'googleCsvFile', processGoogleCSV);
 
