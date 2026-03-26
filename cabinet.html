@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
+        /* Все стили остаются без изменений (как в предыдущей версии) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -266,8 +267,7 @@
         <div id="seo" class="tab-pane active">
             <div class="card">
                 <div class="card-title"><i class="fas fa-search"></i> Мета-теги страниц</div>
-                <table id="seoTable"><thead>   \\
-<th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th> </thead><tbody></tbody> </table>
+                <table id="seoTable"><thead> <tr><th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th></tr> </thead><tbody></tbody> </table>
                 <div class="flex-between"><button id="addPageBtn">+ Добавить страницу</button><button id="checkSeoBtn" class="secondary">Проверить SEO</button></div>
                 <div id="seoChecklist" style="margin-top: 20px; display: none;"></div>
             </div>
@@ -307,7 +307,7 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-chart-line"></i> Анализ конкурентов</div>
                 <div class="flex-between"><input type="text" id="competitorUrl" placeholder="URL конкурента"><button id="addCompetitorBtn">Добавить</button></div>
-                <table id="competitorsTable"><thead><tr><th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th></tr></thead><tbody></tbody></table>
+                <table id="competitorsTable"><thead> <tr><th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th></tr> </thead><tbody></tbody> </table>
             </div>
         </div>
 
@@ -380,6 +380,7 @@
 
 <script>
     const PASSWORD = "admin";
+    const BACKEND_URL = 'https://script.google.com/macros/s/ВАШ_ИДЕНТИФИКАТОР/exec'; // ⚠️ Замените на свой URL
     const STORAGE = {
         seoPages: 'promo_seoPages',
         competitors: 'promo_competitors',
@@ -402,6 +403,7 @@
         renderCompetitors();
         renderEvents();
         renderSubscribers();
+        syncSubscribersFromBackend(); // Загружаем из Google Sheets и синхронизируем
         renderMaxChannels();
         renderMaxSubscribers();
         bindButtons();
@@ -527,7 +529,27 @@
         });
     }
 
-    // ==================== Email подписчики (исправленная версия) ====================
+    // ==================== Email подписчики (с синхронизацией с бэкендом) ====================
+    async function syncSubscribersFromBackend() {
+        try {
+            const response = await fetch(BACKEND_URL);
+            if (!response.ok) throw new Error('HTTP error');
+            const data = await response.json();
+            if (Array.isArray(data)) {
+                const subscribers = data.map(row => ({
+                    email: row.email,
+                    timestamp: row.timestamp,
+                    source: row.source || 'backend'
+                }));
+                localStorage.setItem(STORAGE.subscribers, JSON.stringify(subscribers));
+                renderSubscribers();
+                console.log(`Загружено ${subscribers.length} подписчиков из Google Sheets`);
+            }
+        } catch (err) {
+            console.error('Ошибка загрузки подписчиков с бэкенда:', err);
+        }
+    }
+
     function renderSubscribers() {
         const subscribers = getData(STORAGE.subscribers);
         const container = document.getElementById('subscribersList');
