@@ -38,7 +38,6 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-        /* Header */
         header {
             background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -107,7 +106,6 @@
             }
         }
 
-        /* Hero */
         .page-hero {
             background: linear-gradient(135deg, #f8fafc, #ffffff);
             padding: 120px 0 60px;
@@ -124,7 +122,6 @@
             margin: 0 auto;
         }
 
-        /* Contact layout */
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -213,7 +210,6 @@
         .success { color: #10b981; }
         .error { color: #dc2626; }
 
-        /* Footer */
         footer {
             background: var(--primary-dark);
             color: white;
@@ -304,7 +300,6 @@
 
     <div class="container">
         <div class="contact-grid">
-            <!-- Контактная информация -->
             <div class="contact-info">
                 <h2>Контакты</h2>
                 <div class="contact-detail">
@@ -337,7 +332,6 @@
                 </div>
             </div>
 
-            <!-- Форма заявки на сотрудничество (русские типы) -->
             <div class="contact-form">
                 <h2>🤝 Заявка на сотрудничество</h2>
                 <p>Оставьте заявку, и я свяжусь с вами в ближайшее время.</p>
@@ -418,7 +412,6 @@
 
     <script src="js/subscribe.js"></script>
     <script>
-        // ==================== Обработка заявок (русский тип) ====================
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzYy1VSd7mK-l90BJ7Rb2I3D6EGqz3dQPtwi6Tjb7ERDsGMictAwCPP_QgJs1vaT1NI/exec';
 
         document.getElementById('leadForm').addEventListener('submit', async (e) => {
@@ -467,7 +460,6 @@
             setTimeout(() => { el.innerHTML = ''; }, 5000);
         }
 
-        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
