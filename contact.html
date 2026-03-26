@@ -407,70 +407,113 @@
         </div>
     </footer>
 
-    <script src="js/subscribe.js"></script>
     <script>
-        // Используем тот же URL, что и в cabinet.html (новый v3)
+        // ==================== ЕДИНСТВЕННОЕ ОБЪЯВЛЕНИЕ BACKEND_URL ====================
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxuYKb225VXL6q28tmnngM9YqSzTyivPjt0A6awgbKmzJanXrpiutlGSFMUmL7H8G_qSaw/exec';
 
-        document.getElementById('leadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const type = document.getElementById('type').value;
-            const message = document.getElementById('message').value.trim();
-            const statusDiv = document.getElementById('status');
-            const submitBtn = document.getElementById('submitBtn');
-
-            if (!name || !email || !message) {
-                showStatus('Заполните обязательные поля', 'error', statusDiv);
-                return;
-            }
-
-            const data = {
-                type: 'lead',
-                name: name,
-                email: email,
-                phone: phone,
-                requestType: type,
-                message: message,
-                timestamp: new Date().toISOString(),
-                status: 'новый'
-            };
-
-            showStatus('⏳ Отправка...', 'sending', statusDiv);
-            submitBtn.disabled = true;
-
-            try {
-                await fetch(BACKEND_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                showStatus('✅ Заявка отправлена. Я свяжусь с вами!', 'success', statusDiv);
-                document.getElementById('leadForm').reset();
-            } catch (err) {
-                console.error(err);
-                showStatus('❌ Ошибка отправки. Попробуйте позже.', 'error', statusDiv);
-            } finally {
-                submitBtn.disabled = false;
-                setTimeout(() => {
-                    if (statusDiv.innerHTML === '⏳ Отправка...') statusDiv.innerHTML = '';
-                }, 5000);
-            }
-        });
-
-        function showStatus(msg, type, el) {
-            el.innerHTML = msg;
-            el.className = `status ${type}`;
-            if (type !== 'sending') {
-                setTimeout(() => {
-                    if (el.innerHTML === msg) el.innerHTML = '';
-                }, 5000);
-            }
+        // Обработка подписки (если форма существует)
+        const subscribeForm = document.getElementById('subscribeForm');
+        const subscribeStatus = document.getElementById('subscribeStatus');
+        if (subscribeForm) {
+            subscribeForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('subscribeEmail').value.trim();
+                const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    if (subscribeStatus) subscribeStatus.innerHTML = '❌ Введите корректный email';
+                    return;
+                }
+                let subscribers = JSON.parse(localStorage.getItem('subscribers') || '[]');
+                if (subscribers.some(s => s.email === email)) {
+                    if (subscribeStatus) subscribeStatus.innerHTML = '✅ Вы уже подписаны!';
+                    return;
+                }
+                const newSubscriber = {
+                    type: 'subscriber',
+                    email: email,
+                    timestamp: new Date().toISOString(),
+                    source: 'footer'
+                };
+                subscribers.push(newSubscriber);
+                localStorage.setItem('subscribers', JSON.stringify(subscribers));
+                try {
+                    await fetch(BACKEND_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newSubscriber)
+                    });
+                    if (subscribeStatus) subscribeStatus.innerHTML = '✅ Подписка оформлена!';
+                    document.getElementById('subscribeEmail').value = '';
+                } catch (err) {
+                    console.error(err);
+                    if (subscribeStatus) subscribeStatus.innerHTML = '❌ Ошибка подписки';
+                }
+                setTimeout(() => { if (subscribeStatus) subscribeStatus.innerHTML = ''; }, 4000);
+            });
         }
 
+        // Обработка заявки
+        const leadForm = document.getElementById('leadForm');
+        if (leadForm) {
+            leadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const type = document.getElementById('type').value;
+                const message = document.getElementById('message').value.trim();
+                const statusDiv = document.getElementById('status');
+                const submitBtn = document.getElementById('submitBtn');
+
+                if (!name || !email || !message) {
+                    if (statusDiv) statusDiv.innerHTML = 'Заполните обязательные поля';
+                    return;
+                }
+
+                const data = {
+                    type: 'lead',
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    requestType: type,
+                    message: message,
+                    timestamp: new Date().toISOString(),
+                    status: 'новый'
+                };
+
+                if (statusDiv) {
+                    statusDiv.innerHTML = '⏳ Отправка...';
+                    statusDiv.className = 'status sending';
+                }
+                if (submitBtn) submitBtn.disabled = true;
+
+                try {
+                    await fetch(BACKEND_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    if (statusDiv) {
+                        statusDiv.innerHTML = '✅ Заявка отправлена. Я свяжусь с вами!';
+                        statusDiv.className = 'status success';
+                    }
+                    leadForm.reset();
+                } catch (err) {
+                    console.error(err);
+                    if (statusDiv) {
+                        statusDiv.innerHTML = '❌ Ошибка отправки. Попробуйте позже.';
+                        statusDiv.className = 'status error';
+                    }
+                } finally {
+                    if (submitBtn) submitBtn.disabled = false;
+                    setTimeout(() => { if (statusDiv && statusDiv.innerHTML !== '⏳ Отправка...') statusDiv.innerHTML = ''; }, 5000);
+                }
+            });
+        }
+
+        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
