@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        /* Все стили остаются как в предыдущей версии – я их не меняю */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -311,7 +310,7 @@
             <div class="card">
                 <div class="card-title"><i class="fas fa-search"></i> Мета-теги страниц</div>
                 <table id="seoTable"><thead>   \\
-<th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th> </thead><tbody></tbody>   </table>
+<th>Страница</th><th>Title</th><th>Description</th><th>Длина</th><th></th> </thead><tbody></tbody>    </table>
                 <div class="flex-between"><button id="addPageBtn">+ Добавить страницу</button><button id="checkSeoBtn" class="secondary">Проверить SEO</button></div>
                 <div id="seoChecklist" style="margin-top: 20px; display: none;"></div>
             </div>
@@ -352,7 +351,7 @@
                 <div class="card-title"><i class="fas fa-chart-line"></i> Анализ конкурентов</div>
                 <div class="flex-between"><input type="text" id="competitorUrl" placeholder="URL конкурента"><button id="addCompetitorBtn">Добавить</button></div>
                 <table id="competitorsTable"><thead>   \\
-<th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th> </thead><tbody></tbody>   </table>
+<th>URL</th><th>Заголовок</th><th>Описание</th><th>Ключевые слова</th><th></th> </thead><tbody></tbody>    </table>
             </div>
         </div>
 
@@ -448,8 +447,14 @@
         <div id="market-analytics" class="tab-pane">
             <div class="card">
                 <div class="card-title"><i class="fas fa-chart-line"></i> Аналитика рынка труда в логистике и SCM</div>
-                <p>Данные собраны с hh.ru, обновляются еженедельно.</p>
-                <div id="analyticsDate" style="font-size: 12px; color: #64748b; margin-bottom: 20px;"></div>
+                <p>Данные собраны с hh.ru, обновляются каждые 6 часов.</p>
+                <div class="flex-between">
+                    <div>
+                        <label for="roleSelect">Выберите роль:</label>
+                        <select id="roleSelect" style="width:200px;"></select>
+                    </div>
+                    <div id="analyticsDate" style="font-size:12px; color:#64748b;"></div>
+                </div>
                 <div class="stats-grid" id="analyticsStats"></div>
                 <div class="chart-card"><h3>🏆 Топ-10 требуемых навыков</h3><canvas id="skillsChart"></canvas></div>
                 <div class="chart-card"><h3>💰 Средняя зарплата по регионам</h3><canvas id="salaryByRegionChart"></canvas></div>
@@ -487,6 +492,7 @@
     let loggedIn = false;
     let yandexChart, googleChart;
     let skillsChart, salaryByRegionChart, timelineChart, experienceChart;
+    let currentAnalyticsData = null;
 
     // ==================== Общие вспомогательные ====================
     function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
@@ -520,7 +526,6 @@
         document.getElementById('testTelegramNotify').onclick = () => { sendTelegramMessage('Тестовое уведомление из кабинета').then(ok => { document.getElementById('telegramNotifyStatus').innerHTML = ok ? '✅ Отправлено' : '❌ Ошибка'; setTimeout(()=>document.getElementById('telegramNotifyStatus').innerHTML='',3000); }); };
         document.getElementById('sendTelegramBtn').onclick = () => { let token = document.getElementById('botToken').value; let chatId = document.getElementById('chatId').value; if(token && chatId) { localStorage.setItem(STORAGE.telegramBot, JSON.stringify({ token, chatId })); sendTelegramMessage('Тестовое сообщение').then(ok => { document.getElementById('telegramStatus').innerHTML = ok ? '✅ Отправлено' : '❌ Ошибка'; setTimeout(()=>document.getElementById('telegramStatus').innerHTML='',3000); }); } };
         document.getElementById('notifyNewSubscriber').addEventListener('change', e => localStorage.setItem('notifyNewSubscriber', e.target.checked));
-        // Загружаем аналитику при открытии вкладки
         loadMarketAnalytics();
     }
 
@@ -1242,16 +1247,24 @@
             const response = await fetch('/Panibratsky-Dmitry/data/hh_analytics.json');
             if (!response.ok) throw new Error('Файл не найден');
             const data = await response.json();
-            displayMarketAnalytics(data);
+            currentAnalyticsData = data;
+            document.getElementById('analyticsDate').innerHTML = `<i class="fas fa-calendar-alt"></i> Обновлено: ${new Date(data.updated_at).toLocaleString()}`;
+            const select = document.getElementById('roleSelect');
+            select.innerHTML = '<option value="overall">Общая статистика</option>' + Object.keys(data.roles).map(role => `<option value="${role}">${role}</option>`).join('');
+            select.value = 'overall';
+            select.addEventListener('change', () => displayRoleAnalytics(select.value));
+            displayRoleAnalytics('overall');
         } catch (err) {
             console.error('Ошибка загрузки аналитики:', err);
             document.getElementById('analyticsDate').innerHTML = '<span style="color:red;">Данные ещё не собраны. Подождите, пока скрипт hh_analytics.py выполнится.</span>';
         }
     }
 
-    function displayMarketAnalytics(data) {
-        document.getElementById('analyticsDate').innerHTML = `<i class="fas fa-calendar-alt"></i> Обновлено: ${new Date(data.updated_at).toLocaleString()}`;
-        // Статистика
+    function displayRoleAnalytics(roleKey) {
+        if (!currentAnalyticsData) return;
+        const data = roleKey === 'overall' ? currentAnalyticsData.overall : currentAnalyticsData.roles[roleKey];
+        if (!data) return;
+
         const statsHtml = `
             <div class="stat-card"><div class="stat-number">${data.total_vacancies}</div><div>Всего вакансий</div></div>
             <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.avg / 1000)} тыс.</div><div>Средняя зарплата (руб)</div></div>
@@ -1260,7 +1273,6 @@
         `;
         document.getElementById('analyticsStats').innerHTML = statsHtml;
 
-        // График навыков
         const skillsLabels = data.top_skills.map(s => s.skill);
         const skillsCounts = data.top_skills.map(s => s.count);
         if (skillsChart) skillsChart.destroy();
@@ -1271,8 +1283,7 @@
             options: { responsive: true, maintainAspectRatio: true }
         });
 
-        // График зарплат по регионам
-        const regions = Object.keys(data.avg_salary_by_region).slice(0, 8);
+        const regions = Object.keys(data.avg_salary_by_region);
         const salaries = regions.map(r => data.avg_salary_by_region[r]);
         if (salaryByRegionChart) salaryByRegionChart.destroy();
         const regionCtx = document.getElementById('salaryByRegionChart').getContext('2d');
@@ -1282,7 +1293,6 @@
             options: { responsive: true, maintainAspectRatio: true }
         });
 
-        // Динамика вакансий
         const timelineLabels = data.timeline.map(t => t.date);
         const timelineCounts = data.timeline.map(t => t.count);
         if (timelineChart) timelineChart.destroy();
@@ -1293,17 +1303,14 @@
             options: { responsive: true, maintainAspectRatio: true }
         });
 
-        // Опыт
-        const expLabels = data.experience_distribution.map(e => {
-            const map = {
-                'no_experience': 'Без опыта',
-                'between_1_and_3': '1-3 года',
-                'between_3_and_6': '3-6 лет',
-                'more_than_6': 'Более 6 лет',
-                'unknown': 'Не указан'
-            };
-            return map[e.experience] || e.experience;
-        });
+        const expMap = {
+            'no_experience': 'Без опыта',
+            'between_1_and_3': '1-3 года',
+            'between_3_and_6': '3-6 лет',
+            'more_than_6': 'Более 6 лет',
+            'unknown': 'Не указан'
+        };
+        const expLabels = data.experience_distribution.map(e => expMap[e.experience] || e.experience);
         const expCounts = data.experience_distribution.map(e => e.count);
         if (experienceChart) experienceChart.destroy();
         const expCtx = document.getElementById('experienceChart').getContext('2d');
