@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дмитрий Панибратский | Экспертиза в SCM</title>
-    <meta name="description" content="Методологии и инструменты управления цепями поставок: Lean, ABC-XYZ анализ, цифровая трансформация, внедрение AI, WMS/TMS. Кейсы оптимизации склада, транспортной логистики и предиктивной аналитики.">
+    <title>Методологии SCM, инструменты логистики, цифровая трансформация | Дмитрий Панибратский</title>
+    <meta name="description" content="Экспертиза в управлении цепями поставок (SCM): методологии Lean, ABC-XYZ, BPM, инструменты цифровой трансформации, реальные кейсы и результаты.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="/1favicon.ico" type="image/x-icon">
@@ -12,63 +12,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Яндекс.Метрика -->
-    <script type="text/javascript" >
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-        ym(105620027, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-        });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-C5X9R6HPQY');
-    </script>
     <style>
-        :root {
-            --primary-dark: #0f172a;
-            --primary-blue: #1e40af;
-            --primary-light: #3b82f6;
-            --accent-gold: #d4af37;
-            --accent-steel: #475569;
-            --neutral-dark: #1e293b;
-            --neutral-medium: #64748b;
-            --neutral-light: #f1f5f9;
-            --success-color: #10b981;
-            --border-radius-sm: 4px;
-            --border-radius: 8px;
-            --border-radius-lg: 12px;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Inter', sans-serif;
+            color: #0f172a;
+            background: #ffffff;
             line-height: 1.5;
-            color: var(--neutral-dark);
-            background-color: #ffffff;
-            font-weight: 400;
-            overflow-x: hidden;
         }
         .container {
-            width: 100%;
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 20px;
@@ -76,13 +32,11 @@
         header {
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            border-bottom: 1px solid #e2e8f0;
             position: fixed;
             top: 0;
-            left: 0;
             width: 100%;
             z-index: 1000;
-            transition: var(--transition);
         }
         .nav-container {
             display: flex;
@@ -93,58 +47,34 @@
         .logo {
             font-size: 20px;
             font-weight: 700;
-            color: var(--primary-dark);
+            color: #0f172a;
             text-decoration: none;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
         }
         .logo-dot {
-            color: var(--accent-gold);
-            margin: 0 2px;
+            color: #d4af37;
         }
         nav ul {
             display: flex;
             list-style: none;
-            transition: var(--transition);
-        }
-        nav ul li {
-            margin-left: 32px;
+            gap: 32px;
         }
         nav ul li a {
             text-decoration: none;
-            color: var(--neutral-medium);
+            color: #64748b;
             font-weight: 500;
             font-size: 14px;
-            transition: var(--transition);
-            padding: 6px 0;
-            position: relative;
-            letter-spacing: 0.2px;
+            transition: color 0.2s;
         }
-        nav ul li a:hover {
-            color: var(--primary-blue);
-        }
+        nav ul li a:hover,
         nav ul li a.active {
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-        nav ul li a.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--accent-gold);
+            color: #1e40af;
         }
         .mobile-menu-btn {
             display: none;
             background: none;
             border: none;
             font-size: 22px;
-            color: var(--primary-dark);
             cursor: pointer;
-            padding: 5px;
         }
         @media (max-width: 768px) {
             nav ul {
@@ -156,475 +86,133 @@
                 background: white;
                 padding: 16px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                z-index: 1000;
                 flex-direction: column;
+                gap: 12px;
             }
             nav ul.active {
                 display: flex;
-            }
-            nav ul li {
-                margin: 0 0 12px 0;
             }
             .mobile-menu-btn {
                 display: block;
             }
         }
-        .hero-expertise {
-            padding: 130px 0 80px;
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-expertise::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 40%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(30, 64, 175, 0) 100%);
-            z-index: 0;
-        }
-        .expertise-container {
-            display: flex;
-            align-items: center;
-            gap: 60px;
-            position: relative;
-            z-index: 1;
-        }
-        .expertise-content {
-            flex: 1;
-        }
-        .expertise-image {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            position: relative;
-        }
-        .profile-photo {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            z-index: 2;
-        }
-        .photo-frame {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-gold);
-            transform: rotate(45deg);
-            z-index: 1;
-            top: 0;
-        }
-        .expertise-tag {
-            display: inline-block;
-            background-color: var(--primary-blue);
-            color: white;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 5px 12px;
-            border-radius: 20px;
-            letter-spacing: 0.8px;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-        }
-        h1 {
-            font-size: clamp(32px, 5vw, 44px);
-            line-height: 1.1;
-            margin-bottom: 20px;
-            color: var(--primary-dark);
-            font-weight: 700;
-            letter-spacing: -0.8px;
-        }
-        .hero-subtitle {
-            font-size: 18px;
-            color: var(--neutral-medium);
-            margin-bottom: 24px;
-            font-weight: 400;
-            max-width: 600px;
-        }
-        .expertise-quote {
-            font-size: 16px;
-            font-style: italic;
-            color: var(--accent-steel);
-            margin-top: 20px;
-            line-height: 1.6;
-            border-left: 3px solid var(--accent-gold);
-            padding-left: 15px;
-            max-width: 800px;
-        }
-        .tag {
-            display: inline-block;
-            background-color: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            padding: 6px 12px;
-            border-radius: 16px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-size: 12px;
-            font-weight: 500;
-            border: 1px solid rgba(30, 64, 175, 0.2);
-        }
-        .section-header {
+        .page-header {
+            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            padding: 120px 0 40px;
             text-align: center;
-            margin-bottom: 50px;
         }
-        .section-title {
-            font-size: clamp(28px, 4vw, 34px);
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
         }
-        .section-subtitle {
-            font-size: 16px;
-            color: var(--neutral-medium);
+        .page-header p {
+            color: #64748b;
             max-width: 700px;
             margin: 0 auto;
-            line-height: 1.5;
         }
-        .methodologies-section {
-            padding: 80px 0;
-            background-color: white;
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
         }
-        .methodologies-grid {
+        .methodology-grid, .tools-grid, .process-grid, .cases-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
-            margin-top: 40px;
+            margin-bottom: 50px;
         }
-        .methodology-card {
+        .methodology-card, .tools-card, .process-card, .case-card {
             background: white;
-            border-radius: var(--border-radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border-top: 4px solid var(--primary-blue);
-            position: relative;
-            overflow: hidden;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s;
         }
-        .methodology-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
+        .methodology-card:hover, .tools-card:hover, .process-card:hover, .case-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
         }
-        .methodology-card:nth-child(2) {
-            border-top-color: var(--accent-gold);
+        .methodology-card h3, .tools-card h3, .process-card h3, .case-card h3 {
+            font-size: 22px;
+            margin-bottom: 16px;
+            color: #1e40af;
         }
-        .methodology-card:nth-child(3) {
-            border-top-color: var(--success-color);
+        .methodology-card ul, .tools-card ul, .case-card ul {
+            padding-left: 20px;
+            margin-top: 10px;
         }
-        .methodology-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
+        .methodology-card li, .tools-card li, .case-card li {
+            margin-bottom: 8px;
+        }
+        .tools-category {
+            margin-bottom: 24px;
+        }
+        .tools-category h4 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+        .process-step {
+            text-align: center;
+        }
+        .process-step .step-number {
+            width: 50px;
+            height: 50px;
+            background: #1e40af;
+            color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            margin-bottom: 20px;
-        }
-        .methodology-card:nth-child(2) .methodology-icon {
-            background: rgba(212, 175, 55, 0.1);
-            color: var(--accent-gold);
-        }
-        .methodology-card:nth-child(3) .methodology-icon {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success-color);
-        }
-        .methodology-title {
-            font-size: 20px;
-            color: var(--primary-dark);
-            margin-bottom: 15px;
             font-weight: 700;
+            margin: 0 auto 16px;
         }
-        .methodology-description {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        .methodology-features {
-            list-style: none;
+        .result-stats {
+            display: flex;
+            justify-content: space-between;
             margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
         }
-        .methodology-features li {
-            margin-bottom: 10px;
-            padding-left: 24px;
-            position: relative;
-            font-size: 14px;
-            color: var(--neutral-medium);
-        }
-        .methodology-features li:before {
-            content: '•';
-            color: var(--primary-blue);
-            font-size: 18px;
-            position: absolute;
-            left: 0;
-        }
-        .tools-section {
-            padding: 80px 0;
-            background-color: var(--neutral-light);
-        }
-        .tools-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        .tool-category {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        .tool-category:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-        .category-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(30, 64, 175, 0.1);
-        }
-        .category-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            margin-right: 15px;
-        }
-        .category-title {
-            font-size: 18px;
-            color: var(--primary-dark);
-            font-weight: 700;
-        }
-        .tools-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .tool-tag {
-            display: inline-flex;
-            align-items: center;
-            background-color: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-        .tool-tag:hover {
-            background-color: rgba(30, 64, 175, 0.2);
-            transform: translateY(-2px);
-        }
-        .tool-tag i {
-            margin-right: 8px;
-            font-size: 12px;
-        }
-        .process-section {
-            padding: 80px 0;
-            background-color: white;
-        }
-        .process-steps {
-            max-width: 900px;
-            margin: 50px auto 0;
-            position: relative;
-        }
-        .process-step {
-            display: flex;
-            margin-bottom: 40px;
-            position: relative;
-        }
-        .process-step:last-child {
-            margin-bottom: 0;
-        }
-        .step-number {
-            min-width: 50px;
-            height: 50px;
-            background: var(--primary-blue);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 700;
-            margin-right: 20px;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 2;
-        }
-        .step-content {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
-            flex-grow: 1;
-            border-left: 4px solid var(--accent-gold);
-        }
-        .step-title {
-            font-size: 18px;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        .step-description {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            line-height: 1.6;
-        }
-        .academy-short {
-            padding: 70px 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-        }
-        .academy-short .cta-button {
-            display: inline-block;
-            padding: 16px 32px;
-            background-color: var(--accent-gold);
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 700;
-            font-size: 16px;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-        }
-        .academy-short .cta-button:hover {
-            background-color: #c19b2c;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-        }
-        .cases-section {
-            padding: 80px 0;
-            background-color: var(--neutral-light);
-        }
-        .cases-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        .case-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        .case-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-        .case-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .case-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            margin-right: 15px;
-        }
-        .case-title {
-            font-size: 18px;
-            color: var(--primary-dark);
-            font-weight: 700;
-        }
-        .case-description {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        .case-results {
-            background: rgba(30, 64, 175, 0.03);
-            border-radius: var(--border-radius-sm);
-            padding: 20px;
-            margin-top: 20px;
-            border-left: 3px solid var(--accent-gold);
-        }
-        .result-item {
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: var(--neutral-dark);
-        }
-        .result-item:last-child {
-            margin-bottom: 0;
-        }
-        .result-item strong {
-            color: var(--primary-blue);
-        }
-        .cta-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e293b 100%);
-            color: white;
+        .result-stats div {
             text-align: center;
         }
-        .cta-title {
-            font-size: clamp(28px, 5vw, 36px);
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: white;
+        .result-stats .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e40af;
         }
-        .cta-description {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 30px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.5;
+        .cta-section {
+            text-align: center;
+            padding: 60px 0;
+            background: #0f172a;
+            color: white;
+            border-radius: 24px;
+            margin: 40px 0;
         }
         .cta-button {
             display: inline-block;
-            padding: 16px 32px;
-            background-color: var(--accent-gold);
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: var(--border-radius);
+            background: #d4af37;
+            color: #0f172a;
+            padding: 12px 30px;
+            border-radius: 40px;
             font-weight: 700;
-            font-size: 16px;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.5px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: 0.2s;
         }
         .cta-button:hover {
-            background-color: #c19b2c;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+            background: #c19b2c;
+            transform: translateY(-2px);
         }
         footer {
-            background-color: var(--primary-dark);
+            background: #0f172a;
             color: white;
             padding: 60px 0 30px;
-            position: relative;
+            margin-top: 60px;
         }
         .footer-container {
             display: grid;
@@ -634,9 +222,7 @@
         }
         .footer-column h3 {
             font-size: 18px;
-            font-weight: 700;
             margin-bottom: 20px;
-            color: white;
             position: relative;
             padding-bottom: 10px;
         }
@@ -647,13 +233,7 @@
             left: 0;
             width: 35px;
             height: 3px;
-            background-color: var(--accent-gold);
-        }
-        .footer-column p {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.5;
-            margin-bottom: 16px;
-            font-size: 14px;
+            background: #d4af37;
         }
         .footer-column ul {
             list-style: none;
@@ -662,153 +242,36 @@
             margin-bottom: 12px;
         }
         .footer-column ul li a {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255,255,255,0.8);
             text-decoration: none;
-            transition: var(--transition);
-            font-size: 14px;
             display: flex;
             align-items: center;
+            gap: 8px;
+            transition: 0.2s;
         }
         .footer-column ul li a:hover {
             color: white;
             padding-left: 5px;
         }
-        .footer-column ul li i {
-            margin-right: 8px;
-            width: 18px;
-            color: var(--accent-gold);
-        }
-        .footer-counters {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        .counter-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .counter-number {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            min-width: 40px;
-            text-align: center;
-        }
         .copyright {
             text-align: center;
             padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
             font-size: 13px;
         }
-        @media (max-width: 992px) {
-            .expertise-container {
-                flex-direction: column;
-                text-align: center;
-                gap: 40px;
-            }
-            h1 {
-                font-size: 40px;
-            }
-            .profile-photo, .photo-frame {
-                width: 260px;
-                height: 260px;
-            }
-            .hero-expertise::before {
-                width: 100%;
-                height: 35%;
-                top: 0;
-            }
-            .section-title {
-                font-size: 30px;
-            }
-        }
         @media (max-width: 768px) {
-            .hero-expertise {
-                padding: 110px 0 60px;
-            }
-            h1 {
-                font-size: 36px;
-            }
-            .hero-subtitle {
-                font-size: 16px;
-            }
-            .expertise-quote {
-                font-size: 14px;
-            }
-            .section-title {
-                font-size: 28px;
-            }
-            .section-subtitle {
-                font-size: 14px;
-            }
-            .methodologies-section, .tools-section, .process-section, .academy-short, .cases-section, .cta-section {
-                padding: 60px 0;
-            }
-            .footer-container {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .cta-title {
-                font-size: 28px;
-            }
-            .cta-description {
-                font-size: 16px;
-            }
-            .methodologies-grid, .tools-categories, .cases-grid {
-                grid-template-columns: 1fr;
-            }
-            .footer-counters {
-                flex-direction: row;
-                justify-content: space-around;
-                gap: 10px;
-                align-items: center;
-            }
-            .process-step {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .step-number {
-                margin-bottom: 15px;
-                margin-right: 0;
-            }
-        }
-        @media (max-width: 576px) {
-            .hero-expertise {
-                padding: 100px 0 50px;
-            }
-            .profile-photo, .photo-frame {
-                width: 220px;
-                height: 220px;
-            }
-            h1 {
-                font-size: 32px;
-            }
-            .container {
-                padding: 0 16px;
-            }
-            .section-title {
-                font-size: 26px;
-            }
-            .counter-number {
-                font-size: 24px;
-            }
+            .page-header h1 { font-size: 32px; }
+            .result-stats { flex-direction: column; gap: 10px; }
+            .methodology-grid, .tools-grid, .process-grid, .cases-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <header id="mainHeader">
+    <header>
         <div class="container nav-container">
-            <a href="index.html" class="logo">
-                ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ
-            </a>
-            <button class="mobile-menu-btn" aria-label="Меню">
-                <i class="fas fa-bars"></i>
-            </button>
+            <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
+            <button class="mobile-menu-btn" aria-label="Меню"><i class="fas fa-bars"></i></button>
             <nav>
                 <ul id="nav-menu">
                     <li><a href="about.html">Обо мне</a></li>
@@ -822,258 +285,169 @@
         </div>
     </header>
 
-    <section class="hero-expertise">
-        <div class="container expertise-container">
-            <div class="expertise-content">
-                <span class="expertise-tag">Глубокая экспертиза</span>
-                <h1>Методологии и инструменты в SCM</h1>
-                <p class="hero-subtitle">Системный подход к управлению цепями поставок, основанный на современных методологиях, цифровых инструментах и проверенных практиках для достижения операционного превосходства.</p>
-                <p class="expertise-quote">
-                    "Истинная экспертиза — это не только знание инструментов, но и понимание, 
-                    какой инструмент применить в конкретной ситуации. Умение адаптировать 
-                    методологии под уникальные бизнес-процессы создает реальную ценность."
-                </p>
-                <div class="hero-tags" style="margin-top: 30px;">
-                    <span class="tag">Бережливое производство (Lean)</span>
-                    <span class="tag">ABC-XYZ анализ</span>
-                    <span class="tag">Цифровая трансформация</span>
-                    <span class="tag">KPI разработка</span>
-                    <span class="tag">ERP/WMS системы</span>
-                    <span class="tag">Управление изменениями</span>
-                    <span class="tag">Академия цепей поставок</span>
-                </div>
+    <div class="page-header">
+        <div class="container">
+            <h1>Методологии и инструменты управления цепями поставок (SCM)</h1>
+            <p>Системный подход к управлению цепями поставок, основанный на современных методологиях, цифровых инструментах и проверенных практиках для достижения операционного превосходства.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Методологии и подходы -->
+        <h2 class="section-title">Методологии и подходы</h2>
+        <div class="methodology-grid">
+            <div class="methodology-card">
+                <h3>Бережливое производство (Lean)</h3>
+                <p>Систематический подход к выявлению и устранению потерь (muda) через непрерывное улучшение (kaizen) и поток создания ценности.</p>
+                <ul>
+                    <li>Картирование потока создания ценности (Value Stream Mapping)</li>
+                    <li>Система 5S для организации рабочего пространства</li>
+                    <li>Канбан для управления запасами и производством</li>
+                    <li>Стандартизированная работа и тактирование</li>
+                    <li>Вытягивающее производство (Pull System)</li>
+                </ul>
             </div>
-            <div class="expertise-image">
-                <div class="photo-frame"></div>
-                <picture>
-                    <source srcset="images/profile.webp" type="image/webp">
-                    <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo"
-                         width="300" height="300" loading="eager"
-                         onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
-                </picture>
+            <div class="methodology-card">
+                <h3>ABC-XYZ анализ</h3>
+                <p>Комплексный метод классификации товарных запасов на основе их вклада в оборот и стабильности спроса для оптимизации управления.</p>
+                <ul>
+                    <li>ABC анализ по объёму продаж/прибыли</li>
+                    <li>XYZ анализ по стабильности спроса</li>
+                    <li>Матрица 3x3 для сегментации SKU</li>
+                    <li>Дифференцированные стратегии управления для каждого сегмента</li>
+                    <li>Динамическое перераспределение запасов</li>
+                </ul>
+            </div>
+            <div class="methodology-card">
+                <h3>Управление бизнес-процессами</h3>
+                <p>Систематическое проектирование, выполнение, мониторинг и оптимизация сквозных бизнес-процессов для повышения эффективности.</p>
+                <ul>
+                    <li>Моделирование и регламентация процессов (BPMN)</li>
+                    <li>Выявление узких мест и возможностей для улучшения</li>
+                    <li>Внедрение процессных KPI и метрик</li>
+                    <li>Реинжиниринг и оптимизация процессов</li>
+                    <li>Построение кросс-функциональных процессных команд</li>
+                </ul>
             </div>
         </div>
-    </section>
 
-    <section class="methodologies-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Методологии и подходы</h2>
-                <p class="section-subtitle">Проверенные методики управления и оптимизации, адаптированные под специфику ритейла и логистики</p>
-            </div>
-            <div class="methodologies-grid">
-                <div class="methodology-card">
-                    <div class="methodology-icon"><i class="fas fa-chart-line"></i></div>
-                    <h3 class="methodology-title">Бережливое производство (Lean)</h3>
-                    <p class="methodology-description">Систематический подход к выявлению и устранению потерь (muda) через непрерывное улучшение (kaizen) и поток создания ценности.</p>
-                    <ul class="methodology-features">
-                        <li>Картирование потока создания ценности (Value Stream Mapping)</li>
-                        <li>Система 5S для организации рабочего пространства</li>
-                        <li>Канбан для управления запасами и производством</li>
-                        <li>Стандартизированная работа и тактирование</li>
-                        <li>Вытягивающее производство (Pull System)</li>
+        <!-- Инструменты и технологии -->
+        <h2 class="section-title">Инструменты и технологии</h2>
+        <div class="tools-grid">
+            <div class="tools-card">
+                <div class="tools-category">
+                    <h4>Корпоративные системы</h4>
+                    <ul>
+                        <li>1С:Предприятие 8</li>
+                        <li>WMS системы</li>
+                        <li>TMS системы</li>
+                        <li>ERP системы</li>
+                        <li>1С-Битрикс</li>
+                        <li>Системы EDI</li>
+                        <li>AutoCAD</li>
+                        <li>Системы контроля доступа</li>
                     </ul>
                 </div>
-                <div class="methodology-card">
-                    <div class="methodology-icon"><i class="fas fa-boxes"></i></div>
-                    <h3 class="methodology-title">ABC-XYZ анализ</h3>
-                    <p class="methodology-description">Комплексный метод классификации товарных запасов на основе их вклада в оборот и стабильности спроса для оптимизации управления.</p>
-                    <ul class="methodology-features">
-                        <li>ABC анализ по объёму продаж/прибыли</li>
-                        <li>XYZ анализ по стабильности спроса</li>
-                        <li>Матрица 3x3 для сегментации SKU</li>
-                        <li>Дифференцированные стратегии управления для каждого сегмента</li>
-                        <li>Динамическое перераспределение запасов</li>
+                <div class="tools-category">
+                    <h4>Аналитика и BI</h4>
+                    <ul>
+                        <li>Microsoft Power BI</li>
+                        <li>Tableau</li>
+                        <li>Google Analytics</li>
+                        <li>Яндекс.Метрика</li>
+                        <li>Excel (продвинутый)</li>
+                        <li>SQL для анализа</li>
+                        <li>Python для аналитики</li>
+                        <li>Статистический анализ</li>
                     </ul>
                 </div>
-                <div class="methodology-card">
-                    <div class="methodology-icon"><i class="fas fa-project-diagram"></i></div>
-                    <h3 class="methodology-title">Управление бизнес-процессами</h3>
-                    <p class="methodology-description">Систематическое проектирование, выполнение, мониторинг и оптимизация сквозных бизнес-процессов для повышения эффективности.</p>
-                    <ul class="methodology-features">
-                        <li>Моделирование и регламентация процессов (BPMN)</li>
-                        <li>Выявление узких мест и возможностей для улучшения</li>
-                        <li>Внедрение процессных KPI и метрик</li>
-                        <li>Реинжиниринг и оптимизация процессов</li>
-                        <li>Построение кросс-функциональных процессных команд</li>
+                <div class="tools-category">
+                    <h4>Цифровые технологии</h4>
+                    <ul>
+                        <li>Искусственный интеллект</li>
+                        <li>Машинное обучение</li>
+                        <li>Цифровые двойники</li>
+                        <li>Интернет вещей (IoT)</li>
+                        <li>RPA (роботизация)</li>
+                        <li>Блокчейн для логистики</li>
+                        <li>Предиктивная аналитика</li>
+                        <li>Когнитивные технологии</li>
                     </ul>
                 </div>
             </div>
         </div>
-    </section>
 
-    <section class="tools-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Инструменты и технологии</h2>
-                <p class="section-subtitle">Современные технологические решения и аналитические инструменты для цифровой трансформации SCM</p>
+        <!-- Процесс работы -->
+        <h2 class="section-title">Процесс работы</h2>
+        <div class="process-grid">
+            <div class="process-card process-step">
+                <div class="step-number">1</div>
+                <h3>Диагностика и анализ</h3>
+                <p>Глубокий анализ текущих бизнес-процессов, выявление узких мест и точек роста. Использование методов картирования процессов, интервью с сотрудниками, анализа данных. Формирование понимания текущего состояния и целевых показателей.</p>
             </div>
-            <div class="tools-categories">
-                <div class="tool-category">
-                    <div class="category-header">
-                        <div class="category-icon"><i class="fas fa-database"></i></div>
-                        <div class="category-title">Корпоративные системы</div>
-                    </div>
-                    <div class="tools-list">
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>1С:Предприятие 8</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>WMS системы</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>TMS системы</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>ERP системы</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>1С-Битрикс</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Системы EDI</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>AutoCAD</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Системы контроля доступа</span>
-                    </div>
+            <div class="process-card process-step">
+                <div class="step-number">2</div>
+                <h3>Проектирование решения</h3>
+                <p>Разработка целевой архитектуры процессов и систем. Подбор и адаптация методологий под специфику бизнеса. Создание дорожной карты трансформации с четкими этапами, сроками и ответственными.</p>
+            </div>
+            <div class="process-card process-step">
+                <div class="step-number">3</div>
+                <h3>Внедрение и пилотирование</h3>
+                <p>Поэтапное внедрение решений, начиная с пилотных зон или процессов. Обучение команды, адаптация инструментов под реальные условия, итеративная доработка. Управление изменениями и вовлечение сотрудников.</p>
+            </div>
+            <div class="process-card process-step">
+                <div class="step-number">4</div>
+                <h3>Мониторинг и оптимизация</h3>
+                <p>Внедрение системы метрик и KPI для отслеживания эффективности. Регулярный анализ результатов, выявление дополнительных возможностей для улучшения. Формирование культуры непрерывного совершенствования (kaizen).</p>
+            </div>
+        </div>
+
+        <!-- Кейсы применения -->
+        <h2 class="section-title">Кейсы применения экспертизы</h2>
+        <div class="cases-grid">
+            <div class="case-card">
+                <h3>Оптимизация складских операций</h3>
+                <p>Внедрение принципов бережливого производства и перенастройка WMS для крупного ритейлера. Редизайн процессов приемки, хранения и отгрузки с использованием Value Stream Mapping.</p>
+                <div class="result-stats">
+                    <div><div class="stat-number">+35%</div><div>Производительность</div></div>
+                    <div><div class="stat-number">-28%</div><div>Время заказов</div></div>
+                    <div><div class="stat-number">99.5%</div><div>Точность инвентаризации</div></div>
                 </div>
-                <div class="tool-category">
-                    <div class="category-header">
-                        <div class="category-icon"><i class="fas fa-chart-pie"></i></div>
-                        <div class="category-title">Аналитика и BI</div>
-                    </div>
-                    <div class="tools-list">
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Microsoft Power BI</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Tableau</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Google Analytics</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Яндекс.Метрика</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Excel (продвинутый)</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>SQL для анализа</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Python для аналитики</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Статистический анализ</span>
-                    </div>
+            </div>
+            <div class="case-card">
+                <h3>Трансформация транспортной логистики</h3>
+                <p>Внедрение TMS системы и оптимизация маршрутов доставки с использованием аналитики данных. Переговоры с перевозчиками и внедрение системы мониторинга транспорта в реальном времени.</p>
+                <div class="result-stats">
+                    <div><div class="stat-number">-18%</div><div>Транспортные расходы</div></div>
+                    <div><div class="stat-number">96%</div><div>Своевременность доставок</div></div>
+                    <div><div class="stat-number">+40%</div><div>Прозрачность цепочки</div></div>
                 </div>
-                <div class="tool-category">
-                    <div class="category-header">
-                        <div class="category-icon"><i class="fas fa-robot"></i></div>
-                        <div class="category-title">Цифровые технологии</div>
-                    </div>
-                    <div class="tools-list">
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Искусственный интеллект</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Машинное обучение</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Цифровые двойники</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Интернет вещей (IoT)</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>RPA (роботизация)</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Блокчейн для логистики</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Предиктивная аналитика</span>
-                        <span class="tool-tag"><i class="fas fa-check-circle"></i>Когнитивные технологии</span>
-                    </div>
+            </div>
+            <div class="case-card">
+                <h3>Внедрение системы предиктивной аналитики</h3>
+                <p>Разработка и внедрение модели прогнозирования спроса на основе машинного обучения. Интеграция с ERP системой для автоматического планирования закупок и пополнения запасов.</p>
+                <div class="result-stats">
+                    <div><div class="stat-number">+42%</div><div>Точность прогнозов</div></div>
+                    <div><div class="stat-number">+30%</div><div>Оборачиваемость запасов</div></div>
+                    <div><div class="stat-number">98.5%</div><div>Уровень сервиса</div></div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <section class="process-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Процесс работы</h2>
-                <p class="section-subtitle">Системный подход к реализации проектов по оптимизации и цифровой трансформации</p>
-            </div>
-            <div class="process-steps">
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3 class="step-title">Диагностика и анализ</h3>
-                        <p class="step-description">Глубокий анализ текущих бизнес-процессов, выявление узких мест и точек роста. Использование методов картирования процессов, интервью с сотрудниками, анализа данных. Формирование понимания текущего состояния и целевых показателей.</p>
-                    </div>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3 class="step-title">Проектирование решения</h3>
-                        <p class="step-description">Разработка целевой архитектуры процессов и систем. Подбор и адаптация методологий под специфику бизнеса. Создание дорожной карты трансформации с четкими этапами, сроками и ответственными.</p>
-                    </div>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3 class="step-title">Внедрение и пилотирование</h3>
-                        <p class="step-description">Поэтапное внедрение решений, начиная с пилотных зон или процессов. Обучение команды, адаптация инструментов под реальные условия, итеративная доработка. Управление изменениями и вовлечение сотрудников.</p>
-                    </div>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h3 class="step-title">Мониторинг и оптимизация</h3>
-                        <p class="step-description">Внедрение системы метрик и KPI для отслеживания эффективности. Регулярный анализ результатов, выявление дополнительных возможностей для улучшения. Формирование культуры непрерывного совершенствования (kaizen).</p>
-                    </div>
-                </div>
-            </div>
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2>Готовы трансформировать вашу логистику?</h2>
+            <p>Давайте обсудим, как современные методологии и цифровые инструменты могут оптимизировать ваши цепочки поставок, сократить издержки и повысить операционную эффективность.</p>
+            <a href="contact.html" class="cta-button">Обсудить сотрудничество</a>
         </div>
-    </section>
-
-    <section class="academy-short">
-        <div class="container" style="text-align: center;">
-            <h2 class="section-title">Академия цепей поставок</h2>
-            <p class="section-subtitle">Являюсь основателем образовательной платформы и профессионального сообщества. Подробнее — на странице «Обо мне».</p>
-            <a href="about.html#academy" class="cta-button" style="margin-top: 30px;">Перейти к описанию</a>
-        </div>
-    </section>
-
-    <section class="cases-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Кейсы применения экспертизы</h2>
-                <p class="section-subtitle">Конкретные примеры применения методологий и инструментов для решения бизнес-задач</p>
-            </div>
-            <div class="cases-grid">
-                <div class="case-card">
-                    <div class="case-header">
-                        <div class="case-icon"><i class="fas fa-warehouse"></i></div>
-                        <div class="case-title">Оптимизация складских операций</div>
-                    </div>
-                    <p class="case-description">Внедрение принципов бережливого производства и перенастройка WMS для крупного ритейлера. Редизайн процессов приемки, хранения и отгрузки с использованием Value Stream Mapping.</p>
-                    <div class="case-results">
-                        <div class="result-item"><strong>Результат:</strong> Увеличение производительности склада на 35%</div>
-                        <div class="result-item"><strong>Снижение:</strong> Время выполнения заказов сокращено на 28%</div>
-                        <div class="result-item"><strong>Точность:</strong> Уровень точности инвентаризации повышен до 99.5%</div>
-                    </div>
-                </div>
-                <div class="case-card">
-                    <div class="case-header">
-                        <div class="case-icon"><i class="fas fa-truck"></i></div>
-                        <div class="case-title">Трансформация транспортной логистики</div>
-                    </div>
-                    <p class="case-description">Внедрение TMS системы и оптимизация маршрутов доставки с использованием аналитики данных. Переговоры с перевозчиками и внедрение системы мониторинга транспорта в реальном времени.</p>
-                    <div class="case-results">
-                        <div class="result-item"><strong>Экономия:</strong> Снижение транспортных расходов на 18%</div>
-                        <div class="result-item"><strong>Сроки:</strong> Увеличение своевременности доставок до 96%</div>
-                        <div class="result-item"><strong>Контроль:</strong> Прозрачность цепочки доставки повышена на 40%</div>
-                    </div>
-                </div>
-                <div class="case-card">
-                    <div class="case-header">
-                        <div class="case-icon"><i class="fas fa-chart-bar"></i></div>
-                        <div class="case-title">Внедрение системы предиктивной аналитики</div>
-                    </div>
-                    <p class="case-description">Разработка и внедрение модели прогнозирования спроса на основе машинного обучения. Интеграция с ERP системой для автоматического планирования закупок и пополнения запасов.</p>
-                    <div class="case-results">
-                        <div class="result-item"><strong>Точность:</strong> Точность прогнозирования повышена на 42%</div>
-                        <div class="result-item"><strong>Запасы:</strong> Уровень запасов оптимизирован, оборачиваемость увеличена на 30%</div>
-                        <div class="result-item"><strong>Сервис:</strong> Уровень обслуживания (Service Level) достиг 98.5%</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="cta-section">
-        <div class="container">
-            <h2 class="cta-title">Готовы трансформировать вашу логистику?</h2>
-            <p class="cta-description">Давайте обсудим, как современные методологии и цифровые инструменты могут оптимизировать ваши цепочки поставок, сократить издержки и повысить операционную эффективность.</p>
-            <a href="contact.html" class="cta-button"><i class="fas fa-handshake"></i> Обсудить сотрудничество</a>
-        </div>
-    </section>
+    </div>
 
     <footer>
         <div class="container">
-            <div class="footer-counters">
-                <div class="counter-item"><span class="counter-number" id="visit-counter">0</span> посещений</div>
-                <div class="counter-item"><span class="counter-number" id="download-counter">0</span> скачиваний</div>
-            </div>
             <div class="footer-container">
                 <div class="footer-column">
                     <h3>Дмитрий Панибратский</h3>
-                    <p>Эксперт в области управления цепями поставок и цифровой трансформации логистики. Специализируюсь на внедрении современных методологий и технологий для достижения операционного превосходства.</p>
-                    <p style="margin-top: 12px; font-style: italic; color: rgba(255, 255, 255, 0.7); font-size: 13px;">"Истинная экспертиза — это умение адаптировать методологии под уникальные бизнес-процессы."</p>
+                    <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p>
                 </div>
                 <div class="footer-column">
                     <h3>Навигация</h3>
@@ -1084,16 +458,13 @@
                         <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
                         <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
-                        <li><a href="/Panibratsky-Dmitry/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Контакты</h3>
                     <ul>
                         <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
-                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i> @LogisticaandSupplyChain</a></li>
-                        <li><a href="tel:+79822282949"><i class="fas fa-phone"></i> +7 (982) 228-29-49</a></li>
-                        <li><a href="tel:+79825810787"><i class="fas fa-phone"></i> +7 (982) 581-07-87</a></li>
+                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -1101,61 +472,28 @@
                     <p>Получайте дайджест новых статей и событий SCM</p>
                     <form id="subscribeForm" style="margin-top: 15px;">
                         <input type="email" id="subscribeEmail" placeholder="Ваш email" required style="width: 100%; padding: 8px 12px; border: none; border-radius: 8px; margin-bottom: 10px;">
-                        <button type="submit" style="background: var(--accent-gold); color: var(--primary-dark); border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer;">Подписаться</button>
+                        <button type="submit" style="background: #d4af37; color: #0f172a; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer;">Подписаться</button>
                     </form>
                     <div id="subscribeStatus" style="margin-top: 10px; font-size: 12px;"></div>
                 </div>
-                <div class="footer-column">
-                    <h3>Академия цепей поставок</h3>
-                    <p><strong>Образовательная платформа</strong><br>Вебинары, мастер-классы и разбор кейсов для профессионалов SCM</p>
-                    <p><strong>Профессиональное сообщество</strong><br>Обмен опытом и развитие стандартов в управлении цепями поставок</p>
-                    <p><strong>Менторство</strong><br>Передача практического опыта следующему поколению руководителей</p>
-                    <a href="https://t.me/LogisticaandSupplyChain" target="_blank" rel="noopener noreferrer" style="color: var(--accent-gold); text-decoration: none; font-size: 14px; margin-top: 10px; display: inline-block;"><i class="fab fa-telegram"></i> Присоединиться в Telegram</a>
-                </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="copyright">&copy; <span id="current-year">2024</span> Дмитрий Панибратский. Эксперт в SCM и цифровой трансформации.</div>
+            <div class="copyright">
+                &copy; 2026 Дмитрий Панибратский.
+            </div>
         </div>
     </footer>
 
-    <script src="js/analytics.js"></script>
     <script src="js/subscribe.js"></script>
     <script>
-        (function() {
-            const mobileBtn = document.querySelector('.mobile-menu-btn');
-            const navMenu = document.getElementById('nav-menu');
-            if (mobileBtn && navMenu) {
-                mobileBtn.addEventListener('click', () => {
-                    navMenu.classList.toggle('active');
-                    const icon = mobileBtn.querySelector('i');
-                    if (icon) {
-                        icon.classList.toggle('fa-bars');
-                        icon.classList.toggle('fa-times');
-                    }
-                });
-                document.querySelectorAll('#nav-menu a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navMenu.classList.remove('active');
-                        const icon = mobileBtn.querySelector('i');
-                        if (icon && icon.classList.contains('fa-times')) {
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
-                        }
-                    });
-                });
-            }
-            let visitCount = parseInt(localStorage.getItem('visitCount') || '0', 10);
-            visitCount++;
-            localStorage.setItem('visitCount', visitCount);
-            const visitSpan = document.getElementById('visit-counter');
-            if (visitSpan) visitSpan.textContent = visitCount;
-            let downloadCount = parseInt(localStorage.getItem('downloadCount') || '0', 10);
-            const downloadSpan = document.getElementById('download-counter');
-            if (downloadSpan) downloadSpan.textContent = downloadCount;
-            const yearSpan = document.getElementById('current-year');
-            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-        })();
+        // Мобильное меню
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        if (mobileBtn && navMenu) {
+            mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+            document.querySelectorAll('#nav-menu a').forEach(link => {
+                link.addEventListener('click', () => navMenu.classList.remove('active'));
+            });
+        }
     </script>
 </body>
 </html>
