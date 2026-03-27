@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мировые новости и тренды SCM | Дмитрий Панибратский</title>
-    <meta name="description" content="Актуальные новости, тренды и исследования в области управления цепями поставок, логистики, цифровой трансформации.">
+    <meta name="description" content="Актуальные события, исследования и аналитика в управлении цепями поставок, логистике, цифровой трансформации.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="/1favicon.ico" type="image/x-icon">
@@ -302,28 +302,70 @@
     </footer>
 
     <script>
-        let allNewsData = [];
-        let activeCategory = 'all';
+        // -------- RSS ИСТОЧНИКИ С КАТЕГОРИЯМИ --------
+        const ruSources = [
+            { name: 'Logirus', url: 'https://logirus.ru/rss', cat: 'logistics', lang: 'ru' },
+            { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', cat: 'logistics', lang: 'ru' },
+            { name: 'Zakupki.gov.ru', url: 'https://zakupki.gov.ru/epz/main/public/rss', cat: 'tenders', lang: 'ru' },
+            { name: 'Retail & Logistics', url: 'https://retail-loyalty.org/rss/', cat: 'logistics', lang: 'ru' },
+            { name: 'Склад & Логистика', url: 'https://logistics.ru/rss', cat: 'warehouse', lang: 'ru' },
+            { name: 'MarketInfo', url: 'https://marketinfo.pro/rss', cat: 'marketplace', lang: 'ru' }
+        ];
 
-        async function loadNewsFromJSON() {
+        const enSources = [
+            { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss', cat: 'tech', lang: 'en' },
+            { name: 'CIO SCM', url: 'https://www.cio.com/rss', cat: 'tech', lang: 'en' }
+        ];
+
+        let activeCategory = 'all';
+        let allNewsData = [];
+
+        async function fetchRSS(source, timeout = 5000) {
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const res = await fetch(apiUrl, { signal: controller.signal });
+                clearTimeout(id);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                if (data.status === 'ok' && data.items) {
+                    return data.items.map(item => ({
+                        title: item.title,
+                        link: item.link,
+                        pubDate: new Date(item.pubDate),
+                        description: item.description.replace(/<[^>]*>/g, '').slice(0, 250),
+                        source: source.name,
+                        lang: source.lang,
+                        category: source.cat
+                    }));
+                }
+                return [];
+            } catch (err) {
+                console.warn(`Ошибка загрузки ${source.name}:`, err);
+                return [];
+            }
+        }
+
+        async function loadAllNews() {
             const container = document.getElementById('newsContainer');
             container.innerHTML = '<div class="loading">Загрузка новостей...</div>';
-            try {
-                const response = await fetch('/Panibratsky-Dmitry/data/news.json');
-                if (!response.ok) throw new Error('Не удалось загрузить новости');
-                const data = await response.json();
-                // Сортировка: русские выше, затем английские, внутри по дате
-                data.sort((a, b) => {
-                    if (a.lang === 'ru' && b.lang !== 'ru') return -1;
-                    if (a.lang !== 'ru' && b.lang === 'ru') return 1;
-                    return new Date(b.pubDate) - new Date(a.pubDate);
-                });
-                allNewsData = data;
-                renderNewsByCategory(activeCategory);
-            } catch (err) {
-                console.error(err);
-                container.innerHTML = '<div class="error">Ошибка загрузки новостей. Попробуйте позже.</div>';
+            let allNews = [];
+            // Сначала загружаем русские источники
+            for (const src of ruSources) {
+                const items = await fetchRSS(src);
+                allNews.push(...items);
             }
+            // Если русских новостей нет, пробуем английские
+            if (allNews.length === 0) {
+                for (const src of enSources) {
+                    const items = await fetchRSS(src);
+                    allNews.push(...items);
+                }
+            }
+            allNews.sort((a,b) => b.pubDate - a.pubDate);
+            allNewsData = allNews;
+            renderNewsByCategory(activeCategory);
         }
 
         function renderNewsByCategory(category) {
@@ -333,13 +375,13 @@
                 filtered = allNewsData.filter(item => item.category === category);
             }
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="error">Новостей в этой категории пока нет.</div>';
+                container.innerHTML = '<div class="error">Новостей в этой категории пока нет. Попробуйте позже.</div>';
                 return;
             }
             const html = filtered.slice(0, 30).map(news => `
                 <div class="news-card">
                     <div class="news-date">
-                        <span>${formatDate(news.pubDate)}</span>
+                        <span>${news.pubDate.toLocaleDateString('ru-RU')}</span>
                         <span class="news-source">${escapeHtml(news.source)}${news.lang === 'en' ? ' <span class="lang-badge">EN</span>' : ''}</span>
                     </div>
                     <h3 class="news-title">${escapeHtml(news.title)}</h3>
@@ -374,11 +416,6 @@
                     renderNewsByCategory(activeCategory);
                 });
             });
-        }
-
-        function formatDate(dateStr) {
-            const d = new Date(dateStr);
-            return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
         function escapeHtml(str) {
@@ -438,7 +475,7 @@
 
         createFilterPanel();
         addTranslateButton();
-        loadNewsFromJSON();
+        loadAllNews();
     </script>
 </body>
 </html>
