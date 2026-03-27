@@ -20,8 +20,6 @@ jobs:
           python-version: '3.10'
       - name: Install dependencies
         run: pip install requests
-      - name: Generate news pages from manual_news.json
-        run: python scripts/generate_news_pages.py
       - name: Run fetch script (RSS)
         run: python scripts/fetch_news.py
       - name: Run hh.ru analytics
@@ -30,5 +28,5 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/news.json data/manual_news.json news/ data/hh_analytics.json
+          git add data/news.json data/manual_news.json data/hh_analytics.json
           git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей и аналитики" && git push)
