@@ -2,32 +2,33 @@ name: Update News
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # каждые 6 часов (00:00, 06:00, 12:00, 18:00 UTC)
-  workflow_dispatch:        # позволяет запустить вручную на вкладке Actions
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/manual_news.json'
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
     permissions:
-      contents: write        # разрешаем запись в репозиторий (чтобы закоммитить news.json)
+      contents: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
       - name: Install dependencies
         run: pip install requests
-
-      - name: Run fetch script
+      - name: Generate news pages from manual_news.json
+        run: python scripts/generate_news_pages.py
+      - name: Run fetch script (RSS)
         run: python scripts/fetch_news.py
-
+      - name: Run hh.ru analytics
+        run: python scripts/hh_analytics.py
       - name: Commit and push if changed
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/news.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей" && git push)
+          git add data/news.json data/manual_news.json news/ data/hh_analytics.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей и аналитики" && git push)
