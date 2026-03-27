@@ -36,7 +36,6 @@
         gtag('config', 'G-C5X9R6HPQY');
     </script>
     <style>
-        /* весь CSS остаётся без изменений – такой же, как в предыдущей полной версии index.html */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -554,85 +553,6 @@
             font-size: 14px;
             color: var(--neutral-medium);
             font-weight: 500;
-        }
-        .certificates-section {
-            padding: 70px 0;
-            background-color: var(--neutral-light);
-        }
-        .certificates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
-        }
-        .certificate-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            text-decoration: none;
-            color: inherit;
-        }
-        .certificate-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--accent-gold);
-        }
-        .certificate-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 26px;
-        }
-        .certificate-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 12px;
-            line-height: 1.4;
-            text-align: center;
-            flex-grow: 1;
-        }
-        .certificate-filename {
-            color: var(--neutral-medium);
-            font-size: 12px;
-            margin-bottom: 15px;
-            text-align: center;
-            word-break: break-word;
-            background: rgba(0,0,0,0.02);
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        .certificate-download {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 10px 16px;
-            border-radius: var(--border-radius-sm);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: var(--transition);
-            margin-top: auto;
-        }
-        .certificate-download:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
         }
         .methodologies-section {
             padding: 70px 0;
@@ -1298,17 +1218,6 @@
         </div>
     </section>
 
-    <!-- Certificates Section (будет перенесён на about.html позже, пока оставляем) -->
-    <section class="certificates-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Сертификаты, дипломы и материалы</h2>
-                <p class="section-subtitle">Все подтверждающие документы и материалы профессионального развития в области SCM и управления</p>
-            </div>
-            <div class="certificates-grid" id="certificates-container"></div>
-        </div>
-    </section>
-
     <!-- Methodologies Section -->
     <section class="methodologies-section">
         <div class="container">
@@ -1659,29 +1568,6 @@
                 });
             });
             updateESGDashboard('2026');
-
-            // Сертификаты
-            const certificates = [
-                { title: "Диплом о профессиональной переподготовке", file: "files/diploma.pdf", filename: "diploma.pdf" },
-                { title: "Сертификат Академии Цепей Поставок (базовый)", file: "files/scm-basic-cert.pdf", filename: "scm-basic-cert.pdf" },
-                { title: "Сертификат Академии Цепей Поставок (продвинутый)", file: "files/scm-advanced-cert.pdf", filename: "scm-advanced-cert.pdf" },
-                { title: "Сертификат Академии Цепей Поставок (стратегический)", file: "files/scm-strategic-cert.pdf", filename: "scm-strategic-cert.pdf" },
-                { title: "Сертификат курса 'Цифровая трансформация SCM'", file: "files/digital-scm-cert.pdf", filename: "digital-scm-cert.pdf" },
-                { title: "Удостоверение о повышении квалификации", file: "files/advanced-training.pdf", filename: "advanced-training.pdf" }
-            ];
-            const container = document.getElementById('certificates-container');
-            if (container) {
-                container.innerHTML = certificates.map(cert => `
-                    <div class="certificate-card" onclick="location.href='${cert.file}'">
-                        <div class="certificate-icon"><i class="fas fa-file-alt"></i></div>
-                        <h3 class="certificate-title">${cert.title}</h3>
-                        <div class="certificate-filename">${cert.filename}</div>
-                        <div class="certificate-download" onclick="event.stopPropagation(); location.href='${cert.file}'">
-                            <i class="fas fa-download"></i> Скачать
-                        </div>
-                    </div>
-                `).join('');
-            }
 
             // ---------- РАСШИРЕННЫЙ ВИДЖЕТ НОВОСТЕЙ (ГЛАВНАЯ) ----------
             const sources = [
