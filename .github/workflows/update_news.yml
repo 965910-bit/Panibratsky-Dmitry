@@ -2,7 +2,7 @@ name: Update News
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */2 * * *'   # каждые 2 часа
   workflow_dispatch:
   push:
     paths:
@@ -15,18 +15,38 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Install dependencies
+
+      - name: Install Python dependencies
         run: pip install requests
-      - name: Run fetch script (RSS)
+
+      - name: Run fetch script (RSS + hh.ru analytics)
         run: python scripts/fetch_news.py
-      - name: Run hh.ru analytics
+
+      - name: Run hh.ru analytics (если отдельный скрипт)
         run: python scripts/hh_analytics.py
+
+      - name: Set up Node.js for Telegram publisher
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Send new news to Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node scripts/telegram-news.js
+
       - name: Commit and push if changed
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/news.json data/hh_analytics.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей и аналитики" && git push)
+          git add data/news.json data/hh_analytics.json data/manual_news.json data/sent_news.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей, аналитики и отправка в Telegram" && git push)
