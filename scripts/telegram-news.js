@@ -6,10 +6,9 @@ const { pipeline } = require('stream');
 const { promisify } = require('util');
 const streamPipeline = promisify(pipeline);
 
-// Рабочие источники (добавлен AXELOT)
+// Только RSS-источники (АТИ не отправляем в Telegram)
 const RSS_SOURCES = [
-    { name: 'Логистика 360', url: 'https://logistics360.ru/feed/' },
-    { name: 'AXELOT', url: 'https://www.axelot.ru/feed/' }
+    { name: 'Логистика 360', url: 'https://logistics360.ru/feed/' }
 ];
 
 const SENT_FILE = path.join(__dirname, '..', 'data', 'sent_news.json');
