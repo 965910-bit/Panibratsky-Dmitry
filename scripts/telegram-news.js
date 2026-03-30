@@ -6,14 +6,9 @@ const { pipeline } = require('stream');
 const { promisify } = require('util');
 const streamPipeline = promisify(pipeline);
 
-// ========== НАСТРОЙКИ ==========
+// Только рабочие источники
 const RSS_SOURCES = [
-    { name: 'Logirus', url: 'https://logirus.ru/rss' },
-    { name: 'Логистика 360', url: 'https://logistics360.ru/feed/' },
-    { name: 'Zakupki.gov.ru', url: 'https://zakupki.gov.ru/epz/main/public/rss' },
-    { name: 'Retail & Logistics', url: 'https://retail-loyalty.org/rss/' },
-    { name: 'Склад & Логистика', url: 'https://logistics.ru/rss' },
-    { name: 'MarketInfo', url: 'https://marketinfo.pro/rss' }
+    { name: 'Логистика 360', url: 'https://logistics360.ru/feed/' }
 ];
 
 const SENT_FILE = path.join(__dirname, '..', 'data', 'sent_news.json');
@@ -25,7 +20,6 @@ const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`
 
 const MAX_NEWS_PER_RUN = 5;
 
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
 function ensureDataDir() {
     if (!fs.existsSync(DATA_DIR)) {
         fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -97,7 +91,6 @@ async function sendToTelegram(news) {
     }
 }
 
-// ========== ОСНОВНАЯ ФУНКЦИЯ ==========
 async function main() {
     if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID) {
         console.error('Отсутствуют TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID в секретах GitHub');
