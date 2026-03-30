@@ -4,9 +4,10 @@ import json
 import re
 import os
 
-# Только рабочие источники (проверено на 30.03.2026)
+# Рабочие источники (добавлен AXELOT)
 SOURCES = [
-    {"name": "Логистика 360", "url": "https://logistics360.ru/feed/", "cat": "logistics", "lang": "ru"}
+    {"name": "Логистика 360", "url": "https://logistics360.ru/feed/", "cat": "logistics", "lang": "ru"},
+    {"name": "AXELOT", "url": "https://www.axelot.ru/feed/", "cat": "scm", "lang": "ru"}
 ]
 
 def fetch_rss(source):
