@@ -70,7 +70,6 @@ def fetch_from_sitemap(source):
         root = ET.fromstring(resp.content)
         ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
 
-        # Собираем ссылки на sitemap-файлы за последние 3 месяца
         sitemap_urls = []
         for sitemap in root.findall('s:sitemap', ns):
             loc = sitemap.find('s:loc', ns).text
@@ -84,7 +83,6 @@ def fetch_from_sitemap(source):
         sitemap_urls.sort(reverse=True)
         sitemap_urls = sitemap_urls[:3]
 
-        # Извлекаем все URL из этих файлов
         all_urls = []
         for sitemap_url in sitemap_urls:
             try:
@@ -98,7 +96,6 @@ def fetch_from_sitemap(source):
             except Exception as e:
                 print(f"Ошибка загрузки {sitemap_url}: {e}")
 
-        # Парсим не более 10 самых свежих новостей
         news_items = []
         for url in all_urls[:10]:
             try:
@@ -106,13 +103,11 @@ def fetch_from_sitemap(source):
                 page.raise_for_status()
                 soup = BeautifulSoup(page.text, 'html.parser')
 
-                # Заголовок
                 title_tag = soup.find('h1')
                 if not title_tag:
                     title_tag = soup.find('title')
                 title = title_tag.text.strip() if title_tag else "Без заголовка"
 
-                # Дата
                 date_elem = soup.find('time')
                 if not date_elem:
                     date_elem = soup.find('meta', {'name': 'date'})
@@ -126,7 +121,6 @@ def fetch_from_sitemap(source):
                 if not pubDate:
                     pubDate = datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0000")
 
-                # Описание
                 desc_meta = soup.find('meta', {'name': 'description'})
                 if desc_meta and desc_meta.get('content'):
                     description = desc_meta['content'][:250]
