@@ -7,7 +7,6 @@ const { promisify } = require('util');
 const streamPipeline = promisify(pipeline);
 
 // ========== НАСТРОЙКИ ==========
-// RSS-источники (те же, что и в fetch_news.py)
 const RSS_SOURCES = [
     { name: 'Logirus', url: 'https://logirus.ru/rss' },
     { name: 'Логистика 360', url: 'https://logistics360.ru/feed/' },
@@ -37,9 +36,14 @@ function loadSentNews() {
     ensureDataDir();
     if (fs.existsSync(SENT_FILE)) {
         try {
-            return JSON.parse(fs.readFileSync(SENT_FILE, 'utf8'));
+            const data = fs.readFileSync(SENT_FILE, 'utf8');
+            const parsed = JSON.parse(data);
+            // Гарантируем, что это массив строк (ссылок)
+            if (Array.isArray(parsed)) {
+                return parsed;
+            }
         } catch (e) {
-            return [];
+            console.error('Ошибка чтения sent_news.json, создаём новый', e);
         }
     }
     return [];
@@ -117,8 +121,13 @@ async function main() {
         }
     }
 
+    // Сортируем по дате (новые сверху)
     allNews.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+    // Загружаем историю отправленных ссылок
     let sentLinks = loadSentNews();
+
+    // Фильтруем новости, которые ещё не отправлялись
     const newNews = allNews.filter(item => !sentLinks.includes(item.link)).slice(0, MAX_NEWS_PER_RUN);
 
     if (newNews.length === 0) {
@@ -126,7 +135,7 @@ async function main() {
         return;
     }
 
-    console.log(`Новых новостей: ${newNews.length}`);
+    console.log(`Найдено новых новостей: ${newNews.length}`);
     let successCount = 0;
     for (const news of newNews) {
         const ok = await sendToTelegram(news);
@@ -134,10 +143,12 @@ async function main() {
             sentLinks.push(news.link);
             successCount++;
         }
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1000)); // пауза между отправками
     }
+
+    // Сохраняем обновлённую историю
     saveSentNews(sentLinks);
-    console.log(`Отправлено ${successCount} из ${newNews.length}`);
+    console.log(`Отправлено ${successCount} из ${newNews.length} новостей.`);
 }
 
 main().catch(err => {
