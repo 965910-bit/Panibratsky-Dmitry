@@ -22,9 +22,9 @@ jobs:
           python-version: '3.10'
 
       - name: Install Python dependencies
-        run: pip install requests
+        run: pip install requests beautifulsoup4
 
-      - name: Run fetch script (RSS)
+      - name: Run fetch script (RSS + Sitemap)
         run: python scripts/fetch_news.py
 
       - name: Set up Node.js for Telegram publisher
