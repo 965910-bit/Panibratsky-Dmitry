@@ -6,9 +6,10 @@ const { pipeline } = require('stream');
 const { promisify } = require('util');
 const streamPipeline = promisify(pipeline);
 
-// Только рабочие источники
+// Рабочие источники (добавлен AXELOT)
 const RSS_SOURCES = [
-    { name: 'Логистика 360', url: 'https://logistics360.ru/feed/' }
+    { name: 'Логистика 360', url: 'https://logistics360.ru/feed/' },
+    { name: 'AXELOT', url: 'https://www.axelot.ru/feed/' }
 ];
 
 const SENT_FILE = path.join(__dirname, '..', 'data', 'sent_news.json');
