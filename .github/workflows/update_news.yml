@@ -21,13 +21,12 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: pip install requests beautifulsoup4 feedparser python-dateutil
 
       - name: Fetch news (RSS + sitemap)
         run: python scripts/fetch_news.py
 
-      # Дополнительные сборщики
       - name: Collect government news
         run: python -c "from collectors.gov_ru import GovRuCollector; c = GovRuCollector(); data = c.fetch(); import json; open('data/gov_news.json','w').write(json.dumps(data, ensure_ascii=False))"
 
