@@ -18,9 +18,10 @@ class GoogleAlertsCollector:
             mail = imaplib.IMAP4_SSL(self.imap_server)
             mail.login(self.email_user, self.email_password)
             mail.select("INBOX")
+            print(f"✅ Подключено к IMAP {self.imap_server}")
             return mail
         except Exception as e:
-            print(f"IMAP error: {e}")
+            print(f"❌ Ошибка IMAP: {e}")
             return None
 
     def _decode_mime(self, value):
@@ -57,16 +58,24 @@ class GoogleAlertsCollector:
         result = {"alerts": []}
         mail = self._connect()
         if not mail:
+            print("❌ Не удалось подключиться к почте")
             return result
 
         from datetime import timedelta
         date_since = (datetime.now() - timedelta(days=since_days)).strftime("%d-%b-%Y")
-        typ, data = mail.search(None, f'(SINCE "{date_since}" SUBJECT "Google Alert")')
+        search_criteria = f'(SINCE "{date_since}" SUBJECT "Google Alert")'
+        print(f"🔍 Поиск писем: {search_criteria}")
+
+        typ, data = mail.search(None, search_criteria)
         if typ != "OK":
+            print("❌ Ошибка поиска писем")
             mail.logout()
             return result
 
-        for num in data[0].split():
+        email_ids = data[0].split()
+        print(f"📧 Найдено писем: {len(email_ids)}")
+
+        for num in email_ids:
             typ, msg_data = mail.fetch(num, "(RFC822)")
             if typ != "OK":
                 continue
@@ -85,6 +94,8 @@ class GoogleAlertsCollector:
                         body = payload.decode("utf-8", errors="ignore")
 
                     links = self._extract_links(body)
+                    if links:
+                        print(f"   Из письма '{subject[:50]}...' извлечено ссылок: {len(links)}")
                     for link in links:
                         result["alerts"].append({
                             "link": link,
@@ -93,4 +104,5 @@ class GoogleAlertsCollector:
                             "date": datetime.now().isoformat()
                         })
         mail.logout()
+        print(f"✅ Всего собрано ссылок: {len(result['alerts'])}")
         return result
