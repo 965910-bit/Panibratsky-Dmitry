@@ -9,41 +9,62 @@ from datetime import datetime, timedelta
 from typing import List, Dict
 from bs4 import BeautifulSoup
 
-# Список доменов, которые мы считаем релевантными (можно расширить)
-ALLOWED_DOMAINS = [
-    'logistics360.ru',
-    'ati.su',
-    'cnews.ru',
-    'logistics.ru',
-    'vc.ru',
-    'habr.com',
-    'tadviser.ru',
-    'interfax.ru',
-    'rzd-partner.ru',
-    'xpert.digital',
-    'abn24.ru',
-    'logirus.ru'
-]
-
-# Ссылки, которые точно не должны попадать в новости
-BLACKLIST_URLS = [
-    'google.com/alerts',
-    'google.com/support',
-    'schema.org',
-    'mail.google.com',
-    'accounts.google.com'
-]
-
 def is_valid_link(link: str) -> bool:
-    """Проверка, что ссылка ведёт на разрешённый домен и не является служебной."""
+    """Проверка, что ссылка ведёт на реальную статью, а не на изображение, CSS, JS и т.д."""
     link_lower = link.lower()
-    for banned in BLACKLIST_URLS:
+    
+    # Исключаем служебные ссылки
+    banned_terms = [
+        'google.com/alerts',
+        'google.com/support',
+        'schema.org',
+        'mail.google.com',
+        'accounts.google.com',
+        'gstatic.com',          # изображения, шрифты Google
+        'googleapis.com',       # API, стили
+        'fonts.googleapis.com',
+        'fonts.gstatic.com',
+        'yandex.net',
+        'yandex.st',
+        'mc.yandex.ru',         # метрика
+        'google-analytics.com',
+        'googletagmanager.com'
+    ]
+    for banned in banned_terms:
         if banned in link_lower:
             return False
-    for domain in ALLOWED_DOMAINS:
+    
+    # Исключаем ссылки, заканчивающиеся на расширения статических файлов
+    static_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', 
+                         '.css', '.js', '.json', '.xml', '.txt', '.pdf')
+    if link_lower.endswith(static_extensions):
+        return False
+    
+    # Проверяем, содержит ли ссылка хотя бы один из разрешённых доменов
+    allowed_domains = [
+        'logistics360.ru',
+        'ati.su',
+        'cnews.ru',
+        'logistics.ru',
+        'vc.ru',
+        'habr.com',
+        'tadviser.ru',
+        'interfax.ru',
+        'rzd-partner.ru',
+        'xpert.digital',
+        'abn24.ru',
+        'logirus.ru',
+        'kommersant.ru',
+        'vedomosti.ru',
+        'rbc.ru',
+        '1prime.ru',
+        'rg.ru'
+    ]
+    for domain in allowed_domains:
         if domain in link_lower:
             return True
-    # Если домен не из списка, но ссылка не запрещена — можно добавить с предупреждением
+    
+    # Если домен не из списка, выводим предупреждение и пропускаем
     print(f"   ⚠️  Неизвестный домен: {link}")
     return False
 
@@ -125,7 +146,6 @@ class GoogleAlertsCollector:
                         pass
             if link.startswith("http") and not link.startswith("https://www.google.com"):
                 link = link.rstrip('.,:;!?)]')
-                # Фильтруем по разрешённым доменам
                 if is_valid_link(link):
                     clean.append(link)
         return clean
