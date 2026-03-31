@@ -6,7 +6,6 @@ const { pipeline } = require('stream');
 const { promisify } = require('util');
 const streamPipeline = promisify(pipeline);
 
-// Только RSS-источники (АТИ не отправляем в Telegram)
 const RSS_SOURCES = [
     { name: 'Логистика 360', url: 'https://logistics360.ru/feed/' }
 ];
@@ -46,6 +45,35 @@ function saveSentNews(sentLinks) {
     }
 }
 
+function addUTM(url, campaign, medium) {
+    if (!url) return url;
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}utm_source=telegram&utm_medium=${medium}&utm_campaign=${campaign}`;
+}
+
+function formatPost(item) {
+    const title = item.title || '';
+    const description = (item.description || '').slice(0, 200);
+    const link = item.link || '';
+    const source = item.source || '';
+    const campaign = `news_${Date.now()}`;
+    const siteUrl = 'https://965910-bit.github.io/Panibratsky-Dmitry/trends.html';
+
+    const text = `📰 *${title}*\n\n${description}\n\n🏷️ *${source}*`;
+    const keyboard = {
+        inline_keyboard: [
+            [
+                { text: "🔗 Читать на сайте", url: addUTM(siteUrl, campaign, "read_more") },
+                { text: "📄 Подробнее", url: addUTM(link, campaign, "source") }
+            ],
+            [
+                { text: "🔁 Поделиться", url: `https://t.me/share/url?url=${encodeURIComponent(addUTM(siteUrl, campaign, "share"))}&text=${encodeURIComponent(title)}` }
+            ]
+        ]
+    };
+    return { text, reply_markup: keyboard, campaign, link, title };
+}
+
 async function fetchRSSItems(sourceUrl) {
     return new Promise((resolve, reject) => {
         const items = [];
@@ -74,26 +102,26 @@ async function fetchRSSItems(sourceUrl) {
     });
 }
 
-async function sendToTelegram(news) {
-    const text = `📰 *${news.title}*\n\n${news.description}\n\n🔗 [Читать далее](${news.link})`;
+async function sendToTelegram(formatted) {
     try {
         await axios.post(TELEGRAM_API, {
             chat_id: TELEGRAM_CHAT_ID,
-            text: text,
+            text: formatted.text,
             parse_mode: 'Markdown',
+            reply_markup: JSON.stringify(formatted.reply_markup),
             disable_web_page_preview: false
         });
-        console.log(`Отправлено: ${news.title}`);
+        console.log(`Отправлено: ${formatted.title}`);
         return true;
     } catch (err) {
-        console.error(`Ошибка отправки: ${news.title}`, err.response?.data || err.message);
+        console.error(`Ошибка отправки: ${formatted.title}`, err.response?.data || err.message);
         return false;
     }
 }
 
 async function main() {
     if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID) {
-        console.error('Отсутствуют TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID в секретах GitHub');
+        console.error('Отсутствуют TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID');
         process.exit(1);
     }
 
@@ -121,7 +149,8 @@ async function main() {
     console.log(`Новых новостей: ${newNews.length}`);
     let successCount = 0;
     for (const news of newNews) {
-        const ok = await sendToTelegram(news);
+        const formatted = formatPost(news);
+        const ok = await sendToTelegram(formatted);
         if (ok) {
             sentLinks.push(news.link);
             successCount++;
