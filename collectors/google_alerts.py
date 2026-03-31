@@ -4,7 +4,7 @@ import re
 import json
 import os
 from email.header import decode_header
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict
 
 class GoogleAlertsCollector:
@@ -42,6 +42,23 @@ class GoogleAlertsCollector:
                 result.append(part)
         return " ".join(result)
 
+    def _extract_keyword(self, subject: str) -> str:
+        """
+        Извлекает ключевое слово из темы письма Google Alert.
+        Поддерживает русские темы: "Оповещение Google – логистика"
+        и английские: "Google Alert – logistics".
+        """
+        # Ищем разделитель " – " (пробел, длинное тире, пробел)
+        if " – " in subject:
+            keyword = subject.split(" – ", 1)[1].strip()
+            keyword = keyword.strip('"')
+            return keyword
+        # Если разделитель не найден, возвращаем всё, что после "Google Alert" или "Оповещение Google"
+        for prefix in ["Google Alert – ", "Оповещение Google – "]:
+            if subject.startswith(prefix):
+                return subject.replace(prefix, "").strip()
+        return "unknown"
+
     def _extract_links(self, body):
         links = re.findall(r'href=["\'](https?://[^"\']+)["\']', body)
         clean = []
@@ -54,16 +71,19 @@ class GoogleAlertsCollector:
                 clean.append(link)
         return clean
 
-    def fetch(self, since_days=1):
+    def fetch(self, since_days=7):
+        """
+        Загружает письма Google Alerts за последние since_days дней.
+        """
         result = {"alerts": []}
         mail = self._connect()
         if not mail:
             print("❌ Не удалось подключиться к почте")
             return result
 
-        from datetime import timedelta
         date_since = (datetime.now() - timedelta(days=since_days)).strftime("%d-%b-%Y")
-        search_criteria = f'(SINCE "{date_since}" SUBJECT "Google Alert")'
+        # Ищем письма, где в теме есть "Google Alert" ИЛИ "Оповещение Google"
+        search_criteria = f'(SINCE "{date_since}" OR SUBJECT "Google Alert" SUBJECT "Оповещение Google")'
         print(f"🔍 Поиск писем: {search_criteria}")
 
         typ, data = mail.search(None, search_criteria)
@@ -83,6 +103,7 @@ class GoogleAlertsCollector:
                 if isinstance(response_part, tuple):
                     msg = email.message_from_bytes(response_part[1])
                     subject = self._decode_mime(msg.get("Subject", ""))
+                    keyword = self._extract_keyword(subject)
                     body = ""
                     if msg.is_multipart():
                         for part in msg.walk():
@@ -95,12 +116,13 @@ class GoogleAlertsCollector:
 
                     links = self._extract_links(body)
                     if links:
-                        print(f"   Из письма '{subject[:50]}...' извлечено ссылок: {len(links)}")
+                        print(f"   Из письма '{subject[:50]}...' извлечено ссылок: {len(links)} (тема: {keyword})")
                     for link in links:
                         result["alerts"].append({
                             "link": link,
                             "source": "Google Alert",
                             "subject": subject,
+                            "keyword": keyword,
                             "date": datetime.now().isoformat()
                         })
         mail.logout()
