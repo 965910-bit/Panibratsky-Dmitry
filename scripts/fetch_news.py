@@ -30,6 +30,7 @@ HEADERS = {
     'Accept-Language': 'ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3'
 }
 
+# ---------------------- RSS ----------------------
 def fetch_rss(source):
     try:
         resp = requests.get(source["url"], timeout=15, headers=HEADERS)
@@ -60,6 +61,7 @@ def fetch_rss(source):
         print(f"Ошибка RSS {source['name']}: {e}")
         return []
 
+# ---------------------- SITEMAP + ПАРСИНГ ----------------------
 def fetch_from_sitemap(source):
     try:
         resp = requests.get(source["url"], timeout=15, headers=HEADERS)
@@ -142,6 +144,39 @@ def fetch_from_sitemap(source):
         print(f"Ошибка обработки sitemap {source['name']}: {e}")
         return []
 
+# ---------------------- GOOGLE ALERTS ----------------------
+def load_google_alerts():
+    """Загружает Google Alerts из data/google_alerts.json и преобразует в формат новостей."""
+    alerts_path = os.path.join(os.path.dirname(__file__), "..", "data", "google_alerts.json")
+    if not os.path.exists(alerts_path):
+        return []
+    try:
+        with open(alerts_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        alerts = data.get("alerts", [])
+        news_items = []
+        for alert in alerts:
+            # Преобразуем дату из ISO в RFC 822
+            try:
+                dt = datetime.fromisoformat(alert["date"])
+                pubDate = dt.strftime("%a, %d %b %Y %H:%M:%S +0000")
+            except:
+                pubDate = datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0000")
+            news_items.append({
+                "title": alert["subject"],  # тема письма
+                "link": alert["link"],
+                "pubDate": pubDate,
+                "description": f"Google Alert по теме: {alert['keyword']}",
+                "source": "Google Alert",
+                "lang": "ru",
+                "category": alert["keyword"]  # используем ключевое слово как категорию
+            })
+        return news_items
+    except Exception as e:
+        print(f"Ошибка загрузки Google Alerts: {e}")
+        return []
+
+# ---------------------- ГЛАВНАЯ ----------------------
 def main():
     all_news = []
     for src in SOURCES:
@@ -152,6 +187,14 @@ def main():
         all_news.extend(news)
         print(f"Из {src['name']} получено {len(news)} новостей")
         time.sleep(1)
+
+    # Добавляем Google Alerts
+    google_news = load_google_alerts()
+    if google_news:
+        all_news.extend(google_news)
+        print(f"Из Google Alerts получено {len(google_news)} новостей")
+    else:
+        print("Google Alerts не найдены или пусты")
 
     all_news.sort(key=lambda x: x['pubDate'], reverse=True)
 
