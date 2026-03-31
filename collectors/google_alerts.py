@@ -45,16 +45,27 @@ class GoogleAlertsCollector:
         return " ".join(result)
 
     def _extract_keyword(self, subject: str) -> str:
-        if " – " in subject:
-            keyword = subject.split(" – ", 1)[1].strip()
+        """
+        Извлекает ключевое слово из темы письма Google Alert.
+        Учитывает возможные неразрывные пробелы.
+        """
+        # Ищем длинное тире с пробелами вокруг
+        # Допускаем любые пробельные символы (включая неразрывный пробел)
+        match = re.search(r'[–—]\s*([^–—]+?)$', subject)
+        if match:
+            keyword = match.group(1).strip()
             keyword = keyword.strip('"')
             return keyword
-        for prefix in ["Google Alert – ", "Оповещение Google – "]:
+        # Если не нашли, пробуем по префиксам
+        for prefix in ["Google Alert – ", "Оповещение Google – ", "Оповещение Google – "]:
             if subject.startswith(prefix):
                 return subject.replace(prefix, "").strip()
         return "unknown"
 
     def _extract_links(self, body):
+        """
+        Извлекает URL из текста письма, используя несколько методов.
+        """
         links = []
         # 1. HTML-ссылки
         soup = BeautifulSoup(body, 'html.parser')
@@ -125,7 +136,6 @@ class GoogleAlertsCollector:
                     keyword = self._extract_keyword(subject)
                     body = ""
                     if msg.is_multipart():
-                        # Сначала ищем text/html, затем text/plain
                         for part in msg.walk():
                             if part.get_content_type() == "text/html":
                                 payload = part.get_payload(decode=True)
