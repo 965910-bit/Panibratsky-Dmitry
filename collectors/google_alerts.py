@@ -4,10 +4,10 @@ import re
 import json
 import os
 import urllib.parse
-import html
 from email.header import decode_header
 from datetime import datetime, timedelta
 from typing import List, Dict
+from bs4 import BeautifulSoup
 
 class GoogleAlertsCollector:
     def __init__(self, email_user, email_password, imap_server="imap.gmail.com"):
@@ -56,31 +56,35 @@ class GoogleAlertsCollector:
 
     def _extract_links(self, body):
         """
-        Извлекает URL из текста письма, обрабатывает HTML-сущности и ссылки google.com/url.
+        Извлекает URL из текста или HTML.
         """
-        # Декодируем HTML-сущности (например, &lt; → <, &gt; → >, &amp; → &)
-        body = html.unescape(body)
-
-        # Ищем URL в формате http:// или https://, возможно внутри <...> или без них
-        # Регулярное выражение: http:// или https://, затем любые символы, кроме пробелов, <, >, кавычек
-        url_pattern = r'(https?://[^\s<>"\'\)]+)'
-        raw_urls = re.findall(url_pattern, body)
-
+        links = []
+        # Парсим HTML
+        soup = BeautifulSoup(body, 'html.parser')
+        for a in soup.find_all('a', href=True):
+            href = a['href']
+            if href.startswith('http'):
+                links.append(href)
+        # Если ссылок не нашли, пробуем искать URL в тексте
+        if not links:
+            url_pattern = r'(?:<)?(https?://[^\s<>]+)(?:>)?'
+            raw_urls = re.findall(url_pattern, body)
+            for link in raw_urls:
+                link = link.rstrip('.,:;!?)]')
+                if link.startswith('http'):
+                    links.append(link)
+        # Обрабатываем ссылки Google и очищаем
         clean = []
-        for link in raw_urls:
-            # Удаляем возможные завершающие символы
-            link = link.rstrip('.,:;!?)]')
-            # Если это ссылка google.com/url, извлекаем параметр q
+        for link in links:
             if "google.com/url?" in link:
                 q_match = re.search(r'[?&]q=([^&]+)', link)
                 if q_match:
                     link = q_match.group(1)
-            # Пропускаем, если это всё ещё google.com
+                    try:
+                        link = urllib.parse.unquote(link)
+                    except:
+                        pass
             if link.startswith("http") and not link.startswith("https://www.google.com"):
-                try:
-                    link = urllib.parse.unquote(link)
-                except:
-                    pass
                 clean.append(link)
         return clean
 
@@ -115,25 +119,30 @@ class GoogleAlertsCollector:
                     if "Google Alert" not in subject and "Оповещение Google" not in subject:
                         continue
                     keyword = self._extract_keyword(subject)
-                    body = ""
+                    body_text = ""
+                    body_html = ""
                     if msg.is_multipart():
                         for part in msg.walk():
-                            if part.get_content_type() == "text/plain":
+                            content_type = part.get_content_type()
+                            if content_type == "text/plain":
                                 payload = part.get_payload(decode=True)
-                                body += payload.decode("utf-8", errors="ignore")
+                                body_text += payload.decode("utf-8", errors="ignore")
+                            elif content_type == "text/html":
+                                payload = part.get_payload(decode=True)
+                                body_html += payload.decode("utf-8", errors="ignore")
                     else:
                         payload = msg.get_payload(decode=True)
-                        body = payload.decode("utf-8", errors="ignore")
+                        body_text = payload.decode("utf-8", errors="ignore")
 
-                    links = self._extract_links(body)
+                    # Ищем ссылки сначала в text/plain, потом в text/html
+                    links = self._extract_links(body_text)
+                    if not links and body_html:
+                        links = self._extract_links(body_html)
+
                     if links:
                         print(f"   Из письма '{subject[:50]}...' извлечено ссылок: {len(links)} (тема: {keyword})")
-                        # Выведем первые 2 ссылки для отладки
-                        for link in links[:2]:
-                            print(f"       Ссылка: {link}")
                     else:
-                        # Для отладки показываем первые 300 символов тела
-                        body_preview = body[:300].replace('\n', ' ')
+                        body_preview = (body_text or body_html)[:300].replace('\n', ' ')
                         print(f"   ⚠️  В письме '{subject[:50]}...' не найдено ссылок. Фрагмент: {body_preview}")
                     for link in links:
                         result["alerts"].append({
@@ -144,7 +153,7 @@ class GoogleAlertsCollector:
                             "date": datetime.now().isoformat()
                         })
                     processed += 1
-                    if processed >= 5:  # Ограничим вывод, чтобы не перегружать логи
+                    if processed >= 5:
                         break
         mail.logout()
         print(f"✅ Всего собрано ссылок: {len(result['alerts'])}")
