@@ -7,7 +7,6 @@ import urllib.parse
 from email.header import decode_header
 from datetime import datetime, timedelta
 from typing import List, Dict
-from bs4 import BeautifulSoup
 
 class GoogleAlertsCollector:
     def __init__(self, email_user, email_password, imap_server="imap.gmail.com"):
@@ -56,32 +55,24 @@ class GoogleAlertsCollector:
 
     def _extract_links(self, body):
         """
-        Извлекает URL из текста письма, используя несколько методов.
+        Извлекает URL из текста, ищет http:// или https://.
+        Возвращает список очищенных ссылок.
         """
         links = []
-        # 1. HTML-ссылки
-        soup = BeautifulSoup(body, 'html.parser')
-        for a in soup.find_all('a', href=True):
-            href = a['href']
-            if href.startswith('http'):
-                links.append(href)
-        # 2. Markdown-ссылки [текст](url)
-        md_links = re.findall(r'\[[^\]]*\]\((https?://[^\)]+)\)', body)
-        links.extend(md_links)
-        # 3. Прямые URL в тексте
-        url_pattern = r'https?://[^\s<>"\'\)]+'
-        raw_urls = re.findall(url_pattern, body)
-        links.extend(raw_urls)
-        # Удаляем дубликаты, сохраняя порядок
-        seen = set()
-        unique_links = []
-        for link in links:
-            if link not in seen:
-                seen.add(link)
-                unique_links.append(link)
-        # Обработка ссылок Google и очистка
-        clean = []
-        for link in unique_links:
+        pos = 0
+        while True:
+            # Ищем начало http:// или https://
+            start_http = body.find("http://", pos)
+            start_https = body.find("https://", pos)
+            if start_http == -1 and start_https == -1:
+                break
+            start = start_http if start_http != -1 and (start_https == -1 or start_http < start_https) else start_https
+            # Ищем конец URL: первый разделитель (пробел, перевод строки, табуляция, >, ", ', ), ], }, и т.д.)
+            end = start
+            while end < len(body) and body[end] not in " \t\n\r><\"')\\]}":
+                end += 1
+            link = body[start:end].rstrip('.,:;!?')
+            # Обрабатываем ссылки Google
             if "google.com/url?" in link:
                 q_match = re.search(r'[?&]q=([^&]+)', link)
                 if q_match:
@@ -91,9 +82,9 @@ class GoogleAlertsCollector:
                     except:
                         pass
             if link.startswith("http") and not link.startswith("https://www.google.com"):
-                link = link.rstrip('.,:;!?)]')
-                clean.append(link)
-        return clean
+                links.append(link)
+            pos = end
+        return links
 
     def fetch(self, since_days=7):
         result = {"alerts": []}
