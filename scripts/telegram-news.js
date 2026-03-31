@@ -1,15 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const FeedParser = require('feedparser');
-const { pipeline } = require('stream');
-const { promisify } = require('util');
-const streamPipeline = promisify(pipeline);
 
-const RSS_SOURCES = [
-    { name: 'Логистика 360', url: 'https://logistics360.ru/feed/' }
-];
-
+const NEWS_FILE = path.join(__dirname, '..', 'data', 'news.json');
 const SENT_FILE = path.join(__dirname, '..', 'data', 'sent_news.json');
 const DATA_DIR = path.join(__dirname, '..', 'data');
 
@@ -45,6 +38,20 @@ function saveSentNews(sentLinks) {
     }
 }
 
+function loadNews() {
+    if (!fs.existsSync(NEWS_FILE)) {
+        console.log('Файл news.json не найден');
+        return [];
+    }
+    try {
+        const data = fs.readFileSync(NEWS_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch (e) {
+        console.error('Ошибка чтения news.json:', e);
+        return [];
+    }
+}
+
 function addUTM(url, campaign, medium) {
     if (!url) return url;
     const separator = url.includes('?') ? '&' : '?';
@@ -56,7 +63,7 @@ function formatPost(item) {
     const description = (item.description || '').slice(0, 200);
     const link = item.link || '';
     const source = item.source || '';
-    const campaign = `news_${Date.now()}`;
+    const campaign = `news_${Date.now()}_${encodeURIComponent(source)}`;
     const siteUrl = 'https://965910-bit.github.io/Panibratsky-Dmitry/trends.html';
 
     const text = `📰 *${title}*\n\n${description}\n\n🏷️ *${source}*`;
@@ -72,34 +79,6 @@ function formatPost(item) {
         ]
     };
     return { text, reply_markup: keyboard, campaign, link, title };
-}
-
-async function fetchRSSItems(sourceUrl) {
-    return new Promise((resolve, reject) => {
-        const items = [];
-        axios({
-            method: 'get',
-            url: sourceUrl,
-            responseType: 'stream',
-            timeout: 10000
-        }).then(response => {
-            const feedparser = new FeedParser({ addmeta: false });
-            streamPipeline(response.data, feedparser).catch(reject);
-            feedparser.on('readable', function() {
-                let item;
-                while (item = this.read()) {
-                    items.push({
-                        title: item.title,
-                        link: item.link,
-                        pubDate: item.pubDate,
-                        description: (item.description || '').replace(/<[^>]*>/g, '').slice(0, 200)
-                    });
-                }
-            });
-            feedparser.on('end', () => resolve(items));
-            feedparser.on('error', reject);
-        }).catch(reject);
-    });
 }
 
 async function sendToTelegram(formatted) {
@@ -125,19 +104,16 @@ async function main() {
         process.exit(1);
     }
 
-    console.log('Сбор новостей для Telegram...');
-    let allNews = [];
-    for (const src of RSS_SOURCES) {
-        try {
-            const items = await fetchRSSItems(src.url);
-            console.log(`Загружено ${items.length} из ${src.name}`);
-            allNews.push(...items);
-        } catch (err) {
-            console.error(`Ошибка ${src.name}:`, err.message);
-        }
+    console.log('Загрузка новостей из news.json...');
+    const allNews = loadNews();
+    if (allNews.length === 0) {
+        console.log('Нет новостей для отправки.');
+        return;
     }
 
+    // Сортируем по дате (новые сверху)
     allNews.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
     let sentLinks = loadSentNews();
     const newNews = allNews.filter(item => !sentLinks.includes(item.link)).slice(0, MAX_NEWS_PER_RUN);
 
