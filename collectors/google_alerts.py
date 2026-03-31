@@ -54,19 +54,23 @@ class GoogleAlertsCollector:
         return "unknown"
 
     def _extract_links(self, body):
-        """Ищет все URL в тексте письма, декодирует и чистит."""
-        # Регулярное выражение для поиска URL
-        url_pattern = r'(https?://[^\s<>"\'\)]+)'
+        """
+        Извлекает URL из текста письма, включая ссылки в угловых скобках
+        и обрабатывает ссылки google.com/url.
+        """
+        # Ищем URL: http:// или https://, возможно в <...>
+        url_pattern = r'(?:<)?(https?://[^\s<>]+)(?:>)?'
         raw_urls = re.findall(url_pattern, body)
         clean = []
         for link in raw_urls:
-            # Удаляем лишние символы в конце
+            # Удаляем завершающие символы, которые могли попасть в конец
             link = link.rstrip('.,:;!?)]')
-            # Обрабатываем ссылки Google
-            if "google.com/url?q=" in link:
-                m = re.search(r'q=([^&]+)', link)
-                if m:
-                    link = m.group(1)
+            # Если это ссылка google.com/url, извлекаем параметр q
+            if "google.com/url?" in link:
+                q_match = re.search(r'[?&]q=([^&]+)', link)
+                if q_match:
+                    link = q_match.group(1)
+            # Пропускаем, если это не http(s) или если это всё ещё google.com
             if link.startswith("http") and not link.startswith("https://www.google.com"):
                 try:
                     link = urllib.parse.unquote(link)
@@ -120,7 +124,7 @@ class GoogleAlertsCollector:
                     if links:
                         print(f"   Из письма '{subject[:50]}...' извлечено ссылок: {len(links)} (тема: {keyword})")
                     else:
-                        # Выводим фрагмент тела для отладки (первые 300 символов)
+                        # Для отладки показываем первые 300 символов тела
                         body_preview = body[:300].replace('\n', ' ')
                         print(f"   ⚠️  В письме '{subject[:50]}...' не найдено ссылок. Фрагмент: {body_preview}")
                     for link in links:
@@ -132,7 +136,7 @@ class GoogleAlertsCollector:
                             "date": datetime.now().isoformat()
                         })
                     processed += 1
-                    if processed >= 5:  # Ограничим вывод, чтобы не перегружать логи
+                    if processed >= 5:
                         break
         mail.logout()
         print(f"✅ Всего собрано ссылок: {len(result['alerts'])}")
