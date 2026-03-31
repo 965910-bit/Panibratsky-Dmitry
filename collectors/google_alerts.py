@@ -56,16 +56,25 @@ class GoogleAlertsCollector:
 
     def _extract_links(self, body):
         """
-        Извлекает URL из текста или HTML.
+        Извлекает URL из текста письма.
+        Ищет:
+        - HTML-теги <a href="...">
+        - Markdown-ссылки [текст](url)
+        - Простые URL в тексте (http:// или https://)
+        - Ссылки google.com/url?q=...
         """
         links = []
-        # Парсим HTML
+        # 1. Ищем HTML-ссылки
         soup = BeautifulSoup(body, 'html.parser')
         for a in soup.find_all('a', href=True):
             href = a['href']
             if href.startswith('http'):
                 links.append(href)
-        # Если ссылок не нашли, пробуем искать URL в тексте
+        # 2. Ищем Markdown-ссылки [текст](url)
+        md_links = re.findall(r'\[[^\]]*\]\((https?://[^\)]+)\)', body)
+        for url in md_links:
+            links.append(url)
+        # 3. Если ссылок всё ещё нет, ищем обычные URL в тексте (включая угловые скобки)
         if not links:
             url_pattern = r'(?:<)?(https?://[^\s<>]+)(?:>)?'
             raw_urls = re.findall(url_pattern, body)
@@ -73,6 +82,7 @@ class GoogleAlertsCollector:
                 link = link.rstrip('.,:;!?)]')
                 if link.startswith('http'):
                     links.append(link)
+
         # Обрабатываем ссылки Google и очищаем
         clean = []
         for link in links:
@@ -119,30 +129,29 @@ class GoogleAlertsCollector:
                     if "Google Alert" not in subject and "Оповещение Google" not in subject:
                         continue
                     keyword = self._extract_keyword(subject)
-                    body_text = ""
-                    body_html = ""
+                    body = ""
                     if msg.is_multipart():
                         for part in msg.walk():
                             content_type = part.get_content_type()
                             if content_type == "text/plain":
                                 payload = part.get_payload(decode=True)
-                                body_text += payload.decode("utf-8", errors="ignore")
-                            elif content_type == "text/html":
-                                payload = part.get_payload(decode=True)
-                                body_html += payload.decode("utf-8", errors="ignore")
+                                body += payload.decode("utf-8", errors="ignore")
+                                break
+                        if not body:
+                            for part in msg.walk():
+                                if part.get_content_type() == "text/html":
+                                    payload = part.get_payload(decode=True)
+                                    body += payload.decode("utf-8", errors="ignore")
+                                    break
                     else:
                         payload = msg.get_payload(decode=True)
-                        body_text = payload.decode("utf-8", errors="ignore")
+                        body = payload.decode("utf-8", errors="ignore")
 
-                    # Ищем ссылки сначала в text/plain, потом в text/html
-                    links = self._extract_links(body_text)
-                    if not links and body_html:
-                        links = self._extract_links(body_html)
-
+                    links = self._extract_links(body)
                     if links:
                         print(f"   Из письма '{subject[:50]}...' извлечено ссылок: {len(links)} (тема: {keyword})")
                     else:
-                        body_preview = (body_text or body_html)[:300].replace('\n', ' ')
+                        body_preview = body[:300].replace('\n', ' ')
                         print(f"   ⚠️  В письме '{subject[:50]}...' не найдено ссылок. Фрагмент: {body_preview}")
                     for link in links:
                         result["alerts"].append({
