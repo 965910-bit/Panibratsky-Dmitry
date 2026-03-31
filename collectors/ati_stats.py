@@ -11,14 +11,12 @@ class ATIStatsCollector:
         }
 
     def fetch_indexes(self):
-        """Собирает индексы ставок с ATI (пример)"""
         url = "https://ati.su/statistics/indexes"
         try:
             resp = requests.get(url, headers=self.headers, timeout=10)
             resp.raise_for_status()
             soup = BeautifulSoup(resp.text, 'html.parser')
-            # Здесь нужно извлечь данные. Это заглушка — реальный парсинг зависит от структуры страницы.
-            # Например, ищем блок с классом .index-value
+            # Пример парсинга (нужно уточнить реальную структуру)
             values = []
             for item in soup.select(".index-value"):
                 values.append(item.text.strip())
