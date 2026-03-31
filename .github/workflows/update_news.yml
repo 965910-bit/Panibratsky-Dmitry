@@ -24,11 +24,11 @@ jobs:
       - name: Install Python dependencies
         run: pip install requests beautifulsoup4 feedparser python-dateutil
 
-      - name: Fetch news (RSS + sitemap)
+      - name: Fetch news (RSS + sitemap + Google Alerts)
         run: python scripts/fetch_news.py
 
-      - name: Collect government news
-        run: python -c "from collectors.gov_ru import GovRuCollector; c = GovRuCollector(); data = c.fetch(); import json; open('data/gov_news.json','w').write(json.dumps(data, ensure_ascii=False))"
+      - name: Collect government news (optional)
+        run: python -c "from collectors.gov_ru import GovRuCollector; c = GovRuCollector(); data = c.fetch(); import json; open('data/gov_news.json','w').write(json.dumps(data, ensure_ascii=False))" || true
 
       - name: Collect ATI stats (optional)
         run: python -c "from collectors.ati_stats import ATIStatsCollector; c = ATIStatsCollector(); data = c.fetch_indexes(); import json; open('data/ati_stats.json','w').write(json.dumps(data, ensure_ascii=False))" || true
