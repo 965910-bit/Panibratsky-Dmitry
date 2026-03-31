@@ -9,6 +9,44 @@ from datetime import datetime, timedelta
 from typing import List, Dict
 from bs4 import BeautifulSoup
 
+# Список доменов, которые мы считаем релевантными (можно расширить)
+ALLOWED_DOMAINS = [
+    'logistics360.ru',
+    'ati.su',
+    'cnews.ru',
+    'logistics.ru',
+    'vc.ru',
+    'habr.com',
+    'tadviser.ru',
+    'interfax.ru',
+    'rzd-partner.ru',
+    'xpert.digital',
+    'abn24.ru',
+    'logirus.ru'
+]
+
+# Ссылки, которые точно не должны попадать в новости
+BLACKLIST_URLS = [
+    'google.com/alerts',
+    'google.com/support',
+    'schema.org',
+    'mail.google.com',
+    'accounts.google.com'
+]
+
+def is_valid_link(link: str) -> bool:
+    """Проверка, что ссылка ведёт на разрешённый домен и не является служебной."""
+    link_lower = link.lower()
+    for banned in BLACKLIST_URLS:
+        if banned in link_lower:
+            return False
+    for domain in ALLOWED_DOMAINS:
+        if domain in link_lower:
+            return True
+    # Если домен не из списка, но ссылка не запрещена — можно добавить с предупреждением
+    print(f"   ⚠️  Неизвестный домен: {link}")
+    return False
+
 class GoogleAlertsCollector:
     def __init__(self, email_user, email_password, imap_server="imap.gmail.com"):
         self.email_user = email_user
@@ -45,49 +83,36 @@ class GoogleAlertsCollector:
         return " ".join(result)
 
     def _extract_keyword(self, subject: str) -> str:
-        """
-        Извлекает ключевое слово из темы письма Google Alert.
-        Учитывает возможные неразрывные пробелы.
-        """
-        # Ищем длинное тире с пробелами вокруг
-        # Допускаем любые пробельные символы (включая неразрывный пробел)
         match = re.search(r'[–—]\s*([^–—]+?)$', subject)
         if match:
             keyword = match.group(1).strip()
             keyword = keyword.strip('"')
             return keyword
-        # Если не нашли, пробуем по префиксам
         for prefix in ["Google Alert – ", "Оповещение Google – ", "Оповещение Google – "]:
             if subject.startswith(prefix):
                 return subject.replace(prefix, "").strip()
         return "unknown"
 
     def _extract_links(self, body):
-        """
-        Извлекает URL из текста письма, используя несколько методов.
-        """
         links = []
-        # 1. HTML-ссылки
         soup = BeautifulSoup(body, 'html.parser')
         for a in soup.find_all('a', href=True):
             href = a['href']
             if href.startswith('http'):
                 links.append(href)
-        # 2. Markdown-ссылки [текст](url)
         md_links = re.findall(r'\[[^\]]*\]\((https?://[^\)]+)\)', body)
         links.extend(md_links)
-        # 3. Прямые URL в тексте
         url_pattern = r'https?://[^\s<>"\'\)]+'
         raw_urls = re.findall(url_pattern, body)
         links.extend(raw_urls)
-        # Удаляем дубликаты, сохраняя порядок
+
         seen = set()
         unique_links = []
         for link in links:
             if link not in seen:
                 seen.add(link)
                 unique_links.append(link)
-        # Обработка ссылок Google и очистка
+
         clean = []
         for link in unique_links:
             if "google.com/url?" in link:
@@ -100,7 +125,9 @@ class GoogleAlertsCollector:
                         pass
             if link.startswith("http") and not link.startswith("https://www.google.com"):
                 link = link.rstrip('.,:;!?)]')
-                clean.append(link)
+                # Фильтруем по разрешённым доменам
+                if is_valid_link(link):
+                    clean.append(link)
         return clean
 
     def fetch(self, since_days=7):
