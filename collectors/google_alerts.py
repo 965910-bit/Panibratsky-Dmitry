@@ -45,15 +45,13 @@ class GoogleAlertsCollector:
     def _extract_keyword(self, subject: str) -> str:
         """
         Извлекает ключевое слово из темы письма Google Alert.
-        Поддерживает русские темы: "Оповещение Google – логистика"
-        и английские: "Google Alert – logistics".
         """
-        # Ищем разделитель " – " (пробел, длинное тире, пробел)
+        # Ищем разделитель " – "
         if " – " in subject:
             keyword = subject.split(" – ", 1)[1].strip()
             keyword = keyword.strip('"')
             return keyword
-        # Если разделитель не найден, возвращаем всё, что после "Google Alert" или "Оповещение Google"
+        # Если разделитель не найден, ищем префикс
         for prefix in ["Google Alert – ", "Оповещение Google – "]:
             if subject.startswith(prefix):
                 return subject.replace(prefix, "").strip()
@@ -73,7 +71,8 @@ class GoogleAlertsCollector:
 
     def fetch(self, since_days=7):
         """
-        Загружает письма Google Alerts за последние since_days дней.
+        Загружает письма за последние since_days дней,
+        затем фильтрует те, у которых в теме есть "Google Alert" или "Оповещение Google".
         """
         result = {"alerts": []}
         mail = self._connect()
@@ -82,8 +81,7 @@ class GoogleAlertsCollector:
             return result
 
         date_since = (datetime.now() - timedelta(days=since_days)).strftime("%d-%b-%Y")
-        # Ищем письма, где в теме есть "Google Alert" ИЛИ "Оповещение Google"
-        search_criteria = f'(SINCE "{date_since}" OR SUBJECT "Google Alert" SUBJECT "Оповещение Google")'
+        search_criteria = f'(SINCE "{date_since}")'
         print(f"🔍 Поиск писем: {search_criteria}")
 
         typ, data = mail.search(None, search_criteria)
@@ -103,6 +101,9 @@ class GoogleAlertsCollector:
                 if isinstance(response_part, tuple):
                     msg = email.message_from_bytes(response_part[1])
                     subject = self._decode_mime(msg.get("Subject", ""))
+                    # Фильтруем письма Google Alerts
+                    if "Google Alert" not in subject and "Оповещение Google" not in subject:
+                        continue
                     keyword = self._extract_keyword(subject)
                     body = ""
                     if msg.is_multipart():
