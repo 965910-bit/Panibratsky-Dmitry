@@ -55,14 +55,33 @@ class GoogleAlertsCollector:
         return "unknown"
 
     def _extract_links(self, body):
-        # Ищем все URL в тексте (http:// или https://)
+        """
+        Извлекает URL из текста письма, используя несколько методов.
+        """
+        links = []
+        # 1. HTML-ссылки
+        soup = BeautifulSoup(body, 'html.parser')
+        for a in soup.find_all('a', href=True):
+            href = a['href']
+            if href.startswith('http'):
+                links.append(href)
+        # 2. Markdown-ссылки [текст](url)
+        md_links = re.findall(r'\[[^\]]*\]\((https?://[^\)]+)\)', body)
+        links.extend(md_links)
+        # 3. Прямые URL в тексте
         url_pattern = r'https?://[^\s<>"\'\)]+'
         raw_urls = re.findall(url_pattern, body)
+        links.extend(raw_urls)
+        # Удаляем дубликаты, сохраняя порядок
+        seen = set()
+        unique_links = []
+        for link in links:
+            if link not in seen:
+                seen.add(link)
+                unique_links.append(link)
+        # Обработка ссылок Google и очистка
         clean = []
-        for link in raw_urls:
-            # Обрезаем возможные завершающие символы
-            link = link.rstrip('.,:;!?)]')
-            # Обрабатываем ссылки Google
+        for link in unique_links:
             if "google.com/url?" in link:
                 q_match = re.search(r'[?&]q=([^&]+)', link)
                 if q_match:
@@ -72,6 +91,7 @@ class GoogleAlertsCollector:
                     except:
                         pass
             if link.startswith("http") and not link.startswith("https://www.google.com"):
+                link = link.rstrip('.,:;!?)]')
                 clean.append(link)
         return clean
 
