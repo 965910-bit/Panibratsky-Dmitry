@@ -7,7 +7,6 @@ import time
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 
-# ---------------------- ИСТОЧНИКИ ----------------------
 SOURCES = [
     {
         "name": "Логистика 360",
@@ -31,7 +30,6 @@ HEADERS = {
     'Accept-Language': 'ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3'
 }
 
-# ---------------------- RSS ----------------------
 def fetch_rss(source):
     try:
         resp = requests.get(source["url"], timeout=15, headers=HEADERS)
@@ -62,7 +60,6 @@ def fetch_rss(source):
         print(f"Ошибка RSS {source['name']}: {e}")
         return []
 
-# ---------------------- SITEMAP + ПАРСИНГ ----------------------
 def fetch_from_sitemap(source):
     try:
         resp = requests.get(source["url"], timeout=15, headers=HEADERS)
@@ -145,7 +142,6 @@ def fetch_from_sitemap(source):
         print(f"Ошибка обработки sitemap {source['name']}: {e}")
         return []
 
-# ---------------------- ГЛАВНАЯ ----------------------
 def main():
     all_news = []
     for src in SOURCES:
