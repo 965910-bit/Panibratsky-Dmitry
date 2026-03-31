@@ -4,6 +4,7 @@ import re
 import json
 import os
 import urllib.parse
+import html
 from email.header import decode_header
 from datetime import datetime, timedelta
 from typing import List, Dict
@@ -55,22 +56,26 @@ class GoogleAlertsCollector:
 
     def _extract_links(self, body):
         """
-        Извлекает URL из текста письма, включая ссылки в угловых скобках
-        и обрабатывает ссылки google.com/url.
+        Извлекает URL из текста письма, обрабатывает HTML-сущности и ссылки google.com/url.
         """
-        # Ищем URL: http:// или https://, возможно в <...>
-        url_pattern = r'(?:<)?(https?://[^\s<>]+)(?:>)?'
+        # Декодируем HTML-сущности (например, &lt; → <, &gt; → >, &amp; → &)
+        body = html.unescape(body)
+
+        # Ищем URL в формате http:// или https://, возможно внутри <...> или без них
+        # Регулярное выражение: http:// или https://, затем любые символы, кроме пробелов, <, >, кавычек
+        url_pattern = r'(https?://[^\s<>"\'\)]+)'
         raw_urls = re.findall(url_pattern, body)
+
         clean = []
         for link in raw_urls:
-            # Удаляем завершающие символы, которые могли попасть в конец
+            # Удаляем возможные завершающие символы
             link = link.rstrip('.,:;!?)]')
             # Если это ссылка google.com/url, извлекаем параметр q
             if "google.com/url?" in link:
                 q_match = re.search(r'[?&]q=([^&]+)', link)
                 if q_match:
                     link = q_match.group(1)
-            # Пропускаем, если это не http(s) или если это всё ещё google.com
+            # Пропускаем, если это всё ещё google.com
             if link.startswith("http") and not link.startswith("https://www.google.com"):
                 try:
                     link = urllib.parse.unquote(link)
@@ -123,6 +128,9 @@ class GoogleAlertsCollector:
                     links = self._extract_links(body)
                     if links:
                         print(f"   Из письма '{subject[:50]}...' извлечено ссылок: {len(links)} (тема: {keyword})")
+                        # Выведем первые 2 ссылки для отладки
+                        for link in links[:2]:
+                            print(f"       Ссылка: {link}")
                     else:
                         # Для отладки показываем первые 300 символов тела
                         body_preview = body[:300].replace('\n', ' ')
@@ -136,7 +144,7 @@ class GoogleAlertsCollector:
                             "date": datetime.now().isoformat()
                         })
                     processed += 1
-                    if processed >= 5:
+                    if processed >= 5:  # Ограничим вывод, чтобы не перегружать логи
                         break
         mail.logout()
         print(f"✅ Всего собрано ссылок: {len(result['alerts'])}")
