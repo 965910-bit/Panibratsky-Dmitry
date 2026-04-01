@@ -102,9 +102,6 @@ class GoogleAlertsCollector:
         if match:
             try:
                 data = json.loads(match.group(1))
-                # Отладка: посмотрим ключи верхнего уровня
-                print(f"DEBUG: JSON top-level keys: {list(data.keys())}")
-
                 # Рекурсивно собираем все строки, начинающиеся с http
                 def extract_urls(obj):
                     if isinstance(obj, dict):
@@ -120,8 +117,6 @@ class GoogleAlertsCollector:
                         links.append(obj)
 
                 extract_urls(data)
-                # Отладка: сколько ссылок найдено в JSON
-                print(f"DEBUG: Found {len(links)} links in JSON")
             except Exception as e:
                 print(f"Ошибка парсинга JSON: {e}")
 
@@ -153,14 +148,19 @@ class GoogleAlertsCollector:
         # Очистка ссылок Google Alert и фильтрация
         clean = []
         for link in unique_links:
+            # Раскрываем обёртки Google
             if "google.com/url?" in link:
-                q_match = re.search(r'[?&]q=([^&]+)', link)
+                # Ищем либо q=, либо url=
+                q_match = re.search(r'[?&](?:q|url)=([^&]+)', link)
                 if q_match:
                     link = q_match.group(1)
                     try:
                         link = urllib.parse.unquote(link)
                     except:
                         pass
+                else:
+                    # Если не нашли параметров, возможно, это просто служебная ссылка – пропускаем
+                    continue
             if link.startswith("http") and not link.startswith("https://www.google.com"):
                 link = link.rstrip('.,:;!?)]')
                 if is_valid_link(link):
