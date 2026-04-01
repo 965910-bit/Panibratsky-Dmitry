@@ -8,6 +8,18 @@
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="/1favicon.ico" type="image/x-icon">
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SCM News">
+    <link rel="apple-touch-icon" href="/icons/ios/icon-180.png" sizes="180x180">
+    <link rel="apple-touch-icon" href="/icons/ios/icon-152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="/icons/ios/icon-120.png" sizes="120x120">
+    <meta name="msapplication-TileImage" content="/icons/windows/LargeTile.scale-100.png">
+    <meta name="msapplication-TileColor" content="#1e40af">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -69,9 +81,6 @@
             cursor: pointer;
         }
         .philosophy-card:hover, .result-card:hover, .certificate-card:hover { transform: translateY(-4px); }
-        .certificate-card {
-            position: relative;
-        }
         .certificate-card[data-tooltip]::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -93,9 +102,7 @@
             text-align: left;
             line-height: 1.4;
         }
-        .certificate-card[data-tooltip]:hover::after {
-            opacity: 1;
-        }
+        .certificate-card[data-tooltip]:hover::after { opacity: 1; }
         .result-number { font-size: 44px; font-weight: 800; color: #1e40af; }
         .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-bottom: 30px; }
         .tag { display: inline-block; background-color: rgba(30,64,175,0.1); color: #1e40af; padding: 6px 12px; border-radius: 16px; margin-right: 8px; margin-bottom: 8px; font-size: 12px; font-weight: 500; border: 1px solid rgba(30,64,175,0.2); }
@@ -110,16 +117,23 @@
         .footer-column ul li { margin-bottom: 12px; }
         .footer-column ul li a { color: rgba(255,255,255,0.8); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
         .footer-column ul li a:hover { color: white; padding-left: 5px; }
+        .footer-install-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .footer-install-btn:hover { background: #0f172a; }
         .copyright { text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); font-size: 13px; }
         @media (max-width: 768px) {
             .page-hero h1 { font-size: 32px; }
             .philosophy-grid, .results-grid, .certificates-grid { grid-template-columns: 1fr; }
-            .certificate-card[data-tooltip]::after {
-                max-width: 200px;
-                font-size: 11px;
-                top: 8px;
-                right: 8px;
-            }
+            .certificate-card[data-tooltip]::after { max-width: 200px; font-size: 11px; top: 8px; right: 8px; }
         }
     </style>
 </head>
@@ -237,13 +251,11 @@
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>Подписка на новости</h3>
-                    <p>Получайте дайджест новых статей и событий SCM</p>
-                    <form id="subscribeForm" style="margin-top: 15px;">
-                        <input type="email" id="subscribeEmail" placeholder="Ваш email" required style="width: 100%; padding: 8px 12px; border: none; border-radius: 8px; margin-bottom: 10px;">
-                        <button type="submit" style="background: #d4af37; color: #0f172a; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer;">Подписаться</button>
-                    </form>
-                    <div id="subscribeStatus" style="margin-top: 10px; font-size: 12px;"></div>
+                    <h3>Приложение</h3>
+                    <button id="installAppBtnFooter" class="footer-install-btn">
+                        📲 Скачать приложение
+                    </button>
+                    <p style="font-size: 12px; margin-top: 8px;">Установите наше PWA на телефон или компьютер</p>
                 </div>
             </div>
             <div class="copyright">
@@ -300,5 +312,7 @@
             });
         }
     </script>
+    <script src="js/register-sw.js"></script>
+    <script src="js/install-prompt.js"></script>
 </body>
 </html>
