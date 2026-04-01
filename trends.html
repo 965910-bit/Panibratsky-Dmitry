@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>движение, автозимнику, вилюй, саудовская, аравия, : Новости логистики и SCM April 2026 | Тренды управления цепями поставок</title>
-    <meta name="description" content="Актуальные новости логистики, транспорта, склада и цифровой трансформации. движение, автозимнику, вилюй, саудовская, аравия, намерена, тульской, области, сняли, оповещение. Ежедневное обновление.">
+    <title>Лента логистических новостей SCM | Управление цепями поставок, цифровизация, тренды</title>
+    <meta name="description" content="Актуальные новости логистики, транспорта, складских технологий и цифровой трансформации цепей поставок. Ежедневное обновление.">
     <meta name="keywords" content="логистика, новости, цепь поставок, SCM, TMS, WMS, автоматизация, маркетплейсы, искусственный интеллект, роботизация">
     <meta name="author" content="Дмитрий Панибратский">
     <meta name="robots" content="index, follow">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
-    <link rel="icon" href="/1favicon.ico" type="image/x-icon">
+    <link rel="icon" href="1favicon.ico" type="image/x-icon">
 
-    <!-- PWA -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SCM News">
-    <link rel="apple-touch-icon" href="/icons/ios/icon-180.png" sizes="180x180">
-    <link rel="apple-touch-icon" href="/icons/ios/icon-152.png" sizes="152x152">
-    <link rel="apple-touch-icon" href="/icons/ios/icon-120.png" sizes="120x120">
-    <meta name="msapplication-TileImage" content="/icons/windows/LargeTile.scale-100.png">
+    <link rel="apple-touch-icon" href="icons/ios/icon-180.png" sizes="180x180">
+    <link rel="apple-touch-icon" href="icons/ios/icon-152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="icons/ios/icon-120.png" sizes="120x120">
+    <meta name="msapplication-TileImage" content="icons/windows/LargeTile.scale-100.png">
     <meta name="msapplication-TileColor" content="#1e40af">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,7 +62,7 @@
             padding-bottom: 0.5rem;
             font-size: 0.9rem;
         }
-        .chart-container, .tagcloud-container {
+        .chart-container, .tagcloud-container, .sources-container {
             background: #ffffff;
             border-radius: 20px;
             padding: 1.2rem;
@@ -84,6 +84,28 @@
         .tagcloud span:hover {
             color: #0077ff;
             transform: scale(1.05);
+        }
+        .filter-bar {
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .active-filter {
+            background: #0077ff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .clear-filter {
+            background: #e2e8f0;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
         }
         .news-item {
             background: white;
@@ -200,6 +222,25 @@
         .auto-update-info i {
             font-size: 0.9rem;
         }
+        .sources-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+        .source-item {
+            text-align: center;
+            min-width: 80px;
+        }
+        .source-count {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e40af;
+        }
+        .source-name {
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
         footer {
             margin-top: 2rem;
             text-align: center;
@@ -229,9 +270,18 @@
         <canvas id="newsChart" width="800" height="400"></canvas>
     </div>
 
+    <div class="sources-container">
+        <h3>🏆 Топ-5 источников</h3>
+        <div id="sources-list" class="sources-list"></div>
+    </div>
+
     <div class="tagcloud-container">
         <h3>🏷️ Облако тегов (нажмите для фильтрации)</h3>
         <div id="tagcloud" class="tagcloud"></div>
+        <div class="filter-bar" id="filter-bar" style="display: none;">
+            <span class="active-filter" id="active-tag"></span>
+            <button id="clear-filter" class="clear-filter">Сбросить фильтр</button>
+        </div>
     </div>
 
     <div id="news-list"></div>
@@ -242,12 +292,11 @@
 </div>
 
 <script>
-    // ---------- Глобальные переменные ----------
     let currentNews = [];
     let chartInstance = null;
     let updateInterval = null;
-    
-    // ---------- Функции ----------
+    let currentTagFilter = localStorage.getItem('tagFilter') || null;
+
     async function loadNews() {
         try {
             const response = await fetch('data/news.json?_=' + Date.now());
@@ -263,12 +312,16 @@
     
     function renderNews(news) {
         const container = document.getElementById('news-list');
-        if (!news.length) {
-            container.innerHTML = '<p>Новостей пока нет.</p>';
+        let filtered = news;
+        if (currentTagFilter) {
+            filtered = news.filter(item => item.tags && item.tags.some(tag => tag.toLowerCase() === currentTagFilter.toLowerCase()));
+        }
+        if (!filtered.length) {
+            container.innerHTML = '<p>Новостей по выбранному фильтру не найдено.</p>';
             return;
         }
-        container.innerHTML = news.map(item => {
-            if (item.dead) return ''; // пропускаем битые ссылки
+        container.innerHTML = filtered.map(item => {
+            if (item.dead) return '';
             const tagsHtml = item.tags && item.tags.length
                 ? `<div class="news-tags">${item.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>`
                 : '';
@@ -293,7 +346,6 @@
             `;
         }).join('');
         
-        // Привязываем обработчики кнопок "Поделиться"
         document.querySelectorAll('.share-btn').forEach(btn => {
             btn.removeEventListener('click', shareHandler);
             btn.addEventListener('click', shareHandler);
@@ -386,13 +438,44 @@
             span.style.fontSize = size + 'px';
             span.style.fontWeight = count > 5 ? '600' : '400';
             span.title = `${count} новостей`;
-            span.onclick = () => filterByTag(tag);
+            span.onclick = () => setTagFilter(tag);
             container.appendChild(span);
         });
     }
     
-    function filterByTag(tag) {
-        alert(`🔍 Фильтр по тегу "${tag}" будет добавлен в следующей версии.`);
+    function buildSourcesRank(news) {
+        const sourceCount = {};
+        news.forEach(item => {
+            const source = item.source;
+            sourceCount[source] = (sourceCount[source] || 0) + 1;
+        });
+        const sorted = Object.entries(sourceCount).sort((a,b) => b[1] - a[1]).slice(0, 5);
+        const container = document.getElementById('sources-list');
+        if (!container) return;
+        container.innerHTML = sorted.map(([name, count]) => `
+            <div class="source-item">
+                <div class="source-count">${count}</div>
+                <div class="source-name">${escapeHtml(name)}</div>
+            </div>
+        `).join('');
+        if (sorted.length === 0) container.innerHTML = '<p>Нет данных об источниках.</p>';
+    }
+    
+    function setTagFilter(tag) {
+        currentTagFilter = tag;
+        localStorage.setItem('tagFilter', tag);
+        const filterBar = document.getElementById('filter-bar');
+        const activeTagSpan = document.getElementById('active-tag');
+        activeTagSpan.textContent = `Фильтр: ${tag}`;
+        filterBar.style.display = 'block';
+        renderNews(currentNews);
+    }
+    
+    function clearFilter() {
+        currentTagFilter = null;
+        localStorage.removeItem('tagFilter');
+        document.getElementById('filter-bar').style.display = 'none';
+        renderNews(currentNews);
     }
     
     function escapeHtml(str) {
@@ -405,7 +488,6 @@
         });
     }
     
-    // ---------- Автообновление ----------
     async function updateNews() {
         try {
             const newData = await loadNews();
@@ -414,6 +496,7 @@
             renderNews(currentNews);
             buildChart(currentNews);
             buildTagCloud(currentNews);
+            buildSourcesRank(currentNews);
             const timerSpan = document.getElementById('update-timer');
             if (timerSpan) {
                 const now = new Date();
@@ -433,13 +516,16 @@
         updateInterval = setInterval(() => {
             updateNews();
         }, intervalMs);
-        updateNews(); // первый вызов сразу
+        updateNews();
     }
     
-    // ---------- Инициализация ----------
     startAutoUpdate(5);
+    document.getElementById('clear-filter')?.addEventListener('click', clearFilter);
+    if (currentTagFilter) {
+        document.getElementById('filter-bar').style.display = 'block';
+        document.getElementById('active-tag').textContent = `Фильтр: ${currentTagFilter}`;
+    }
     
-    // Добавляем структурированные данные (JSON-LD) для SEO
     const scriptJsonLd = document.createElement('script');
     scriptJsonLd.type = 'application/ld+json';
     scriptJsonLd.textContent = JSON.stringify({
@@ -456,5 +542,6 @@
     document.head.appendChild(scriptJsonLd);
 </script>
 <script src="js/register-sw.js"></script>
+<script src="js/install-prompt.js"></script>
 </body>
 </html>
