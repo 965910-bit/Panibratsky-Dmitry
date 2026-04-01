@@ -93,18 +93,44 @@ class GoogleAlertsCollector:
         return "unknown"
 
     def _extract_links(self, body):
+        import json  # локальный импорт для избежания конфликтов
+
         links = []
-        soup = BeautifulSoup(body, 'html.parser')
-        for a in soup.find_all('a', href=True):
-            href = a['href']
-            if href.startswith('http'):
-                links.append(href)
+
+        # 1. Ищем JSON-блок с данными письма (новый формат Google Alerts)
+        script_pattern = r'<script[^>]*data-scope="inboxmarkup"[^>]*type="application/json"[^>]*>(.*?)</script>'
+        match = re.search(script_pattern, body, re.DOTALL)
+        if match:
+            try:
+                data = json.loads(match.group(1))
+                inner_html = data.get('body', '')
+                if inner_html:
+                    soup = BeautifulSoup(inner_html, 'html.parser')
+                    for a in soup.find_all('a', href=True):
+                        href = a['href']
+                        if href.startswith('http'):
+                            links.append(href)
+            except Exception as e:
+                print(f"Ошибка парсинга JSON: {e}")
+
+        # 2. Если JSON не нашёлся, пробуем обычный HTML (старый формат)
+        if not links:
+            soup = BeautifulSoup(body, 'html.parser')
+            for a in soup.find_all('a', href=True):
+                href = a['href']
+                if href.startswith('http'):
+                    links.append(href)
+
+        # 3. Markdown ссылки
         md_links = re.findall(r'\[[^\]]*\]\((https?://[^\)]+)\)', body)
         links.extend(md_links)
+
+        # 4. Простые URL в тексте
         url_pattern = r'https?://[^\s<>"\'\)]+'
         raw_urls = re.findall(url_pattern, body)
         links.extend(raw_urls)
 
+        # Удаляем дубликаты
         seen = set()
         unique_links = []
         for link in links:
@@ -112,6 +138,7 @@ class GoogleAlertsCollector:
                 seen.add(link)
                 unique_links.append(link)
 
+        # Очистка ссылок Google Alert и фильтрация
         clean = []
         for link in unique_links:
             if "google.com/url?" in link:
