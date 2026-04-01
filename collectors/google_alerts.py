@@ -10,63 +10,41 @@ from typing import List, Dict
 from bs4 import BeautifulSoup
 
 def is_valid_link(link: str) -> bool:
-    """Проверка, что ссылка ведёт на реальную статью, а не на изображение, CSS, JS и т.д."""
+    """
+    Проверяет, что ссылка не является служебной и не ведёт на статический файл.
+    """
     link_lower = link.lower()
-    
-    # Исключаем служебные ссылки
+
+    # Исключаем служебные ссылки Google, схему, статику
     banned_terms = [
         'google.com/alerts',
         'google.com/support',
         'schema.org',
         'mail.google.com',
         'accounts.google.com',
-        'gstatic.com',          # изображения, шрифты Google
-        'googleapis.com',       # API, стили
+        'gstatic.com',           # изображения, шрифты Google
+        'googleapis.com',        # API, стили
         'fonts.googleapis.com',
         'fonts.gstatic.com',
         'yandex.net',
         'yandex.st',
-        'mc.yandex.ru',         # метрика
+        'mc.yandex.ru',          # метрика
         'google-analytics.com',
         'googletagmanager.com'
     ]
     for banned in banned_terms:
         if banned in link_lower:
             return False
-    
+
     # Исключаем ссылки, заканчивающиеся на расширения статических файлов
-    static_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', 
+    static_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico',
                          '.css', '.js', '.json', '.xml', '.txt', '.pdf')
     if link_lower.endswith(static_extensions):
         return False
-    
-    # Проверяем, содержит ли ссылка хотя бы один из разрешённых доменов
-    allowed_domains = [
-        'logistics360.ru',
-        'ati.su',
-        'cnews.ru',
-        'logistics.ru',
-        'vc.ru',
-        'habr.com',
-        'tadviser.ru',
-        'interfax.ru',
-        'rzd-partner.ru',
-        'xpert.digital',
-        'abn24.ru',
-        'logirus.ru',
-        'kommersant.ru',
-        'vedomosti.ru',
-        'rbc.ru',
-        '1prime.ru',
-        'rg.ru'
-    ]
-    for domain in allowed_domains:
-        if domain in link_lower:
-            return True
-    
-    # Если домен не из списка, выводим предупреждение и пропускаем
-    print(f"   ⚠️  Неизвестный домен: {link}")
-    return False
+
+    # Все остальные ссылки считаем валидными
+    return True
+
 
 class GoogleAlertsCollector:
     def __init__(self, email_user, email_password, imap_server="imap.gmail.com"):
