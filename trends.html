@@ -3,127 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>российские, производители, заранее, тонные, грузов: Новости логистики и SCM April 2026 | Тренды управления цепями поставок</title>
-    <meta name="description" content="Актуальные новости логистики, транспорта, склада и цифровой трансформации. российские, производители, заранее, тонные, грузовики, водороде, движение, автозимнику, вилюй, саудовская. Ежедневное обновление.">
-    <meta name="keywords" content="логистика, новости, цепь поставок, TMS, WMS, автоматизация, маркетплейсы">
+    <title>Лента логистических новостей SCM | Управление цепями поставок, цифровизация, тренды</title>
+    <meta name="description" content="Актуальные новости логистики, транспорта, складских технологий и цифровой трансформации цепей поставок. Ежедневное обновление.">
+    <meta name="keywords" content="логистика, новости, цепь поставок, SCM, TMS, WMS, автоматизация, маркетплейсы, искусственный интеллект, роботизация">
+    <meta name="author" content="Дмитрий Панибратский">
+    <meta name="robots" content="index, follow">
+    <meta name="yandex-verification" content="108fc8ce05da4c6d" />
+    <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
+    <link rel="icon" href="/1favicon.ico" type="image/x-icon">
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SCM News">
+    <link rel="apple-touch-icon" href="/icons/ios/icon-180.png" sizes="180x180">
+    <link rel="apple-touch-icon" href="/icons/ios/icon-152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="/icons/ios/icon-120.png" sizes="120x120">
+    <meta name="msapplication-TileImage" content="/icons/windows/LargeTile.scale-100.png">
+    <meta name="msapplication-TileColor" content="#1e40af">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f9fafb;
+            color: #1f2937;
+            line-height: 1.5;
             padding: 20px;
-            background-color: #f9f9f9;
-            color: #333;
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 2rem;
         }
         h1 {
-            margin-top: 0;
             font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #0f172a;
+        }
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .chart-container, .tagcloud-container {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .tagcloud {
+            text-align: center;
+            line-height: 2.2;
+            margin: 1rem 0;
+        }
+        .tagcloud span {
+            cursor: pointer;
+            transition: 0.1s;
+            display: inline-block;
+            margin: 0 6px;
+        }
+        .tagcloud span:hover {
+            color: #0077ff;
+            transform: scale(1.05);
         }
         .news-item {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: box-shadow 0.2s;
+        }
+        .news-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .news-title {
             font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
         }
         .news-title a {
-            color: #0077ff;
+            color: #1f2937;
             text-decoration: none;
         }
         .news-title a:hover {
+            color: #0077ff;
             text-decoration: underline;
         }
         .news-meta {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .news-source {
+            background: #eef2ff;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1e40af;
         }
         .news-description {
-            font-size: 0.9rem;
-            color: #444;
-            margin-bottom: 8px;
+            color: #374151;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
         }
-        .tags {
-            font-size: 0.75rem;
-            color: #0077ff;
+        .news-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.5rem 0;
         }
         .tag {
-            display: inline-block;
-            background: #eef3ff;
-            padding: 2px 8px;
-            border-radius: 12px;
-            margin-right: 6px;
-            margin-bottom: 4px;
+            background: #eef2ff;
+            color: #1e3a8a;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
         }
-        hr {
-            margin: 20px 0;
+        .news-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.75rem;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #9ca3af;
         }
-        canvas {
-            max-width: 100%;
-            height: auto;
+        .share-buttons {
+            display: flex;
+            gap: 12px;
         }
-        #tagcloud span {
-            transition: 0.2s;
+        .share-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #6b7280;
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
-        #tagcloud span:hover {
+        .share-btn:hover {
             color: #0077ff;
-            text-decoration: underline;
+        }
+        .share-btn i {
+            font-size: 1rem;
+        }
+        .status-badge {
+            display: inline-block;
+            background: #e5e7eb;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #4b5563;
+        }
+        .auto-update-info {
+            background: #f3f4f6;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .auto-update-info i {
+            font-size: 0.9rem;
         }
         footer {
-            margin-top: 40px;
-            font-size: 0.75rem;
-            color: #aaa;
+            margin-top: 2rem;
             text-align: center;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+        }
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .container { padding: 1rem; }
+            .news-title { font-size: 1rem; }
+            .share-buttons { gap: 8px; }
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="container">
     <h1>📰 Лента логистических новостей</h1>
-    <p>Автоматический сбор новостей по логистике, управлению цепями поставок, цифровизации.</p>
+    <div class="subtitle">Автоматический сбор новостей по логистике, управлению цепями поставок и цифровизации. Обновление каждые 5 минут.</div>
+    
+    <div class="auto-update-info">
+        <i class="fas fa-sync-alt"></i> Новости обновляются автоматически каждые 5 минут <span id="update-timer" class="status-badge">⏳ загрузка...</span>
+    </div>
 
-    <div style="margin: 20px 0;">
+    <div class="chart-container">
         <canvas id="newsChart" width="800" height="400"></canvas>
     </div>
 
-    <div style="margin: 20px 0;">
-        <h3>Облако тегов</h3>
-        <div id="tagcloud" style="text-align: center; line-height: 2.2;"></div>
+    <div class="tagcloud-container">
+        <h3>🏷️ Облако тегов (нажмите для фильтрации)</h3>
+        <div id="tagcloud" class="tagcloud"></div>
     </div>
-
-    <hr>
 
     <div id="news-list"></div>
 
     <footer>
-        <p>Новости обновляются каждые 30 минут. Источники: Логистика 360, АТИ, Google Alerts.</p>
-        <p><a href="rss.xml">Подписаться на RSS</a></p>
+        <p>Новости обновляются каждые 30 минут из RSS, sitemap и Google Alerts. <a href="rss.xml" target="_blank">Подписаться на RSS</a> | <a href="https://965910-bit.github.io/Panibratsky-Dmitry/" target="_blank">На главную</a></p>
     </footer>
 </div>
 
 <script>
+    // ---------- Глобальные переменные ----------
+    let currentNews = [];
+    let chartInstance = null;
+    let updateInterval = null;
+    
+    // ---------- Функции ----------
     async function loadNews() {
-        const response = await fetch('data/news.json');
-        const data = await response.json();
-        return data;
+        try {
+            const response = await fetch('data/news.json?_=' + Date.now());
+            if (!response.ok) throw new Error('Network error');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Ошибка загрузки новостей:', error);
+            document.getElementById('news-list').innerHTML = '<p>Не удалось загрузить новости. Попробуйте позже.</p>';
+            return [];
+        }
     }
-
+    
+    function renderNews(news) {
+        const container = document.getElementById('news-list');
+        if (!news.length) {
+            container.innerHTML = '<p>Новостей пока нет.</p>';
+            return;
+        }
+        container.innerHTML = news.map(item => {
+            if (item.dead) return ''; // пропускаем битые ссылки
+            const tagsHtml = item.tags && item.tags.length
+                ? `<div class="news-tags">${item.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>`
+                : '';
+            return `
+                <div class="news-item" data-link="${escapeHtml(item.link)}">
+                    <div class="news-title"><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener">${escapeHtml(item.title)}</a></div>
+                    <div class="news-meta">
+                        <span class="news-source">${escapeHtml(item.source)}</span>
+                        <span>📅 ${new Date(item.pubDate).toLocaleString('ru-RU')}</span>
+                    </div>
+                    <div class="news-description">${escapeHtml(item.description)}</div>
+                    ${tagsHtml}
+                    <div class="news-footer">
+                        <span>Категория: ${escapeHtml(item.category || 'логистика')}</span>
+                        <div class="share-buttons">
+                            <button class="share-btn" data-share="tg" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-telegram"></i> Поделиться</button>
+                            <button class="share-btn" data-share="vk" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-vk"></i> VK</button>
+                            <button class="share-btn" data-share="tw" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-twitter"></i> X</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // Привязываем обработчики кнопок "Поделиться"
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.removeEventListener('click', shareHandler);
+            btn.addEventListener('click', shareHandler);
+        });
+    }
+    
+    function shareHandler(e) {
+        e.preventDefault();
+        const btn = e.currentTarget;
+        const url = btn.getAttribute('data-url');
+        const title = btn.getAttribute('data-title');
+        const shareType = btn.getAttribute('data-share');
+        let shareUrl = '';
+        if (shareType === 'tg') {
+            shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+        } else if (shareType === 'vk') {
+            shareUrl = `https://vk.com/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+        } else if (shareType === 'tw') {
+            shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+        }
+        if (shareUrl) {
+            window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=500');
+        }
+    }
+    
     function buildChart(news) {
         const counts = {};
         news.forEach(item => {
             const date = new Date(item.pubDate);
+            if (isNaN(date)) return;
             const key = date.toISOString().slice(0,10);
             counts[key] = (counts[key] || 0) + 1;
         });
@@ -138,7 +338,8 @@
             dataPoints.push(counts[key] || 0);
         }
         const ctx = document.getElementById('newsChart').getContext('2d');
-        new Chart(ctx, {
+        if (chartInstance) chartInstance.destroy();
+        chartInstance = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
@@ -146,12 +347,16 @@
                     label: 'Количество новостей',
                     data: dataPoints,
                     borderColor: '#0077ff',
+                    backgroundColor: 'rgba(0, 119, 255, 0.1)',
                     tension: 0.2,
-                    fill: false
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#0077ff'
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
                 plugins: {
                     legend: { position: 'top' },
                     title: { display: true, text: 'Динамика публикаций за последние 30 дней' }
@@ -159,13 +364,14 @@
             }
         });
     }
-
+    
     function buildTagCloud(news) {
         const tagCount = {};
         news.forEach(item => {
-            if (item.tags) {
+            if (item.tags && Array.isArray(item.tags)) {
                 item.tags.forEach(tag => {
-                    tagCount[tag] = (tagCount[tag] || 0) + 1;
+                    const normalized = tag.toLowerCase().trim();
+                    if (normalized) tagCount[normalized] = (tagCount[normalized] || 0) + 1;
                 });
             }
         });
@@ -176,37 +382,19 @@
         sorted.forEach(([tag, count]) => {
             const span = document.createElement('span');
             span.textContent = tag;
-            const size = 12 + Math.min(24, count * 2);
+            const size = 12 + Math.min(24, count * 1.5);
             span.style.fontSize = size + 'px';
-            span.style.margin = '0 6px';
-            span.style.display = 'inline-block';
-            span.style.cursor = 'pointer';
+            span.style.fontWeight = count > 5 ? '600' : '400';
+            span.title = `${count} новостей`;
             span.onclick = () => filterByTag(tag);
             container.appendChild(span);
         });
     }
-
+    
     function filterByTag(tag) {
-        alert('Фильтр по тегу "' + tag + '" будет добавлен позже');
+        alert(`🔍 Фильтр по тегу "${tag}" будет добавлен в следующей версии.`);
     }
-
-    function renderNews(news) {
-        const container = document.getElementById('news-list');
-        container.innerHTML = '';
-        news.forEach(item => {
-            if (item.dead) return;
-            const div = document.createElement('div');
-            div.className = 'news-item';
-            div.innerHTML = `
-                <div class="news-title"><a href="${item.link}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a></div>
-                <div class="news-meta">${item.source} • ${new Date(item.pubDate).toLocaleString('ru-RU')}</div>
-                <div class="news-description">${escapeHtml(item.description)}</div>
-                <div class="tags">${item.tags ? item.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('') : ''}</div>
-            `;
-            container.appendChild(div);
-        });
-    }
-
+    
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -214,16 +402,59 @@
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
         });
     }
-
-    loadNews().then(data => {
-        buildChart(data);
-        buildTagCloud(data);
-        renderNews(data);
-    }).catch(err => console.error('Ошибка загрузки новостей:', err));
+    
+    // ---------- Автообновление ----------
+    async function updateNews() {
+        try {
+            const newData = await loadNews();
+            if (!newData.length) return;
+            currentNews = newData;
+            renderNews(currentNews);
+            buildChart(currentNews);
+            buildTagCloud(currentNews);
+            const timerSpan = document.getElementById('update-timer');
+            if (timerSpan) {
+                const now = new Date();
+                timerSpan.innerHTML = `✅ обновлено в ${now.toLocaleTimeString()}`;
+                setTimeout(() => {
+                    if (timerSpan.innerHTML.includes('✅')) timerSpan.innerHTML = '⏳ ожидание обновления...';
+                }, 3000);
+            }
+        } catch (err) {
+            console.error('Ошибка при автообновлении:', err);
+        }
+    }
+    
+    function startAutoUpdate(intervalMinutes = 5) {
+        const intervalMs = intervalMinutes * 60 * 1000;
+        if (updateInterval) clearInterval(updateInterval);
+        updateInterval = setInterval(() => {
+            updateNews();
+        }, intervalMs);
+        updateNews(); // первый вызов сразу
+    }
+    
+    // ---------- Инициализация ----------
+    startAutoUpdate(5);
+    
+    // Добавляем структурированные данные (JSON-LD) для SEO
+    const scriptJsonLd = document.createElement('script');
+    scriptJsonLd.type = 'application/ld+json';
+    scriptJsonLd.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Лента логистических новостей SCM",
+        "description": "Автоматический сбор новостей по логистике, управлению цепями поставок и цифровизации.",
+        "url": "https://965910-bit.github.io/Panibratsky-Dmitry/trends.html",
+        "publisher": {
+            "@type": "Person",
+            "name": "Дмитрий Панибратский"
+        }
+    });
+    document.head.appendChild(scriptJsonLd);
 </script>
+<script src="js/register-sw.js"></script>
 </body>
 </html>
