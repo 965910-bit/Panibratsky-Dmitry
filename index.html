@@ -8,6 +8,18 @@
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="/1favicon.ico" type="image/x-icon">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SCM News">
+    <link rel="apple-touch-icon" href="/icons/ios/icon-180.png" sizes="180x180">
+    <link rel="apple-touch-icon" href="/icons/ios/icon-152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="/icons/ios/icon-120.png" sizes="120x120">
+    <meta name="msapplication-TileImage" content="/icons/windows/LargeTile.scale-100.png">
+    <meta name="msapplication-TileColor" content="#1e40af">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -36,6 +48,7 @@
         gtag('config', 'G-C5X9R6HPQY');
     </script>
     <style>
+        /* ВЕСЬ CSS ИЗ ВАШЕГО index.html (скопируйте сюда) */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -1570,84 +1583,49 @@
             updateESGDashboard('2026');
 
             // ---------- РАСШИРЕННЫЙ ВИДЖЕТ НОВОСТЕЙ (ГЛАВНАЯ) ----------
-            const sources = [
-                { name: 'Zakupki.gov.ru', url: 'https://zakupki.gov.ru/epz/main/public/rss', lang: 'ru' },
-                { name: 'Logirus', url: 'https://logirus.ru/rss', lang: 'ru' },
-                { name: 'Логистика 360', url: 'https://logistics360.ru/feed/', lang: 'ru' },
-                { name: 'Supply Chain Digital', url: 'https://supplychaindigital.com/feeds/rss', lang: 'en' },
-                { name: 'ATI.SU', url: 'https://www.ati.su/rss', lang: 'ru' },
-                { name: 'MarketInfo', url: 'https://marketinfo.pro/rss', lang: 'ru' }
-            ];
-
-            async function fetchRSS(source, timeoutMs = 5000) {
-                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+            async function loadHomeNews() {
+                const container = document.getElementById('homeNewsGrid');
+                if (!container) return;
+                container.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
                 try {
-                    const response = await fetch(apiUrl, { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const data = await response.json();
-                    if (data.status === 'ok' && data.items && data.items.length) {
-                        return data.items.map(item => ({
-                            title: item.title,
-                            link: item.link,
-                            pubDate: new Date(item.pubDate),
-                            description: item.description.replace(/<[^>]*>/g, '').slice(0, 150),
-                            source: source.name,
-                            lang: source.lang
-                        }));
+                    const response = await fetch('data/news.json?_=' + Date.now());
+                    if (!response.ok) throw new Error('Network error');
+                    const allNews = await response.json();
+                    const latest = allNews.slice(0, 6);
+                    if (latest.length === 0) {
+                        container.innerHTML = '<div class="news-card news-loading">Новостей пока нет.</div>';
+                        return;
                     }
-                    return [];
-                } catch (error) {
-                    console.warn(`Ошибка загрузки ${source.name}:`, error);
-                    return [];
-                }
-            }
-
-            async function loadNewsWidget() {
-                const newsContainer = document.getElementById('homeNewsGrid');
-                newsContainer.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
-                let allNews = [];
-                for (const src of sources) {
-                    const items = await fetchRSS(src);
-                    allNews.push(...items);
-                }
-                allNews.sort((a, b) => b.pubDate - a.pubDate);
-                const latest = allNews.slice(0, 6);
-
-                if (latest.length === 0) {
-                    newsContainer.innerHTML = '<div class="news-card news-loading">Не удалось загрузить новости. Попробуйте позже.</div>';
-                    return;
-                }
-
-                function formatDate(date) {
-                    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-                }
-                function escapeHtml(str) {
-                    return str.replace(/[&<>]/g, function(m) {
-                        if (m === '&') return '&amp;';
-                        if (m === '<') return '&lt;';
-                        if (m === '>') return '&gt;';
-                        return m;
-                    });
-                }
-
-                newsContainer.innerHTML = latest.map(news => `
-                    <div class="news-card">
-                        <div class="news-date">
-                            <span>${formatDate(news.pubDate)}</span>
-                            <span class="news-source">${escapeHtml(news.source)}${news.lang === 'en' ? ' <span class="lang-badge">EN</span>' : ''}</span>
+                    function formatDate(date) {
+                        return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+                    }
+                    function escapeHtml(str) {
+                        return str.replace(/[&<>]/g, function(m) {
+                            if (m === '&') return '&amp;';
+                            if (m === '<') return '&lt;';
+                            if (m === '>') return '&gt;';
+                            return m;
+                        });
+                    }
+                    container.innerHTML = latest.map(news => `
+                        <div class="news-card">
+                            <div class="news-date">
+                                <span>${formatDate(new Date(news.pubDate))}</span>
+                                <span class="news-source">${escapeHtml(news.source)}</span>
+                            </div>
+                            <h3 class="news-title">${escapeHtml(news.title)}</h3>
+                            <p class="news-excerpt">${escapeHtml(news.description)}</p>
+                            <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="news-link">Читать на источнике →</a>
                         </div>
-                        <h3 class="news-title">${escapeHtml(news.title)}</h3>
-                        <p class="news-excerpt">${escapeHtml(news.description)}</p>
-                        <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="news-link">Читать на источнике →</a>
-                    </div>
-                `).join('');
+                    `).join('');
+                } catch (err) {
+                    console.error('Ошибка загрузки виджета новостей:', err);
+                    container.innerHTML = '<div class="news-card news-loading">Не удалось загрузить новости.</div>';
+                }
             }
-
-            loadNewsWidget();
+            loadHomeNews();
         })();
     </script>
+    <script src="js/register-sw.js"></script>
 </body>
 </html>
