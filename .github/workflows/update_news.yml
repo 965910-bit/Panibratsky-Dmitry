@@ -2,8 +2,11 @@ name: Update News
 
 on:
   schedule:
-    - cron: '*/30 * * * *'   # каждые 30 минут
+    - cron: '*/30 * * * *'
   workflow_dispatch:
+
+permissions:
+  contents: write   # <-- добавляем эту строку
 
 jobs:
   fetch:
@@ -20,20 +23,17 @@ jobs:
         run: |
           pip install requests beautifulsoup4 feedparser python-dateutil
 
-      # ========== ШАГ 1: Google Alerts (обновляем google_alerts.json) ==========
       - name: Google Alerts (if email configured)
         run: |
           python -c "from collectors.google_alerts import GoogleAlertsCollector; c = GoogleAlertsCollector('$GMAIL_USER', '$GMAIL_PASSWORD'); alerts = c.fetch(); import json; open('data/google_alerts.json','w').write(json.dumps(alerts, ensure_ascii=False))"
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
-        continue-on-error: true   # чтобы не останавливать пайплайн, если нет подключения
+        continue-on-error: true
 
-      # ========== ШАГ 2: Основной сбор новостей ==========
       - name: Fetch news (RSS + sitemap + Google Alerts)
         run: python scripts/fetch_news.py
 
-      # ========== Дополнительные сборщики ==========
       - name: Collect government news (optional)
         run: python -c "from collectors.gov_ru import GovRuCollector; c = GovRuCollector(); data = c.fetch(); import json; open('data/gov_news.json','w').write(json.dumps(data, ensure_ascii=False))" || true
         continue-on-error: true
@@ -42,14 +42,12 @@ jobs:
         run: python -c "from collectors.ati_stats import ATIStatsCollector; c = ATIStatsCollector(); data = c.fetch_indexes(); import json; open('data/ati_stats.json','w').write(json.dumps(data, ensure_ascii=False))" || true
         continue-on-error: true
 
-      # ========== Генерация sitemap и метатегов ==========
       - name: Generate sitemap
         run: python scripts/generate_sitemap.py
 
       - name: Update metadata in trends.html
         run: python scripts/update_metadata.py
 
-      # ========== Telegram уведомления ==========
       - name: Set up Node.js for Telegram publisher
         uses: actions/setup-node@v4
         with:
