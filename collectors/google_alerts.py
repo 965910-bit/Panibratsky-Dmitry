@@ -94,15 +94,17 @@ class GoogleAlertsCollector:
 
     def _extract_links(self, body):
         import json
-
         links = []
 
-        # 1. Ищем JSON-блок с данными письма (новый формат Google Alerts)
+        # 1. Ищем JSON-блок с данными письма
         script_pattern = r'<script[^>]*data-scope="inboxmarkup"[^>]*type="application/json"[^>]*>(.*?)</script>'
         match = re.search(script_pattern, body, re.DOTALL)
         if match:
             try:
                 data = json.loads(match.group(1))
+                # Отладка: посмотрим ключи верхнего уровня
+                print(f"DEBUG: JSON top-level keys: {list(data.keys())}")
+
                 # Рекурсивно собираем все строки, начинающиеся с http
                 def extract_urls(obj):
                     if isinstance(obj, dict):
@@ -118,6 +120,8 @@ class GoogleAlertsCollector:
                         links.append(obj)
 
                 extract_urls(data)
+                # Отладка: сколько ссылок найдено в JSON
+                print(f"DEBUG: Found {len(links)} links in JSON")
             except Exception as e:
                 print(f"Ошибка парсинга JSON: {e}")
 
