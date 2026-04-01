@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # <-- добавляем эту строку
+  contents: write
 
 jobs:
   fetch:
@@ -45,6 +45,14 @@ jobs:
       - name: Generate sitemap
         run: python scripts/generate_sitemap.py
 
+      - name: Generate RSS feed
+        run: python scripts/generate_rss.py
+
+      - name: Save daily snapshot
+        run: |
+          mkdir -p data/news-history
+          cp data/news.json data/news-history/$(date +'%Y-%m-%d').json
+
       - name: Update metadata in trends.html
         run: python scripts/update_metadata.py
 
@@ -66,5 +74,5 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/ trends.html sitemap.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей, sitemap, метатегов" && git push)
+          git add data/ trends.html sitemap.xml rss.xml
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей, sitemap, RSS, метатегов" && git push)
