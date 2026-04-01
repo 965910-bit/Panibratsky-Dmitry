@@ -6,6 +6,7 @@ import os
 import time
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 SOURCES = [
     {
@@ -29,6 +30,58 @@ HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Language': 'ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3'
 }
+
+# ========== ЧЁРНЫЙ СПИСОК УКРАИНСКИХ ДОМЕНОВ ==========
+UKRAINIAN_DOMAINS = [
+    'ukr.net',
+    'unian.net',
+    'pravda.com.ua',
+    'censor.net',
+    'liga.net',
+    'kp.ua',
+    'tsn.ua',
+    'rbc.ua',
+    'epravda.com.ua',
+    'focus.ua',
+    'apostrophe.ua',
+    'obozrevatel.com',
+    'segodnya.ua',
+    'strana.ua',
+    'fakty.ua',
+    'gordonua.com',
+    'glavcom.ua',
+    'zaxid.net',
+    'ukrinform.ua',
+    'unn.com.ua',
+    'zn.ua',
+    'nv.ua',
+    'lb.ua',
+    'comments.ua',
+    'ua.interfax.com.ua',
+    'radio.ua',
+    'ukr.media',
+    'hromadske.ua',
+    'censor.net.ua'
+]
+
+def is_ukrainian_source(link: str) -> bool:
+    """Проверяет, является ли ссылка украинским источником по домену."""
+    try:
+        domain = urlparse(link).netloc.lower()
+        if not domain:
+            return False
+        if domain.startswith('www.'):
+            domain = domain[4:]
+        # Точное совпадение с доменом из списка
+        for banned in UKRAINIAN_DOMAINS:
+            if domain == banned or domain.endswith('.' + banned):
+                return True
+        # Исключаем все ссылки с доменом .ua
+        if domain.endswith('.ua'):
+            return True
+    except:
+        pass
+    return False
 
 # ---------------------- RSS ----------------------
 def fetch_rss(source):
@@ -146,7 +199,8 @@ def fetch_from_sitemap(source):
 
 # ---------------------- GOOGLE ALERTS ----------------------
 def load_google_alerts():
-    """Загружает Google Alerts из data/google_alerts.json и преобразует в формат новостей."""
+    """Загружает Google Alerts из data/google_alerts.json и преобразует в формат новостей,
+       отфильтровывая украинские источники."""
     alerts_path = os.path.join(os.path.dirname(__file__), "..", "data", "google_alerts.json")
     if not os.path.exists(alerts_path):
         return []
@@ -155,22 +209,28 @@ def load_google_alerts():
             data = json.load(f)
         alerts = data.get("alerts", [])
         news_items = []
+        skipped = 0
         for alert in alerts:
-            # Преобразуем дату из ISO в RFC 822
+            link = alert.get("link", "")
+            if is_ukrainian_source(link):
+                skipped += 1
+                continue
             try:
                 dt = datetime.fromisoformat(alert["date"])
                 pubDate = dt.strftime("%a, %d %b %Y %H:%M:%S +0000")
             except:
                 pubDate = datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0000")
             news_items.append({
-                "title": alert["subject"],  # тема письма
-                "link": alert["link"],
+                "title": alert["subject"],
+                "link": link,
                 "pubDate": pubDate,
                 "description": f"Google Alert по теме: {alert['keyword']}",
                 "source": "Google Alert",
                 "lang": "ru",
-                "category": alert["keyword"]  # используем ключевое слово как категорию
+                "category": alert["keyword"]
             })
+        if skipped:
+            print(f"Из Google Alerts отфильтровано украинских источников: {skipped}")
         return news_items
     except Exception as e:
         print(f"Ошибка загрузки Google Alerts: {e}")
@@ -188,7 +248,6 @@ def main():
         print(f"Из {src['name']} получено {len(news)} новостей")
         time.sleep(1)
 
-    # Добавляем Google Alerts
     google_news = load_google_alerts()
     if google_news:
         all_news.extend(google_news)
