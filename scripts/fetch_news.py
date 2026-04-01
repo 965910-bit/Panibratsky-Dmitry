@@ -65,6 +65,18 @@ UKRAINIAN_DOMAINS = [
     'censor.net.ua'
 ]
 
+# ========== КЛЮЧЕВЫЕ СЛОВА ДЛЯ ТЕГОВ ==========
+KEYWORDS = [
+    "логистик", "перевозк", "грузоперевозк", "склад", "транспорт", "доставка", "логист",
+    "цепь поставок", "управление цепями", "складск", "фулфилмент", "последняя миля",
+    "робот", "автоматизац", "искусственный интеллект", "ии", "цифровизац", "беспилотник",
+    "дрон", "wms", "tms", "yms", "iot", "блокчейн", "big data",
+    "маркетплейс", "озон", "wildberries", "ozon", "wb", "электронная коммерция", "e-commerce",
+    "розничн", "торговл",
+    "экономик", "инфляц", "санкц", "кризис", "импорт", "экспорт", "таможн", "пошлин",
+    "росси", "москв", "петербург", "спб", "сибир", "урал", "дальний восток"
+]
+
 def is_ukrainian_source(link: str) -> bool:
     try:
         domain = urlparse(link).netloc.lower()
@@ -80,6 +92,25 @@ def is_ukrainian_source(link: str) -> bool:
     except:
         pass
     return False
+
+def extract_tags(text):
+    text_lower = text.lower()
+    found = set()
+    for kw in KEYWORDS:
+        if kw in text_lower:
+            found.add(kw)
+    return list(found)
+
+def summarize_description(desc, max_len=200):
+    if len(desc) <= max_len:
+        return desc
+    cut = max_len
+    for sep in ['.', '!', '?']:
+        last = desc.rfind(sep, 0, max_len)
+        if last > max_len // 2:
+            cut = last + 1
+            break
+    return desc[:cut].strip()
 
 # ---------------------- RSS ----------------------
 def fetch_rss(source):
@@ -98,6 +129,8 @@ def fetch_rss(source):
             pubDate = item.find("pubDate").text if item.find("pubDate") is not None else ""
             description = item.find("description").text if item.find("description") is not None else ""
             description = re.sub(r'<[^>]+>', '', description)[:250]
+            description = summarize_description(description)
+            tags = extract_tags(description + " " + title)
             result.append({
                 "title": title,
                 "link": link,
@@ -105,7 +138,8 @@ def fetch_rss(source):
                 "description": description,
                 "source": source["name"],
                 "lang": source["lang"],
-                "category": source["cat"]
+                "category": source["cat"],
+                "tags": tags
             })
         return result
     except Exception as e:
@@ -178,6 +212,9 @@ def fetch_from_sitemap(source):
                     first_p = soup.find('p')
                     description = first_p.text.strip()[:250] if first_p else ""
 
+                description = summarize_description(description)
+                tags = extract_tags(description + " " + title)
+
                 news_items.append({
                     "title": title,
                     "link": url,
@@ -185,7 +222,8 @@ def fetch_from_sitemap(source):
                     "description": description,
                     "source": source["name"],
                     "lang": source["lang"],
-                    "category": source["cat"]
+                    "category": source["cat"],
+                    "tags": tags
                 })
             except Exception as e:
                 print(f"Ошибка парсинга {url}: {e}")
@@ -197,7 +235,6 @@ def fetch_from_sitemap(source):
 
 # ---------------------- GOOGLE ALERTS ----------------------
 def fetch_page_description(url):
-    """Извлекает описание со страницы (meta description или первый абзац)."""
     try:
         resp = requests.get(url, timeout=8, headers=HEADERS)
         if resp.status_code != 200:
@@ -206,7 +243,6 @@ def fetch_page_description(url):
         meta_desc = soup.find('meta', {'name': 'description'})
         if meta_desc and meta_desc.get('content'):
             return meta_desc['content'][:250]
-        # Ищем первый абзац текста
         for p in soup.find_all('p'):
             text = p.get_text(strip=True)
             if len(text) > 30:
@@ -216,7 +252,6 @@ def fetch_page_description(url):
         return ""
 
 def load_google_alerts(existing_links):
-    """Загружает Google Alerts, фильтрует по домену и дубликатам, извлекает описание."""
     alerts_path = os.path.join(os.path.dirname(__file__), "..", "data", "google_alerts.json")
     if not os.path.exists(alerts_path):
         return []
@@ -236,10 +271,11 @@ def load_google_alerts(existing_links):
                 skipped_duplicate += 1
                 continue
 
-            # Извлекаем описание со страницы
             description = fetch_page_description(link)
             if not description:
                 description = f"Google Alert по теме: {alert['keyword']}"
+            description = summarize_description(description)
+            tags = extract_tags(description + " " + alert["subject"])
 
             try:
                 dt = datetime.fromisoformat(alert["date"])
@@ -254,7 +290,8 @@ def load_google_alerts(existing_links):
                 "description": description,
                 "source": "Google Alert",
                 "lang": "ru",
-                "category": alert["keyword"]
+                "category": alert["keyword"],
+                "tags": tags
             })
         if skipped_ua:
             print(f"Из Google Alerts отфильтровано украинских источников: {skipped_ua}")
@@ -267,7 +304,6 @@ def load_google_alerts(existing_links):
 
 # ---------------------- ОБЩАЯ ФУНКЦИЯ ДЛЯ ЗАГРУЗКИ СУЩЕСТВУЮЩИХ ССЫЛОК ----------------------
 def load_existing_links(news_file):
-    """Возвращает множество ссылок из уже существующего news.json."""
     if not os.path.exists(news_file):
         return set()
     try:
@@ -279,23 +315,20 @@ def load_existing_links(news_file):
 
 # ---------------------- ЧИСТКА СТАРЫХ НОВОСТЕЙ ----------------------
 def clean_old_news(news_items, days=30):
-    """Удаляет новости старше указанного количества дней."""
     now = datetime.now()
     cutoff = now - timedelta(days=days)
     cleaned = []
     removed = 0
     for item in news_items:
         try:
-            # Парсим дату в формате RFC 822
             pub_date = parsedate_to_datetime(item['pubDate'])
             if pub_date.tzinfo is None:
-                pub_date = pub_date.replace(tzinfo=None)  # для сравнения с наивным now
+                pub_date = pub_date.replace(tzinfo=None)
             if pub_date >= cutoff:
                 cleaned.append(item)
             else:
                 removed += 1
         except Exception:
-            # Если дата не распарсилась, сохраняем (лучше оставить, чем потерять)
             cleaned.append(item)
     if removed:
         print(f"Удалено старых новостей (старше {days} дней): {removed}")
@@ -312,11 +345,10 @@ def main():
             news = fetch_rss(src)
         else:
             news = fetch_from_sitemap(src)
-        # Для RSS/sitemap тоже можно фильтровать дубликаты
         for item in news:
             if item['link'] not in existing_links:
                 all_news.append(item)
-                existing_links.add(item['link'])  # чтобы не дублировать внутри одного запуска
+                existing_links.add(item['link'])
         print(f"Из {src['name']} получено {len(news)} новостей")
 
     google_news = load_google_alerts(existing_links)
@@ -326,7 +358,6 @@ def main():
     else:
         print("Google Alerts не найдены или пусты")
 
-    # Чистка старых новостей перед записью
     all_news = clean_old_news(all_news, days=30)
 
     all_news.sort(key=lambda x: x['pubDate'], reverse=True)
