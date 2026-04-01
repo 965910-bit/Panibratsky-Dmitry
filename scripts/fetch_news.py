@@ -7,6 +7,7 @@ import time
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
+from email.utils import parsedate_to_datetime
 
 SOURCES = [
     {
@@ -65,18 +66,15 @@ UKRAINIAN_DOMAINS = [
 ]
 
 def is_ukrainian_source(link: str) -> bool:
-    """Проверяет, является ли ссылка украинским источником по домену."""
     try:
         domain = urlparse(link).netloc.lower()
         if not domain:
             return False
         if domain.startswith('www.'):
             domain = domain[4:]
-        # Точное совпадение с доменом из списка
         for banned in UKRAINIAN_DOMAINS:
             if domain == banned or domain.endswith('.' + banned):
                 return True
-        # Исключаем все ссылки с доменом .ua
         if domain.endswith('.ua'):
             return True
     except:
@@ -198,9 +196,27 @@ def fetch_from_sitemap(source):
         return []
 
 # ---------------------- GOOGLE ALERTS ----------------------
-def load_google_alerts():
-    """Загружает Google Alerts из data/google_alerts.json и преобразует в формат новостей,
-       отфильтровывая украинские источники."""
+def fetch_page_description(url):
+    """Извлекает описание со страницы (meta description или первый абзац)."""
+    try:
+        resp = requests.get(url, timeout=8, headers=HEADERS)
+        if resp.status_code != 200:
+            return ""
+        soup = BeautifulSoup(resp.text, 'html.parser')
+        meta_desc = soup.find('meta', {'name': 'description'})
+        if meta_desc and meta_desc.get('content'):
+            return meta_desc['content'][:250]
+        # Ищем первый абзац текста
+        for p in soup.find_all('p'):
+            text = p.get_text(strip=True)
+            if len(text) > 30:
+                return text[:250]
+        return ""
+    except Exception:
+        return ""
+
+def load_google_alerts(existing_links):
+    """Загружает Google Alerts, фильтрует по домену и дубликатам, извлекает описание."""
     alerts_path = os.path.join(os.path.dirname(__file__), "..", "data", "google_alerts.json")
     if not os.path.exists(alerts_path):
         return []
@@ -209,57 +225,114 @@ def load_google_alerts():
             data = json.load(f)
         alerts = data.get("alerts", [])
         news_items = []
-        skipped = 0
+        skipped_duplicate = 0
+        skipped_ua = 0
         for alert in alerts:
             link = alert.get("link", "")
             if is_ukrainian_source(link):
-                skipped += 1
+                skipped_ua += 1
                 continue
+            if link in existing_links:
+                skipped_duplicate += 1
+                continue
+
+            # Извлекаем описание со страницы
+            description = fetch_page_description(link)
+            if not description:
+                description = f"Google Alert по теме: {alert['keyword']}"
+
             try:
                 dt = datetime.fromisoformat(alert["date"])
                 pubDate = dt.strftime("%a, %d %b %Y %H:%M:%S +0000")
             except:
                 pubDate = datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0000")
+
             news_items.append({
                 "title": alert["subject"],
                 "link": link,
                 "pubDate": pubDate,
-                "description": f"Google Alert по теме: {alert['keyword']}",
+                "description": description,
                 "source": "Google Alert",
                 "lang": "ru",
                 "category": alert["keyword"]
             })
-        if skipped:
-            print(f"Из Google Alerts отфильтровано украинских источников: {skipped}")
+        if skipped_ua:
+            print(f"Из Google Alerts отфильтровано украинских источников: {skipped_ua}")
+        if skipped_duplicate:
+            print(f"Из Google Alerts отфильтровано дубликатов: {skipped_duplicate}")
         return news_items
     except Exception as e:
         print(f"Ошибка загрузки Google Alerts: {e}")
         return []
 
+# ---------------------- ОБЩАЯ ФУНКЦИЯ ДЛЯ ЗАГРУЗКИ СУЩЕСТВУЮЩИХ ССЫЛОК ----------------------
+def load_existing_links(news_file):
+    """Возвращает множество ссылок из уже существующего news.json."""
+    if not os.path.exists(news_file):
+        return set()
+    try:
+        with open(news_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return {item['link'] for item in data}
+    except:
+        return set()
+
+# ---------------------- ЧИСТКА СТАРЫХ НОВОСТЕЙ ----------------------
+def clean_old_news(news_items, days=30):
+    """Удаляет новости старше указанного количества дней."""
+    now = datetime.now()
+    cutoff = now - timedelta(days=days)
+    cleaned = []
+    removed = 0
+    for item in news_items:
+        try:
+            # Парсим дату в формате RFC 822
+            pub_date = parsedate_to_datetime(item['pubDate'])
+            if pub_date.tzinfo is None:
+                pub_date = pub_date.replace(tzinfo=None)  # для сравнения с наивным now
+            if pub_date >= cutoff:
+                cleaned.append(item)
+            else:
+                removed += 1
+        except Exception:
+            # Если дата не распарсилась, сохраняем (лучше оставить, чем потерять)
+            cleaned.append(item)
+    if removed:
+        print(f"Удалено старых новостей (старше {days} дней): {removed}")
+    return cleaned
+
 # ---------------------- ГЛАВНАЯ ----------------------
 def main():
+    news_file = os.path.join(os.path.dirname(__file__), "..", "data", "news.json")
+    existing_links = load_existing_links(news_file)
+
     all_news = []
     for src in SOURCES:
         if src["type"] == "rss":
             news = fetch_rss(src)
         else:
             news = fetch_from_sitemap(src)
-        all_news.extend(news)
+        # Для RSS/sitemap тоже можно фильтровать дубликаты
+        for item in news:
+            if item['link'] not in existing_links:
+                all_news.append(item)
+                existing_links.add(item['link'])  # чтобы не дублировать внутри одного запуска
         print(f"Из {src['name']} получено {len(news)} новостей")
-        time.sleep(1)
 
-    google_news = load_google_alerts()
+    google_news = load_google_alerts(existing_links)
     if google_news:
         all_news.extend(google_news)
         print(f"Из Google Alerts получено {len(google_news)} новостей")
     else:
         print("Google Alerts не найдены или пусты")
 
+    # Чистка старых новостей перед записью
+    all_news = clean_old_news(all_news, days=30)
+
     all_news.sort(key=lambda x: x['pubDate'], reverse=True)
 
-    output_path = os.path.join(os.path.dirname(__file__), "..", "data", "news.json")
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
+    os.makedirs(os.path.dirname(news_file), exist_ok=True)
+    with open(news_file, "w", encoding="utf-8") as f:
         json.dump(all_news, f, ensure_ascii=False, indent=2)
 
     print(f"Всего сохранено {len(all_news)} новостей")
