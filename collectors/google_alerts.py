@@ -93,28 +93,31 @@ class GoogleAlertsCollector:
         return "unknown"
 
     def _extract_links(self, body):
-        """
-        Извлекает ссылки из письма Google Alert, учитывая новый формат
-        с JSON-блоком <script data-scope="inboxmarkup" ...>.
-        """
         import json
 
         links = []
 
-        # 1. Ищем JSON-блок с данными письма (новый формат)
+        # 1. Ищем JSON-блок с данными письма (новый формат Google Alerts)
         script_pattern = r'<script[^>]*data-scope="inboxmarkup"[^>]*type="application/json"[^>]*>(.*?)</script>'
         match = re.search(script_pattern, body, re.DOTALL)
         if match:
             try:
                 data = json.loads(match.group(1))
-                # Ссылки лежат в HTML-коде внутри поля 'body'
-                inner_html = data.get('body', '')
-                if inner_html:
-                    soup = BeautifulSoup(inner_html, 'html.parser')
-                    for a in soup.find_all('a', href=True):
-                        href = a['href']
-                        if href.startswith('http'):
-                            links.append(href)
+                # Рекурсивно собираем все строки, начинающиеся с http
+                def extract_urls(obj):
+                    if isinstance(obj, dict):
+                        for key, value in obj.items():
+                            if isinstance(value, str) and value.startswith('http'):
+                                links.append(value)
+                            else:
+                                extract_urls(value)
+                    elif isinstance(obj, list):
+                        for item in obj:
+                            extract_urls(item)
+                    elif isinstance(obj, str) and obj.startswith('http'):
+                        links.append(obj)
+
+                extract_urls(data)
             except Exception as e:
                 print(f"Ошибка парсинга JSON: {e}")
 
@@ -146,7 +149,6 @@ class GoogleAlertsCollector:
         # Очистка ссылок Google Alert и фильтрация
         clean = []
         for link in unique_links:
-            # Раскрываем обёртки Google
             if "google.com/url?" in link:
                 q_match = re.search(r'[?&]q=([^&]+)', link)
                 if q_match:
