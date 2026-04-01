@@ -1,22 +1,22 @@
 const CACHE_NAME = 'scm-news-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/about.html',
-  '/expertise.html',
-  '/experience.html',
-  '/trends.html',
-  '/contact.html',
-  '/data/news.json',
-  '/rss.xml',
-  '/sitemap.xml',
-  '/robots.txt',
-  '/1favicon.ico',
-  '/js/subscribe.js',
-  '/js/analytics.js',
-  '/js/register-sw.js',
-  '/icons/android/launchericon-192x192.png',
-  '/icons/android/launchericon-512x512.png'
+  '.',
+  'index.html',
+  'about.html',
+  'expertise.html',
+  'experience.html',
+  'trends.html',
+  'contact.html',
+  'data/news.json',
+  'rss.xml',
+  'sitemap.xml',
+  'robots.txt',
+  '1favicon.ico',
+  'js/subscribe.js',
+  'js/analytics.js',
+  'js/register-sw.js',
+  'icons/android/launchericon-192x192.png',
+  'icons/android/launchericon-512x512.png'
 ];
 
 self.addEventListener('install', event => {
