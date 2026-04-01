@@ -2,17 +2,12 @@ name: Update News
 
 on:
   schedule:
-    - cron: '0 */2 * * *'
+    - cron: '*/30 * * * *'   # каждые 30 минут
   workflow_dispatch:
-  push:
-    paths:
-      - 'data/manual_news.json'
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -22,31 +17,39 @@ jobs:
           python-version: '3.10'
 
       - name: Install Python dependencies
-        run: pip install requests beautifulsoup4 feedparser python-dateutil
+        run: |
+          pip install requests beautifulsoup4 feedparser python-dateutil
 
+      # ========== ШАГ 1: Google Alerts (обновляем google_alerts.json) ==========
+      - name: Google Alerts (if email configured)
+        run: |
+          python -c "from collectors.google_alerts import GoogleAlertsCollector; c = GoogleAlertsCollector('$GMAIL_USER', '$GMAIL_PASSWORD'); alerts = c.fetch(); import json; open('data/google_alerts.json','w').write(json.dumps(alerts, ensure_ascii=False))"
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+        continue-on-error: true   # чтобы не останавливать пайплайн, если нет подключения
+
+      # ========== ШАГ 2: Основной сбор новостей ==========
       - name: Fetch news (RSS + sitemap + Google Alerts)
         run: python scripts/fetch_news.py
 
+      # ========== Дополнительные сборщики ==========
       - name: Collect government news (optional)
         run: python -c "from collectors.gov_ru import GovRuCollector; c = GovRuCollector(); data = c.fetch(); import json; open('data/gov_news.json','w').write(json.dumps(data, ensure_ascii=False))" || true
+        continue-on-error: true
 
       - name: Collect ATI stats (optional)
         run: python -c "from collectors.ati_stats import ATIStatsCollector; c = ATIStatsCollector(); data = c.fetch_indexes(); import json; open('data/ati_stats.json','w').write(json.dumps(data, ensure_ascii=False))" || true
+        continue-on-error: true
 
+      # ========== Генерация sitemap и метатегов ==========
       - name: Generate sitemap
         run: python scripts/generate_sitemap.py
 
       - name: Update metadata in trends.html
         run: python scripts/update_metadata.py
 
-      - name: Google Alerts (if email configured)
-        env:
-          GMAIL_USER: ${{ secrets.GMAIL_USER }}
-          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
-        if: env.GMAIL_USER != ''
-        run: |
-          python -c "from collectors.google_alerts import GoogleAlertsCollector; c = GoogleAlertsCollector('$GMAIL_USER', '$GMAIL_PASSWORD'); alerts = c.fetch(); import json; open('data/google_alerts.json','w').write(json.dumps(alerts, ensure_ascii=False))"
-
+      # ========== Telegram уведомления ==========
       - name: Set up Node.js for Telegram publisher
         uses: actions/setup-node@v4
         with:
@@ -56,10 +59,10 @@ jobs:
         run: npm install
 
       - name: Send new news to Telegram
+        run: node scripts/telegram-news.js
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: node scripts/telegram-news.js
 
       - name: Commit and push if changed
         run: |
