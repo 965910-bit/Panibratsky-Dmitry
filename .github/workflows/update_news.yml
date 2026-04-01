@@ -56,20 +56,6 @@ jobs:
       - name: Update metadata in trends.html
         run: python scripts/update_metadata.py
 
-      - name: Set up Node.js for Telegram publisher
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Node.js dependencies
-        run: npm install
-
-      - name: Send new news to Telegram
-        run: node scripts/telegram-news.js
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-
       - name: Commit and push if changed
         run: |
           git config --local user.email "action@github.com"
