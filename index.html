@@ -7,19 +7,20 @@
     <meta name="description" content="Стратегический лидер в управлении цепями поставок (SCM). 15+ лет опыта в цифровой трансформации логистики, внедрении AI, создании Академии SCM. Оптимизация, рост эффективности и конкурентное преимущество вашего бизнеса.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
-    <link rel="icon" href="/1favicon.ico" type="image/x-icon">
-    
+    <link rel="icon" href="1favicon.ico" type="image/x-icon">
+
     <!-- PWA -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SCM News">
-    <link rel="apple-touch-icon" href="/icons/ios/icon-180.png" sizes="180x180">
-    <link rel="apple-touch-icon" href="/icons/ios/icon-152.png" sizes="152x152">
-    <link rel="apple-touch-icon" href="/icons/ios/icon-120.png" sizes="120x120">
-    <meta name="msapplication-TileImage" content="/icons/windows/LargeTile.scale-100.png">
+    <link rel="apple-touch-icon" href="icons/ios/icon-180.png" sizes="180x180">
+    <link rel="apple-touch-icon" href="icons/ios/icon-152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="icons/ios/icon-120.png" sizes="120x120">
+    <meta name="msapplication-TileImage" content="icons/windows/LargeTile.scale-100.png">
     <meta name="msapplication-TileColor" content="#1e40af">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -48,7 +49,6 @@
         gtag('config', 'G-C5X9R6HPQY');
     </script>
     <style>
-        /* ВЕСЬ CSS ИЗ ВАШЕГО index.html (скопируйте сюда) */
         :root {
             --primary-dark: #0f172a;
             --primary-blue: #1e40af;
@@ -921,6 +921,20 @@
             width: 18px;
             color: var(--accent-gold);
         }
+        .footer-install-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .footer-install-btn:hover {
+            background: #0f172a;
+        }
         .copyright {
             text-align: center;
             padding-top: 30px;
@@ -1059,7 +1073,6 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero-section">
         <div class="container hero-container">
             <div class="hero-content">
@@ -1090,7 +1103,6 @@
         </div>
     </section>
 
-    <!-- Philosophy Section -->
     <section class="philosophy-section">
         <div class="container">
             <div class="philosophy-container">
@@ -1187,7 +1199,6 @@
         </div>
     </section>
 
-    <!-- Strategic Results -->
     <section class="results-section">
         <div class="container">
             <div class="section-header">
@@ -1215,7 +1226,6 @@
         </div>
     </section>
 
-    <!-- Widget мировых новостей (расширенный) -->
     <section class="news-section" id="worldNewsWidget">
         <div class="container">
             <div class="section-header">
@@ -1231,7 +1241,6 @@
         </div>
     </section>
 
-    <!-- Methodologies Section -->
     <section class="methodologies-section">
         <div class="container">
             <div class="section-header">
@@ -1271,7 +1280,6 @@
         </div>
     </section>
 
-    <!-- Leadership Philosophy -->
     <section class="leadership-philosophy">
         <div class="container">
             <div class="section-header">
@@ -1313,7 +1321,6 @@
         </div>
     </section>
 
-    <!-- Academy Section with Flip Cards -->
     <section class="academy-section">
         <div class="container">
             <div class="section-header">
@@ -1382,7 +1389,6 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
             <h2 class="cta-title">Готовы трансформировать ваши цепи поставок?</h2>
@@ -1396,7 +1402,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-container">
@@ -1424,13 +1429,9 @@
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>Подписка на новости</h3>
-                    <p>Получайте дайджест новых статей и событий SCM</p>
-                    <form id="subscribeForm" style="margin-top: 15px;">
-                        <input type="email" id="subscribeEmail" placeholder="Ваш email" required style="width: 100%; padding: 8px 12px; border: none; border-radius: 8px; margin-bottom: 10px;">
-                        <button type="submit" style="background: var(--accent-gold); color: var(--primary-dark); border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer;">Подписаться</button>
-                    </form>
-                    <div id="subscribeStatus" style="margin-top: 10px; font-size: 12px;"></div>
+                    <h3>Приложение</h3>
+                    <button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button>
+                    <p style="font-size: 12px; margin-top: 8px;">Установите наше PWA на телефон или компьютер</p>
                 </div>
             </div>
             <div class="copyright">
@@ -1443,7 +1444,6 @@
     <script src="js/subscribe.js"></script>
     <script>
         (function() {
-            // Мобильное меню
             const mobileBtn = document.querySelector('.mobile-menu-btn');
             const navMenu = document.getElementById('nav-menu');
             if (mobileBtn && navMenu) {
@@ -1467,122 +1467,9 @@
                 });
             }
 
-            // Анимация счётчиков в таймлайне (таймлайн скрыт)
-            const timelineSection = document.querySelector('.vision-2036');
-            let countersAnimated = false;
-            function animateCounters() {
-                if (countersAnimated) return;
-                const counters = document.querySelectorAll('.timeline-item .counter');
-                counters.forEach(counter => {
-                    const target = parseInt(counter.getAttribute('data-target'), 10);
-                    let current = 0;
-                    const increment = Math.ceil(target / 30);
-                    const update = () => {
-                        current += increment;
-                        if (current >= target) {
-                            counter.textContent = target;
-                            return;
-                        }
-                        counter.textContent = current;
-                        requestAnimationFrame(update);
-                    };
-                    update();
-                });
-                countersAnimated = true;
-            }
-            if (timelineSection) {
-                const observer = new IntersectionObserver(entries => {
-                    if (entries[0].isIntersecting) {
-                        animateCounters();
-                        observer.disconnect();
-                    }
-                }, { threshold: 0.3 });
-                observer.observe(timelineSection);
-            }
-
-            // Модальное окно Tech Radar (оставлено для совместимости, но сам блок удалён)
-            const modal = document.getElementById('tech-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalDesc = document.getElementById('modal-desc');
-            const closeBtn = modal ? modal.querySelector('.close') : null;
-            if (modal && modalTitle && modalDesc) {
-                document.querySelectorAll('.radar-segment').forEach(seg => {
-                    seg.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const tech = seg.getAttribute('data-tech');
-                        const desc = seg.getAttribute('data-desc');
-                        if (tech && desc) {
-                            modalTitle.textContent = tech;
-                            modalDesc.textContent = desc;
-                            modal.style.display = 'block';
-                        }
-                    });
-                });
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', () => {
-                        modal.style.display = 'none';
-                    });
-                }
-                window.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.style.display = 'none';
-                });
-            }
-
-            // Кнопки предзаписи
-            document.querySelectorAll('.preorder-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const card = btn.closest('.flip-card');
-                    let programName = '';
-                    if (card) {
-                        const front = card.querySelector('.flip-front h3');
-                        if (front) programName = front.innerText.trim();
-                    }
-                    alert(`Спасибо за интерес к программе "${programName || 'Академии SCM'}"! Скоро мы свяжемся с вами.`);
-                    window.location.href = 'contact.html';
-                });
-            });
-
-            // Счётчики удалены, но оставляем пустые переменные, чтобы не было ошибок
-            const visitSpan = document.getElementById('visit-counter');
-            const downloadSpan = document.getElementById('download-counter');
-
-            // Текущий год
             const yearSpan = document.getElementById('current-year');
             if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-            // ESG дашборд (не используется, оставлен для совместимости)
-            const esgData = {
-                2026: { co2: 120, renew: 25, circ: 40 },
-                2030: { co2: 85, renew: 45, circ: 55 },
-                2036: { co2: 40, renew: 80, circ: 75 }
-            };
-            function updateESGDashboard(year) {
-                const data = esgData[year];
-                if (!data) return;
-                const co2El = document.getElementById('co2-value');
-                const renewEl = document.getElementById('renew-value');
-                const circEl = document.getElementById('circ-value');
-                if (co2El) co2El.innerText = data.co2;
-                if (renewEl) renewEl.innerText = data.renew;
-                if (circEl) circEl.innerText = data.circ;
-                const co2Chart = document.getElementById('chart-co2');
-                const renewChart = document.getElementById('chart-renew');
-                const circChart = document.getElementById('chart-circ');
-                if (co2Chart) co2Chart.style.background = `conic-gradient(#e74c3c 0% ${data.co2/2}%, #ecf0f1 ${data.co2/2}% 100%)`;
-                if (renewChart) renewChart.style.background = `conic-gradient(#f1c40f 0% ${data.renew}%, #ecf0f1 ${data.renew}% 100%)`;
-                if (circChart) circChart.style.background = `conic-gradient(#2ecc71 0% ${data.circ}%, #ecf0f1 ${data.circ}% 100%)`;
-            }
-            document.querySelectorAll('.year-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    updateESGDashboard(btn.dataset.year);
-                });
-            });
-            updateESGDashboard('2026');
-
-            // ---------- РАСШИРЕННЫЙ ВИДЖЕТ НОВОСТЕЙ (ГЛАВНАЯ) ----------
             async function loadHomeNews() {
                 const container = document.getElementById('homeNewsGrid');
                 if (!container) return;
@@ -1627,5 +1514,6 @@
         })();
     </script>
     <script src="js/register-sw.js"></script>
+    <script src="js/install-prompt.js"></script>
 </body>
 </html>
