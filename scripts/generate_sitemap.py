@@ -13,7 +13,7 @@ def generate_sitemap():
         "expertise.html",
         "experience.html"
     ]
-    base_url = "https://965910-bit.github.io/Panibratsky-Dmitry/"
+    base_url = "https://scm-news.ru/"
 
     news_path = os.path.join(os.path.dirname(__file__), "..", "data", "news.json")
     news_items = []

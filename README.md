@@ -38,4 +38,4 @@
 
 ## Контакты
 - GitHub: [965910-bit](https://github.com/965910-bit)
-- Портфолио: https://965910-bit.github.io/Panibratsky-Dmitry/
+- Портфолио: https://scm-news.ru/

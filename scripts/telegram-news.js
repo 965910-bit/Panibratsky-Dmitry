@@ -64,7 +64,7 @@ function formatPost(item) {
     const link = item.link || '';
     const source = item.source || '';
     const campaign = `news_${Date.now()}_${encodeURIComponent(source)}`;
-    const siteUrl = 'https://965910-bit.github.io/Panibratsky-Dmitry/trends.html';
+    const siteUrl = 'https://scm-news.ru/trends.html';
 
     const text = `📰 *${title}*\n\n${description}\n\n🏷️ *${source}*`;
     const keyboard = {

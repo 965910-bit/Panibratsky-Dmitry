@@ -22,11 +22,11 @@ def generate_rss():
     rss.append('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">')
     rss.append('<channel>')
     rss.append('  <title>Логистические новости</title>')
-    rss.append('  <link>https://965910-bit.github.io/Panibratsky-Dmitry/</link>')
+    rss.append('  <link>https://scm-news.ru/</link>')
     rss.append('  <description>Автоматический сбор новостей по логистике, цифровизации и управлению цепями поставок</description>')
     rss.append('  <language>ru</language>')
     rss.append(f'  <lastBuildDate>{format_datetime(datetime.now())}</lastBuildDate>')
-    rss.append('  <atom:link href="https://965910-bit.github.io/Panibratsky-Dmitry/rss.xml" rel="self" type="application/rss+xml"/>')
+    rss.append('  <atom:link href="https://scm-news.ru/rss.xml" rel="self" type="application/rss+xml"/>')
 
     for item in items:
         rss.append('  <item>')
