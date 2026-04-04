@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>госавтоинспекция, приморья, нашла, опасный, груз, : Новости логистики и SCM April 2026 | Тренды управления цепями поставок</title>
-    <meta name="description" content="Актуальные новости логистики, транспорта, склада и цифровой трансформации. госавтоинспекция, приморья, нашла, опасный, груз, прошёл, алтайский, край, пустили, потеряло. Ежедневное обновление.">
+    <title>Новости SCM | Логистика, управление цепями поставок, тренды</title>
+    <meta name="description" content="Автоматическая лента новостей по логистике, управлению цепями поставок, цифровой трансформации. Ежедневное обновление.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
@@ -30,12 +30,7 @@
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
         m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-        ym(105620027, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-        });
+        ym(105620027, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
@@ -54,31 +49,146 @@
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --text-primary: #1f2937;
+            --text-secondary: #374151;
+            --text-muted: #6b7280;
+            --border: #e2e8f0;
+            --accent: #0077ff;
+            --accent-light: #3b82f6;
+            --gold: #d4af37;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+        body.dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f9fafb;
-            color: #1f2937;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             line-height: 1.5;
+            transition: background 0.3s, color 0.3s;
+            font-size: 16px;
             padding: 20px;
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
+            background: var(--bg-primary);
             border-radius: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: var(--card-shadow);
             padding: 2rem;
         }
-        /* ===== ШАПКА (НАВИГАЦИЯ) ===== */
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .container { padding: 1rem; }
+        }
+        /* Прогресс-бар */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            z-index: 1001;
+        }
+        .progress-bar {
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--accent-light));
+            width: 0%;
+            transition: width 0.1s;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            border: none;
+            font-size: 20px;
+        }
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+        .theme-switch {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+        }
+        .theme-switch i {
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .breadcrumb {
+            padding: 0 0 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        /* Шапка */
         header {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border);
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 1000;
+        }
+        body.dark header {
+            background-color: rgba(15,23,42,0.95);
         }
         .nav-container {
             max-width: 1200px;
@@ -91,12 +201,10 @@
         .logo {
             font-size: 20px;
             font-weight: 700;
-            color: #0f172a;
+            color: var(--text-primary);
             text-decoration: none;
         }
-        .logo-dot {
-            color: #d4af37;
-        }
+        .logo-dot { color: var(--gold); }
         nav ul {
             display: flex;
             list-style: none;
@@ -104,14 +212,13 @@
         }
         nav ul li a {
             text-decoration: none;
-            color: #64748b;
+            color: var(--text-muted);
             font-weight: 500;
             font-size: 14px;
             transition: color 0.2s;
         }
-        nav ul li a:hover,
-        nav ul li a.active {
-            color: #1e40af;
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--accent);
         }
         .mobile-menu-btn {
             display: none;
@@ -119,9 +226,9 @@
             border: none;
             font-size: 22px;
             cursor: pointer;
+            color: var(--text-primary);
         }
         @media (max-width: 768px) {
-            body { padding: 12px; padding-top: 70px; }
             .nav-container { padding: 12px 16px; }
             nav ul {
                 display: none;
@@ -129,41 +236,38 @@
                 top: 100%;
                 left: 0;
                 width: 100%;
-                background: white;
+                background: var(--bg-primary);
                 padding: 16px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.1);
                 flex-direction: column;
                 gap: 12px;
             }
-            nav ul.active {
-                display: flex;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-            .container { padding: 1rem; }
+            nav ul.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .scroll-top, .theme-switch { bottom: 20px; }
+            .scroll-top { right: 20px; }
+            .theme-switch { left: 20px; }
         }
-        /* остальные стили (лента, график, облако тегов) – без изменений */
         h1 {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            color: #0f172a;
+            color: var(--text-primary);
         }
         .subtitle {
-            color: #64748b;
+            color: var(--text-muted);
             margin-bottom: 2rem;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border);
             padding-bottom: 0.5rem;
             font-size: 0.9rem;
         }
         .chart-container, .tagcloud-container, .sources-container {
-            background: #ffffff;
+            background: var(--bg-primary);
             border-radius: 20px;
             padding: 1.2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
         }
         .tagcloud {
             text-align: center;
@@ -175,9 +279,10 @@
             transition: 0.1s;
             display: inline-block;
             margin: 0 6px;
+            color: var(--text-secondary);
         }
         .tagcloud span:hover {
-            color: #0077ff;
+            color: var(--accent);
             transform: scale(1.05);
         }
         .filter-bar {
@@ -188,27 +293,28 @@
             flex-wrap: wrap;
         }
         .active-filter {
-            background: #0077ff;
+            background: var(--accent);
             color: white;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
         }
         .clear-filter {
-            background: #e2e8f0;
+            background: var(--border);
             border: none;
             padding: 4px 12px;
             border-radius: 20px;
             cursor: pointer;
             font-size: 0.8rem;
+            color: var(--text-primary);
         }
         .news-item {
-            background: white;
+            background: var(--bg-primary);
             border-radius: 16px;
             padding: 1.2rem;
             margin-bottom: 1.2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
             transition: box-shadow 0.2s;
         }
         .news-item:hover {
@@ -220,16 +326,16 @@
             margin-bottom: 0.5rem;
         }
         .news-title a {
-            color: #1f2937;
+            color: var(--text-primary);
             text-decoration: none;
         }
         .news-title a:hover {
-            color: #0077ff;
+            color: var(--accent);
             text-decoration: underline;
         }
         .news-meta {
             font-size: 0.85rem;
-            color: #6b7280;
+            color: var(--text-muted);
             margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
@@ -237,15 +343,15 @@
             gap: 8px;
         }
         .news-source {
-            background: #eef2ff;
+            background: rgba(30,64,175,0.1);
             padding: 2px 8px;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 500;
-            color: #1e40af;
+            color: var(--accent);
         }
         .news-description {
-            color: #374151;
+            color: var(--text-secondary);
             line-height: 1.4;
             margin-bottom: 0.5rem;
         }
@@ -256,8 +362,8 @@
             margin: 0.5rem 0;
         }
         .tag {
-            background: #eef2ff;
-            color: #1e3a8a;
+            background: rgba(30,64,175,0.1);
+            color: var(--accent);
             padding: 0.2rem 0.6rem;
             border-radius: 20px;
             font-size: 0.75rem;
@@ -268,10 +374,10 @@
             justify-content: space-between;
             align-items: center;
             margin-top: 0.75rem;
-            border-top: 1px solid #f3f4f6;
+            border-top: 1px solid var(--border);
             padding-top: 0.5rem;
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: var(--text-muted);
         }
         .share-buttons {
             display: flex;
@@ -282,32 +388,29 @@
             border: none;
             cursor: pointer;
             font-size: 1rem;
-            color: #6b7280;
+            color: var(--text-muted);
             transition: color 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 4px;
         }
         .share-btn:hover {
-            color: #0077ff;
-        }
-        .share-btn i {
-            font-size: 1rem;
+            color: var(--accent);
         }
         .status-badge {
             display: inline-block;
-            background: #e5e7eb;
+            background: var(--border);
             padding: 2px 8px;
             border-radius: 20px;
             font-size: 0.7rem;
-            color: #4b5563;
+            color: var(--text-muted);
         }
         .auto-update-info {
-            background: #f3f4f6;
+            background: var(--bg-secondary);
             padding: 8px 12px;
             border-radius: 12px;
             font-size: 0.75rem;
-            color: #4b5563;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -327,23 +430,24 @@
         .source-count {
             font-size: 1.4rem;
             font-weight: 700;
-            color: #1e40af;
+            color: var(--accent);
         }
         .source-name {
             font-size: 0.8rem;
-            color: #4b5563;
+            color: var(--text-muted);
         }
         footer {
             margin-top: 2rem;
             text-align: center;
             font-size: 0.75rem;
-            color: #9ca3af;
-            border-top: 1px solid #e2e8f0;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
             padding-top: 1.5rem;
         }
     </style>
 </head>
 <body>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
@@ -361,7 +465,13 @@
         </div>
     </header>
 
-    <div class="container">
+    <div style="padding-top: 80px;"></div>
+
+    <div class="container fade-up">
+        <div class="breadcrumb">
+            <a href="index.html">Главная</a> / <span>Новости SCM</span>
+        </div>
+
         <h1>📰 Лента логистических новостей</h1>
         <div class="subtitle">Автоматический сбор новостей по логистике, управлению цепями поставок и цифровизации. Обновление каждые 5 минут.</div>
         
@@ -393,6 +503,9 @@
             <p>Новости обновляются каждые 30 минут из RSS, sitemap и Google Alerts. <a href="rss.xml" target="_blank">Подписаться на RSS</a> | <a href="https://scm-news.ru/" target="_blank">На главную</a></p>
         </footer>
     </div>
+
+    <button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
+    <div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
 
     <script>
         let currentNews = [];
@@ -653,7 +766,46 @@
                 link.addEventListener('click', () => navMenu.classList.remove('active'));
             });
         }
-        
+
+        // Прогресс-бар
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Кнопка "Наверх"
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollBtn.classList.add('show');
+            else scrollBtn.classList.remove('show');
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Тёмная тема
+        const themeSwitch = document.getElementById('themeSwitch');
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') document.body.classList.add('dark');
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Анимации при скролле
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
+
         const scriptJsonLd = document.createElement('script');
         scriptJsonLd.type = 'application/ld+json';
         scriptJsonLd.textContent = JSON.stringify({
