@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ходе, рейда, екатеринбурге, турция, освободила, по: Новости логистики и SCM April 2026 | Тренды управления цепями поставок</title>
-    <meta name="description" content="Актуальные новости логистики, транспорта, склада и цифровой трансформации. ходе, рейда, екатеринбурге, турция, освободила, пошлин, пошлина, экспорт, российской, минэнерго. Ежедневное обновление.">
+    <title>Новости SCM | Логистика, управление цепями поставок, тренды</title>
+    <meta name="description" content="Автоматическая лента новостей по логистике, управлению цепями поставок, цифровой трансформации. Ежедневное обновление.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
@@ -129,14 +129,8 @@
             border: none;
             font-size: 20px;
         }
-        .scroll-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .scroll-top:hover {
-            background: var(--gold);
-            transform: translateY(-3px);
-        }
+        .scroll-top.show { opacity: 1; visibility: visible; }
+        .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
         .theme-switch {
             position: fixed;
             bottom: 30px;
@@ -151,32 +145,19 @@
             cursor: pointer;
             box-shadow: var(--card-shadow);
         }
-        .theme-switch i {
-            font-size: 18px;
-            color: var(--text-primary);
-        }
+        .theme-switch i { font-size: 18px; color: var(--text-primary); }
         .fade-up {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
         .breadcrumb {
             padding: 0 0 20px;
             font-size: 14px;
             color: var(--text-muted);
         }
-        .breadcrumb a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        /* Шапка */
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
         header {
             background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -187,9 +168,7 @@
             width: 100%;
             z-index: 1000;
         }
-        body.dark header {
-            background-color: rgba(15,23,42,0.95);
-        }
+        body.dark header { background-color: rgba(15,23,42,0.95); }
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -217,9 +196,7 @@
             font-size: 14px;
             transition: color 0.2s;
         }
-        nav ul li a:hover, nav ul li a.active {
-            color: var(--accent);
-        }
+        nav ul li a:hover, nav ul li a.active { color: var(--accent); }
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -248,6 +225,56 @@
             .scroll-top { right: 20px; }
             .theme-switch { left: 20px; }
         }
+        .chat-widget {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .chat-button {
+            width: 55px;
+            height: 55px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .chat-button:hover { transform: scale(1.05); background: var(--gold); }
+        .chat-button i { font-size: 26px; color: white; }
+        .chat-box {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 280px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .chat-box.open { opacity: 1; visibility: visible; }
+        .chat-header { background: var(--accent); color: white; padding: 12px; font-weight: 600; }
+        .chat-body { padding: 12px; font-size: 14px; color: var(--text-secondary); }
+        .chat-quick button {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            margin: 4px;
+        }
+        @media (max-width: 768px) {
+            .chat-widget { bottom: 80px; right: 20px; }
+            .chat-box { width: 260px; }
+        }
         h1 {
             font-size: 2rem;
             font-weight: 700;
@@ -261,6 +288,30 @@
             padding-bottom: 0.5rem;
             font-size: 0.9rem;
         }
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .search-bar button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .search-bar button:hover { background: var(--gold); }
         .chart-container, .tagcloud-container, .sources-container {
             background: var(--bg-primary);
             border-radius: 20px;
@@ -281,10 +332,7 @@
             margin: 0 6px;
             color: var(--text-secondary);
         }
-        .tagcloud span:hover {
-            color: var(--accent);
-            transform: scale(1.05);
-        }
+        .tagcloud span:hover { color: var(--accent); transform: scale(1.05); }
         .filter-bar {
             margin: 1rem 0;
             display: flex;
@@ -317,9 +365,7 @@
             border: 1px solid var(--border);
             transition: box-shadow 0.2s;
         }
-        .news-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+        .news-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .news-title {
             font-size: 1.2rem;
             font-weight: 600;
@@ -329,10 +375,7 @@
             color: var(--text-primary);
             text-decoration: none;
         }
-        .news-title a:hover {
-            color: var(--accent);
-            text-decoration: underline;
-        }
+        .news-title a:hover { color: var(--accent); text-decoration: underline; }
         .news-meta {
             font-size: 0.85rem;
             color: var(--text-muted);
@@ -379,10 +422,7 @@
             font-size: 0.8rem;
             color: var(--text-muted);
         }
-        .share-buttons {
-            display: flex;
-            gap: 12px;
-        }
+        .share-buttons { display: flex; gap: 12px; }
         .share-btn {
             background: none;
             border: none;
@@ -394,9 +434,20 @@
             align-items: center;
             gap: 4px;
         }
-        .share-btn:hover {
-            color: var(--accent);
+        .share-btn:hover { color: var(--accent); }
+        .like-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 12px;
         }
+        .like-btn.liked { color: #e74c3c; }
         .status-badge {
             display: inline-block;
             background: var(--border);
@@ -432,9 +483,27 @@
             font-weight: 700;
             color: var(--accent);
         }
-        .source-name {
-            font-size: 0.8rem;
-            color: var(--text-muted);
+        .source-name { font-size: 0.8rem; color: var(--text-muted); }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .pagination button {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+        .pagination button:hover { background: var(--accent); color: white; }
+        .pagination .active-page {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
         }
         footer {
             margin-top: 2rem;
@@ -474,7 +543,12 @@
 
         <h1>📰 Лента логистических новостей</h1>
         <div class="subtitle">Автоматический сбор новостей по логистике, управлению цепями поставок и цифровизации. Обновление каждые 5 минут.</div>
-        
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Поиск по заголовку или описанию...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+
         <div class="auto-update-info">
             <i class="fas fa-sync-alt"></i> Новости обновляются автоматически каждые 5 минут <span id="update-timer" class="status-badge">⏳ загрузка...</span>
         </div>
@@ -498,6 +572,7 @@
         </div>
 
         <div id="news-list"></div>
+        <div id="pagination" class="pagination"></div>
 
         <footer>
             <p>Новости обновляются каждые 30 минут из RSS, sitemap и Google Alerts. <a href="rss.xml" target="_blank">Подписаться на RSS</a> | <a href="https://scm-news.ru/" target="_blank">На главную</a></p>
@@ -507,40 +582,92 @@
     <button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
     <div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
 
+    <div class="chat-widget">
+        <div class="chat-button" id="chatButton"><i class="fas fa-comment-dots"></i></div>
+        <div class="chat-box" id="chatBox">
+            <div class="chat-header">📬 Чат с экспертом</div>
+            <div class="chat-body">
+                <p>Здравствуйте! Чем могу помочь?</p>
+                <div class="chat-quick">
+                    <button onclick="window.location.href='contact.html'">📝 Оставить заявку</button>
+                    <button onclick="window.open('https://t.me/LogisticaandSupplyChain','_blank')">✈️ Telegram</button>
+                    <button onclick="window.location.href='mailto:dmitry@scm-news.ru'">📧 Написать email</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let currentNews = [];
+        let allNews = [];
+        let currentPage = 1;
+        const perPage = 10;
+        let currentSearch = '';
+        let currentTagFilter = localStorage.getItem('tagFilter') || null;
         let chartInstance = null;
         let updateInterval = null;
-        let currentTagFilter = localStorage.getItem('tagFilter') || null;
 
+        // Загрузка новостей из JSON
         async function loadNews() {
             try {
                 const response = await fetch('data/news.json?_=' + Date.now());
-                if (!response.ok) throw new Error('Network error');
+                if (!response.ok) throw new Error();
                 const data = await response.json();
                 return data;
-            } catch (error) {
-                console.error('Ошибка загрузки новостей:', error);
+            } catch(e) {
+                console.error('Ошибка загрузки новостей:', e);
                 document.getElementById('news-list').innerHTML = '<p>Не удалось загрузить новости. Попробуйте позже.</p>';
                 return [];
             }
         }
-        
-        function renderNews(news) {
-            const container = document.getElementById('news-list');
-            let filtered = news;
-            if (currentTagFilter) {
-                filtered = news.filter(item => item.tags && item.tags.some(tag => tag.toLowerCase() === currentTagFilter.toLowerCase()));
+
+        // Сохранение лайков в localStorage
+        function getLikes() {
+            const likes = localStorage.getItem('newsLikes');
+            return likes ? JSON.parse(likes) : {};
+        }
+        function saveLikes(likes) {
+            localStorage.setItem('newsLikes', JSON.stringify(likes));
+        }
+        function likeNews(id) {
+            let likes = getLikes();
+            if (likes[id]) {
+                delete likes[id];
+            } else {
+                likes[id] = true;
             }
-            if (!filtered.length) {
-                container.innerHTML = '<p>Новостей по выбранному фильтру не найдено.</p>';
+            saveLikes(likes);
+            renderNews();
+        }
+
+        // Фильтрация и пагинация
+        function getFilteredNews() {
+            let filtered = [...allNews];
+            if (currentTagFilter) {
+                filtered = filtered.filter(item => item.tags && item.tags.some(tag => tag.toLowerCase() === currentTagFilter.toLowerCase()));
+            }
+            if (currentSearch) {
+                filtered = filtered.filter(item => item.title.toLowerCase().includes(currentSearch) || (item.description && item.description.toLowerCase().includes(currentSearch)));
+            }
+            return filtered;
+        }
+
+        function renderNews() {
+            const filtered = getFilteredNews();
+            const totalPages = Math.ceil(filtered.length / perPage);
+            if (currentPage > totalPages) currentPage = totalPages || 1;
+            const start = (currentPage - 1) * perPage;
+            const pageNews = filtered.slice(start, start + perPage);
+            const container = document.getElementById('news-list');
+            if (!pageNews.length) {
+                container.innerHTML = '<p>Новостей не найдено.</p>';
+                document.getElementById('pagination').innerHTML = '';
                 return;
             }
-            container.innerHTML = filtered.map(item => {
+            const likes = getLikes();
+            container.innerHTML = pageNews.map(item => {
                 if (item.dead) return '';
-                const tagsHtml = item.tags && item.tags.length
-                    ? `<div class="news-tags">${item.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>`
-                    : '';
+                const tagsHtml = item.tags && item.tags.length ? `<div class="news-tags">${item.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>` : '';
+                const liked = likes[item.link] ? 'liked' : '';
                 return `
                     <div class="news-item" data-link="${escapeHtml(item.link)}">
                         <div class="news-title"><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener">${escapeHtml(item.title)}</a></div>
@@ -552,22 +679,62 @@
                         ${tagsHtml}
                         <div class="news-footer">
                             <span>Категория: ${escapeHtml(item.category || 'логистика')}</span>
-                            <div class="share-buttons">
-                                <button class="share-btn" data-share="tg" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-telegram"></i> Поделиться</button>
-                                <button class="share-btn" data-share="vk" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-vk"></i> VK</button>
-                                <button class="share-btn" data-share="tw" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-twitter"></i> X</button>
+                            <div>
+                                <button class="like-btn ${liked}" data-link="${item.link}"><i class="fas fa-heart"></i> <span class="like-count">${likes[item.link] ? 1 : 0}</span></button>
+                                <div class="share-buttons" style="display: inline-flex;">
+                                    <button class="share-btn" data-share="tg" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-telegram"></i></button>
+                                    <button class="share-btn" data-share="vk" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-vk"></i></button>
+                                    <button class="share-btn" data-share="tw" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-twitter"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
-            
+            // Обработчики лайков
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.removeEventListener('click', likeHandler);
+                btn.addEventListener('click', likeHandler);
+            });
+            // Обработчики шаринга
             document.querySelectorAll('.share-btn').forEach(btn => {
                 btn.removeEventListener('click', shareHandler);
                 btn.addEventListener('click', shareHandler);
             });
+            // Пагинация
+            const paginationDiv = document.getElementById('pagination');
+            paginationDiv.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                if (i === currentPage) btn.classList.add('active-page');
+                btn.addEventListener('click', () => {
+                    currentPage = i;
+                    renderNews();
+                });
+                paginationDiv.appendChild(btn);
+            }
         }
-        
+
+        function likeHandler(e) {
+            e.stopPropagation();
+            const btn = e.currentTarget;
+            const link = btn.getAttribute('data-link');
+            let likes = getLikes();
+            if (likes[link]) {
+                delete likes[link];
+                btn.classList.remove('liked');
+                btn.querySelector('.like-count').textContent = '0';
+            } else {
+                likes[link] = true;
+                btn.classList.add('liked');
+                btn.querySelector('.like-count').textContent = '1';
+            }
+            saveLikes(likes);
+            ym(105620027, 'reachGoal', 'news_like');
+            gtag('event', 'news_like', { event_category: 'engagement', event_label: link });
+        }
+
         function shareHandler(e) {
             e.preventDefault();
             const btn = e.currentTarget;
@@ -588,11 +755,29 @@
                 ym(105620027, 'reachGoal', 'share_tw');
                 gtag('event', 'share', { event_category: 'engagement', event_label: 'twitter' });
             }
-            if (shareUrl) {
-                window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=500');
+            if (shareUrl) window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=500');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+        }
+
+        async function updateNews() {
+            const newData = await loadNews();
+            if (!newData.length) return;
+            allNews = newData;
+            renderNews();
+            buildChart(allNews);
+            buildTagCloud(allNews);
+            buildSourcesRank(allNews);
+            const timerSpan = document.getElementById('update-timer');
+            if (timerSpan) {
+                timerSpan.innerHTML = `✅ обновлено в ${new Date().toLocaleTimeString()}`;
+                setTimeout(() => { if (timerSpan.innerHTML.includes('✅')) timerSpan.innerHTML = '⏳ ожидание обновления...'; }, 3000);
             }
         }
-        
+
         function buildChart(news) {
             const counts = {};
             news.forEach(item => {
@@ -615,30 +800,11 @@
             if (chartInstance) chartInstance.destroy();
             chartInstance = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Количество новостей',
-                        data: dataPoints,
-                        borderColor: '#0077ff',
-                        backgroundColor: 'rgba(0, 119, 255, 0.1)',
-                        tension: 0.2,
-                        fill: true,
-                        pointRadius: 3,
-                        pointBackgroundColor: '#0077ff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { position: 'top' },
-                        title: { display: true, text: 'Динамика публикаций за последние 30 дней' }
-                    }
-                }
+                data: { labels, datasets: [{ label: 'Количество новостей', data: dataPoints, borderColor: '#0077ff', backgroundColor: 'rgba(0,119,255,0.1)', tension: 0.2, fill: true, pointRadius: 3, pointBackgroundColor: '#0077ff' }] },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Динамика публикаций за последние 30 дней' } } }
             });
         }
-        
+
         function buildTagCloud(news) {
             const tagCount = {};
             news.forEach(item => {
@@ -652,7 +818,7 @@
             const container = document.getElementById('tagcloud');
             if (!container) return;
             container.innerHTML = '';
-            const sorted = Object.entries(tagCount).sort((a,b) => b[1] - a[1]).slice(0, 50);
+            const sorted = Object.entries(tagCount).sort((a,b) => b[1] - a[1]).slice(0, 30);
             sorted.forEach(([tag, count]) => {
                 const span = document.createElement('span');
                 span.textContent = tag;
@@ -664,100 +830,93 @@
                 container.appendChild(span);
             });
         }
-        
+
         function buildSourcesRank(news) {
             const sourceCount = {};
-            news.forEach(item => {
-                const source = item.source;
-                sourceCount[source] = (sourceCount[source] || 0) + 1;
-            });
-            const sorted = Object.entries(sourceCount).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            news.forEach(item => { sourceCount[item.source] = (sourceCount[item.source] || 0) + 1; });
+            const sorted = Object.entries(sourceCount).sort((a,b) => b[1] - a[1]).slice(0,5);
             const container = document.getElementById('sources-list');
             if (!container) return;
-            container.innerHTML = sorted.map(([name, count]) => `
-                <div class="source-item">
-                    <div class="source-count">${count}</div>
-                    <div class="source-name">${escapeHtml(name)}</div>
-                </div>
-            `).join('');
-            if (sorted.length === 0) container.innerHTML = '<p>Нет данных об источниках.</p>';
+            container.innerHTML = sorted.map(([name, count]) => `<div class="source-item"><div class="source-count">${count}</div><div class="source-name">${escapeHtml(name)}</div></div>`).join('');
         }
-        
+
         function setTagFilter(tag) {
             currentTagFilter = tag;
             localStorage.setItem('tagFilter', tag);
+            currentPage = 1;
+            currentSearch = '';
+            document.getElementById('searchInput').value = '';
             const filterBar = document.getElementById('filter-bar');
-            const activeTagSpan = document.getElementById('active-tag');
-            activeTagSpan.textContent = `Фильтр: ${tag}`;
+            document.getElementById('active-tag').textContent = `Фильтр: ${tag}`;
             filterBar.style.display = 'block';
-            renderNews(currentNews);
+            renderNews();
         }
-        
+
         function clearFilter() {
             currentTagFilter = null;
             localStorage.removeItem('tagFilter');
+            currentPage = 1;
             document.getElementById('filter-bar').style.display = 'none';
-            renderNews(currentNews);
+            renderNews();
         }
-        
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
-        
-        async function updateNews() {
-            try {
-                const newData = await loadNews();
-                if (!newData.length) return;
-                currentNews = newData;
-                renderNews(currentNews);
-                buildChart(currentNews);
-                buildTagCloud(currentNews);
-                buildSourcesRank(currentNews);
-                const timerSpan = document.getElementById('update-timer');
-                if (timerSpan) {
-                    const now = new Date();
-                    timerSpan.innerHTML = `✅ обновлено в ${now.toLocaleTimeString()}`;
-                    setTimeout(() => {
-                        if (timerSpan.innerHTML.includes('✅')) timerSpan.innerHTML = '⏳ ожидание обновления...';
-                    }, 3000);
-                }
-            } catch (err) {
-                console.error('Ошибка при автообновлении:', err);
-            }
-        }
-        
+
         function startAutoUpdate(intervalMinutes = 5) {
-            const intervalMs = intervalMinutes * 60 * 1000;
             if (updateInterval) clearInterval(updateInterval);
-            updateInterval = setInterval(() => {
-                updateNews();
-            }, intervalMs);
+            updateInterval = setInterval(() => updateNews(), intervalMinutes * 60 * 1000);
             updateNews();
         }
-        
+
         startAutoUpdate(5);
         document.getElementById('clear-filter')?.addEventListener('click', clearFilter);
         if (currentTagFilter) {
             document.getElementById('filter-bar').style.display = 'block';
             document.getElementById('active-tag').textContent = `Фильтр: ${currentTagFilter}`;
         }
-        
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            currentSearch = document.getElementById('searchInput').value.toLowerCase();
+            currentPage = 1;
+            renderNews();
+        });
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                currentSearch = e.target.value.toLowerCase();
+                currentPage = 1;
+                renderNews();
+            }
+        });
+
         // Отслеживание кликов по ссылкам новостей
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', (e) => {
             let target = e.target.closest('.news-title a');
             if (target && target.href) {
                 ym(105620027, 'reachGoal', 'news_click');
                 gtag('event', 'news_click', { event_category: 'engagement', event_label: target.href });
             }
         });
-        
-        // Мобильное меню
+
+        // Прогресс-бар, кнопка наверх, тема, анимации, чат, мобильное меню
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
+            const scrollBtn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) scrollBtn.classList.add('show');
+            else scrollBtn.classList.remove('show');
+        });
+        document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        const themeSwitch = document.getElementById('themeSwitch');
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+        const chatButton = document.getElementById('chatButton');
+        const chatBox = document.getElementById('chatBox');
+        chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
@@ -766,60 +925,6 @@
                 link.addEventListener('click', () => navMenu.classList.remove('active'));
             });
         }
-
-        // Прогресс-бар
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('progressBar').style.width = scrolled + '%';
-        });
-
-        // Кнопка "Наверх"
-        const scrollBtn = document.getElementById('scrollTopBtn');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) scrollBtn.classList.add('show');
-            else scrollBtn.classList.remove('show');
-        });
-        scrollBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // Тёмная тема
-        const themeSwitch = document.getElementById('themeSwitch');
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'dark') document.body.classList.add('dark');
-        themeSwitch.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-        });
-
-        // Анимации при скролле
-        const fadeElements = document.querySelectorAll('.fade-up');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        fadeElements.forEach(el => observer.observe(el));
-
-        const scriptJsonLd = document.createElement('script');
-        scriptJsonLd.type = 'application/ld+json';
-        scriptJsonLd.textContent = JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "CollectionPage",
-            "name": "Лента логистических новостей SCM",
-            "description": "Автоматический сбор новостей по логистике, управлению цепями поставок и цифровизации.",
-            "url": "https://scm-news.ru/trends.html",
-            "publisher": {
-                "@type": "Person",
-                "name": "Дмитрий Панибратский"
-            }
-        });
-        document.head.appendChild(scriptJsonLd);
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
