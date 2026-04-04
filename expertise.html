@@ -29,12 +29,7 @@
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
         m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-        ym(105620027, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-        });
+        ym(105620027, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
@@ -53,26 +48,141 @@
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #1e40af;
+            --accent-light: #3b82f6;
+            --gold: #d4af37;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+        body.dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        }
         body {
             font-family: 'Inter', sans-serif;
-            color: #0f172a;
-            background: #ffffff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.5;
+            transition: background 0.3s, color 0.3s;
+            font-size: 16px;
         }
         .container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
-        /* ШАПКА (НАВИГАЦИЯ) */
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            body { font-size: 15px; }
+        }
+        /* Прогресс-бар */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            z-index: 1001;
+        }
+        .progress-bar {
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--accent-light));
+            width: 0%;
+            transition: width 0.1s;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            border: none;
+            font-size: 20px;
+        }
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+        .theme-switch {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+        }
+        .theme-switch i {
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .breadcrumb {
+            padding: 100px 0 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        /* Шапка */
         header {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
+        }
+        body.dark header {
+            background-color: rgba(15,23,42,0.95);
         }
         .nav-container {
             display: flex;
@@ -83,12 +193,10 @@
         .logo {
             font-size: 20px;
             font-weight: 700;
-            color: #0f172a;
+            color: var(--text-primary);
             text-decoration: none;
         }
-        .logo-dot {
-            color: #d4af37;
-        }
+        .logo-dot { color: var(--gold); }
         nav ul {
             display: flex;
             list-style: none;
@@ -96,14 +204,13 @@
         }
         nav ul li a {
             text-decoration: none;
-            color: #64748b;
+            color: var(--text-muted);
             font-weight: 500;
             font-size: 14px;
             transition: color 0.2s;
         }
-        nav ul li a:hover,
-        nav ul li a.active {
-            color: #1e40af;
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--accent);
         }
         .mobile-menu-btn {
             display: none;
@@ -111,6 +218,7 @@
             border: none;
             font-size: 22px;
             cursor: pointer;
+            color: var(--text-primary);
         }
         @media (max-width: 768px) {
             nav ul {
@@ -119,24 +227,20 @@
                 top: 100%;
                 left: 0;
                 width: 100%;
-                background: white;
+                background: var(--bg-primary);
                 padding: 16px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.1);
                 flex-direction: column;
                 gap: 12px;
             }
-            nav ul.active {
-                display: flex;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-            body {
-                padding-top: 70px;
-            }
+            nav ul.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .scroll-top, .theme-switch { bottom: 20px; }
+            .scroll-top { right: 20px; }
+            .theme-switch { left: 20px; }
         }
         .page-header {
-            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
             padding: 120px 0 40px;
             text-align: center;
         }
@@ -146,7 +250,7 @@
             margin-bottom: 20px;
         }
         .page-header p {
-            color: #64748b;
+            color: var(--text-muted);
             max-width: 700px;
             margin: 0 auto;
         }
@@ -162,11 +266,11 @@
             margin-bottom: 50px;
         }
         .methodology-card, .tools-card, .process-card, .case-card {
-            background: white;
+            background: var(--bg-primary);
             border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
             transition: transform 0.2s;
         }
         .methodology-card:hover, .tools-card:hover, .process-card:hover, .case-card:hover {
@@ -176,7 +280,7 @@
         .methodology-card h3, .tools-card h3, .process-card h3, .case-card h3 {
             font-size: 22px;
             margin-bottom: 16px;
-            color: #1e40af;
+            color: var(--accent);
         }
         .methodology-card ul, .tools-card ul, .case-card ul {
             padding-left: 20px;
@@ -191,7 +295,7 @@
         .process-step .step-number {
             width: 50px;
             height: 50px;
-            background: #1e40af;
+            background: var(--accent);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -206,27 +310,27 @@
             justify-content: space-between;
             margin-top: 20px;
             padding-top: 15px;
-            border-top: 1px solid #e2e8f0;
-        }
-        .result-stats div {
-            text-align: center;
+            border-top: 1px solid var(--border);
         }
         .result-stats .stat-number {
             font-size: 24px;
             font-weight: 800;
-            color: #1e40af;
+            color: var(--accent);
         }
         .cta-section {
             text-align: center;
             padding: 60px 0;
-            background: #0f172a;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             color: white;
             border-radius: 24px;
             margin: 40px 0;
         }
+        body.dark .cta-section {
+            background: linear-gradient(135deg, #020617, #0f172a);
+        }
         .cta-button {
             display: inline-block;
-            background: #d4af37;
+            background: var(--gold);
             color: #0f172a;
             padding: 12px 30px;
             border-radius: 40px;
@@ -264,14 +368,10 @@
             left: 0;
             width: 35px;
             height: 3px;
-            background: #d4af37;
+            background: var(--gold);
         }
-        .footer-column ul {
-            list-style: none;
-        }
-        .footer-column ul li {
-            margin-bottom: 12px;
-        }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 12px; }
         .footer-column ul li a {
             color: rgba(255,255,255,0.8);
             text-decoration: none;
@@ -309,6 +409,7 @@
     </style>
 </head>
 <body>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
     <header>
         <div class="container nav-container">
             <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
@@ -326,7 +427,13 @@
         </div>
     </header>
 
-    <div class="page-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Главная</a> / <span>Экспертиза</span>
+        </div>
+    </div>
+
+    <div class="page-header fade-up">
         <div class="container">
             <h1>Методологии и инструменты управления цепями поставок (SCM)</h1>
             <p>Системный подход к управлению цепями поставок, основанный на современных методологиях, цифровых инструментах и проверенных практиках для достижения операционного превосходства.</p>
@@ -335,9 +442,9 @@
 
     <div class="container">
         <!-- Методологии и подходы -->
-        <h2 class="section-title">Методологии и подходы</h2>
+        <h2 class="section-title fade-up">Методологии и подходы</h2>
         <div class="methodology-grid">
-            <div class="methodology-card" data-methodology="lean">
+            <div class="methodology-card fade-up" data-methodology="lean">
                 <h3>Бережливое производство (Lean)</h3>
                 <p>Систематический подход к выявлению и устранению потерь (muda) через непрерывное улучшение (kaizen) и поток создания ценности.</p>
                 <ul>
@@ -348,7 +455,7 @@
                     <li>Вытягивающее производство (Pull System)</li>
                 </ul>
             </div>
-            <div class="methodology-card" data-methodology="abcxyz">
+            <div class="methodology-card fade-up" data-methodology="abcxyz">
                 <h3>ABC-XYZ анализ</h3>
                 <p>Комплексный метод классификации товарных запасов на основе их вклада в оборот и стабильности спроса для оптимизации управления.</p>
                 <ul>
@@ -359,7 +466,7 @@
                     <li>Динамическое перераспределение запасов</li>
                 </ul>
             </div>
-            <div class="methodology-card" data-methodology="bpm">
+            <div class="methodology-card fade-up" data-methodology="bpm">
                 <h3>Управление бизнес-процессами</h3>
                 <p>Систематическое проектирование, выполнение, мониторинг и оптимизация сквозных бизнес-процессов для повышения эффективности.</p>
                 <ul>
@@ -373,9 +480,9 @@
         </div>
 
         <!-- Инструменты и технологии -->
-        <h2 class="section-title">Инструменты и технологии</h2>
+        <h2 class="section-title fade-up">Инструменты и технологии</h2>
         <div class="methodology-grid">
-            <div class="methodology-card" data-tool="corporate">
+            <div class="methodology-card fade-up" data-tool="corporate">
                 <h3>🏢 Корпоративные системы</h3>
                 <ul>
                     <li>1С:Предприятие 8</li>
@@ -388,7 +495,7 @@
                     <li>Системы контроля доступа</li>
                 </ul>
             </div>
-            <div class="methodology-card" data-tool="bi">
+            <div class="methodology-card fade-up" data-tool="bi">
                 <h3>📊 Аналитика и BI</h3>
                 <ul>
                     <li>Microsoft Power BI</li>
@@ -401,7 +508,7 @@
                     <li>Статистический анализ</li>
                 </ul>
             </div>
-            <div class="methodology-card" data-tool="digital">
+            <div class="methodology-card fade-up" data-tool="digital">
                 <h3>🤖 Цифровые технологии</h3>
                 <ul>
                     <li>Искусственный интеллект</li>
@@ -417,9 +524,9 @@
         </div>
 
         <!-- Искусственный интеллект и автоматизация в SCM -->
-        <h2 class="section-title">🤖 Искусственный интеллект и автоматизация в SCM</h2>
+        <h2 class="section-title fade-up">🤖 Искусственный интеллект и автоматизация в SCM</h2>
         <div class="methodology-grid">
-            <div class="methodology-card" data-ai="predictive">
+            <div class="methodology-card fade-up" data-ai="predictive">
                 <h3>Предиктивная аналитика</h3>
                 <p>Разработка и внедрение моделей машинного обучения для прогнозирования спроса, оптимального уровня запасов и выявления аномалий в цепочке поставок.</p>
                 <ul>
@@ -428,7 +535,7 @@
                     <li>Детекция аномалий в закупках</li>
                 </ul>
             </div>
-            <div class="methodology-card" data-ai="rpa">
+            <div class="methodology-card fade-up" data-ai="rpa">
                 <h3>Автоматизация рутинных операций (RPA)</h3>
                 <p>Применение RPA-ботов для переноса данных между системами (1С, WMS, TMS), создания отчётов, сверки накладных.</p>
                 <ul>
@@ -437,7 +544,7 @@
                     <li>Экономия до 15 часов в неделю</li>
                 </ul>
             </div>
-            <div class="methodology-card" data-ai="generative">
+            <div class="methodology-card fade-up" data-ai="generative">
                 <h3>Генеративные AI-инструменты</h3>
                 <p>Использование LLM (ChatGPT, DeepSeek, Claude) для написания скриптов, документации, генерации кода для веб-проектов, создания контента.</p>
                 <ul>
@@ -449,24 +556,24 @@
         </div>
 
         <!-- Процесс работы -->
-        <h2 class="section-title">Процесс работы</h2>
+        <h2 class="section-title fade-up">Процесс работы</h2>
         <div class="process-grid">
-            <div class="process-card process-step">
+            <div class="process-card process-step fade-up">
                 <div class="step-number">1</div>
                 <h3>Диагностика и анализ</h3>
                 <p>Глубокий анализ текущих бизнес-процессов, выявление узких мест и точек роста. Использование методов картирования процессов, интервью с сотрудниками, анализа данных. Формирование понимания текущего состояния и целевых показателей.</p>
             </div>
-            <div class="process-card process-step">
+            <div class="process-card process-step fade-up">
                 <div class="step-number">2</div>
                 <h3>Проектирование решения</h3>
                 <p>Разработка целевой архитектуры процессов и систем. Подбор и адаптация методологий под специфику бизнеса. Создание дорожной карты трансформации с четкими этапами, сроками и ответственными.</p>
             </div>
-            <div class="process-card process-step">
+            <div class="process-card process-step fade-up">
                 <div class="step-number">3</div>
                 <h3>Внедрение и пилотирование</h3>
                 <p>Поэтапное внедрение решений, начиная с пилотных зон или процессов. Обучение команды, адаптация инструментов под реальные условия, итеративная доработка. Управление изменениями и вовлечение сотрудников.</p>
             </div>
-            <div class="process-card process-step">
+            <div class="process-card process-step fade-up">
                 <div class="step-number">4</div>
                 <h3>Мониторинг и оптимизация</h3>
                 <p>Внедрение системы метрик и KPI для отслеживания эффективности. Регулярный анализ результатов, выявление дополнительных возможностей для улучшения. Формирование культуры непрерывного совершенствования (kaizen).</p>
@@ -474,9 +581,9 @@
         </div>
 
         <!-- Кейсы применения -->
-        <h2 class="section-title">Кейсы применения экспертизы</h2>
+        <h2 class="section-title fade-up">Кейсы применения экспертизы</h2>
         <div class="cases-grid">
-            <div class="case-card" data-case="warehouse">
+            <div class="case-card fade-up" data-case="warehouse">
                 <h3>Оптимизация складских операций</h3>
                 <p>Внедрение принципов бережливого производства и перенастройка WMS для крупного ритейлера. Редизайн процессов приемки, хранения и отгрузки с использованием Value Stream Mapping.</p>
                 <div class="result-stats">
@@ -485,7 +592,7 @@
                     <div><div class="stat-number">99.5%</div><div>Точность инвентаризации</div></div>
                 </div>
             </div>
-            <div class="case-card" data-case="transport">
+            <div class="case-card fade-up" data-case="transport">
                 <h3>Трансформация транспортной логистики</h3>
                 <p>Внедрение TMS системы и оптимизация маршрутов доставки с использованием аналитики данных. Переговоры с перевозчиками и внедрение системы мониторинга транспорта в реальном времени.</p>
                 <div class="result-stats">
@@ -494,7 +601,7 @@
                     <div><div class="stat-number">+40%</div><div>Прозрачность цепочки</div></div>
                 </div>
             </div>
-            <div class="case-card" data-case="predictive">
+            <div class="case-card fade-up" data-case="predictive">
                 <h3>Внедрение системы предиктивной аналитики</h3>
                 <p>Разработка и внедрение модели прогнозирования спроса на основе машинного обучения. Интеграция с ERP системой для автоматического планирования закупок и пополнения запасов.</p>
                 <div class="result-stats">
@@ -506,7 +613,7 @@
         </div>
 
         <!-- CTA -->
-        <div class="cta-section">
+        <div class="cta-section fade-up">
             <h2>Готовы трансформировать вашу логистику?</h2>
             <p>Давайте обсудим, как современные методологии и цифровые инструменты могут оптимизировать ваши цепочки поставок, сократить издержки и повысить операционную эффективность.</p>
             <a href="contact.html" class="cta-button" id="expertiseCtaBtn">Обсудить сотрудничество</a>
@@ -516,40 +623,17 @@
     <footer>
         <div class="container">
             <div class="footer-container">
-                <div class="footer-column">
-                    <h3>Дмитрий Панибратский</h3>
-                    <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p>
-                </div>
-                <div class="footer-column">
-                    <h3>Навигация</h3>
-                    <ul>
-                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
-                        <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
-                        <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
-                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
-                        <li><a href="/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Контакты</h3>
-                    <ul>
-                        <li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
-                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Приложение</h3>
-                    <button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button>
-                    <p style="font-size: 12px; margin-top: 8px;">Установите наше PWA на телефон или компьютер</p>
-                </div>
+                <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank">RSS-лента</a></li></ul></div>
+                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
+                <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button></div>
             </div>
-            <div class="copyright">
-                &copy; 2026 Дмитрий Панибратский.
-            </div>
+            <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
         </div>
     </footer>
+
+    <button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
+    <div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
 
     <script src="js/subscribe.js"></script>
     <script>
@@ -559,31 +643,24 @@
             gtag('event', 'expertise_click', { event_category: category, event_label: label });
         }
 
-        // Клики по методологиям
         document.querySelectorAll('.methodology-card[data-methodology]').forEach(card => {
             card.addEventListener('click', () => {
                 const method = card.getAttribute('data-methodology');
                 trackCardClick('methodology', method);
             });
         });
-
-        // Клики по инструментам
         document.querySelectorAll('.methodology-card[data-tool]').forEach(card => {
             card.addEventListener('click', () => {
                 const tool = card.getAttribute('data-tool');
                 trackCardClick('tool', tool);
             });
         });
-
-        // Клики по AI-блокам
         document.querySelectorAll('.methodology-card[data-ai]').forEach(card => {
             card.addEventListener('click', () => {
                 const aiType = card.getAttribute('data-ai');
                 trackCardClick('ai', aiType);
             });
         });
-
-        // Клики по кейсам
         document.querySelectorAll('.case-card[data-case]').forEach(card => {
             card.addEventListener('click', () => {
                 const caseType = card.getAttribute('data-case');
@@ -591,7 +668,6 @@
             });
         });
 
-        // Отслеживание клика по CTA кнопке
         const ctaBtn = document.getElementById('expertiseCtaBtn');
         if (ctaBtn) {
             ctaBtn.addEventListener('click', () => {
@@ -609,6 +685,45 @@
                 link.addEventListener('click', () => navMenu.classList.remove('active'));
             });
         }
+
+        // Прогресс-бар
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Кнопка "Наверх"
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollBtn.classList.add('show');
+            else scrollBtn.classList.remove('show');
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Тёмная тема
+        const themeSwitch = document.getElementById('themeSwitch');
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') document.body.classList.add('dark');
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Анимации при скролле
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
