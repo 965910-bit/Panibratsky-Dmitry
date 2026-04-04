@@ -29,12 +29,7 @@
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
         m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-        ym(105620027, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-        });
+        ym(105620027, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
@@ -53,26 +48,141 @@
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #1e40af;
+            --accent-light: #3b82f6;
+            --gold: #d4af37;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+        body.dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        }
         body {
             font-family: 'Inter', sans-serif;
-            color: #0f172a;
-            background: #ffffff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.5;
+            transition: background 0.3s, color 0.3s;
+            font-size: 16px;
         }
         .container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
-        /* ШАПКА (НАВИГАЦИЯ) */
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            body { font-size: 15px; }
+        }
+        /* Прогресс-бар */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            z-index: 1001;
+        }
+        .progress-bar {
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--accent-light));
+            width: 0%;
+            transition: width 0.1s;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            border: none;
+            font-size: 20px;
+        }
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+        .theme-switch {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+        }
+        .theme-switch i {
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .breadcrumb {
+            padding: 100px 0 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        /* Шапка */
         header {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
+        }
+        body.dark header {
+            background-color: rgba(15,23,42,0.95);
         }
         .nav-container {
             display: flex;
@@ -83,12 +193,10 @@
         .logo {
             font-size: 20px;
             font-weight: 700;
-            color: #0f172a;
+            color: var(--text-primary);
             text-decoration: none;
         }
-        .logo-dot {
-            color: #d4af37;
-        }
+        .logo-dot { color: var(--gold); }
         nav ul {
             display: flex;
             list-style: none;
@@ -96,14 +204,13 @@
         }
         nav ul li a {
             text-decoration: none;
-            color: #64748b;
+            color: var(--text-muted);
             font-weight: 500;
             font-size: 14px;
             transition: color 0.2s;
         }
-        nav ul li a:hover,
-        nav ul li a.active {
-            color: #1e40af;
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--accent);
         }
         .mobile-menu-btn {
             display: none;
@@ -111,6 +218,7 @@
             border: none;
             font-size: 22px;
             cursor: pointer;
+            color: var(--text-primary);
         }
         @media (max-width: 768px) {
             nav ul {
@@ -119,24 +227,20 @@
                 top: 100%;
                 left: 0;
                 width: 100%;
-                background: white;
+                background: var(--bg-primary);
                 padding: 16px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.1);
                 flex-direction: column;
                 gap: 12px;
             }
-            nav ul.active {
-                display: flex;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-            body {
-                padding-top: 70px;
-            }
+            nav ul.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .scroll-top, .theme-switch { bottom: 20px; }
+            .scroll-top { right: 20px; }
+            .theme-switch { left: 20px; }
         }
         .page-header {
-            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
             padding: 120px 0 40px;
             text-align: center;
         }
@@ -146,7 +250,7 @@
             margin-bottom: 20px;
         }
         .page-header p {
-            color: #64748b;
+            color: var(--text-muted);
             max-width: 700px;
             margin: 0 auto;
         }
@@ -156,11 +260,11 @@
             margin-bottom: 20px;
         }
         .card {
-            background: white;
+            background: var(--bg-primary);
             border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
             margin-bottom: 40px;
         }
         .timeline {
@@ -175,7 +279,7 @@
             top: 0;
             bottom: 0;
             width: 2px;
-            background: #d4af37;
+            background: var(--gold);
         }
         .timeline-item {
             margin-bottom: 40px;
@@ -194,12 +298,12 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #d4af37;
-            border: 2px solid white;
+            background: var(--gold);
+            border: 2px solid var(--bg-primary);
         }
         .timeline-date {
             font-weight: 700;
-            color: #1e40af;
+            color: var(--accent);
             margin-bottom: 8px;
         }
         .timeline-title {
@@ -208,7 +312,7 @@
             margin-bottom: 8px;
         }
         .timeline-subtitle {
-            color: #475569;
+            color: var(--text-muted);
             margin-bottom: 12px;
         }
         .skills-grid {
@@ -217,35 +321,38 @@
             gap: 24px;
         }
         .skill-category {
-            background: #f8fafc;
+            background: var(--bg-secondary);
             border-radius: 16px;
             padding: 20px;
         }
         .skill-category h3 {
             font-size: 18px;
             margin-bottom: 16px;
-            color: #1e40af;
+            color: var(--accent);
         }
         .skill-tag {
             display: inline-block;
-            background: white;
+            background: var(--bg-primary);
             padding: 6px 12px;
             border-radius: 30px;
             font-size: 13px;
             margin: 4px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
         }
         .cta-section {
             text-align: center;
             padding: 60px 0;
-            background: #0f172a;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             color: white;
             border-radius: 24px;
             margin: 40px 0;
         }
+        body.dark .cta-section {
+            background: linear-gradient(135deg, #020617, #0f172a);
+        }
         .cta-button {
             display: inline-block;
-            background: #d4af37;
+            background: var(--gold);
             color: #0f172a;
             padding: 12px 30px;
             border-radius: 40px;
@@ -283,14 +390,10 @@
             left: 0;
             width: 35px;
             height: 3px;
-            background: #d4af37;
+            background: var(--gold);
         }
-        .footer-column ul {
-            list-style: none;
-        }
-        .footer-column ul li {
-            margin-bottom: 12px;
-        }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 12px; }
         .footer-column ul li a {
             color: rgba(255,255,255,0.8);
             text-decoration: none;
@@ -328,6 +431,7 @@
     </style>
 </head>
 <body>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
     <header>
         <div class="container nav-container">
             <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
@@ -345,7 +449,13 @@
         </div>
     </header>
 
-    <div class="page-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Главная</a> / <span>Опыт</span>
+        </div>
+    </div>
+
+    <div class="page-header fade-up">
         <div class="container">
             <h1>Опыт работы в управлении цепями поставок (SCM) и логистике</h1>
             <p>Более 15 лет трансформирую операционные сложности в конкурентные преимущества через системный подход и стратегическое лидерство.</p>
@@ -353,25 +463,25 @@
     </div>
 
     <div class="container">
-        <!-- Блок скачивания резюме (дата удалена) -->
-        <div class="card" style="text-align: center;">
-            <i class="fas fa-file-pdf" style="font-size: 48px; color: #1e40af;"></i>
+        <!-- Блок скачивания резюме (без фиксированной даты) -->
+        <div class="card fade-up" style="text-align: center;">
+            <i class="fas fa-file-pdf" style="font-size: 48px; color: var(--accent);"></i>
             <h2 style="margin: 20px 0 10px;">Скачать полное резюме</h2>
-            <p style="color: #475569;">Детальная информация о профессиональном опыте, образовании и достижениях в формате PDF</p>
+            <p style="color: var(--text-muted);">Детальная информация о профессиональном опыте, образовании и достижениях в формате PDF</p>
             <div style="display: flex; justify-content: center; gap: 30px; margin: 20px 0;">
                 <div><strong>15+</strong><br>Лет опыта</div>
                 <div><strong>79</strong><br>Макс. размер команды</div>
                 <div><strong>87,000</strong><br>SKU под управлением</div>
                 <div><strong>6</strong><br>Страниц в резюме</div>
             </div>
-            <a href="resume/Дмитрий_Панибратский_CV.pdf" class="cta-button" style="background: #1e40af; color: white;" id="resumeDownloadBtn">Скачать PDF</a>
+            <a href="resume/Дмитрий_Панибратский_CV.pdf" class="cta-button" style="background: var(--accent); color: white;" id="resumeDownloadBtn">Скачать PDF</a>
             <p style="font-size: 12px; margin-top: 15px;">Формат: PDF | Размер: 6 страниц</p>
         </div>
 
         <!-- Карьерный путь -->
-        <h2 class="section-title">Карьерный путь</h2>
+        <h2 class="section-title fade-up">Карьерный путь</h2>
         <div class="timeline">
-            <div class="timeline-item" data-job="leroy-merlin">
+            <div class="timeline-item fade-up" data-job="leroy-merlin">
                 <div class="timeline-date">Март 2020 — Июль 2025 · 5 лет 5 месяцев</div>
                 <div class="timeline-title">«ЛЕРУА МЕРЛЕН» (Французская компания-ритейлер)</div>
                 <div class="timeline-subtitle">Менеджер цепи поставок магазина</div>
@@ -389,7 +499,7 @@
                 </ul>
             </div>
 
-            <div class="timeline-item" data-job="greenlight">
+            <div class="timeline-item fade-up" data-job="greenlight">
                 <div class="timeline-date">Май 2018 — Декабрь 2019 · 1 год 8 месяцев</div>
                 <div class="timeline-title">ООО «ГРИНЛАЙТ» (Rossko: оптово-розничная продажа автозапчастей)</div>
                 <div class="timeline-subtitle">Начальник склада</div>
@@ -401,7 +511,7 @@
                 </ul>
             </div>
 
-            <div class="timeline-item" data-job="auto">
+            <div class="timeline-item fade-up" data-job="auto">
                 <div class="timeline-date">Декабрь 2014 — Февраль 2018 · 3 года 3 месяца</div>
                 <div class="timeline-title">ООО «АВТО-ПРИТЯЖЕНИЕ», ФРАНШИЗА «ЮЛСАН», ООО «ЮГРАПРОМСЕРВИС»</div>
                 <div class="timeline-subtitle">Директор магазина / Генеральный директор (совместительство)</div>
@@ -416,7 +526,7 @@
                 </ul>
             </div>
 
-            <div class="timeline-item" data-job="resource-manager">
+            <div class="timeline-item fade-up" data-job="resource-manager">
                 <div class="timeline-date">Октябрь 2014 — Май 2018 · 3 года 8 месяцев</div>
                 <div class="timeline-title">ООО «РЕСУРС-АВТО» (Оптово-розничная продажа автозапчастей)</div>
                 <div class="timeline-subtitle">Менеджер отдела логистики и контроля качества обслуживания клиента</div>
@@ -426,7 +536,7 @@
                 </ul>
             </div>
 
-            <div class="timeline-item" data-job="resource-operator">
+            <div class="timeline-item fade-up" data-job="resource-operator">
                 <div class="timeline-date">Февраль 2013 — Сентябрь 2014 · 1 год 8 месяцев</div>
                 <div class="timeline-title">ООО «РЕСУРС-АВТО» (Разные позиции)</div>
                 <div class="timeline-subtitle">Водитель-экспедитор / Кладовщик</div>
@@ -434,7 +544,7 @@
                 Кладовщик: Поддержание качественного функционирования складского помещения (1500 м², 18 человек). Приемка товара по количеству и качеству в 1С. Распределение товара по складу адресного хранения (работа с ТСД).</p>
             </div>
 
-            <div class="timeline-item" data-job="gaz">
+            <div class="timeline-item fade-up" data-job="gaz">
                 <div class="timeline-date">2012 — 2013</div>
                 <div class="timeline-title">ООО «ГАЗ-ЗАПЧАСТЬ» (Официальный дилер по продажам автомобилей)</div>
                 <div class="timeline-subtitle">Менеджер по закупкам и снабжению</div>
@@ -443,30 +553,30 @@
         </div>
 
         <!-- Ключевые компетенции -->
-        <h2 class="section-title">Ключевые компетенции</h2>
+        <h2 class="section-title fade-up">Ключевые компетенции</h2>
         <div class="skills-grid">
-            <div class="skill-category">
+            <div class="skill-category fade-up">
                 <h3>Логистика и SCM</h3>
                 <div><span class="skill-tag">Управление цепочкой поставок</span> <span class="skill-tag">Контроль поставок</span> <span class="skill-tag">Внутренняя логистика</span> <span class="skill-tag">Оптимизация логистических процессов</span> <span class="skill-tag">Логистический менеджмент</span> <span class="skill-tag">Управление товарными запасами</span> <span class="skill-tag">Управление складом</span> <span class="skill-tag">Автоматизация склада</span> <span class="skill-tag">Аудит складских процессов</span> <span class="skill-tag">Транспортная логистика</span></div>
             </div>
-            <div class="skill-category">
+            <div class="skill-category fade-up">
                 <h3>Аналитика и управление</h3>
                 <div><span class="skill-tag">Аналитические способности</span> <span class="skill-tag">ABC-XYZ анализ</span> <span class="skill-tag">Управление эффективностью</span> <span class="skill-tag">Планирование</span> <span class="skill-tag">Управление ассортиментом</span> <span class="skill-tag">Бережливое производство</span> <span class="skill-tag">Управление бизнес-процессами</span> <span class="skill-tag">Регламентация бизнес-процессов</span> <span class="skill-tag">Аудит бизнес-процессов</span> <span class="skill-tag">KPI разработка</span></div>
             </div>
-            <div class="skill-category">
+            <div class="skill-category fade-up">
                 <h3>Лидерство и менеджмент</h3>
                 <div><span class="skill-tag">Лидерство</span> <span class="skill-tag">Командообразование</span> <span class="skill-tag">Управление проектами</span> <span class="skill-tag">Клиентоориентированность</span> <span class="skill-tag">Инновационный менеджмент</span> <span class="skill-tag">Региональное развитие</span> <span class="skill-tag">Управление изменениями</span> <span class="skill-tag">Мотивация персонала</span> <span class="skill-tag">Обучение и развитие команд</span></div>
             </div>
-            <div class="skill-category">
+            <div class="skill-category fade-up">
                 <h3>Технологии и системы</h3>
                 <div><span class="skill-tag">1С: Предприятие 8</span> <span class="skill-tag">WMS системы</span> <span class="skill-tag">TMS системы</span> <span class="skill-tag">ERP системы</span> <span class="skill-tag">1С-Битрикс</span> <span class="skill-tag">E-Commerce</span> <span class="skill-tag">Цифровая трансформация</span> <span class="skill-tag">Искусственный интеллект</span> <span class="skill-tag">Цифровые двойники</span> <span class="skill-tag">Автоматизация отчетности</span></div>
             </div>
         </div>
 
         <!-- Опыт внедрения AI и автоматизации -->
-        <h2 class="section-title">🤖 Опыт внедрения AI и автоматизации</h2>
+        <h2 class="section-title fade-up">🤖 Опыт внедрения AI и автоматизации</h2>
         <div class="timeline">
-            <div class="timeline-item" data-ai="scm-news">
+            <div class="timeline-item fade-up" data-ai="scm-news">
                 <div class="timeline-date">2025–2026</div>
                 <div class="timeline-title">SCM News – полностью автоматизированный медиа-проект</div>
                 <div class="timeline-subtitle">Создан с использованием AI-ассистента (DeepSeek)</div>
@@ -478,7 +588,7 @@
                     <li>Настроил собственные домены, DNS, SSL-сертификаты, работу с регистратором.</li>
                 </ul>
             </div>
-            <div class="timeline-item" data-ai="leroy">
+            <div class="timeline-item fade-up" data-ai="leroy">
                 <div class="timeline-date">2024–2025</div>
                 <div class="timeline-title">Автоматизация складского учёта с элементами AI</div>
                 <div class="timeline-subtitle">Леруа Мерлен (проект в рамках работы)</div>
@@ -490,8 +600,8 @@
         </div>
 
         <!-- Образование и квалификации -->
-        <h2 class="section-title">Образование и квалификации</h2>
-        <div class="card">
+        <h2 class="section-title fade-up">Образование и квалификации</h2>
+        <div class="card fade-up">
             <div style="margin-bottom: 20px;">
                 <h3>2023 — MBA "Логистика, Снабжение, Закупки"</h3>
                 <p>Международный центр дистанционного образования — Руководитель в сфере управления материально-техническим снабжением и закупками</p>
@@ -511,7 +621,7 @@
         </div>
 
         <!-- CTA -->
-        <div class="cta-section">
+        <div class="cta-section fade-up">
             <h2 style="font-size: 28px;">Хотите обсудить ваш проект?</h2>
             <p style="max-width: 600px; margin: 20px auto;">Готов применить 15-летний опыт для решения ваших задач в области управления цепями поставок, оптимизации складских процессов и цифровой трансформации логистики.</p>
             <a href="contact.html" class="cta-button" id="experienceCtaBtn">Обсудить сотрудничество</a>
@@ -521,40 +631,17 @@
     <footer>
         <div class="container">
             <div class="footer-container">
-                <div class="footer-column">
-                    <h3>Дмитрий Панибратский</h3>
-                    <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p>
-                </div>
-                <div class="footer-column">
-                    <h3>Навигация</h3>
-                    <ul>
-                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
-                        <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
-                        <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
-                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
-                        <li><a href="/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Контакты</h3>
-                    <ul>
-                        <li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
-                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Приложение</h3>
-                    <button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button>
-                    <p style="font-size: 12px; margin-top: 8px;">Установите наше PWA на телефон или компьютер</p>
-                </div>
+                <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank">RSS-лента</a></li></ul></div>
+                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
+                <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button></div>
             </div>
-            <div class="copyright">
-                &copy; 2026 Дмитрий Панибратский.
-            </div>
+            <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
         </div>
     </footer>
+
+    <button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
+    <div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
 
     <script src="js/subscribe.js"></script>
     <script>
@@ -603,6 +690,45 @@
                 link.addEventListener('click', () => navMenu.classList.remove('active'));
             });
         }
+
+        // Прогресс-бар
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Кнопка "Наверх"
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollBtn.classList.add('show');
+            else scrollBtn.classList.remove('show');
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Тёмная тема
+        const themeSwitch = document.getElementById('themeSwitch');
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') document.body.classList.add('dark');
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Анимации при скролле
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
