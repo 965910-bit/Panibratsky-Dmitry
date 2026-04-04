@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Новости SCM | Логистика, управление цепями поставок, тренды</title>
-    <meta name="description" content="Автоматическая лента новостей по логистике, управлению цепями поставок, цифровой трансформации. Ежедневное обновление.">
+    <meta name="description" content="Автоматическая лента новостей по логистике, управлению цепями поставок, цифровой трансформации. Ежедневное обновление, поиск, рейтинг.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
@@ -108,6 +108,7 @@
             width: 0%;
             transition: width 0.1s;
         }
+        /* Кнопка наверх */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -131,6 +132,7 @@
         }
         .scroll-top.show { opacity: 1; visibility: visible; }
         .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
+        /* Переключатель темы */
         .theme-switch {
             position: fixed;
             bottom: 30px;
@@ -146,18 +148,21 @@
             box-shadow: var(--card-shadow);
         }
         .theme-switch i { font-size: 18px; color: var(--text-primary); }
+        /* Анимации */
         .fade-up {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
+        /* Хлебные крошки */
         .breadcrumb {
             padding: 0 0 20px;
             font-size: 14px;
             color: var(--text-muted);
         }
         .breadcrumb a { color: var(--accent); text-decoration: none; }
+        /* Шапка */
         header {
             background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -225,6 +230,7 @@
             .scroll-top { right: 20px; }
             .theme-switch { left: 20px; }
         }
+        /* Чат-бот */
         .chat-widget {
             position: fixed;
             bottom: 100px;
@@ -295,12 +301,11 @@
         }
         .search-bar input {
             flex: 1;
-            padding: 12px 16px;
+            padding: 12px;
             border: 1px solid var(--border);
             border-radius: 30px;
             background: var(--bg-primary);
             color: var(--text-primary);
-            font-size: 14px;
         }
         .search-bar button {
             background: var(--accent);
@@ -422,7 +427,10 @@
             font-size: 0.8rem;
             color: var(--text-muted);
         }
-        .share-buttons { display: flex; gap: 12px; }
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+        }
         .share-btn {
             background: none;
             border: none;
@@ -445,9 +453,10 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            margin-left: 12px;
+            margin-left: 10px;
         }
         .like-btn.liked { color: #e74c3c; }
+        .like-btn:hover { color: #e74c3c; }
         .status-badge {
             display: inline-block;
             background: var(--border);
@@ -483,7 +492,10 @@
             font-weight: 700;
             color: var(--accent);
         }
-        .source-name { font-size: 0.8rem; color: var(--text-muted); }
+        .source-name {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
         .pagination {
             display: flex;
             justify-content: center;
@@ -491,19 +503,22 @@
             margin-top: 30px;
         }
         .pagination button {
-            background: var(--bg-primary);
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
             padding: 8px 16px;
             border-radius: 30px;
             cursor: pointer;
-            color: var(--text-primary);
             transition: all 0.2s;
+            color: var(--text-primary);
         }
-        .pagination button:hover { background: var(--accent); color: white; }
-        .pagination .active-page {
+        .pagination button:hover:not(:disabled) {
             background: var(--accent);
             color: white;
             border-color: var(--accent);
+        }
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         footer {
             margin-top: 2rem;
@@ -546,7 +561,7 @@
 
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Поиск по заголовку или описанию...">
-            <button id="searchBtn"><i class="fas fa-search"></i></button>
+            <button id="searchBtn"><i class="fas fa-search"></i> Найти</button>
         </div>
 
         <div class="auto-update-info">
@@ -599,75 +614,67 @@
 
     <script>
         let allNews = [];
+        let filteredNews = [];
         let currentPage = 1;
         const perPage = 10;
-        let currentSearch = '';
         let currentTagFilter = localStorage.getItem('tagFilter') || null;
+        let currentSearch = '';
         let chartInstance = null;
         let updateInterval = null;
 
-        // Загрузка новостей из JSON
+        // Загрузка новостей
         async function loadNews() {
             try {
                 const response = await fetch('data/news.json?_=' + Date.now());
-                if (!response.ok) throw new Error();
+                if (!response.ok) throw new Error('Network error');
                 const data = await response.json();
-                return data;
-            } catch(e) {
-                console.error('Ошибка загрузки новостей:', e);
+                allNews = data;
+                applyFilters();
+            } catch (error) {
+                console.error('Ошибка загрузки новостей:', error);
                 document.getElementById('news-list').innerHTML = '<p>Не удалось загрузить новости. Попробуйте позже.</p>';
-                return [];
             }
         }
 
-        // Сохранение лайков в localStorage
-        function getLikes() {
-            const likes = localStorage.getItem('newsLikes');
-            return likes ? JSON.parse(likes) : {};
-        }
-        function saveLikes(likes) {
-            localStorage.setItem('newsLikes', JSON.stringify(likes));
-        }
-        function likeNews(id) {
-            let likes = getLikes();
-            if (likes[id]) {
-                delete likes[id];
-            } else {
-                likes[id] = true;
-            }
-            saveLikes(likes);
-            renderNews();
-        }
-
-        // Фильтрация и пагинация
-        function getFilteredNews() {
-            let filtered = [...allNews];
+        // Применить фильтры (тег + поиск)
+        function applyFilters() {
+            let result = [...allNews];
             if (currentTagFilter) {
-                filtered = filtered.filter(item => item.tags && item.tags.some(tag => tag.toLowerCase() === currentTagFilter.toLowerCase()));
+                result = result.filter(item => item.tags && item.tags.some(tag => tag.toLowerCase() === currentTagFilter.toLowerCase()));
             }
             if (currentSearch) {
-                filtered = filtered.filter(item => item.title.toLowerCase().includes(currentSearch) || (item.description && item.description.toLowerCase().includes(currentSearch)));
+                const searchLower = currentSearch.toLowerCase();
+                result = result.filter(item =>
+                    item.title.toLowerCase().includes(searchLower) ||
+                    (item.description && item.description.toLowerCase().includes(searchLower))
+                );
             }
-            return filtered;
+            filteredNews = result;
+            currentPage = 1;
+            renderNews();
+            buildChart(filteredNews);
+            buildTagCloud(filteredNews);
+            buildSourcesRank(filteredNews);
         }
 
+        // Рендер с пагинацией
         function renderNews() {
-            const filtered = getFilteredNews();
-            const totalPages = Math.ceil(filtered.length / perPage);
-            if (currentPage > totalPages) currentPage = totalPages || 1;
-            const start = (currentPage - 1) * perPage;
-            const pageNews = filtered.slice(start, start + perPage);
             const container = document.getElementById('news-list');
+            const start = (currentPage - 1) * perPage;
+            const end = start + perPage;
+            const pageNews = filteredNews.slice(start, end);
             if (!pageNews.length) {
-                container.innerHTML = '<p>Новостей не найдено.</p>';
+                container.innerHTML = '<p>Новостей по выбранному фильтру не найдено.</p>';
                 document.getElementById('pagination').innerHTML = '';
                 return;
             }
-            const likes = getLikes();
             container.innerHTML = pageNews.map(item => {
                 if (item.dead) return '';
-                const tagsHtml = item.tags && item.tags.length ? `<div class="news-tags">${item.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>` : '';
-                const liked = likes[item.link] ? 'liked' : '';
+                const tagsHtml = item.tags && item.tags.length
+                    ? `<div class="news-tags">${item.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>`
+                    : '';
+                const likes = localStorage.getItem(`like_${item.link}`) || '0';
+                const isLiked = localStorage.getItem(`liked_${item.link}`) === 'true';
                 return `
                     <div class="news-item" data-link="${escapeHtml(item.link)}">
                         <div class="news-title"><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener">${escapeHtml(item.title)}</a></div>
@@ -679,60 +686,30 @@
                         ${tagsHtml}
                         <div class="news-footer">
                             <span>Категория: ${escapeHtml(item.category || 'логистика')}</span>
-                            <div>
-                                <button class="like-btn ${liked}" data-link="${item.link}"><i class="fas fa-heart"></i> <span class="like-count">${likes[item.link] ? 1 : 0}</span></button>
-                                <div class="share-buttons" style="display: inline-flex;">
-                                    <button class="share-btn" data-share="tg" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-telegram"></i></button>
-                                    <button class="share-btn" data-share="vk" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-vk"></i></button>
-                                    <button class="share-btn" data-share="tw" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-twitter"></i></button>
+                            <div style="display: flex; align-items: center;">
+                                <div class="share-buttons">
+                                    <button class="share-btn" data-share="tg" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-telegram"></i> Поделиться</button>
+                                    <button class="share-btn" data-share="vk" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-vk"></i> VK</button>
+                                    <button class="share-btn" data-share="tw" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-twitter"></i> X</button>
                                 </div>
+                                <button class="like-btn ${isLiked ? 'liked' : ''}" data-link="${item.link}"><i class="fas fa-heart"></i> <span class="like-count">${likes}</span></button>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
+
+            // Обработчики кнопок "Поделиться"
+            document.querySelectorAll('.share-btn').forEach(btn => {
+                btn.removeEventListener('click', shareHandler);
+                btn.addEventListener('click', shareHandler);
+            });
             // Обработчики лайков
             document.querySelectorAll('.like-btn').forEach(btn => {
                 btn.removeEventListener('click', likeHandler);
                 btn.addEventListener('click', likeHandler);
             });
-            // Обработчики шаринга
-            document.querySelectorAll('.share-btn').forEach(btn => {
-                btn.removeEventListener('click', shareHandler);
-                btn.addEventListener('click', shareHandler);
-            });
-            // Пагинация
-            const paginationDiv = document.getElementById('pagination');
-            paginationDiv.innerHTML = '';
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement('button');
-                btn.textContent = i;
-                if (i === currentPage) btn.classList.add('active-page');
-                btn.addEventListener('click', () => {
-                    currentPage = i;
-                    renderNews();
-                });
-                paginationDiv.appendChild(btn);
-            }
-        }
-
-        function likeHandler(e) {
-            e.stopPropagation();
-            const btn = e.currentTarget;
-            const link = btn.getAttribute('data-link');
-            let likes = getLikes();
-            if (likes[link]) {
-                delete likes[link];
-                btn.classList.remove('liked');
-                btn.querySelector('.like-count').textContent = '0';
-            } else {
-                likes[link] = true;
-                btn.classList.add('liked');
-                btn.querySelector('.like-count').textContent = '1';
-            }
-            saveLikes(likes);
-            ym(105620027, 'reachGoal', 'news_like');
-            gtag('event', 'news_like', { event_category: 'engagement', event_label: link });
+            renderPagination();
         }
 
         function shareHandler(e) {
@@ -755,27 +732,45 @@
                 ym(105620027, 'reachGoal', 'share_tw');
                 gtag('event', 'share', { event_category: 'engagement', event_label: 'twitter' });
             }
-            if (shareUrl) window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=500');
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
-        }
-
-        async function updateNews() {
-            const newData = await loadNews();
-            if (!newData.length) return;
-            allNews = newData;
-            renderNews();
-            buildChart(allNews);
-            buildTagCloud(allNews);
-            buildSourcesRank(allNews);
-            const timerSpan = document.getElementById('update-timer');
-            if (timerSpan) {
-                timerSpan.innerHTML = `✅ обновлено в ${new Date().toLocaleTimeString()}`;
-                setTimeout(() => { if (timerSpan.innerHTML.includes('✅')) timerSpan.innerHTML = '⏳ ожидание обновления...'; }, 3000);
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=500');
             }
+        }
+
+        function likeHandler(e) {
+            e.stopPropagation();
+            const btn = e.currentTarget;
+            const link = btn.getAttribute('data-link');
+            let count = parseInt(localStorage.getItem(`like_${link}`) || '0');
+            const wasLiked = localStorage.getItem(`liked_${link}`) === 'true';
+            if (wasLiked) {
+                count--;
+                localStorage.setItem(`liked_${link}`, 'false');
+            } else {
+                count++;
+                localStorage.setItem(`liked_${link}`, 'true');
+            }
+            localStorage.setItem(`like_${link}`, count.toString());
+            btn.querySelector('.like-count').textContent = count;
+            if (count > 0) btn.classList.add('liked');
+            else btn.classList.remove('liked');
+            ym(105620027, 'reachGoal', 'news_like');
+            gtag('event', 'news_like', { event_category: 'engagement', event_label: link });
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredNews.length / perPage);
+            const paginationDiv = document.getElementById('pagination');
+            if (totalPages <= 1) {
+                paginationDiv.innerHTML = '';
+                return;
+            }
+            let html = `<button id="prevPage" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Назад</button>`;
+            html += `<span style="margin: 0 15px;">Страница ${currentPage} из ${totalPages}</span>`;
+            html += `<button id="nextPage" ${currentPage === totalPages ? 'disabled' : ''}>Вперед <i class="fas fa-chevron-right"></i></button>`;
+            paginationDiv.innerHTML = html;
+            document.getElementById('prevPage')?.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderNews(); } });
+            document.getElementById('nextPage')?.addEventListener('click', () => { if (currentPage < totalPages) { currentPage++; renderNews(); } });
         }
 
         function buildChart(news) {
@@ -800,8 +795,27 @@
             if (chartInstance) chartInstance.destroy();
             chartInstance = new Chart(ctx, {
                 type: 'line',
-                data: { labels, datasets: [{ label: 'Количество новостей', data: dataPoints, borderColor: '#0077ff', backgroundColor: 'rgba(0,119,255,0.1)', tension: 0.2, fill: true, pointRadius: 3, pointBackgroundColor: '#0077ff' }] },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Динамика публикаций за последние 30 дней' } } }
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Количество новостей',
+                        data: dataPoints,
+                        borderColor: '#0077ff',
+                        backgroundColor: 'rgba(0, 119, 255, 0.1)',
+                        tension: 0.2,
+                        fill: true,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#0077ff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Динамика публикаций за последние 30 дней' }
+                    }
+                }
             });
         }
 
@@ -818,7 +832,7 @@
             const container = document.getElementById('tagcloud');
             if (!container) return;
             container.innerHTML = '';
-            const sorted = Object.entries(tagCount).sort((a,b) => b[1] - a[1]).slice(0, 30);
+            const sorted = Object.entries(tagCount).sort((a,b) => b[1] - a[1]).slice(0, 50);
             sorted.forEach(([tag, count]) => {
                 const span = document.createElement('span');
                 span.textContent = tag;
@@ -826,82 +840,80 @@
                 span.style.fontSize = size + 'px';
                 span.style.fontWeight = count > 5 ? '600' : '400';
                 span.title = `${count} новостей`;
-                span.onclick = () => setTagFilter(tag);
+                span.onclick = () => { currentTagFilter = tag; localStorage.setItem('tagFilter', tag); applyFilters(); document.getElementById('filter-bar').style.display = 'block'; document.getElementById('active-tag').textContent = `Фильтр: ${tag}`; };
                 container.appendChild(span);
             });
         }
 
         function buildSourcesRank(news) {
             const sourceCount = {};
-            news.forEach(item => { sourceCount[item.source] = (sourceCount[item.source] || 0) + 1; });
-            const sorted = Object.entries(sourceCount).sort((a,b) => b[1] - a[1]).slice(0,5);
+            news.forEach(item => {
+                const source = item.source;
+                sourceCount[source] = (sourceCount[source] || 0) + 1;
+            });
+            const sorted = Object.entries(sourceCount).sort((a,b) => b[1] - a[1]).slice(0, 5);
             const container = document.getElementById('sources-list');
             if (!container) return;
-            container.innerHTML = sorted.map(([name, count]) => `<div class="source-item"><div class="source-count">${count}</div><div class="source-name">${escapeHtml(name)}</div></div>`).join('');
+            container.innerHTML = sorted.map(([name, count]) => `
+                <div class="source-item">
+                    <div class="source-count">${count}</div>
+                    <div class="source-name">${escapeHtml(name)}</div>
+                </div>
+            `).join('');
+            if (sorted.length === 0) container.innerHTML = '<p>Нет данных об источниках.</p>';
         }
 
-        function setTagFilter(tag) {
-            currentTagFilter = tag;
-            localStorage.setItem('tagFilter', tag);
-            currentPage = 1;
-            currentSearch = '';
-            document.getElementById('searchInput').value = '';
-            const filterBar = document.getElementById('filter-bar');
-            document.getElementById('active-tag').textContent = `Фильтр: ${tag}`;
-            filterBar.style.display = 'block';
-            renderNews();
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
         }
 
-        function clearFilter() {
-            currentTagFilter = null;
-            localStorage.removeItem('tagFilter');
-            currentPage = 1;
-            document.getElementById('filter-bar').style.display = 'none';
-            renderNews();
+        async function updateNews() {
+            await loadNews();
+            const timerSpan = document.getElementById('update-timer');
+            if (timerSpan) {
+                const now = new Date();
+                timerSpan.innerHTML = `✅ обновлено в ${now.toLocaleTimeString()}`;
+                setTimeout(() => { if (timerSpan.innerHTML.includes('✅')) timerSpan.innerHTML = '⏳ ожидание обновления...'; }, 3000);
+            }
         }
 
         function startAutoUpdate(intervalMinutes = 5) {
             if (updateInterval) clearInterval(updateInterval);
-            updateInterval = setInterval(() => updateNews(), intervalMinutes * 60 * 1000);
+            updateInterval = setInterval(updateNews, intervalMinutes * 60 * 1000);
             updateNews();
         }
 
-        startAutoUpdate(5);
-        document.getElementById('clear-filter')?.addEventListener('click', clearFilter);
+        // Сброс фильтра
+        document.getElementById('clear-filter')?.addEventListener('click', () => {
+            currentTagFilter = null;
+            localStorage.removeItem('tagFilter');
+            document.getElementById('filter-bar').style.display = 'none';
+            applyFilters();
+        });
+
+        // Поиск
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            currentSearch = document.getElementById('searchInput').value.trim();
+            currentTagFilter = null;
+            localStorage.removeItem('tagFilter');
+            document.getElementById('filter-bar').style.display = 'none';
+            applyFilters();
+        });
+
+        // Восстановление фильтра тегов
         if (currentTagFilter) {
             document.getElementById('filter-bar').style.display = 'block';
             document.getElementById('active-tag').textContent = `Фильтр: ${currentTagFilter}`;
         }
-        document.getElementById('searchBtn').addEventListener('click', () => {
-            currentSearch = document.getElementById('searchInput').value.toLowerCase();
-            currentPage = 1;
-            renderNews();
-        });
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                currentSearch = e.target.value.toLowerCase();
-                currentPage = 1;
-                renderNews();
-            }
-        });
 
-        // Отслеживание кликов по ссылкам новостей
-        document.addEventListener('click', (e) => {
-            let target = e.target.closest('.news-title a');
-            if (target && target.href) {
-                ym(105620027, 'reachGoal', 'news_click');
-                gtag('event', 'news_click', { event_category: 'engagement', event_label: target.href });
-            }
-        });
-
-        // Прогресс-бар, кнопка наверх, тема, анимации, чат, мобильное меню
+        // Прогресс-бар, кнопка наверх, тема, анимации, чат, меню
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
-            const scrollBtn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) scrollBtn.classList.add('show');
-            else scrollBtn.classList.remove('show');
+            if (window.scrollY > 300) document.getElementById('scrollTopBtn').classList.add('show');
+            else document.getElementById('scrollTopBtn').classList.remove('show');
         });
         document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
         const themeSwitch = document.getElementById('themeSwitch');
@@ -910,10 +922,9 @@
             document.body.classList.toggle('dark');
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
         });
-        const fadeObserver = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
         const chatButton = document.getElementById('chatButton');
         const chatBox = document.getElementById('chatBox');
         chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
@@ -921,10 +932,12 @@
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
             mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
-            document.querySelectorAll('#nav-menu a').forEach(link => {
-                link.addEventListener('click', () => navMenu.classList.remove('active'));
-            });
+            document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
+
+        // Инициализация
+        loadNews();
+        startAutoUpdate(5);
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
