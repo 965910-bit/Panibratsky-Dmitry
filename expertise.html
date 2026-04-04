@@ -464,18 +464,44 @@
             margin-top: 20px;
             border-left: 4px solid var(--gold);
         }
-        /* Карта навыков */
-        .skills-chart {
-            max-width: 300px;
-            margin: 0 auto;
-        }
+        /* Карта навыков (улучшенная) */
         .skills-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
-            align-items: center;
             justify-content: center;
-            margin-bottom: 40px;
+            align-items: center;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        .skills-chart {
+            max-width: 100%;
+            height: auto;
+            background: var(--bg-primary);
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+        }
+        .skills-legend {
+            min-width: 200px;
+        }
+        .skills-legend p {
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .skills-legend ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .skills-legend li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
         }
         footer {
             background: #0f172a;
@@ -713,19 +739,19 @@
             <div id="tcoResult" class="calc-result" style="display: none;"></div>
         </div>
 
-        <!-- Интерактивная карта навыков -->
+        <!-- Интерактивная карта навыков (улучшенная, крупная) -->
         <h2 class="section-title fade-up">📊 Интерактивная карта навыков</h2>
         <div class="skills-container">
-            <canvas id="skillsRadar" class="skills-chart" width="300" height="300"></canvas>
-            <div style="max-width: 300px;">
-                <p><strong>Уровень владения методологиями:</strong></p>
+            <canvas id="skillsRadar" width="500" height="500" class="skills-chart"></canvas>
+            <div class="skills-legend">
+                <p>🎯 Уровень владения методологиями:</p>
                 <ul>
-                    <li>Lean: 85%</li>
-                    <li>ABC-XYZ: 90%</li>
-                    <li>BPM: 80%</li>
-                    <li>AI/ML: 75%</li>
-                    <li>RPA: 70%</li>
-                    <li>Цифровая трансформация: 88%</li>
+                    <li><span class="legend-color" style="background: #1e40af;"></span> Lean: <strong>85%</strong></li>
+                    <li><span class="legend-color" style="background: #3b82f6;"></span> ABC-XYZ: <strong>90%</strong></li>
+                    <li><span class="legend-color" style="background: #6366f1;"></span> BPM: <strong>80%</strong></li>
+                    <li><span class="legend-color" style="background: #8b5cf6;"></span> AI/ML: <strong>75%</strong></li>
+                    <li><span class="legend-color" style="background: #a855f7;"></span> RPA: <strong>70%</strong></li>
+                    <li><span class="legend-color" style="background: #d946ef;"></span> Цифровая трансформация: <strong>88%</strong></li>
                 </ul>
             </div>
         </div>
@@ -842,7 +868,7 @@
             gtag('event', 'tco_calc', { event_category: 'calculator', event_label: 'TCO' });
         });
 
-        // Интерактивная карта навыков (Radar Chart)
+        // Интерактивная карта навыков (Radar Chart) – улучшенная, крупная
         const ctx = document.getElementById('skillsRadar').getContext('2d');
         new Chart(ctx, {
             type: 'radar',
@@ -853,20 +879,45 @@
                     data: [85, 90, 80, 75, 70, 88],
                     backgroundColor: 'rgba(30, 64, 175, 0.2)',
                     borderColor: '#1e40af',
+                    borderWidth: 2,
                     pointBackgroundColor: '#d4af37',
                     pointBorderColor: '#fff',
-                    pointRadius: 5
+                    pointRadius: 6,
+                    pointHoverRadius: 9,
+                    pointBorderWidth: 2,
+                    fill: true,
+                    tension: 0.1
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.raw + '%';
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'top',
+                        labels: { font: { size: 14, weight: 'bold' }, color: getComputedStyle(document.body).getPropertyValue('--text-primary') }
+                    }
+                },
                 scales: {
                     r: {
                         beginAtZero: true,
                         max: 100,
-                        ticks: { stepSize: 20, color: getComputedStyle(document.body).getPropertyValue('--text-muted') }
+                        ticks: { stepSize: 20, backdropColor: 'transparent', color: getComputedStyle(document.body).getPropertyValue('--text-muted'), font: { size: 12 } },
+                        grid: { color: getComputedStyle(document.body).getPropertyValue('--border') },
+                        angleLines: { color: getComputedStyle(document.body).getPropertyValue('--border') },
+                        pointLabels: { font: { size: 14, weight: 'bold' }, color: getComputedStyle(document.body).getPropertyValue('--text-primary') }
                     }
+                },
+                elements: {
+                    line: { borderWidth: 2 },
+                    point: { borderWidth: 2 }
                 }
             }
         });
@@ -902,7 +953,7 @@
         themeSwitch.addEventListener('click', () => {
             document.body.classList.toggle('dark');
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-            // Перезагружаем для обновления цвета графика
+            // Перезагружаем для обновления цветов графика
             location.reload();
         });
 
