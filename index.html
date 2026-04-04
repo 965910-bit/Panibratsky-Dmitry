@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дмитрий Панибратский – стратегия управления цепями поставок, SCM, логистика</title>
-    <meta name="description" content="Стратегический лидер в управлении цепями поставок (SCM). 15+ лет опыта в цифровой трансформации логистики, внедрении AI, создании Академии SCM. Оптимизация, рост эффективности и конкурентное преимущество вашего бизнеса.">
+    <meta name="description" content="Стратегический лидер в управлении цепями поставок (SCM). 15+ лет опыта в цифровой трансформации логистики, внедрении AI, создании Академии SCM.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
-
-    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,12 +23,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Яндекс.Метрика -->
-    <script type="text/javascript" >
+    <script type="text/javascript">
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
         ym(105620027, "init", {
             clickmap:true,
@@ -40,6 +37,7 @@
         });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
     <script>
@@ -48,54 +46,33 @@
         gtag('js', new Date());
         gtag('config', 'G-C5X9R6HPQY');
     </script>
+
     <style>
-        :root {
-            --primary-dark: #0f172a;
-            --primary-blue: #1e40af;
-            --primary-light: #3b82f6;
-            --accent-gold: #d4af37;
-            --accent-steel: #475569;
-            --neutral-dark: #1e293b;
-            --neutral-medium: #64748b;
-            --neutral-light: #f1f5f9;
-            --success-color: #10b981;
-            --border-radius-sm: 4px;
-            --border-radius: 8px;
-            --border-radius-lg: 12px;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #0f172a;
             line-height: 1.5;
-            color: var(--neutral-dark);
-            background-color: #ffffff;
-            font-weight: 400;
-            overflow-x: hidden;
         }
         .container {
-            width: 100%;
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 20px;
         }
+        /* ШАПКА (НАВИГАЦИЯ) */
         header {
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            border-bottom: 1px solid #e2e8f0;
             position: fixed;
             top: 0;
-            left: 0;
             width: 100%;
             z-index: 1000;
-            transition: var(--transition);
         }
         .nav-container {
             display: flex;
@@ -106,58 +83,34 @@
         .logo {
             font-size: 20px;
             font-weight: 700;
-            color: var(--primary-dark);
+            color: #0f172a;
             text-decoration: none;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
         }
         .logo-dot {
-            color: var(--accent-gold);
-            margin: 0 2px;
+            color: #d4af37;
         }
         nav ul {
             display: flex;
             list-style: none;
-            transition: var(--transition);
-        }
-        nav ul li {
-            margin-left: 32px;
+            gap: 32px;
         }
         nav ul li a {
             text-decoration: none;
-            color: var(--neutral-medium);
+            color: #64748b;
             font-weight: 500;
             font-size: 14px;
-            transition: var(--transition);
-            padding: 6px 0;
-            position: relative;
-            letter-spacing: 0.2px;
+            transition: color 0.2s;
         }
-        nav ul li a:hover {
-            color: var(--primary-blue);
-        }
+        nav ul li a:hover,
         nav ul li a.active {
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-        nav ul li a.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--accent-gold);
+            color: #1e40af;
         }
         .mobile-menu-btn {
             display: none;
             background: none;
             border: none;
             font-size: 22px;
-            color: var(--primary-dark);
             cursor: pointer;
-            padding: 5px;
         }
         @media (max-width: 768px) {
             nav ul {
@@ -169,41 +122,27 @@
                 background: white;
                 padding: 16px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                z-index: 1000;
                 flex-direction: column;
+                gap: 12px;
             }
             nav ul.active {
                 display: flex;
             }
-            nav ul li {
-                margin: 0 0 12px 0;
-            }
             .mobile-menu-btn {
                 display: block;
+            }
+            body {
+                padding-top: 70px;
             }
         }
         .hero-section {
             padding: 130px 0 60px;
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 40%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(30, 64, 175, 0) 100%);
-            z-index: 0;
         }
         .hero-container {
             display: flex;
             align-items: center;
             gap: 60px;
-            position: relative;
-            z-index: 1;
         }
         .hero-content {
             flex: 1;
@@ -212,674 +151,143 @@
             flex: 1;
             display: flex;
             justify-content: center;
-            position: relative;
         }
         .profile-photo {
             width: 300px;
             height: 300px;
             border-radius: 50%;
             object-fit: cover;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            z-index: 2;
-        }
-        .photo-frame {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-gold);
-            transform: rotate(45deg);
-            z-index: 1;
-            top: 0;
+            border: 3px solid #d4af37;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
         }
         .executive-tag {
             display: inline-block;
-            background-color: var(--primary-blue);
+            background: #1e40af;
             color: white;
             font-size: 11px;
             font-weight: 600;
             padding: 5px 12px;
             border-radius: 20px;
-            letter-spacing: 0.8px;
             margin-bottom: 16px;
-            text-transform: uppercase;
         }
         h1 {
-            font-size: clamp(32px, 5vw, 44px);
+            font-size: clamp(32px,5vw,44px);
             line-height: 1.1;
             margin-bottom: 20px;
-            color: var(--primary-dark);
-            font-weight: 700;
-            letter-spacing: -0.8px;
         }
         .hero-title {
             font-size: 18px;
-            color: var(--neutral-medium);
+            color: #64748b;
             margin-bottom: 24px;
-            font-weight: 400;
             max-width: 600px;
         }
         .hero-subtitle {
             font-size: 16px;
             font-style: italic;
-            color: var(--accent-steel);
-            margin-top: 16px;
-            line-height: 1.5;
-            border-left: 3px solid var(--accent-gold);
+            border-left: 3px solid #d4af37;
             padding-left: 12px;
             max-width: 800px;
+            margin-top: 16px;
         }
         .tag {
             display: inline-block;
-            background-color: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
+            background: rgba(30,64,175,0.1);
+            color: #1e40af;
             padding: 6px 12px;
             border-radius: 16px;
-            margin-right: 8px;
-            margin-bottom: 8px;
+            margin: 4px;
             font-size: 12px;
             font-weight: 500;
-            border: 1px solid rgba(30, 64, 175, 0.2);
-        }
-        .philosophy-section {
-            padding: 70px 0;
-            background-color: var(--neutral-light);
-        }
-        .philosophy-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .philosophy-card {
-            background-color: white;
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            position: relative;
-            overflow: hidden;
-        }
-        .philosophy-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
-        }
-        .philosophy-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background-color: rgba(212, 175, 55, 0.1);
-            color: var(--accent-gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 32px;
-        }
-        .philosophy-title {
-            font-size: clamp(24px, 4vw, 30px);
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 24px;
-            text-align: center;
-            line-height: 1.2;
-        }
-        .philosophy-content {
-            font-size: 18px;
-            color: var(--neutral-medium);
-            line-height: 1.7;
-            margin-bottom: 30px;
-            text-align: center;
-            font-weight: 300;
-        }
-        .philosophy-insight {
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            margin: 30px 0;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
-        .philosophy-insight h3 {
-            color: var(--primary-blue);
-            margin-bottom: 16px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .philosophy-insight ul {
-            list-style: none;
-            padding-left: 0;
-            margin: 12px 0;
-        }
-        .philosophy-insight li {
-            margin-bottom: 8px;
-            padding-left: 20px;
-            position: relative;
-            font-size: 15px;
-        }
-        .philosophy-insight li:before {
-            content: "•";
-            color: var(--accent-gold);
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-        }
-        .strategic-academy {
-            background: rgba(30, 64, 175, 0.05);
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 24px;
-            border-left: 4px solid var(--accent-gold);
-        }
-        .strategic-academy h4 {
-            color: var(--primary-dark);
-            margin-bottom: 12px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .strategic-academy p {
-            margin-bottom: 12px;
-            line-height: 1.6;
-            font-size: 15px;
-        }
-        .book-announcement {
-            background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(30, 64, 175, 0.02) 100%);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            margin: 30px 0;
-            border-left: 4px solid var(--accent-gold);
-            display: flex;
-            align-items: flex-start;
-            gap: 24px;
-        }
-        .book-cover {
-            flex-shrink: 0;
-            width: 180px;
-            height: 250px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
-        .book-cover img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .book-info {
-            flex: 1;
-        }
-        .book-info .book-title {
-            font-size: 22px;
-            color: var(--primary-dark);
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-        .book-info .book-description {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-        .book-status {
-            margin-top: 16px;
-        }
-        .philosophy-principles {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
-        }
-        .principle-card {
-            background-color: rgba(30, 64, 175, 0.03);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            border-left: 4px solid var(--accent-gold);
-            transition: var(--transition);
-        }
-        .principle-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow);
-        }
-        .principle-number {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            background-color: var(--accent-gold);
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 32px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            font-size: 14px;
-        }
-        .principle-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 12px;
-        }
-        .principle-description {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            line-height: 1.5;
-        }
-        .vision-2036 {
-            display: none;
-        }
-        .imperatives-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-        .imperative-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 24px;
-            padding: 1.5rem;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        .imperative-card:hover {
-            background: rgba(255,255,255,0.15);
-            transform: translateY(-5px);
-        }
-        .hover-effect {
-            position: absolute;
-            bottom: -100%;
-            left: 0;
-            width: 100%;
-            background: var(--primary-blue);
-            color: white;
-            padding: 0.5rem;
-            text-align: center;
-            transition: bottom 0.3s;
-        }
-        .imperative-card:hover .hover-effect {
-            bottom: 0;
-        }
-        .results-section {
-            padding: 70px 0;
-            background-color: white;
-        }
-        .section-header {
-            text-align: center;
-            margin-bottom: 50px;
+            border: 1px solid rgba(30,64,175,0.2);
         }
         .section-title {
-            font-size: clamp(28px, 4vw, 34px);
+            font-size: 32px;
             font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
-        .section-subtitle {
-            font-size: 16px;
-            color: var(--neutral-medium);
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.5;
+            margin-bottom: 30px;
         }
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
             gap: 30px;
-            margin-top: 40px;
+            margin: 40px 0;
         }
         .result-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 30px 20px;
-            box-shadow: var(--shadow);
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             text-align: center;
-            transition: var(--transition);
-            border-top: 4px solid transparent;
+            border-top: 4px solid #d4af37;
+            transition: transform 0.2s;
+            cursor: pointer;
         }
         .result-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-            border-top: 4px solid var(--accent-gold);
+            transform: translateY(-5px);
         }
         .result-number {
             font-size: 44px;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
-            line-height: 1;
-        }
-        .result-label {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            font-weight: 500;
-        }
-        .methodologies-section {
-            padding: 70px 0;
-            background-color: white;
+            font-weight: 800;
+            color: #1e40af;
         }
         .methodologies-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+            gap: 30px;
+            margin: 40px 0;
         }
         .methodology-card {
-            display: flex;
-            align-items: flex-start;
-            background-color: white;
-            border-radius: var(--border-radius);
+            background: white;
+            border-radius: 20px;
             padding: 24px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            min-height: 180px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s;
+            cursor: pointer;
         }
         .methodology-card:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--accent-gold);
         }
-        .methodology-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: rgba(212, 175, 55, 0.1);
-            color: var(--accent-gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 20px;
-            flex-shrink: 0;
+        .methodology-card h3 {
             font-size: 20px;
-        }
-        .methodology-content h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-        .methodology-content p {
-            font-size: 14px;
-            color: var(--neutral-medium);
-            line-height: 1.5;
-        }
-        .leadership-philosophy {
-            padding: 70px 0;
-            background-color: var(--neutral-light);
-        }
-        .philosophy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-top: 30px;
-        }
-        .philosophy-item {
-            background: white;
-            padding: 24px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        .philosophy-item:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-        .philosophy-item .philosophy-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(30, 64, 175, 0.1);
-            color: var(--primary-blue);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            margin-bottom: 16px;
-        }
-        .philosophy-item h3 {
-            font-size: 20px;
-            color: var(--primary-dark);
-            margin-bottom: 16px;
-        }
-        .philosophy-item ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        .philosophy-item li {
-            margin-bottom: 8px;
-            padding-left: 20px;
-            position: relative;
-            line-height: 1.5;
-            font-size: 14px;
-        }
-        .philosophy-item li:before {
-            content: "•";
-            color: var(--accent-gold);
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-        }
-        .philosophy-quote {
-            text-align: center;
-            margin-top: 30px;
-            padding: 24px;
-            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(30, 64, 175, 0) 100%);
-            border-radius: 12px;
-            border-left: 4px solid var(--accent-gold);
-            border-right: 4px solid var(--primary-blue);
-        }
-        .philosophy-quote p {
-            font-size: 18px;
-            font-style: italic;
-            color: var(--primary-dark);
-            line-height: 1.5;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .academy-section {
-            padding: 70px 0;
-            background-color: white;
-        }
-        .academy-card {
-            background: linear-gradient(135deg, rgba(0, 82, 204, 0.05) 0%, rgba(0, 184, 217, 0.05) 100%);
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
-            margin: 40px 0;
-            border-left: 4px solid var(--accent-gold);
-        }
-        .academy-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .academy-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background-color: rgba(30, 64, 175, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .academy-icon i {
-            font-size: 32px;
-            color: var(--primary-blue);
-        }
-        .academy-title {
-            font-size: 26px;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-        }
-        .academy-subtitle {
-            color: var(--neutral-medium);
-        }
-        .academy-mission {
-            margin: 30px 0;
-        }
-        .academy-mission h3 {
-            color: var(--primary-blue);
-            margin-bottom: 16px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .academy-mission p {
-            font-size: 15px;
-            line-height: 1.6;
-            color: var(--neutral-dark);
-        }
-        .flip-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            perspective: 1000px;
-            margin: 40px 0;
-        }
-        .flip-card {
-            width: 100%;
-            height: 300px;
-            cursor: pointer;
-        }
-        .flip-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .flip-card:hover .flip-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-front, .flip-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        .flip-front {
-            background: linear-gradient(145deg, var(--primary-blue), #1e3a8a);
-            color: white;
-        }
-        .flip-back {
-            background: white;
-            transform: rotateY(180deg);
-        }
-        .preorder-btn {
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-top: 1rem;
-        }
-        .academy-link {
-            text-align: center;
-            margin-top: 40px;
-        }
-        .academy-link .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 32px;
-            background-color: var(--accent-gold);
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: 700;
-            font-size: 16px;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-        }
-        .academy-link .cta-button:hover {
-            background-color: #c19b2c;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+            margin-bottom: 12px;
         }
         .cta-section {
-            padding: 70px 0;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e293b 100%);
-            color: white;
             text-align: center;
-        }
-        .cta-title {
-            font-size: clamp(28px, 5vw, 36px);
-            font-weight: 700;
-            margin-bottom: 20px;
+            padding: 60px 0;
+            background: #0f172a;
             color: white;
-        }
-        .cta-description {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 30px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.5;
+            border-radius: 24px;
+            margin: 40px 0;
         }
         .cta-button {
             display: inline-block;
-            padding: 16px 32px;
-            background-color: var(--accent-gold);
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: var(--border-radius);
+            background: #d4af37;
+            color: #0f172a;
+            padding: 12px 30px;
+            border-radius: 40px;
             font-weight: 700;
-            font-size: 16px;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.5px;
+            text-decoration: none;
+            transition: 0.2s;
         }
         .cta-button:hover {
-            background-color: #c19b2c;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+            background: #c19b2c;
+            transform: translateY(-2px);
         }
         footer {
-            background-color: var(--primary-dark);
+            background: #0f172a;
             color: white;
             padding: 60px 0 30px;
-            position: relative;
+            margin-top: 60px;
         }
         .footer-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
             gap: 40px;
             margin-bottom: 40px;
         }
         .footer-column h3 {
             font-size: 18px;
-            font-weight: 700;
             margin-bottom: 20px;
-            color: white;
             position: relative;
             padding-bottom: 10px;
         }
@@ -890,36 +298,22 @@
             left: 0;
             width: 35px;
             height: 3px;
-            background-color: var(--accent-gold);
-        }
-        .footer-column p {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.5;
-            margin-bottom: 16px;
-            font-size: 14px;
+            background: #d4af37;
         }
         .footer-column ul {
             list-style: none;
         }
-        .footer-column ul li {
-            margin-bottom: 12px;
-        }
         .footer-column ul li a {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255,255,255,0.8);
             text-decoration: none;
-            transition: var(--transition);
-            font-size: 14px;
             display: flex;
             align-items: center;
+            gap: 8px;
+            transition: 0.2s;
         }
         .footer-column ul li a:hover {
             color: white;
             padding-left: 5px;
-        }
-        .footer-column ul li i {
-            margin-right: 8px;
-            width: 18px;
-            color: var(--accent-gold);
         }
         .footer-install-btn {
             background: #1e40af;
@@ -930,21 +324,17 @@
             cursor: pointer;
             font-weight: 600;
             margin-top: 10px;
-            transition: 0.2s;
-        }
-        .footer-install-btn:hover {
-            background: #0f172a;
         }
         .copyright {
             text-align: center;
             padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
             font-size: 13px;
         }
         .news-section {
             padding: 60px 0;
-            background: var(--neutral-light);
+            background: #f8fafc;
         }
         .news-grid {
             display: grid;
@@ -958,11 +348,10 @@
             padding: 24px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             transition: transform 0.2s;
-            border: 1px solid #e2e8f0;
+            cursor: pointer;
         }
         .news-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
         }
         .news-date {
             color: #64748b;
@@ -1000,7 +389,7 @@
         }
         .btn-all-news {
             display: inline-block;
-            background: var(--primary-blue);
+            background: #1e40af;
             color: white;
             padding: 12px 24px;
             border-radius: 40px;
@@ -1009,54 +398,29 @@
             transition: 0.2s;
         }
         .btn-all-news:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
+            background: #0f172a;
         }
-        .news-footer {
-            text-align: center;
-            margin-top: 20px;
-        }
-        @media (max-width: 992px) {
+        @media (max-width: 768px) {
             .hero-container {
                 flex-direction: column;
                 text-align: center;
-                gap: 40px;
             }
-            .hero-section::before {
-                width: 100%;
-                height: 35%;
-                top: 0;
-            }
-            .book-announcement {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            }
-            .book-cover {
-                margin: 0 auto;
-            }
-        }
-        @media (max-width: 768px) {
-            .hero-section {
-                padding: 110px 0 50px;
-            }
-            .profile-photo, .photo-frame {
+            .profile-photo {
                 width: 220px;
                 height: 220px;
             }
-            .footer-counters {
-                flex-direction: column;
-                gap: 10px;
-                align-items: center;
+            .hero-title {
+                margin-left: auto;
+                margin-right: auto;
             }
-            .news-grid {
-                grid-template-columns: 1fr;
+            .hero-subtitle {
+                text-align: left;
             }
         }
     </style>
 </head>
 <body>
-    <header id="mainHeader">
+    <header>
         <div class="container nav-container">
             <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
             <button class="mobile-menu-btn" aria-label="Меню"><i class="fas fa-bars"></i></button>
@@ -1079,148 +443,48 @@
                 <span class="executive-tag">Философия управления SCM</span>
                 <h1>Стратегия управления цепями поставок (SCM) и логистикой</h1>
                 <p class="hero-title">15+ лет трансформирую операционные сложности в конкурентные преимущества через системный подход, цифровые технологии и стратегическое лидерство.</p>
-                <p class="hero-subtitle">
-                    "Нет неэффективного бизнеса — есть непроработанная стратегия и цели. Цепь поставок — это материализованная мысль: сначала вы выбираете философию, затем она строит за вас цепь."
-                </p>
-                <div class="hero-tags">
+                <p class="hero-subtitle">"Нет неэффективного бизнеса — есть непроработанная стратегия и цели. Цепь поставок — это материализованная мысль: сначала вы выбираете философию, затем она строит за вас цепь."</p>
+                <div>
                     <span class="tag">Стратегическое мышление</span>
                     <span class="tag">Цифровая трансформация</span>
                     <span class="tag">AI-интеграция</span>
-                    <span class="tag">Управление изменениями</span>
-                    <span class="tag">Философия лидерства</span>
                     <span class="tag">Академия SCM</span>
                 </div>
             </div>
             <div class="hero-image">
-                <div class="photo-frame"></div>
-                <picture>
-                    <source srcset="images/profile.webp" type="image/webp">
-                    <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo"
-                         width="300" height="300" loading="eager"
-                         onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
-                </picture>
+                <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
             </div>
         </div>
     </section>
 
-    <section class="philosophy-section">
+    <section style="padding: 60px 0;">
         <div class="container">
-            <div class="philosophy-container">
-                <div class="philosophy-card">
-                    <div class="philosophy-icon">
-                        <i class="fas fa-chess-king"></i>
-                    </div>
-                    <h2 class="philosophy-title">Философия стратегического управления SCM</h2>
-                    <p class="philosophy-content">
-                        Управление цепями поставок — это не операционная задача, а стратегическая дисциплина, 
-                        определяющая конкурентные преимущества компании в цифровую эпоху. Моя философия строится 
-                        на принципе трансформации сложностей в возможности, где каждая операционная проблема 
-                        рассматривается как потенциал для создания уникального рыночного преимущества.
-                    </p>
-                    
-                    <div class="philosophy-insight">
-                        <h3><i class="fas fa-brain"></i> Стратегическая парадигма управления</h3>
-                        <p style="font-size: 15px; line-height: 1.6; color: var(--neutral-dark);">
-                            Современный руководитель УЦП — это "архитектор философий", который гибридизирует подходы:
-                        </p>
-                        <ul>
-                            <li><strong>Бережливость (Lean)</strong> для стабильных процессов</li>
-                            <li><strong>Гибкость (Agile)</strong> для волатильного спроса</li>
-                            <li><strong>Устойчивость (Resilient)</strong> для критичных узлов</li>
-                            <li><strong>Цифровая трансформация</strong> как основа всех решений</li>
-                        </ul>
-                        
-                        <div class="strategic-academy">
-                            <h4><i class="fas fa-graduation-cap"></i> Философия Академии Цепи Поставок</h4>
-                            <p>
-                                В условиях дефицита кадров стратегически важно закладывать стратегию Академии Цепи Поставок. 
-                                Человеческий ресурс — самый дорогой, а квалифицированный и опытный — бесценен.
-                            </p>
-                            <p style="font-style: italic; color: var(--neutral-medium); font-size: 14px;">
-                                "Академия — это не центр затрат, а 'фабрика будущего' компании, где выращивают не носителей навыков, 
-                                а носителей философии системного мышления и адаптивности."
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="book-announcement">
-                        <div class="book-cover">
-                            <picture>
-                                <source srcset="images/scm-book-screenshot.webp" type="image/webp">
-                                <img src="images/scm-book-screenshot.png" alt="Обложка книги 'Стратегическое управление SCM в эпоху цифровой трансформации'"
-                                     width="180" height="250" loading="lazy"
-                                     onerror="this.src='https://via.placeholder.com/180x250?text=Book+Cover'">
-                            </picture>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">Готовлю к изданию книгу</h3>
-                            <p class="book-description">
-                                <strong>"Стратегическое управление SCM в эпоху цифровой трансформации"</strong><br><br>
-                                В книге систематизирован 15-летний опыт преобразования цепей поставок, 
-                                практические кейсы внедрения AI и методологии создания конкурентных преимуществ 
-                                через технологическую интеграцию. Книга станет практическим руководством для руководителей, 
-                                стремящихся превратить свои цепи поставок в стратегическое конкурентное преимущество.
-                            </p>
-                            <div class="book-status">
-                                <span class="tag">В процессе написания</span>
-                                <span class="tag">Планируемый выход: 2026</span>
-                                <span class="tag">Практические кейсы</span>
-                                <span class="tag">AI-интеграция</span>
-                                <span class="tag">Стратегическое мышление</span>
-                                <span class="tag">Философия управления</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="philosophy-principles">
-                        <div class="principle-card">
-                            <div class="principle-number">1</div>
-                            <h3 class="principle-title">Системность мышления</h3>
-                            <p class="principle-description">Рассматриваю SCM как единую экосистему, где каждое решение влияет на всю цепь создания стоимости</p>
-                        </div>
-                        <div class="principle-card">
-                            <div class="principle-number">2</div>
-                            <h3 class="principle-title">Адаптивность к изменениям</h3>
-                            <p class="principle-description">Создаю гибкие системы, способные адаптироваться к рыночной волатильности и технологическим сдвигам</p>
-                        </div>
-                        <div class="principle-card">
-                            <div class="principle-number">3</div>
-                            <h3 class="principle-title">Данные как актив</h3>
-                            <p class="principle-description">Преобразую операционные данные в стратегические инсайты для принятия обоснованных решений</p>
-                        </div>
-                        <div class="principle-card">
-                            <div class="principle-number">4</div>
-                            <h3 class="principle-title">Человекоцентричность</h3>
-                            <p class="principle-description">Строю процессы вокруг людей, создавая среды для роста и развития команд</p>
-                        </div>
-                    </div>
-                </div>
+            <h2 class="section-title">Философия стратегического управления SCM</h2>
+            <div style="background: #f8fafc; border-radius: 32px; padding: 40px;">
+                <p style="font-size: 18px; line-height: 1.6; color: #334155;">Управление цепями поставок — это не операционная задача, а стратегическая дисциплина, определяющая конкурентные преимущества компании в цифровую эпоху. Моя философия строится на принципе трансформации сложностей в возможности, где каждая операционная проблема рассматривается как потенциал для создания уникального рыночного преимущества.</p>
             </div>
         </div>
     </section>
 
-    <section class="results-section">
+    <section style="background: #f8fafc; padding: 60px 0;">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Измеримые результаты стратегического подхода</h2>
-                <p class="section-subtitle">Конкретные бизнес-результаты, достигнутые через применение стратегического мышления к управлению цепями поставок</p>
-            </div>
+            <h2 class="section-title">Измеримые результаты стратегического подхода</h2>
             <div class="results-grid">
-                <div class="result-card">
+                <div class="result-card" data-result="efficiency">
                     <div class="result-number">143%</div>
-                    <div class="result-label">рост операционной эффективности через цифровую трансформацию</div>
+                    <div class="result-label">рост операционной эффективности</div>
                 </div>
-                <div class="result-card">
+                <div class="result-card" data-result="cost">
                     <div class="result-number">25%</div>
-                    <div class="result-label">снижение логистических затрат через оптимизацию процессов</div>
+                    <div class="result-label">снижение логистических затрат</div>
                 </div>
-                <div class="result-card">
+                <div class="result-card" data-result="projects">
                     <div class="result-number">15+</div>
-                    <div class="result-label">успешно реализованных стратегических проектов</div>
+                    <div class="result-label">реализованных стратегических проектов</div>
                 </div>
-                <div class="result-card">
+                <div class="result-card" data-result="sku">
                     <div class="result-number">87k+</div>
-                    <div class="result-label">SKU под стратегическим управлением</div>
+                    <div class="result-label">SKU под управлением</div>
                 </div>
             </div>
         </div>
@@ -1228,177 +492,22 @@
 
     <section class="news-section" id="worldNewsWidget">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">🌍 Последние новости SCM</h2>
-                <p class="section-subtitle">Актуальные события и тренды в управлении цепями поставок</p>
-            </div>
+            <h2 class="section-title">🌍 Последние новости SCM</h2>
+            <p style="color: #64748b; margin-bottom: 20px;">Актуальные события и тренды в управлении цепями поставок</p>
             <div id="homeNewsGrid" class="news-grid">
                 <div class="news-card news-loading">Загрузка новостей...</div>
             </div>
-            <div class="news-footer">
-                <a href="trends.html" class="btn-all-news">Все новости →</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="methodologies-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Методологический фундамент</h2>
-                <p class="section-subtitle">Интеллектуальные системы и подходы, формирующие основу моего стратегического мышления и управленческой практики</p>
-            </div>
-            <div class="methodologies-container">
-                <div class="methodology-card">
-                    <div class="methodology-icon"><i class="fas fa-sitemap"></i></div>
-                    <div class="methodology-content">
-                        <h3>Методология Адизеса</h3>
-                        <p>Стратегии управления организационными изменениями и корпоративной трансформацией на разных этапах жизненного цикла компании.</p>
-                    </div>
-                </div>
-                <div class="methodology-card">
-                    <div class="methodology-icon"><i class="fas fa-bullhorn"></i></div>
-                    <div class="methodology-content">
-                        <h3>Игорь Манн</h3>
-                        <p>Принципы маркетинга, продаж и практического подхода к бизнесу.</p>
-                    </div>
-                </div>
-                <div class="methodology-card">
-                    <div class="methodology-icon"><i class="fas fa-chart-line"></i></div>
-                    <div class="methodology-content">
-                        <h3>Владимир Сидоренко (Performia)</h3>
-                        <p>Система оценки и развития персонала, основанная на анализе поведения и мотивации.</p>
-                    </div>
-                </div>
-                <div class="methodology-card">
-                    <div class="methodology-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    <div class="methodology-content">
-                        <h3>Максим Батырев</h3>
-                        <p>Комбат-менеджмент — принципы экстремальной эффективности бизнес-процессов.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="leadership-philosophy">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Философия стратегического лидерства в SCM</h2>
-                <p class="section-subtitle">От управления процессами к архитектуре ценности и экосистем</p>
-            </div>
-            <div class="philosophy-grid">
-                <div class="philosophy-item">
-                    <div class="philosophy-icon"><i class="fas fa-chess-queen"></i></div>
-                    <h3>Три парадигмы руководителя</h3>
-                    <ul>
-                        <li><strong>Архитектор ценности:</strong> Управляю не издержками, а системой доставки ценности</li>
-                        <li><strong>Стратег-интегратор:</strong> Превращаю УЦП в конкурентное преимущество</li>
-                        <li><strong>Лидер-наставник:</strong> Создаю среду для принятия осмысленных решений</li>
-                    </ul>
-                </div>
-                <div class="philosophy-item">
-                    <div class="philosophy-icon"><i class="fas fa-balance-scale"></i></div>
-                    <h3>Баланс философий</h3>
-                    <ul>
-                        <li><strong>Маржинальность vs Безубыточность</strong></li>
-                        <li><strong>Эффективность vs Устойчивость</strong></li>
-                        <li><strong>Глобализация vs Локализация</strong></li>
-                    </ul>
-                </div>
-                <div class="philosophy-item">
-                    <div class="philosophy-icon"><i class="fas fa-brain"></i></div>
-                    <h3>Мета-навыки руководителя</h3>
-                    <ul>
-                        <li><strong>Синтетическое мышление</strong></li>
-                        <li><strong>Диалектическое мышление</strong></li>
-                        <li><strong>Эпистемологическая скромность</strong></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="philosophy-quote">
-                <p>"Управление цепями поставок сегодня — это управление философиями."</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="academy-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Академия Управления Цепями Поставок</h2>
-                <p class="section-subtitle">Образовательная платформа, где рождаются лидеры</p>
-            </div>
-            <div class="academy-card">
-                <div class="academy-header">
-                    <div class="academy-icon"><i class="fas fa-graduation-cap"></i></div>
-                    <div>
-                        <h3 class="academy-title">Основатель и идеолог</h3>
-                        <p class="academy-subtitle">Дмитрий Панибратский</p>
-                    </div>
-                </div>
-                <div class="academy-mission">
-                    <h3><i class="fas fa-bullseye"></i> Миссия Академии</h3>
-                    <p>"Академия — точка сборки нового логистического мышления, где рождаются лидеры, способные строить цепочки, которые создают ценность."</p>
-                </div>
-                <div class="flip-grid">
-                    <div class="flip-card">
-                        <div class="flip-inner">
-                            <div class="flip-front">
-                                <h3>🌐 SCM Base Camp</h3>
-                                <p>Фундаментальное понимание цепей поставок</p>
-                            </div>
-                            <div class="flip-back">
-                                <p>Старт: 2026</p>
-                                <p>Формат: онлайн</p>
-                                <button class="preorder-btn">Предзапись</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-card">
-                        <div class="flip-inner">
-                            <div class="flip-front">
-                                <h3>📈 Professional SCM Stream</h3>
-                                <p>Стратегия и цифровизация</p>
-                            </div>
-                            <div class="flip-back">
-                                <p>Старт: 2027</p>
-                                <p>Формат: гибрид</p>
-                                <button class="preorder-btn">Предзапись</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-card">
-                        <div class="flip-inner">
-                            <div class="flip-front">
-                                <h3>🧪 Leaders Lab</h3>
-                                <p>Закрытый клуб топ-менеджеров</p>
-                            </div>
-                            <div class="flip-back">
-                                <p>Старт: 2026</p>
-                                <p>По приглашениям</p>
-                                <button class="preorder-btn">Заявка</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="academy-link">
-                    <a href="https://scm-news.ru/academy.html" target="_blank" class="cta-button">
-                        <i class="fas fa-external-link-alt"></i> Полный сайт Академии
-                    </a>
-                </div>
+            <div class="news-footer" style="text-align: center; margin-top: 20px;">
+                <a href="trends.html" class="btn-all-news" id="allNewsBtn">Все новости →</a>
             </div>
         </div>
     </section>
 
     <section class="cta-section">
         <div class="container">
-            <h2 class="cta-title">Готовы трансформировать ваши цепи поставок?</h2>
-            <p class="cta-description">
-                Давайте обсудим, как стратегический подход к управлению SCM может создать конкурентные преимущества 
-                для вашего бизнеса в эпоху цифровой трансформации.
-            </p>
-            <a href="contact.html" class="cta-button">
-                <i class="fas fa-handshake"></i> Обсудить стратегическое сотрудничество
-            </a>
+            <h2>Готовы трансформировать ваши цепи поставок?</h2>
+            <p>Давайте обсудим, как стратегический подход к управлению SCM может создать конкурентные преимущества для вашего бизнеса.</p>
+            <a href="contact.html" class="cta-button" id="mainCtaBtn">Обсудить сотрудничество</a>
         </div>
     </section>
 
@@ -1418,13 +527,13 @@
                         <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
                         <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
-                        <li><a href="/Panibratsky-Dmitry/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
+                        <li><a href="/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Контакты</h3>
                     <ul>
-                        <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
+                        <li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
                         <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
                     </ul>
                 </div>
@@ -1435,83 +544,110 @@
                 </div>
             </div>
             <div class="copyright">
-                &copy; <span id="current-year">2024</span> Дмитрий Панибратский.
+                &copy; 2026 Дмитрий Панибратский.
             </div>
         </div>
     </footer>
 
-    <script src="js/analytics.js"></script>
     <script src="js/subscribe.js"></script>
     <script>
-        (function() {
-            const mobileBtn = document.querySelector('.mobile-menu-btn');
-            const navMenu = document.getElementById('nav-menu');
-            if (mobileBtn && navMenu) {
-                mobileBtn.addEventListener('click', () => {
-                    navMenu.classList.toggle('active');
-                    const icon = mobileBtn.querySelector('i');
-                    if (icon) {
-                        icon.classList.toggle('fa-bars');
-                        icon.classList.toggle('fa-times');
-                    }
-                });
-                document.querySelectorAll('#nav-menu a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navMenu.classList.remove('active');
-                        const icon = mobileBtn.querySelector('i');
-                        if (icon && icon.classList.contains('fa-times')) {
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
+        // Функция загрузки виджета новостей на главной
+        async function loadHomeNews() {
+            const container = document.getElementById('homeNewsGrid');
+            if (!container) return;
+            container.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
+            try {
+                const response = await fetch('data/news.json?_=' + Date.now());
+                if (!response.ok) throw new Error('Network error');
+                const allNews = await response.json();
+                const latest = allNews.slice(0, 6);
+                if (latest.length === 0) {
+                    container.innerHTML = '<div class="news-card news-loading">Новостей пока нет.</div>';
+                    return;
+                }
+                function formatDate(date) {
+                    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+                function escapeHtml(str) {
+                    return str.replace(/[&<>]/g, function(m) {
+                        if (m === '&') return '&amp;';
+                        if (m === '<') return '&lt;';
+                        if (m === '>') return '&gt;';
+                        return m;
+                    });
+                }
+                container.innerHTML = latest.map(news => `
+                    <div class="news-card" data-news-url="${news.link}">
+                        <div class="news-date">
+                            <span>${formatDate(new Date(news.pubDate))}</span>
+                            <span class="news-source">${escapeHtml(news.source)}</span>
+                        </div>
+                        <h3 class="news-title">${escapeHtml(news.title)}</h3>
+                        <p class="news-excerpt">${escapeHtml(news.description)}</p>
+                        <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="news-link" data-track="true">Читать на источнике →</a>
+                    </div>
+                `).join('');
+                // Отслеживание кликов по новостям на главной
+                document.querySelectorAll('#homeNewsGrid .news-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (e.target.closest('.news-link')) return;
+                        const link = card.getAttribute('data-news-url');
+                        if (link) {
+                            ym(105620027, 'reachGoal', 'home_news_click');
+                            gtag('event', 'home_news_click', { event_category: 'engagement', event_label: link });
+                            window.open(link, '_blank');
                         }
                     });
                 });
+                document.querySelectorAll('#homeNewsGrid .news-link[data-track="true"]').forEach(link => {
+                    link.addEventListener('click', () => {
+                        ym(105620027, 'reachGoal', 'home_news_link_click');
+                        gtag('event', 'home_news_link_click', { event_category: 'engagement', event_label: link.href });
+                    });
+                });
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div class="news-card news-loading">Не удалось загрузить новости.</div>';
             }
+        }
+        loadHomeNews();
 
-            const yearSpan = document.getElementById('current-year');
-            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+        // Отслеживание кликов по карточкам результатов
+        document.querySelectorAll('.result-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const result = card.getAttribute('data-result');
+                ym(105620027, 'reachGoal', 'result_click', { result: result });
+                gtag('event', 'result_click', { event_category: 'engagement', event_label: result });
+            });
+        });
 
-            async function loadHomeNews() {
-                const container = document.getElementById('homeNewsGrid');
-                if (!container) return;
-                container.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
-                try {
-                    const response = await fetch('data/news.json?_=' + Date.now());
-                    if (!response.ok) throw new Error('Network error');
-                    const allNews = await response.json();
-                    const latest = allNews.slice(0, 6);
-                    if (latest.length === 0) {
-                        container.innerHTML = '<div class="news-card news-loading">Новостей пока нет.</div>';
-                        return;
-                    }
-                    function formatDate(date) {
-                        return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-                    }
-                    function escapeHtml(str) {
-                        return str.replace(/[&<>]/g, function(m) {
-                            if (m === '&') return '&amp;';
-                            if (m === '<') return '&lt;';
-                            if (m === '>') return '&gt;';
-                            return m;
-                        });
-                    }
-                    container.innerHTML = latest.map(news => `
-                        <div class="news-card">
-                            <div class="news-date">
-                                <span>${formatDate(new Date(news.pubDate))}</span>
-                                <span class="news-source">${escapeHtml(news.source)}</span>
-                            </div>
-                            <h3 class="news-title">${escapeHtml(news.title)}</h3>
-                            <p class="news-excerpt">${escapeHtml(news.description)}</p>
-                            <a href="${news.link}" target="_blank" rel="noopener noreferrer" class="news-link">Читать на источнике →</a>
-                        </div>
-                    `).join('');
-                } catch (err) {
-                    console.error('Ошибка загрузки виджета новостей:', err);
-                    container.innerHTML = '<div class="news-card news-loading">Не удалось загрузить новости.</div>';
-                }
-            }
-            loadHomeNews();
-        })();
+        // Отслеживание клика по CTA кнопке на главной
+        const ctaBtn = document.getElementById('mainCtaBtn');
+        if (ctaBtn) {
+            ctaBtn.addEventListener('click', () => {
+                ym(105620027, 'reachGoal', 'main_cta_click');
+                gtag('event', 'main_cta_click', { event_category: 'engagement', event_label: 'main_cta' });
+            });
+        }
+
+        // Отслеживание клика по кнопке "Все новости"
+        const allNewsBtn = document.getElementById('allNewsBtn');
+        if (allNewsBtn) {
+            allNewsBtn.addEventListener('click', () => {
+                ym(105620027, 'reachGoal', 'all_news_click');
+                gtag('event', 'all_news_click', { event_category: 'engagement', event_label: 'all_news' });
+            });
+        }
+
+        // Мобильное меню
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        if (mobileBtn && navMenu) {
+            mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+            document.querySelectorAll('#nav-menu a').forEach(link => {
+                link.addEventListener('click', () => navMenu.classList.remove('active'));
+            });
+        }
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
