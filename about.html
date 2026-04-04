@@ -8,8 +8,6 @@
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
-
-    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,6 +23,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Яндекс.Метрика -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(105620027, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-C5X9R6HPQY');
+    </script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -34,6 +56,7 @@
             line-height: 1.5;
         }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+        /* ШАПКА (НАВИГАЦИЯ) */
         header {
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -43,22 +66,87 @@
             width: 100%;
             z-index: 1000;
         }
-        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
-        .logo { font-size: 20px; font-weight: 700; color: #0f172a; text-decoration: none; }
-        .logo-dot { color: #d4af37; }
-        nav ul { display: flex; list-style: none; gap: 32px; }
-        nav ul li a { text-decoration: none; color: #64748b; font-weight: 500; font-size: 14px; transition: color 0.2s; }
-        nav ul li a:hover, nav ul li a.active { color: #1e40af; }
-        .mobile-menu-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; }
-        @media (max-width: 768px) {
-            nav ul { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); flex-direction: column; gap: 12px; }
-            nav ul.active { display: flex; }
-            .mobile-menu-btn { display: block; }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
         }
-        .page-hero { background: linear-gradient(135deg, #f8fafc, #ffffff); padding: 120px 0 40px; text-align: center; }
-        .page-hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 20px; }
-        .page-hero p { color: #64748b; max-width: 700px; margin: 0 auto; }
-        .section-title { font-size: 32px; font-weight: 700; margin-bottom: 30px; }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: none;
+        }
+        .logo-dot {
+            color: #d4af37;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: #1e40af;
+        }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 16px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                flex-direction: column;
+                gap: 12px;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            body {
+                padding-top: 70px;
+            }
+        }
+        .page-hero {
+            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            padding: 120px 0 40px;
+            text-align: center;
+        }
+        .page-hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        .page-hero p {
+            color: #64748b;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
         .profile-photo {
             width: 200px;
             height: 200px;
@@ -70,7 +158,12 @@
         }
         .video-container { margin: 30px 0; text-align: center; }
         video { max-width: 100%; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .philosophy-grid, .results-grid, .certificates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .philosophy-grid, .results-grid, .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
         .philosophy-card, .result-card, .certificate-card {
             background: white;
             border-radius: 20px;
@@ -99,24 +192,86 @@
             pointer-events: none;
             transition: opacity 0.2s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            font-weight: normal;
-            text-align: left;
-            line-height: 1.4;
         }
         .certificate-card[data-tooltip]:hover::after { opacity: 1; }
         .result-number { font-size: 44px; font-weight: 800; color: #1e40af; }
-        .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-bottom: 30px; }
-        .tag { display: inline-block; background-color: rgba(30,64,175,0.1); color: #1e40af; padding: 6px 12px; border-radius: 16px; margin-right: 8px; margin-bottom: 8px; font-size: 12px; font-weight: 500; border: 1px solid rgba(30,64,175,0.2); }
-        .cta-section { text-align: center; padding: 60px 0; background: #0f172a; color: white; border-radius: 24px; margin: 40px 0; }
-        .cta-button { display: inline-block; background: #d4af37; color: #0f172a; padding: 12px 30px; border-radius: 40px; font-weight: 700; text-decoration: none; margin-top: 20px; transition: 0.2s; }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+        .tag {
+            display: inline-block;
+            background-color: rgba(30,64,175,0.1);
+            color: #1e40af;
+            padding: 6px 12px;
+            border-radius: 16px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(30,64,175,0.2);
+        }
+        .cta-section {
+            text-align: center;
+            padding: 60px 0;
+            background: #0f172a;
+            color: white;
+            border-radius: 24px;
+            margin: 40px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: #d4af37;
+            color: #0f172a;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
         .cta-button:hover { background: #c19b2c; transform: translateY(-2px); }
-        footer { background: #0f172a; color: white; padding: 60px 0 30px; margin-top: 60px; }
-        .footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-column h3 { font-size: 18px; margin-bottom: 20px; position: relative; padding-bottom: 10px; }
-        .footer-column h3::after { content: ''; position: absolute; bottom: 0; left: 0; width: 35px; height: 3px; background: #d4af37; }
+        footer {
+            background: #0f172a;
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 35px;
+            height: 3px;
+            background: #d4af37;
+        }
         .footer-column ul { list-style: none; }
         .footer-column ul li { margin-bottom: 12px; }
-        .footer-column ul li a { color: rgba(255,255,255,0.8); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .footer-column ul li a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
         .footer-column ul li a:hover { color: white; padding-left: 5px; }
         .footer-install-btn {
             background: #1e40af;
@@ -127,10 +282,14 @@
             cursor: pointer;
             font-weight: 600;
             margin-top: 10px;
-            transition: 0.2s;
         }
-        .footer-install-btn:hover { background: #0f172a; }
-        .copyright { text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); font-size: 13px; }
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+        }
         @media (max-width: 768px) {
             .page-hero h1 { font-size: 32px; }
             .philosophy-grid, .results-grid, .certificates-grid { grid-template-columns: 1fr; }
@@ -167,7 +326,7 @@
         <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
 
         <div class="video-container">
-            <video controls width="100%" poster="images/video-poster.jpg">
+            <video controls width="100%" poster="images/video-poster.jpg" id="aboutVideo">
                 <source src="videos/about.mp4" type="video/mp4">
                 Ваш браузер не поддерживает видео.
             </video>
@@ -194,22 +353,7 @@
             <div class="result-card"><div class="result-number">10%</div><div>снижение затрат</div></div>
             <div class="result-card"><div class="result-number">5</div><div>национальных сертификатов</div></div>
         </div>
-        
-        <div class="card">
-            <h2>🤖 Работа с искусственным интеллектом (AI) и автоматизация</h2>
-            <p>Активно применяю AI-инструменты для ускорения разработки и оптимизации бизнес-процессов. В проекте SCM News использовал AI-ассистента для:</p>
-            <ul>
-                <li>Написания Python-скриптов для парсинга RSS, sitemap и Google Alerts.</li>
-                <li>Создания автоматических workflow (GitHub Actions) для ежедневного обновления новостей и проверки битых ссылок.</li>
-                <li>Генерации HTML/CSS/JS кода для PWA, графиков, облака тегов и фильтрации.</li>
-                <li>Настройки DNS-записей, SSL-сертификатов, email-рассылок (UniSender) с лид-магнитом.</li>
-                <li>Разработки скрипта для отправки Telegram-дайджеста (Node.js).</li>
-            </ul>
-            <p>Это позволило сократить время запуска проекта с месяцев до нескольких дней, а также полностью автоматизировать сбор и доставку контента.</p>
-            <div class="tag" style="background:#1e40af; color:white;">AI-разработка</div>
-            <div class="tag" style="background:#1e40af; color:white;">Автоматизация SCM</div>
-            <div class="tag" style="background:#1e40af; color:white;">LLM-интеграция</div>
-        </div>
+
         <div class="card">
             <h2>Книга в работе</h2>
             <p><strong>«Стратегическое управление SCM в эпоху цифровой трансформации»</strong> (планируемый выход: 2026) — систематизация 15-летнего опыта, практические кейсы внедрения AI и методологии создания конкурентных преимуществ.</p>
@@ -228,7 +372,7 @@
                 <div><strong>24+</strong> вебинара</div>
                 <div><strong>35+</strong> разобранных кейсов</div>
             </div>
-            <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="cta-button" style="background: #1e40af; color: white; margin-top: 15px;">Присоединиться в Telegram</a>
+            <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="cta-button" style="background: #1e40af; color: white; margin-top: 15px;" id="telegramLink">Присоединиться в Telegram</a>
         </div>
 
         <h2 class="section-title">Сертификаты и квалификации</h2>
@@ -251,18 +395,19 @@
                 <div class="footer-column">
                     <h3>Навигация</h3>
                     <ul>
-                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
-                        <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
-                        <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
-                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
+                        <li><a href="about.html">Обо мне</a></li>
+                        <li><a href="expertise.html">Экспертиза</a></li>
+                        <li><a href="experience.html">Опыт</a></li>
+                        <li><a href="index.html">Стратегия</a></li>
+                        <li><a href="trends.html">Новости SCM</a></li>
+                        <li><a href="contact.html">Контакты</a></li>
+                        <li><a href="/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Контакты</h3>
                     <ul>
-                        <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
+                        <li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
                         <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
                     </ul>
                 </div>
@@ -280,6 +425,7 @@
 
     <script src="js/subscribe.js"></script>
     <script>
+        // Данные сертификатов (ваш массив)
         const certificates = [
             { title: "Диплом о профессиональной переподготовке (Коммерческий директор)", file: "files/diplom-commercial-director.pdf", description: "Квалификация: коммерческий директор. Компетенции: управление продажами, бюджетирование, стратегическое планирование, управление командой." },
             { title: "CPL (Certified in Russian Logistics) – 2020", file: "files/cpl-panibratsky.html", description: "Базовый сертификат в области логистики. Подтверждает знание основ транспортной логистики, складских операций, управления запасами." },
@@ -317,6 +463,33 @@
             `).join('');
         }
 
+        // Отслеживание кликов по сертификатам
+        document.querySelectorAll('.certificate-card').forEach(card => {
+            card.addEventListener('click', () => {
+                ym(105620027, 'reachGoal', 'certificate_click');
+                gtag('event', 'certificate_click', { event_category: 'engagement', event_label: 'certificate' });
+            });
+        });
+
+        // Отслеживание просмотра видео (событие при воспроизведении)
+        const video = document.getElementById('aboutVideo');
+        if (video) {
+            video.addEventListener('play', () => {
+                ym(105620027, 'reachGoal', 'video_play');
+                gtag('event', 'video_play', { event_category: 'engagement', event_label: 'about_video' });
+            });
+        }
+
+        // Отслеживание клика по ссылке в Telegram
+        const telegramLink = document.getElementById('telegramLink');
+        if (telegramLink) {
+            telegramLink.addEventListener('click', () => {
+                ym(105620027, 'reachGoal', 'telegram_click');
+                gtag('event', 'telegram_click', { event_category: 'social', event_label: 'telegram' });
+            });
+        }
+
+        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
