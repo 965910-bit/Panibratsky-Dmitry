@@ -84,12 +84,8 @@
             padding: 0 24px;
         }
         @media (max-width: 768px) {
-            .container {
-                padding: 0 20px;
-            }
-            body {
-                font-size: 15px;
-            }
+            .container { padding: 0 20px; }
+            body { font-size: 15px; }
         }
         /* Прогресс-бар */
         .progress-container {
@@ -107,7 +103,6 @@
             width: 0%;
             transition: width 0.1s;
         }
-        /* Кнопка "Наверх" */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -137,7 +132,6 @@
             background: var(--gold);
             transform: translateY(-3px);
         }
-        /* Переключатель темы */
         .theme-switch {
             position: fixed;
             bottom: 30px;
@@ -156,7 +150,6 @@
             font-size: 18px;
             color: var(--text-primary);
         }
-        /* Анимации при скролле */
         .fade-up {
             opacity: 0;
             transform: translateY(30px);
@@ -166,7 +159,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-        /* Хлебные крошки */
         .breadcrumb {
             padding: 100px 0 20px;
             font-size: 14px;
@@ -176,12 +168,52 @@
             color: var(--accent);
             text-decoration: none;
         }
-        .breadcrumb a:hover {
-            text-decoration: underline;
+        /* Плавающее оглавление */
+        .toc {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            box-shadow: var(--card-shadow);
+            z-index: 90;
+            max-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
         }
-        /* Остальные стили (без изменений, но с учётом переменных) */
+        .toc.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .toc ul {
+            list-style: none;
+        }
+        .toc li {
+            margin-bottom: 8px;
+        }
+        .toc a {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: block;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .toc a:hover {
+            background: var(--accent-light);
+            color: white;
+        }
+        @media (max-width: 1024px) {
+            .toc { display: none; }
+        }
+        /* Шапка */
         header {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             position: fixed;
@@ -190,7 +222,7 @@
             z-index: 1000;
         }
         body.dark header {
-            background-color: rgba(15, 23, 42, 0.95);
+            background-color: rgba(15,23,42,0.95);
         }
         .nav-container {
             display: flex;
@@ -204,9 +236,7 @@
             color: var(--text-primary);
             text-decoration: none;
         }
-        .logo-dot {
-            color: var(--gold);
-        }
+        .logo-dot { color: var(--gold); }
         nav ul {
             display: flex;
             list-style: none;
@@ -243,15 +273,9 @@
                 flex-direction: column;
                 gap: 12px;
             }
-            nav ul.active {
-                display: flex;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-            .scroll-top, .theme-switch {
-                bottom: 20px;
-            }
+            nav ul.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .scroll-top, .theme-switch { bottom: 20px; }
             .scroll-top { right: 20px; }
             .theme-switch { left: 20px; }
         }
@@ -288,7 +312,285 @@
         body.dark .cta-section {
             background: linear-gradient(135deg, #020617, #0f172a);
         }
-        /* Остальные стили из вашего index.html, но с учётом переменных. Для краткости я включаю их в полный код. */
+        .executive-tag {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-size: clamp(32px,5vw,44px);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .hero-title {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            max-width: 600px;
+        }
+        .hero-subtitle {
+            font-size: 16px;
+            font-style: italic;
+            border-left: 3px solid var(--gold);
+            padding-left: 12px;
+            max-width: 800px;
+            margin-top: 16px;
+        }
+        .tag {
+            display: inline-block;
+            background: rgba(30,64,175,0.1);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 16px;
+            margin: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(30,64,175,0.2);
+        }
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .result-number {
+            font-size: 44px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .methodologies-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .methodology-card {
+            padding: 24px;
+            border-radius: 20px;
+        }
+        .methodology-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(212,175,55,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 24px;
+            color: var(--gold);
+        }
+        .philosophy-section {
+            padding: 70px 0;
+            background: var(--bg-secondary);
+        }
+        .philosophy-card {
+            background: var(--bg-primary);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+        }
+        .cta-button {
+            display: inline-block;
+            background: var(--gold);
+            color: #0f172a;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        footer {
+            background: #0f172a;
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 35px;
+            height: 3px;
+            background: var(--gold);
+        }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 12px; }
+        .footer-column ul li a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-install-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+        }
+        .news-section {
+            padding: 60px 0;
+            background: var(--bg-secondary);
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .news-card {
+            border-radius: 20px;
+            padding: 24px;
+        }
+        .news-date {
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+        }
+        .news-source {
+            background: var(--border);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .news-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .news-excerpt {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .news-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .btn-all-news {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        /* Чат-бот виджет */
+        .chat-widget {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .chat-button {
+            width: 55px;
+            height: 55px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .chat-button:hover {
+            transform: scale(1.05);
+            background: var(--gold);
+        }
+        .chat-button i {
+            font-size: 26px;
+            color: white;
+        }
+        .chat-box {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 280px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .chat-box.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .chat-header {
+            background: var(--accent);
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .chat-body {
+            padding: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .chat-body a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .chat-quick {
+            margin-top: 10px;
+        }
+        .chat-quick button {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            margin: 4px;
+        }
+        @media (max-width: 768px) {
+            .chat-widget { bottom: 80px; right: 20px; }
+            .chat-box { width: 260px; }
+        }
     </style>
 </head>
 <body>
@@ -316,7 +618,21 @@
         </div>
     </div>
 
-    <section class="hero-section fade-up">
+    <!-- Плавающее оглавление -->
+    <div class="toc" id="toc">
+        <ul>
+            <li><a href="#hero">Главная</a></li>
+            <li><a href="#philosophy">Философия</a></li>
+            <li><a href="#results">Результаты</a></li>
+            <li><a href="#methodologies">Методологии</a></li>
+            <li><a href="#leadership">Лидерство</a></li>
+            <li><a href="#academy">Академия</a></li>
+            <li><a href="#news">Новости</a></li>
+            <li><a href="#contact">Контакты</a></li>
+        </ul>
+    </div>
+
+    <section id="hero" class="hero-section fade-up">
         <div class="container hero-container">
             <div class="hero-content">
                 <span class="executive-tag">Философия управления SCM</span>
@@ -336,71 +652,193 @@
         </div>
     </section>
 
-    <section class="philosophy-section fade-up">
+    <section id="philosophy" class="philosophy-section fade-up">
         <div class="container">
             <div class="philosophy-card">
                 <div class="philosophy-icon"><i class="fas fa-chess-king"></i></div>
                 <h2 class="philosophy-title">Философия стратегического управления SCM</h2>
                 <p class="philosophy-content">Управление цепями поставок — это не операционная задача, а стратегическая дисциплина, определяющая конкурентные преимущества компании в цифровую эпоху. Моя философия строится на принципе трансформации сложностей в возможности, где каждая операционная проблема рассматривается как потенциал для создания уникального рыночного преимущества.</p>
-                <!-- остальной контент из вашего index.html, но с классами fade-up для внутренних блоков -->
+                <!-- остальной контент философии (как был) -->
             </div>
         </div>
     </section>
 
-    <!-- Здесь продолжается весь остальной контент index.html с добавлением классов fade-up для секций и анимаций. В целях экономии места я не буду повторять весь текст, так как он уже есть. Структура остаётся той же, добавляются только анимации, прогресс-бар, кнопка наверх, переключатель темы, хлебные крошки. -->
+    <section id="results" class="results-section fade-up">
+        <div class="container">
+            <h2 class="section-title">Измеримые результаты стратегического подхода</h2>
+            <div class="results-grid">
+                <div class="result-card"><div class="result-number">143%</div><div>рост операционной эффективности</div></div>
+                <div class="result-card"><div class="result-number">25%</div><div>снижение логистических затрат</div></div>
+                <div class="result-card"><div class="result-number">15+</div><div>реализованных стратегических проектов</div></div>
+                <div class="result-card"><div class="result-number">87k+</div><div>SKU под управлением</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="methodologies" class="methodologies-section fade-up">
+        <div class="container">
+            <h2 class="section-title">Методологический фундамент</h2>
+            <div class="methodologies-container">
+                <div class="methodology-card"><div class="methodology-icon"><i class="fas fa-sitemap"></i></div><h3>Методология Адизеса</h3><p>Стратегии управления изменениями.</p></div>
+                <div class="methodology-card"><div class="methodology-icon"><i class="fas fa-bullhorn"></i></div><h3>Игорь Манн</h3><p>Маркетинг и продажи.</p></div>
+                <div class="methodology-card"><div class="methodology-icon"><i class="fas fa-chart-line"></i></div><h3>Владимир Сидоренко</h3><p>Оценка и развитие персонала.</p></div>
+                <div class="methodology-card"><div class="methodology-icon"><i class="fas fa-tachometer-alt"></i></div><h3>Максим Батырев</h3><p>Комбат-менеджмент.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="leadership" class="leadership-philosophy fade-up">
+        <div class="container">
+            <h2 class="section-title">Философия стратегического лидерства в SCM</h2>
+            <div class="philosophy-grid" style="display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:24px;">
+                <div class="philosophy-item"><h3>Три парадигмы руководителя</h3><ul><li>Архитектор ценности</li><li>Стратег-интегратор</li><li>Лидер-наставник</li></ul></div>
+                <div class="philosophy-item"><h3>Баланс философий</h3><ul><li>Маржинальность vs Безубыточность</li><li>Эффективность vs Устойчивость</li><li>Глобализация vs Локализация</li></ul></div>
+                <div class="philosophy-item"><h3>Мета-навыки руководителя</h3><ul><li>Синтетическое мышление</li><li>Диалектическое мышление</li><li>Эпистемологическая скромность</li></ul></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="academy" class="academy-section fade-up">
+        <div class="container">
+            <h2 class="section-title">Академия Управления Цепями Поставок</h2>
+            <div class="academy-card" style="background: linear-gradient(135deg, rgba(0,82,204,0.05), rgba(0,184,217,0.05)); border-radius: 32px; padding: 40px; margin: 40px 0;">
+                <h3>Основатель и идеолог: Дмитрий Панибратский</h3>
+                <p>"Академия — точка сборки нового логистического мышления, где рождаются лидеры, способные строить цепочки, которые создают ценность."</p>
+                <div style="margin-top: 20px;"><a href="https://scm-news.online" target="_blank" class="cta-button">Перейти на сайт Академии</a></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="news" class="news-section fade-up">
+        <div class="container">
+            <h2 class="section-title">🌍 Последние новости SCM</h2>
+            <div id="homeNewsGrid" class="news-grid">
+                <div class="news-card">Загрузка новостей...</div>
+            </div>
+            <div class="news-footer"><a href="trends.html" class="btn-all-news">Все новости →</a></div>
+        </div>
+    </section>
+
+    <section id="contact" class="cta-section fade-up">
+        <div class="container">
+            <h2>Готовы трансформировать ваши цепи поставок?</h2>
+            <a href="contact.html" class="cta-button">Обсудить сотрудничество</a>
+        </div>
+    </section>
 
     <footer>
-        <!-- ваш футер -->
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в SCM</p></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li></ul></div>
+                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram</a></li></ul></div>
+                <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button></div>
+            </div>
+            <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
+        </div>
     </footer>
 
     <button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
-    <div class="theme-switch" id="themeSwitch">
-        <i class="fas fa-sun"></i>
-        <i class="fas fa-moon"></i>
+    <div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
+
+    <!-- Чат-бот -->
+    <div class="chat-widget">
+        <div class="chat-button" id="chatButton"><i class="fas fa-comment-dots"></i></div>
+        <div class="chat-box" id="chatBox">
+            <div class="chat-header">📬 Чат с экспертом</div>
+            <div class="chat-body">
+                <p>Здравствуйте! Чем могу помочь?</p>
+                <div class="chat-quick">
+                    <button onclick="window.location.href='contact.html'">📝 Оставить заявку</button>
+                    <button onclick="window.open('https://t.me/LogisticaandSupplyChain','_blank')">✈️ Telegram</button>
+                    <button onclick="window.location.href='mailto:dmitry@scm-news.ru'">📧 Написать email</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        // Виджет новостей
+        async function loadHomeNews() {
+            const container = document.getElementById('homeNewsGrid');
+            if (!container) return;
+            container.innerHTML = '<div class="news-card">Загрузка новостей...</div>';
+            try {
+                const response = await fetch('data/news.json?_=' + Date.now());
+                if (!response.ok) throw new Error();
+                const allNews = await response.json();
+                const latest = allNews.slice(0, 6);
+                container.innerHTML = latest.map(n => `
+                    <div class="news-card">
+                        <div class="news-date"><span>${new Date(n.pubDate).toLocaleDateString()}</span><span class="news-source">${escapeHtml(n.source)}</span></div>
+                        <h3 class="news-title">${escapeHtml(n.title)}</h3>
+                        <p class="news-excerpt">${escapeHtml(n.description)}</p>
+                        <a href="${n.link}" target="_blank" class="news-link">Читать →</a>
+                    </div>
+                `).join('');
+            } catch(e) { container.innerHTML = '<div class="news-card">Ошибка загрузки</div>'; }
+        }
+        function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+        loadHomeNews();
+
+        // Плавающее оглавление
+        const toc = document.getElementById('toc');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) toc.classList.add('visible');
+            else toc.classList.remove('visible');
+        });
+        document.querySelectorAll('.toc a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
         // Прогресс-бар
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('progressBar').style.width = scrolled + '%';
+            document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
         });
 
-        // Кнопка "Наверх"
+        // Кнопка наверх
         const scrollBtn = document.getElementById('scrollTopBtn');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) scrollBtn.classList.add('show');
             else scrollBtn.classList.remove('show');
         });
-        scrollBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
         // Тёмная тема
         const themeSwitch = document.getElementById('themeSwitch');
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'dark') document.body.classList.add('dark');
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
         themeSwitch.addEventListener('click', () => {
             document.body.classList.toggle('dark');
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
         });
 
-        // Анимации при скролле
-        const fadeElements = document.querySelectorAll('.fade-up');
+        // Анимации
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
         }, { threshold: 0.1 });
-        fadeElements.forEach(el => observer.observe(el));
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-        // Мобильное меню (как было)
-        // ... остальные скрипты (виджет новостей, цели и т.д.)
+        // Чат-бот
+        const chatButton = document.getElementById('chatButton');
+        const chatBox = document.getElementById('chatBox');
+        chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
+
+        // Мобильное меню
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        if (mobileBtn && navMenu) {
+            mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+            document.querySelectorAll('#nav-menu a').forEach(link => {
+                link.addEventListener('click', () => navMenu.classList.remove('active'));
+            });
+        }
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
