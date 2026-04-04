@@ -24,6 +24,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Яндекс.Метрика -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -37,6 +38,7 @@
         });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
     <script>
@@ -45,6 +47,7 @@
         gtag('js', new Date());
         gtag('config', 'G-C5X9R6HPQY');
     </script>
+
     <style>
         * {
             margin: 0;
@@ -56,24 +59,34 @@
             background: #f9fafb;
             color: #1f2937;
             line-height: 1.5;
+            padding: 20px;
         }
-        /* Шапка с навигацией */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 2rem;
+        }
+        /* ===== ШАПКА (НАВИГАЦИЯ) ===== */
         header {
-            background: rgba(255,255,255,0.95);
+            background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid #e2e8f0;
-            position: sticky;
+            position: fixed;
             top: 0;
-            z-index: 100;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
         }
         .nav-container {
-            max-width: 1280px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 70px;
+            padding: 16px 20px;
         }
         .logo {
             font-size: 20px;
@@ -108,10 +121,12 @@
             cursor: pointer;
         }
         @media (max-width: 768px) {
+            body { padding: 12px; padding-top: 70px; }
+            .nav-container { padding: 12px 16px; }
             nav ul {
                 display: none;
                 position: absolute;
-                top: 70px;
+                top: 100%;
                 left: 0;
                 width: 100%;
                 background: white;
@@ -126,18 +141,9 @@
             .mobile-menu-btn {
                 display: block;
             }
+            .container { padding: 1rem; }
         }
-        /* Основной контейнер */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            padding: 2rem;
-            margin-top: 30px;
-            margin-bottom: 30px;
-        }
+        /* остальные стили (лента, график, облако тегов) – без изменений */
         h1 {
             font-size: 2rem;
             font-weight: 700;
@@ -328,19 +334,12 @@
             color: #4b5563;
         }
         footer {
+            margin-top: 2rem;
             text-align: center;
             font-size: 0.75rem;
             color: #9ca3af;
             border-top: 1px solid #e2e8f0;
-            padding: 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto 30px;
-        }
-        @media (max-width: 640px) {
-            .container { padding: 1rem; margin-top: 15px; }
-            .news-title { font-size: 1rem; }
-            .share-buttons { gap: 8px; }
-            h1 { font-size: 1.5rem; }
+            padding-top: 1.5rem;
         }
     </style>
 </head>
@@ -389,11 +388,11 @@
         </div>
 
         <div id="news-list"></div>
-    </div>
 
-    <footer>
-        <p>Новости обновляются каждые 30 минут из RSS, sitemap и Google Alerts. <a href="rss.xml" target="_blank">Подписаться на RSS</a> | <a href="https://scm-news.ru/" target="_blank">scm-news.ru</a></p>
-    </footer>
+        <footer>
+            <p>Новости обновляются каждые 30 минут из RSS, sitemap и Google Alerts. <a href="rss.xml" target="_blank">Подписаться на RSS</a> | <a href="https://scm-news.ru/" target="_blank">На главную</a></p>
+        </footer>
+    </div>
 
     <script>
         let currentNews = [];
@@ -431,7 +430,7 @@
                     : '';
                 return `
                     <div class="news-item" data-link="${escapeHtml(item.link)}">
-                        <div class="news-title"><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener" class="news-link-click">${escapeHtml(item.title)}</a></div>
+                        <div class="news-title"><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener">${escapeHtml(item.title)}</a></div>
                         <div class="news-meta">
                             <span class="news-source">${escapeHtml(item.source)}</span>
                             <span>📅 ${new Date(item.pubDate).toLocaleString('ru-RU')}</span>
@@ -454,17 +453,6 @@
                 btn.removeEventListener('click', shareHandler);
                 btn.addEventListener('click', shareHandler);
             });
-            // Отслеживание кликов по заголовкам новостей
-            document.querySelectorAll('.news-link-click').forEach(link => {
-                link.removeEventListener('click', newsClickHandler);
-                link.addEventListener('click', newsClickHandler);
-            });
-        }
-        
-        function newsClickHandler(e) {
-            const url = e.currentTarget.href;
-            ym(105620027, 'reachGoal', 'news_click');
-            gtag('event', 'news_click', { event_category: 'engagement', event_label: url });
         }
         
         function shareHandler(e) {
@@ -646,6 +634,15 @@
             document.getElementById('filter-bar').style.display = 'block';
             document.getElementById('active-tag').textContent = `Фильтр: ${currentTagFilter}`;
         }
+        
+        // Отслеживание кликов по ссылкам новостей
+        document.addEventListener('click', function(e) {
+            let target = e.target.closest('.news-title a');
+            if (target && target.href) {
+                ym(105620027, 'reachGoal', 'news_click');
+                gtag('event', 'news_click', { event_category: 'engagement', event_label: target.href });
+            }
+        });
         
         // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
