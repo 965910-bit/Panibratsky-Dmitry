@@ -8,8 +8,6 @@
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
-
-    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,6 +23,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Яндекс.Метрика -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(105620027, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-C5X9R6HPQY');
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -42,6 +64,7 @@
             margin: 0 auto;
             padding: 0 20px;
         }
+        /* ШАПКА (НАВИГАЦИЯ) */
         header {
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -108,6 +131,9 @@
             .mobile-menu-btn {
                 display: block;
             }
+            body {
+                padding-top: 70px;
+            }
         }
         .page-header {
             background: linear-gradient(135deg, #f8fafc, #ffffff);
@@ -154,6 +180,11 @@
         .timeline-item {
             margin-bottom: 40px;
             position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .timeline-item:hover {
+            transform: translateX(5px);
         }
         .timeline-item::before {
             content: '';
@@ -281,10 +312,6 @@
             cursor: pointer;
             font-weight: 600;
             margin-top: 10px;
-            transition: 0.2s;
-        }
-        .footer-install-btn:hover {
-            background: #0f172a;
         }
         .copyright {
             text-align: center;
@@ -326,7 +353,7 @@
     </div>
 
     <div class="container">
-        <!-- Блок скачивания резюме -->
+        <!-- Блок скачивания резюме с отслеживанием -->
         <div class="card" style="text-align: center;">
             <i class="fas fa-file-pdf" style="font-size: 48px; color: #1e40af;"></i>
             <h2 style="margin: 20px 0 10px;">Скачать полное резюме</h2>
@@ -337,7 +364,7 @@
                 <div><strong>87,000</strong><br>SKU под управлением</div>
                 <div><strong>6</strong><br>Страниц в резюме</div>
             </div>
-            <a href="resume/Дмитрий_Панибратский_CV.pdf" class="cta-button" style="background: #1e40af; color: white;">Скачать PDF</a>
+            <a href="resume/Дмитрий_Панибратский_CV.pdf" class="cta-button" style="background: #1e40af; color: white;" id="resumeDownloadBtn">Скачать PDF</a>
             <p style="font-size: 12px; margin-top: 15px;">Резюме обновлено: 27 марта 2026 г. | Формат: PDF | Размер: 6 страниц</p>
         </div>
 
@@ -345,7 +372,7 @@
         <h2 class="section-title">Карьерный путь</h2>
         <div class="timeline">
             <!-- Леруа Мерлен -->
-            <div class="timeline-item">
+            <div class="timeline-item" data-job="leroy-merlin">
                 <div class="timeline-date">Март 2020 — Июль 2025 · 5 лет 5 месяцев</div>
                 <div class="timeline-title">«ЛЕРУА МЕРЛЕН» (Французская компания-ритейлер)</div>
                 <div class="timeline-subtitle">Менеджер цепи поставок магазина</div>
@@ -364,7 +391,7 @@
             </div>
 
             <!-- ГРИНЛАЙТ -->
-            <div class="timeline-item">
+            <div class="timeline-item" data-job="greenlight">
                 <div class="timeline-date">Май 2018 — Декабрь 2019 · 1 год 8 месяцев</div>
                 <div class="timeline-title">ООО «ГРИНЛАЙТ» (Rossko: оптово-розничная продажа автозапчастей)</div>
                 <div class="timeline-subtitle">Начальник склада</div>
@@ -377,7 +404,7 @@
             </div>
 
             <!-- Авто-притяжение, Юлсан, Юграпромсервис -->
-            <div class="timeline-item">
+            <div class="timeline-item" data-job="auto">
                 <div class="timeline-date">Декабрь 2014 — Февраль 2018 · 3 года 3 месяца</div>
                 <div class="timeline-title">ООО «АВТО-ПРИТЯЖЕНИЕ», ФРАНШИЗА «ЮЛСАН», ООО «ЮГРАПРОМСЕРВИС»</div>
                 <div class="timeline-subtitle">Директор магазина / Генеральный директор (совместительство)</div>
@@ -393,7 +420,7 @@
             </div>
 
             <!-- Ресурс-Авто (менеджер) -->
-            <div class="timeline-item">
+            <div class="timeline-item" data-job="resource-manager">
                 <div class="timeline-date">Октябрь 2014 — Май 2018 · 3 года 8 месяцев</div>
                 <div class="timeline-title">ООО «РЕСУРС-АВТО» (Оптово-розничная продажа автозапчастей)</div>
                 <div class="timeline-subtitle">Менеджер отдела логистики и контроля качества обслуживания клиента</div>
@@ -404,7 +431,7 @@
             </div>
 
             <!-- Ресурс-Авто (водитель-экспедитор / кладовщик) -->
-            <div class="timeline-item">
+            <div class="timeline-item" data-job="resource-operator">
                 <div class="timeline-date">Февраль 2013 — Сентябрь 2014 · 1 год 8 месяцев</div>
                 <div class="timeline-title">ООО «РЕСУРС-АВТО» (Разные позиции)</div>
                 <div class="timeline-subtitle">Водитель-экспедитор / Кладовщик</div>
@@ -413,7 +440,7 @@
             </div>
 
             <!-- ГАЗ-Запчасть -->
-            <div class="timeline-item">
+            <div class="timeline-item" data-job="gaz">
                 <div class="timeline-date">2012 — 2013</div>
                 <div class="timeline-title">ООО «ГАЗ-ЗАПЧАСТЬ» (Официальный дилер по продажам автомобилей)</div>
                 <div class="timeline-subtitle">Менеджер по закупкам и снабжению</div>
@@ -445,7 +472,7 @@
         <!-- Опыт внедрения AI и автоматизации -->
         <h2 class="section-title">🤖 Опыт внедрения AI и автоматизации</h2>
         <div class="timeline">
-            <div class="timeline-item">
+            <div class="timeline-item" data-ai="scm-news">
                 <div class="timeline-date">2025–2026</div>
                 <div class="timeline-title">SCM News – полностью автоматизированный медиа-проект</div>
                 <div class="timeline-subtitle">Создан с использованием AI-ассистента (DeepSeek)</div>
@@ -457,7 +484,7 @@
                     <li>Настроил собственные домены, DNS, SSL-сертификаты, работу с регистратором.</li>
                 </ul>
             </div>
-            <div class="timeline-item">
+            <div class="timeline-item" data-ai="leroy">
                 <div class="timeline-date">2024–2025</div>
                 <div class="timeline-title">Автоматизация складского учёта с элементами AI</div>
                 <div class="timeline-subtitle">Леруа Мерлен (проект в рамках работы)</div>
@@ -493,7 +520,7 @@
         <div class="cta-section">
             <h2 style="font-size: 28px;">Хотите обсудить ваш проект?</h2>
             <p style="max-width: 600px; margin: 20px auto;">Готов применить 15-летний опыт для решения ваших задач в области управления цепями поставок, оптимизации складских процессов и цифровой трансформации логистики.</p>
-            <a href="contact.html" class="cta-button">Обсудить сотрудничество</a>
+            <a href="contact.html" class="cta-button" id="experienceCtaBtn">Обсудить сотрудничество</a>
         </div>
     </div>
 
@@ -513,13 +540,13 @@
                         <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
                         <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
-                        <li><a href="/Panibratsky-Dmitry/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
+                        <li><a href="/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Контакты</h3>
                     <ul>
-                        <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
+                        <li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
                         <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
                     </ul>
                 </div>
@@ -537,6 +564,43 @@
 
     <script src="js/subscribe.js"></script>
     <script>
+        // Отслеживание скачивания резюме
+        const resumeBtn = document.getElementById('resumeDownloadBtn');
+        if (resumeBtn) {
+            resumeBtn.addEventListener('click', () => {
+                ym(105620027, 'reachGoal', 'resume_download');
+                gtag('event', 'resume_download', { event_category: 'files', event_label: 'CV' });
+            });
+        }
+
+        // Отслеживание кликов по пунктам карьеры (таймлайн)
+        document.querySelectorAll('.timeline-item[data-job]').forEach(item => {
+            item.addEventListener('click', () => {
+                const job = item.getAttribute('data-job');
+                ym(105620027, 'reachGoal', 'career_click', { job: job });
+                gtag('event', 'career_click', { event_category: 'engagement', event_label: job });
+            });
+        });
+
+        // Отслеживание кликов по AI-таймлайну
+        document.querySelectorAll('.timeline-item[data-ai]').forEach(item => {
+            item.addEventListener('click', () => {
+                const aiProj = item.getAttribute('data-ai');
+                ym(105620027, 'reachGoal', 'ai_project_click', { project: aiProj });
+                gtag('event', 'ai_project_click', { event_category: 'engagement', event_label: aiProj });
+            });
+        });
+
+        // Отслеживание клика по CTA кнопке
+        const ctaBtn = document.getElementById('experienceCtaBtn');
+        if (ctaBtn) {
+            ctaBtn.addEventListener('click', () => {
+                ym(105620027, 'reachGoal', 'experience_cta_click');
+                gtag('event', 'experience_cta_click', { event_category: 'engagement', event_label: 'experience_cta' });
+            });
+        }
+
+        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
