@@ -8,8 +8,6 @@
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
-
-    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,6 +23,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Яндекс.Метрика -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(105620027, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-C5X9R6HPQY');
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -42,6 +64,7 @@
             margin: 0 auto;
             padding: 0 20px;
         }
+        /* ШАПКА (НАВИГАЦИЯ) */
         header {
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -108,6 +131,9 @@
             .mobile-menu-btn {
                 display: block;
             }
+            body {
+                padding-top: 70px;
+            }
         }
         .page-header {
             background: linear-gradient(135deg, #f8fafc, #ffffff);
@@ -158,14 +184,6 @@
         }
         .methodology-card li, .tools-card li, .case-card li {
             margin-bottom: 8px;
-        }
-        .tools-category {
-            margin-bottom: 24px;
-        }
-        .tools-category h4 {
-            font-size: 18px;
-            margin-bottom: 12px;
-            color: #0f172a;
         }
         .process-step {
             text-align: center;
@@ -275,10 +293,6 @@
             cursor: pointer;
             font-weight: 600;
             margin-top: 10px;
-            transition: 0.2s;
-        }
-        .footer-install-btn:hover {
-            background: #0f172a;
         }
         .copyright {
             text-align: center;
@@ -323,7 +337,7 @@
         <!-- Методологии и подходы -->
         <h2 class="section-title">Методологии и подходы</h2>
         <div class="methodology-grid">
-            <div class="methodology-card">
+            <div class="methodology-card" data-methodology="lean">
                 <h3>Бережливое производство (Lean)</h3>
                 <p>Систематический подход к выявлению и устранению потерь (muda) через непрерывное улучшение (kaizen) и поток создания ценности.</p>
                 <ul>
@@ -334,7 +348,7 @@
                     <li>Вытягивающее производство (Pull System)</li>
                 </ul>
             </div>
-            <div class="methodology-card">
+            <div class="methodology-card" data-methodology="abcxyz">
                 <h3>ABC-XYZ анализ</h3>
                 <p>Комплексный метод классификации товарных запасов на основе их вклада в оборот и стабильности спроса для оптимизации управления.</p>
                 <ul>
@@ -345,7 +359,7 @@
                     <li>Динамическое перераспределение запасов</li>
                 </ul>
             </div>
-            <div class="methodology-card">
+            <div class="methodology-card" data-methodology="bpm">
                 <h3>Управление бизнес-процессами</h3>
                 <p>Систематическое проектирование, выполнение, мониторинг и оптимизация сквозных бизнес-процессов для повышения эффективности.</p>
                 <ul>
@@ -358,10 +372,10 @@
             </div>
         </div>
 
-        <!-- Инструменты и технологии (обновлённый блок) -->
+        <!-- Инструменты и технологии -->
         <h2 class="section-title">Инструменты и технологии</h2>
         <div class="methodology-grid">
-            <div class="methodology-card">
+            <div class="methodology-card" data-tool="corporate">
                 <h3>🏢 Корпоративные системы</h3>
                 <ul>
                     <li>1С:Предприятие 8</li>
@@ -374,7 +388,7 @@
                     <li>Системы контроля доступа</li>
                 </ul>
             </div>
-            <div class="methodology-card">
+            <div class="methodology-card" data-tool="bi">
                 <h3>📊 Аналитика и BI</h3>
                 <ul>
                     <li>Microsoft Power BI</li>
@@ -387,7 +401,7 @@
                     <li>Статистический анализ</li>
                 </ul>
             </div>
-            <div class="methodology-card">
+            <div class="methodology-card" data-tool="digital">
                 <h3>🤖 Цифровые технологии</h3>
                 <ul>
                     <li>Искусственный интеллект</li>
@@ -405,7 +419,7 @@
         <!-- Искусственный интеллект и автоматизация в SCM -->
         <h2 class="section-title">🤖 Искусственный интеллект и автоматизация в SCM</h2>
         <div class="methodology-grid">
-            <div class="methodology-card">
+            <div class="methodology-card" data-ai="predictive">
                 <h3>Предиктивная аналитика</h3>
                 <p>Разработка и внедрение моделей машинного обучения для прогнозирования спроса, оптимального уровня запасов и выявления аномалий в цепочке поставок.</p>
                 <ul>
@@ -414,7 +428,7 @@
                     <li>Детекция аномалий в закупках</li>
                 </ul>
             </div>
-            <div class="methodology-card">
+            <div class="methodology-card" data-ai="rpa">
                 <h3>Автоматизация рутинных операций (RPA)</h3>
                 <p>Применение RPA-ботов для переноса данных между системами (1С, WMS, TMS), создания отчётов, сверки накладных.</p>
                 <ul>
@@ -423,7 +437,7 @@
                     <li>Экономия до 15 часов в неделю</li>
                 </ul>
             </div>
-            <div class="methodology-card">
+            <div class="methodology-card" data-ai="generative">
                 <h3>Генеративные AI-инструменты</h3>
                 <p>Использование LLM (ChatGPT, DeepSeek, Claude) для написания скриптов, документации, генерации кода для веб-проектов, создания контента.</p>
                 <ul>
@@ -462,7 +476,7 @@
         <!-- Кейсы применения -->
         <h2 class="section-title">Кейсы применения экспертизы</h2>
         <div class="cases-grid">
-            <div class="case-card">
+            <div class="case-card" data-case="warehouse">
                 <h3>Оптимизация складских операций</h3>
                 <p>Внедрение принципов бережливого производства и перенастройка WMS для крупного ритейлера. Редизайн процессов приемки, хранения и отгрузки с использованием Value Stream Mapping.</p>
                 <div class="result-stats">
@@ -471,7 +485,7 @@
                     <div><div class="stat-number">99.5%</div><div>Точность инвентаризации</div></div>
                 </div>
             </div>
-            <div class="case-card">
+            <div class="case-card" data-case="transport">
                 <h3>Трансформация транспортной логистики</h3>
                 <p>Внедрение TMS системы и оптимизация маршрутов доставки с использованием аналитики данных. Переговоры с перевозчиками и внедрение системы мониторинга транспорта в реальном времени.</p>
                 <div class="result-stats">
@@ -480,7 +494,7 @@
                     <div><div class="stat-number">+40%</div><div>Прозрачность цепочки</div></div>
                 </div>
             </div>
-            <div class="case-card">
+            <div class="case-card" data-case="predictive">
                 <h3>Внедрение системы предиктивной аналитики</h3>
                 <p>Разработка и внедрение модели прогнозирования спроса на основе машинного обучения. Интеграция с ERP системой для автоматического планирования закупок и пополнения запасов.</p>
                 <div class="result-stats">
@@ -495,7 +509,7 @@
         <div class="cta-section">
             <h2>Готовы трансформировать вашу логистику?</h2>
             <p>Давайте обсудим, как современные методологии и цифровые инструменты могут оптимизировать ваши цепочки поставок, сократить издержки и повысить операционную эффективность.</p>
-            <a href="contact.html" class="cta-button">Обсудить сотрудничество</a>
+            <a href="contact.html" class="cta-button" id="expertiseCtaBtn">Обсудить сотрудничество</a>
         </div>
     </div>
 
@@ -515,102 +529,15 @@
                         <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
                         <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
                         <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
-                        <li><a href="/Panibratsky-Dmitry/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
+                        <li><a href="/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Контакты</h3>
                     <ul>
-                        <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
+                        <li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
                         <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
                     </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>📬 Дайджест SCM</h3>
-                    <p>Новости логистики каждое утро</p>
-                    <!-- НАЧАЛО: форма подписки UniSender (полный оригинальный код) -->
-                    <div id="static-form-container" data-url="https://cp.unisender.com/ru/v5/subscribe-form/view/6z9amrcqxhj5adrteod4pjandfc8qdtc9zbpo3sy" data-settings="63ef4qsswawxb1fkxgo7jqyannnbzo5t63x1xsu7huo5fzgexyj7y" style="display: none">
-                        <form method="POST" action="https://cp.unisender.com/ru/subscribe?hash=615otrmkm1s951fkxgo7jqyannyq7tnebmkmbfhhg4gmsyhzubqoy" name="subscribtion_form" us_mode="embed">
-                            <div class="container responsive">
-                                <table cellpadding="0" cellspacing="0" align="center" style="width: 100%; box-sizing: border-box; background-color: rgb(204, 204, 204); float: left;">
-                                    <tbody>
-                                        <tr>
-                                            <td style="vertical-align: top; padding: 0px; width: 100%;">
-                                                <table cellpadding="0" cellspacing="0" align="center" style="background-color: rgb(255, 255, 255); border-radius: 0px; max-width: 450px; width: 100%; border: none; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td width="100%" style="vertical-align: top; max-width: 450px; font-size: 0px; padding: 25px;">
-                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="width: 100%; table-layout: fixed; height: auto; border-collapse: collapse; border-spacing: 0px; display: inline-table; vertical-align: top; font-size: medium;">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td style="width: 100%; padding: 8px; height: 50px;" valign="top">
-                                                                                <table border="0" cellspacing="0" cellpadding="0" style="height: 100%; width: 100%; table-layout: fixed; border-spacing: 0px; border-collapse: collapse; min-height: 50px;">
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <td style="width: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: rgb(34, 34, 34);">
-                                                                                                <div style="display:inline-block; width:100%; font-size:0;">
-                                                                                                    <label style="font-size: 12px; padding: 0px 0px 5px; vertical-align: middle; box-sizing: border-box; width: 32%; display: inline-block; font-family: Arial, Helvetica, sans-serif; color: rgb(34, 34, 34);">
-                                                                                                        <span>E-mail</span>
-                                                                                                        <b style="font-size:14px; font-family:Georgia; line-height:10px;"> *</b>
-                                                                                                    </label>
-                                                                                                    <div style="display: inline-block; width: 66%;">
-                                                                                                        <input type="text" name="email" _validator="email" _required="1" style="border-radius: 3px; font: 13px / 1 Arial, Helvetica; padding: 0px 8px; width: 100%; box-sizing: border-box; border: 1px solid rgb(193, 201, 203); background-color: rgb(255, 255, 255); background-image: none; height: 30px;" _label="E-mail" placeholder="">
-                                                                                                        <div class="error-block" style="display:none; color:#ff592d; font:11px/18px Arial;"></div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            <tr>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="width: 100%; table-layout: fixed; height: auto; border-collapse: collapse; border-spacing: 0px; display: inline-table; vertical-align: top; font-size: medium;">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td style="width: 100%; background-image: none; min-height: 0px; height: 0px;" valign="top">
-                                                                                <table border="0" cellspacing="0" cellpadding="0" style="height: 100%; width: 100%; table-layout: fixed; border-spacing: 0px; border-collapse: collapse; min-height: 0px;">
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <td style="width: 100%; text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: rgb(34, 34, 34);">
-                                                                                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="display: inline-table; width: auto; border-spacing: 0px; border-collapse: collapse;">
-                                                                                                    <tbody>
-                                                                                                        <tr>
-                                                                                                            <td align="center" valign="middle" style="border: none; border-radius: 30px; padding: 15px 20px 17px; background-color: rgb(136, 136, 136); height: 18.7969px; min-height: 18.7969px;">
-                                                                                                                <button href="javascript:" target="_blank" style="width: 100%; display: inline-block; text-decoration: none; word-break: break-all; font-size: 14px; font-family: Arial, Helvetica, sans-serif; line-height: 16.8px; color: rgb(255, 255, 255); background-color: rgb(136, 136, 136); border: 0px;">Получать дайджест</button>
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                    </tbody>
-                                                                                                </table>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <input type="hidden" name="charset" value="UTF-8">
-                            <input type="hidden" name="default_list_id" value="1">
-                            <input type="hidden" name="overwrite" value="2">
-                            <input type="hidden" name="is_v5" value="1">
-                        </form>
-                    </div>
-                    <script src="https://shared.s3.unisender.ru/popups/popup.js"></script>
-                    <script>
-                      window.popupForSubscriptionsForm("https://apig.unisender.com");
-                    </script>
-                    <!-- КОНЕЦ: форма подписки UniSender -->
                 </div>
                 <div class="footer-column">
                     <h3>Приложение</h3>
@@ -626,6 +553,54 @@
 
     <script src="js/subscribe.js"></script>
     <script>
+        // Отслеживание кликов по методологиям, инструментам, AI-блокам, кейсам
+        function trackCardClick(category, label) {
+            ym(105620027, 'reachGoal', 'expertise_click', { category: category, label: label });
+            gtag('event', 'expertise_click', { event_category: category, event_label: label });
+        }
+
+        // Клики по методологиям
+        document.querySelectorAll('.methodology-card[data-methodology]').forEach(card => {
+            card.addEventListener('click', () => {
+                const method = card.getAttribute('data-methodology');
+                trackCardClick('methodology', method);
+            });
+        });
+
+        // Клики по инструментам
+        document.querySelectorAll('.methodology-card[data-tool]').forEach(card => {
+            card.addEventListener('click', () => {
+                const tool = card.getAttribute('data-tool');
+                trackCardClick('tool', tool);
+            });
+        });
+
+        // Клики по AI-блокам
+        document.querySelectorAll('.methodology-card[data-ai]').forEach(card => {
+            card.addEventListener('click', () => {
+                const aiType = card.getAttribute('data-ai');
+                trackCardClick('ai', aiType);
+            });
+        });
+
+        // Клики по кейсам
+        document.querySelectorAll('.case-card[data-case]').forEach(card => {
+            card.addEventListener('click', () => {
+                const caseType = card.getAttribute('data-case');
+                trackCardClick('case', caseType);
+            });
+        });
+
+        // Отслеживание клика по CTA кнопке
+        const ctaBtn = document.getElementById('expertiseCtaBtn');
+        if (ctaBtn) {
+            ctaBtn.addEventListener('click', () => {
+                ym(105620027, 'reachGoal', 'expertise_cta_click');
+                gtag('event', 'expertise_cta_click', { event_category: 'engagement', event_label: 'expertise_cta' });
+            });
+        }
+
+        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
