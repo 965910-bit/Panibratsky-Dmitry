@@ -18,6 +18,7 @@
     <link rel="apple-touch-icon" href="icons/ios/icon-120.png" sizes="120x120">
     <meta name="msapplication-TileImage" content="icons/windows/LargeTile.scale-100.png">
     <meta name="msapplication-TileColor" content="#1e40af">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -28,12 +29,7 @@
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
         m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-        ym(105620027, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-        });
+        ym(105620027, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
@@ -52,26 +48,141 @@
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #1e40af;
+            --accent-light: #3b82f6;
+            --gold: #d4af37;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+        body.dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background: #ffffff;
-            color: #0f172a;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.5;
+            transition: background 0.3s, color 0.3s;
+            font-size: 16px;
         }
         .container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
-        /* ШАПКА (НАВИГАЦИЯ) – такая же, как на других страницах */
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            body { font-size: 15px; }
+        }
+        /* Прогресс-бар */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            z-index: 1001;
+        }
+        .progress-bar {
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--accent-light));
+            width: 0%;
+            transition: width 0.1s;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            border: none;
+            font-size: 20px;
+        }
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+        .theme-switch {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+        }
+        .theme-switch i {
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .breadcrumb {
+            padding: 100px 0 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        /* Шапка */
         header {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
+        }
+        body.dark header {
+            background-color: rgba(15,23,42,0.95);
         }
         .nav-container {
             display: flex;
@@ -82,12 +193,10 @@
         .logo {
             font-size: 20px;
             font-weight: 700;
-            color: #0f172a;
+            color: var(--text-primary);
             text-decoration: none;
         }
-        .logo-dot {
-            color: #d4af37;
-        }
+        .logo-dot { color: var(--gold); }
         nav ul {
             display: flex;
             list-style: none;
@@ -95,14 +204,13 @@
         }
         nav ul li a {
             text-decoration: none;
-            color: #64748b;
+            color: var(--text-muted);
             font-weight: 500;
             font-size: 14px;
             transition: color 0.2s;
         }
-        nav ul li a:hover,
-        nav ul li a.active {
-            color: #1e40af;
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--accent);
         }
         .mobile-menu-btn {
             display: none;
@@ -110,6 +218,7 @@
             border: none;
             font-size: 22px;
             cursor: pointer;
+            color: var(--text-primary);
         }
         @media (max-width: 768px) {
             nav ul {
@@ -118,24 +227,21 @@
                 top: 100%;
                 left: 0;
                 width: 100%;
-                background: white;
+                background: var(--bg-primary);
                 padding: 16px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.1);
                 flex-direction: column;
                 gap: 12px;
             }
-            nav ul.active {
-                display: flex;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-            body {
-                padding-top: 70px;
-            }
+            nav ul.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            body { padding-top: 70px; }
+            .scroll-top, .theme-switch { bottom: 20px; }
+            .scroll-top { right: 20px; }
+            .theme-switch { left: 20px; }
         }
         .page-hero {
-            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
             padding: 120px 0 40px;
             text-align: center;
         }
@@ -145,7 +251,7 @@
             margin-bottom: 20px;
         }
         .page-hero p {
-            color: #64748b;
+            color: var(--text-muted);
             max-width: 700px;
             margin: 0 auto;
         }
@@ -156,7 +262,7 @@
             margin: 60px 0;
         }
         .contact-info {
-            background: #f1f5f9;
+            background: var(--bg-secondary);
             border-radius: 24px;
             padding: 32px;
         }
@@ -173,7 +279,7 @@
         .contact-detail i {
             width: 40px;
             height: 40px;
-            background: #1e40af;
+            background: var(--accent);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -182,22 +288,22 @@
             font-size: 18px;
         }
         .contact-detail a {
-            color: #0f172a;
+            color: var(--text-primary);
             text-decoration: none;
         }
         .contact-form {
-            background: white;
+            background: var(--bg-primary);
             border-radius: 24px;
             padding: 32px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
         }
         .contact-form h2 {
             font-size: 24px;
             margin-bottom: 8px;
         }
         .contact-form p {
-            color: #64748b;
+            color: var(--text-muted);
             margin-bottom: 24px;
         }
         .form-group {
@@ -211,13 +317,15 @@
         input, select, textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid var(--border);
             border-radius: 12px;
             font-family: inherit;
             font-size: 14px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
         }
         button[type="submit"] {
-            background: #1e40af;
+            background: var(--accent);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -227,7 +335,8 @@
             transition: 0.2s;
         }
         button[type="submit"]:hover {
-            background: #0f172a;
+            background: var(--gold);
+            transform: translateY(-2px);
         }
         .status {
             margin-top: 16px;
@@ -262,14 +371,10 @@
             left: 0;
             width: 35px;
             height: 3px;
-            background: #d4af37;
+            background: var(--gold);
         }
-        .footer-column ul {
-            list-style: none;
-        }
-        .footer-column ul li {
-            margin-bottom: 12px;
-        }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 12px; }
         .footer-column ul li a {
             color: rgba(255,255,255,0.8);
             text-decoration: none;
@@ -310,6 +415,7 @@
     </style>
 </head>
 <body>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
     <header>
         <div class="container nav-container">
             <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
@@ -327,14 +433,20 @@
         </div>
     </header>
 
-    <div class="page-hero">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Главная</a> / <span>Контакты</span>
+        </div>
+    </div>
+
+    <div class="page-hero fade-up">
         <div class="container">
             <h1>📬 Свяжитесь со мной – эксперт по SCM и логистике</h1>
             <p>Буду рад обсудить стратегическое сотрудничество, партнёрство или ответить на ваши вопросы по управлению цепями поставок.</p>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container fade-up">
         <div class="contact-grid">
             <div class="contact-info">
                 <h2>Контакты</h2>
@@ -400,40 +512,17 @@
     <footer>
         <div class="container">
             <div class="footer-container">
-                <div class="footer-column">
-                    <h3>Дмитрий Панибратский</h3>
-                    <p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p>
-                </div>
-                <div class="footer-column">
-                    <h3>Навигация</h3>
-                    <ul>
-                        <li><a href="about.html">Обо мне</a></li>
-                        <li><a href="expertise.html">Экспертиза</a></li>
-                        <li><a href="experience.html">Опыт</a></li>
-                        <li><a href="index.html">Стратегия</a></li>
-                        <li><a href="trends.html">Новости SCM</a></li>
-                        <li><a href="contact.html">Контакты</a></li>
-                        <li><a href="/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Контакты</h3>
-                    <ul>
-                        <li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
-                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Приложение</h3>
-                    <button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button>
-                    <p style="font-size: 12px; margin-top: 8px;">Установите наше PWA на телефон или компьютер</p>
-                </div>
+                <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank">RSS-лента</a></li></ul></div>
+                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
+                <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button></div>
             </div>
-            <div class="copyright">
-                &copy; 2026 Дмитрий Панибратский.
-            </div>
+            <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
         </div>
     </footer>
+
+    <button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
+    <div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
 
     <script>
         // URL вашего Google Apps Script (тот же, что был ранее)
@@ -478,7 +567,6 @@
                     body: JSON.stringify(data)
                 });
                 showStatus('✅ Заявка отправлена. Я свяжусь с вами!', 'success', statusDiv);
-                // Отправляем цель в метрики
                 ym(105620027, 'reachGoal', 'lead_submit');
                 gtag('event', 'lead_submit', { event_category: 'forms', event_label: 'contact' });
                 form.reset();
@@ -512,6 +600,45 @@
                 link.addEventListener('click', () => navMenu.classList.remove('active'));
             });
         }
+
+        // Прогресс-бар
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Кнопка "Наверх"
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollBtn.classList.add('show');
+            else scrollBtn.classList.remove('show');
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Тёмная тема
+        const themeSwitch = document.getElementById('themeSwitch');
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') document.body.classList.add('dark');
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Анимации при скролле
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
