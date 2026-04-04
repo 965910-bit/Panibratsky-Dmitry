@@ -43,8 +43,11 @@
     </script>
 
     <style>
-        /* ВСЕ ВАШИ СТИЛИ ИЗ ИСХОДНОГО about.html, плюс новые для прогресс-бара, темы, чата, анимаций, хлебных крошек, кнопки наверх */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
@@ -77,7 +80,6 @@
         }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
         @media (max-width: 768px) { body { font-size: 15px; } }
-        /* Прогресс-бар */
         .progress-container {
             position: fixed;
             top: 0;
@@ -93,7 +95,6 @@
             width: 0%;
             transition: width 0.1s;
         }
-        /* Кнопка наверх */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -117,7 +118,6 @@
         }
         .scroll-top.show { opacity: 1; visibility: visible; }
         .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
-        /* Переключатель темы */
         .theme-switch {
             position: fixed;
             bottom: 30px;
@@ -133,14 +133,18 @@
             box-shadow: var(--card-shadow);
         }
         .theme-switch i { font-size: 18px; color: var(--text-primary); }
-        /* Хлебные крошки */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
         .breadcrumb {
             padding: 100px 0 20px;
             font-size: 14px;
             color: var(--text-muted);
         }
         .breadcrumb a { color: var(--accent); text-decoration: none; }
-        /* Шапка */
         header {
             background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -204,7 +208,6 @@
             .scroll-top { right: 20px; }
             .theme-switch { left: 20px; }
         }
-        /* Чат-бот */
         .chat-widget {
             position: fixed;
             bottom: 100px;
@@ -255,22 +258,43 @@
             .chat-widget { bottom: 80px; right: 20px; }
             .chat-box { width: 260px; }
         }
-        /* Анимации */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+        .page-hero {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            padding: 120px 0 40px;
+            text-align: center;
         }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
-        /* Остальные ваши стили из about.html (я их сохраняю) */
-        .page-hero { background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary)); padding: 120px 0 40px; text-align: center; }
-        .page-hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 20px; }
-        .page-hero p { color: var(--text-muted); max-width: 700px; margin: 0 auto; }
-        .section-title { font-size: 32px; font-weight: 700; margin-bottom: 30px; }
-        .profile-photo { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; margin: 0 auto 30px; display: block; border: 3px solid var(--gold); }
+        .page-hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        .page-hero p {
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 30px;
+            display: block;
+            border: 3px solid var(--gold);
+        }
         .video-container { margin: 30px 0; text-align: center; }
         video { max-width: 100%; border-radius: 20px; box-shadow: var(--card-shadow); }
-        .philosophy-grid, .results-grid, .certificates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .philosophy-grid, .results-grid, .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
         .philosophy-card, .result-card, .certificate-card {
             background: var(--bg-primary);
             border-radius: 20px;
@@ -521,7 +545,6 @@
 
     <script src="js/subscribe.js"></script>
     <script>
-        // Сертификаты (ваш массив)
         const certificates = [
             { title: "Диплом о профессиональной переподготовке (Коммерческий директор)", file: "files/diplom-commercial-director.pdf", description: "Квалификация: коммерческий директор. Компетенции: управление продажами, бюджетирование, стратегическое планирование, управление командой." },
             { title: "CPL (Certified in Russian Logistics) – 2020", file: "files/cpl-panibratsky.html", description: "Базовый сертификат в области логистики." },
@@ -559,7 +582,6 @@
             `).join('');
         }
 
-        // Отслеживание кликов по сертификатам
         document.querySelectorAll('.certificate-card').forEach(card => {
             card.addEventListener('click', () => {
                 ym(105620027, 'reachGoal', 'certificate_click');
@@ -567,7 +589,6 @@
             });
         });
 
-        // Отслеживание видео
         const video = document.getElementById('aboutVideo');
         if (video) {
             video.addEventListener('play', () => {
@@ -576,7 +597,6 @@
             });
         }
 
-        // Отслеживание Telegram
         const telegramLink = document.getElementById('telegramLink');
         if (telegramLink) {
             telegramLink.addEventListener('click', () => {
@@ -585,22 +605,15 @@
             });
         }
 
-        // Прогресс-бар
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
+            if (window.scrollY > 300) document.getElementById('scrollTopBtn').classList.add('show');
+            else document.getElementById('scrollTopBtn').classList.remove('show');
         });
+        document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-        // Кнопка наверх
-        const scrollBtn = document.getElementById('scrollTopBtn');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) scrollBtn.classList.add('show');
-            else scrollBtn.classList.remove('show');
-        });
-        scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-        // Тёмная тема
         const themeSwitch = document.getElementById('themeSwitch');
         if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
         themeSwitch.addEventListener('click', () => {
@@ -608,26 +621,19 @@
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
         });
 
-        // Анимации
         const fadeElements = document.querySelectorAll('.fade-up');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-        }, { threshold: 0.1 });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
         fadeElements.forEach(el => observer.observe(el));
 
-        // Чат-бот
         const chatButton = document.getElementById('chatButton');
         const chatBox = document.getElementById('chatBox');
         chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
 
-        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
             mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
-            document.querySelectorAll('#nav-menu a').forEach(link => {
-                link.addEventListener('click', () => navMenu.classList.remove('active'));
-            });
+            document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
     </script>
     <script src="js/register-sw.js"></script>
