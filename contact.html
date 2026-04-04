@@ -8,8 +8,6 @@
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
-
-    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,21 +18,35 @@
     <link rel="apple-touch-icon" href="icons/ios/icon-120.png" sizes="120x120">
     <meta name="msapplication-TileImage" content="icons/windows/LargeTile.scale-100.png">
     <meta name="msapplication-TileColor" content="#1e40af">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Яндекс.Метрика -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(105620027, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-C5X9R6HPQY');
+    </script>
+
     <style>
-        :root {
-            --primary-dark: #0f172a;
-            --primary-blue: #1e40af;
-            --accent-gold: #d4af37;
-            --neutral-medium: #64748b;
-            --neutral-light: #f1f5f9;
-            --border-radius: 8px;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-        }
         * {
             margin: 0;
             padding: 0;
@@ -42,8 +54,8 @@
         }
         body {
             font-family: 'Inter', sans-serif;
-            color: var(--primary-dark);
-            background: white;
+            background: #ffffff;
+            color: #0f172a;
             line-height: 1.5;
         }
         .container {
@@ -51,8 +63,9 @@
             margin: 0 auto;
             padding: 0 20px;
         }
+        /* ШАПКА (НАВИГАЦИЯ) – такая же, как на других страницах */
         header {
-            background-color: rgba(255,255,255,0.95);
+            background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid #e2e8f0;
             position: fixed;
@@ -69,11 +82,11 @@
         .logo {
             font-size: 20px;
             font-weight: 700;
-            color: var(--primary-dark);
+            color: #0f172a;
             text-decoration: none;
         }
         .logo-dot {
-            color: var(--accent-gold);
+            color: #d4af37;
         }
         nav ul {
             display: flex;
@@ -82,14 +95,14 @@
         }
         nav ul li a {
             text-decoration: none;
-            color: var(--neutral-medium);
+            color: #64748b;
             font-weight: 500;
             font-size: 14px;
             transition: color 0.2s;
         }
         nav ul li a:hover,
         nav ul li a.active {
-            color: var(--primary-blue);
+            color: #1e40af;
         }
         .mobile-menu-btn {
             display: none;
@@ -117,6 +130,9 @@
             .mobile-menu-btn {
                 display: block;
             }
+            body {
+                padding-top: 70px;
+            }
         }
         .page-hero {
             background: linear-gradient(135deg, #f8fafc, #ffffff);
@@ -129,7 +145,7 @@
             margin-bottom: 20px;
         }
         .page-hero p {
-            color: var(--neutral-medium);
+            color: #64748b;
             max-width: 700px;
             margin: 0 auto;
         }
@@ -140,7 +156,7 @@
             margin: 60px 0;
         }
         .contact-info {
-            background: var(--neutral-light);
+            background: #f1f5f9;
             border-radius: 24px;
             padding: 32px;
         }
@@ -157,7 +173,7 @@
         .contact-detail i {
             width: 40px;
             height: 40px;
-            background: var(--primary-blue);
+            background: #1e40af;
             color: white;
             border-radius: 50%;
             display: flex;
@@ -166,14 +182,14 @@
             font-size: 18px;
         }
         .contact-detail a {
-            color: var(--primary-dark);
+            color: #0f172a;
             text-decoration: none;
         }
         .contact-form {
             background: white;
             border-radius: 24px;
             padding: 32px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
         }
         .contact-form h2 {
@@ -181,7 +197,7 @@
             margin-bottom: 8px;
         }
         .contact-form p {
-            color: var(--neutral-medium);
+            color: #64748b;
             margin-bottom: 24px;
         }
         .form-group {
@@ -200,8 +216,8 @@
             font-family: inherit;
             font-size: 14px;
         }
-        button {
-            background: var(--primary-blue);
+        button[type="submit"] {
+            background: #1e40af;
             color: white;
             border: none;
             padding: 12px 24px;
@@ -210,8 +226,8 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        button:hover {
-            background: var(--primary-dark);
+        button[type="submit"]:hover {
+            background: #0f172a;
         }
         .status {
             margin-top: 16px;
@@ -222,7 +238,7 @@
         .error { color: #dc2626; }
         .sending { color: #f59e0b; }
         footer {
-            background: var(--primary-dark);
+            background: #0f172a;
             color: white;
             padding: 60px 0 30px;
             margin-top: 60px;
@@ -246,7 +262,7 @@
             left: 0;
             width: 35px;
             height: 3px;
-            background: var(--accent-gold);
+            background: #d4af37;
         }
         .footer-column ul {
             list-style: none;
@@ -275,10 +291,6 @@
             cursor: pointer;
             font-weight: 600;
             margin-top: 10px;
-            transition: 0.2s;
-        }
-        .footer-install-btn:hover {
-            background: #0f172a;
         }
         .copyright {
             text-align: center;
@@ -324,14 +336,13 @@
 
     <div class="container">
         <div class="contact-grid">
-            <!-- Контактная информация -->
             <div class="contact-info">
                 <h2>Контакты</h2>
                 <div class="contact-detail">
                     <i class="fas fa-envelope"></i>
                     <div>
                         <strong>Email</strong><br>
-                        <a href="mailto:dmitriy.panibratskiy@yandex.ru">dmitriy.panibratskiy@yandex.ru</a>
+                        <a href="mailto:dmitry@scm-news.ru">dmitry@scm-news.ru</a>
                     </div>
                 </div>
                 <div class="contact-detail">
@@ -348,16 +359,8 @@
                         Россия (работаем по всей стране)
                     </div>
                 </div>
-                <div class="contact-detail">
-                    <i class="fab fa-vk"></i>
-                    <div>
-                        <strong>MAX / VK</strong><br>
-                        <a href="https://vk.com/..." target="_blank">скоро будет канал</a>
-                    </div>
-                </div>
             </div>
 
-            <!-- Форма заявки на сотрудничество -->
             <div class="contact-form">
                 <h2>🤝 Заявка на сотрудничество</h2>
                 <p>Оставьте заявку, и я свяжусь с вами в ближайшее время.</p>
@@ -404,19 +407,19 @@
                 <div class="footer-column">
                     <h3>Навигация</h3>
                     <ul>
-                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> Обо мне</a></li>
-                        <li><a href="expertise.html"><i class="fas fa-chevron-right"></i> Экспертиза</a></li>
-                        <li><a href="experience.html"><i class="fas fa-chevron-right"></i> Опыт</a></li>
-                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Стратегия</a></li>
-                        <li><a href="trends.html"><i class="fas fa-chevron-right"></i> Новости SCM</a></li>
-                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Контакты</a></li>
-                        <li><a href="/Panibratsky-Dmitry/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
+                        <li><a href="about.html">Обо мне</a></li>
+                        <li><a href="expertise.html">Экспертиза</a></li>
+                        <li><a href="experience.html">Опыт</a></li>
+                        <li><a href="index.html">Стратегия</a></li>
+                        <li><a href="trends.html">Новости SCM</a></li>
+                        <li><a href="contact.html">Контакты</a></li>
+                        <li><a href="/rss.xml" target="_blank"><i class="fas fa-rss"></i> RSS-лента</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Контакты</h3>
                     <ul>
-                        <li><a href="mailto:dmitriy.panibratskiy@yandex.ru"><i class="fas fa-envelope"></i> dmitriy.panibratskiy@yandex.ru</a></li>
+                        <li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
                         <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
                     </ul>
                 </div>
@@ -432,19 +435,21 @@
         </div>
     </footer>
 
-    <script src="js/subscribe.js"></script>
     <script>
+        // URL вашего Google Apps Script (тот же, что был ранее)
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzgYyJmzN_sf1cNiAX-11F_YgUUyYvPbjaRRfDGiAq6CWazZUGynpfOplzmvbs34KO4Mg/exec';
 
-        document.getElementById('leadForm').addEventListener('submit', async (e) => {
+        const form = document.getElementById('leadForm');
+        const statusDiv = document.getElementById('status');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const type = document.getElementById('type').value;
             const message = document.getElementById('message').value.trim();
-            const statusDiv = document.getElementById('status');
-            const submitBtn = document.getElementById('submitBtn');
 
             if (!name || !email || !message) {
                 showStatus('Заполните обязательные поля', 'error', statusDiv);
@@ -473,7 +478,10 @@
                     body: JSON.stringify(data)
                 });
                 showStatus('✅ Заявка отправлена. Я свяжусь с вами!', 'success', statusDiv);
-                document.getElementById('leadForm').reset();
+                // Отправляем цель в метрики
+                ym(105620027, 'reachGoal', 'lead_submit');
+                gtag('event', 'lead_submit', { event_category: 'forms', event_label: 'contact' });
+                form.reset();
             } catch (err) {
                 console.error(err);
                 showStatus('❌ Ошибка отправки. Попробуйте позже.', 'error', statusDiv);
@@ -495,6 +503,7 @@
             }
         }
 
+        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
