@@ -24,14 +24,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Яндекс.Метрика и GA4 -->
+    <!-- Яндекс.Метрика (новый счётчик для scm-news.ru) -->
     <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-        ym(105620027, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108401876', 'ym');
+
+        ym(108401876, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -76,8 +83,15 @@
             transition: background 0.3s, color 0.3s;
             font-size: 16px;
         }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-        @media (max-width: 768px) { .container { padding: 0 20px; } body { font-size: 15px; } }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            body { font-size: 15px; }
+        }
         /* Прогресс-бар */
         .progress-container {
             position: fixed;
@@ -94,6 +108,7 @@
             width: 0%;
             transition: width 0.1s;
         }
+        /* Кнопка наверх */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -117,6 +132,7 @@
         }
         .scroll-top.show { opacity: 1; visibility: visible; }
         .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
+        /* Переключатель темы */
         .theme-switch {
             position: fixed;
             bottom: 30px;
@@ -506,7 +522,7 @@
             </div>
         </div>
 
-        <!-- Карта геолокации (Яндекс.Карты) -->
+        <!-- Карта геолокации (Яндекс.Карты – г. Сургут) -->
         <div class="map-container">
             <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3Ae0b9b5d2c8f4a1b7c6d5e9f8a7b6c5d4e3f2a1b2c3d4e5f6a7b8c9d0e1f2a3b4&amp;source=constructor" frameborder="0"></iframe>
         </div>
@@ -585,7 +601,7 @@
                     body: JSON.stringify(data)
                 });
                 showStatus('✅ Заявка отправлена. Я свяжусь с вами!', 'success', statusDiv);
-                ym(105620027, 'reachGoal', 'lead_submit');
+                ym(108401876, 'reachGoal', 'lead_submit');
                 gtag('event', 'lead_submit', { event_category: 'forms', event_label: 'contact' });
                 form.reset();
             } catch (err) {
