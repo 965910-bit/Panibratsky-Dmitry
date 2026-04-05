@@ -24,7 +24,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Яндекс.Метрика (новый счётчик для scm-news.ru) -->
+    <!-- Google tag (gtag.js) - GA4 новый ресурс -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DM41FJYWX0');
+    </script>
+
+    <!-- Яндекс.Метрика (счётчик scm-news.ru) -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -32,20 +41,9 @@
             for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
             k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
         })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108401876', 'ym');
-
         ym(108401876, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-C5X9R6HPQY');
-    </script>
 
     <!-- Микроразметка Schema.org (Person) -->
     <script type="application/ld+json">
@@ -624,7 +622,7 @@
         <h2 class="section-title fade-up">Сертификаты и квалификации</h2>
         <div class="certificates-grid" id="certificates-container"></div>
 
-        <!-- НОВЫЙ БЛОК: Что я приобрёл в ходе этого проекта -->
+        <!-- Блок: Что я приобрёл в ходе этого проекта -->
         <div class="card fade-up">
             <h2>🧠 Что я приобрёл в ходе этого проекта</h2>
             <p>Создание сайта <code>scm-news.ru</code> и лендинга <code>scm-news.online</code> стало для меня полноценным профессиональным вызовом. За несколько недель я не только реализовал технически сложный продукт, но и приобрёл компетенции, которые выходят далеко за рамки обычного SCM-специалиста:</p>
@@ -643,7 +641,7 @@
         <div class="cta-section fade-up">
             <h2>Давайте создавать будущее вместе</h2>
             <p>Если вы ищете лидера, способного превратить вашу цепь поставок в конкурентное преимущество, — я открыт к диалогу.</p>
-            <a href="contact.html" class="cta-button">Связаться со мной</a>
+            <a href="contact.html" class="cta-button" id="aboutCtaBtn">Связаться со мной</a>
         </div>
     </div>
 
@@ -743,7 +741,16 @@
             });
         }
 
-        // Прогресс-бар, кнопка наверх, тема, анимации, чат, меню
+        // Отслеживание CTA кнопки
+        const aboutCtaBtn = document.getElementById('aboutCtaBtn');
+        if (aboutCtaBtn) {
+            aboutCtaBtn.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'about_cta_click');
+                gtag('event', 'about_cta_click', { event_category: 'engagement', event_label: 'about_cta' });
+            });
+        }
+
+        // Прогресс-бар
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -753,6 +760,7 @@
         });
         document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
+        // Тёмная тема
         const themeSwitch = document.getElementById('themeSwitch');
         if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
         themeSwitch.addEventListener('click', () => {
@@ -760,16 +768,19 @@
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
         });
 
+        // Анимации
         const fadeElements = document.querySelectorAll('.fade-up');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
         }, { threshold: 0.1 });
         fadeElements.forEach(el => observer.observe(el));
 
+        // Чат-бот
         const chatButton = document.getElementById('chatButton');
         const chatBox = document.getElementById('chatBox');
         chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
 
+        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
