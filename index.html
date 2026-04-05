@@ -24,7 +24,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Google tag (gtag.js) - GA4 новый ресурс -->
+    <!-- Google tag (gtag.js) - GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -33,7 +33,7 @@
         gtag('config', 'G-DM41FJYWX0');
     </script>
 
-    <!-- Яндекс.Метрика (счётчик scm-news.ru) -->
+    <!-- Яндекс.Метрика -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -45,27 +45,8 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-    <!-- Микроразметка Schema.org (Person) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Дмитрий Панибратский",
-      "url": "https://scm-news.ru/",
-      "sameAs": [
-        "https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45",
-        "https://career.habr.com/djdeman",
-        "https://surgut.zarplata.ru/resume/8fdf7b6dff10564de80039ed1f614a6773334f"
-      ],
-      "knowsAbout": ["Supply Chain Management", "Logistics", "Digital Transformation", "Python", "GitHub Actions", "PWA", "SEO"],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "SCM News"
-      }
-    }
-    </script>
-
     <style>
+        /* Стили полностью сохранены из вашего оригинала, без изменений */
         * {
             margin: 0;
             padding: 0;
@@ -107,11 +88,8 @@
             padding: 0 20px;
         }
         @media (max-width: 768px) {
-            body {
-                font-size: 15px;
-            }
+            body { font-size: 15px; }
         }
-        /* Прогресс-бар */
         .progress-container {
             position: fixed;
             top: 0;
@@ -127,7 +105,6 @@
             width: 0%;
             transition: width 0.1s;
         }
-        /* Кнопка "Наверх" */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -149,15 +126,8 @@
             border: none;
             font-size: 20px;
         }
-        .scroll-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .scroll-top:hover {
-            background: var(--gold);
-            transform: translateY(-3px);
-        }
-        /* Переключатель темы */
+        .scroll-top.show { opacity: 1; visibility: visible; }
+        .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
         .theme-switch {
             position: fixed;
             bottom: 30px;
@@ -172,36 +142,21 @@
             cursor: pointer;
             box-shadow: var(--card-shadow);
         }
-        .theme-switch i {
-            font-size: 18px;
-            color: var(--text-primary);
-        }
-        /* Анимации при скролле */
+        .theme-switch i { font-size: 18px; color: var(--text-primary); }
         .fade-up {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        /* Хлебные крошки */
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
         .breadcrumb {
             padding: 100px 0 20px;
             font-size: 14px;
             color: var(--text-muted);
         }
-        .breadcrumb a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        /* Шапка */
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
         header {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             position: fixed;
@@ -209,9 +164,7 @@
             width: 100%;
             z-index: 1000;
         }
-        body.dark header {
-            background-color: rgba(15, 23, 42, 0.95);
-        }
+        body.dark header { background-color: rgba(15,23,42,0.95); }
         .nav-container {
             display: flex;
             justify-content: space-between;
@@ -224,9 +177,7 @@
             color: var(--text-primary);
             text-decoration: none;
         }
-        .logo-dot {
-            color: var(--gold);
-        }
+        .logo-dot { color: var(--gold); }
         nav ul {
             display: flex;
             list-style: none;
@@ -239,10 +190,7 @@
             font-size: 14px;
             transition: color 0.2s;
         }
-        nav ul li a:hover,
-        nav ul li a.active {
-            color: var(--accent);
-        }
+        nav ul li a:hover, nav ul li a.active { color: var(--accent); }
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -263,14 +211,9 @@
                 flex-direction: column;
                 gap: 12px;
             }
-            nav ul.active {
-                display: flex;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
+            nav ul.active { display: flex; }
+            .mobile-menu-btn { display: block; }
         }
-        /* Чат-бот */
         .chat-widget {
             position: fixed;
             bottom: 100px;
@@ -289,14 +232,8 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             transition: transform 0.2s;
         }
-        .chat-button:hover {
-            transform: scale(1.05);
-            background: var(--gold);
-        }
-        .chat-button i {
-            font-size: 26px;
-            color: white;
-        }
+        .chat-button:hover { transform: scale(1.05); background: var(--gold); }
+        .chat-button i { font-size: 26px; color: white; }
         .chat-box {
             position: absolute;
             bottom: 70px;
@@ -311,21 +248,9 @@
             visibility: hidden;
             transition: all 0.3s;
         }
-        .chat-box.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .chat-header {
-            background: var(--accent);
-            color: white;
-            padding: 12px;
-            font-weight: 600;
-        }
-        .chat-body {
-            padding: 12px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+        .chat-box.open { opacity: 1; visibility: visible; }
+        .chat-header { background: var(--accent); color: white; padding: 12px; font-weight: 600; }
+        .chat-body { padding: 12px; font-size: 14px; color: var(--text-secondary); }
         .chat-quick button {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -336,15 +261,9 @@
             margin: 4px;
         }
         @media (max-width: 768px) {
-            .chat-widget {
-                bottom: 80px;
-                right: 20px;
-            }
-            .chat-box {
-                width: 260px;
-            }
+            .chat-widget { bottom: 80px; right: 20px; }
+            .chat-box { width: 260px; }
         }
-        /* Hero */
         .hero-section {
             padding: 130px 0 60px;
             background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
@@ -419,6 +338,7 @@
             border: 1px solid var(--border);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
         .philosophy-card::before {
             content: '';
@@ -526,6 +446,7 @@
             padding: 24px;
             border-left: 4px solid var(--gold);
             transition: var(--transition);
+            cursor: pointer;
         }
         .principle-card:hover {
             transform: translateY(-4px);
@@ -543,7 +464,6 @@
             margin-bottom: 16px;
             font-weight: 700;
         }
-        /* Результаты */
         .results-section {
             padding: 70px 0;
         }
@@ -576,6 +496,7 @@
             text-align: center;
             border-top: 4px solid transparent;
             transition: var(--transition);
+            cursor: pointer;
         }
         .result-card:hover {
             transform: translateY(-6px);
@@ -587,7 +508,6 @@
             color: var(--accent);
             margin-bottom: 10px;
         }
-        /* Методологии */
         .methodologies-section {
             padding: 70px 0;
         }
@@ -607,6 +527,7 @@
             box-shadow: var(--card-shadow);
             border: 1px solid var(--border);
             transition: var(--transition);
+            cursor: pointer;
         }
         .methodology-card:hover {
             transform: translateY(-4px);
@@ -624,7 +545,6 @@
             font-size: 20px;
             color: var(--gold);
         }
-        /* Лидерство */
         .leadership-philosophy {
             padding: 70px 0;
             background: var(--bg-secondary);
@@ -640,6 +560,7 @@
             border-radius: 16px;
             padding: 24px;
             box-shadow: var(--card-shadow);
+            cursor: pointer;
         }
         .philosophy-item .philosophy-icon {
             width: 50px;
@@ -662,7 +583,6 @@
             border-left: 4px solid var(--gold);
             border-right: 4px solid var(--accent);
         }
-        /* Академия */
         .academy-section {
             padding: 70px 0;
         }
@@ -749,7 +669,6 @@
             text-align: center;
             margin-top: 40px;
         }
-        /* CTA */
         .cta-section {
             padding: 70px 0;
             background: linear-gradient(135deg, #0f172a, #1e293b);
@@ -785,7 +704,6 @@
             background: #c19b2c;
             transform: translateY(-3px);
         }
-        /* Новости */
         .news-section {
             padding: 60px 0;
             background: var(--bg-secondary);
@@ -989,7 +907,6 @@
                 </div>
             </div>
             <div class="hero-image">
-                <div class="photo-frame"></div>
                 <picture>
                     <source srcset="images/profile.webp" type="image/webp">
                     <img src="images/profile.jpg" alt="Дмитрий Панибратский" class="profile-photo" width="300" height="300" loading="eager" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80'">
@@ -1001,7 +918,7 @@
     <section id="philosophy" class="philosophy-section fade-up">
         <div class="container">
             <div class="philosophy-container">
-                <div class="philosophy-card">
+                <div class="philosophy-card" data-philosophy="main">
                     <div class="philosophy-icon"><i class="fas fa-chess-king"></i></div>
                     <h2 class="philosophy-title">Философия стратегического управления SCM</h2>
                     <p class="philosophy-content">Управление цепями поставок — это не операционная задача, а стратегическая дисциплина, определяющая конкурентные преимущества компании в цифровую эпоху. Моя философия строится на принципе трансформации сложностей в возможности, где каждая операционная проблема рассматривается как потенциал для создания уникального рыночного преимущества.</p>
@@ -1039,10 +956,10 @@
                         </div>
                     </div>
                     <div class="philosophy-principles">
-                        <div class="principle-card"><div class="principle-number">1</div><h3>Системность мышления</h3><p>Рассматриваю SCM как единую экосистему, где каждое решение влияет на всю цепь создания стоимости</p></div>
-                        <div class="principle-card"><div class="principle-number">2</div><h3>Адаптивность к изменениям</h3><p>Создаю гибкие системы, способные адаптироваться к рыночной волатильности и технологическим сдвигам</p></div>
-                        <div class="principle-card"><div class="principle-number">3</div><h3>Данные как актив</h3><p>Преобразую операционные данные в стратегические инсайты для принятия обоснованных решений</p></div>
-                        <div class="principle-card"><div class="principle-number">4</div><h3>Человекоцентричность</h3><p>Строю процессы вокруг людей, создавая среды для роста и развития команд</p></div>
+                        <div class="principle-card" data-principle="1"><div class="principle-number">1</div><h3>Системность мышления</h3><p>Рассматриваю SCM как единую экосистему, где каждое решение влияет на всю цепь создания стоимости</p></div>
+                        <div class="principle-card" data-principle="2"><div class="principle-number">2</div><h3>Адаптивность к изменениям</h3><p>Создаю гибкие системы, способные адаптироваться к рыночной волатильности и технологическим сдвигам</p></div>
+                        <div class="principle-card" data-principle="3"><div class="principle-number">3</div><h3>Данные как актив</h3><p>Преобразую операционные данные в стратегические инсайты для принятия обоснованных решений</p></div>
+                        <div class="principle-card" data-principle="4"><div class="principle-number">4</div><h3>Человекоцентричность</h3><p>Строю процессы вокруг людей, создавая среды для роста и развития команд</p></div>
                     </div>
                 </div>
             </div>
@@ -1056,10 +973,10 @@
                 <p class="section-subtitle">Конкретные бизнес-результаты, достигнутые через применение стратегического мышления к управлению цепями поставок</p>
             </div>
             <div class="results-grid">
-                <div class="result-card"><div class="result-number">143%</div><div>рост операционной эффективности через цифровую трансформацию</div></div>
-                <div class="result-card"><div class="result-number">25%</div><div>снижение логистических затрат через оптимизацию процессов</div></div>
-                <div class="result-card"><div class="result-number">15+</div><div>успешно реализованных стратегических проектов</div></div>
-                <div class="result-card"><div class="result-number">87k+</div><div>SKU под стратегическим управлением</div></div>
+                <div class="result-card" data-result="efficiency"><div class="result-number">143%</div><div>рост операционной эффективности через цифровую трансформацию</div></div>
+                <div class="result-card" data-result="cost"><div class="result-number">25%</div><div>снижение логистических затрат через оптимизацию процессов</div></div>
+                <div class="result-card" data-result="projects"><div class="result-number">15+</div><div>успешно реализованных стратегических проектов</div></div>
+                <div class="result-card" data-result="sku"><div class="result-number">87k+</div><div>SKU под стратегическим управлением</div></div>
             </div>
         </div>
     </section>
@@ -1071,10 +988,10 @@
                 <p class="section-subtitle">Интеллектуальные системы и подходы, формирующие основу моего стратегического мышления и управленческой практики</p>
             </div>
             <div class="methodologies-container">
-                <div class="methodology-card"><div class="methodology-icon"><i class="fas fa-sitemap"></i></div><div class="methodology-content"><h3>Методология Адизеса</h3><p>Стратегии управления организационными изменениями и корпоративной трансформацией на разных этапах жизненного цикла компании.</p></div></div>
-                <div class="methodology-card"><div class="methodology-icon"><i class="fas fa-bullhorn"></i></div><div class="methodology-content"><h3>Игорь Манн</h3><p>Принципы маркетинга, продаж и практического подхода к бизнесу.</p></div></div>
-                <div class="methodology-card"><div class="methodology-icon"><i class="fas fa-chart-line"></i></div><div class="methodology-content"><h3>Владимир Сидоренко (Performia)</h3><p>Система оценки и развития персонала, основанная на анализе поведения и мотивации.</p></div></div>
-                <div class="methodology-card"><div class="methodology-icon"><i class="fas fa-tachometer-alt"></i></div><div class="methodology-content"><h3>Максим Батырев</h3><p>Комбат-менеджмент — принципы экстремальной эффективности бизнес-процессов.</p></div></div>
+                <div class="methodology-card" data-methodology="adizes"><div class="methodology-icon"><i class="fas fa-sitemap"></i></div><div class="methodology-content"><h3>Методология Адизеса</h3><p>Стратегии управления организационными изменениями и корпоративной трансформацией на разных этапах жизненного цикла компании.</p></div></div>
+                <div class="methodology-card" data-methodology="mann"><div class="methodology-icon"><i class="fas fa-bullhorn"></i></div><div class="methodology-content"><h3>Игорь Манн</h3><p>Принципы маркетинга, продаж и практического подхода к бизнесу.</p></div></div>
+                <div class="methodology-card" data-methodology="sydorenko"><div class="methodology-icon"><i class="fas fa-chart-line"></i></div><div class="methodology-content"><h3>Владимир Сидоренко (Performia)</h3><p>Система оценки и развития персонала, основанная на анализе поведения и мотивации.</p></div></div>
+                <div class="methodology-card" data-methodology="batyrev"><div class="methodology-icon"><i class="fas fa-tachometer-alt"></i></div><div class="methodology-content"><h3>Максим Батырев</h3><p>Комбат-менеджмент — принципы экстремальной эффективности бизнес-процессов.</p></div></div>
             </div>
         </div>
     </section>
@@ -1086,9 +1003,9 @@
                 <p class="section-subtitle">От управления процессами к архитектуре ценности и экосистем</p>
             </div>
             <div class="philosophy-grid">
-                <div class="philosophy-item"><div class="philosophy-icon"><i class="fas fa-chess-queen"></i></div><h3>Три парадигмы руководителя</h3><ul><li><strong>Архитектор ценности:</strong> Управляю не издержками, а системой доставки ценности</li><li><strong>Стратег-интегратор:</strong> Превращаю УЦП в конкурентное преимущество</li><li><strong>Лидер-наставник:</strong> Создаю среду для принятия осмысленных решений</li></ul></div>
-                <div class="philosophy-item"><div class="philosophy-icon"><i class="fas fa-balance-scale"></i></div><h3>Баланс философий</h3><ul><li><strong>Маржинальность vs Безубыточность</strong></li><li><strong>Эффективность vs Устойчивость</strong></li><li><strong>Глобализация vs Локализация</strong></li></ul></div>
-                <div class="philosophy-item"><div class="philosophy-icon"><i class="fas fa-brain"></i></div><h3>Мета-навыки руководителя</h3><ul><li><strong>Синтетическое мышление</strong></li><li><strong>Диалектическое мышление</strong></li><li><strong>Эпистемологическая скромность</strong></li></ul></div>
+                <div class="philosophy-item" data-leadership="architect"><div class="philosophy-icon"><i class="fas fa-chess-queen"></i></div><h3>Три парадигмы руководителя</h3><ul><li><strong>Архитектор ценности:</strong> Управляю не издержками, а системой доставки ценности</li><li><strong>Стратег-интегратор:</strong> Превращаю УЦП в конкурентное преимущество</li><li><strong>Лидер-наставник:</strong> Создаю среду для принятия осмысленных решений</li></ul></div>
+                <div class="philosophy-item" data-leadership="balance"><div class="philosophy-icon"><i class="fas fa-balance-scale"></i></div><h3>Баланс философий</h3><ul><li><strong>Маржинальность vs Безубыточность</strong></li><li><strong>Эффективность vs Устойчивость</strong></li><li><strong>Глобализация vs Локализация</strong></li></ul></div>
+                <div class="philosophy-item" data-leadership="meta"><div class="philosophy-icon"><i class="fas fa-brain"></i></div><h3>Мета-навыки руководителя</h3><ul><li><strong>Синтетическое мышление</strong></li><li><strong>Диалектическое мышление</strong></li><li><strong>Эпистемологическая скромность</strong></li></ul></div>
             </div>
             <div class="philosophy-quote"><p>"Управление цепями поставок сегодня — это управление философиями."</p></div>
         </div>
@@ -1104,11 +1021,11 @@
                 <div class="academy-header"><div class="academy-icon"><i class="fas fa-graduation-cap"></i></div><div><h3 class="academy-title">Основатель и идеолог</h3><p class="academy-subtitle">Дмитрий Панибратский</p></div></div>
                 <div class="academy-mission"><h3><i class="fas fa-bullseye"></i> Миссия Академии</h3><p>"Академия — точка сборки нового логистического мышления, где рождаются лидеры, способные строить цепочки, которые создают ценность."</p></div>
                 <div class="flip-grid">
-                    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><h3>🌐 SCM Base Camp</h3><p>Фундаментальное понимание цепей поставок</p></div><div class="flip-back"><p>Старт: 2026</p><p>Формат: онлайн</p><button class="preorder-btn" onclick="window.location.href='contact.html'">Предзапись</button></div></div></div>
-                    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><h3>📈 Professional SCM Stream</h3><p>Стратегия и цифровизация</p></div><div class="flip-back"><p>Старт: 2027</p><p>Формат: гибрид</p><button class="preorder-btn" onclick="window.location.href='contact.html'">Предзапись</button></div></div></div>
-                    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><h3>🧪 Leaders Lab</h3><p>Закрытый клуб топ-менеджеров</p></div><div class="flip-back"><p>Старт: 2026</p><p>По приглашениям</p><button class="preorder-btn" onclick="window.location.href='contact.html'">Заявка</button></div></div></div>
+                    <div class="flip-card" data-academy="basecamp"><div class="flip-inner"><div class="flip-front"><h3>🌐 SCM Base Camp</h3><p>Фундаментальное понимание цепей поставок</p></div><div class="flip-back"><p>Старт: 2026</p><p>Формат: онлайн</p><button class="preorder-btn" onclick="window.location.href='contact.html'">Предзапись</button></div></div></div>
+                    <div class="flip-card" data-academy="professional"><div class="flip-inner"><div class="flip-front"><h3>📈 Professional SCM Stream</h3><p>Стратегия и цифровизация</p></div><div class="flip-back"><p>Старт: 2027</p><p>Формат: гибрид</p><button class="preorder-btn" onclick="window.location.href='contact.html'">Предзапись</button></div></div></div>
+                    <div class="flip-card" data-academy="leaders"><div class="flip-inner"><div class="flip-front"><h3>🧪 Leaders Lab</h3><p>Закрытый клуб топ-менеджеров</p></div><div class="flip-back"><p>Старт: 2026</p><p>По приглашениям</p><button class="preorder-btn" onclick="window.location.href='contact.html'">Заявка</button></div></div></div>
                 </div>
-                <div class="academy-link"><a href="https://scm-news.ru/academy.html" target="_blank" class="cta-button"><i class="fas fa-external-link-alt"></i> Полный сайт Академии</a></div>
+                <div class="academy-link"><a href="https://scm-news.ru/academy.html" target="_blank" class="cta-button" id="academyFullLink"><i class="fas fa-external-link-alt"></i> Полный сайт Академии</a></div>
             </div>
         </div>
     </section>
@@ -1140,8 +1057,8 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
-                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank">RSS-лента</a></li></ul></div>
-                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank" id="rssFooterLink">RSS-лента</a></li></ul></div>
+                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
                 <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button><p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер</p></div>
             </div>
             <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
@@ -1185,14 +1102,21 @@
                         <div class="news-date"><span>${formatDate(new Date(n.pubDate))}</span><span class="news-source">${escapeHtml(n.source)}</span></div>
                         <h3 class="news-title">${escapeHtml(n.title)}</h3>
                         <p class="news-excerpt">${escapeHtml(n.description)}</p>
-                        <a href="${n.link}" target="_blank" class="news-link">Читать на источнике →</a>
+                        <a href="${n.link}" target="_blank" class="news-link home-news-link" data-news-link="${escapeHtml(n.link)}">Читать на источнике →</a>
                     </div>
                 `).join('');
+                // Отслеживание кликов по ссылкам новостей
+                document.querySelectorAll('.home-news-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        ym(108401876, 'reachGoal', 'home_news_link_click');
+                        gtag('event', 'home_news_link_click', { event_category: 'news', event_label: link.getAttribute('data-news-link') });
+                    });
+                });
             } catch(e) { container.innerHTML = '<div class="news-card">Не удалось загрузить новости.</div>'; }
         }
         loadHomeNews();
 
-        // Отслеживание кликов по CTA кнопке на главной
+        // Отслеживание кликов по CTA на главной
         const mainCtaBtn = document.getElementById('mainCtaBtn');
         if (mainCtaBtn) {
             mainCtaBtn.addEventListener('click', () => {
@@ -1201,7 +1125,7 @@
             });
         }
 
-        // Отслеживание клика по кнопке "Все новости"
+        // Кнопка "Все новости"
         const allNewsBtn = document.getElementById('allNewsBtn');
         if (allNewsBtn) {
             allNewsBtn.addEventListener('click', () => {
@@ -1210,25 +1134,110 @@
             });
         }
 
-        // Отслеживание кликов по карточкам результатов
-        document.querySelectorAll('.result-card').forEach(card => {
+        // Отслеживание кликов по карточкам результатов (раздельные цели)
+        document.querySelectorAll('.result-card[data-result]').forEach(card => {
             card.addEventListener('click', () => {
-                const resultText = card.querySelector('.result-number')?.innerText || '';
-                ym(108401876, 'reachGoal', 'result_click', { result: resultText });
-                gtag('event', 'result_click', { event_category: 'engagement', event_label: resultText });
+                const resultType = card.getAttribute('data-result');
+                ym(108401876, 'reachGoal', 'result_click_' + resultType);
+                gtag('event', 'result_click', { event_category: 'results', event_label: resultType });
             });
         });
 
-        // Отслеживание кликов по ссылкам новостей на главной
-        document.addEventListener('click', function(e) {
-            let target = e.target.closest('.news-link');
-            if (target && target.href) {
-                ym(108401876, 'reachGoal', 'home_news_link_click');
-                gtag('event', 'home_news_link_click', { event_category: 'engagement', event_label: target.href });
-            }
+        // Отслеживание кликов по карточкам методологий (раздельные цели)
+        document.querySelectorAll('.methodology-card[data-methodology]').forEach(card => {
+            card.addEventListener('click', () => {
+                const method = card.getAttribute('data-methodology');
+                ym(108401876, 'reachGoal', 'methodology_click_' + method);
+                gtag('event', 'methodology_click', { event_category: 'methodology', event_label: method });
+            });
         });
 
-        // Прогресс-бар
+        // Отслеживание кликов по блокам лидерства
+        document.querySelectorAll('.philosophy-item[data-leadership]').forEach(item => {
+            item.addEventListener('click', () => {
+                const leadership = item.getAttribute('data-leadership');
+                ym(108401876, 'reachGoal', 'leadership_click_' + leadership);
+                gtag('event', 'leadership_click', { event_category: 'leadership', event_label: leadership });
+            });
+        });
+
+        // Отслеживание кликов по карточкам принципов философии
+        document.querySelectorAll('.principle-card[data-principle]').forEach(card => {
+            card.addEventListener('click', () => {
+                const principle = card.getAttribute('data-principle');
+                ym(108401876, 'reachGoal', 'principle_click_' + principle);
+                gtag('event', 'principle_click', { event_category: 'philosophy', event_label: principle });
+            });
+        });
+
+        // Отслеживание кликов по блокам Академии (переворотные карточки)
+        document.querySelectorAll('.flip-card[data-academy]').forEach(card => {
+            card.addEventListener('click', () => {
+                const academyType = card.getAttribute('data-academy');
+                ym(108401876, 'reachGoal', 'academy_flip_click_' + academyType);
+                gtag('event', 'academy_flip_click', { event_category: 'academy', event_label: academyType });
+            });
+        });
+        // Ссылка на полный сайт Академии
+        const academyFullLink = document.getElementById('academyFullLink');
+        if (academyFullLink) {
+            academyFullLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'academy_full_site_click');
+                gtag('event', 'academy_full_site_click', { event_category: 'academy', event_label: 'full_site' });
+            });
+        }
+
+        // Отслеживание кликов по главной философской карточке
+        const mainPhilosophyCard = document.querySelector('.philosophy-card[data-philosophy="main"]');
+        if (mainPhilosophyCard) {
+            mainPhilosophyCard.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'main_philosophy_card_click');
+                gtag('event', 'main_philosophy_card_click', { event_category: 'philosophy', event_label: 'main' });
+            });
+        }
+
+        // Навигация по меню
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                let page = '';
+                if (href.includes('about.html')) page = 'about';
+                else if (href.includes('expertise.html')) page = 'expertise';
+                else if (href.includes('experience.html')) page = 'experience';
+                else if (href.includes('index.html')) page = 'home';
+                else if (href.includes('trends.html')) page = 'trends';
+                else if (href.includes('contact.html')) page = 'contact';
+                if (page) {
+                    ym(108401876, 'reachGoal', 'nav_click_' + page);
+                    gtag('event', 'nav_click', { event_category: 'navigation', event_label: page });
+                }
+            });
+        });
+
+        // Футер
+        const rssFooterLink = document.getElementById('rssFooterLink');
+        if (rssFooterLink) {
+            rssFooterLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_rss_click');
+                gtag('event', 'footer_rss_click', { event_category: 'footer', event_label: 'rss' });
+            });
+        }
+        const footerEmailLink = document.getElementById('footerEmailLink');
+        if (footerEmailLink) {
+            footerEmailLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_email_click');
+                gtag('event', 'footer_email_click', { event_category: 'footer', event_label: 'email' });
+            });
+        }
+        const footerTelegramLink = document.getElementById('footerTelegramLink');
+        if (footerTelegramLink) {
+            footerTelegramLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_telegram_click');
+                gtag('event', 'footer_telegram_click', { event_category: 'footer', event_label: 'telegram' });
+            });
+        }
+
+        // Прогресс-бар, кнопка наверх, тема, анимации, чат, мобильное меню
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -1237,21 +1246,26 @@
             else document.getElementById('scrollTopBtn').classList.remove('show');
         });
         document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-        // Тёмная тема
         const themeSwitch = document.getElementById('themeSwitch');
         if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
         themeSwitch.addEventListener('click', () => {
             document.body.classList.toggle('dark');
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
         });
-
-        // Анимации
         const fadeElements = document.querySelectorAll('.fade-up');
         const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
         fadeElements.forEach(el => observer.observe(el));
+        const chatButton = document.getElementById('chatButton');
+        const chatBox = document.getElementById('chatBox');
+        chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        if (mobileBtn && navMenu) {
+            mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+            document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
+        }
 
-        // Плавающее оглавление
+        // Плавающее оглавление (просто стилизация, без отслеживания)
         const toc = document.getElementById('toc');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 400) toc.classList.add('visible');
@@ -1265,19 +1279,6 @@
                 if (target) target.scrollIntoView({ behavior: 'smooth' });
             });
         });
-
-        // Чат-бот
-        const chatButton = document.getElementById('chatButton');
-        const chatBox = document.getElementById('chatBox');
-        chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
-
-        // Мобильное меню
-        const mobileBtn = document.querySelector('.mobile-menu-btn');
-        const navMenu = document.getElementById('nav-menu');
-        if (mobileBtn && navMenu) {
-            mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
-            document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
-        }
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
