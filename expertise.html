@@ -25,7 +25,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Яндекс.Метрика (новый счётчик для scm-news.ru) -->
+    <!-- Google tag (gtag.js) - GA4 новый ресурс -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DM41FJYWX0');
+    </script>
+
+    <!-- Яндекс.Метрика (счётчик scm-news.ru) -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -33,19 +42,28 @@
             for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
             k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
         })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108401876', 'ym');
-
         ym(108401876, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-C5X9R6HPQY');
+    <!-- Микроразметка Schema.org (Person) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Дмитрий Панибратский",
+      "url": "https://scm-news.ru/",
+      "sameAs": [
+        "https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45",
+        "https://career.habr.com/djdeman",
+        "https://surgut.zarplata.ru/resume/8fdf7b6dff10564de80039ed1f614a6773334f"
+      ],
+      "knowsAbout": ["Supply Chain Management", "Logistics", "Digital Transformation", "Python", "GitHub Actions", "PWA", "SEO"],
+      "worksFor": {
+        "@type": "Organization",
+        "name": "SCM News"
+      }
+    }
     </script>
 
     <style>
@@ -587,7 +605,7 @@
         <!-- Методологии и подходы -->
         <h2 class="section-title fade-up">Методологии и подходы</h2>
         <div class="methodology-grid">
-            <div class="methodology-card fade-up">
+            <div class="methodology-card fade-up" data-methodology="lean">
                 <h3>Бережливое производство (Lean)</h3>
                 <p>Систематический подход к выявлению и устранению потерь (muda) через непрерывное улучшение (kaizen) и поток создания ценности.</p>
                 <ul>
@@ -598,7 +616,7 @@
                     <li>Вытягивающее производство (Pull System)</li>
                 </ul>
             </div>
-            <div class="methodology-card fade-up">
+            <div class="methodology-card fade-up" data-methodology="abcxyz">
                 <h3>ABC-XYZ анализ</h3>
                 <p>Комплексный метод классификации товарных запасов на основе их вклада в оборот и стабильности спроса для оптимизации управления.</p>
                 <ul>
@@ -609,7 +627,7 @@
                     <li>Динамическое перераспределение запасов</li>
                 </ul>
             </div>
-            <div class="methodology-card fade-up">
+            <div class="methodology-card fade-up" data-methodology="bpm">
                 <h3>Управление бизнес-процессами</h3>
                 <p>Систематическое проектирование, выполнение, мониторинг и оптимизация сквозных бизнес-процессов для повышения эффективности.</p>
                 <ul>
@@ -625,7 +643,7 @@
         <!-- Инструменты и технологии -->
         <h2 class="section-title fade-up">Инструменты и технологии</h2>
         <div class="methodology-grid">
-            <div class="methodology-card fade-up">
+            <div class="methodology-card fade-up" data-tool="corporate">
                 <h3>🏢 Корпоративные системы</h3>
                 <ul>
                     <li>1С:Предприятие 8</li>
@@ -638,7 +656,7 @@
                     <li>Системы контроля доступа</li>
                 </ul>
             </div>
-            <div class="methodology-card fade-up">
+            <div class="methodology-card fade-up" data-tool="bi">
                 <h3>📊 Аналитика и BI</h3>
                 <ul>
                     <li>Microsoft Power BI</li>
@@ -651,7 +669,7 @@
                     <li>Статистический анализ</li>
                 </ul>
             </div>
-            <div class="methodology-card fade-up">
+            <div class="methodology-card fade-up" data-tool="digital">
                 <h3>🤖 Цифровые технологии</h3>
                 <ul>
                     <li>Искусственный интеллект</li>
@@ -669,7 +687,7 @@
         <!-- Искусственный интеллект и автоматизация в SCM -->
         <h2 class="section-title fade-up">🤖 Искусственный интеллект и автоматизация в SCM</h2>
         <div class="methodology-grid">
-            <div class="methodology-card fade-up">
+            <div class="methodology-card fade-up" data-ai="predictive">
                 <h3>Предиктивная аналитика</h3>
                 <p>Разработка и внедрение моделей машинного обучения для прогнозирования спроса, оптимального уровня запасов и выявления аномалий в цепочке поставок.</p>
                 <ul>
@@ -678,7 +696,7 @@
                     <li>Детекция аномалий в закупках</li>
                 </ul>
             </div>
-            <div class="methodology-card fade-up">
+            <div class="methodology-card fade-up" data-ai="rpa">
                 <h3>Автоматизация рутинных операций (RPA)</h3>
                 <p>Применение RPA-ботов для переноса данных между системами (1С, WMS, TMS), создания отчётов, сверки накладных.</p>
                 <ul>
@@ -687,7 +705,7 @@
                     <li>Экономия до 15 часов в неделю</li>
                 </ul>
             </div>
-            <div class="methodology-card fade-up">
+            <div class="methodology-card fade-up" data-ai="generative">
                 <h3>Генеративные AI-инструменты</h3>
                 <p>Использование LLM (ChatGPT, DeepSeek, Claude) для написания скриптов, документации, генерации кода для веб-проектов, создания контента.</p>
                 <ul>
@@ -763,7 +781,7 @@
         <!-- Кейсы применения -->
         <h2 class="section-title fade-up">Кейсы применения экспертизы</h2>
         <div class="cases-grid">
-            <div class="case-card fade-up">
+            <div class="case-card fade-up" data-case="warehouse">
                 <h3>Оптимизация складских операций</h3>
                 <p>Внедрение принципов бережливого производства и перенастройка WMS для крупного ритейлера. Редизайн процессов приемки, хранения и отгрузки с использованием Value Stream Mapping.</p>
                 <div class="result-stats">
@@ -772,7 +790,7 @@
                     <div><div class="stat-number">99.5%</div><div>Точность инвентаризации</div></div>
                 </div>
             </div>
-            <div class="case-card fade-up">
+            <div class="case-card fade-up" data-case="transport">
                 <h3>Трансформация транспортной логистики</h3>
                 <p>Внедрение TMS системы и оптимизация маршрутов доставки с использованием аналитики данных. Переговоры с перевозчиками и внедрение системы мониторинга транспорта в реальном времени.</p>
                 <div class="result-stats">
@@ -781,7 +799,7 @@
                     <div><div class="stat-number">+40%</div><div>Прозрачность цепочки</div></div>
                 </div>
             </div>
-            <div class="case-card fade-up">
+            <div class="case-card fade-up" data-case="predictive">
                 <h3>Внедрение системы предиктивной аналитики</h3>
                 <p>Разработка и внедрение модели прогнозирования спроса на основе машинного обучения. Интеграция с ERP системой для автоматического планирования закупок и пополнения запасов.</p>
                 <div class="result-stats">
@@ -876,7 +894,38 @@
             }
         });
 
-        // Отслеживание клика по CTA
+        // Отслеживание кликов по методологиям, инструментам, AI-блокам, кейсам
+        function trackCardClick(category, label) {
+            ym(108401876, 'reachGoal', 'expertise_click', { category: category, label: label });
+            gtag('event', 'expertise_click', { event_category: category, event_label: label });
+        }
+
+        document.querySelectorAll('.methodology-card[data-methodology]').forEach(card => {
+            card.addEventListener('click', () => {
+                const method = card.getAttribute('data-methodology');
+                trackCardClick('methodology', method);
+            });
+        });
+        document.querySelectorAll('.methodology-card[data-tool]').forEach(card => {
+            card.addEventListener('click', () => {
+                const tool = card.getAttribute('data-tool');
+                trackCardClick('tool', tool);
+            });
+        });
+        document.querySelectorAll('.methodology-card[data-ai]').forEach(card => {
+            card.addEventListener('click', () => {
+                const aiType = card.getAttribute('data-ai');
+                trackCardClick('ai', aiType);
+            });
+        });
+        document.querySelectorAll('.case-card[data-case]').forEach(card => {
+            card.addEventListener('click', () => {
+                const caseType = card.getAttribute('data-case');
+                trackCardClick('case', caseType);
+            });
+        });
+
+        // Отслеживание клика по CTA кнопке
         document.getElementById('expertiseCtaBtn').addEventListener('click', () => {
             ym(108401876, 'reachGoal', 'expertise_cta_click');
             gtag('event', 'expertise_cta_click', { event_category: 'engagement', event_label: 'expertise_cta' });
