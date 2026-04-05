@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>трое, детей, пострадали, намерен, перенести, часть: Новости логистики и SCM April 2026 | Тренды управления цепями поставок</title>
-    <meta name="description" content="Актуальные новости логистики, транспорта, склада и цифровой трансформации. трое, детей, пострадали, намерен, перенести, часть, более, большегрузов, скопилось, представил. Ежедневное обновление.">
+    <title>Новости SCM | Логистика, управление цепями поставок, тренды</title>
+    <meta name="description" content="Автоматическая лента новостей по логистике, управлению цепями поставок, цифровой трансформации. Ежедневное обновление, поиск, рейтинг.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
@@ -25,14 +25,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Яндекс.Метрика -->
+    <!-- Яндекс.Метрика (новый счётчик для scm-news.ru) -->
     <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-        ym(105620027, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108401876', 'ym');
+
+        ym(108401876, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
@@ -721,15 +726,15 @@
             let shareUrl = '';
             if (shareType === 'tg') {
                 shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
-                ym(105620027, 'reachGoal', 'share_tg');
+                ym(108401876, 'reachGoal', 'share_tg');
                 gtag('event', 'share', { event_category: 'engagement', event_label: 'telegram' });
             } else if (shareType === 'vk') {
                 shareUrl = `https://vk.com/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
-                ym(105620027, 'reachGoal', 'share_vk');
+                ym(108401876, 'reachGoal', 'share_vk');
                 gtag('event', 'share', { event_category: 'engagement', event_label: 'vk' });
             } else if (shareType === 'tw') {
                 shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
-                ym(105620027, 'reachGoal', 'share_tw');
+                ym(108401876, 'reachGoal', 'share_tw');
                 gtag('event', 'share', { event_category: 'engagement', event_label: 'twitter' });
             }
             if (shareUrl) {
@@ -754,7 +759,7 @@
             btn.querySelector('.like-count').textContent = count;
             if (count > 0) btn.classList.add('liked');
             else btn.classList.remove('liked');
-            ym(105620027, 'reachGoal', 'news_like');
+            ym(108401876, 'reachGoal', 'news_like');
             gtag('event', 'news_like', { event_category: 'engagement', event_label: link });
         }
 
