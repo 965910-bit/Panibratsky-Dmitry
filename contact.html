@@ -47,6 +47,26 @@
         gtag('config', 'G-C5X9R6HPQY');
     </script>
 
+    <!-- Микроразметка Schema.org (Person) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Дмитрий Панибратский",
+      "url": "https://scm-news.ru/",
+      "sameAs": [
+        "https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45",
+        "https://career.habr.com/djdeman",
+        "https://surgut.zarplata.ru/resume/8fdf7b6dff10564de80039ed1f614a6773334f"
+      ],
+      "knowsAbout": ["Supply Chain Management", "Logistics", "Digital Transformation", "Python", "GitHub Actions", "PWA", "SEO"],
+      "worksFor": {
+        "@type": "Organization",
+        "name": "SCM News"
+      }
+    }
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -366,6 +386,75 @@
             border: none;
             display: block;
         }
+        /* Блок резюме */
+        .resume-links-section {
+            margin: 60px 0 40px;
+            padding: 0 20px;
+        }
+        .resume-links-section h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        .resume-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+        .resume-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 18px 24px;
+            width: 100%;
+            max-width: 330px;
+            text-decoration: none;
+            transition: all 0.25s;
+            box-shadow: var(--card-shadow);
+        }
+        .resume-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -10px rgba(0,0,0,0.15);
+        }
+        .resume-icon {
+            font-size: 2.2rem;
+            width: 55px;
+            text-align: center;
+        }
+        .resume-info {
+            flex: 1;
+        }
+        .resume-platform {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+        .resume-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .resume-arrow {
+            font-size: 1.3rem;
+            color: var(--accent);
+            transition: transform 0.2s;
+        }
+        .resume-card:hover .resume-arrow {
+            transform: translateX(4px);
+        }
+        .resume-card.hh:hover { border-left: 4px solid #ff6b00; }
+        .resume-card.habr:hover { border-left: 4px solid #77aa33; }
+        .resume-card.zarplata:hover { border-left: 4px solid #0f7b3e; }
+        @media (max-width: 768px) {
+            .resume-cards { flex-direction: column; align-items: center; }
+            .resume-card { max-width: 100%; }
+        }
         footer {
             background: #0f172a;
             color: white;
@@ -525,6 +614,37 @@
         <!-- Карта геолокации (Яндекс.Карты – г. Сургут) -->
         <div class="map-container">
             <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3Ae0b9b5d2c8f4a1b7c6d5e9f8a7b6c5d4e3f2a1b2c3d4e5f6a7b8c9d0e1f2a3b4&amp;source=constructor" frameborder="0"></iframe>
+        </div>
+
+        <!-- Блок: Мои профессиональные резюме -->
+        <div class="resume-links-section">
+            <h3>📄 Мои профессиональные резюме</h3>
+            <div class="resume-cards">
+                <a href="https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45" target="_blank" rel="noopener noreferrer" class="resume-card hh">
+                    <div class="resume-icon">👔</div>
+                    <div class="resume-info">
+                        <span class="resume-platform">HeadHunter</span>
+                        <span class="resume-desc">Актуальное резюме с полным опытом</span>
+                    </div>
+                    <div class="resume-arrow">→</div>
+                </a>
+                <a href="https://career.habr.com/djdeman" target="_blank" rel="noopener noreferrer" class="resume-card habr">
+                    <div class="resume-icon">🧑‍💻</div>
+                    <div class="resume-info">
+                        <span class="resume-platform">Хабр Карьера</span>
+                        <span class="resume-desc">Техническое сообщество и портфолио</span>
+                    </div>
+                    <div class="resume-arrow">→</div>
+                </a>
+                <a href="https://surgut.zarplata.ru/resume/8fdf7b6dff10564de80039ed1f614a6773334f" target="_blank" rel="noopener noreferrer" class="resume-card zarplata">
+                    <div class="resume-icon">💰</div>
+                    <div class="resume-info">
+                        <span class="resume-platform">Зарплата.ру</span>
+                        <span class="resume-desc">Детализация карьеры и навыков</span>
+                    </div>
+                    <div class="resume-arrow">→</div>
+                </a>
+            </div>
         </div>
     </div>
 
