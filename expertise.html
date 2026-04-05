@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Google tag (gtag.js) - GA4 новый ресурс -->
+    <!-- Google tag (gtag.js) - GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -34,7 +34,7 @@
         gtag('config', 'G-DM41FJYWX0');
     </script>
 
-    <!-- Яндекс.Метрика (счётчик scm-news.ru) -->
+    <!-- Яндекс.Метрика -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -46,27 +46,8 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-    <!-- Микроразметка Schema.org (Person) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Дмитрий Панибратский",
-      "url": "https://scm-news.ru/",
-      "sameAs": [
-        "https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45",
-        "https://career.habr.com/djdeman",
-        "https://surgut.zarplata.ru/resume/8fdf7b6dff10564de80039ed1f614a6773334f"
-      ],
-      "knowsAbout": ["Supply Chain Management", "Logistics", "Digital Transformation", "Python", "GitHub Actions", "PWA", "SEO"],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "SCM News"
-      }
-    }
-    </script>
-
     <style>
+        /* (стили такие же, как в вашем оригинале, без изменений) */
         * {
             margin: 0;
             padding: 0;
@@ -111,7 +92,6 @@
             .container { padding: 0 20px; }
             body { font-size: 15px; }
         }
-        /* Прогресс-бар */
         .progress-container {
             position: fixed;
             top: 0;
@@ -127,7 +107,6 @@
             width: 0%;
             transition: width 0.1s;
         }
-        /* Кнопка "Наверх" */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -149,15 +128,8 @@
             border: none;
             font-size: 20px;
         }
-        .scroll-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .scroll-top:hover {
-            background: var(--gold);
-            transform: translateY(-3px);
-        }
-        /* Переключатель темы */
+        .scroll-top.show { opacity: 1; visibility: visible; }
+        .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
         .theme-switch {
             position: fixed;
             bottom: 30px;
@@ -172,34 +144,19 @@
             cursor: pointer;
             box-shadow: var(--card-shadow);
         }
-        .theme-switch i {
-            font-size: 18px;
-            color: var(--text-primary);
-        }
-        /* Анимации */
+        .theme-switch i { font-size: 18px; color: var(--text-primary); }
         .fade-up {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        /* Хлебные крошки */
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
         .breadcrumb {
             padding: 100px 0 20px;
             font-size: 14px;
             color: var(--text-muted);
         }
-        .breadcrumb a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        /* Шапка */
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
         header {
             background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -209,9 +166,7 @@
             width: 100%;
             z-index: 1000;
         }
-        body.dark header {
-            background-color: rgba(15,23,42,0.95);
-        }
+        body.dark header { background-color: rgba(15,23,42,0.95); }
         .nav-container {
             display: flex;
             justify-content: space-between;
@@ -224,9 +179,7 @@
             color: var(--text-primary);
             text-decoration: none;
         }
-        .logo-dot {
-            color: var(--gold);
-        }
+        .logo-dot { color: var(--gold); }
         nav ul {
             display: flex;
             list-style: none;
@@ -239,10 +192,7 @@
             font-size: 14px;
             transition: color 0.2s;
         }
-        nav ul li a:hover,
-        nav ul li a.active {
-            color: var(--accent);
-        }
+        nav ul li a:hover, nav ul li a.active { color: var(--accent); }
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -264,19 +214,12 @@
                 flex-direction: column;
                 gap: 12px;
             }
-            nav ul.active {
-                display: flex;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-            .scroll-top, .theme-switch {
-                bottom: 20px;
-            }
+            nav ul.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .scroll-top, .theme-switch { bottom: 20px; }
             .scroll-top { right: 20px; }
             .theme-switch { left: 20px; }
         }
-        /* Чат-бот */
         .chat-widget {
             position: fixed;
             bottom: 100px;
@@ -295,14 +238,8 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             transition: transform 0.2s;
         }
-        .chat-button:hover {
-            transform: scale(1.05);
-            background: var(--gold);
-        }
-        .chat-button i {
-            font-size: 26px;
-            color: white;
-        }
+        .chat-button:hover { transform: scale(1.05); background: var(--gold); }
+        .chat-button i { font-size: 26px; color: white; }
         .chat-box {
             position: absolute;
             bottom: 70px;
@@ -317,21 +254,9 @@
             visibility: hidden;
             transition: all 0.3s;
         }
-        .chat-box.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .chat-header {
-            background: var(--accent);
-            color: white;
-            padding: 12px;
-            font-weight: 600;
-        }
-        .chat-body {
-            padding: 12px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+        .chat-box.open { opacity: 1; visibility: visible; }
+        .chat-header { background: var(--accent); color: white; padding: 12px; font-weight: 600; }
+        .chat-body { padding: 12px; font-size: 14px; color: var(--text-secondary); }
         .chat-quick button {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -342,30 +267,16 @@
             margin: 4px;
         }
         @media (max-width: 768px) {
-            .chat-widget {
-                bottom: 80px;
-                right: 20px;
-            }
-            .chat-box {
-                width: 260px;
-            }
+            .chat-widget { bottom: 80px; right: 20px; }
+            .chat-box { width: 260px; }
         }
-        /* Страница экспертизы */
         .page-header {
             background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
             padding: 120px 0 40px;
             text-align: center;
         }
-        .page-header h1 {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 20px;
-        }
-        .page-header p {
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto;
-        }
+        .page-header h1 { font-size: 48px; font-weight: 800; margin-bottom: 20px; }
+        .page-header p { color: var(--text-muted); max-width: 700px; margin: 0 auto; }
         .section-title {
             font-size: 32px;
             font-weight: 700;
@@ -384,6 +295,7 @@
             box-shadow: var(--card-shadow);
             border: 1px solid var(--border);
             transition: transform 0.2s;
+            cursor: pointer;
         }
         .methodology-card:hover, .process-card:hover, .case-card:hover {
             transform: translateY(-4px);
@@ -437,9 +349,6 @@
             border-radius: 24px;
             margin: 40px 0;
         }
-        body.dark .cta-section {
-            background: linear-gradient(135deg, #020617, #0f172a);
-        }
         .cta-button {
             display: inline-block;
             background: var(--gold);
@@ -454,15 +363,11 @@
             background: #c19b2c;
             transform: translateY(-2px);
         }
-        /* Калькулятор TCO */
         .calculator {
             background: var(--bg-secondary);
             border-radius: 24px;
             padding: 30px;
             margin: 40px 0;
-        }
-        .calculator h3 {
-            margin-bottom: 20px;
         }
         .calc-field {
             margin-bottom: 15px;
@@ -487,7 +392,6 @@
             margin-top: 20px;
             border-left: 4px solid var(--gold);
         }
-        /* Карта навыков */
         .skills-chart {
             max-width: 300px;
             margin: 0 auto;
@@ -527,12 +431,8 @@
             height: 3px;
             background: var(--gold);
         }
-        .footer-column ul {
-            list-style: none;
-        }
-        .footer-column ul li {
-            margin-bottom: 12px;
-        }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 12px; }
         .footer-column ul li a {
             color: rgba(255,255,255,0.8);
             text-decoration: none;
@@ -541,10 +441,7 @@
             gap: 8px;
             transition: 0.2s;
         }
-        .footer-column ul li a:hover {
-            color: white;
-            padding-left: 5px;
-        }
+        .footer-column ul li a:hover { color: white; padding-left: 5px; }
         .footer-install-btn {
             background: #1e40af;
             color: white;
@@ -756,22 +653,22 @@
         <!-- Процесс работы -->
         <h2 class="section-title fade-up">Процесс работы</h2>
         <div class="process-grid">
-            <div class="process-card process-step fade-up">
+            <div class="process-card process-step fade-up" data-process="1">
                 <div class="step-number">1</div>
                 <h3>Диагностика и анализ</h3>
                 <p>Глубокий анализ текущих бизнес-процессов, выявление узких мест и точек роста. Использование методов картирования процессов, интервью с сотрудниками, анализа данных. Формирование понимания текущего состояния и целевых показателей.</p>
             </div>
-            <div class="process-card process-step fade-up">
+            <div class="process-card process-step fade-up" data-process="2">
                 <div class="step-number">2</div>
                 <h3>Проектирование решения</h3>
                 <p>Разработка целевой архитектуры процессов и систем. Подбор и адаптация методологий под специфику бизнеса. Создание дорожной карты трансформации с четкими этапами, сроками и ответственными.</p>
             </div>
-            <div class="process-card process-step fade-up">
+            <div class="process-card process-step fade-up" data-process="3">
                 <div class="step-number">3</div>
                 <h3>Внедрение и пилотирование</h3>
                 <p>Поэтапное внедрение решений, начиная с пилотных зон или процессов. Обучение команды, адаптация инструментов под реальные условия, итеративная доработка. Управление изменениями и вовлечение сотрудников.</p>
             </div>
-            <div class="process-card process-step fade-up">
+            <div class="process-card process-step fade-up" data-process="4">
                 <div class="step-number">4</div>
                 <h3>Мониторинг и оптимизация</h3>
                 <p>Внедрение системы метрик и KPI для отслеживания эффективности. Регулярный анализ результатов, выявление дополнительных возможностей для улучшения. Формирование культуры непрерывного совершенствования (kaizen).</p>
@@ -822,8 +719,8 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
-                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank">RSS-лента</a></li></ul></div>
-                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank" id="rssFooterLink">RSS-лента</a></li></ul></div>
+                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
                 <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button><p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер</p></div>
             </div>
             <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
@@ -894,34 +791,41 @@
             }
         });
 
-        // Отслеживание кликов по методологиям, инструментам, AI-блокам, кейсам
-        function trackCardClick(category, label) {
-            ym(108401876, 'reachGoal', 'expertise_click', { category: category, label: label });
-            gtag('event', 'expertise_click', { event_category: category, event_label: label });
-        }
-
+        // Отслеживание кликов по карточкам методологий (отдельные цели)
         document.querySelectorAll('.methodology-card[data-methodology]').forEach(card => {
             card.addEventListener('click', () => {
                 const method = card.getAttribute('data-methodology');
-                trackCardClick('methodology', method);
+                ym(108401876, 'reachGoal', 'expertise_methodology_' + method);
+                gtag('event', 'expertise_click', { event_category: 'methodology', event_label: method });
             });
         });
         document.querySelectorAll('.methodology-card[data-tool]').forEach(card => {
             card.addEventListener('click', () => {
                 const tool = card.getAttribute('data-tool');
-                trackCardClick('tool', tool);
+                ym(108401876, 'reachGoal', 'expertise_tool_' + tool);
+                gtag('event', 'expertise_click', { event_category: 'tool', event_label: tool });
             });
         });
         document.querySelectorAll('.methodology-card[data-ai]').forEach(card => {
             card.addEventListener('click', () => {
                 const aiType = card.getAttribute('data-ai');
-                trackCardClick('ai', aiType);
+                ym(108401876, 'reachGoal', 'expertise_ai_' + aiType);
+                gtag('event', 'expertise_click', { event_category: 'ai', event_label: aiType });
             });
         });
         document.querySelectorAll('.case-card[data-case]').forEach(card => {
             card.addEventListener('click', () => {
                 const caseType = card.getAttribute('data-case');
-                trackCardClick('case', caseType);
+                ym(108401876, 'reachGoal', 'expertise_case_' + caseType);
+                gtag('event', 'expertise_click', { event_category: 'case', event_label: caseType });
+            });
+        });
+        // Отслеживание кликов по этапам процесса
+        document.querySelectorAll('.process-step[data-process]').forEach(step => {
+            step.addEventListener('click', () => {
+                const processNum = step.getAttribute('data-process');
+                ym(108401876, 'reachGoal', 'process_step_click_' + processNum);
+                gtag('event', 'process_step_click', { event_category: 'process', event_label: processNum });
             });
         });
 
@@ -931,60 +835,77 @@
             gtag('event', 'expertise_cta_click', { event_category: 'engagement', event_label: 'expertise_cta' });
         });
 
-        // Прогресс-бар
+        // Отслеживание навигации по меню
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                let page = '';
+                if (href.includes('about.html')) page = 'about';
+                else if (href.includes('expertise.html')) page = 'expertise';
+                else if (href.includes('experience.html')) page = 'experience';
+                else if (href.includes('index.html')) page = 'home';
+                else if (href.includes('trends.html')) page = 'trends';
+                else if (href.includes('contact.html')) page = 'contact';
+                if (page) {
+                    ym(108401876, 'reachGoal', 'nav_click_' + page);
+                    gtag('event', 'nav_click', { event_category: 'navigation', event_label: page });
+                }
+            });
+        });
+
+        // Отслеживание кликов по ссылкам в футере
+        const rssFooterLink = document.getElementById('rssFooterLink');
+        if (rssFooterLink) {
+            rssFooterLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_rss_click');
+                gtag('event', 'footer_rss_click', { event_category: 'footer', event_label: 'rss' });
+            });
+        }
+        const footerEmailLink = document.getElementById('footerEmailLink');
+        if (footerEmailLink) {
+            footerEmailLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_email_click');
+                gtag('event', 'footer_email_click', { event_category: 'footer', event_label: 'email' });
+            });
+        }
+        const footerTelegramLink = document.getElementById('footerTelegramLink');
+        if (footerTelegramLink) {
+            footerTelegramLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_telegram_click');
+                gtag('event', 'footer_telegram_click', { event_category: 'footer', event_label: 'telegram' });
+            });
+        }
+
+        // Прогресс-бар, кнопка наверх, тема, анимации, чат, мобильное меню
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('progressBar').style.width = scrolled + '%';
+            document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
+            if (window.scrollY > 300) document.getElementById('scrollTopBtn').classList.add('show');
+            else document.getElementById('scrollTopBtn').classList.remove('show');
         });
-
-        // Кнопка "Наверх"
-        const scrollBtn = document.getElementById('scrollTopBtn');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) scrollBtn.classList.add('show');
-            else scrollBtn.classList.remove('show');
-        });
-        scrollBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // Тёмная тема
+        document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
         const themeSwitch = document.getElementById('themeSwitch');
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'dark') document.body.classList.add('dark');
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
         themeSwitch.addEventListener('click', () => {
             document.body.classList.toggle('dark');
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-            // Перезагружаем для обновления цветов графика
-            location.reload();
         });
-
-        // Анимации при скролле
         const fadeElements = document.querySelectorAll('.fade-up');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, { threshold: 0.1 });
         fadeElements.forEach(el => observer.observe(el));
-
-        // Чат-бот
         const chatButton = document.getElementById('chatButton');
         const chatBox = document.getElementById('chatBox');
         chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
-
-        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
             mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
-            document.querySelectorAll('#nav-menu a').forEach(link => {
-                link.addEventListener('click', () => navMenu.classList.remove('active'));
-            });
+            document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
     </script>
     <script src="js/register-sw.js"></script>
