@@ -25,7 +25,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Яндекс.Метрика (новый счётчик для scm-news.ru) -->
+    <!-- Google tag (gtag.js) - GA4 новый ресурс -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DM41FJYWX0');
+    </script>
+
+    <!-- Яндекс.Метрика (счётчик scm-news.ru) -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -33,19 +42,28 @@
             for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
             k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
         })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108401876', 'ym');
-
         ym(108401876, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-C5X9R6HPQY');
+    <!-- Микроразметка Schema.org (Person) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Дмитрий Панибратский",
+      "url": "https://scm-news.ru/",
+      "sameAs": [
+        "https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45",
+        "https://career.habr.com/djdeman",
+        "https://surgut.zarplata.ru/resume/8fdf7b6dff10564de80039ed1f614a6773334f"
+      ],
+      "knowsAbout": ["Supply Chain Management", "Logistics", "Digital Transformation", "Python", "GitHub Actions", "PWA", "SEO"],
+      "worksFor": {
+        "@type": "Organization",
+        "name": "SCM News"
+      }
+    }
     </script>
 
     <style>
