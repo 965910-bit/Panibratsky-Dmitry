@@ -8,6 +8,8 @@
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
+
+    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -24,14 +26,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Яндекс.Метрика -->
+    <!-- Яндекс.Метрика (новый счётчик для scm-news.ru) -->
     <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-        ym(105620027, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108401876', 'ym');
+
+        ym(108401876, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/105620027" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C5X9R6HPQY"></script>
@@ -78,8 +85,17 @@
             transition: background 0.3s, color 0.3s;
             font-size: 16px;
         }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
-        @media (max-width: 768px) { body { font-size: 15px; } }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        @media (max-width: 768px) {
+            body {
+                font-size: 15px;
+            }
+        }
+        /* Прогресс-бар */
         .progress-container {
             position: fixed;
             top: 0;
@@ -95,6 +111,7 @@
             width: 0%;
             transition: width 0.1s;
         }
+        /* Кнопка "Наверх" */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -111,13 +128,20 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 100;
             border: none;
             font-size: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .scroll-top.show { opacity: 1; visibility: visible; }
-        .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+        /* Переключатель темы */
         .theme-switch {
             position: fixed;
             bottom: 30px;
@@ -132,21 +156,36 @@
             cursor: pointer;
             box-shadow: var(--card-shadow);
         }
-        .theme-switch i { font-size: 18px; color: var(--text-primary); }
+        .theme-switch i {
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+        /* Анимации при скролле */
         .fade-up {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Хлебные крошки */
         .breadcrumb {
             padding: 100px 0 20px;
             font-size: 14px;
             color: var(--text-muted);
         }
-        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        /* Шапка */
         header {
-            background-color: rgba(255,255,255,0.95);
+            background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             position: fixed;
@@ -154,7 +193,9 @@
             width: 100%;
             z-index: 1000;
         }
-        body.dark header { background-color: rgba(15,23,42,0.95); }
+        body.dark header {
+            background-color: rgba(15, 23, 42, 0.95);
+        }
         .nav-container {
             display: flex;
             justify-content: space-between;
@@ -167,7 +208,9 @@
             color: var(--text-primary);
             text-decoration: none;
         }
-        .logo-dot { color: var(--gold); }
+        .logo-dot {
+            color: var(--gold);
+        }
         nav ul {
             display: flex;
             list-style: none;
@@ -180,14 +223,16 @@
             font-size: 14px;
             transition: color 0.2s;
         }
-        nav ul li a:hover, nav ul li a.active { color: var(--accent); }
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: var(--accent);
+        }
         .mobile-menu-btn {
             display: none;
             background: none;
             border: none;
             font-size: 22px;
             cursor: pointer;
-            color: var(--text-primary);
         }
         @media (max-width: 768px) {
             nav ul {
@@ -196,18 +241,20 @@
                 top: 100%;
                 left: 0;
                 width: 100%;
-                background: var(--bg-primary);
+                background: white;
                 padding: 16px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.1);
                 flex-direction: column;
                 gap: 12px;
             }
-            nav ul.active { display: flex; }
-            .mobile-menu-btn { display: block; }
-            .scroll-top, .theme-switch { bottom: 20px; }
-            .scroll-top { right: 20px; }
-            .theme-switch { left: 20px; }
+            nav ul.active {
+                display: flex;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
         }
+        /* Чат-бот */
         .chat-widget {
             position: fixed;
             bottom: 100px;
@@ -226,8 +273,14 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             transition: transform 0.2s;
         }
-        .chat-button:hover { transform: scale(1.05); background: var(--gold); }
-        .chat-button i { font-size: 26px; color: white; }
+        .chat-button:hover {
+            transform: scale(1.05);
+            background: var(--gold);
+        }
+        .chat-button i {
+            font-size: 26px;
+            color: white;
+        }
         .chat-box {
             position: absolute;
             bottom: 70px;
@@ -242,9 +295,21 @@
             visibility: hidden;
             transition: all 0.3s;
         }
-        .chat-box.open { opacity: 1; visibility: visible; }
-        .chat-header { background: var(--accent); color: white; padding: 12px; font-weight: 600; }
-        .chat-body { padding: 12px; font-size: 14px; color: var(--text-secondary); }
+        .chat-box.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .chat-header {
+            background: var(--accent);
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .chat-body {
+            padding: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
         .chat-quick button {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -255,9 +320,15 @@
             margin: 4px;
         }
         @media (max-width: 768px) {
-            .chat-widget { bottom: 80px; right: 20px; }
-            .chat-box { width: 260px; }
+            .chat-widget {
+                bottom: 80px;
+                right: 20px;
+            }
+            .chat-box {
+                width: 260px;
+            }
         }
+        /* Страница about */
         .page-hero {
             background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
             padding: 120px 0 40px;
@@ -287,8 +358,15 @@
             display: block;
             border: 3px solid var(--gold);
         }
-        .video-container { margin: 30px 0; text-align: center; }
-        video { max-width: 100%; border-radius: 20px; box-shadow: var(--card-shadow); }
+        .video-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        video {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+        }
         .philosophy-grid, .results-grid, .certificates-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -305,7 +383,9 @@
             position: relative;
             cursor: pointer;
         }
-        .philosophy-card:hover, .result-card:hover, .certificate-card:hover { transform: translateY(-4px); }
+        .philosophy-card:hover, .result-card:hover, .certificate-card:hover {
+            transform: translateY(-4px);
+        }
         .certificate-card[data-tooltip]::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -323,8 +403,14 @@
             pointer-events: none;
             transition: opacity 0.2s;
         }
-        .certificate-card[data-tooltip]:hover::after { opacity: 1; }
-        .result-number { font-size: 44px; font-weight: 800; color: var(--accent); }
+        .certificate-card[data-tooltip]:hover::after {
+            opacity: 1;
+        }
+        .result-number {
+            font-size: 44px;
+            font-weight: 800;
+            color: var(--accent);
+        }
         .card {
             background: var(--bg-primary);
             border-radius: 20px;
@@ -364,7 +450,10 @@
             margin-top: 20px;
             transition: 0.2s;
         }
-        .cta-button:hover { background: #c19b2c; transform: translateY(-2px); }
+        .cta-button:hover {
+            background: #c19b2c;
+            transform: translateY(-2px);
+        }
         footer {
             background: #0f172a;
             color: white;
@@ -392,8 +481,12 @@
             height: 3px;
             background: var(--gold);
         }
-        .footer-column ul { list-style: none; }
-        .footer-column ul li { margin-bottom: 12px; }
+        .footer-column ul {
+            list-style: none;
+        }
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
         .footer-column ul li a {
             color: rgba(255,255,255,0.8);
             text-decoration: none;
@@ -402,7 +495,10 @@
             gap: 8px;
             transition: 0.2s;
         }
-        .footer-column ul li a:hover { color: white; padding-left: 5px; }
+        .footer-column ul li a:hover {
+            color: white;
+            padding-left: 5px;
+        }
         .footer-install-btn {
             background: #1e40af;
             color: white;
@@ -421,8 +517,12 @@
             font-size: 13px;
         }
         @media (max-width: 768px) {
-            .page-hero h1 { font-size: 32px; }
-            .philosophy-grid, .results-grid, .certificates-grid { grid-template-columns: 1fr; }
+            .page-hero h1 {
+                font-size: 32px;
+            }
+            .philosophy-grid, .results-grid, .certificates-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -545,6 +645,7 @@
 
     <script src="js/subscribe.js"></script>
     <script>
+        // Данные сертификатов
         const certificates = [
             { title: "Диплом о профессиональной переподготовке (Коммерческий директор)", file: "files/diplom-commercial-director.pdf", description: "Квалификация: коммерческий директор. Компетенции: управление продажами, бюджетирование, стратегическое планирование, управление командой." },
             { title: "CPL (Certified in Russian Logistics) – 2020", file: "files/cpl-panibratsky.html", description: "Базовый сертификат в области логистики." },
@@ -582,29 +683,33 @@
             `).join('');
         }
 
+        // Отслеживание кликов по сертификатам
         document.querySelectorAll('.certificate-card').forEach(card => {
             card.addEventListener('click', () => {
-                ym(105620027, 'reachGoal', 'certificate_click');
+                ym(108401876, 'reachGoal', 'certificate_click');
                 gtag('event', 'certificate_click', { event_category: 'engagement', event_label: 'certificate' });
             });
         });
 
+        // Отслеживание видео
         const video = document.getElementById('aboutVideo');
         if (video) {
             video.addEventListener('play', () => {
-                ym(105620027, 'reachGoal', 'video_play');
+                ym(108401876, 'reachGoal', 'video_play');
                 gtag('event', 'video_play', { event_category: 'engagement', event_label: 'about_video' });
             });
         }
 
+        // Отслеживание Telegram
         const telegramLink = document.getElementById('telegramLink');
         if (telegramLink) {
             telegramLink.addEventListener('click', () => {
-                ym(105620027, 'reachGoal', 'telegram_click');
+                ym(108401876, 'reachGoal', 'telegram_click');
                 gtag('event', 'telegram_click', { event_category: 'social', event_label: 'telegram' });
             });
         }
 
+        // Прогресс-бар, кнопка наверх, тема, анимации, чат, меню
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -622,7 +727,9 @@
         });
 
         const fadeElements = document.querySelectorAll('.fade-up');
-        const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
         fadeElements.forEach(el => observer.observe(el));
 
         const chatButton = document.getElementById('chatButton');
