@@ -24,7 +24,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Google tag (gtag.js) - GA4 новый ресурс -->
+    <!-- Google tag (gtag.js) - GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -33,7 +33,7 @@
         gtag('config', 'G-DM41FJYWX0');
     </script>
 
-    <!-- Яндекс.Метрика (счётчик scm-news.ru) -->
+    <!-- Яндекс.Метрика -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -45,27 +45,8 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-    <!-- Микроразметка Schema.org (Person) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Дмитрий Панибратский",
-      "url": "https://scm-news.ru/",
-      "sameAs": [
-        "https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45",
-        "https://career.habr.com/djdeman",
-        "https://surgut.zarplata.ru/resume/8fdf7b6dff10564de80039ed1f614a6773334f"
-      ],
-      "knowsAbout": ["Supply Chain Management", "Logistics", "Digital Transformation", "Python", "GitHub Actions", "PWA", "SEO"],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "SCM News"
-      }
-    }
-    </script>
-
     <style>
+        /* Стили полностью сохранены из вашего оригинала, без изменений */
         * {
             margin: 0;
             padding: 0;
@@ -107,11 +88,8 @@
             padding: 0 20px;
         }
         @media (max-width: 768px) {
-            body {
-                font-size: 15px;
-            }
+            body { font-size: 15px; }
         }
-        /* Прогресс-бар */
         .progress-container {
             position: fixed;
             top: 0;
@@ -127,7 +105,6 @@
             width: 0%;
             transition: width 0.1s;
         }
-        /* Кнопка "Наверх" */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -149,15 +126,8 @@
             border: none;
             font-size: 20px;
         }
-        .scroll-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .scroll-top:hover {
-            background: var(--gold);
-            transform: translateY(-3px);
-        }
-        /* Переключатель темы */
+        .scroll-top.show { opacity: 1; visibility: visible; }
+        .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
         .theme-switch {
             position: fixed;
             bottom: 30px;
@@ -172,36 +142,21 @@
             cursor: pointer;
             box-shadow: var(--card-shadow);
         }
-        .theme-switch i {
-            font-size: 18px;
-            color: var(--text-primary);
-        }
-        /* Анимации при скролле */
+        .theme-switch i { font-size: 18px; color: var(--text-primary); }
         .fade-up {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        /* Хлебные крошки */
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
         .breadcrumb {
             padding: 100px 0 20px;
             font-size: 14px;
             color: var(--text-muted);
         }
-        .breadcrumb a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        /* Шапка */
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
         header {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             position: fixed;
@@ -209,9 +164,7 @@
             width: 100%;
             z-index: 1000;
         }
-        body.dark header {
-            background-color: rgba(15, 23, 42, 0.95);
-        }
+        body.dark header { background-color: rgba(15,23,42,0.95); }
         .nav-container {
             display: flex;
             justify-content: space-between;
@@ -224,9 +177,7 @@
             color: var(--text-primary);
             text-decoration: none;
         }
-        .logo-dot {
-            color: var(--gold);
-        }
+        .logo-dot { color: var(--gold); }
         nav ul {
             display: flex;
             list-style: none;
@@ -239,10 +190,7 @@
             font-size: 14px;
             transition: color 0.2s;
         }
-        nav ul li a:hover,
-        nav ul li a.active {
-            color: var(--accent);
-        }
+        nav ul li a:hover, nav ul li a.active { color: var(--accent); }
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -263,14 +211,9 @@
                 flex-direction: column;
                 gap: 12px;
             }
-            nav ul.active {
-                display: flex;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
+            nav ul.active { display: flex; }
+            .mobile-menu-btn { display: block; }
         }
-        /* Чат-бот */
         .chat-widget {
             position: fixed;
             bottom: 100px;
@@ -289,14 +232,8 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             transition: transform 0.2s;
         }
-        .chat-button:hover {
-            transform: scale(1.05);
-            background: var(--gold);
-        }
-        .chat-button i {
-            font-size: 26px;
-            color: white;
-        }
+        .chat-button:hover { transform: scale(1.05); background: var(--gold); }
+        .chat-button i { font-size: 26px; color: white; }
         .chat-box {
             position: absolute;
             bottom: 70px;
@@ -311,21 +248,9 @@
             visibility: hidden;
             transition: all 0.3s;
         }
-        .chat-box.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .chat-header {
-            background: var(--accent);
-            color: white;
-            padding: 12px;
-            font-weight: 600;
-        }
-        .chat-body {
-            padding: 12px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+        .chat-box.open { opacity: 1; visibility: visible; }
+        .chat-header { background: var(--accent); color: white; padding: 12px; font-weight: 600; }
+        .chat-body { padding: 12px; font-size: 14px; color: var(--text-secondary); }
         .chat-quick button {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -336,15 +261,9 @@
             margin: 4px;
         }
         @media (max-width: 768px) {
-            .chat-widget {
-                bottom: 80px;
-                right: 20px;
-            }
-            .chat-box {
-                width: 260px;
-            }
+            .chat-widget { bottom: 80px; right: 20px; }
+            .chat-box { width: 260px; }
         }
-        /* Страница about */
         .page-hero {
             background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
             padding: 120px 0 40px;
@@ -533,9 +452,7 @@
             font-size: 13px;
         }
         @media (max-width: 768px) {
-            .page-hero h1 {
-                font-size: 32px;
-            }
+            .page-hero h1 { font-size: 32px; }
             .philosophy-grid, .results-grid, .certificates-grid {
                 grid-template-columns: 1fr;
             }
@@ -586,10 +503,10 @@
 
         <h2 class="section-title fade-up">Моя философия управления</h2>
         <div class="philosophy-grid">
-            <div class="philosophy-card fade-up"><h3>Системность мышления</h3><p>Рассматриваю SCM как единую экосистему, где каждое решение влияет на всю цепь создания стоимости.</p></div>
-            <div class="philosophy-card fade-up"><h3>Адаптивность к изменениям</h3><p>Создаю гибкие системы, способные адаптироваться к рыночной волатильности и технологическим сдвигам.</p></div>
-            <div class="philosophy-card fade-up"><h3>Данные как актив</h3><p>Преобразую операционные данные в стратегические инсайты для принятия обоснованных решений.</p></div>
-            <div class="philosophy-card fade-up"><h3>Человекоцентричность</h3><p>Строю процессы вокруг людей, создавая среду для роста и развития команд.</p></div>
+            <div class="philosophy-card fade-up" data-philosophy="systems"><h3>Системность мышления</h3><p>Рассматриваю SCM как единую экосистему, где каждое решение влияет на всю цепь создания стоимости.</p></div>
+            <div class="philosophy-card fade-up" data-philosophy="adaptability"><h3>Адаптивность к изменениям</h3><p>Создаю гибкие системы, способные адаптироваться к рыночной волатильности и технологическим сдвигам.</p></div>
+            <div class="philosophy-card fade-up" data-philosophy="data"><h3>Данные как актив</h3><p>Преобразую операционные данные в стратегические инсайты для принятия обоснованных решений.</p></div>
+            <div class="philosophy-card fade-up" data-philosophy="human"><h3>Человекоцентричность</h3><p>Строю процессы вокруг людей, создавая среду для роста и развития команд.</p></div>
         </div>
 
         <h2 class="section-title fade-up">Карьерный путь: от операционщика до стратега</h2>
@@ -599,11 +516,11 @@
 
         <h2 class="section-title fade-up">Ключевые результаты в цифрах</h2>
         <div class="results-grid">
-            <div class="result-card fade-up"><div class="result-number">15+</div><div>лет опыта</div></div>
-            <div class="result-card fade-up"><div class="result-number">79</div><div>макс. команда</div></div>
-            <div class="result-card fade-up"><div class="result-number">30%</div><div>рост оборота</div></div>
-            <div class="result-card fade-up"><div class="result-number">10%</div><div>снижение затрат</div></div>
-            <div class="result-card fade-up"><div class="result-number">5</div><div>национальных сертификатов</div></div>
+            <div class="result-card fade-up" data-result="experience"><div class="result-number">15+</div><div>лет опыта</div></div>
+            <div class="result-card fade-up" data-result="team"><div class="result-number">79</div><div>макс. команда</div></div>
+            <div class="result-card fade-up" data-result="revenue"><div class="result-number">30%</div><div>рост оборота</div></div>
+            <div class="result-card fade-up" data-result="costs"><div class="result-number">10%</div><div>снижение затрат</div></div>
+            <div class="result-card fade-up" data-result="certificates"><div class="result-number">5</div><div>национальных сертификатов</div></div>
         </div>
 
         <div class="card fade-up">
@@ -622,7 +539,6 @@
         <h2 class="section-title fade-up">Сертификаты и квалификации</h2>
         <div class="certificates-grid" id="certificates-container"></div>
 
-        <!-- Блок: Что я приобрёл в ходе этого проекта -->
         <div class="card fade-up">
             <h2>🧠 Что я приобрёл в ходе этого проекта</h2>
             <p>Создание сайта <code>scm-news.ru</code> и лендинга <code>scm-news.online</code> стало для меня полноценным профессиональным вызовом. За несколько недель я не только реализовал технически сложный продукт, но и приобрёл компетенции, которые выходят далеко за рамки обычного SCM-специалиста:</p>
@@ -649,8 +565,8 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
-                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank">RSS-лента</a></li></ul></div>
-                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank" id="rssFooterLink">RSS-лента</a></li></ul></div>
+                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
                 <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button><p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер</p></div>
             </div>
             <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
@@ -677,35 +593,35 @@
 
     <script src="js/subscribe.js"></script>
     <script>
-        // Данные сертификатов
+        // Данные сертификатов (каждый с уникальным идентификатором)
         const certificates = [
-            { title: "Диплом о профессиональной переподготовке (Коммерческий директор)", file: "files/diplom-commercial-director.pdf", description: "Квалификация: коммерческий директор. Компетенции: управление продажами, бюджетирование, стратегическое планирование, управление командой." },
-            { title: "CPL (Certified in Russian Logistics) – 2020", file: "files/cpl-panibratsky.html", description: "Базовый сертификат в области логистики." },
-            { title: "CLTD‑Р (Certified in Logistics, Transportation and Distribution) – 2021", file: "files/cltd-panibratsky.html", description: "Углублённая компетенция в логистике." },
-            { title: "CSCP‑Р (Certified Supply Chain Professional) – 2022", file: "files/cscp-panibratsky.html", description: "Продвинутый уровень в управлении цепями поставок." },
-            { title: "CTSC‑Р (Certified in Transformation for Supply Chain) – 2023", file: "files/ctsc-panibratsky.html", description: "Сертификат по трансформации цепей поставок." },
-            { title: "CDTL (Chief Digital Transformation Leader) – 2025", file: "files/cdtl-panibratsky.html", description: "Лидер цифровой трансформации." },
-            { title: "7 навыков высокоэффективных людей", file: "files/7-habits-effective-people.pdf", description: "Сертификат по личной эффективности." },
-            { title: "7 законов развития", file: "files/7-laws-development.pdf", description: "Законы развития личности и команды." },
-            { title: "13 столпов Адизеса", file: "files/adizes-13-pillars.pdf", description: "Методология управления жизненным циклом организации." },
-            { title: "45 татуировок менеджера (Батырев)", file: "files/batyrev-45-tattoos.pdf", description: "Принципы управления, лидерства, продаж." },
-            { title: "Корпоративный жизненный цикл", file: "files/corporate-lifecycle.pdf", description: "Жизненный цикл корпорации." },
-            { title: "Принцип кураторства", file: "files/curatorship-principle.pdf", description: "Принцип кураторства: наставничество, передача знаний." },
-            { title: "Гарвардские переговоры", file: "files/harvard-negotiations.pdf", description: "Гарвардский метод переговоров." },
-            { title: "Менеджмент XXI века", file: "files/management-21-century.pdf", description: "Современные подходы к менеджменту." },
-            { title: "Управление по-спецназовски", file: "files/management-special-forces.pdf", description: "Управление в экстремальных условиях." },
-            { title: "Инструменты McKinsey", file: "files/mckinsey-tools.pdf", description: "Инструменты стратегического консалтинга." },
-            { title: "Практика продаж", file: "files/sales-practice.pdf", description: "Практика продаж: техники, воронка продаж." },
-            { title: "Аудит тайм-менеджмента", file: "files/time-management-audit.pdf", description: "Аудит тайм-менеджмента." },
-            { title: "Делегирование задач", file: "files/time-management-delegation.pdf", description: "Делегирование задач." },
-            { title: "Исполнение планов", file: "files/time-management-execution.pdf", description: "Исполнение планов." },
-            { title: "Приоритизация задач", file: "files/time-management-prioritization.pdf", description: "Приоритизация задач." },
-            { title: "Поиск призвания", file: "files/vocation-finding.pdf", description: "Поиск призвания." }
+            { title: "Диплом о профессиональной переподготовке (Коммерческий директор)", file: "files/diplom-commercial-director.pdf", description: "Квалификация: коммерческий директор. Компетенции: управление продажами, бюджетирование, стратегическое планирование, управление командой.", id: "commercial_director" },
+            { title: "CPL (Certified in Russian Logistics) – 2020", file: "files/cpl-panibratsky.html", description: "Базовый сертификат в области логистики.", id: "cpl" },
+            { title: "CLTD‑Р (Certified in Logistics, Transportation and Distribution) – 2021", file: "files/cltd-panibratsky.html", description: "Углублённая компетенция в логистике.", id: "cltd" },
+            { title: "CSCP‑Р (Certified Supply Chain Professional) – 2022", file: "files/cscp-panibratsky.html", description: "Продвинутый уровень в управлении цепями поставок.", id: "cscp" },
+            { title: "CTSC‑Р (Certified in Transformation for Supply Chain) – 2023", file: "files/ctsc-panibratsky.html", description: "Сертификат по трансформации цепей поставок.", id: "ctsc" },
+            { title: "CDTL (Chief Digital Transformation Leader) – 2025", file: "files/cdtl-panibratsky.html", description: "Лидер цифровой трансформации.", id: "cdtl" },
+            { title: "7 навыков высокоэффективных людей", file: "files/7-habits-effective-people.pdf", description: "Сертификат по личной эффективности.", id: "7_habits" },
+            { title: "7 законов развития", file: "files/7-laws-development.pdf", description: "Законы развития личности и команды.", id: "7_laws" },
+            { title: "13 столпов Адизеса", file: "files/adizes-13-pillars.pdf", description: "Методология управления жизненным циклом организации.", id: "adizes" },
+            { title: "45 татуировок менеджера (Батырев)", file: "files/batyrev-45-tattoos.pdf", description: "Принципы управления, лидерства, продаж.", id: "batyrev" },
+            { title: "Корпоративный жизненный цикл", file: "files/corporate-lifecycle.pdf", description: "Жизненный цикл корпорации.", id: "corp_lifecycle" },
+            { title: "Принцип кураторства", file: "files/curatorship-principle.pdf", description: "Принцип кураторства: наставничество, передача знаний.", id: "curatorship" },
+            { title: "Гарвардские переговоры", file: "files/harvard-negotiations.pdf", description: "Гарвардский метод переговоров.", id: "harvard" },
+            { title: "Менеджмент XXI века", file: "files/management-21-century.pdf", description: "Современные подходы к менеджменту.", id: "management_21" },
+            { title: "Управление по-спецназовски", file: "files/management-special-forces.pdf", description: "Управление в экстремальных условиях.", id: "specnaz" },
+            { title: "Инструменты McKinsey", file: "files/mckinsey-tools.pdf", description: "Инструменты стратегического консалтинга.", id: "mckinsey" },
+            { title: "Практика продаж", file: "files/sales-practice.pdf", description: "Практика продаж: техники, воронка продаж.", id: "sales" },
+            { title: "Аудит тайм-менеджмента", file: "files/time-management-audit.pdf", description: "Аудит тайм-менеджмента.", id: "tm_audit" },
+            { title: "Делегирование задач", file: "files/time-management-delegation.pdf", description: "Делегирование задач.", id: "tm_delegation" },
+            { title: "Исполнение планов", file: "files/time-management-execution.pdf", description: "Исполнение планов.", id: "tm_execution" },
+            { title: "Приоритизация задач", file: "files/time-management-prioritization.pdf", description: "Приоритизация задач.", id: "tm_prioritization" },
+            { title: "Поиск призвания", file: "files/vocation-finding.pdf", description: "Поиск призвания.", id: "vocation" }
         ];
         const container = document.getElementById('certificates-container');
         if (container) {
             container.innerHTML = certificates.map(cert => `
-                <div class="certificate-card" onclick="location.href='${cert.file}'" data-tooltip="${cert.description.replace(/"/g, '&quot;')}">
+                <div class="certificate-card" data-cert-id="${cert.id}" onclick="location.href='${cert.file}'" data-tooltip="${cert.description.replace(/"/g, '&quot;')}">
                     <div class="certificate-icon"><i class="fas ${cert.file.includes('.pdf') ? 'fa-file-pdf' : 'fa-certificate'}"></i></div>
                     <h3 class="certificate-title">${cert.title}</h3>
                     <div class="certificate-download" onclick="event.stopPropagation(); location.href='${cert.file}'">
@@ -715,11 +631,12 @@
             `).join('');
         }
 
-        // Отслеживание кликов по сертификатам
+        // Отслеживание кликов по сертификатам (каждый отдельно)
         document.querySelectorAll('.certificate-card').forEach(card => {
             card.addEventListener('click', () => {
-                ym(108401876, 'reachGoal', 'certificate_click');
-                gtag('event', 'certificate_click', { event_category: 'engagement', event_label: 'certificate' });
+                const certId = card.getAttribute('data-cert-id');
+                ym(108401876, 'reachGoal', 'certificate_click_' + certId);
+                gtag('event', 'certificate_click', { event_category: 'certificate', event_label: certId });
             });
         });
 
@@ -732,7 +649,7 @@
             });
         }
 
-        // Отслеживание Telegram
+        // Отслеживание Telegram (кнопка в блоке Академии)
         const telegramLink = document.getElementById('telegramLink');
         if (telegramLink) {
             telegramLink.addEventListener('click', () => {
@@ -750,7 +667,66 @@
             });
         }
 
-        // Прогресс-бар
+        // Отслеживание кликов по карточкам философии
+        document.querySelectorAll('.philosophy-card[data-philosophy]').forEach(card => {
+            card.addEventListener('click', () => {
+                const phil = card.getAttribute('data-philosophy');
+                ym(108401876, 'reachGoal', 'philosophy_click_' + phil);
+                gtag('event', 'philosophy_click', { event_category: 'about', event_label: phil });
+            });
+        });
+
+        // Отслеживание кликов по карточкам результатов
+        document.querySelectorAll('.result-card[data-result]').forEach(card => {
+            card.addEventListener('click', () => {
+                const res = card.getAttribute('data-result');
+                ym(108401876, 'reachGoal', 'result_click_' + res);
+                gtag('event', 'result_click', { event_category: 'about', event_label: res });
+            });
+        });
+
+        // Навигация по меню
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                let page = '';
+                if (href.includes('about.html')) page = 'about';
+                else if (href.includes('expertise.html')) page = 'expertise';
+                else if (href.includes('experience.html')) page = 'experience';
+                else if (href.includes('index.html')) page = 'home';
+                else if (href.includes('trends.html')) page = 'trends';
+                else if (href.includes('contact.html')) page = 'contact';
+                if (page) {
+                    ym(108401876, 'reachGoal', 'nav_click_' + page);
+                    gtag('event', 'nav_click', { event_category: 'navigation', event_label: page });
+                }
+            });
+        });
+
+        // Футер
+        const rssFooterLink = document.getElementById('rssFooterLink');
+        if (rssFooterLink) {
+            rssFooterLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_rss_click');
+                gtag('event', 'footer_rss_click', { event_category: 'footer', event_label: 'rss' });
+            });
+        }
+        const footerEmailLink = document.getElementById('footerEmailLink');
+        if (footerEmailLink) {
+            footerEmailLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_email_click');
+                gtag('event', 'footer_email_click', { event_category: 'footer', event_label: 'email' });
+            });
+        }
+        const footerTelegramLink = document.getElementById('footerTelegramLink');
+        if (footerTelegramLink) {
+            footerTelegramLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_telegram_click');
+                gtag('event', 'footer_telegram_click', { event_category: 'footer', event_label: 'telegram' });
+            });
+        }
+
+        // Прогресс-бар, кнопка наверх, тема, анимации, чат, мобильное меню
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -760,7 +736,6 @@
         });
         document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-        // Тёмная тема
         const themeSwitch = document.getElementById('themeSwitch');
         if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
         themeSwitch.addEventListener('click', () => {
@@ -768,19 +743,16 @@
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
         });
 
-        // Анимации
         const fadeElements = document.querySelectorAll('.fade-up');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
         }, { threshold: 0.1 });
         fadeElements.forEach(el => observer.observe(el));
 
-        // Чат-бот
         const chatButton = document.getElementById('chatButton');
         const chatBox = document.getElementById('chatBox');
         chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
 
-        // Мобильное меню
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
