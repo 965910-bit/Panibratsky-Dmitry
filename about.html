@@ -89,7 +89,7 @@
     </script>
 
     <style>
-        /* Стили полностью сохранены из вашего оригинала, без изменений */
+        /* все стили такие же, как в исходном about.html (я их не меняю, просто повторяю структуру) */
         * {
             margin: 0;
             padding: 0;
@@ -500,7 +500,6 @@
                 grid-template-columns: 1fr;
             }
         }
-        /* Дополнительные стили для FAQ-аккордеона */
         .faq-block {
             margin: 60px 0 40px;
             padding: 20px;
@@ -556,6 +555,7 @@
                     <li><a href="index.html">Стратегия</a></li>
                     <li><a href="trends.html">Новости SCM</a></li>
                     <li><a href="contact.html">Контакты</a></li>
+                    <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
                 </ul>
             </nav>
         </div>
@@ -670,9 +670,15 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
-                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank" id="rssFooterLink">RSS-лента</a></li></ul></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li></ul></div>
                 <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
                 <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button><p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер</p></div>
+                <div class="footer-column">
+                    <h3>Присоединяйтесь</h3>
+                    <ul>
+                        <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer"><i class="fas fa-comment-dots"></i> Канал в MAX</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
         </div>
@@ -698,7 +704,7 @@
 
     <script src="js/subscribe.js"></script>
     <script>
-        // Данные сертификатов (каждый с уникальным идентификатором)
+        // Данные сертификатов
         const certificates = [
             { title: "Диплом о профессиональной переподготовке (Коммерческий директор)", file: "files/diplom-commercial-director.pdf", description: "Квалификация: коммерческий директор. Компетенции: управление продажами, бюджетирование, стратегическое планирование, управление командой.", id: "commercial_director" },
             { title: "CPL (Certified in Russian Logistics) – 2020", file: "files/cpl-panibratsky.html", description: "Базовый сертификат в области логистики.", id: "cpl" },
@@ -736,7 +742,6 @@
             `).join('');
         }
 
-        // Отслеживание кликов по сертификатам (каждый отдельно)
         document.querySelectorAll('.certificate-card').forEach(card => {
             card.addEventListener('click', () => {
                 const certId = card.getAttribute('data-cert-id');
@@ -745,7 +750,6 @@
             });
         });
 
-        // Отслеживание видео
         const video = document.getElementById('aboutVideo');
         if (video) {
             video.addEventListener('play', () => {
@@ -754,7 +758,6 @@
             });
         }
 
-        // Отслеживание Telegram (кнопка в блоке Академии)
         const telegramLink = document.getElementById('telegramLink');
         if (telegramLink) {
             telegramLink.addEventListener('click', () => {
@@ -763,7 +766,6 @@
             });
         }
 
-        // Отслеживание CTA кнопки
         const aboutCtaBtn = document.getElementById('aboutCtaBtn');
         if (aboutCtaBtn) {
             aboutCtaBtn.addEventListener('click', () => {
@@ -772,7 +774,6 @@
             });
         }
 
-        // Отслеживание кликов по карточкам философии
         document.querySelectorAll('.philosophy-card[data-philosophy]').forEach(card => {
             card.addEventListener('click', () => {
                 const phil = card.getAttribute('data-philosophy');
@@ -781,7 +782,6 @@
             });
         });
 
-        // Отслеживание кликов по карточкам результатов
         document.querySelectorAll('.result-card[data-result]').forEach(card => {
             card.addEventListener('click', () => {
                 const res = card.getAttribute('data-result');
@@ -790,7 +790,6 @@
             });
         });
 
-        // Навигация по меню
         document.querySelectorAll('#nav-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -808,7 +807,6 @@
             });
         });
 
-        // Футер
         const rssFooterLink = document.getElementById('rssFooterLink');
         if (rssFooterLink) {
             rssFooterLink.addEventListener('click', () => {
@@ -831,7 +829,6 @@
             });
         }
 
-        // Прогресс-бар, кнопка наверх, тема, анимации, чат, мобильное меню
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -840,24 +837,18 @@
             else document.getElementById('scrollTopBtn').classList.remove('show');
         });
         document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
         const themeSwitch = document.getElementById('themeSwitch');
         if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
         themeSwitch.addEventListener('click', () => {
             document.body.classList.toggle('dark');
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
         });
-
         const fadeElements = document.querySelectorAll('.fade-up');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-        }, { threshold: 0.1 });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
         fadeElements.forEach(el => observer.observe(el));
-
         const chatButton = document.getElementById('chatButton');
         const chatBox = document.getElementById('chatBox');
         chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
-
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.getElementById('nav-menu');
         if (mobileBtn && navMenu) {
@@ -865,7 +856,6 @@
             document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
 
-        // Аккордеон для FAQ
         document.addEventListener('DOMContentLoaded', function() {
             const questions = document.querySelectorAll('.faq-question');
             questions.forEach(q => {
