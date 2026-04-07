@@ -46,6 +46,48 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
+    <!-- Микроразметка FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Как вы начинали карьеру в SCM?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "С операционных позиций: водитель-экспедитор, кладовщик, менеджер по закупкам. Это дало глубокое понимание процессов «с земли». Затем последовательно рос до менеджера цепи поставок в «Леруа Мерлен» и генерального директора в других компаниях."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Какой самый сложный проект вы реализовали?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Полное переоснащение склада 4000 м² в «Леруа Мерлен»: внедрение системы мониторинга заказов, перестройка зон хранения, обучение команды 79 человек. Результат: продуктивность выросла на 20% за год, магазин вошёл в топ-10 по CSat."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Что вы сделали для автоматизации логистики?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Внедрил дашборды Power BI с ML-моделями для прогнозирования спроса, автоматизировал сбор отчётов через RPA, запустил PWA-портал SCM News с парсингом новостей через GitHub Actions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как вы управляли командой из 79 человек?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Использовал принципы бережливого управления: стандартизированные рабочие инструкции, визуальный менеджмент, ежедневные «быстрые» совещания, систему наставничества и геймификацию для повышения вовлечённости."
+          }
+        }
+      ]
+    }
+    </script>
+
     <style>
         /* Стили полностью сохранены из вашего оригинала, без изменений */
         * {
@@ -436,6 +478,46 @@
             .timeline { padding-left: 20px; }
             .timeline-item::before { left: -24px; }
         }
+        /* Дополнительные стили для FAQ-аккордеона */
+        .faq-block {
+            margin: 60px 0 40px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+        .faq-item {
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .faq-question {
+            font-weight: 700;
+            cursor: pointer;
+            padding: 16px 0;
+            position: relative;
+            padding-right: 30px;
+            font-size: 18px;
+        }
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            top: 16px;
+            font-size: 22px;
+            font-weight: 400;
+        }
+        .faq-question.active::after {
+            content: '−';
+        }
+        .faq-answer {
+            display: none;
+            padding-bottom: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .faq-answer.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -637,6 +719,28 @@
         </div>
     </div>
 
+    <div class="container">
+        <div class="faq-block">
+            <h2 class="section-title">Часто задаваемые вопросы</h2>
+            <div class="faq-item">
+                <div class="faq-question">Как вы начинали карьеру в SCM?</div>
+                <div class="faq-answer">С операционных позиций: водитель-экспедитор, кладовщик, менеджер по закупкам. Это дало глубокое понимание процессов «с земли». Затем последовательно рос до менеджера цепи поставок в «Леруа Мерлен» и генерального директора в других компаниях.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Какой самый сложный проект вы реализовали?</div>
+                <div class="faq-answer">Полное переоснащение склада 4000 м² в «Леруа Мерлен»: внедрение системы мониторинга заказов, перестройка зон хранения, обучение команды 79 человек. Результат: продуктивность выросла на 20% за год, магазин вошёл в топ-10 по CSat.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Что вы сделали для автоматизации логистики?</div>
+                <div class="faq-answer">Внедрил дашборды Power BI с ML-моделями для прогнозирования спроса, автоматизировал сбор отчётов через RPA, запустил PWA-портал SCM News с парсингом новостей через GitHub Actions.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Как вы управляли командой из 79 человек?</div>
+                <div class="faq-answer">Использовал принципы бережливого управления: стандартизированные рабочие инструкции, визуальный менеджмент, ежедневные «быстрые» совещания, систему наставничества и геймификацию для повышения вовлечённости.</div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="container">
             <div class="footer-container">
@@ -775,6 +879,18 @@
             mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
             document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
+
+        // Аккордеон для FAQ
+        document.addEventListener('DOMContentLoaded', function() {
+            const questions = document.querySelectorAll('.faq-question');
+            questions.forEach(q => {
+                q.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const answer = this.nextElementSibling;
+                    answer.classList.toggle('show');
+                });
+            });
+        });
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
