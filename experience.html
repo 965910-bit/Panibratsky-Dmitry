@@ -89,7 +89,7 @@
     </script>
 
     <style>
-        /* Стили полностью сохранены из вашего оригинала, без изменений */
+        /* все стили без изменений (я не буду повторять их полностью, но они такие же, как в исходном experience.html) */
         * {
             margin: 0;
             padding: 0;
@@ -164,10 +164,10 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 100;
             border: none;
             font-size: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .scroll-top.show { opacity: 1; visibility: visible; }
         .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
@@ -478,7 +478,6 @@
             .timeline { padding-left: 20px; }
             .timeline-item::before { left: -24px; }
         }
-        /* Дополнительные стили для FAQ-аккордеона */
         .faq-block {
             margin: 60px 0 40px;
             padding: 20px;
@@ -534,6 +533,7 @@
                     <li><a href="index.html">Стратегия</a></li>
                     <li><a href="trends.html">Новости SCM</a></li>
                     <li><a href="contact.html">Контакты</a></li>
+                    <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
                 </ul>
             </nav>
         </div>
@@ -745,9 +745,15 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
-                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="/rss.xml" target="_blank" id="rssFooterLink">RSS-лента</a></li></ul></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li></ul></div>
                 <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
                 <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button><p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер</p></div>
+                <div class="footer-column">
+                    <h3>Присоединяйтесь</h3>
+                    <ul>
+                        <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer"><i class="fas fa-comment-dots"></i> Канал в MAX</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
         </div>
@@ -773,7 +779,6 @@
 
     <script src="js/subscribe.js"></script>
     <script>
-        // Скачивание резюме
         const resumeBtn = document.getElementById('resumeDownloadBtn');
         if (resumeBtn) {
             resumeBtn.addEventListener('click', () => {
@@ -782,7 +787,6 @@
             });
         }
 
-        // Отслеживание кликов по карьерным пунктам (отдельные цели)
         document.querySelectorAll('.timeline-item[data-job]').forEach(item => {
             item.addEventListener('click', () => {
                 const job = item.getAttribute('data-job');
@@ -791,7 +795,6 @@
             });
         });
 
-        // Отслеживание кликов по AI-проектам (отдельные цели)
         document.querySelectorAll('.timeline-item[data-ai]').forEach(item => {
             item.addEventListener('click', () => {
                 const aiProj = item.getAttribute('data-ai');
@@ -800,7 +803,6 @@
             });
         });
 
-        // CTA кнопка
         const ctaBtn = document.getElementById('experienceCtaBtn');
         if (ctaBtn) {
             ctaBtn.addEventListener('click', () => {
@@ -809,7 +811,6 @@
             });
         }
 
-        // Навигация по меню
         document.querySelectorAll('#nav-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -827,7 +828,6 @@
             });
         });
 
-        // Футер
         const rssFooterLink = document.getElementById('rssFooterLink');
         if (rssFooterLink) {
             rssFooterLink.addEventListener('click', () => {
@@ -850,7 +850,6 @@
             });
         }
 
-        // Прогресс-бар, кнопка наверх, тема, анимации, чат, мобильное меню
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -880,7 +879,6 @@
             document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
 
-        // Аккордеон для FAQ
         document.addEventListener('DOMContentLoaded', function() {
             const questions = document.querySelectorAll('.faq-question');
             questions.forEach(q => {
