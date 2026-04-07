@@ -46,58 +46,8 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-    <!-- Микроразметка FAQ -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Как быстро вы отвечаете на заявки?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Обычно в течение 1 рабочего дня. Если вопрос срочный, лучше написать в Telegram."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Можно ли связаться с вами через Telegram?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Да, ссылка на Telegram-канал и личный аккаунт есть в разделе «Контакты». Я отвечаю в рабочие часы, но вы можете оставить сообщение в любое время."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Какие форматы сотрудничества вы предлагаете?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Стратегический консалтинг по SCM, аудит цепей поставок, внедрение цифровых инструментов, обучение команд, разработка индивидуальных курсов через Академию SCM."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Нужно ли регистрироваться, чтобы отправить заявку?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Нет, форма доступна без регистрации. Просто заполните поля и отправьте."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Принимаете ли вы заявки на партнёрство и вакансии?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Да, в форме выберите соответствующий тип заявки. Рассматриваю предложения о партнёрстве, интеграциях, а также вакансии для HR-специалистов в области SCM."
-          }
-        }
-      ]
-    }
-    </script>
-
     <style>
-        /* Стили полностью сохранены из вашего оригинала, без изменений */
+        /* все стили без изменений (такие же, как в исходном contact.html) */
         * {
             margin: 0;
             padding: 0;
@@ -537,7 +487,6 @@
             .page-hero h1 { font-size: 32px; }
             .map-container iframe { height: 300px; }
         }
-        /* Дополнительные стили для FAQ-аккордеона */
         .faq-block {
             margin: 60px 0 40px;
             padding: 20px;
@@ -593,6 +542,7 @@
                     <li><a href="index.html">Стратегия</a></li>
                     <li><a href="trends.html">Новости SCM</a></li>
                     <li><a href="contact.html" class="active">Контакты</a></li>
+                    <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
                 </ul>
             </nav>
         </div>
@@ -747,7 +697,7 @@
                         <li><a href="index.html">Стратегия</a></li>
                         <li><a href="trends.html">Новости SCM</a></li>
                         <li><a href="contact.html">Контакты</a></li>
-                        <li><a href="/rss.xml" target="_blank" id="rssFooterLink">RSS-лента</a></li>
+                        <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -761,6 +711,12 @@
                     <h3>Приложение</h3>
                     <button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button>
                     <p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Присоединяйтесь</h3>
+                    <ul>
+                        <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer"><i class="fas fa-comment-dots"></i> Канал в MAX</a></li>
+                    </ul>
                 </div>
             </div>
             <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
@@ -787,7 +743,6 @@
 
     <script src="js/subscribe.js"></script>
     <script>
-        // URL Google Apps Script для формы
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzgYyJmzN_sf1cNiAX-11F_YgUUyYvPbjaRRfDGiAq6CWazZUGynpfOplzmvbs34KO4Mg/exec';
 
         const form = document.getElementById('leadForm');
@@ -849,7 +804,6 @@
             }
         }
 
-        // Отслеживание кликов по карточкам резюме (раздельные цели)
         document.querySelectorAll('.resume-card').forEach(card => {
             card.addEventListener('click', () => {
                 const platform = card.getAttribute('data-resume');
@@ -866,7 +820,6 @@
             });
         });
 
-        // Отслеживание кликов по ссылкам в контактной информации
         const emailLink = document.getElementById('emailLink');
         if (emailLink) {
             emailLink.addEventListener('click', () => {
@@ -882,7 +835,6 @@
             });
         }
 
-        // Отслеживание кликов по ссылкам в футере
         const rssFooterLink = document.getElementById('rssFooterLink');
         if (rssFooterLink) {
             rssFooterLink.addEventListener('click', () => {
@@ -905,7 +857,6 @@
             });
         }
 
-        // Отслеживание кликов по пунктам меню (навигация)
         document.querySelectorAll('#nav-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -923,7 +874,6 @@
             });
         });
 
-        // Прогресс-бар
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -971,7 +921,6 @@
             });
         }
 
-        // Аккордеон для FAQ
         document.addEventListener('DOMContentLoaded', function() {
             const questions = document.querySelectorAll('.faq-question');
             questions.forEach(q => {
