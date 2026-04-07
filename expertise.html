@@ -7,6 +7,7 @@
     <meta name="description" content="Экспертиза в управлении цепями поставок (SCM): методологии Lean, ABC-XYZ, BPM, инструменты цифровой трансформации, реальные кейсы и результаты.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
+    <link rel="canonical" href="https://scm-news.ru/expertise.html" />
     <link rel="icon" href="1favicon.ico" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
@@ -46,8 +47,74 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
+    <!-- Микроразметка FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Что такое ABC-XYZ анализ и как он помогает управлять запасами?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ABC-XYZ анализ разделяет товары по двум критериям: ABC – по вкладу в оборот (A – самые ценные), XYZ – по стабильности спроса (X – стабильный). Матрица 3×3 позволяет выбрать стратегию управления: для AX – JIT, для CZ – только под заказ. Это снижает затоваривание и дефицит."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Чем Lean отличается от Six Sigma?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Lean фокусируется на устранении потерь (muda) и ускорении потока, а Six Sigma – на снижении вариабельности и дефектов. Lean Six Sigma объединяет оба подхода: сначала убирают потери, потом стабилизируют процесс."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "В чём разница между WMS, TMS и ERP?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "WMS управляет складскими операциями (приёмка, хранение, отгрузка). TMS – транспортной логистикой (маршрутизация, отслеживание). ERP – это интегрированная система для планирования ресурсов предприятия, которая может включать модули WMS и TMS."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как ИИ помогает в прогнозировании спроса?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Нейросети анализируют исторические данные, сезонность, макроэкономические показатели и даже соцсети, чтобы строить точные прогнозы. Это снижает ошибки на 30–50% и уменьшает страховые запасы."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Какие результаты даёт оптимизация складских операций на примере вашего кейса?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "В одном из проектов мы внедрили Value Stream Mapping и перенастроили WMS. Производительность выросла на 35%, время обработки заказа сократилось на 28%, точность инвентаризации достигла 99,5%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как выбрать между WMS, TMS и ERP для малого бизнеса?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Начните с WMS, если основные проблемы на складе. TMS нужен при больших объёмах перевозок и сложных маршрутах. ERP — когда требуется интеграция с финансами и производством. Для малого бизнеса часто достаточно облачного WMS с базовым TMS-модулем."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Каков ROI от внедрения AI в прогнозирование спроса?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Компании получают снижение ошибок прогноза на 30–50%, уменьшение страховых запасов на 20–30%, сокращение дефицита и повышение уровня сервиса. Окупаемость обычно составляет 6–12 месяцев."
+          }
+        }
+      ]
+    }
+    </script>
+
     <style>
-        /* (стили такие же, как в вашем оригинале, без изменений) */
+        /* Стили полностью сохранены из вашего оригинала, без изменений */
         * {
             margin: 0;
             padding: 0;
@@ -464,6 +531,46 @@
             .result-stats { flex-direction: column; gap: 10px; }
             .methodology-grid, .process-grid, .cases-grid { grid-template-columns: 1fr; }
         }
+        /* Дополнительные стили для FAQ-аккордеона */
+        .faq-block {
+            margin: 60px 0 40px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+        .faq-item {
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .faq-question {
+            font-weight: 700;
+            cursor: pointer;
+            padding: 16px 0;
+            position: relative;
+            padding-right: 30px;
+            font-size: 18px;
+        }
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            top: 16px;
+            font-size: 22px;
+            font-weight: 400;
+        }
+        .faq-question.active::after {
+            content: '−';
+        }
+        .faq-answer {
+            display: none;
+            padding-bottom: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .faq-answer.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -715,6 +822,40 @@
         </div>
     </div>
 
+    <div class="container">
+        <div class="faq-block">
+            <h2 class="section-title">Часто задаваемые вопросы</h2>
+            <div class="faq-item">
+                <div class="faq-question">Что такое ABC-XYZ анализ и как он помогает управлять запасами?</div>
+                <div class="faq-answer">ABC-XYZ анализ разделяет товары по двум критериям: ABC – по вкладу в оборот (A – самые ценные), XYZ – по стабильности спроса (X – стабильный). Матрица 3×3 позволяет выбрать стратегию управления: для AX – JIT, для CZ – только под заказ. Это снижает затоваривание и дефицит.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Чем Lean отличается от Six Sigma?</div>
+                <div class="faq-answer">Lean фокусируется на устранении потерь (muda) и ускорении потока, а Six Sigma – на снижении вариабельности и дефектов. Lean Six Sigma объединяет оба подхода: сначала убирают потери, потом стабилизируют процесс.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">В чём разница между WMS, TMS и ERP?</div>
+                <div class="faq-answer">WMS управляет складскими операциями (приёмка, хранение, отгрузка). TMS – транспортной логистикой (маршрутизация, отслеживание). ERP – это интегрированная система для планирования ресурсов предприятия, которая может включать модули WMS и TMS.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Как ИИ помогает в прогнозировании спроса?</div>
+                <div class="faq-answer">Нейросети анализируют исторические данные, сезонность, макроэкономические показатели и даже соцсети, чтобы строить точные прогнозы. Это снижает ошибки на 30–50% и уменьшает страховые запасы.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Какие результаты даёт оптимизация складских операций на примере вашего кейса?</div>
+                <div class="faq-answer">В одном из проектов мы внедрили Value Stream Mapping и перенастроили WMS. Производительность выросла на 35%, время обработки заказа сократилось на 28%, точность инвентаризации достигла 99,5%.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Как выбрать между WMS, TMS и ERP для малого бизнеса?</div>
+                <div class="faq-answer">Начните с WMS, если основные проблемы на складе. TMS нужен при больших объёмах перевозок и сложных маршрутах. ERP — когда требуется интеграция с финансами и производством. Для малого бизнеса часто достаточно облачного WMS с базовым TMS-модулем.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Каков ROI от внедрения AI в прогнозирование спроса?</div>
+                <div class="faq-answer">Компании получают снижение ошибок прогноза на 30–50%, уменьшение страховых запасов на 20–30%, сокращение дефицита и повышение уровня сервиса. Окупаемость обычно составляет 6–12 месяцев.</div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="container">
             <div class="footer-container">
@@ -907,6 +1048,18 @@
             mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
             document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
+
+        // Аккордеон для FAQ
+        document.addEventListener('DOMContentLoaded', function() {
+            const questions = document.querySelectorAll('.faq-question');
+            questions.forEach(q => {
+                q.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const answer = this.nextElementSibling;
+                    answer.classList.toggle('show');
+                });
+            });
+        });
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
