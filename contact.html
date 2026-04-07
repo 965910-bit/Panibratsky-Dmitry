@@ -46,8 +46,58 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
+    <!-- Микроразметка FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Как быстро вы отвечаете на заявки?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Обычно в течение 1 рабочего дня. Если вопрос срочный, лучше написать в Telegram."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Можно ли связаться с вами через Telegram?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да, ссылка на Telegram-канал и личный аккаунт есть в разделе «Контакты». Я отвечаю в рабочие часы, но вы можете оставить сообщение в любое время."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Какие форматы сотрудничества вы предлагаете?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Стратегический консалтинг по SCM, аудит цепей поставок, внедрение цифровых инструментов, обучение команд, разработка индивидуальных курсов через Академию SCM."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Нужно ли регистрироваться, чтобы отправить заявку?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Нет, форма доступна без регистрации. Просто заполните поля и отправьте."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Принимаете ли вы заявки на партнёрство и вакансии?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да, в форме выберите соответствующий тип заявки. Рассматриваю предложения о партнёрстве, интеграциях, а также вакансии для HR-специалистов в области SCM."
+          }
+        }
+      ]
+    }
+    </script>
+
     <style>
-        /* Стили без изменений, такие же как в вашем оригинале */
+        /* Стили полностью сохранены из вашего оригинала, без изменений */
         * {
             margin: 0;
             padding: 0;
@@ -487,6 +537,46 @@
             .page-hero h1 { font-size: 32px; }
             .map-container iframe { height: 300px; }
         }
+        /* Дополнительные стили для FAQ-аккордеона */
+        .faq-block {
+            margin: 60px 0 40px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+        .faq-item {
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .faq-question {
+            font-weight: 700;
+            cursor: pointer;
+            padding: 16px 0;
+            position: relative;
+            padding-right: 30px;
+            font-size: 18px;
+        }
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            top: 16px;
+            font-size: 22px;
+            font-weight: 400;
+        }
+        .faq-question.active::after {
+            content: '−';
+        }
+        .faq-answer {
+            display: none;
+            padding-bottom: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .faq-answer.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -614,6 +704,32 @@
                     </div>
                     <div class="resume-arrow">→</div>
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="faq-block">
+            <h2 class="section-title">Часто задаваемые вопросы</h2>
+            <div class="faq-item">
+                <div class="faq-question">Как быстро вы отвечаете на заявки?</div>
+                <div class="faq-answer">Обычно в течение 1 рабочего дня. Если вопрос срочный, лучше написать в Telegram.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Можно ли связаться с вами через Telegram?</div>
+                <div class="faq-answer">Да, ссылка на Telegram-канал и личный аккаунт есть в разделе «Контакты». Я отвечаю в рабочие часы, но вы можете оставить сообщение в любое время.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Какие форматы сотрудничества вы предлагаете?</div>
+                <div class="faq-answer">Стратегический консалтинг по SCM, аудит цепей поставок, внедрение цифровых инструментов, обучение команд, разработка индивидуальных курсов через Академию SCM.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Нужно ли регистрироваться, чтобы отправить заявку?</div>
+                <div class="faq-answer">Нет, форма доступна без регистрации. Просто заполните поля и отправьте.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Принимаете ли вы заявки на партнёрство и вакансии?</div>
+                <div class="faq-answer">Да, в форме выберите соответствующий тип заявки. Рассматриваю предложения о партнёрстве, интеграциях, а также вакансии для HR-специалистов в области SCM.</div>
             </div>
         </div>
     </div>
@@ -854,6 +970,18 @@
                 link.addEventListener('click', () => navMenu.classList.remove('active'));
             });
         }
+
+        // Аккордеон для FAQ
+        document.addEventListener('DOMContentLoaded', function() {
+            const questions = document.querySelectorAll('.faq-question');
+            questions.forEach(q => {
+                q.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const answer = this.nextElementSibling;
+                    answer.classList.toggle('show');
+                });
+            });
+        });
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
