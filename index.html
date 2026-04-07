@@ -57,7 +57,7 @@
           "name": "Что такое управление цепями поставок (SCM) и почему это стратегически важно?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Управление цепями поставок — это не просто логистика, а стратегическая дисциплина, определяющая конкурентоспособность бизнеса. Оно охватывае планирование, sourcing, производство, доставку и возвраты, интегрируя все процессы для создания ценности для клиента при оптимальных затратах."
+            "text": "Управление цепями поставок — это не просто логистика, а стратегическая дисциплина, определяющая конкурентоспособность бизнеса. Оно охватывает планирование, sourcing, производство, доставку и возвраты, интегрируя все процессы для создания ценности для клиента при оптимальных затратах."
           }
         },
         {
@@ -97,7 +97,7 @@
     </script>
 
     <style>
-        /* (здесь ваши стили – без изменений, я их не трогаю) */
+        /* Все ваши оригинальные стили без изменений */
         * {
             margin: 0;
             padding: 0;
@@ -901,7 +901,7 @@
                 margin: 0 auto;
             }
         }
-        /* Дополнительные стили для FAQ-аккордеона */
+        /* Дополнительные стили для FAQ-аккордеона (не конфликтуют) */
         .faq-block {
             margin: 60px 0 40px;
             padding: 20px;
@@ -981,7 +981,6 @@
         </ul>
     </div>
 
-    <!-- Здесь идёт основной контент вашей страницы (без изменений) -->
     <section id="hero" class="hero-section fade-up">
         <div class="container hero-container">
             <div class="hero-content">
@@ -1145,7 +1144,7 @@
         </div>
     </section>
 
-    <!-- Блок FAQ (аккордеон) для страницы Стратегия -->
+    <!-- Блок FAQ (аккордеон) -->
     <div class="container">
         <div class="faq-block">
             <h2 class="section-title">Часто задаваемые вопросы</h2>
@@ -1204,13 +1203,189 @@
 
     <script src="js/subscribe.js"></script>
     <script>
-        // Ваши существующие скрипты (без изменений) ...
+        // Ваш существующий скрипт полностью сохранён без изменений
         async function loadHomeNews() {
-            // ...
+            const container = document.getElementById('homeNewsGrid');
+            if (!container) return;
+            container.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
+            try {
+                const response = await fetch('data/news.json?_=' + Date.now());
+                if (!response.ok) throw new Error();
+                const allNews = await response.json();
+                const latest = allNews.slice(0, 6);
+                if (latest.length === 0) { container.innerHTML = '<div class="news-card">Новостей пока нет.</div>'; return; }
+                function formatDate(d) { return d.toLocaleDateString('ru-RU', { day:'numeric', month:'long', year:'numeric' }); }
+                function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+                container.innerHTML = latest.map(n => `
+                    <div class="news-card">
+                        <div class="news-date"><span>${formatDate(new Date(n.pubDate))}</span><span class="news-source">${escapeHtml(n.source)}</span></div>
+                        <h3 class="news-title">${escapeHtml(n.title)}</h3>
+                        <p class="news-excerpt">${escapeHtml(n.description)}</p>
+                        <a href="${n.link}" target="_blank" class="news-link home-news-link" data-news-link="${escapeHtml(n.link)}">Читать на источнике →</a>
+                    </div>
+                `).join('');
+                document.querySelectorAll('.home-news-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        ym(108401876, 'reachGoal', 'home_news_link_click');
+                        gtag('event', 'home_news_link_click', { event_category: 'news', event_label: link.getAttribute('data-news-link') });
+                    });
+                });
+            } catch(e) { container.innerHTML = '<div class="news-card">Не удалось загрузить новости.</div>'; }
         }
         loadHomeNews();
-        // ... все остальные ваши функции
-        // Добавляем скрипт для аккордеона FAQ
+
+        const mainCtaBtn = document.getElementById('mainCtaBtn');
+        if (mainCtaBtn) {
+            mainCtaBtn.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'main_cta_click');
+                gtag('event', 'main_cta_click', { event_category: 'engagement', event_label: 'main_cta' });
+            });
+        }
+
+        const allNewsBtn = document.getElementById('allNewsBtn');
+        if (allNewsBtn) {
+            allNewsBtn.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'all_news_click');
+                gtag('event', 'all_news_click', { event_category: 'engagement', event_label: 'all_news' });
+            });
+        }
+
+        document.querySelectorAll('.result-card[data-result]').forEach(card => {
+            card.addEventListener('click', () => {
+                const resultType = card.getAttribute('data-result');
+                ym(108401876, 'reachGoal', 'result_click_' + resultType);
+                gtag('event', 'result_click', { event_category: 'results', event_label: resultType });
+            });
+        });
+
+        document.querySelectorAll('.methodology-card[data-methodology]').forEach(card => {
+            card.addEventListener('click', () => {
+                const method = card.getAttribute('data-methodology');
+                ym(108401876, 'reachGoal', 'methodology_click_' + method);
+                gtag('event', 'methodology_click', { event_category: 'methodology', event_label: method });
+            });
+        });
+
+        document.querySelectorAll('.philosophy-item[data-leadership]').forEach(item => {
+            item.addEventListener('click', () => {
+                const leadership = item.getAttribute('data-leadership');
+                ym(108401876, 'reachGoal', 'leadership_click_' + leadership);
+                gtag('event', 'leadership_click', { event_category: 'leadership', event_label: leadership });
+            });
+        });
+
+        document.querySelectorAll('.principle-card[data-principle]').forEach(card => {
+            card.addEventListener('click', () => {
+                const principle = card.getAttribute('data-principle');
+                ym(108401876, 'reachGoal', 'principle_click_' + principle);
+                gtag('event', 'principle_click', { event_category: 'philosophy', event_label: principle });
+            });
+        });
+
+        document.querySelectorAll('.flip-card[data-academy]').forEach(card => {
+            card.addEventListener('click', () => {
+                const academyType = card.getAttribute('data-academy');
+                ym(108401876, 'reachGoal', 'academy_flip_click_' + academyType);
+                gtag('event', 'academy_flip_click', { event_category: 'academy', event_label: academyType });
+            });
+        });
+        const academyFullLink = document.getElementById('academyFullLink');
+        if (academyFullLink) {
+            academyFullLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'academy_full_site_click');
+                gtag('event', 'academy_full_site_click', { event_category: 'academy', event_label: 'full_site' });
+            });
+        }
+
+        const mainPhilosophyCard = document.querySelector('.philosophy-card[data-philosophy="main"]');
+        if (mainPhilosophyCard) {
+            mainPhilosophyCard.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'main_philosophy_card_click');
+                gtag('event', 'main_philosophy_card_click', { event_category: 'philosophy', event_label: 'main' });
+            });
+        }
+
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                let page = '';
+                if (href.includes('about.html')) page = 'about';
+                else if (href.includes('expertise.html')) page = 'expertise';
+                else if (href.includes('experience.html')) page = 'experience';
+                else if (href.includes('index.html')) page = 'home';
+                else if (href.includes('trends.html')) page = 'trends';
+                else if (href.includes('contact.html')) page = 'contact';
+                if (page) {
+                    ym(108401876, 'reachGoal', 'nav_click_' + page);
+                    gtag('event', 'nav_click', { event_category: 'navigation', event_label: page });
+                }
+            });
+        });
+
+        const rssFooterLink = document.getElementById('rssFooterLink');
+        if (rssFooterLink) {
+            rssFooterLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_rss_click');
+                gtag('event', 'footer_rss_click', { event_category: 'footer', event_label: 'rss' });
+            });
+        }
+        const footerEmailLink = document.getElementById('footerEmailLink');
+        if (footerEmailLink) {
+            footerEmailLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_email_click');
+                gtag('event', 'footer_email_click', { event_category: 'footer', event_label: 'email' });
+            });
+        }
+        const footerTelegramLink = document.getElementById('footerTelegramLink');
+        if (footerTelegramLink) {
+            footerTelegramLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_telegram_click');
+                gtag('event', 'footer_telegram_click', { event_category: 'footer', event_label: 'telegram' });
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
+            if (window.scrollY > 300) document.getElementById('scrollTopBtn').classList.add('show');
+            else document.getElementById('scrollTopBtn').classList.remove('show');
+        });
+        document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        const themeSwitch = document.getElementById('themeSwitch');
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
+        const chatButton = document.getElementById('chatButton');
+        const chatBox = document.getElementById('chatBox');
+        chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        if (mobileBtn && navMenu) {
+            mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+            document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
+        }
+
+        const toc = document.getElementById('toc');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) toc.classList.add('visible');
+            else toc.classList.remove('visible');
+        });
+        document.querySelectorAll('.toc a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Аккордеон для FAQ
         document.addEventListener('DOMContentLoaded', function() {
             const questions = document.querySelectorAll('.faq-question');
             questions.forEach(q => {
@@ -1221,7 +1396,6 @@
                 });
             });
         });
-        // (остальной код ваших скриптов должен быть здесь, я его не трогаю, просто добавляю аккордеон)
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
