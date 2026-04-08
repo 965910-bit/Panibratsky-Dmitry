@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Библиотека методологий SCM</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
+        .app-container { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar .logo {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            display: block;
+            text-decoration: none;
+            color: #0f172a;
+        }
+        .sidebar .logo span { color: #d4af37; }
+        .sidebar nav ul { list-style: none; }
+        .sidebar nav ul li { margin-bottom: 8px; }
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .sidebar nav ul li a:hover, .sidebar nav ul li a.active {
+            background: #eef2ff;
+            color: #1e40af;
+        }
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 24px 32px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .methodology-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .methodology-card h3 {
+            margin-bottom: 12px;
+            color: #1e40af;
+        }
+        .glossary-list dt {
+            font-weight: 700;
+            margin-top: 12px;
+        }
+        .glossary-list dd {
+            margin-left: 20px;
+            color: #334155;
+        }
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="index.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html" class="active"><i class="fas fa-book"></i> Библиотека</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>📚 Библиотека методологий SCM</h1>
+        <p>Справочная информация по ключевым моделям, процессам и терминам.</p>
+
+        <div class="card">
+            <h2>Методологии и модели</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card">
+                    <h3>SCOR (Supply Chain Operations Reference)</h3>
+                    <p>Модель для описания, измерения и улучшения цепей поставок. Включает 6 процессов: Plan, Source, Make, Deliver, Return, Enable.</p>
+                </div>
+                <div class="methodology-card">
+                    <h3>DCOR (Design Chain Operations Reference)</h3>
+                    <p>Расширение SCOR для управления жизненным циклом продукта (Research, Design, Integrate, Amplify).</p>
+                </div>
+                <div class="methodology-card">
+                    <h3>S&OP (Sales and Operations Planning)</h3>
+                    <p>Процесс ежемесячного планирования, объединяющий продажи, производство, логистику и финансы.</p>
+                </div>
+                <div class="methodology-card">
+                    <h3>E2E (End-to-End) планирование</h3>
+                    <p>Сквозное планирование цепочки поставок от поставщика до клиента с учётом всех ограничений.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Глоссарий ключевых терминов</h2>
+            <dl class="glossary-list">
+                <dt>OTIF (On-Time In-Full)</dt>
+                <dd>Доставка вовремя и в полном объёме.</dd>
+                <dt>Inventory Turnover</dt>
+                <dd>Оборачиваемость запасов = COGS / средний запас.</dd>
+                <dt>Perfect Order Fulfillment</dt>
+                <dd>Идеальный заказ – доставлен вовремя, полностью, без повреждений, с корректными документами.</dd>
+                <dt>Cash-to-Cash Cycle</dt>
+                <dd>Финансовый цикл = DIO + DSO – DPO.</dd>
+                <dt>Forecast Accuracy</dt>
+                <dd>Точность прогноза спроса (обычно 1 – MAPE).</dd>
+                <dt>Total Supply Chain Cost</dt>
+                <dd>Общие затраты на управление цепочкой поставок (% от выручки).</dd>
+            </dl>
+        </div>
+    </main>
+</div>
+</body>
+</html>
