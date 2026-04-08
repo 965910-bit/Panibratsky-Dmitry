@@ -100,19 +100,19 @@
             border: 1px solid #e2e8f0;
             transition: 0.2s;
         }
-        .methodology-grid {
+        .methodology-grid, .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
             margin-top: 16px;
         }
-        .methodology-card {
+        .methodology-card, .kpi-card {
             background: #f8fafc;
             border-radius: 16px;
             padding: 20px;
             border-left: 4px solid #1e40af;
         }
-        .methodology-card h3 {
+        .methodology-card h3, .kpi-card h3 {
             margin-bottom: 12px;
             color: #1e40af;
         }
@@ -158,11 +158,11 @@
 
     <main class="main-content">
         <h1>📚 Библиотека методологий SCM</h1>
-        <p>Справочная информация по ключевым моделям, процессам, терминам и лучшим практикам управления цепями поставок.</p>
+        <p>Справочная информация по ключевым моделям, процессам, терминам, KPI и лучшим практикам управления цепями поставок.</p>
 
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Поиск по методологиям, терминам, практикам...">
+            <input type="text" id="searchInput" placeholder="Поиск по методологиям, KPI, терминам...">
             <button id="searchButton">Найти</button>
             <button id="resetButton" class="reset">Сбросить</button>
         </div>
@@ -207,7 +207,203 @@
             </div>
         </div>
 
-        <!-- Блок 2: Расширенный глоссарий ключевых терминов -->
+        <!-- Блок 2: Полный справочник KPI с формулами и пояснениями -->
+        <div class="card" data-card>
+            <h2>Полный справочник KPI (показатели эффективности)</h2>
+            <div class="kpi-grid">
+                <!-- 1. Метрики по модели SCOR -->
+                <div class="kpi-card" data-searchable>
+                    <h3>Perfect Order Fulfillment</h3>
+                    <p><strong>Формула:</strong> (Кол-во идеально выполненных заказов / Общее кол-во заказов) × 100%</p>
+                    <p><strong>Что показывает:</strong> Процент заказов, выполненных вовремя, полностью, без повреждений и с корректными документами. Ключевой интегральный показатель качества SCM.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>On-Time Delivery (OTD)</h3>
+                    <p><strong>Формула:</strong> (Кол-во доставок вовремя / Общее кол-во доставок) × 100%</p>
+                    <p><strong>Что показывает:</strong> Долю заказов, доставленных в согласованный срок. Отражает надёжность перевозчика.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Delivery In Full (DI)</h3>
+                    <p><strong>Формула:</strong> (Кол-во полностью отгруженных заказов / Общее кол-во заказов) × 100%</p>
+                    <p><strong>Что показывает:</strong> Долю заказов, отгруженных в полном объёме без замен.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Documentation Accuracy</h3>
+                    <p><strong>Формула:</strong> (Кол-во заказов с корректными документами / Общее кол-во заказов) × 100%</p>
+                    <p><strong>Что показывает:</strong> Долю заказов с правильно оформленными накладными, счетами и т.д.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Order Fulfillment Cycle Time</h3>
+                    <p><strong>Формула:</strong> Среднее (Фактическая дата отгрузки - Дата получения заказа)</p>
+                    <p><strong>Что показывает:</strong> Среднее время от получения заказа до его отгрузки. Отражает скорость реакции.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Total Supply Chain Cost</h3>
+                    <p><strong>Формула:</strong> Суммарные затраты на SCM (планирование, закупки, производство, доставка, возвраты, склад)</p>
+                    <p><strong>Что показывает:</strong> Общие затраты на управление цепочкой поставок. Часто выражается в % от выручки.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Cash-to-Cash Cycle Time</h3>
+                    <p><strong>Формула:</strong> DIO + DSO – DPO</p>
+                    <p><strong>Что показывает:</strong> Время от оплаты сырья до получения денег от клиента. Чем короче, тем лучше для ликвидности.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Inventory Days of Supply</h3>
+                    <p><strong>Формула:</strong> (Средний остаток запасов / Себестоимость продаж) × 365</p>
+                    <p><strong>Что показывает:</strong> На сколько дней текущей деятельности хватит имеющихся запасов.</p>
+                </div>
+                <!-- 2. Финансовые и экономические показатели -->
+                <div class="kpi-card" data-searchable>
+                    <h3>Gross Margin Return on Investment (GMROI)</h3>
+                    <p><strong>Формула:</strong> Валовая прибыль / Средние инвестиции в запасы</p>
+                    <p><strong>Что показывает:</strong> Сколько валовой прибыли приносит каждый рубль, вложенный в запасы.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Cost Per Unit (CPU)</h3>
+                    <p><strong>Формула:</strong> Общие транспортные затраты / Количество отгруженных единиц</p>
+                    <p><strong>Что показывает:</strong> Стоимость перевозки одной единицы товара.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Profit Margin (логистическая)</h3>
+                    <p><strong>Формула:</strong> (Выручка – Логистические расходы) / Выручка × 100%</p>
+                    <p><strong>Что показывает:</strong> Рентабельность логистической деятельности.</p>
+                </div>
+                <!-- 3. Показатели качества -->
+                <div class="kpi-card" data-searchable>
+                    <h3>Defect Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во дефектных товаров / Общее кол-во товаров) × 100%</p>
+                    <p><strong>Что показывает:</strong> Долю бракованной продукции в поставках или на складе.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Damage Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во повреждённых товаров / Общее кол-во отгруженных товаров) × 100%</p>
+                    <p><strong>Что показывает:</strong> Долю товаров, повреждённых при транспортировке или хранении.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Return Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во возвращённых товаров / Общее кол-во проданных товаров) × 100%</p>
+                    <p><strong>Что показывает:</strong> Долю возвращённых заказов (по разным причинам).</p>
+                </div>
+                <!-- 4. Управление запасами -->
+                <div class="kpi-card" data-searchable>
+                    <h3>Inventory Turnover</h3>
+                    <p><strong>Формула:</strong> Себестоимость проданных товаров (COGS) / Средняя стоимость запасов</p>
+                    <p><strong>Что показывает:</strong> Оборачиваемость запасов (сколько раз за период они обновились).</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Fill Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во доставленных единиц с первой попытки / Общее кол-во заказанных единиц) × 100%</p>
+                    <p><strong>Что показывает:</strong> Уровень удовлетворения спроса из наличного запаса без дефицита.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Stockout Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во дней с дефицитом / Общее кол-во дней в периоде) × 100%</p>
+                    <p><strong>Что показывает:</strong> Частоту отсутствия товара на складе.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Inventory Accuracy</h3>
+                    <p><strong>Формула:</strong> (Кол-во позиций с точным остатком / Общее кол-во позиций) × 100%</p>
+                    <p><strong>Что показывает:</strong> Точность учёта запасов по данным инвентаризации.</p>
+                </div>
+                <!-- 5. Складские показатели -->
+                <div class="kpi-card" data-searchable>
+                    <h3>Pick Accuracy</h3>
+                    <p><strong>Формула:</strong> (Кол-во правильно собранных позиций / Общее кол-во отобранных позиций) × 100%</p>
+                    <p><strong>Что показывает:</strong> Точность сборки заказов на складе.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Order Picking Productivity</h3>
+                    <p><strong>Формула:</strong> Отобранные позиции (или заказы) / Затраченные человеко-часы</p>
+                    <p><strong>Что показывает:</strong> Производительность труда сборщиков.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Space Utilization</h3>
+                    <p><strong>Формула:</strong> (Занятая площадь / Общая площадь склада) × 100%</p>
+                    <p><strong>Что показывает:</strong> Использование складских площадей.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Dock-to-Stock Cycle Time</h3>
+                    <p><strong>Формула:</strong> Время размещения - Время прибытия</p>
+                    <p><strong>Что показывает:</strong> Среднее время от получения товара до его размещения в ячейке хранения.</p>
+                </div>
+                <!-- 6. Транспортные показатели -->
+                <div class="kpi-card" data-searchable>
+                    <h3>Deadhead Percentage</h3>
+                    <p><strong>Формула:</strong> (Пробег без груза / Общий пробег) × 100%</p>
+                    <p><strong>Что показывает:</strong> Долю холостого пробега, снижающую эффективность транспорта.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Transport Utilization</h3>
+                    <p><strong>Формула:</strong> (Загруженный вес / Полная грузоподъёмность) × 100%</p>
+                    <p><strong>Что показывает:</strong> Загрузку транспорта.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Cost Per Kilometer (CPK)</h3>
+                    <p><strong>Формула:</strong> Общие затраты на перевозку / Общий пробег в километрах</p>
+                    <p><strong>Что показывает:</strong> Стоимость одного километра пробега.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Average Delivery Time</h3>
+                    <p><strong>Формула:</strong> Суммарное время всех доставок / Количество доставок</p>
+                    <p><strong>Что показывает:</strong> Среднее фактическое время доставки.</p>
+                </div>
+                <!-- 7. Показатели закупок -->
+                <div class="kpi-card" data-searchable>
+                    <h3>Supplier On-Time Delivery</h3>
+                    <p><strong>Формула:</strong> (Кол-во поставок вовремя / Общее кол-во поставок) × 100%</p>
+                    <p><strong>Что показывает:</strong> Своевременность поставок от поставщиков.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Supplier Quality Rating</h3>
+                    <p><strong>Формула:</strong> (1 – Дефекты на миллион / 1 000 000) × 100%</p>
+                    <p><strong>Что показывает:</strong> Оценку качества продукции поставщика.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Total Cost of Ownership (TCO)</h3>
+                    <p><strong>Формула:</strong> Цена закупки + Доставка + Таможня + Хранение + Обслуживание + Утилизация</p>
+                    <p><strong>Что показывает:</strong> Совокупную стоимость владения товаром.</p>
+                </div>
+                <!-- 8. Клиентские показатели -->
+                <div class="kpi-card" data-searchable>
+                    <h3>Customer Satisfaction Index (CSI) / NPS</h3>
+                    <p><strong>Формула NPS:</strong> (% промоутеров - % критиков)</p>
+                    <p><strong>Что показывает:</strong> Лояльность клиентов, готовность рекомендовать.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Order Accuracy</h3>
+                    <p><strong>Формула:</strong> (Кол-во заказов без ошибок / Общее кол-во заказов) × 100%</p>
+                    <p><strong>Что показывает:</strong> Точность выполнения заказа (ассортимент, количество).</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Backorder Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во заказов с дефицитом / Общее кол-во заказов) × 100%</p>
+                    <p><strong>Что показывает:</strong> Долю заказов, отгруженных не полностью из-за отсутствия товара.</p>
+                </div>
+                <!-- 9. ESG показатели -->
+                <div class="kpi-card" data-searchable>
+                    <h3>Carbon Footprint (CO₂ emissions)</h3>
+                    <p><strong>Формула:</strong> Σ (Объём топлива × Коэффициент эмиссии)</p>
+                    <p><strong>Что показывает:</strong> Общий объём выбросов парниковых газов (тонны CO₂-экв).</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>CO₂ Emissions per Unit</h3>
+                    <p><strong>Формула:</strong> Общие выбросы CO₂ / Количество отгруженных единиц (или тонно-километры)</p>
+                    <p><strong>Что показывает:</strong> Углеродный след на единицу продукции.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Renewable Energy Use</h3>
+                    <p><strong>Формула:</strong> (Потребление из ВИЭ / Общее потребление энергии) × 100%</p>
+                    <p><strong>Что показывает:</strong> Долю возобновляемой энергии в энергопотреблении.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <h3>Waste Generation</h3>
+                    <p><strong>Формула:</strong> Σ (Вес каждого типа отходов)</p>
+                    <p><strong>Что показывает:</strong> Общий вес отходов (упаковка, брак, списанные товары).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок 3: Расширенный глоссарий ключевых терминов -->
         <div class="card" data-card>
             <h2>Расширенный глоссарий ключевых терминов</h2>
             <div class="two-columns">
@@ -242,7 +438,7 @@
             </div>
         </div>
 
-        <!-- Блок 3: KPI, Сертификация и управление рисками -->
+        <!-- Блок 4: KPI, Сертификация и управление рисками -->
         <div class="card" data-card>
             <h2>Измерение эффективности, сертификация и управление рисками</h2>
             <div class="methodology-grid">
@@ -272,7 +468,7 @@
             </div>
         </div>
 
-        <!-- Блок 4: Цифровая трансформация -->
+        <!-- Блок 5: Цифровая трансформация SCM -->
         <div class="card" data-card>
             <h2>Цифровая трансформация SCM (SCM 4.0)</h2>
             <div class="methodology-grid">
@@ -295,7 +491,7 @@
             </div>
         </div>
 
-        <!-- Блок 5: Управление взаимоотношениями и устойчивое развитие -->
+        <!-- Блок 6: Управление взаимоотношениями и устойчивое развитие -->
         <div class="card" data-card>
             <h2>Управление взаимоотношениями и устойчивое развитие (ESG)</h2>
             <div class="methodology-grid">
@@ -318,7 +514,7 @@
             </div>
         </div>
 
-        <!-- Блок 6: Лучшие практики по направлениям -->
+        <!-- Блок 7: Лучшие практики по ключевым направлениям -->
         <div class="card" data-card>
             <h2>Лучшие практики по ключевым направлениям SCM</h2>
             <div class="methodology-grid">
@@ -375,23 +571,21 @@
 
         function performSearch() {
             const term = searchInput.value.trim().toLowerCase();
-            // Сначала показываем все карточки, все методологии и все элементы глоссария
             const allCards = document.querySelectorAll('.card[data-card]');
-            const allMethodologyCards = document.querySelectorAll('.methodology-card');
+            const allMethodologyCards = document.querySelectorAll('.methodology-card, .kpi-card');
             const allGlossaryTerms = document.querySelectorAll('.glossary-list dt, .glossary-list dd');
-            
+
             allCards.forEach(card => card.style.display = '');
             allMethodologyCards.forEach(card => card.style.display = '');
             allGlossaryTerms.forEach(term => term.style.display = '');
             removeHighlights(document.body);
-            
+
             if (term === '') {
                 resultsCountSpan.innerHTML = '';
                 return;
             }
 
             let visibleCount = 0;
-            // Обрабатываем методологические карточки
             allMethodologyCards.forEach(card => {
                 const text = card.textContent.toLowerCase();
                 if (!text.includes(term)) {
@@ -401,13 +595,7 @@
                     highlightText(card, term);
                 }
             });
-            
-            // Обрабатываем глоссарий: скрываем пары dt/dd, если ни dt, ни dd не содержат термин
-            const glossaryItems = document.querySelectorAll('.glossary-list dt, .glossary-list dd');
-            // Группируем по родительскому dl? Проще: скрываем отдельные dt и dd, но они идут парами. 
-            // Лучше: если dt не содержит, скрываем и dt, и следующее dd. Если dd содержит, показываем и dt.
-            // Для простоты: скрываем dt, если он не содержит термин, и скрываем dd, если не содержит. Но это может разорвать пары.
-            // Сделаем так: для каждого dt проверяем текст dt и следующего dd, если хотя бы один содержит, то оба показываем.
+
             const dts = document.querySelectorAll('.glossary-list dt');
             dts.forEach(dt => {
                 const dd = dt.nextElementSibling;
@@ -426,22 +614,21 @@
                     }
                 }
             });
-            
-            // Теперь скрываем родительские карточки, если в них не осталось видимых дочерних элементов
+
             allCards.forEach(card => {
-                const visibleChildren = card.querySelectorAll('.methodology-card:not([style*="display: none"]), .glossary-list dt:not([style*="display: none"])');
+                const visibleChildren = card.querySelectorAll('.methodology-card:not([style*="display: none"]), .kpi-card:not([style*="display: none"]), .glossary-list dt:not([style*="display: none"])');
                 if (visibleChildren.length === 0) {
                     card.style.display = 'none';
                 }
             });
-            
+
             resultsCountSpan.innerHTML = `Найдено совпадений в ${visibleCount} элементах.`;
         }
 
         function resetSearch() {
             searchInput.value = '';
             const allCards = document.querySelectorAll('.card[data-card]');
-            const allMethodologyCards = document.querySelectorAll('.methodology-card');
+            const allMethodologyCards = document.querySelectorAll('.methodology-card, .kpi-card');
             const allGlossaryTerms = document.querySelectorAll('.glossary-list dt, .glossary-list dd');
             allCards.forEach(card => card.style.display = '');
             allMethodologyCards.forEach(card => card.style.display = '');
