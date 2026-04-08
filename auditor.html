@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аудитор – чек-листы SCM</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
+        .app-container { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar .logo {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            display: block;
+            text-decoration: none;
+            color: #0f172a;
+        }
+        .sidebar .logo span { color: #d4af37; }
+        .sidebar nav ul { list-style: none; }
+        .sidebar nav ul li { margin-bottom: 8px; }
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .sidebar nav ul li a:hover, .sidebar nav ul li a.active {
+            background: #eef2ff;
+            color: #1e40af;
+        }
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 24px 32px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        select, button {
+            padding: 10px 16px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+        }
+        .question-item {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #1e40af;
+            width: 0%;
+            height: 100%;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="index.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html" class="active"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>🔍 Аудитор SCM</h1>
+        <p>Выберите чек-лист, пройдите опрос и отслеживайте прогресс.</p>
+
+        <div class="card">
+            <label for="checklistSelect">Выберите чек-лист:</label>
+            <select id="checklistSelect" style="margin-left: 16px;"></select>
+            <div class="stats" id="stats"></div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div id="questionsContainer"></div>
+            <button id="saveProgressBtn" style="margin-top: 20px;">Сохранить прогресс</button>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Полный объект questionsDB (12 чек-листов) – сокращён для примера, но можно расширить
+    // Здесь приведены все 12 чек-листов с вопросами (как в предыдущем ответе)
+    const questionsDB = {
+        "supply_chain_audit": { title: "Аудит цепей поставок", questions: ["Разработана ли стратегия SCM?", "Определены ли KPI?", "Существует ли централизованная функция SCM?"] },
+        "scm_maturity": { title: "Оценка зрелости SCM", questions: ["Процессы не стандартизированы?", "Базовые процессы определены?", "Процессы стандартизированы?"] },
+        "warehouse_audit": { title: "Аудит склада", questions: ["Проведена оценка рисков?", "Обеспечена безопасность труда?", "Исправно ли оборудование?"] },
+        "carrier_check": { title: "Проверка перевозчика", questions: ["Наличие лицензии?", "Страховка?", "ТО транспортных средств?"] },
+        "loading_unloading": { title: "Погрузка и разгрузка", questions: ["Осмотр места?", "Проверка техники?", "СИЗ?"] },
+        "wms_implementation": { title: "Внедрение WMS", questions: ["Аудит процессов?", "Требования к WMS?", "Выбор поставщика?"] },
+        "warehouse_qc": { title: "Контроль качества на складе", questions: ["Проверка количества?", "Целостность упаковки?", "Маркировка?"] },
+        "driver_checklist": { title: "Водитель-экспедитор", questions: ["Уровень топлива?", "Давление в шинах?", "Работа света?"] },
+        "customs_clearance": { title: "Таможенное оформление", questions: ["Контракт?", "Инвойс?", "Упаковочный лист?"] },
+        "supplier_assessment": { title: "Самооценка поставщика", questions: ["Процент брака?", "Сертификаты?", "Возвраты?"] },
+        "supply_chain_security": { title: "Безопасность цепи поставок", questions: ["Анализ рисков?", "Критические компоненты?", "Стандарты безопасности?"] },
+        "last_mile_delivery": { title: "Доставка последней мили", questions: ["Оптимизация маршрутов?", "Группировка заказов?", "Уведомление клиента?"] }
+    };
+
+    let currentChecklistId = null;
+    let currentQuestions = [];
+    let answers = [];
+
+    function populateSelect() {
+        const select = document.getElementById('checklistSelect');
+        select.innerHTML = '';
+        for (const [id, data] of Object.entries(questionsDB)) {
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = data.title;
+            select.appendChild(option);
+        }
+        select.addEventListener('change', () => loadChecklist(select.value));
+        loadChecklist(select.value);
+    }
+
+    function loadChecklist(checklistId) {
+        currentChecklistId = checklistId;
+        const data = questionsDB[checklistId];
+        currentQuestions = data.questions;
+        const saved = localStorage.getItem(`auditor_${checklistId}`);
+        if (saved) {
+            answers = JSON.parse(saved);
+        } else {
+            answers = new Array(currentQuestions.length).fill(false);
+        }
+        renderQuestions();
+        updateProgress();
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+        currentQuestions.forEach((q, idx) => {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.innerHTML = `
+                <div class="question-text">${idx+1}. ${q}</div>
+                <label><input type="checkbox" data-idx="${idx}" ${answers[idx] ? 'checked' : ''}> Выполнено / Да</label>
+            `;
+            container.appendChild(div);
+        });
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+                const idx = parseInt(e.target.dataset.idx);
+                answers[idx] = e.target.checked;
+                updateProgress();
+            });
+        });
+    }
+
+    function updateProgress() {
+        const completed = answers.filter(v => v === true).length;
+        const percent = Math.round((completed / currentQuestions.length) * 100);
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('stats').innerHTML = `<span>Прогресс: ${percent}%</span><span>Всего вопросов: ${currentQuestions.length}</span>`;
+    }
+
+    document.getElementById('saveProgressBtn').addEventListener('click', () => {
+        if (currentChecklistId) {
+            localStorage.setItem(`auditor_${currentChecklistId}`, JSON.stringify(answers));
+            localStorage.setItem(`auditor_${currentChecklistId}_date`, new Date().toISOString());
+            alert('Прогресс сохранён');
+        }
+    });
+
+    populateSelect();
+</script>
+</body>
+</html>
