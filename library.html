@@ -83,6 +83,9 @@
             cursor: pointer;
             font-weight: 500;
         }
+        .search-bar button.reset {
+            background: #94a3b8;
+        }
         .search-results-count {
             font-size: 14px;
             color: #64748b;
@@ -96,9 +99,6 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
             transition: 0.2s;
-        }
-        .card.hidden {
-            display: none;
         }
         .methodology-grid, .term-grid {
             display: grid;
@@ -160,17 +160,16 @@
         <h1>📚 Библиотека методологий SCM</h1>
         <p>Справочная информация по ключевым моделям, процессам, терминам и лучшим практикам управления цепями поставок.</p>
 
-        <!-- Панель поиска -->
         <div class="search-bar">
             <i class="fas fa-search"></i>
             <input type="text" id="searchInput" placeholder="Поиск по методологиям, терминам, практикам...">
             <button id="searchButton">Найти</button>
-            <button id="resetButton" style="background: #94a3b8;">Сбросить</button>
+            <button id="resetButton" class="reset">Сбросить</button>
         </div>
         <div id="searchResultsCount" class="search-results-count"></div>
 
         <!-- Блок 1: Ключевые методологии и модели -->
-        <div class="card" data-searchable>
+        <div class="card" data-card>
             <h2>Ключевые методологии и модели</h2>
             <div class="methodology-grid">
                 <div class="methodology-card" data-searchable>
@@ -209,7 +208,7 @@
         </div>
 
         <!-- Блок 2: Расширенный глоссарий ключевых терминов -->
-        <div class="card" data-searchable>
+        <div class="card" data-card>
             <h2>Расширенный глоссарий ключевых терминов</h2>
             <div class="two-columns">
                 <div>
@@ -244,7 +243,7 @@
         </div>
 
         <!-- Блок 3: KPI, Сертификация и управление рисками -->
-        <div class="card" data-searchable>
+        <div class="card" data-card>
             <h2>Измерение эффективности, сертификация и управление рисками</h2>
             <div class="methodology-grid">
                 <div class="methodology-card" data-searchable>
@@ -274,7 +273,7 @@
         </div>
 
         <!-- Блок 4: Цифровая трансформация -->
-        <div class="card" data-searchable>
+        <div class="card" data-card>
             <h2>Цифровая трансформация SCM (SCM 4.0)</h2>
             <div class="methodology-grid">
                 <div class="methodology-card" data-searchable>
@@ -297,7 +296,7 @@
         </div>
 
         <!-- Блок 5: Управление взаимоотношениями и устойчивое развитие -->
-        <div class="card" data-searchable>
+        <div class="card" data-card>
             <h2>Управление взаимоотношениями и устойчивое развитие (ESG)</h2>
             <div class="methodology-grid">
                 <div class="methodology-card" data-searchable>
@@ -320,7 +319,7 @@
         </div>
 
         <!-- Блок 6: Лучшие практики по направлениям -->
-        <div class="card" data-searchable>
+        <div class="card" data-card>
             <h2>Лучшие практики по ключевым направлениям SCM</h2>
             <div class="methodology-grid">
                 <div class="methodology-card" data-searchable>
@@ -345,100 +344,89 @@
 </div>
 
 <script>
-    function escapeRegExp(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
+    (function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchButton');
+        const resetBtn = document.getElementById('resetButton');
+        const resultsCountSpan = document.getElementById('searchResultsCount');
 
-    function highlightText(node, term) {
-        if (!term.trim()) return;
-        const regex = new RegExp(`(${escapeRegExp(term)})`, 'gi');
-        if (node.nodeType === Node.TEXT_NODE) {
-            if (regex.test(node.textContent)) {
-                const span = document.createElement('span');
-                span.innerHTML = node.textContent.replace(regex, `<mark>$1</mark>`);
-                node.parentNode.replaceChild(span, node);
-            }
-        } else if (node.nodeType === Node.ELEMENT_NODE && !['SCRIPT', 'STYLE', 'MARK'].includes(node.tagName)) {
-            Array.from(node.childNodes).forEach(child => highlightText(child, term));
-        }
-    }
-
-    function removeHighlights(container) {
-        const marks = container.querySelectorAll('mark');
-        marks.forEach(mark => {
-            const parent = mark.parentNode;
-            parent.replaceChild(document.createTextNode(mark.textContent), mark);
-            parent.normalize();
-        });
-    }
-
-    function searchAndFilter() {
-        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-        const searchableElements = document.querySelectorAll('[data-searchable]');
-        let totalMatches = 0;
-
-        // Сначала сбрасываем всё: показываем все карточки и удаляем подсветку
-        document.querySelectorAll('.card').forEach(card => {
-            card.classList.remove('hidden');
-            removeHighlights(card);
-        });
-
-        if (searchTerm === '') {
-            document.getElementById('searchResultsCount').innerHTML = '';
-            return;
-        }
-
-        // Проходим по каждому поисковому элементу
-        searchableElements.forEach(el => {
-            const text = el.textContent.toLowerCase();
-            if (!text.includes(searchTerm)) {
-                // Скрываем родительскую карточку или сам элемент, если он является карточкой
-                let card = el.closest('.card');
-                if (card) {
-                    card.classList.add('hidden');
-                } else if (el.closest('.methodology-card')) {
-                    el.closest('.methodology-card').style.display = 'none';
-                } else if (el.closest('.term-card')) {
-                    el.closest('.term-card').style.display = 'none';
-                } else if (el.tagName === 'DT' || el.tagName === 'DD') {
-                    // Для глоссария скрываем родительский dl?
-                    // Проще скрыть всю карточку глоссария, но там два столбца. Сделаем проще: скрываем всю карточку, если ни один термин не совпал.
-                }
-            } else {
-                totalMatches++;
-                // Подсвечиваем текст в этом элементе
-                highlightText(el, searchTerm);
-            }
-        });
-
-        // Дополнительная логика для глоссария: если ни один dt/dd не совпал, скрываем карточку
-        const glossaryCard = document.querySelector('.card:nth-of-type(2)'); // второй card - глоссарий
-        if (glossaryCard) {
-            const glossaryItems = glossaryCard.querySelectorAll('dt, dd');
-            let hasGlossaryMatch = false;
-            glossaryItems.forEach(item => {
-                if (item.textContent.toLowerCase().includes(searchTerm)) hasGlossaryMatch = true;
+        function removeHighlights(container) {
+            const marks = container.querySelectorAll('mark');
+            marks.forEach(mark => {
+                const parent = mark.parentNode;
+                parent.replaceChild(document.createTextNode(mark.textContent), mark);
+                parent.normalize();
             });
-            if (!hasGlossaryMatch) glossaryCard.classList.add('hidden');
-            else glossaryCard.classList.remove('hidden');
         }
 
-        document.getElementById('searchResultsCount').innerHTML = `Найдено совпадений в ${totalMatches} элементах.`;
-    }
+        function highlightText(node, term) {
+            if (!term.trim()) return;
+            const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            if (node.nodeType === Node.TEXT_NODE) {
+                if (regex.test(node.textContent)) {
+                    const span = document.createElement('span');
+                    span.innerHTML = node.textContent.replace(regex, `<mark>$1</mark>`);
+                    node.parentNode.replaceChild(span, node);
+                }
+            } else if (node.nodeType === Node.ELEMENT_NODE && !['SCRIPT', 'STYLE', 'MARK'].includes(node.tagName)) {
+                Array.from(node.childNodes).forEach(child => highlightText(child, term));
+            }
+        }
 
-    function resetSearch() {
-        document.getElementById('searchInput').value = '';
-        document.querySelectorAll('.card').forEach(card => card.classList.remove('hidden'));
-        document.querySelectorAll('.methodology-card, .term-card').forEach(card => card.style.display = '');
-        removeHighlights(document.body);
-        document.getElementById('searchResultsCount').innerHTML = '';
-    }
+        function performSearch() {
+            const term = searchInput.value.trim().toLowerCase();
+            // Сбрасываем видимость всех карточек и удаляем подсветку
+            const allCards = document.querySelectorAll('.card[data-card]');
+            allCards.forEach(card => {
+                card.style.display = '';
+                removeHighlights(card);
+            });
+            if (term === '') {
+                resultsCountSpan.innerHTML = '';
+                return;
+            }
 
-    document.getElementById('searchButton').addEventListener('click', searchAndFilter);
-    document.getElementById('resetButton').addEventListener('click', resetSearch);
-    document.getElementById('searchInput').addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') searchAndFilter();
-    });
+            let totalMatches = 0;
+            // Проверяем каждую карточку
+            allCards.forEach(card => {
+                const searchableElements = card.querySelectorAll('[data-searchable]');
+                let cardHasMatch = false;
+                searchableElements.forEach(el => {
+                    if (el.textContent.toLowerCase().includes(term)) {
+                        cardHasMatch = true;
+                        totalMatches++;
+                    }
+                });
+                if (!cardHasMatch) {
+                    card.style.display = 'none';
+                } else {
+                    // Подсвечиваем только в найденных карточках
+                    searchableElements.forEach(el => {
+                        if (el.textContent.toLowerCase().includes(term)) {
+                            highlightText(el, term);
+                        }
+                    });
+                }
+            });
+            resultsCountSpan.innerHTML = `Найдено совпадений в ${totalMatches} элементах.`;
+        }
+
+        function resetSearch() {
+            searchInput.value = '';
+            const allCards = document.querySelectorAll('.card[data-card]');
+            allCards.forEach(card => {
+                card.style.display = '';
+                removeHighlights(card);
+            });
+            resultsCountSpan.innerHTML = '';
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        resetBtn.addEventListener('click', resetSearch);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+    })();
 </script>
 </body>
 </html>
