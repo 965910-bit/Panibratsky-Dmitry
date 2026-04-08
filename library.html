@@ -51,6 +51,43 @@
             flex: 1;
             padding: 24px 32px;
         }
+        .search-bar {
+            background: white;
+            border-radius: 40px;
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .search-bar i {
+            color: #94a3b8;
+            font-size: 18px;
+        }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            font-family: inherit;
+        }
+        .search-bar button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .search-results-count {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
         .card {
             background: white;
             border-radius: 20px;
@@ -58,18 +95,24 @@
             margin-bottom: 24px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
+            transition: 0.2s;
         }
-        .methodology-grid {
+        .card.hidden {
+            display: none;
+        }
+        .methodology-grid, .term-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
+            margin-top: 16px;
         }
-        .methodology-card {
+        .methodology-card, .term-card {
             background: #f8fafc;
             border-radius: 16px;
             padding: 20px;
+            border-left: 4px solid #1e40af;
         }
-        .methodology-card h3 {
+        .methodology-card h3, .term-card h3 {
             margin-bottom: 12px;
             color: #1e40af;
         }
@@ -81,9 +124,21 @@
             margin-left: 20px;
             color: #334155;
         }
+        .two-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        mark {
+            background: #fef08a;
+            color: #0f172a;
+            padding: 0 2px;
+            border-radius: 4px;
+        }
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .main-content { margin-left: 0; padding: 16px; }
+            .search-bar button { padding: 4px 12px; font-size: 14px; }
         }
     </style>
 </head>
@@ -103,48 +158,287 @@
 
     <main class="main-content">
         <h1>📚 Библиотека методологий SCM</h1>
-        <p>Справочная информация по ключевым моделям, процессам и терминам.</p>
+        <p>Справочная информация по ключевым моделям, процессам, терминам и лучшим практикам управления цепями поставок.</p>
 
-        <div class="card">
-            <h2>Методологии и модели</h2>
+        <!-- Панель поиска -->
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Поиск по методологиям, терминам, практикам...">
+            <button id="searchButton">Найти</button>
+            <button id="resetButton" style="background: #94a3b8;">Сбросить</button>
+        </div>
+        <div id="searchResultsCount" class="search-results-count"></div>
+
+        <!-- Блок 1: Ключевые методологии и модели -->
+        <div class="card" data-searchable>
+            <h2>Ключевые методологии и модели</h2>
             <div class="methodology-grid">
-                <div class="methodology-card">
+                <div class="methodology-card" data-searchable>
                     <h3>SCOR (Supply Chain Operations Reference)</h3>
-                    <p>Модель для описания, измерения и улучшения цепей поставок. Включает 6 процессов: Plan, Source, Make, Deliver, Return, Enable.</p>
+                    <p>Сквозная референсная модель для описания, измерения и улучшения цепей поставок. Включает 6 ключевых процессов: Plan, Source, Make, Deliver, Return, Enable. Позволяет проводить бенчмаркинг и выявлять узкие места.</p>
                 </div>
-                <div class="methodology-card">
+                <div class="methodology-card" data-searchable>
                     <h3>DCOR (Design Chain Operations Reference)</h3>
-                    <p>Расширение SCOR для управления жизненным циклом продукта (Research, Design, Integrate, Amplify).</p>
+                    <p>Расширение SCOR для управления жизненным циклом продукта: Research, Design, Integrate, Amplify. Используется для повышения эффективности R&D и инжиниринга в цепочке поставок.</p>
                 </div>
-                <div class="methodology-card">
+                <div class="methodology-card" data-searchable>
+                    <h3>CCOR (Customer Chain Operations Reference)</h3>
+                    <p>Модель, фокусирующаяся на взаимодействии с клиентами, охватывая процессы маркетинга, продаж и обслуживания для создания бесшовного клиентского опыта.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
                     <h3>S&OP (Sales and Operations Planning)</h3>
-                    <p>Процесс ежемесячного планирования, объединяющий продажи, производство, логистику и финансы.</p>
+                    <p>Интегрированный ежемесячный процесс планирования, объединяющий продажи, производство, логистику и финансы. Балансирует спрос и предложение для согласования стратегических целей.</p>
                 </div>
-                <div class="methodology-card">
+                <div class="methodology-card" data-searchable>
+                    <h3>Lean Six Sigma</h3>
+                    <p>Подход, объединяющий Lean (устранение потерь) и Six Sigma (снижение вариабельности). В SCM помогает сокращать дефекты на 50-70%, уменьшать время выполнения заказов на 30-40% и повышать надежность поставщиков.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
                     <h3>E2E (End-to-End) планирование</h3>
-                    <p>Сквозное планирование цепочки поставок от поставщика до клиента с учётом всех ограничений.</p>
+                    <p>Сквозное планирование всей цепочки поставок — от поставщика до клиента — с учётом всех ограничений. Позволяет оптимизировать запасы и повысить скорость реакции.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Kraljic Matrix</h3>
+                    <p>Стратегическая модель для анализа и сегментации портфеля закупок, классифицирующая товары по двум осям: влияние на прибыль и риск поставки.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>SCOR Digital Standard</h3>
+                    <p>Цифровая версия SCOR-модели, ориентированная на внедрение AI, машинного обучения и аналитики больших данных для повышения точности прогнозов и автономной оптимизации.</p>
                 </div>
             </div>
         </div>
 
-        <div class="card">
-            <h2>Глоссарий ключевых терминов</h2>
-            <dl class="glossary-list">
-                <dt>OTIF (On-Time In-Full)</dt>
-                <dd>Доставка вовремя и в полном объёме.</dd>
-                <dt>Inventory Turnover</dt>
-                <dd>Оборачиваемость запасов = COGS / средний запас.</dd>
-                <dt>Perfect Order Fulfillment</dt>
-                <dd>Идеальный заказ – доставлен вовремя, полностью, без повреждений, с корректными документами.</dd>
-                <dt>Cash-to-Cash Cycle</dt>
-                <dd>Финансовый цикл = DIO + DSO – DPO.</dd>
-                <dt>Forecast Accuracy</dt>
-                <dd>Точность прогноза спроса (обычно 1 – MAPE).</dd>
-                <dt>Total Supply Chain Cost</dt>
-                <dd>Общие затраты на управление цепочкой поставок (% от выручки).</dd>
-            </dl>
+        <!-- Блок 2: Расширенный глоссарий ключевых терминов -->
+        <div class="card" data-searchable>
+            <h2>Расширенный глоссарий ключевых терминов</h2>
+            <div class="two-columns">
+                <div>
+                    <dl class="glossary-list">
+                        <dt data-searchable>OTIF (On-Time In-Full)</dt>
+                        <dd data-searchable>Ключевой KPI, измеряющий процент заказов, доставленных вовремя и в полном объёме без замен и повреждений.</dd>
+                        <dt data-searchable>Perfect Order Fulfillment</dt>
+                        <dd data-searchable>Показатель SCOR-модели, оценивающий долю идеальных заказов: вовремя, полностью, без повреждений и с корректными документами.</dd>
+                        <dt data-searchable>Inventory Turnover</dt>
+                        <dd data-searchable>Оборачиваемость запасов, рассчитываемая как отношение себестоимости проданных товаров (COGS) к средней стоимости запасов.</dd>
+                        <dt data-searchable>Total Supply Chain Cost</dt>
+                        <dd data-searchable>Общие затраты на управление цепочкой поставок, выраженные в процентах от выручки. Ключевая метрика эффективности SCM.</dd>
+                        <dt data-searchable>Cash-to-Cash Cycle</dt>
+                        <dd data-searchable>Финансовый цикл: DIO + DSO – DPO. Показывает, сколько дней требуется для конвертации вложений в запасы и дебиторскую задолженность в реальные деньги.</dd>
+                    </dl>
+                </div>
+                <div>
+                    <dl class="glossary-list">
+                        <dt data-searchable>Fill Rate (Уровень выполнения заказа)</dt>
+                        <dd data-searchable>Показатель доступности товара, отражающий процент спроса, удовлетворённого из наличного запаса без дефицита.</dd>
+                        <dt data-searchable>TCO (Total Cost of Ownership)</dt>
+                        <dd data-searchable>Совокупная стоимость владения, включающая не только цену закупки, но и логистику, таможню, хранение, обслуживание и утилизацию.</dd>
+                        <dt data-searchable>Forecast Accuracy</dt>
+                        <dd data-searchable>Точность прогноза спроса, обычно рассчитываемая как 1 — MAPE (средняя абсолютная процентная ошибка).</dd>
+                        <dt data-searchable>ESG (Environmental, Social, Governance)</dt>
+                        <dd data-searchable>Набор критериев для оценки устойчивости компании: экологическая ответственность, социальная политика и качество корпоративного управления.</dd>
+                        <dt data-searchable>Order Fulfillment Cycle Time</dt>
+                        <dd data-searchable>Среднее время от получения заказа до его фактической отгрузки. Отражает скорость реагирования цепи поставок.</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок 3: KPI, Сертификация и управление рисками -->
+        <div class="card" data-searchable>
+            <h2>Измерение эффективности, сертификация и управление рисками</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card" data-searchable>
+                    <h3>5 атрибутов эффективности SCOR</h3>
+                    <p><strong>Надёжность (Reliability):</strong> Perfect Order Fulfillment<br>
+                    <strong>Скорость реакции (Responsiveness):</strong> Order Fulfillment Cycle Time<br>
+                    <strong>Гибкость (Agility):</strong> Upside Supply Chain Flexibility<br>
+                    <strong>Стоимость (Cost):</strong> Total SCM Cost<br>
+                    <strong>Управление активами (Assets):</strong> Cash-to-Cash Cycle Time</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>APICS / ASCM Сертификация</h3>
+                    <p><strong>CSCP:</strong> Полный охват SCM (стратегия, управление спросом, поставками).<br>
+                    <strong>CLTD:</strong> Углублённая логистика, транспорт и дистрибуция.<br>
+                    <strong>CPIM:</strong> Производственные запасы, планирование производства.<br>
+                    <strong>CTSC:</strong> Лидерство в цифровой трансформации SCM.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Управление рисками и устойчивость</h3>
+                    <p>Стратегии повышения устойчивости: диверсификация поставщиков и маршрутов, страховые запасы, резервирование мощностей, прозрачность всей цепочки (Track & Trace). Включает анализ статических и динамических рисков.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Бенчмаркинг в SCM</h3>
+                    <p>Сравнение ключевых KPI с отраслевыми стандартами. Использует методы Data Envelopment Analysis (DEA) и инструменты BI-систем для выявления лучших практик и установки реалистичных целей.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок 4: Цифровая трансформация -->
+        <div class="card" data-searchable>
+            <h2>Цифровая трансформация SCM (SCM 4.0)</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card" data-searchable>
+                    <h3>Искусственный интеллект и ML</h3>
+                    <p>Улучшает точность прогнозирования спроса на 30-50%, оптимизирует маршруты доставки и управляет запасами в реальном времени.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Интернет вещей (IoT)</h3>
+                    <p>Обеспечивает полную прозрачность цепочки: датчики GPS и телеметрии позволяют в реальном времени отслеживать местоположение, температуру и состояние груза.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Цифровые двойники (Digital Twins)</h3>
+                    <p>Виртуальные копии складов, транспорта и целых сетей для моделирования сценариев "что если" без риска для реальных операций.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Блокчейн</h3>
+                    <p>Повышает прозрачность и безопасность сделок, автоматизирует документооборот (смарт-контракты), снижая количество споров и время на верификацию.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок 5: Управление взаимоотношениями и устойчивое развитие -->
+        <div class="card" data-searchable>
+            <h2>Управление взаимоотношениями и устойчивое развитие (ESG)</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card" data-searchable>
+                    <h3>Управление поставщиками (SRM)</h3>
+                    <p>Систематическое развитие отношений с поставщиками: сегментация по матрице Кралича, совместное планирование (JVP), регулярная оценка KPI и мониторинг рисков для трансформации закупок в стратегический актив.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Управление взаимоотношениями с клиентами (CRM)</h3>
+                    <p>Интеграция CRM с SCM позволяет точно предсказывать спрос, сокращать время выполнения заказов и повышать лояльность за счёт персонализированного сервиса и прозрачности статусов.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Устойчивое развитие (ESG)</h3>
+                    <p>Оценка Scope 1,2,3 выбросов CO₂, переход на возобновляемую энергию, «зелёные» закупки и прозрачность в соблюдении социальных стандартов по всей цепочке поставок.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Обратная логистика (Reverse Logistics)</h3>
+                    <p>Оптимизация процессов возврата, ремонта и переработки товаров. Эффективная обратная логистика превращает возвраты из статьи затрат в источник дохода.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок 6: Лучшие практики по направлениям -->
+        <div class="card" data-searchable>
+            <h2>Лучшие практики по ключевым направлениям SCM</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card" data-searchable>
+                    <h3>Управление спросом и запасами</h3>
+                    <p>Сбор POS-данных, прогнозирование на основе машинного обучения, ABC-XYZ анализ, Theory of Constraints и страховые запасы для обеспечения сервиса без избыточных остатков.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Управление транспортом (TMS)</h3>
+                    <p>Динамическая маршрутизация, консолидация отправок, электронный обмен данными (EDI) с перевозчиками, отслеживание в реальном времени и контроль TMS для снижения затрат на 10-20%.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Управление складом (WMS)</h3>
+                    <p>Адресное хранение, автоматизация приёмки и отгрузки с ТСД, зонное комплектование (zone picking), волновое планирование (wave planning) и регулярный ABC-анализ.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <h3>Управление закупками (Strategic Sourcing)</h3>
+                    <p>Стратегический подход, учитывающий TCO и устойчивость, управление категориями, оценка и развитие поставщиков, цифровизация закупок (e-Procurement).</p>
+                </div>
+            </div>
         </div>
     </main>
 </div>
+
+<script>
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function highlightText(node, term) {
+        if (!term.trim()) return;
+        const regex = new RegExp(`(${escapeRegExp(term)})`, 'gi');
+        if (node.nodeType === Node.TEXT_NODE) {
+            if (regex.test(node.textContent)) {
+                const span = document.createElement('span');
+                span.innerHTML = node.textContent.replace(regex, `<mark>$1</mark>`);
+                node.parentNode.replaceChild(span, node);
+            }
+        } else if (node.nodeType === Node.ELEMENT_NODE && !['SCRIPT', 'STYLE', 'MARK'].includes(node.tagName)) {
+            Array.from(node.childNodes).forEach(child => highlightText(child, term));
+        }
+    }
+
+    function removeHighlights(container) {
+        const marks = container.querySelectorAll('mark');
+        marks.forEach(mark => {
+            const parent = mark.parentNode;
+            parent.replaceChild(document.createTextNode(mark.textContent), mark);
+            parent.normalize();
+        });
+    }
+
+    function searchAndFilter() {
+        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+        const searchableElements = document.querySelectorAll('[data-searchable]');
+        let totalMatches = 0;
+
+        // Сначала сбрасываем всё: показываем все карточки и удаляем подсветку
+        document.querySelectorAll('.card').forEach(card => {
+            card.classList.remove('hidden');
+            removeHighlights(card);
+        });
+
+        if (searchTerm === '') {
+            document.getElementById('searchResultsCount').innerHTML = '';
+            return;
+        }
+
+        // Проходим по каждому поисковому элементу
+        searchableElements.forEach(el => {
+            const text = el.textContent.toLowerCase();
+            if (!text.includes(searchTerm)) {
+                // Скрываем родительскую карточку или сам элемент, если он является карточкой
+                let card = el.closest('.card');
+                if (card) {
+                    card.classList.add('hidden');
+                } else if (el.closest('.methodology-card')) {
+                    el.closest('.methodology-card').style.display = 'none';
+                } else if (el.closest('.term-card')) {
+                    el.closest('.term-card').style.display = 'none';
+                } else if (el.tagName === 'DT' || el.tagName === 'DD') {
+                    // Для глоссария скрываем родительский dl?
+                    // Проще скрыть всю карточку глоссария, но там два столбца. Сделаем проще: скрываем всю карточку, если ни один термин не совпал.
+                }
+            } else {
+                totalMatches++;
+                // Подсвечиваем текст в этом элементе
+                highlightText(el, searchTerm);
+            }
+        });
+
+        // Дополнительная логика для глоссария: если ни один dt/dd не совпал, скрываем карточку
+        const glossaryCard = document.querySelector('.card:nth-of-type(2)'); // второй card - глоссарий
+        if (glossaryCard) {
+            const glossaryItems = glossaryCard.querySelectorAll('dt, dd');
+            let hasGlossaryMatch = false;
+            glossaryItems.forEach(item => {
+                if (item.textContent.toLowerCase().includes(searchTerm)) hasGlossaryMatch = true;
+            });
+            if (!hasGlossaryMatch) glossaryCard.classList.add('hidden');
+            else glossaryCard.classList.remove('hidden');
+        }
+
+        document.getElementById('searchResultsCount').innerHTML = `Найдено совпадений в ${totalMatches} элементах.`;
+    }
+
+    function resetSearch() {
+        document.getElementById('searchInput').value = '';
+        document.querySelectorAll('.card').forEach(card => card.classList.remove('hidden'));
+        document.querySelectorAll('.methodology-card, .term-card').forEach(card => card.style.display = '');
+        removeHighlights(document.body);
+        document.getElementById('searchResultsCount').innerHTML = '';
+    }
+
+    document.getElementById('searchButton').addEventListener('click', searchAndFilter);
+    document.getElementById('resetButton').addEventListener('click', resetSearch);
+    document.getElementById('searchInput').addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') searchAndFilter();
+    });
+</script>
 </body>
 </html>
