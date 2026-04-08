@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI-центр – управление метриками SCM</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
+        .app-container { display: flex; min-height: 100vh; }
+        /* Боковое меню */
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar .logo {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            display: block;
+            text-decoration: none;
+            color: #0f172a;
+        }
+        .sidebar .logo span { color: #d4af37; }
+        .sidebar nav ul { list-style: none; }
+        .sidebar nav ul li { margin-bottom: 8px; }
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .sidebar nav ul li a:hover, .sidebar nav ul li a.active {
+            background: #eef2ff;
+            color: #1e40af;
+        }
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 24px 32px;
+        }
+        /* Карточки */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .kpi-item {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px;
+        }
+        .kpi-item label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .kpi-item input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+        .kpi-result {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 8px 0;
+            color: #1e40af;
+        }
+        .benchmark {
+            font-size: 13px;
+            color: #64748b;
+        }
+        .good { color: #10b981; }
+        .warning { color: #f59e0b; }
+        .bad { color: #dc2626; }
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <!-- Боковое меню -->
+    <aside class="sidebar">
+        <a href="index.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html" class="active"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>📈 KPI-центр</h1>
+        <p>Рассчитайте ключевые показатели эффективности, сравните с бенчмарками и отслеживайте динамику.</p>
+
+        <!-- Калькулятор KPI -->
+        <div class="card">
+            <h2><i class="fas fa-calculator"></i> Калькулятор KPI</h2>
+            <div class="grid-2" id="kpi-calculators">
+                <!-- OTIF -->
+                <div class="kpi-item" data-kpi="otif">
+                    <label>On-Time In-Full (OTIF), %</label>
+                    <input type="number" id="otif_on_time" placeholder="Своевременные доставки, %" step="0.1">
+                    <input type="number" id="otif_in_full" placeholder="Полные доставки, %" step="0.1">
+                    <div class="kpi-result" id="otif_result">—</div>
+                    <div class="benchmark" id="otif_benchmark"></div>
+                    <button class="save-kpi" data-kpi="otif">Сохранить</button>
+                </div>
+                <!-- Inventory Turnover -->
+                <div class="kpi-item" data-kpi="turnover">
+                    <label>Оборачиваемость запасов (раз в год)</label>
+                    <input type="number" id="turnover_cogs" placeholder="COGS (себестоимость продаж)" step="any">
+                    <input type="number" id="turnover_avg_inv" placeholder="Средний запас" step="any">
+                    <div class="kpi-result" id="turnover_result">—</div>
+                    <div class="benchmark" id="turnover_benchmark"></div>
+                    <button class="save-kpi" data-kpi="turnover">Сохранить</button>
+                </div>
+                <!-- Forecast Accuracy -->
+                <div class="kpi-item" data-kpi="forecast">
+                    <label>Точность прогноза спроса, %</label>
+                    <input type="number" id="forecast_actual" placeholder="Фактический спрос" step="any">
+                    <input type="number" id="forecast_predicted" placeholder="Прогнозируемый спрос" step="any">
+                    <div class="kpi-result" id="forecast_result">—</div>
+                    <div class="benchmark" id="forecast_benchmark"></div>
+                    <button class="save-kpi" data-kpi="forecast">Сохранить</button>
+                </div>
+                <!-- Total SCM Cost as % of Sales -->
+                <div class="kpi-item" data-kpi="scm_cost">
+                    <label>Затраты на SCM (% от выручки)</label>
+                    <input type="number" id="scm_cost_value" placeholder="Затраты на SCM" step="any">
+                    <input type="number" id="scm_sales" placeholder="Выручка" step="any">
+                    <div class="kpi-result" id="scm_cost_result">—</div>
+                    <div class="benchmark" id="scm_cost_benchmark"></div>
+                    <button class="save-kpi" data-kpi="scm_cost">Сохранить</button>
+                </div>
+                <!-- Cash-to-Cash Cycle -->
+                <div class="kpi-item" data-kpi="c2c">
+                    <label>Cash-to-Cash цикл (дни)</label>
+                    <input type="number" id="c2c_dio" placeholder="DIO (дни запаса)" step="any">
+                    <input type="number" id="c2c_dso" placeholder="DSO (дни дебиторки)" step="any">
+                    <input type="number" id="c2c_dpo" placeholder="DPO (дни кредиторки)" step="any">
+                    <div class="kpi-result" id="c2c_result">—</div>
+                    <div class="benchmark" id="c2c_benchmark"></div>
+                    <button class="save-kpi" data-kpi="c2c">Сохранить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Декомпозиция (пример для OTIF) -->
+        <div class="card">
+            <h2><i class="fas fa-code-branch"></i> Декомпозиция корневых причин (OTIF)</h2>
+            <div id="decomposition">
+                <p>Выберите KPI для анализа:</p>
+                <select id="decomp_select">
+                    <option value="otif">Perfect Order Fulfillment (OTIF)</option>
+                </select>
+                <div id="decomp_tree" style="margin-top: 16px;"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Бенчмарки (средние значения по отрасли – можно расширить)
+    const benchmarks = {
+        otif: { target: 95, good: 90, warning: 80 },
+        turnover: { target: 6, good: 5, warning: 3 },
+        forecast: { target: 85, good: 75, warning: 60 },
+        scm_cost: { target: 8, good: 10, warning: 15 },
+        c2c: { target: 45, good: 60, warning: 90 }  // чем ниже, тем лучше
+    };
+
+    // Функция расчёта OTIF
+    function calcOTIF() {
+        const onTime = parseFloat(document.getElementById('otif_on_time').value) || 0;
+        const inFull = parseFloat(document.getElementById('otif_in_full').value) || 0;
+        const result = (onTime * inFull) / 100;
+        const percent = result.toFixed(1);
+        document.getElementById('otif_result').innerHTML = percent + '%';
+        const bench = benchmarks.otif;
+        let status = '';
+        if (result >= bench.target) status = '✅ Отлично (выше целевого)';
+        else if (result >= bench.good) status = '⚠️ Норма, но есть резерв';
+        else status = '🔴 Требует внимания';
+        document.getElementById('otif_benchmark').innerHTML = `Бенчмарк: целевой ${bench.target}% | Ваш результат: ${percent}% — ${status}`;
+        return result;
+    }
+
+    // Оборачиваемость запасов
+    function calcTurnover() {
+        const cogs = parseFloat(document.getElementById('turnover_cogs').value) || 0;
+        const avgInv = parseFloat(document.getElementById('turnover_avg_inv').value) || 0;
+        const result = avgInv === 0 ? 0 : cogs / avgInv;
+        const value = result.toFixed(1);
+        document.getElementById('turnover_result').innerHTML = value;
+        const bench = benchmarks.turnover;
+        let status = '';
+        if (value >= bench.target) status = '✅ Высокая оборачиваемость';
+        else if (value >= bench.good) status = '⚠️ Средняя';
+        else status = '🔴 Низкая, запасы замораживают капитал';
+        document.getElementById('turnover_benchmark').innerHTML = `Бенчмарк: целевой ${bench.target} | Ваш: ${value} — ${status}`;
+        return value;
+    }
+
+    // Точность прогноза
+    function calcForecast() {
+        const actual = parseFloat(document.getElementById('forecast_actual').value) || 0;
+        const predicted = parseFloat(document.getElementById('forecast_predicted').value) || 0;
+        let accuracy = 0;
+        if (actual !== 0) {
+            accuracy = 100 - (Math.abs(actual - predicted) / actual) * 100;
+        }
+        const value = accuracy.toFixed(1);
+        document.getElementById('forecast_result').innerHTML = value + '%';
+        const bench = benchmarks.forecast;
+        let status = '';
+        if (value >= bench.target) status = '✅ Отличная точность';
+        else if (value >= bench.good) status = '⚠️ Приемлемая, но можно улучшить';
+        else status = '🔴 Низкая точность, пересмотрите модель';
+        document.getElementById('forecast_benchmark').innerHTML = `Бенчмарк: целевой ${bench.target}% | Ваш: ${value}% — ${status}`;
+        return value;
+    }
+
+    // Затраты на SCM в % от выручки
+    function calcSCMCost() {
+        const cost = parseFloat(document.getElementById('scm_cost_value').value) || 0;
+        const sales = parseFloat(document.getElementById('scm_sales').value) || 0;
+        const percent = sales === 0 ? 0 : (cost / sales) * 100;
+        const value = percent.toFixed(1);
+        document.getElementById('scm_cost_result').innerHTML = value + '%';
+        const bench = benchmarks.scm_cost;
+        let status = '';
+        if (value <= bench.target) status = '✅ Низкие затраты (эффективно)';
+        else if (value <= bench.good) status = '⚠️ Средние затраты';
+        else status = '🔴 Высокие затраты, нужна оптимизация';
+        document.getElementById('scm_cost_benchmark').innerHTML = `Бенчмарк: целевой ≤ ${bench.target}% | Ваш: ${value}% — ${status}`;
+        return value;
+    }
+
+    // Cash-to-Cash цикл
+    function calcC2C() {
+        const dio = parseFloat(document.getElementById('c2c_dio').value) || 0;
+        const dso = parseFloat(document.getElementById('c2c_dso').value) || 0;
+        const dpo = parseFloat(document.getElementById('c2c_dpo').value) || 0;
+        const result = dio + dso - dpo;
+        const value = result.toFixed(0);
+        document.getElementById('c2c_result').innerHTML = value + ' дней';
+        const bench = benchmarks.c2c;
+        let status = '';
+        if (value <= bench.target) status = '✅ Отличный цикл (быстрая конвертация)';
+        else if (value <= bench.good) status = '⚠️ Приемлемый цикл';
+        else status = '🔴 Длинный цикл, капитал заморожен';
+        document.getElementById('c2c_benchmark').innerHTML = `Бенчмарк: целевой ≤ ${bench.target} дней | Ваш: ${value} — ${status}`;
+        return value;
+    }
+
+    // Сохранение данных в localStorage
+    function saveKPI(kpiId) {
+        const data = {};
+        switch(kpiId) {
+            case 'otif':
+                data.on_time = document.getElementById('otif_on_time').value;
+                data.in_full = document.getElementById('otif_in_full').value;
+                data.result = calcOTIF();
+                break;
+            case 'turnover':
+                data.cogs = document.getElementById('turnover_cogs').value;
+                data.avg_inv = document.getElementById('turnover_avg_inv').value;
+                data.result = calcTurnover();
+                break;
+            case 'forecast':
+                data.actual = document.getElementById('forecast_actual').value;
+                data.predicted = document.getElementById('forecast_predicted').value;
+                data.result = calcForecast();
+                break;
+            case 'scm_cost':
+                data.cost = document.getElementById('scm_cost_value').value;
+                data.sales = document.getElementById('scm_sales').value;
+                data.result = calcSCMCost();
+                break;
+            case 'c2c':
+                data.dio = document.getElementById('c2c_dio').value;
+                data.dso = document.getElementById('c2c_dso').value;
+                data.dpo = document.getElementById('c2c_dpo').value;
+                data.result = calcC2C();
+                break;
+        }
+        data.timestamp = new Date().toISOString();
+        localStorage.setItem(`kpi_${kpiId}`, JSON.stringify(data));
+        alert(`KPI "${kpiId}" сохранён`);
+    }
+
+    // Загрузка сохранённых данных
+    function loadSavedKPIs() {
+        const kpis = ['otif', 'turnover', 'forecast', 'scm_cost', 'c2c'];
+        kpis.forEach(kpi => {
+            const saved = localStorage.getItem(`kpi_${kpi}`);
+            if (saved) {
+                const data = JSON.parse(saved);
+                switch(kpi) {
+                    case 'otif':
+                        if (data.on_time) document.getElementById('otif_on_time').value = data.on_time;
+                        if (data.in_full) document.getElementById('otif_in_full').value = data.in_full;
+                        calcOTIF();
+                        break;
+                    case 'turnover':
+                        if (data.cogs) document.getElementById('turnover_cogs').value = data.cogs;
+                        if (data.avg_inv) document.getElementById('turnover_avg_inv').value = data.avg_inv;
+                        calcTurnover();
+                        break;
+                    case 'forecast':
+                        if (data.actual) document.getElementById('forecast_actual').value = data.actual;
+                        if (data.predicted) document.getElementById('forecast_predicted').value = data.predicted;
+                        calcForecast();
+                        break;
+                    case 'scm_cost':
+                        if (data.cost) document.getElementById('scm_cost_value').value = data.cost;
+                        if (data.sales) document.getElementById('scm_sales').value = data.sales;
+                        calcSCMCost();
+                        break;
+                    case 'c2c':
+                        if (data.dio) document.getElementById('c2c_dio').value = data.dio;
+                        if (data.dso) document.getElementById('c2c_dso').value = data.dso;
+                        if (data.dpo) document.getElementById('c2c_dpo').value = data.dpo;
+                        calcC2C();
+                        break;
+                }
+            }
+        });
+    }
+
+    // Декомпозиция OTIF (пример)
+    function renderDecomposition() {
+        const container = document.getElementById('decomp_tree');
+        container.innerHTML = `
+            <div style="background:#f8fafc; padding:16px; border-radius:16px;">
+                <p><strong>Perfect Order Fulfillment (OTIF) = 82%</strong> (пример)</p>
+                <ul style="margin-top:12px; list-style: none;">
+                    <li>📦 On-time delivery: 88% <span class="bad">🔴 ниже порога 95%</span></li>
+                    <li>📦 In-full delivery: 94% <span class="warning">🟡 близко к норме</span></li>
+                    <li>📦 Damage-free: 96% <span class="good">✅ хорошо</span></li>
+                    <li>📦 Documentation accuracy: 90% <span class="bad">🔴 критично</span></li>
+                </ul>
+                <p style="margin-top:12px;"><strong>Рекомендации:</strong> улучшить точность документов и своевременность доставки.</p>
+            </div>
+        `;
+    }
+
+    // Обработчики кнопок сохранения
+    document.querySelectorAll('.save-kpi').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const kpi = btn.getAttribute('data-kpi');
+            saveKPI(kpi);
+        });
+    });
+
+    // Привязка событий ввода для автоматического пересчёта
+    document.getElementById('otif_on_time').addEventListener('input', calcOTIF);
+    document.getElementById('otif_in_full').addEventListener('input', calcOTIF);
+    document.getElementById('turnover_cogs').addEventListener('input', calcTurnover);
+    document.getElementById('turnover_avg_inv').addEventListener('input', calcTurnover);
+    document.getElementById('forecast_actual').addEventListener('input', calcForecast);
+    document.getElementById('forecast_predicted').addEventListener('input', calcForecast);
+    document.getElementById('scm_cost_value').addEventListener('input', calcSCMCost);
+    document.getElementById('scm_sales').addEventListener('input', calcSCMCost);
+    document.getElementById('c2c_dio').addEventListener('input', calcC2C);
+    document.getElementById('c2c_dso').addEventListener('input', calcC2C);
+    document.getElementById('c2c_dpo').addEventListener('input', calcC2C);
+
+    // Инициализация
+    loadSavedKPIs();
+    renderDecomposition();
+</script>
+</body>
+</html>
