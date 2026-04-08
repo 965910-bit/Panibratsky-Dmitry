@@ -100,19 +100,19 @@
             border: 1px solid #e2e8f0;
             transition: 0.2s;
         }
-        .methodology-grid, .term-grid {
+        .methodology-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
             margin-top: 16px;
         }
-        .methodology-card, .term-card {
+        .methodology-card {
             background: #f8fafc;
             border-radius: 16px;
             padding: 20px;
             border-left: 4px solid #1e40af;
         }
-        .methodology-card h3, .term-card h3 {
+        .methodology-card h3 {
             margin-bottom: 12px;
             color: #1e40af;
         }
@@ -375,49 +375,78 @@
 
         function performSearch() {
             const term = searchInput.value.trim().toLowerCase();
-            // Сбрасываем видимость всех карточек и удаляем подсветку
+            // Сначала показываем все карточки, все методологии и все элементы глоссария
             const allCards = document.querySelectorAll('.card[data-card]');
-            allCards.forEach(card => {
-                card.style.display = '';
-                removeHighlights(card);
-            });
+            const allMethodologyCards = document.querySelectorAll('.methodology-card');
+            const allGlossaryTerms = document.querySelectorAll('.glossary-list dt, .glossary-list dd');
+            
+            allCards.forEach(card => card.style.display = '');
+            allMethodologyCards.forEach(card => card.style.display = '');
+            allGlossaryTerms.forEach(term => term.style.display = '');
+            removeHighlights(document.body);
+            
             if (term === '') {
                 resultsCountSpan.innerHTML = '';
                 return;
             }
 
-            let totalMatches = 0;
-            // Проверяем каждую карточку
-            allCards.forEach(card => {
-                const searchableElements = card.querySelectorAll('[data-searchable]');
-                let cardHasMatch = false;
-                searchableElements.forEach(el => {
-                    if (el.textContent.toLowerCase().includes(term)) {
-                        cardHasMatch = true;
-                        totalMatches++;
-                    }
-                });
-                if (!cardHasMatch) {
+            let visibleCount = 0;
+            // Обрабатываем методологические карточки
+            allMethodologyCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (!text.includes(term)) {
                     card.style.display = 'none';
                 } else {
-                    // Подсвечиваем только в найденных карточках
-                    searchableElements.forEach(el => {
-                        if (el.textContent.toLowerCase().includes(term)) {
-                            highlightText(el, term);
-                        }
-                    });
+                    visibleCount++;
+                    highlightText(card, term);
                 }
             });
-            resultsCountSpan.innerHTML = `Найдено совпадений в ${totalMatches} элементах.`;
+            
+            // Обрабатываем глоссарий: скрываем пары dt/dd, если ни dt, ни dd не содержат термин
+            const glossaryItems = document.querySelectorAll('.glossary-list dt, .glossary-list dd');
+            // Группируем по родительскому dl? Проще: скрываем отдельные dt и dd, но они идут парами. 
+            // Лучше: если dt не содержит, скрываем и dt, и следующее dd. Если dd содержит, показываем и dt.
+            // Для простоты: скрываем dt, если он не содержит термин, и скрываем dd, если не содержит. Но это может разорвать пары.
+            // Сделаем так: для каждого dt проверяем текст dt и следующего dd, если хотя бы один содержит, то оба показываем.
+            const dts = document.querySelectorAll('.glossary-list dt');
+            dts.forEach(dt => {
+                const dd = dt.nextElementSibling;
+                if (dd && dd.tagName === 'DD') {
+                    const dtText = dt.textContent.toLowerCase();
+                    const ddText = dd.textContent.toLowerCase();
+                    if (dtText.includes(term) || ddText.includes(term)) {
+                        dt.style.display = '';
+                        dd.style.display = '';
+                        visibleCount += 2;
+                        highlightText(dt, term);
+                        highlightText(dd, term);
+                    } else {
+                        dt.style.display = 'none';
+                        dd.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Теперь скрываем родительские карточки, если в них не осталось видимых дочерних элементов
+            allCards.forEach(card => {
+                const visibleChildren = card.querySelectorAll('.methodology-card:not([style*="display: none"]), .glossary-list dt:not([style*="display: none"])');
+                if (visibleChildren.length === 0) {
+                    card.style.display = 'none';
+                }
+            });
+            
+            resultsCountSpan.innerHTML = `Найдено совпадений в ${visibleCount} элементах.`;
         }
 
         function resetSearch() {
             searchInput.value = '';
             const allCards = document.querySelectorAll('.card[data-card]');
-            allCards.forEach(card => {
-                card.style.display = '';
-                removeHighlights(card);
-            });
+            const allMethodologyCards = document.querySelectorAll('.methodology-card');
+            const allGlossaryTerms = document.querySelectorAll('.glossary-list dt, .glossary-list dd');
+            allCards.forEach(card => card.style.display = '');
+            allMethodologyCards.forEach(card => card.style.display = '');
+            allGlossaryTerms.forEach(term => term.style.display = '');
+            removeHighlights(document.body);
             resultsCountSpan.innerHTML = '';
         }
 
