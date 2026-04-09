@@ -1,1 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Процессы SCM – методология и регламенты</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <style>
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 28px;
+            border: 1px solid #e2e8f0;
+        }
+        .section-card h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sub-section {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px dashed #cbd5e1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #eef2ff;
+            font-weight: 600;
+        }
+        .raci-table th {
+            background: #1e40af;
+            color: white;
+        }
+        .raci-table td {
+            background: #f8fafc;
+        }
+        .diagram {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 16px;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+        .note {
+            background: #fef9c3;
+            padding: 12px;
+            border-radius: 16px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html" class="active"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+            </ul>
+        </nav>
+    </aside>
 
+    <main class="main-content">
+        <h1>🔄 Процессы SCM – методология и регламенты</h1>
+        <p>Описание ключевых процессов управления цепями поставок на основе SCOR-модели, RACI-матриц и лучших практик.</p>
+
+        <!-- 1. SCOR-модель -->
+        <div class="section-card">
+            <h2><i class="fas fa-diagram-project"></i> 1. SCOR-модель (Supply Chain Operations Reference)</h2>
+            <p>SCOR – эталонная модель для описания, измерения и улучшения цепей поставок. Выделяет 6 ключевых процессов:</p>
+            <div class="diagram">
+                <strong>Plan</strong> (Планирование) → балансировка спроса и предложения<br>
+                <strong>Source</strong> (Закупки) → управление поставщиками, закупка материалов<br>
+                <strong>Make</strong> (Производство) → превращение сырья в готовую продукцию<br>
+                <strong>Deliver</strong> (Доставка) → управление заказами, склад, транспорт<br>
+                <strong>Return</strong> (Возвраты) → обратная логистика, возвраты от клиентов<br>
+                <strong>Enable</strong> (Обеспечение) → управление персоналом, IT, рисками
+            </div>
+            <p>Каждый процесс имеет свои KPI, лучшие практики и может быть детализирован до уровня операций.</p>
+        </div>
+
+        <!-- 2. RACI-матрицы для ключевых процессов -->
+        <div class="section-card">
+            <h2><i class="fas fa-table"></i> 2. RACI-матрицы</h2>
+            <p>Распределение ответственности между отделами. R – Responsible (исполнитель), A – Accountable (утверждающий), C – Consulted (консультируется), I – Informed (информируется).</p>
+            
+            <div class="sub-section"><strong>Процесс: Управление заказами (Order-to-Cash)</strong>
+                <table class="raci-table">
+                    <thead><tr><th>Действие</th><th>Продажи</th><th>SCM</th><th>Склад</th><th>Транспорт</th><th>Финансы</th></tr></thead>
+                    <tbody>
+                        <tr><td>Приём и проверка заказа</td><td>R</td><td>C</td><td>I</td><td>I</td><td>I</td></tr>
+                        <tr><td>Планирование отгрузки</td><td>C</td><td>R/A</td><td>C</td><td>C</td><td>I</td></tr>
+                        <tr><td>Комплектация и упаковка</td><td>I</td><td>C</td><td>R</td><td>I</td><td>I</td></tr>
+                        <tr><td>Доставка клиенту</td><td>I</td><td>C</td><td>I</td><td>R</td><td>I</td></tr>
+                        <tr><td>Выставление счета и оплата</td><td>C</td><td>I</td><td>I</td><td>I</td><td>R/A</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="sub-section"><strong>Процесс: Управление закупками (Procure-to-Pay)</strong>
+                <table class="raci-table">
+                    <thead><tr><th>Действие</th><th>Закупки</th><th>SCM</th><th>Финансы</th><th>Юристы</th><th>Склад</th></tr></thead>
+                    <tbody>
+                        <tr><td>Выбор поставщика и тендер</td><td>R/A</td><td>C</td><td>C</td><td>C</td><td>I</td></tr>
+                        <tr><td>Заключение договора</td><td>C</td><td>I</td><td>C</td><td>R/A</td><td>I</td></tr>
+                        <tr><td>Размещение заказа</td><td>R</td><td>C</td><td>I</td><td>I</td><td>I</td></tr>
+                        <tr><td>Приёмка товара</td><td>C</td><td>C</td><td>I</td><td>I</td><td>R</td></tr>
+                        <tr><td>Оплата счета</td><td>C</td><td>I</td><td>R/A</td><td>I</td><td>I</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="sub-section"><strong>Процесс: Управление запасами</strong>
+                <table class="raci-table">
+                    <thead><tr><th>Действие</th><th>SCM</th><th>Закупки</th><th>Продажи</th><th>Склад</th><th>Финансы</th></tr></thead>
+                    <tbody>
+                        <tr><td>Прогнозирование спроса</td><td>R/A</td><td>C</td><td>C</td><td>I</td><td>I</td></tr>
+                        <tr><td>Расчёт точки заказа и страхового запаса</td><td>R/A</td><td>C</td><td>I</td><td>I</td><td>C</td></tr>
+                        <tr><td>Инвентаризация</td><td>C</td><td>I</td><td>I</td><td>R</td><td>C</td></tr>
+                        <tr><td>Списание неликвидов</td><td>R/A</td><td>C</td><td>I</td><td>C</td><td>C</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. S&OP (Sales and Operations Planning) -->
+        <div class="section-card">
+            <h2><i class="fas fa-chart-line"></i> 3. S&OP – интегральное планирование</h2>
+            <p>Ежемесячный процесс, объединяющий продажи, производство, логистику и финансы. Этапы:</p>
+            <div class="diagram">
+                1. Сбор данных (факт продаж, запасы, выполнение плана)<br>
+                2. Прогнозирование спроса (статистическое + рыночные данные)<br>
+                3. Планирование поставок (закупки, производство, логистика)<br>
+                4. Предварительный S&OP (согласование с финансами)<br>
+                5. Исполнительный S&OP (утверждение плана, корректировка бюджета)<br>
+                6. Обратная связь и корректировка модели
+            </div>
+            <div class="note">Цифровой двойник позволяет автоматизировать этапы 2–4, просчитывая сценарии «что, если» и рекомендуя оптимальные параметры.</div>
+        </div>
+
+        <!-- 4. Описание ключевых процессов склада -->
+        <div class="section-card">
+            <h2><i class="fas fa-warehouse"></i> 4. Процессы склада (WMS)</h2>
+            <div class="diagram">
+                <strong>Приёмка:</strong> выгрузка → проверка документов → сканирование → контроль качества → маркировка → передача на размещение.<br>
+                <strong>Размещение:</strong> выбор ячейки (WMS) → перемещение → сканирование → фиксация адреса.<br>
+                <strong>Комплектация:</strong> получение задания → маршрутизация → отбор → сканирование → передача на упаковку.<br>
+                <strong>Упаковка:</strong> укладка в коробку → наклейка этикетки → формирование транспортного пакета.<br>
+                <strong>Отгрузка:</strong> формирование паллет → загрузка в транспорт → оформление документов.
+            </div>
+            <p>Для каждой операции установлены нормативы времени, KPI и ответственные.</p>
+        </div>
+
+        <!-- 5. Процессы транспорта и доставки -->
+        <div class="section-card">
+            <h2><i class="fas fa-truck"></i> 5. Процессы транспорта и доставки</h2>
+            <div class="diagram">
+                <strong>Планирование маршрутов:</strong> анализ заказов → консолидация → выбор типа ТС → расчёт стоимости.<br>
+                <strong>Назначение перевозчика:</strong> тендер / договор → выдача заявки → подтверждение.<br>
+                <strong>Отслеживание груза:</strong> GPS/ГЛОНАСС → статусы в TMS → уведомление клиента.<br>
+                <strong>Доставка и подтверждение:</strong> передача груза → подписание документов → занесение в систему.<br>
+                <strong>Обработка претензий:</strong> приём жалобы → проверка → выставление штрафа → корректирующие действия.
+            </div>
+        </div>
+
+        <!-- 6. Процессы закупок и управления поставщиками -->
+        <div class="section-card">
+            <h2><i class="fas fa-handshake"></i> 6. Процессы закупок и управления поставщиками</h2>
+            <div class="diagram">
+                <strong>Оценка и выбор поставщиков:</strong> RFI → RFQ → анализ предложений → аудит → аккредитация.<br>
+                <strong>Заключение договора:</strong> согласование условий → подписание → внесение в реестр.<br>
+                <strong>Управление заказами:</strong> расчёт потребности → размещение заказа → подтверждение.<br>
+                <strong>Мониторинг поставок:</strong> OTD, качество, рекламации → скоринг поставщиков.<br>
+                <strong>Развитие поставщиков:</strong> совместные проекты, обучение, корректирующие действия.
+            </div>
+        </div>
+
+        <!-- 7. Интеграция с цифровым двойником -->
+        <div class="section-card">
+            <h2><i class="fas fa-microchip"></i> 7. Цифровой двойник в процессах SCM</h2>
+            <p>Цифровой двойник – динамическая модель, которая синхронизируется с реальными процессами и позволяет:</p>
+            <ul>
+                <li>Прогнозировать спрос и оптимизировать запасы (what-if анализ).</li>
+                <li>Моделировать сбои (задержки поставщика, рост цен) и рассчитывать TTR/TTS.</li>
+                <li>Автоматически корректировать точки заказа и страховые запасы.</li>
+                <li>Тестировать внедрение новых технологий (RF, роботов) без остановки реального процесса.</li>
+                <li>Проводить виртуальные аудиты и оптимизировать численность персонала.</li>
+            </ul>
+            <div class="note">Внедрение цифрового двойника – ключевой этап цифровой трансформации SCM (см. дорожную карту).</div>
+        </div>
+
+        <!-- 8. Рекомендации по автоматизации процессов -->
+        <div class="section-card">
+            <h2><i class="fas fa-robot"></i> 8. Рекомендации по автоматизации процессов</h2>
+            <table>
+                <thead><tr><th>Процесс</th><th>Инструмент автоматизации</th><th>Ожидаемый эффект</th></tr></thead>
+                <tbody>
+                    <tr><td>Приёмка и размещение</td><td>RF-терминалы, WMS, ASN (EDI)</td><td>Снижение ошибок на 60%, рост скорости на 50%</td></tr>
+                    <tr><td>Комплектация</td><td>RF, голосовая комплектация, сортировочные конвейеры</td><td>Производительность до 150 строк/час, ошибки <0,3%</td></tr>
+                    <tr><td>Управление запасами</td><td>Автоматический пересчёт точки заказа, ML-прогнозирование</td><td>Снижение неликвидов на 30%, рост оборачиваемости</td></tr>
+                    <tr><td>Транспорт</td><td>TMS, GPS-мониторинг, динамическая маршрутизация</td><td>Снижение порожнего пробега на 20%, экономия топлива 10%</td></tr>
+                    <tr><td>Закупки</td><td>E-прокьюремент, EDI, тендерные площадки</td><td>Прозрачность, снижение затрат на 5–15%</td></tr>
+                    <tr><td>Документооборот</td><td>RPA-боты, электронный архив</td><td>Сокращение ручного ввода на 80%, снижение ошибок</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 9. Ссылки на связанные разделы -->
+        <div class="section-card">
+            <h2><i class="fas fa-link"></i> 9. Связанные разделы</h2>
+            <ul>
+                <li><a href="standards.html">Нормативы и бенчмарки</a> – числовые значения для оценки процессов.</li>
+                <li><a href="calculators.html">Калькуляторы SCM</a> – инструменты для расчёта EOQ, точки заказа, численности.</li>
+                <li><a href="auditor.html">Аудитор SCM</a> – проверка соответствия процессов стандартам.</li>
+                <li><a href="roadmap.html">Дорожная карта</a> – план трансформации процессов.</li>
+            </ul>
+        </div>
+    </main>
+</div>
+</body>
+</html>
