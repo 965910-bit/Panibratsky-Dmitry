@@ -91,9 +91,21 @@
         .quick-link:hover {
             background: #eef2ff;
         }
+        .print-btn {
+            background: #f59e0b;
+        }
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
+            }
+        }
+        @media print {
+            .sidebar, .btn-group, .print-btn, .quick-link {
+                display: none;
+            }
+            .card {
+                break-inside: avoid;
+                page-break-inside: avoid;
             }
         }
     </style>
@@ -122,6 +134,9 @@
     <main class="main-content">
         <h1>📊 SCM-дашборд</h1>
         <p>Сводная аналитика цепи поставок: ключевые показатели, прогресс трансформации, аудиты и рекомендации.</p>
+        <div style="text-align: right; margin-bottom: 16px;">
+            <button id="printDashboardBtn" class="print-btn"><i class="fas fa-print"></i> Печать дашборда</button>
+        </div>
 
         <div class="dashboard-grid">
             <!-- KPI виджеты -->
@@ -255,7 +270,6 @@
             let value = getLastKPI(kpi.id);
             if (value === null) value = '—';
             let statusClass = '';
-            let statusText = '';
             if (value !== '—') {
                 if (kpi.lowerIsBetter) {
                     if (value <= kpi.target) statusClass = 'kpi-good';
@@ -376,6 +390,10 @@
         });
     }
 
+    function printDashboard() {
+        window.print();
+    }
+
     // Инициализация
     renderKPIWidgets();
     renderRoadmapProgress();
@@ -384,6 +402,7 @@
     renderNotifications();
     renderWarehouseStats();
     populateKpiSelect();
+    document.getElementById('printDashboardBtn').addEventListener('click', printDashboard);
 </script>
 </body>
 </html>
