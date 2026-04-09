@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Методология управления запасами – Инструменты и расчёты для SCM</title>
+    <meta name="description" content="Полная методология управления запасами: оборачиваемость, GMROI, глубина остатка, классификация товаров, поиск неликвидов, КСХ, мотивация закупщиков. С примерами и калькуляторами.">
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
+        .app-container { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar .logo {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            display: block;
+            text-decoration: none;
+            color: #0f172a;
+        }
+        .sidebar .logo span { color: #d4af37; }
+        .sidebar nav ul { list-style: none; }
+        .sidebar nav ul li { margin-bottom: 8px; }
+        .sidebar nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .sidebar nav ul li a:hover, .sidebar nav ul li a.active {
+            background: #eef2ff;
+            color: #1e40af;
+        }
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 24px 32px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        h1 { font-size: 32px; margin-bottom: 8px; }
+        h2 { font-size: 24px; margin: 20px 0 16px; color: #1e40af; }
+        h3 { font-size: 20px; margin: 16px 0 12px; }
+        .formula {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 12px;
+            font-family: monospace;
+            margin: 12px 0;
+        }
+        .calc-group {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 16px 0;
+        }
+        .calc-group input, .calc-group select {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin: 8px 0;
+            width: 100%;
+            max-width: 300px;
+        }
+        .calc-group button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .calc-result {
+            margin-top: 12px;
+            font-weight: 700;
+        }
+        .table-wrapper { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+        th { background: #eef2ff; }
+        .badge {
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="index.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html" class="active"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>📦 Методология управления запасами</h1>
+        <p>Ключевые показатели, классификация, алгоритмы поиска неликвидов и мотивация закупщиков. Интерактивные калькуляторы для расчётов.</p>
+
+        <!-- Оглавление -->
+        <div class="card">
+            <h2>Содержание</h2>
+            <ul style="columns: 2; list-style: none;">
+                <li><a href="#basic">1. Базовые показатели</a></li>
+                <li><a href="#classification">2. Классификация товаров и запасов</a></li>
+                <li><a href="#non-moving">3. Поиск неликвидов</a></li>
+                <li><a href="#ksh">4. Критический срок хранения (КСХ)</a></li>
+                <li><a href="#motivation">5. Мотивация закупщиков</a></li>
+                <li><a href="#example">6. Сквозной пример</a></li>
+            </ul>
+        </div>
+
+        <!-- 1. Базовые показатели -->
+        <div class="card" id="basic">
+            <h2>1. Базовые показатели</h2>
+
+            <h3>📊 1.1. Оборачиваемость запасов</h3>
+            <div class="formula">
+                <strong>В днях:</strong> Оборачиваемость (дни) = Средний остаток за период / Средние продажи в день<br>
+                <strong>В разах:</strong> Коэффициент оборачиваемости = Сумма продаж за период / Средний остаток
+            </div>
+            <p><strong>Нормативы (примерные):</strong> A (хиты) – 10–30 дней; B – 30–60 дней; C – 60–90 дней. Сверхнорматив – >90 дней, супернеликвид – >180 дней без продаж.</p>
+
+            <h3>💰 1.2. Доходность запасов (GMROI)</h3>
+            <div class="formula">
+                <strong>GMROI = Валовая прибыль за период / Средний остаток в закупочных ценах</strong><br>
+                >1 – норма, >2 – хорошо, <1 – плохо.
+            </div>
+            <div class="calc-group">
+                <label>Валовая прибыль за период (руб):</label>
+                <input type="number" id="gmroi_profit" placeholder="например 500000">
+                <label>Средний остаток в закупочных ценах (руб):</label>
+                <input type="number" id="gmroi_avg_stock" placeholder="например 250000">
+                <button id="calc_gmroi">Рассчитать GMROI</button>
+                <div id="gmroi_result" class="calc-result"></div>
+            </div>
+
+            <h3>⏳ 1.3. Глубина остатка (дни до нуля)</h3>
+            <div class="formula">
+                Глубина остатка (дни) = Текущий остаток (шт) / Средние продажи в день (шт)
+            </div>
+            <div class="calc-group">
+                <label>Текущий остаток (шт):</label>
+                <input type="number" id="depth_stock" placeholder="например 100">
+                <label>Средние продажи в день (шт):</label>
+                <input type="number" id="depth_sales_per_day" placeholder="например 5">
+                <button id="calc_depth">Рассчитать глубину</button>
+                <div id="depth_result" class="calc-result"></div>
+            </div>
+        </div>
+
+        <!-- 2. Классификация товаров и запасов -->
+        <div class="card" id="classification">
+            <h2>2. Классификация товаров и запасов</h2>
+            <h3>2.1. Статусы товаров (закупочные характеристики)</h3>
+            <p><span class="badge">Закрытые</span> <span class="badge">Складской запас</span> <span class="badge">Нерегуляры</span> <span class="badge">Под заказ</span> <span class="badge">Новинка</span> <span class="badge">Акция</span> <span class="badge">Сезон</span></p>
+            <h3>2.2. Типы запасов (по экономической роли)</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Группа</th><th>Типы</th></tr></thead>
+                    <tbody>
+                        <tr><td>Рабочий</td><td>Оперативный, Страховой, Под заказ, В пути</td></tr>
+                        <tr><td>Рыночный</td><td>Сверхнормативный, Сезонный, Промо, Ошибочный</td></tr>
+                        <tr><td>Мёртвый</td><td>Неликвид, Брак, Рекламации</td></tr>
+                        <tr><td>Внереализационный</td><td>Сырьё, реклама</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Поиск неликвидов -->
+        <div class="card" id="non-moving">
+            <h2>3. Алгоритм поиска неликвидов</h2>
+            <ol>
+                <li>Удалить товары с нулевым остатком.</li>
+                <li>Оставить товары, у которых Дней на складе > Норматив для новинки (например, 60 дней).</li>
+                <li><strong>Супернеликвиды:</strong> продажи = 0.</li>
+                <li><strong>Обычные неликвиды:</strong> продажи > 0, Глубина остатка > КСХ (или > 180 дней), и GMROI &lt; 2.</li>
+                <li>Присвоить статусы «Супернеликвид» и «Неликвид» в учётной системе.</li>
+            </ol>
+        </div>
+
+        <!-- 4. Критический срок хранения -->
+        <div class="card" id="ksh">
+            <h2>4. Критический срок хранения (КСХ)</h2>
+            <div class="formula">
+                <strong>КСХ = (Р + АД × (ОтПост – ОтПок)) / (АД + З)</strong><br>
+                Р – рентабельность продаж (валовая прибыль / выручка)<br>
+                АД – альтернативная доходность (ставка по депозиту / 365)<br>
+                ОтПост – отсрочка поставщика (дни)<br>
+                ОтПок – отсрочка клиентам (дни)<br>
+                З – затраты на хранение в % к себестоимости в день
+            </div>
+            <div class="calc-group">
+                <label>Рентабельность продаж (%, например 20 → 0.2):</label>
+                <input type="number" id="ksh_r" step="0.01" placeholder="0.2">
+                <label>Альтернативная доходность (годовая %, например 10 → 0.1):</label>
+                <input type="number" id="ksh_ad" step="0.01" placeholder="0.1">
+                <label>Отсрочка поставщика (дни):</label>
+                <input type="number" id="ksh_otpost" placeholder="30">
+                <label>Отсрочка клиентам (дни):</label>
+                <input type="number" id="ksh_otpok" placeholder="15">
+                <label>Затраты на хранение (% к себестоимости в день):</label>
+                <input type="number" id="ksh_z" step="0.001" placeholder="0.001">
+                <button id="calc_ksh">Рассчитать КСХ (дни)</button>
+                <div id="ksh_result" class="calc-result"></div>
+            </div>
+        </div>
+
+        <!-- 5. Мотивация закупщиков -->
+        <div class="card" id="motivation">
+            <h2>5. Мотивация закупщиков (на основе глубины остатка)</h2>
+            <p><strong>Три мотиватора и веса:</strong> Обнуление остатков (50%), Мёртвый запас (40%), Снижение затрат (10%).</p>
+            <div class="formula">
+                Премия = (Макс_премия × 50% × (1 – %невып_обнуление)) + (Макс_премия × 40% × (1 – %невып_мертвый)) + (Макс_премия × 10% × коэф_снижения_затрат)
+            </div>
+            <div class="calc-group">
+                <label>Максимальная премия (руб):</label>
+                <input type="number" id="mot_bonus" placeholder="70000">
+                <label>% невыполнения по обнулению (0..1):</label>
+                <input type="number" id="mot_obn" step="0.01" placeholder="0.23">
+                <label>% невыполнения по мёртвому запасу (0..1):</label>
+                <input type="number" id="mot_mert" step="0.01" placeholder="0.13">
+                <label>Коэффициент снижения затрат (0..1):</label>
+                <input type="number" id="mot_cost" step="0.01" placeholder="1.0">
+                <button id="calc_motivation">Рассчитать премию</button>
+                <div id="mot_result" class="calc-result"></div>
+            </div>
+            <p><strong>Важные уточнения:</strong> Для сезонных товаров норматив max увеличивается; для товаров «под заказ» мотивация считается по проценту невыполненных заказов клиентов; для группы A норматив min ужесточается (например, 5 дней вместо 3).</p>
+        </div>
+
+        <!-- 6. Сквозной пример -->
+        <div class="card" id="example">
+            <h2>6. Сквозной пример расчёта по одному товару</h2>
+            <p><strong>Товар:</strong> Гребень для волос.<br>
+            Период: 181 день. Остаток на конец: 29 шт. Продажи за период: 17 шт.<br>
+            Средние продажи в день = 17 / 181 ≈ 0,094 шт.<br>
+            Глубина остатка = 29 / 0,094 ≈ 308 дней.<br>
+            GMROI = 0,45 (очень низкий).<br>
+            КСХ = 175 дней (рассчитан).<br>
+            <strong>Вывод:</strong> товар – неликвид (глубина > 175, GMROI < 2). Закупщик получает депремирование по статье «Мёртвый запас».</p>
+            <div class="formula">
+                <strong>Как использовать этот пример:</strong> подставьте свои данные в калькуляторы выше, чтобы оценить неликвиды и скорректировать мотивацию.
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📌 Внедрение методологии (по шагам)</h2>
+            <ol>
+                <li>Настроить учётную систему (физические склады + виртуальные).</li>
+                <li>Присвоить товарам закупочные характеристики.</li>
+                <li>Рассчитать критические сроки хранения.</li>
+                <li>Ежедневно/еженедельно формировать отчёт по алгоритму поиска неликвидов.</li>
+                <li>Ежемесячно рассчитывать мотивацию закупщиков по глубине остатка.</li>
+                <li>Вывести на инфостену ключевые метрики: доля супернеликвидов, обеспеченность товаром, выполнение плана продаж неликвидов.</li>
+            </ol>
+        </div>
+    </main>
+</div>
+
+<script>
+    // GMROI калькулятор
+    document.getElementById('calc_gmroi').addEventListener('click', () => {
+        const profit = parseFloat(document.getElementById('gmroi_profit').value);
+        const avgStock = parseFloat(document.getElementById('gmroi_avg_stock').value);
+        if (!isNaN(profit) && !isNaN(avgStock) && avgStock !== 0) {
+            const gmroi = profit / avgStock;
+            document.getElementById('gmroi_result').innerHTML = `GMROI = ${gmroi.toFixed(2)} (${gmroi > 1 ? (gmroi > 2 ? '✅ отлично' : '✅ норма') : '❌ плохо'})`;
+        } else {
+            document.getElementById('gmroi_result').innerHTML = 'Введите корректные значения';
+        }
+    });
+
+    // Глубина остатка
+    document.getElementById('calc_depth').addEventListener('click', () => {
+        const stock = parseFloat(document.getElementById('depth_stock').value);
+        const salesPerDay = parseFloat(document.getElementById('depth_sales_per_day').value);
+        if (!isNaN(stock) && !isNaN(salesPerDay) && salesPerDay !== 0) {
+            const depth = stock / salesPerDay;
+            document.getElementById('depth_result').innerHTML = `Глубина остатка: ${depth.toFixed(1)} дней. ${depth > 90 ? '⚠️ Сверхнорматив, возможен неликвид' : '✅ в пределах нормы'}`;
+        } else {
+            document.getElementById('depth_result').innerHTML = 'Введите корректные значения';
+        }
+    });
+
+    // КСХ калькулятор
+    document.getElementById('calc_ksh').addEventListener('click', () => {
+        let r = parseFloat(document.getElementById('ksh_r').value);
+        let ad_year = parseFloat(document.getElementById('ksh_ad').value);
+        let otPost = parseFloat(document.getElementById('ksh_otpost').value);
+        let otPok = parseFloat(document.getElementById('ksh_otpok').value);
+        let z = parseFloat(document.getElementById('ksh_z').value);
+
+        if (isNaN(r)) r = 0;
+        if (isNaN(ad_year)) ad_year = 0;
+        if (isNaN(otPost)) otPost = 0;
+        if (isNaN(otPok)) otPok = 0;
+        if (isNaN(z)) z = 0;
+
+        const ad = ad_year / 365;
+        const numerator = r + ad * (otPost - otPok);
+        const denominator = ad + z;
+        if (denominator !== 0) {
+            const ksh = numerator / denominator;
+            document.getElementById('ksh_result').innerHTML = `Критический срок хранения (КСХ) = ${ksh.toFixed(1)} дней. ${ksh < 0 ? '⚠️ Формула дала отрицательное значение – проверьте исходные данные.' : ''}`;
+        } else {
+            document.getElementById('ksh_result').innerHTML = 'Ошибка: знаменатель равен нулю.';
+        }
+    });
+
+    // Мотивация закупщиков
+    document.getElementById('calc_motivation').addEventListener('click', () => {
+        let maxBonus = parseFloat(document.getElementById('mot_bonus').value);
+        let obn = parseFloat(document.getElementById('mot_obn').value);
+        let mert = parseFloat(document.getElementById('mot_mert').value);
+        let costCoef = parseFloat(document.getElementById('mot_cost').value);
+
+        if (isNaN(maxBonus)) maxBonus = 0;
+        if (isNaN(obn)) obn = 0;
+        if (isNaN(mert)) mert = 0;
+        if (isNaN(costCoef)) costCoef = 0;
+
+        const part1 = maxBonus * 0.5 * (1 - obn);
+        const part2 = maxBonus * 0.4 * (1 - mert);
+        const part3 = maxBonus * 0.1 * costCoef;
+        const total = part1 + part2 + part3;
+        document.getElementById('mot_result').innerHTML = `Премия = ${total.toFixed(2)} руб. (части: обнуление ${part1.toFixed(2)}, мёртвый запас ${part2.toFixed(2)}, снижение затрат ${part3.toFixed(2)})`;
+    });
+</script>
+</body>
+</html>
