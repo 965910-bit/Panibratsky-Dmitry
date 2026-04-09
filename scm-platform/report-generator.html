@@ -7,6 +7,7 @@
     <title>SCM – Отчётный шаблон</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
     <script src="scm-common.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,27 +39,12 @@
             align-items: center;
             gap: 16px;
         }
-        .logo-placeholder {
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: 800;
-            color: #1e40af;
-        }
-        /* Если есть реальный логотип, раскомментировать и указать путь */
-        /*
         .logo-image {
             width: 60px;
             height: 60px;
-            background: url('logo.png') no-repeat center;
+            background: url('assets/LargeTile.scale-200.png') no-repeat center;
             background-size: contain;
         }
-        */
         .company-name {
             font-size: 20px;
             font-weight: 600;
@@ -186,12 +172,7 @@
 <div class="report-container" id="reportContainer">
     <div class="report-header">
         <div class="logo-area">
-            <div class="logo-placeholder">
-                <i class="fas fa-boxes"></i>
-            </div>
-            <!-- Для реального логотипа замените блок выше на:
             <div class="logo-image"></div>
-            -->
             <div class="company-name">
                 ООО «Логистик-Сервис»<br>
                 <span style="font-size: 12px;">Управление цепями поставок</span>
@@ -211,16 +192,13 @@
     </div>
 </div>
 <script>
-    // Получение параметров из URL
     const urlParams = new URLSearchParams(window.location.search);
-    const type = urlParams.get('type');      // 'audit', 'checklist', 'kpi'
-    const id = urlParams.get('id');          // для аудита – ID
-    const name = urlParams.get('name');      // для чек-листа – название категории
-    const kpiId = urlParams.get('kpi');      // для KPI – идентификатор
+    const type = urlParams.get('type');
+    const id = urlParams.get('id');
+    const name = urlParams.get('name');
+    const kpiId = urlParams.get('kpi');
 
-    let reportData = null;
-
-    async function loadReport() {
+    function loadReport() {
         let html = '';
         if (type === 'audit' && id) {
             const audit = SCMData.getAuditById(id);
@@ -343,10 +321,9 @@
 
     document.getElementById('printBtn').addEventListener('click', () => window.print());
     document.getElementById('emailBtn').addEventListener('click', () => {
-        // Получаем HTML содержимое отчёта (без кнопок и лишних элементов)
         const reportHtml = document.getElementById('reportContent').innerHTML;
         const subject = encodeURIComponent(document.getElementById('reportTypeTitle').innerText);
-        const body = encodeURIComponent(reportHtml.replace(/<[^>]*>/g, '').substring(0, 2000)); // простой текст
+        const body = encodeURIComponent(reportHtml.replace(/<[^>]*>/g, '').substring(0, 2000));
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     });
 
