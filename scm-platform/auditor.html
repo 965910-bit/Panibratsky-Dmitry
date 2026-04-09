@@ -1,1 +1,648 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Аудитор SCM – оценка зрелости цепи поставок</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
+        .app-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: white; border-right: 1px solid #e2e8f0; padding: 24px 16px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar .logo { font-size: 18px; font-weight: 700; margin-bottom: 32px; display: block; text-decoration: none; color: #0f172a; }
+        .sidebar .logo span { color: #d4af37; }
+        .sidebar nav ul { list-style: none; }
+        .sidebar nav ul li { margin-bottom: 8px; }
+        .sidebar nav ul li a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; text-decoration: none; color: #334155; font-weight: 500; transition: 0.2s; }
+        .sidebar nav ul li a:hover, .sidebar nav ul li a.active { background: #eef2ff; color: #1e40af; }
+        .main-content { margin-left: 260px; flex: 1; padding: 24px 32px; }
+        .audit-type-selector, .template-selector { background: white; border-radius: 20px; padding: 16px 24px; margin-bottom: 24px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; border: 1px solid #e2e8f0; }
+        .total-score-card { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; border-radius: 24px; padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .total-score-number { font-size: 48px; font-weight: 800; }
+        .maturity-label { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 40px; font-weight: 500; }
+        .audit-section { background: white; border-radius: 20px; padding: 24px; margin-bottom: 24px; border: 1px solid #e2e8f0; }
+        .section-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #eef2ff; }
+        .section-header h2 { font-size: 22px; color: #1e40af; }
+        .section-score { font-weight: 700; background: #eef2ff; padding: 6px 14px; border-radius: 30px; font-size: 14px; }
+        .checklist-item { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .checklist-item select, .checklist-item input { padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 12px; background: white; }
+        .checklist-item label { flex: 2; cursor: pointer; font-size: 14px; }
+        .fact-input { width: 120px; }
+        .fact-unit { font-size: 12px; color: #64748b; margin-left: 4px; }
+        .progress-bar-container { height: 8px; background: #e2e8f0; border-radius: 10px; margin: 12px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: #1e40af; width: 0%; border-radius: 10px; }
+        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+        button { background: #1e40af; color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-weight: 500; }
+        button.reset-btn { background: #94a3b8; }
+        button.print-btn { background: #f59e0b; }
+        .mode-switch { display: flex; gap: 8px; margin-bottom: 20px; background: white; border-radius: 40px; padding: 6px; border: 1px solid #e2e8f0; width: fit-content; }
+        .mode-switch button { background: transparent; color: #334155; box-shadow: none; }
+        .mode-switch button.active { background: #1e40af; color: white; }
+        .constructor-section { background: white; border-radius: 20px; padding: 24px; margin-bottom: 24px; }
+        .item-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .item-picker label { display: flex; align-items: center; gap: 6px; background: #f8fafc; padding: 6px 12px; border-radius: 30px; font-size: 13px; }
+        .custom-item-form { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+        .custom-item-form input, .custom-item-form select { padding: 8px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .template-list { margin-top: 20px; }
+        .template-item { background: #f8fafc; border-radius: 16px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px; } }
+        @media print { .sidebar, .btn-group, .audit-type-selector, .template-selector, .mode-switch, .total-score-card, .progress-bar-container { display: none; } .main-content { margin: 0; padding: 0; } .audit-section { break-inside: avoid; } }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html" class="active"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+            </ul>
+        </nav>
+    </aside>
 
+    <main class="main-content">
+        <h1>📋 Аудитор SCM</h1>
+        <div class="mode-switch" id="modeSwitch">
+            <button id="auditModeBtn" class="active">🔍 Провести аудит</button>
+            <button id="constructorModeBtn">🛠️ Конструктор шаблонов</button>
+        </div>
+
+        <!-- Режим аудита -->
+        <div id="auditModePanel">
+            <div class="audit-type-selector">
+                <div><label><input type="radio" name="auditType" value="Плановый" checked> Плановый</label>
+                     <label><input type="radio" name="auditType" value="Внеплановый"> Внеплановый</label>
+                     <label><input type="radio" name="auditType" value="Целевой"> Целевой</label></div>
+                <div><label>Шаблон аудита: </label><select id="templateSelectForAudit"></select></div>
+                <div><label>Загрузить сохранённый аудит: </label><select id="loadAuditSelect"></select></div>
+            </div>
+            <div class="total-score-card">
+                <div><div style="font-size: 18px;">Общий уровень зрелости SCM</div><div class="total-score-number" id="totalScorePercent">0%</div></div>
+                <div class="maturity-label" id="maturityLabel">—</div>
+            </div>
+            <div id="auditSectionsContainer"></div>
+            <div class="btn-group">
+                <button id="saveAuditBtn">💾 Сохранить аудит</button>
+                <button id="calculateBtn">📊 Пересчитать оценку</button>
+                <button id="resetAuditBtn" class="reset-btn">🔄 Сбросить все ответы</button>
+                <button id="printPdfBtn" class="print-btn">🖨️ Печать PDF (отчёт с рекомендациями)</button>
+            </div>
+        </div>
+
+        <!-- Режим конструктора -->
+        <div id="constructorModePanel" style="display: none;">
+            <div class="constructor-section">
+                <h3>📌 Выберите пункты для шаблона</h3>
+                <div id="allItemsPicker" class="item-picker"></div>
+                <div class="custom-item-form">
+                    <input type="text" id="newItemText" placeholder="Текст пункта" style="flex:2;">
+                    <select id="newItemCondition"><option value="greater">≥</option><option value="less">≤</option></select>
+                    <input type="number" id="newItemTarget" placeholder="Целевое значение">
+                    <input type="text" id="newItemUnit" placeholder="Ед. изм. (%, дни, руб.)">
+                    <button id="addCustomItemBtn">➕ Добавить свой пункт</button>
+                </div>
+                <div class="template-list">
+                    <h3>📁 Мои шаблоны</h3>
+                    <div id="templatesList"></div>
+                    <div style="margin-top: 16px;">
+                        <input type="text" id="newTemplateName" placeholder="Название шаблона">
+                        <button id="saveTemplateBtn">💾 Сохранить текущий набор как шаблон</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // ------------------------------------------------------------------
+    // 1. ПОЛНЫЙ ПЕРЕЧЕНЬ ВОЗМОЖНЫХ ПУНКТОВ АУДИТА (11 секций, 135+ пунктов)
+    // ------------------------------------------------------------------
+    const sectionTitles = {
+        personnel: '1. Персонал и ФОТ',
+        operations: '2. Операционная эффективность (склад)',
+        transport: '3. Транспорт и логистика',
+        procurement: '4. Закупки и управление поставщиками',
+        finance: '5. Финансы и бюджетирование',
+        data_it: '6. Данные и IT',
+        compliance: '7. Комплаенс и риски',
+        esg: '8. Устойчивое развитие (ESG)',
+        customer: '9. Клиентский сервис и качество',
+        digital: '10. Цифровая трансформация и инновации',
+        safety: '11. Охрана труда, пожарная и промышленная безопасность'
+    };
+    const sectionsOrder = ['personnel','operations','transport','procurement','finance','data_it','compliance','esg','customer','digital','safety'];
+
+    let masterItems = {
+        // ---- 1. Персонал и ФОТ (12) ----
+        p1:{section:"personnel",text:"Численность персонала рассчитана driver-based (привязка к объёму работ)",recommend:"Да",inputType:"none",unit:""},
+        p2:{section:"personnel",text:"Северные надбавки и районный коэффициент начисляются корректно",recommend:"Да",inputType:"none",unit:""},
+        p3:{section:"personnel",text:"Учтены льготы для женщин (36-часовая неделя, перерывы на кормление)",recommend:"Да",inputType:"none",unit:""},
+        p4:{section:"personnel",text:"Внедрена сдельная оплата (за скан / за паллету / за строку)",recommend:"Да",inputType:"none",unit:""},
+        p5:{section:"personnel",text:"Текучесть кадров на складе",recommend:"<25%",inputType:"number",unit:"%",target:25,condition:"less"},
+        p6:{section:"personnel",text:"Текучесть среди водителей и экспедиторов",recommend:"<20%",inputType:"number",unit:"%",target:20,condition:"less"},
+        p7:{section:"personnel",text:"Доля сотрудников, прошедших обучение цифровой грамотности",recommend:"≥80%",inputType:"number",unit:"%",target:80,condition:"greater"},
+        p8:{section:"personnel",text:"Доля сотрудников, прошедших обучение по охране труда (за год)",recommend:"100%",inputType:"number",unit:"%",target:100,condition:"greater"},
+        p9:{section:"personnel",text:"Наличие программы наставничества для новых сотрудников",recommend:"Да",inputType:"none",unit:""},
+        p10:{section:"personnel",text:"Средняя зарплата комплектовщика (регион)",recommend:"не ниже рынка",inputType:"number",unit:"руб.",target:50000,condition:"greater"},
+        p11:{section:"personnel",text:"Использование временного персонала (аутстаффинг) в пик",recommend:"Да",inputType:"none",unit:""},
+        p12:{section:"personnel",text:"Доля сотрудников, охваченных KPI-премированием",recommend:"≥90%",inputType:"number",unit:"%",target:90,condition:"greater"},
+        // ---- 2. Операционная эффективность (12) ----
+        o1:{section:"operations",text:"Производительность склада (строк/чел.-час)",recommend:"≥80",inputType:"number",unit:"строк/час",target:80,condition:"greater"},
+        o2:{section:"operations",text:"Ошибки сборки",recommend:"<0,5%",inputType:"number",unit:"%",target:0.5,condition:"less"},
+        o3:{section:"operations",text:"OTD отгрузки со склада (от получения заказа до отгрузки)",recommend:"≥98%",inputType:"number",unit:"%",target:98,condition:"greater"},
+        o4:{section:"operations",text:"Fill Rate (наличие товара на складе)",recommend:"≥97%",inputType:"number",unit:"%",target:97,condition:"greater"},
+        o5:{section:"operations",text:"Внедрена система адресного хранения и RF-терминалы",recommend:"Да",inputType:"none",unit:""},
+        o6:{section:"operations",text:"Точность инвентаризации (расхождение фактического остатка с учётным)",recommend:"≥99,5%",inputType:"number",unit:"%",target:99.5,condition:"greater"},
+        o7:{section:"operations",text:"Время цикла приёмки (от разгрузки до размещения в ячейку)",recommend:"<2 часа",inputType:"number",unit:"часов",target:2,condition:"less"},
+        o8:{section:"operations",text:"Время цикла комплектации (от получения задания до передачи на упаковку)",recommend:"<1 час",inputType:"number",unit:"часов",target:1,condition:"less"},
+        o9:{section:"operations",text:"Доля возвратов по вине склада (неправильная сборка, повреждение)",recommend:"<2%",inputType:"number",unit:"%",target:2,condition:"less"},
+        o10:{section:"operations",text:"Использование складских площадей (загрузка)",recommend:"75–85%",inputType:"number",unit:"%",target:80,condition:"greater"},
+        o11:{section:"operations",text:"Внедрена система WMS (управление складом)",recommend:"Да",inputType:"none",unit:""},
+        o12:{section:"operations",text:"Автоматизация учёта сроков годности (FEFO)",recommend:"Да",inputType:"none",unit:""},
+        // ---- 3. Транспорт и логистика (10) ----
+        t1:{section:"transport",text:"OTD доставки клиентам (вовремя)",recommend:"≥96%",inputType:"number",unit:"%",target:96,condition:"greater"},
+        t2:{section:"transport",text:"Доля повреждённых грузов при транспортировке",recommend:"<0,5%",inputType:"number",unit:"%",target:0.5,condition:"less"},
+        t3:{section:"transport",text:"Средняя стоимость доставки 1 тонно-километра",recommend:"≤12 руб.",inputType:"number",unit:"руб.",target:12,condition:"less"},
+        t4:{section:"transport",text:"Доля порожнего пробега (Deadhead)",recommend:"<20%",inputType:"number",unit:"%",target:20,condition:"less"},
+        t5:{section:"transport",text:"Использование TMS (транспортной системы)",recommend:"Да",inputType:"none",unit:""},
+        t6:{section:"transport",text:"Доля маршрутов, оптимизированных автоматически",recommend:"≥80%",inputType:"number",unit:"%",target:80,condition:"greater"},
+        t7:{section:"transport",text:"Среднее время загрузки фуры",recommend:"<2 часа",inputType:"number",unit:"часов",target:2,condition:"less"},
+        t8:{section:"transport",text:"Наличие системы отслеживания грузов в реальном времени (GPS/ГЛОНАСС)",recommend:"Да",inputType:"none",unit:""},
+        t9:{section:"transport",text:"Доля перевозок, выполненных собственным транспортом",recommend:"любое",inputType:"number",unit:"%",target:0,condition:"greater"},
+        t10:{section:"transport",text:"Средний расход топлива (л/100 км) по парку",recommend:"≤32 л",inputType:"number",unit:"л",target:32,condition:"less"},
+        // ---- 4. Закупки и управление поставщиками (10) ----
+        pr1:{section:"procurement",text:"Доля закупок у сертифицированных поставщиков",recommend:"≥80%",inputType:"number",unit:"%",target:80,condition:"greater"},
+        pr2:{section:"procurement",text:"Своевременность поставок от поставщиков (OTD)",recommend:"≥96%",inputType:"number",unit:"%",target:96,condition:"greater"},
+        pr3:{section:"procurement",text:"Доля брака от поставщиков",recommend:"<1%",inputType:"number",unit:"%",target:1,condition:"less"},
+        pr4:{section:"procurement",text:"Наличие альтернативных поставщиков для критических позиций (не менее 2)",recommend:"Да",inputType:"none",unit:""},
+        pr5:{section:"procurement",text:"Использование электронных тендеров (e-procurement)",recommend:"Да",inputType:"none",unit:""},
+        pr6:{section:"procurement",text:"Доля закупок, проведённых через централизованный тендер",recommend:"≥70%",inputType:"number",unit:"%",target:70,condition:"greater"},
+        pr7:{section:"procurement",text:"Средняя отсрочка платежа поставщикам (DPO)",recommend:"≥45 дней",inputType:"number",unit:"дней",target:45,condition:"greater"},
+        pr8:{section:"procurement",text:"Проведена оценка рисков поставщиков (финансовых, геополитических)",recommend:"Да",inputType:"none",unit:""},
+        pr9:{section:"procurement",text:"Доля закупок по рамочным договорам (долгосрочным)",recommend:"≥60%",inputType:"number",unit:"%",target:60,condition:"greater"},
+        pr10:{section:"procurement",text:"Автоматизация процесса согласования закупок (EDI, SAP Ariba и т.п.)",recommend:"Да",inputType:"none",unit:""},
+        // ---- 5. Финансы и бюджетирование (10) ----
+        f1:{section:"finance",text:"Бюджет SCM утверждён и не превышает плановый более чем на 5%",recommend:"Да",inputType:"none",unit:""},
+        f2:{section:"finance",text:"Доля ФОТ в выручке SCM",recommend:"≤5%",inputType:"number",unit:"%",target:5,condition:"less"},
+        f3:{section:"finance",text:"Cash-to-Cash цикл (CCC)",recommend:"≤45 дней",inputType:"number",unit:"дней",target:45,condition:"less"},
+        f4:{section:"finance",text:"GMROI для категории A (валовая рентабельность инвестиций в запасы)",recommend:">2",inputType:"number",unit:"",target:2,condition:"greater"},
+        f5:{section:"finance",text:"Ежемесячный анализ отклонений бюджета SCM",recommend:"Да",inputType:"none",unit:""},
+        f6:{section:"finance",text:"Затраты на транспорт (% от выручки)",recommend:"<4%",inputType:"number",unit:"%",target:4,condition:"less"},
+        f7:{section:"finance",text:"Затраты на склад (% от выручки)",recommend:"<3%",inputType:"number",unit:"%",target:3,condition:"less"},
+        f8:{section:"finance",text:"ROI на инвестиции в автоматизацию (WMS, RF, роботы)",recommend:">100%",inputType:"number",unit:"%",target:100,condition:"greater"},
+        f9:{section:"finance",text:"Оборачиваемость запасов (раз в год)",recommend:"≥6",inputType:"number",unit:"раз",target:6,condition:"greater"},
+        f10:{section:"finance",text:"Доля неликвидов в общем объёме запасов",recommend:"<5%",inputType:"number",unit:"%",target:5,condition:"less"},
+        // ---- 6. Данные и IT (10) ----
+        d1:{section:"data_it",text:"Внедрена WMS с адресным хранением",recommend:"Да",inputType:"none",unit:""},
+        d2:{section:"data_it",text:"Точность данных в WMS (выборочная инвентаризация)",recommend:"≥99%",inputType:"number",unit:"%",target:99,condition:"greater"},
+        d3:{section:"data_it",text:"Data Latency (задержка обновления данных)",recommend:"<1 минуты",inputType:"number",unit:"сек",target:60,condition:"less"},
+        d4:{section:"data_it",text:"MAPE прогноза спроса (средняя абсолютная процентная ошибка)",recommend:"≤15%",inputType:"number",unit:"%",target:15,condition:"less"},
+        d5:{section:"data_it",text:"Цифровой двойник используется для what-if анализа",recommend:"Да",inputType:"none",unit:""},
+        d6:{section:"data_it",text:"Интеграция WMS с ERP (1С, SAP и т.д.)",recommend:"Да",inputType:"none",unit:""},
+        d7:{section:"data_it",text:"Использование BI-дашбордов для мониторинга KPI в реальном времени",recommend:"Да",inputType:"none",unit:""},
+        d8:{section:"data_it",text:"Автоматическое прогнозирование спроса (ML/AI)",recommend:"Да",inputType:"none",unit:""},
+        d9:{section:"data_it",text:"Доля ручного ввода данных в учётных системах",recommend:"<10%",inputType:"number",unit:"%",target:10,condition:"less"},
+        d10:{section:"data_it",text:"Проведена оценка кибербезопасности SCM-систем",recommend:"Да",inputType:"none",unit:""},
+        // ---- 7. Комплаенс и риски (8) ----
+        c1:{section:"compliance",text:"Все сотрудники прошли инструктаж по охране труда",recommend:"Да",inputType:"none",unit:""},
+        c2:{section:"compliance",text:"Страхование грузов и складов (доля застрахованных)",recommend:"100%",inputType:"number",unit:"%",target:100,condition:"greater"},
+        c3:{section:"compliance",text:"Оценка рисков ключевых поставщиков (финансовых, геополитических, ESG)",recommend:"Да",inputType:"none",unit:""},
+        c4:{section:"compliance",text:"Договоры с перевозчиками содержат SLA с KPI и штрафами",recommend:"Да",inputType:"none",unit:""},
+        c5:{section:"compliance",text:"Наличие плана непрерывности бизнеса (BCP) для критических сбоев",recommend:"Да",inputType:"none",unit:""},
+        c6:{section:"compliance",text:"Проведён аудит безопасности данных (GDPR, 152-ФЗ)",recommend:"Да",inputType:"none",unit:""},
+        c7:{section:"compliance",text:"Соблюдение таможенного законодательства (доля корректных деклараций)",recommend:"≥99%",inputType:"number",unit:"%",target:99,condition:"greater"},
+        c8:{section:"compliance",text:"Наличие сертификатов ISO (9001, 14001, 45001)",recommend:"Да",inputType:"none",unit:""},
+        // ---- 8. Устойчивое развитие ESG (8) ----
+        e1:{section:"esg",text:"Учёт Scope 1,2,3 выбросов CO₂",recommend:"Да",inputType:"none",unit:""},
+        e2:{section:"esg",text:"Снижение выбросов CO₂ на единицу продукции за год",recommend:"≥5%",inputType:"number",unit:"%",target:5,condition:"greater"},
+        e3:{section:"esg",text:"Доля переработанных материалов в упаковке",recommend:"≥30%",inputType:"number",unit:"%",target:30,condition:"greater"},
+        e4:{section:"esg",text:"Доля отходов, направленных на переработку или утилизацию",recommend:"≥80%",inputType:"number",unit:"%",target:80,condition:"greater"},
+        e5:{section:"esg",text:"Наличие политики устойчивого развития у поставщиков",recommend:"Да",inputType:"none",unit:""},
+        e6:{section:"esg",text:"Использование возобновляемой энергии (солнечные панели, зелёный тариф)",recommend:"Да",inputType:"none",unit:""},
+        e7:{section:"esg",text:"Социальные программы для сотрудников (ДМС, обучение, жильё)",recommend:"Да",inputType:"none",unit:""},
+        e8:{section:"esg",text:"Публичная ESG-отчётность (нефинансовая отчётность)",recommend:"Да",inputType:"none",unit:""},
+        // ---- 9. Клиентский сервис и качество (8) ----
+        cs1:{section:"customer",text:"NPS по логистике (Net Promoter Score)",recommend:"≥50",inputType:"number",unit:"баллов",target:50,condition:"greater"},
+        cs2:{section:"customer",text:"CES (Customer Effort Score) – лёгкость решения проблем",recommend:"≤2",inputType:"number",unit:"баллов",target:2,condition:"less"},
+        cs3:{section:"customer",text:"FCR (First Contact Resolution) – доля проблем, решённых с первого обращения",recommend:"≥80%",inputType:"number",unit:"%",target:80,condition:"greater"},
+        cs4:{section:"customer",text:"Среднее время ответа на претензию",recommend:"<4 часов",inputType:"number",unit:"часов",target:4,condition:"less"},
+        cs5:{section:"customer",text:"Доля возвратов товара по вине логистики (повреждения, ошибки)",recommend:"<2%",inputType:"number",unit:"%",target:2,condition:"less"},
+        cs6:{section:"customer",text:"Доля клиентов, использующих электронный документооборот",recommend:"≥70%",inputType:"number",unit:"%",target:70,condition:"greater"},
+        cs7:{section:"customer",text:"Наличие системы отслеживания заказа для клиента (трекинг)",recommend:"Да",inputType:"none",unit:""},
+        cs8:{section:"customer",text:"Средняя оценка качества доставки (по 5-балльной шкале)",recommend:"≥4,5",inputType:"number",unit:"баллов",target:4.5,condition:"greater"},
+        // ---- 10. Цифровая трансформация и инновации (10) ----
+        x1:{section:"digital",text:"Внедрены RPA-боты (роботизация рутинных операций)",recommend:"Да",inputType:"none",unit:""},
+        x2:{section:"digital",text:"Доля процессов, автоматизированных с помощью RPA (от общего числа)",recommend:"≥20%",inputType:"number",unit:"%",target:20,condition:"greater"},
+        x3:{section:"digital",text:"Использование машинного обучения для прогнозирования спроса",recommend:"Да",inputType:"none",unit:""},
+        x4:{section:"digital",text:"Применение IoT-датчиков для мониторинга транспорта и склада",recommend:"Да",inputType:"none",unit:""},
+        x5:{section:"digital",text:"Наличие стратегии цифровой трансформации SCM",recommend:"Да",inputType:"none",unit:""},
+        x6:{section:"digital",text:"Бюджет на инновации в SCM (% от бюджета SCM)",recommend:"≥5%",inputType:"number",unit:"%",target:5,condition:"greater"},
+        x7:{section:"digital",text:"Проведено обучение сотрудников новым цифровым инструментам",recommend:"Да",inputType:"none",unit:""},
+        x8:{section:"digital",text:"Внедрена система управления эффективностью (WFM) для персонала",recommend:"Да",inputType:"none",unit:""},
+        x9:{section:"digital",text:"Использование цифровых двойников для симуляции сценариев",recommend:"Да",inputType:"none",unit:""},
+        x10:{section:"digital",text:"Доля процессов, переведённых в электронный документооборот",recommend:"≥90%",inputType:"number",unit:"%",target:90,condition:"greater"},
+        // ---- 11. Охрана труда, пожарная и промышленная безопасность (35) ----
+        s1:{section:"safety",text:"Назначен ответственный за охрану труда (специалист или возложены обязанности)",recommend:"Да",inputType:"none",unit:""},
+        s2:{section:"safety",text:"Разработана и утверждена система управления охраной труда (СУОТ)",recommend:"Да",inputType:"none",unit:""},
+        s3:{section:"safety",text:"Проведены вводные и первичные инструктажи по охране труда (журналы)",recommend:"Да",inputType:"none",unit:""},
+        s4:{section:"safety",text:"Проведены повторные, внеплановые и целевые инструктажи (по графику)",recommend:"Да",inputType:"none",unit:""},
+        s5:{section:"safety",text:"Проведено обучение по охране труда руководителей и специалистов (не реже 1 раза в 3 года)",recommend:"Да",inputType:"none",unit:""},
+        s6:{section:"safety",text:"Проведены медицинские осмотры (предварительные, периодические, послесменные)",recommend:"100%",inputType:"number",unit:"%",target:100,condition:"greater"},
+        s7:{section:"safety",text:"Проведена специальная оценка условий труда (СОУТ) для всех рабочих мест",recommend:"Да",inputType:"none",unit:""},
+        s8:{section:"safety",text:"Наличие журнала выдачи СИЗ (средств индивидуальной защиты) с подписями",recommend:"Да",inputType:"none",unit:""},
+        s9:{section:"safety",text:"Наличие журнала регистрации несчастных случаев на производстве (форма Н-1)",recommend:"Да",inputType:"none",unit:""},
+        s10:{section:"safety",text:"Наличие плана мероприятий по улучшению условий и охраны труда",recommend:"Да",inputType:"none",unit:""},
+        s11:{section:"safety",text:"Проведена проверка знаний требований охраны труда у работников",recommend:"Да",inputType:"none",unit:""},
+        s12:{section:"safety",text:"Наличие карт специальной оценки условий труда (СОУТ) на каждом рабочем месте",recommend:"Да",inputType:"none",unit:""},
+        s13:{section:"safety",text:"Наличие журнала выдачи инструкций по охране труда",recommend:"Да",inputType:"none",unit:""},
+        s14:{section:"safety",text:"Наличие программы вводного инструктажа и программ первичного инструктажа",recommend:"Да",inputType:"none",unit:""},
+        s15:{section:"safety",text:"Проведена проверка знаний электробезопасности (группы допуска)",recommend:"Да",inputType:"none",unit:""},
+        s16:{section:"safety",text:"Наличие приказов о назначении ответственных за электрохозяйство",recommend:"Да",inputType:"none",unit:""},
+        s17:{section:"safety",text:"Наличие декларации соответствия условий труда (при отсутствии вредных факторов)",recommend:"Да",inputType:"none",unit:""},
+        f1_pb:{section:"safety",text:"Назначен ответственный за пожарную безопасность и утверждена инструкция",recommend:"Да",inputType:"none",unit:""},
+        f2_pb:{section:"safety",text:"Проведен противопожарный инструктаж со всеми работниками (журналы)",recommend:"Да",inputType:"none",unit:""},
+        f3_pb:{section:"safety",text:"Наличие планов эвакуации людей при пожаре (этажи, помещения)",recommend:"Да",inputType:"none",unit:""},
+        f4_pb:{section:"safety",text:"Наличие системы автоматической пожарной сигнализации (АПС) и системы оповещения (СОУЭ)",recommend:"Да",inputType:"none",unit:""},
+        f5_pb:{section:"safety",text:"Проведено техническое обслуживание и проверка систем АПС и СОУЭ",recommend:"Да",inputType:"none",unit:""},
+        f6_pb:{section:"safety",text:"Наличие первичных средств пожаротушения (огнетушители) в соответствии с нормами",recommend:"Да",inputType:"none",unit:""},
+        f7_pb:{section:"safety",text:"Проведена проверка и перезарядка огнетушителей (по графику)",recommend:"Да",inputType:"none",unit:""},
+        f8_pb:{section:"safety",text:"Обеспечено исправное состояние пожарных гидрантов, кранов и водоисточников",recommend:"Да",inputType:"none",unit:""},
+        f9_pb:{section:"safety",text:"Проведены практические тренировки по эвакуации людей при пожаре",recommend:"Да",inputType:"none",unit:""},
+        f10_pb:{section:"safety",text:"Обеспечен свободный доступ к путям эвакуации и запасным выходам (не загромождены)",recommend:"Да",inputType:"none",unit:""},
+        f11_pb:{section:"safety",text:"Наличие журнала проверки состояния противопожарного водоснабжения",recommend:"Да",inputType:"none",unit:""},
+        i1:{section:"safety",text:"Проведена идентификация и регистрация опасных производственных объектов (ОПО) в реестре",recommend:"Да",inputType:"none",unit:""},
+        i2:{section:"safety",text:"Наличие лицензии на эксплуатацию взрывопожароопасных и химически опасных ОПО (I, II, III классов)",recommend:"Да",inputType:"none",unit:""},
+        i3:{section:"safety",text:"Разработана и утверждена декларация промышленной безопасности (для ОПО I и II классов)",recommend:"Да",inputType:"none",unit:""},
+        i4:{section:"safety",text:"Проведена экспертиза промышленной безопасности зданий, сооружений и технических устройств",recommend:"Да",inputType:"none",unit:""},
+        i5:{section:"safety",text:"Наличие договора обязательного страхования гражданской ответственности владельца ОПО",recommend:"Да",inputType:"none",unit:""},
+        i6:{section:"safety",text:"Разработан план мероприятий по локализации и ликвидации аварий (ПЛА)",recommend:"Да",inputType:"none",unit:""},
+        i7:{section:"safety",text:"Проведена аттестация руководителей и специалистов в области промышленной безопасности",recommend:"Да",inputType:"none",unit:""}
+    };
+
+    // Кастомные пункты и шаблоны
+    let customItems = {};
+    let templates = [];
+
+    // ------------------------------------------------------------------
+    // 2. ФУНКЦИИ ДЛЯ РАБОТЫ С LOCALSTORAGE (совместимость с scm-common.js)
+    // ------------------------------------------------------------------
+    function loadCustomItems() { const saved = localStorage.getItem('audit_custom_items'); if(saved) customItems = JSON.parse(saved); }
+    function saveCustomItems() { localStorage.setItem('audit_custom_items', JSON.stringify(customItems)); }
+    function loadTemplates() { const saved = localStorage.getItem('audit_templates'); if(saved) templates = JSON.parse(saved); else templates = []; }
+    function saveTemplates() { localStorage.setItem('audit_templates', JSON.stringify(templates)); }
+    function getAllItems() { return { ...masterItems, ...customItems }; }
+    function getAuditRegistry() { const reg = localStorage.getItem('audit_registry'); return reg ? JSON.parse(reg) : []; }
+    function saveAuditRegistry(registry) { localStorage.setItem('audit_registry', JSON.stringify(registry)); }
+    function addAudit(auditData) { const reg = getAuditRegistry(); auditData.id = Date.now().toString(); auditData.createdAt = new Date().toISOString(); reg.push(auditData); saveAuditRegistry(reg); return auditData.id; }
+    function getAuditById(id) { return getAuditRegistry().find(a => a.id === id); }
+
+    // ------------------------------------------------------------------
+    // 3. РЕЖИМ АУДИТА – ОТРИСОВКА, ПРОГРЕСС, СОХРАНЕНИЕ, ПЕЧАТЬ
+    // ------------------------------------------------------------------
+    let currentTemplateId = null;
+
+    function renderAuditSections(selectedItemIds) {
+        const all = getAllItems();
+        let itemsToShow = {};
+        if (!selectedItemIds || selectedItemIds.length === 0) itemsToShow = all;
+        else { for(let id of selectedItemIds) if(all[id]) itemsToShow[id]=all[id]; }
+        const groups = {};
+        for(let [id,item] of Object.entries(itemsToShow)) { if(!groups[item.section]) groups[item.section]=[]; groups[item.section].push({id,...item}); }
+        const container = document.getElementById('auditSectionsContainer');
+        container.innerHTML = '';
+        for(let sec of sectionsOrder) {
+            if(!groups[sec]) continue;
+            const div = document.createElement('div'); div.className='audit-section'; div.setAttribute('data-section',sec);
+            div.innerHTML = `<div class="section-header"><h2>${sectionTitles[sec]}</h2><div class="section-score" id="score_${sec}">0%</div></div>
+                             <div class="checklist-items" id="items_${sec}"></div>
+                             <div class="progress-bar-container"><div class="progress-fill" id="progress_${sec}"></div></div>`;
+            container.appendChild(div);
+            const itemsContainer = div.querySelector('.checklist-items');
+            for(let item of groups[sec]) {
+                const row = document.createElement('div'); row.className='checklist-item';
+                const select = document.createElement('select'); select.id=`status_${item.id}`; select.innerHTML='<option value="yes">Да</option><option value="no" selected>Нет</option><option value="na">Не требуется</option>';
+                const label = document.createElement('label'); label.textContent = item.text;
+                row.appendChild(select); row.appendChild(label);
+                if(item.inputType !== 'none') {
+                    const inp = document.createElement('input'); inp.type=item.inputType; inp.id=`fact_${item.id}`; inp.placeholder=`Факт, ${item.unit}`; inp.className='fact-input';
+                    const unitSpan = document.createElement('span'); unitSpan.className='fact-unit'; unitSpan.textContent=item.unit;
+                    row.appendChild(inp); row.appendChild(unitSpan);
+                }
+                itemsContainer.appendChild(row);
+            }
+        }
+        loadCurrentFormStateForAudit();
+        updateAllScoresForAudit();
+        attachAuditEvents();
+    }
+
+    function saveCurrentFormStateForAudit() {
+        const state = {};
+        for(let id of Object.keys(getAllItems())) {
+            const sel = document.getElementById(`status_${id}`);
+            const inp = document.getElementById(`fact_${id}`);
+            if(sel) state[id] = { status: sel.value, fact: inp ? inp.value : '' };
+        }
+        localStorage.setItem('audit_current_form', JSON.stringify(state));
+    }
+    function loadCurrentFormStateForAudit() {
+        const saved = localStorage.getItem('audit_current_form');
+        if(saved) {
+            const state = JSON.parse(saved);
+            for(let [id,data] of Object.entries(state)) {
+                const sel = document.getElementById(`status_${id}`);
+                const inp = document.getElementById(`fact_${id}`);
+                if(sel) sel.value = data.status;
+                if(inp) inp.value = data.fact || '';
+            }
+        }
+    }
+    function isFactCompliant(itemId, factValue) {
+        const all = getAllItems(); const item = all[itemId];
+        if(!item || item.inputType==='none') return true;
+        if(item.target===undefined) return true;
+        const num = parseFloat(factValue); if(isNaN(num)) return false;
+        if(item.condition==='less') return num < item.target;
+        if(item.condition==='greater') return num > item.target;
+        return false;
+    }
+    function computeSectionProgressForAudit(ids) {
+        let total=0, compliant=0;
+        for(let id of ids) {
+            const sel = document.getElementById(`status_${id}`);
+            if(!sel) continue;
+            const status = sel.value;
+            if(status==='na') continue;
+            total++;
+            if(status==='yes') {
+                const item = getAllItems()[id];
+                if(item && item.inputType!=='none') {
+                    const inp = document.getElementById(`fact_${id}`);
+                    const fact = inp ? inp.value : '';
+                    if(isFactCompliant(id, fact)) compliant++;
+                } else compliant++;
+            }
+        }
+        return total===0 ? 0 : (compliant/total)*100;
+    }
+    function updateAllScoresForAudit() {
+        const all = getAllItems();
+        const groups = {};
+        for(let id of Object.keys(all)) { let s = all[id].section; if(!groups[s]) groups[s]=[]; groups[s].push(id); }
+        for(let [sec, ids] of Object.entries(groups)) {
+            let percent = computeSectionProgressForAudit(ids);
+            let scoreSpan = document.getElementById(`score_${sec}`);
+            if(scoreSpan) scoreSpan.innerText = `${Math.round(percent)}%`;
+            let progFill = document.getElementById(`progress_${sec}`);
+            if(progFill) progFill.style.width = `${percent}%`;
+        }
+        let total=0, count=0;
+        for(let sec of sectionsOrder) {
+            if(groups[sec]) { total += computeSectionProgressForAudit(groups[sec]); count++; }
+        }
+        let avg = count===0 ? 0 : total/count;
+        document.getElementById('totalScorePercent').innerText = `${Math.round(avg)}%`;
+        let maturity = avg<30?'🔴 Критический уровень':avg<50?'🟠 Низкий уровень':avg<70?'🟡 Средний уровень':avg<85?'🟢 Высокий уровень':'🏆 Отличный уровень';
+        document.getElementById('maturityLabel').innerHTML = maturity;
+        saveCurrentFormStateForAudit();
+    }
+    function attachAuditEvents() {
+        document.querySelectorAll('.checklist-item select, .checklist-item input').forEach(el => {
+            el.removeEventListener('change', updateAllScoresForAudit);
+            el.removeEventListener('input', updateAllScoresForAudit);
+            el.addEventListener('change', updateAllScoresForAudit);
+            el.addEventListener('input', updateAllScoresForAudit);
+        });
+    }
+    function resetAudit() {
+        for(let id of Object.keys(getAllItems())) {
+            let sel = document.getElementById(`status_${id}`);
+            let inp = document.getElementById(`fact_${id}`);
+            if(sel) sel.value = 'no';
+            if(inp) inp.value = '';
+        }
+        saveCurrentFormStateForAudit();
+        updateAllScoresForAudit();
+    }
+    function saveAuditToRegistry() {
+        let auditType = document.querySelector('input[name="auditType"]:checked').value;
+        let templateId = document.getElementById('templateSelectForAudit').value;
+        let all = getAllItems();
+        let statuses={}, facts={};
+        for(let id of Object.keys(all)) {
+            let sel = document.getElementById(`status_${id}`);
+            let inp = document.getElementById(`fact_${id}`);
+            if(sel) statuses[id]=sel.value;
+            if(inp) facts[id]=inp.value;
+        }
+        let nonConform = [];
+        for(let id of Object.keys(all)) {
+            let status = statuses[id];
+            if(status==='no') nonConform.push({id, text:all[id].text, reason:'Статус "Нет"'});
+            else if(status==='yes' && all[id].inputType!=='none') {
+                let fact = facts[id];
+                if(!isFactCompliant(id, fact)) nonConform.push({id, text:all[id].text, reason:`Факт ${fact} не соответствует цели ${all[id].recommend}`});
+            }
+        }
+        let groups = {};
+        for(let id of Object.keys(all)) { let s = all[id].section; if(!groups[s]) groups[s]=[]; groups[s].push(id); }
+        let sectionScores = {};
+        for(let [sec, ids] of Object.entries(groups)) sectionScores[sec] = computeSectionProgressForAudit(ids);
+        let totalPercent = parseFloat(document.getElementById('totalScorePercent').innerText);
+        let auditData = { type: auditType, date: new Date().toISOString(), templateId: templateId || null, totalPercent, sectionScores, nonConformances: nonConform, statuses, facts };
+        addAudit(auditData);
+        alert('Аудит сохранён');
+        populateAuditLoadSelect();
+    }
+    function populateAuditLoadSelect() {
+        let select = document.getElementById('loadAuditSelect');
+        if(!select) return;
+        let registry = getAuditRegistry();
+        select.innerHTML = '<option value="">-- Загрузить аудит --</option>';
+        registry.forEach(a => { let opt = document.createElement('option'); opt.value = a.id; opt.textContent = `${new Date(a.date).toLocaleString()} (${a.type}) – ${a.totalPercent}%`; select.appendChild(opt); });
+    }
+    function loadAuditById(auditId) {
+        let audit = getAuditById(auditId);
+        if(!audit) return;
+        document.querySelector(`input[name="auditType"][value="${audit.type}"]`).checked = true;
+        if(audit.templateId) {
+            document.getElementById('templateSelectForAudit').value = audit.templateId;
+            applyTemplateToAudit(audit.templateId);
+        } else {
+            renderAuditSections([]);
+        }
+        for(let [id,status] of Object.entries(audit.statuses)) {
+            let sel = document.getElementById(`status_${id}`);
+            if(sel) sel.value = status;
+        }
+        for(let [id,fact] of Object.entries(audit.facts)) {
+            let inp = document.getElementById(`fact_${id}`);
+            if(inp) inp.value = fact;
+        }
+        updateAllScoresForAudit();
+        alert(`Загружен аудит от ${new Date(audit.date).toLocaleString()}`);
+    }
+    function printReport() {
+        let all = getAllItems();
+        let nonConform = [];
+        for(let id of Object.keys(all)) {
+            let sel = document.getElementById(`status_${id}`);
+            if(!sel) continue;
+            let status = sel.value;
+            if(status==='no') nonConform.push({text:all[id].text, reason:'Статус "Нет"', recommend:`Рекомендуется: ${all[id].text}.`});
+            else if(status==='yes' && all[id].inputType!=='none') {
+                let inp = document.getElementById(`fact_${id}`);
+                let fact = inp ? inp.value : '';
+                if(!isFactCompliant(id, fact)) nonConform.push({text:all[id].text, reason:`Факт ${fact} не соответствует цели ${all[id].recommend}`, recommend:`Достигните ${all[id].recommend}`});
+            }
+        }
+        if(nonConform.length===0) { alert('Нет несоответствий'); return; }
+        let win = window.open('', '_blank');
+        win.document.write(`<html><head><title>Отчёт аудита SCM</title><style>body{font-family:Inter;margin:20px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:8px}th{background:#eef2ff}</style></head><body>
+        <h1>Отчёт аудита SCM</h1><p>Дата: ${new Date().toLocaleString()}</p><p>Тип: ${document.querySelector('input[name="auditType"]:checked').value}</p>
+        <p>Общий уровень зрелости: ${document.getElementById('totalScorePercent').innerText}</p><h2>Рекомендации</h2>
+        <table><thead><tr><th>Пункт</th><th>Причина</th><th>Рекомендация</th></tr></thead><tbody>
+        ${nonConform.map(nc=>`<tr><td>${nc.text}</td><td>${nc.reason}</td><td>${nc.recommend}</td></tr>`).join('')}
+        </tbody></table></body></html>`);
+        win.document.close(); win.print();
+    }
+
+    // ------------------------------------------------------------------
+    // 4. РЕЖИМ КОНСТРУКТОРА (выбор пунктов, кастомные, шаблоны)
+    // ------------------------------------------------------------------
+    function renderConstructor() {
+        const container = document.getElementById('allItemsPicker');
+        let all = getAllItems();
+        let selectedIds = JSON.parse(sessionStorage.getItem('constructor_selected_ids') || '[]');
+        container.innerHTML = '';
+        for(let sec of sectionsOrder) {
+            let secDiv = document.createElement('div'); secDiv.style.marginBottom='16px';
+            let title = document.createElement('div'); title.style.fontWeight='bold'; title.innerText = sectionTitles[sec];
+            secDiv.appendChild(title);
+            let itemsDiv = document.createElement('div'); itemsDiv.className='item-picker';
+            for(let [id,item] of Object.entries(all)) {
+                if(item.section===sec) {
+                    let label = document.createElement('label');
+                    let cb = document.createElement('input'); cb.type='checkbox'; cb.value=id; cb.checked=selectedIds.includes(id);
+                    cb.addEventListener('change', (e) => {
+                        if(e.target.checked) { if(!selectedIds.includes(id)) selectedIds.push(id); }
+                        else { selectedIds = selectedIds.filter(i=>i!==id); }
+                        sessionStorage.setItem('constructor_selected_ids', JSON.stringify(selectedIds));
+                    });
+                    label.appendChild(cb); label.appendChild(document.createTextNode(item.text));
+                    itemsDiv.appendChild(label);
+                }
+            }
+            secDiv.appendChild(itemsDiv);
+            container.appendChild(secDiv);
+        }
+        let customDiv = document.createElement('div'); customDiv.style.marginTop='20px'; customDiv.innerHTML='<strong>Свои пункты:</strong>';
+        for(let [id,item] of Object.entries(customItems)) {
+            let row = document.createElement('div'); row.style.display='flex'; row.style.gap='8px'; row.style.alignItems='center'; row.style.marginTop='4px';
+            row.innerHTML = `<span>${item.text} (${item.unit})</span> <button class="remove-custom" data-id="${id}">❌</button>`;
+            customDiv.appendChild(row);
+        }
+        container.appendChild(customDiv);
+        document.querySelectorAll('.remove-custom').forEach(btn => {
+            btn.addEventListener('click', (e) => { delete customItems[btn.getAttribute('data-id')]; saveCustomItems(); renderConstructor(); });
+        });
+        renderTemplatesList();
+    }
+    function renderTemplatesList() {
+        let container = document.getElementById('templatesList');
+        container.innerHTML = '';
+        templates.forEach(tmpl => {
+            let div = document.createElement('div'); div.className='template-item';
+            div.innerHTML = `<span><strong>${tmpl.name}</strong> (${tmpl.itemIds.length} пунктов)</span>
+                             <div><button class="use-template" data-id="${tmpl.id}">Использовать в аудите</button>
+                             <button class="delete-template" data-id="${tmpl.id}">🗑️</button></div>`;
+            container.appendChild(div);
+        });
+        document.querySelectorAll('.use-template').forEach(btn => {
+            btn.addEventListener('click', (e) => { auditModeBtn.click(); let id = btn.getAttribute('data-id'); let select = document.getElementById('templateSelectForAudit'); let opt = Array.from(select.options).find(o=>o.value===id); if(opt) select.value=id; applyTemplateToAudit(id); });
+        });
+        document.querySelectorAll('.delete-template').forEach(btn => {
+            btn.addEventListener('click', (e) => { templates = templates.filter(t=>t.id!==btn.getAttribute('data-id')); saveTemplates(); renderTemplatesList(); populateTemplateSelect(); });
+        });
+    }
+    function populateTemplateSelect() {
+        let select = document.getElementById('templateSelectForAudit');
+        select.innerHTML = '<option value="">-- Без шаблона (все пункты) --</option>';
+        templates.forEach(tmpl => { let opt = document.createElement('option'); opt.value = tmpl.id; opt.textContent = tmpl.name; select.appendChild(opt); });
+    }
+    function applyTemplateToAudit(templateId) {
+        let tmpl = templates.find(t=>t.id===templateId);
+        if(tmpl) renderAuditSections(tmpl.itemIds);
+        else renderAuditSections([]);
+    }
+
+    // ------------------------------------------------------------------
+    // 5. ПЕРЕКЛЮЧЕНИЕ МЕЖДУ РЕЖИМАМИ, ОБРАБОТЧИКИ
+    // ------------------------------------------------------------------
+    const auditPanel = document.getElementById('auditModePanel');
+    const constructorPanel = document.getElementById('constructorModePanel');
+    const auditModeBtn = document.getElementById('auditModeBtn');
+    const constructorModeBtn = document.getElementById('constructorModeBtn');
+    auditModeBtn.addEventListener('click', () => { auditPanel.style.display='block'; constructorPanel.style.display='none'; auditModeBtn.classList.add('active'); constructorModeBtn.classList.remove('active'); populateTemplateSelect(); if(currentTemplateId) applyTemplateToAudit(currentTemplateId); else renderAuditSections([]); });
+    constructorModeBtn.addEventListener('click', () => { auditPanel.style.display='none'; constructorPanel.style.display='block'; auditModeBtn.classList.remove('active'); constructorModeBtn.classList.add('active'); renderConstructor(); });
+
+    document.getElementById('addCustomItemBtn').addEventListener('click', () => {
+        let text = document.getElementById('newItemText').value.trim();
+        let condition = document.getElementById('newItemCondition').value;
+        let target = parseFloat(document.getElementById('newItemTarget').value);
+        let unit = document.getElementById('newItemUnit').value.trim();
+        if(!text) return alert('Введите текст пункта');
+        let id = 'custom_'+Date.now();
+        customItems[id] = { section:"personnel", text:text, recommend:(condition==='greater'?'≥':'≤')+target+unit, inputType:"number", unit:unit, target:target, condition:condition };
+        saveCustomItems();
+        document.getElementById('newItemText').value=''; document.getElementById('newItemTarget').value=''; document.getElementById('newItemUnit').value='';
+        renderConstructor();
+    });
+    document.getElementById('saveTemplateBtn').addEventListener('click', () => {
+        let name = document.getElementById('newTemplateName').value.trim();
+        if(!name) return alert('Введите название шаблона');
+        let selectedIds = JSON.parse(sessionStorage.getItem('constructor_selected_ids') || '[]');
+        if(selectedIds.length===0) return alert('Выберите хотя бы один пункт');
+        let newTemplate = { id: Date.now().toString(), name: name, itemIds: selectedIds };
+        templates.push(newTemplate);
+        saveTemplates();
+        document.getElementById('newTemplateName').value='';
+        renderTemplatesList();
+        populateTemplateSelect();
+    });
+    document.getElementById('saveAuditBtn').addEventListener('click', saveAuditToRegistry);
+    document.getElementById('calculateBtn').addEventListener('click', updateAllScoresForAudit);
+    document.getElementById('resetAuditBtn').addEventListener('click', resetAudit);
+    document.getElementById('printPdfBtn').addEventListener('click', printReport);
+    document.getElementById('templateSelectForAudit').addEventListener('change', (e) => { currentTemplateId = e.target.value; if(e.target.value) applyTemplateToAudit(e.target.value); else renderAuditSections([]); });
+    document.getElementById('loadAuditSelect').addEventListener('change', (e) => { if(e.target.value) loadAuditById(e.target.value); });
+
+    // Инициализация
+    function init() {
+        loadCustomItems(); loadTemplates();
+        populateTemplateSelect(); populateAuditLoadSelect();
+        renderAuditSections([]);
+        attachAuditEvents();
+        let urlLoad = new URLSearchParams(window.location.search).get('load');
+        if(urlLoad) loadAuditById(urlLoad);
+    }
+    init();
+</script>
+</body>
+</html>
