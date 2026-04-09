@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="scm-style.css">
     <script src="scm-common.js"></script>
     <style>
-        /* Стили (аналогичны auditor.html) */
         .mode-switch { display: flex; gap: 8px; margin-bottom: 20px; background: white; border-radius: 40px; padding: 6px; border: 1px solid #e2e8f0; width: fit-content; }
         .mode-switch button { background: transparent; color: #334155; box-shadow: none; }
         .mode-switch button.active { background: #1e40af; color: white; }
@@ -29,7 +28,6 @@
         .progress-fill { height: 100%; background: #1e40af; width: 0%; border-radius: 10px; }
         .add-item-form { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
         .add-item-form input { flex: 2; padding: 8px 12px; border-radius: 30px; border: 1px solid #e2e8f0; }
-        .new-category-form { background: #f8fafc; border-radius: 20px; padding: 20px; margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
         .btn-group { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
         .constructor-section { background: white; border-radius: 20px; padding: 24px; margin-bottom: 24px; }
         .item-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
@@ -37,8 +35,9 @@
         .custom-item-form { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
         .template-list { margin-top: 20px; }
         .template-item { background: #f8fafc; border-radius: 16px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .template-selector { background: white; border-radius: 20px; padding: 16px 24px; margin-bottom: 24px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; border: 1px solid #e2e8f0; }
         @media (max-width: 768px) { .category-header { flex-direction: column; align-items: flex-start; gap: 12px; } }
-        @media print { .sidebar, .btn-group, .mode-switch, .category-actions, .add-item-form, .new-category-form { display: none; } }
+        @media print { .sidebar, .btn-group, .mode-switch, .category-actions, .add-item-form, .template-selector { display: none; } }
     </style>
 </head>
 <body>
@@ -70,6 +69,13 @@
         </div>
 
         <div id="auditModePanel">
+            <div class="template-selector">
+                <label>Шаблон чек-листа: </label>
+                <select id="auditTemplateSelect">
+                    <option value="">-- Без шаблона (все пункты) --</option>
+                </select>
+                <button id="applyAuditTemplateBtn">Применить шаблон</button>
+            </div>
             <div class="btn-group">
                 <button id="resetAllChecklistsBtn" class="reset-btn">🔄 Сбросить все ответы</button>
                 <button id="printPendingChecklistsBtn" class="print-btn">🖨️ Печать невыполненных</button>
@@ -260,11 +266,9 @@
         qm08: { section: "quality", text: "Используется бенчмаркинг с отраслевыми лидерами", recommend: "Да", inputType: "none", unit: "" }
     };
 
-    // Кастомные пункты и шаблоны
     let customItems = {};
     let templates = [];
 
-    // Группировка по секциям (категориям) – порядок и названия
     const sectionTitles = {
         warehouse: "📦 Склад и логистика",
         transport: "🚛 Транспорт и доставка",
@@ -286,7 +290,6 @@
 
     function getAllItems() { return { ...masterItems, ...customItems }; }
 
-    // ---------------------- Функции сохранения, загрузки, рендеринга ----------------------
     function loadCustomItems() { const saved = localStorage.getItem('checklist_custom_items'); if(saved) customItems = JSON.parse(saved); }
     function saveCustomItems() { localStorage.setItem('checklist_custom_items', JSON.stringify(customItems)); }
     function loadTemplates() { const saved = localStorage.getItem('checklist_templates'); if(saved) templates = JSON.parse(saved); else templates = []; }
@@ -360,10 +363,20 @@
         saveCurrentFormState();
     }
 
-    function renderAuditSections() {
+    let currentFilterIds = null;
+
+    function renderAuditSections(filterIds = null) {
         const all = getAllItems();
+        let itemsToShow = {};
+        if (filterIds && filterIds.length > 0) {
+            for (let id of filterIds) {
+                if (all[id]) itemsToShow[id] = all[id];
+            }
+        } else {
+            itemsToShow = all;
+        }
         const groups = {};
-        for (let [id, item] of Object.entries(all)) {
+        for (let [id, item] of Object.entries(itemsToShow)) {
             if (!groups[item.section]) groups[item.section] = [];
             groups[item.section].push({ id, ...item });
         }
@@ -446,7 +459,7 @@
         const newId = `custom_${Date.now()}_${Math.random()}`;
         customItems[newId] = { section: section, text: newText, recommend: "Да", inputType: "none", unit: "" };
         saveCustomItems();
-        renderAuditSections();
+        renderAuditSections(currentFilterIds);
         input.value = '';
     }
 
@@ -516,14 +529,13 @@
                     saveCurrentFormState();
                     updateAllScores();
                 }
-                renderAuditSections();
+                renderAuditSections(currentFilterIds);
                 alert('Импорт выполнен');
             } catch(err) { alert('Ошибка импорта: ' + err.message); }
         };
         reader.readAsText(file);
     }
 
-    // -------------------- Конструктор шаблонов (как в auditor.html) --------------------
     function renderConstructor() {
         const container = document.getElementById('allItemsPicker');
         let all = getAllItems();
@@ -574,18 +586,49 @@
             container.appendChild(div);
         });
         document.querySelectorAll('.use-template').forEach(btn => {
-            btn.addEventListener('click', (e) => { auditModeBtn.click(); let id = btn.getAttribute('data-id'); applyTemplate(id); });
+            btn.addEventListener('click', (e) => { applyTemplate(btn.getAttribute('data-id')); });
         });
         document.querySelectorAll('.delete-template').forEach(btn => {
-            btn.addEventListener('click', (e) => { templates = templates.filter(t => t.id !== btn.getAttribute('data-id')); saveTemplates(); renderTemplatesList(); });
+            btn.addEventListener('click', (e) => { templates = templates.filter(t => t.id !== btn.getAttribute('data-id')); saveTemplates(); renderTemplatesList(); populateAuditTemplateSelect(); });
         });
     }
 
     function applyTemplate(templateId) {
         const tmpl = templates.find(t => t.id === templateId);
-        if (!tmpl) return;
-        sessionStorage.setItem('constructor_selected_ids', JSON.stringify(tmpl.itemIds));
-        renderAuditSections(); // В этой версии рендерим все пункты, фильтрацию по шаблону можно добавить позже
+        if (tmpl) {
+            currentFilterIds = tmpl.itemIds;
+            auditModeBtn.click();
+            renderAuditSections(currentFilterIds);
+            const select = document.getElementById('auditTemplateSelect');
+            if (select) select.value = templateId;
+        }
+    }
+
+    function populateAuditTemplateSelect() {
+        const select = document.getElementById('auditTemplateSelect');
+        if (!select) return;
+        select.innerHTML = '<option value="">-- Без шаблона (все пункты) --</option>';
+        templates.forEach(tmpl => {
+            const opt = document.createElement('option');
+            opt.value = tmpl.id;
+            opt.textContent = `${tmpl.name} (${tmpl.itemIds.length} пунктов)`;
+            select.appendChild(opt);
+        });
+    }
+
+    function onApplyAuditTemplate() {
+        const select = document.getElementById('auditTemplateSelect');
+        const templateId = select.value;
+        if (templateId) {
+            const tmpl = templates.find(t => t.id === templateId);
+            if (tmpl) {
+                currentFilterIds = tmpl.itemIds;
+                renderAuditSections(currentFilterIds);
+            }
+        } else {
+            currentFilterIds = null;
+            renderAuditSections(null);
+        }
     }
 
     document.getElementById('addCustomItemBtn').addEventListener('click', () => {
@@ -611,26 +654,40 @@
         saveTemplates();
         document.getElementById('newTemplateName').value = '';
         renderTemplatesList();
+        populateAuditTemplateSelect();
     });
 
-    // Переключение режимов
     const auditPanel = document.getElementById('auditModePanel');
     const constructorPanel = document.getElementById('constructorModePanel');
     const auditModeBtn = document.getElementById('auditModeBtn');
     const constructorModeBtn = document.getElementById('constructorModeBtn');
-    auditModeBtn.addEventListener('click', () => { auditPanel.style.display = 'block'; constructorPanel.style.display = 'none'; auditModeBtn.classList.add('active'); constructorModeBtn.classList.remove('active'); renderAuditSections(); });
-    constructorModeBtn.addEventListener('click', () => { auditPanel.style.display = 'none'; constructorPanel.style.display = 'block'; auditModeBtn.classList.remove('active'); constructorModeBtn.classList.add('active'); renderConstructor(); });
+    auditModeBtn.addEventListener('click', () => {
+        auditPanel.style.display = 'block';
+        constructorPanel.style.display = 'none';
+        auditModeBtn.classList.add('active');
+        constructorModeBtn.classList.remove('active');
+        populateAuditTemplateSelect();
+        if (currentFilterIds) renderAuditSections(currentFilterIds);
+        else renderAuditSections(null);
+    });
+    constructorModeBtn.addEventListener('click', () => {
+        auditPanel.style.display = 'none';
+        constructorPanel.style.display = 'block';
+        auditModeBtn.classList.remove('active');
+        constructorModeBtn.classList.add('active');
+        renderConstructor();
+    });
 
-    // Кнопки
     document.getElementById('resetAllChecklistsBtn').addEventListener('click', resetAll);
     document.getElementById('printPendingChecklistsBtn').addEventListener('click', printPending);
     document.getElementById('exportChecklistsBtn').addEventListener('click', exportData);
     document.getElementById('importChecklistsBtn').addEventListener('click', () => document.getElementById('importFileInput').click());
     document.getElementById('importFileInput').addEventListener('change', (e) => { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; });
+    document.getElementById('applyAuditTemplateBtn').addEventListener('click', onApplyAuditTemplate);
 
-    // Инициализация
     loadCustomItems(); loadTemplates();
-    renderAuditSections();
+    populateAuditTemplateSelect();
+    renderAuditSections(null);
 </script>
 </body>
 </html>
