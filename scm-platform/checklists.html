@@ -1,1 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Чек-листы SCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
+    <style>
+        /* дополнительные стили для чек-листов */
+        .checklist-category {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            transition: 0.2s;
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eef2ff;
+        }
+        .category-header h2 {
+            font-size: 22px;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .category-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .category-actions button {
+            background: #e2e8f0;
+            color: #1e40af;
+            padding: 4px 12px;
+            font-size: 13px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .category-actions button:hover {
+            background: #cbd5e1;
+        }
+        .checklist-items {
+            margin-bottom: 16px;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .checklist-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .delete-item-btn {
+            background: none;
+            border: none;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            transition: 0.2s;
+        }
+        .delete-item-btn:hover {
+            background: #fee2e2;
+        }
+        .add-item-form {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .add-item-form input {
+            flex: 2;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            font-family: inherit;
+        }
+        .add-item-form button {
+            background: #1e40af;
+            padding: 8px 20px;
+        }
+        .new-category-form {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .new-category-form input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            font-family: inherit;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .print-btn {
+            background: #f59e0b;
+        }
+        .export-btn {
+            background: #10b981;
+        }
+        .import-btn {
+            background: #8b5cf6;
+        }
+        .info-hint {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        @media (max-width: 768px) {
+            .category-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+        @media print {
+            .sidebar, .btn-group, .category-actions, .add-item-form, .new-category-form {
+                display: none;
+            }
+            .main-content {
+                margin: 0;
+                padding: 0;
+            }
+            .checklist-category {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html" class="active"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+            </ul>
+        </nav>
+    </aside>
 
+    <main class="main-content">
+        <h1>✅ Чек-листы SCM</h1>
+        <p>Управляйте списками проверок по различным направлениям. Отмечайте выполненные пункты, добавляйте свои.</p>
+
+        <div class="btn-group">
+            <button id="printPendingBtn" class="print-btn"><i class="fas fa-print"></i> Печать невыполненных</button>
+            <button id="exportChecklistsBtn" class="export-btn"><i class="fas fa-download"></i> Экспорт всех чек-листов</button>
+            <button id="importChecklistsBtn" class="import-btn"><i class="fas fa-upload"></i> Импорт чек-листов (JSON)</button>
+            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+        </div>
+
+        <div class="new-category-form">
+            <input type="text" id="newCategoryName" placeholder="Название новой категории, например: «Обслуживание оборудования»">
+            <button id="addCategoryBtn"><i class="fas fa-plus"></i> Добавить категорию</button>
+        </div>
+
+        <div id="checklistsContainer">
+            <div class="info-hint"><i class="fas fa-info-circle"></i> Здесь появятся категории. Если их нет — добавьте первую через форму выше.</div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Хранилище категорий и пунктов
+    let categories = {};
+
+    // Загрузка из localStorage, если пусто — инициализация стартовыми данными
+    function loadChecklistsData() {
+        const saved = localStorage.getItem('scm_checklists');
+        if (saved && saved !== '{}') {
+            categories = JSON.parse(saved);
+        } else {
+            // Стартовые категории с примерами (чтобы интерфейс не был пустым)
+            categories = {
+                "📦 Аудит склада (ежеквартальный)": [
+                    "Проведена инвентаризация А-класса (точность >99,5%)",
+                    "Соблюдение FIFO/FEFO проверено по 10 случайным позициям",
+                    "RF-терминалы работают, прошивка обновлена",
+                    "Нет заблокированных ячеек без причины",
+                    "Проверена система адресного хранения (случайные 50 адресов)"
+                ],
+                "🎯 Внедрение KPI-премирования": [
+                    "Утверждены нормативы времени на каждую операцию (хронометраж)",
+                    "Сотрудники ознакомлены с матрицей KPI",
+                    "Настроен ежемесячный расчёт премий в Excel/1С",
+                    "Проведён пилот на 10 сотрудниках, собрана обратная связь"
+                ],
+                "🚛 Еженедельная проверка транспорта": [
+                    "Проверены путевые листы, расход топлива в норме",
+                    "Соблюдены интервалы ТО",
+                    "Нет простоев под погрузкой более 2 часов",
+                    "Навигационное оборудование работает, треки сохранены"
+                ],
+                "🛡️ Охрана труда и пожарная безопасность": [
+                    "Назначен ответственный за охрану труда",
+                    "Проведены инструктажи (журналы)",
+                    "СОУТ проведена на всех рабочих местах",
+                    "Наличие журнала выдачи СИЗ",
+                    "Наличие аптечек и их укомплектованность",
+                    "Планы эвакуации утверждены и размещены",
+                    "АПС и СОУЭ исправны (акт проверки)",
+                    "Огнетушители в наличии и перезаряжены",
+                    "Пути эвакуации не загромождены",
+                    "Проведена тренировка по эвакуации"
+                ],
+                "🤝 Закупки и управление поставщиками": [
+                    "Проведена оценка рисков ключевых поставщиков",
+                    "Доля закупок у сертифицированных поставщиков >80%",
+                    "Договоры содержат SLA с KPI и штрафами",
+                    "Есть альтернативные поставщики для критических позиций"
+                ],
+                "💡 Цифровая трансформация": [
+                    "Внедрена WMS на складе",
+                    "Используются BI-дашборды для мониторинга KPI",
+                    "Автоматическое прогнозирование спроса (ML)",
+                    "RPA-боты внедрены (не менее 2 процессов)"
+                ]
+            };
+            saveChecklistsData();
+        }
+        renderAllCategories();
+    }
+
+    // Сохранение в localStorage
+    function saveChecklistsData() {
+        localStorage.setItem('scm_checklists', JSON.stringify(categories));
+    }
+
+    // Рендер всех категорий
+    function renderAllCategories() {
+        const container = document.getElementById('checklistsContainer');
+        if (!container) return;
+        if (Object.keys(categories).length === 0) {
+            container.innerHTML = `<div class="info-hint"><i class="fas fa-info-circle"></i> Нет ни одной категории. Создайте первую с помощью формы выше.</div>`;
+            return;
+        }
+        container.innerHTML = '';
+        for (let [catName, items] of Object.entries(categories)) {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'checklist-category';
+            categoryDiv.dataset.category = catName;
+
+            // Шапка категории
+            const header = document.createElement('div');
+            header.className = 'category-header';
+            header.innerHTML = `<h2><i class="fas fa-list-check"></i> ${escapeHtml(catName)}</h2>
+                                <div class="category-actions">
+                                    <button class="reset-category" data-category="${escapeHtml(catName)}"><i class="fas fa-undo-alt"></i> Сбросить отметки</button>
+                                    <button class="delete-category" data-category="${escapeHtml(catName)}"><i class="fas fa-trash-alt"></i> Удалить категорию</button>
+                                </div>`;
+            categoryDiv.appendChild(header);
+
+            // Список пунктов
+            const itemsDiv = document.createElement('div');
+            itemsDiv.className = 'checklist-items';
+            const savedState = SCMData.loadChecklist(catName) || {};
+            items.forEach((itemText, idx) => {
+                const itemId = `${catName}_${idx}`;
+                const isChecked = savedState[itemId] === true;
+                const itemRow = document.createElement('div');
+                itemRow.className = 'checklist-item';
+                itemRow.innerHTML = `
+                    <input type="checkbox" id="${escapeHtml(itemId)}" ${isChecked ? 'checked' : ''}>
+                    <label for="${escapeHtml(itemId)}">${escapeHtml(itemText)}</label>
+                    <button class="delete-item-btn" data-category="${escapeHtml(catName)}" data-item-idx="${idx}" title="Удалить пункт"><i class="fas fa-trash-alt"></i></button>
+                `;
+                const cb = itemRow.querySelector('input');
+                cb.addEventListener('change', (e) => {
+                    const state = SCMData.loadChecklist(catName) || {};
+                    state[itemId] = e.target.checked;
+                    SCMData.saveChecklist(catName, state);
+                });
+                itemsDiv.appendChild(itemRow);
+            });
+            categoryDiv.appendChild(itemsDiv);
+
+            // Форма добавления нового пункта
+            const addForm = document.createElement('div');
+            addForm.className = 'add-item-form';
+            addForm.innerHTML = `
+                <input type="text" class="new-item-input" placeholder="Новый пункт, например: «Проверить состояние стеллажей»">
+                <button class="add-item-btn" data-category="${escapeHtml(catName)}"><i class="fas fa-plus"></i> Добавить пункт</button>
+            `;
+            categoryDiv.appendChild(addForm);
+
+            container.appendChild(categoryDiv);
+        }
+        attachCategoryEvents();
+    }
+
+    // Экранирование HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Привязка событий для категорий, удаления, добавления
+    function attachCategoryEvents() {
+        // Сброс категории
+        document.querySelectorAll('.reset-category').forEach(btn => {
+            btn.removeEventListener('click', handleResetCategory);
+            btn.addEventListener('click', handleResetCategory);
+        });
+        // Удаление категории
+        document.querySelectorAll('.delete-category').forEach(btn => {
+            btn.removeEventListener('click', handleDeleteCategory);
+            btn.addEventListener('click', handleDeleteCategory);
+        });
+        // Удаление пункта
+        document.querySelectorAll('.delete-item-btn').forEach(btn => {
+            btn.removeEventListener('click', handleDeleteItem);
+            btn.addEventListener('click', handleDeleteItem);
+        });
+        // Добавление пункта
+        document.querySelectorAll('.add-item-btn').forEach(btn => {
+            btn.removeEventListener('click', handleAddItem);
+            btn.addEventListener('click', handleAddItem);
+        });
+    }
+
+    function handleResetCategory(e) {
+        const catName = e.currentTarget.getAttribute('data-category');
+        if (confirm(`Сбросить все отметки в категории "${catName}"?`)) {
+            SCMData.saveChecklist(catName, {});
+            renderAllCategories();
+        }
+    }
+
+    function handleDeleteCategory(e) {
+        const catName = e.currentTarget.getAttribute('data-category');
+        if (confirm(`Удалить категорию "${catName}" и все её пункты?`)) {
+            delete categories[catName];
+            saveChecklistsData();
+            renderAllCategories();
+        }
+    }
+
+    function handleDeleteItem(e) {
+        const catName = e.currentTarget.getAttribute('data-category');
+        const idx = parseInt(e.currentTarget.getAttribute('data-item-idx'));
+        if (!isNaN(idx) && categories[catName] && categories[catName][idx]) {
+            if (confirm('Удалить пункт?')) {
+                categories[catName].splice(idx, 1);
+                // Обновляем состояние чек-листа для этой категории
+                const savedState = SCMData.loadChecklist(catName) || {};
+                const newState = {};
+                // Переиндексируем оставшиеся пункты
+                for (let i = 0; i < categories[catName].length; i++) {
+                    const oldId = `${catName}_${i >= idx ? i+1 : i}`;
+                    const newId = `${catName}_${i}`;
+                    if (savedState[oldId] !== undefined) newState[newId] = savedState[oldId];
+                }
+                SCMData.saveChecklist(catName, newState);
+                saveChecklistsData();
+                renderAllCategories();
+            }
+        }
+    }
+
+    function handleAddItem(e) {
+        const catName = e.currentTarget.getAttribute('data-category');
+        const input = e.currentTarget.parentElement.querySelector('.new-item-input');
+        const newText = input.value.trim();
+        if (newText === '') return alert('Введите текст пункта');
+        if (!categories[catName]) categories[catName] = [];
+        categories[catName].push(newText);
+        saveChecklistsData();
+        // Сохраняем состояние чек-листа для нового пункта (по умолчанию не отмечен)
+        renderAllCategories();
+        input.value = '';
+    }
+
+    // Добавление новой категории
+    document.getElementById('addCategoryBtn').addEventListener('click', () => {
+        const newName = document.getElementById('newCategoryName').value.trim();
+        if (newName === '') return alert('Введите название категории');
+        if (categories[newName]) return alert('Такая категория уже существует');
+        categories[newName] = [];
+        saveChecklistsData();
+        renderAllCategories();
+        document.getElementById('newCategoryName').value = '';
+    });
+
+    // Печать невыполненных пунктов по всем категориям
+    document.getElementById('printPendingBtn').addEventListener('click', () => {
+        let pendingItems = [];
+        for (let [catName, items] of Object.entries(categories)) {
+            const savedState = SCMData.loadChecklist(catName) || {};
+            items.forEach((itemText, idx) => {
+                const itemId = `${catName}_${idx}`;
+                if (!savedState[itemId]) {
+                    pendingItems.push({ category: catName, text: itemText });
+                }
+            });
+        }
+        if (pendingItems.length === 0) {
+            alert('Нет невыполненных пунктов!');
+            return;
+        }
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html><head><title>Невыполненные пункты чек-листов</title>
+            <style>body{font-family:Inter;margin:20px}h1{color:#1e40af}ul{list-style:none;padding:0}li{margin-bottom:8px}strong{color:#1e40af}</style>
+            </head><body>
+            <h1>Невыполненные пункты чек-листов</h1>
+            <p>Дата: ${new Date().toLocaleString()}</p>
+            <ul>
+                ${pendingItems.map(p => `<li><strong>${escapeHtml(p.category)}</strong>: ${escapeHtml(p.text)}</li>`).join('')}
+            </ul>
+            </body></html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    });
+
+    // Экспорт всех данных чек-листов (категории + состояния)
+    document.getElementById('exportChecklistsBtn').addEventListener('click', () => {
+        const allStates = {};
+        for (let catName of Object.keys(categories)) {
+            allStates[catName] = SCMData.loadChecklist(catName) || {};
+        }
+        const exportData = {
+            categories: categories,
+            checklistStates: allStates,
+            exportDate: new Date().toISOString()
+        };
+        const jsonStr = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([jsonStr], {type: 'application/json'});
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = `scm_checklists_${new Date().toISOString().slice(0,19)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
+    // Импорт чек-листов
+    const importBtn = document.getElementById('importChecklistsBtn');
+    const fileInput = document.getElementById('importFileInput');
+    importBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (data.categories && data.checklistStates) {
+                    categories = data.categories;
+                    for (let catName of Object.keys(categories)) {
+                        if (data.checklistStates[catName]) {
+                            SCMData.saveChecklist(catName, data.checklistStates[catName]);
+                        } else {
+                            SCMData.saveChecklist(catName, {});
+                        }
+                    }
+                    saveChecklistsData();
+                    renderAllCategories();
+                    alert('Импорт выполнен успешно');
+                } else {
+                    alert('Неверный формат файла');
+                }
+            } catch(err) {
+                alert('Ошибка при импорте: ' + err.message);
+            }
+            fileInput.value = '';
+        };
+        reader.readAsText(file);
+    });
+
+    // Инициализация
+    loadChecklistsData();
+</script>
+</body>
+</html>
