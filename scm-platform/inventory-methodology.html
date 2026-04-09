@@ -4,12 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Методология управления запасами – инструменты и расчёты SCM</title>
+    <title>Методология SCM – управление запасами и ключевые модели</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="scm-style.css">
-    <script src="scm-common.js"></script>
     <style>
+        .methodology-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+        .methodology-card h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .formula {
             background: #f1f5f9;
             padding: 12px;
@@ -17,150 +31,180 @@
             font-family: monospace;
             margin: 12px 0;
         }
-        .calc-group {
-            background: #f8fafc;
-            padding: 16px;
-            border-radius: 16px;
-            margin: 16px 0;
-        }
-        .calc-group input, .calc-group select {
-            padding: 8px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            margin: 8px 0;
-            width: 100%;
-            max-width: 300px;
-        }
-        button {
-            background: #1e40af;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-        .calc-result {
-            margin-top: 12px;
-            font-weight: 700;
-        }
         .badge {
             background: #e2e8f0;
             padding: 4px 8px;
             border-radius: 20px;
             font-size: 12px;
         }
-        .section-card {
-            background: white;
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
-            border: 1px solid #e2e8f0;
+        .link-list {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
         }
-        .section-card h2 {
-            font-size: 24px;
-            margin-bottom: 16px;
+        .link-list a {
+            background: #eef2ff;
+            padding: 6px 12px;
+            border-radius: 30px;
+            text-decoration: none;
             color: #1e40af;
+            font-size: 13px;
+        }
+        @media (max-width: 768px) {
+            .methodology-card {
+                padding: 16px;
+            }
         }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">...</aside>
-    <main class="main-content">
-        <h1>📦 Методология управления запасами</h1>
-        <p>Ключевые показатели, классификация, алгоритмы поиска неликвидов и мотивация закупщиков. Интерактивные калькуляторы и ссылки на смежные разделы.</p>
-
-        <div class="section-card">
-            <h2>1. Базовые показатели</h2>
-            <h3>📊 Оборачиваемость запасов</h3>
-            <div class="formula">
-                <strong>В днях:</strong> Оборачиваемость (дни) = Средний остаток / Средние продажи в день<br>
-                <strong>В разах:</strong> Коэффициент оборачиваемости = Сумма продаж / Средний остаток
-            </div>
-            <p><strong>Нормативы:</strong> A (хиты) – 10–30 дней; B – 30–60 дней; C – 60–90 дней. Сверхнорматив >90 дней.</p>
-            <p>👉 <a href="calculators.html#turnover">Перейти к калькулятору оборачиваемости</a></p>
-
-            <h3>💰 GMROI</h3>
-            <div class="formula">GMROI = Валовая прибыль / Средний остаток (в закупочных ценах)<br>>1 – норма, >2 – хорошо.</div>
-            <p>👉 <a href="calculators.html#gmroi">Калькулятор GMROI</a></p>
-
-            <h3>⏳ Глубина остатка (дни до нуля)</h3>
-            <div class="formula">Глубина остатка = Текущий остаток (шт) / Средние продажи в день (шт)</div>
-            <p>👉 <a href="calculators.html#depth">Калькулятор глубины остатка</a></p>
-        </div>
-
-        <div class="section-card">
-            <h2>2. Классификация товаров и запасов</h2>
-            <p><span class="badge">Закрытые</span> <span class="badge">Складской запас</span> <span class="badge">Нерегуляры</span> <span class="badge">Под заказ</span> <span class="badge">Новинка</span> <span class="badge">Акция</span> <span class="badge">Сезон</span></p>
-            <h3>Типы запасов</h3>
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
             <ul>
-                <li><strong>Рабочий:</strong> Оперативный, Страховой, Под заказ, В пути</li>
-                <li><strong>Рыночный:</strong> Сверхнормативный, Сезонный, Промо, Ошибочный</li>
-                <li><strong>Мёртвый:</strong> Неликвид, Брак, Рекламации</li>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html" class="active"><i class="fas fa-boxes"></i> Методологии SCM</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
             </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>📚 Методологии SCM – полный справочник</h1>
+        <p>Ключевые модели, подходы и инструменты управления цепями поставок, включая управление запасами, аутсорсинг, SLA, цифровую трансформацию и ESG.</p>
+
+        <!-- 1. SCOR и производные -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-diagram-project"></i> 1. SCOR, DCOR, CCOR</h2>
+            <p><strong>SCOR (Supply Chain Operations Reference)</strong> – эталонная модель для описания, измерения и улучшения цепей поставок. Включает 6 процессов: Plan, Source, Make, Deliver, Return, Enable.</p>
+            <p><strong>DCOR (Design Chain Operations Reference)</strong> – расширение SCOR для управления жизненным циклом продукта (Research, Design, Integrate, Amplify).</p>
+            <p><strong>CCOR (Customer Chain Operations Reference)</strong> – модель для взаимодействия с клиентами (маркетинг, продажи, обслуживание).</p>
+            <div class="link-list"><a href="processes.html">Процессы SCM</a><a href="library.html">Библиотека</a></div>
         </div>
 
-        <div class="section-card">
-            <h2>3. Поиск неликвидов (алгоритм)</h2>
+        <!-- 2. S&OP и E2E планирование -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-chart-line"></i> 2. S&OP и E2E планирование</h2>
+            <p><strong>S&OP (Sales and Operations Planning)</strong> – ежемесячный процесс балансировки спроса и предложения, объединяющий продажи, производство, логистику и финансы.</p>
+            <p><strong>E2E (End-to-End) планирование</strong> – сквозное планирование всей цепочки от поставщика до клиента с учётом ограничений.</p>
+            <div class="link-list"><a href="processes.html#sop">Подробнее о S&OP</a><a href="calculators.html#forecast">Прогнозирование</a></div>
+        </div>
+
+        <!-- 3. Lean Six Sigma -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-chart-simple"></i> 3. Lean Six Sigma</h2>
+            <p>Объединяет Lean (устранение потерь) и Six Sigma (снижение вариабельности). В SCM помогает сокращать дефекты на 50-70% и уменьшать время выполнения заказов на 30-40%.</p>
+            <div class="link-list"><a href="standards.html#quality">Нормативы качества</a><a href="checklists.html">Чек-листы аудита</a></div>
+        </div>
+
+        <!-- 4. Kraljic Matrix -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-th"></i> 4. Kraljic Matrix</h2>
+            <p>Стратегическая модель для сегментации портфеля закупок по двум осям: влияние на прибыль и риск поставки. Выделяет 4 категории: стратегические, рычажные, узкие места, рутинные.</p>
+            <div class="link-list"><a href="library.html#procurement">Управление закупками</a></div>
+        </div>
+
+        <!-- 5. Управление запасами (ключевые показатели) -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-boxes"></i> 5. Управление запасами</h2>
+            <p><strong>Оборачиваемость запасов</strong> (разы, дни) – скорость оборота товаров.</p>
+            <div class="formula">Оборачиваемость (разы) = COGS / Средний запас</div>
+            <p><strong>GMROI</strong> – валовая рентабельность инвестиций в запасы.</p>
+            <div class="formula">GMROI = Валовая прибыль / Средний запас</div>
+            <p><strong>Глубина остатка (дни до нуля)</strong> = Текущий остаток / Средние продажи в день.</p>
+            <p><strong>Критический срок хранения (КСХ)</strong> – максимальный срок хранения, после которого товар становится неликвидом.</p>
+            <div class="formula">КСХ = (Р + АД×(ОтПост–ОтПок)) / (АД + З)</div>
+            <div class="link-list"><a href="calculators.html#turnover">Калькулятор оборачиваемости</a><a href="calculators.html#gmroi">GMROI</a><a href="calculators.html#depth">Глубина остатка</a><a href="calculators.html#ksh">КСХ</a></div>
+        </div>
+
+        <!-- 6. Поиск неликвидов и мотивация закупщиков -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-search"></i> 6. Поиск неликвидов и мотивация закупщиков</h2>
+            <p><strong>Алгоритм поиска неликвидов:</strong></p>
             <ol>
                 <li>Удалить товары с нулевым остатком.</li>
-                <li>Оставить товары, у которых Дней на складе > Норматив для новинки (например, 60 дней).</li>
-                <li><strong>Супернеликвиды:</strong> продажи = 0.</li>
-                <li><strong>Обычные неликвиды:</strong> продажи > 0, Глубина остатка > КСХ (или > 180 дней), и GMROI &lt; 2.</li>
-                <li>Присвоить статусы в учётной системе.</li>
+                <li>Оставить товары с днями на складе > норматива (60 дней).</li>
+                <li>Супернеликвиды: продажи = 0.</li>
+                <li>Обычные неликвиды: продажи > 0, глубина остатка > КСХ (или >180 дней), GMROI &lt; 2.</li>
             </ol>
-            <p>👉 <a href="calculators.html#depth">Калькулятор глубины остатка</a> | <a href="calculators.html#gmroi">Калькулятор GMROI</a></p>
+            <p><strong>Мотивация закупщиков</strong> (премия от выполнения планов по обнулению остатков, снижению мёртвого запаса и затрат).</p>
+            <div class="link-list"><a href="calculators.html#procurement_bonus">Калькулятор премии</a><a href="kpi-center.html">KPI-центр</a></div>
         </div>
 
-        <div class="section-card">
-            <h2>4. Критический срок хранения (КСХ)</h2>
-            <div class="formula">
-                КСХ = (Р + АД × (ОтПост – ОтПок)) / (АД + З)<br>
-                Р – рентабельность продаж; АД – альтернативная доходность (ставка по депозиту / 365);<br>
-                ОтПост – отсрочка поставщика; ОтПок – отсрочка клиентам; З – затраты на хранение (% к себестоимости в день)
-            </div>
-            <p>👉 <a href="calculators.html#ksh">Калькулятор КСХ</a></p>
-        </div>
-
-        <div class="section-card">
-            <h2>5. Мотивация закупщиков (на основе глубины остатка)</h2>
-            <div class="formula">
-                Премия = (Макс_премия × 50% × (1 – %невып_обнуление)) + (Макс_премия × 40% × (1 – %невып_мертвый)) + (Макс_премия × 10% × коэф_снижения_затрат)
-            </div>
-            <p>👉 <a href="calculators.html#procurement_bonus">Калькулятор премии закупщика</a></p>
-        </div>
-
-        <div class="section-card">
-            <h2>6. Сквозной пример расчёта по одному товару</h2>
-            <p><strong>Товар:</strong> Гребень для волос.<br>
-            Период: 181 день. Остаток: 29 шт. Продажи: 17 шт.<br>
-            Средние продажи в день = 17/181 ≈ 0,094 шт.<br>
-            Глубина остатка = 29/0,094 ≈ 308 дней.<br>
-            GMROI = 0,45 (очень низкий).<br>
-            КСХ = 175 дней (рассчитан).<br>
-            <strong>Вывод:</strong> товар – неликвид (глубина > КСХ, GMROI < 2).</p>
-        </div>
-
-        <div class="section-card">
-            <h2>7. Внедрение методологии (по шагам)</h2>
-            <ol>
-                <li>Настроить учётную систему (физические склады + виртуальные).</li>
-                <li>Присвоить товарам закупочные характеристики.</li>
-                <li>Рассчитать критические сроки хранения.</li>
-                <li>Ежедневно/еженедельно формировать отчёт по алгоритму поиска неликвидов.</li>
-                <li>Ежемесячно рассчитывать мотивацию закупщиков по глубине остатка.</li>
-                <li>Вывести на инфостену ключевые метрики (доля супернеликвидов, обеспеченность товаром).</li>
-            </ol>
-        </div>
-
-        <div class="section-card">
-            <h2>8. Связанные разделы</h2>
+        <!-- 7. Модели аутсорсинга (1PL–5PL) -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-handshake"></i> 7. Модели аутсорсинга в логистике</h2>
             <ul>
-                <li><a href="calculators.html">Калькуляторы SCM</a> – EOQ, страховой запас, точка заказа, GMROI, глубина остатка, КСХ.</li>
-                <li><a href="kpi-center.html">KPI-центр</a> – оборачиваемость, GMROI, Fill Rate.</li>
-                <li><a href="standards.html">Нормативы</a> – отраслевые бенчмарки оборачиваемости.</li>
-                <li><a href="library.html">Библиотека</a> – методологии управления запасами.</li>
+                <li><strong>1PL</strong> – собственная логистика.</li>
+                <li><strong>2PL</strong> – базовые услуги (транспорт или склад).</li>
+                <li><strong>3PL</strong> – комплексные операционные услуги.</li>
+                <li><strong>4PL</strong> – стратегическое управление всей сетью.</li>
+                <li><strong>5PL</strong> – цифровой интегратор на базе Big Data/AI.</li>
             </ul>
+            <div class="link-list"><a href="library.html#outsourcing">Подробнее</a><a href="standards.html#transport">Транспортные нормативы</a></div>
+        </div>
+
+        <!-- 8. SLA (Service Level Agreement) -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-file-signature"></i> 8. SLA – ключевые KPI для перевозчиков и 3PL</h2>
+            <ul>
+                <li><strong>OTD</strong> – своевременность доставки (≥98%).</li>
+                <li><strong>In-Full</strong> – полнота отгрузки (≥99%).</li>
+                <li><strong>Damage-Free</strong> – сохранность груза (≥99,5%).</li>
+                <li><strong>Pick Accuracy</strong> – точность сборки (≥99,5%).</li>
+                <li><strong>Response Time</strong> – время реакции на претензию (&lt;4 часа).</li>
+            </ul>
+            <div class="link-list"><a href="standards.html#sla">Нормативы SLA</a><a href="library.html#sla">Библиотека SLA</a></div>
+        </div>
+
+        <!-- 9. Цифровая трансформация, RPA, цифровой двойник -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-microchip"></i> 9. Цифровая трансформация SCM</h2>
+            <p><strong>Цифровой двойник</strong> – динамическая модель для what-if анализа, прогнозирования сбоев и оптимизации.</p>
+            <p><strong>RPA (Robotic Process Automation)</strong> – роботизация рутинных операций (ввод накладных, сверка).</p>
+            <p><strong>ML-прогнозирование</strong> – повышение точности прогнозов спроса (MAPE &lt;10%).</p>
+            <div class="link-list"><a href="processes.html#digital">Цифровой двойник в процессах</a><a href="calculators.html#roi">ROI автоматизации</a><a href="kpi-center.html#mape">MAPE</a></div>
+        </div>
+
+        <!-- 10. ESG в управлении цепями поставок -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-leaf"></i> 10. ESG (Environment, Social, Governance)</h2>
+            <ul>
+                <li><strong>CO₂ footprint</strong> – учёт Scope 1,2,3 выбросов.</li>
+                <li><strong>Циркулярная экономика</strong> – доля переработанных материалов, отходов на переработку.</li>
+                <li><strong>Социальные программы</strong> – ДМС, обучение, безопасность труда.</li>
+            </ul>
+            <div class="link-list"><a href="standards.html#esg">ESG-бенчмарки</a><a href="auditor.html#esg">Аудит ESG</a></div>
+        </div>
+
+        <!-- 11. Классификация товаров и запасов -->
+        <div class="methodology-card">
+            <h2><i class="fas fa-tags"></i> 11. Классификация товаров и запасов</h2>
+            <p><strong>По закупочным характеристикам:</strong> закрытые, складской запас, нерегуляры, под заказ, новинка, акция, сезон.</p>
+            <p><strong>По экономической роли:</strong> рабочий (оперативный, страховой, под заказ, в пути), рыночный (сверхнормативный, сезонный, промо, ошибочный), мёртвый (неликвид, брак, рекламации).</p>
+        </div>
+
+        <div class="methodology-card">
+            <h2><i class="fas fa-link"></i> Связанные разделы</h2>
+            <div class="link-list">
+                <a href="calculators.html">Калькуляторы</a>
+                <a href="kpi-center.html">KPI-центр</a>
+                <a href="standards.html">Нормативы</a>
+                <a href="library.html">Библиотека</a>
+                <a href="processes.html">Процессы</a>
+                <a href="auditor.html">Аудитор</a>
+                <a href="roadmap.html">Дорожная карта</a>
+            </div>
         </div>
     </main>
 </div>
