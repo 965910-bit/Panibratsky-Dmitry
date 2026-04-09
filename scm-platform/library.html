@@ -1,1 +1,796 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Библиотека SCM – методологии, KPI, термины, лучшие практики</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <style>
+        .search-bar {
+            background: white;
+            border-radius: 40px;
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .search-bar i { color: #94a3b8; font-size: 18px; }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            font-family: inherit;
+        }
+        .search-bar button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .search-bar button.reset { background: #94a3b8; }
+        .search-results-count {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: 0.2s;
+        }
+        .methodology-grid, .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
+        .methodology-card, .kpi-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            border-left: 4px solid #1e40af;
+            position: relative;
+        }
+        .methodology-card h3, .kpi-card h3 {
+            margin-bottom: 12px;
+            color: #1e40af;
+        }
+        .glossary-list dt {
+            font-weight: 700;
+            margin-top: 12px;
+        }
+        .glossary-list dd {
+            margin-left: 20px;
+            color: #334155;
+        }
+        .two-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        mark { background: #fef08a; color: #0f172a; padding: 0 2px; border-radius: 4px; }
+        .synonyms { display: none; }
+        @media (max-width: 768px) {
+            .methodology-grid, .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html" class="active"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+            </ul>
+        </nav>
+    </aside>
 
+    <main class="main-content">
+        <h1>📚 Библиотека SCM</h1>
+        <p>Справочная информация по методологиям, моделям, KPI, терминам и лучшим практикам управления цепями поставок.</p>
+
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Поиск по методологиям, KPI, терминам...">
+            <button id="searchButton">Найти</button>
+            <button id="resetButton" class="reset">Сбросить</button>
+        </div>
+        <div id="searchResultsCount" class="search-results-count"></div>
+
+        <!-- БЛОК 1: КЛЮЧЕВЫЕ МЕТОДОЛОГИИ И МОДЕЛИ -->
+        <div class="card" data-card>
+            <h2>Ключевые методологии и модели</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">scor модель эталон цепочка поставок бенчмаркинг</span>
+                    <h3>SCOR (Supply Chain Operations Reference)</h3>
+                    <p>Сквозная референсная модель для описания, измерения и улучшения цепей поставок. Включает 6 процессов: Plan, Source, Make, Deliver, Return, Enable. Позволяет проводить бенчмаркинг и выявлять узкие места.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">dcor жизненный цикл продукта r&d инжиниринг</span>
+                    <h3>DCOR (Design Chain Operations Reference)</h3>
+                    <p>Расширение SCOR для управления жизненным циклом продукта: Research, Design, Integrate, Amplify. Используется для повышения эффективности R&D и инжиниринга в цепочке поставок.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">ccor клиентский опыт маркетинг продажи обслуживание</span>
+                    <h3>CCOR (Customer Chain Operations Reference)</h3>
+                    <p>Модель, фокусирующаяся на взаимодействии с клиентами, охватывая процессы маркетинга, продаж и обслуживания для создания бесшовного клиентского опыта.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">s&op планирование продажи операции спрос предложение</span>
+                    <h3>S&OP (Sales and Operations Planning)</h3>
+                    <p>Интегрированный ежемесячный процесс планирования, объединяющий продажи, производство, логистику и финансы. Балансирует спрос и предложение для согласования стратегических целей.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">lean six sigma бережливое производство потери вариабельность дефекты</span>
+                    <h3>Lean Six Sigma</h3>
+                    <p>Подход, объединяющий Lean (устранение потерь) и Six Sigma (снижение вариабельности). В SCM помогает сокращать дефекты на 50-70%, уменьшать время выполнения заказов на 30-40% и повышать надежность поставщиков.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">e2e end-to-end сквозное планирование оптимизация запасов</span>
+                    <h3>E2E (End-to-End) планирование</h3>
+                    <p>Сквозное планирование всей цепочки поставок — от поставщика до клиента — с учётом всех ограничений. Позволяет оптимизировать запасы и повысить скорость реакции.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">kraljic матрица закупки портфель прибыль риск</span>
+                    <h3>Kraljic Matrix</h3>
+                    <p>Стратегическая модель для анализа и сегментации портфеля закупок, классифицирующая товары по двум осям: влияние на прибыль и риск поставки.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">scor digital ai машинное обучение big data прогнозирование</span>
+                    <h3>SCOR Digital Standard</h3>
+                    <p>Цифровая версия SCOR-модели, ориентированная на внедрение AI, машинного обучения и аналитики больших данных для повышения точности прогнозов и автономной оптимизации.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 2: ПОЛНЫЙ СПРАВОЧНИК KPI (все метрики) -->
+        <div class="card" data-card>
+            <h2>Полный справочник KPI (показатели эффективности)</h2>
+            <div class="kpi-grid">
+                <!-- SCOR метрики -->
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">идеальный заказ выполнение вовремя без повреждений точность документов интегральный показатель качество</span>
+                    <h3>Perfect Order Fulfillment</h3>
+                    <p><strong>Формула:</strong> (Кол-во идеально выполненных заказов / Общее кол-во заказов) × 100%</p>
+                    <p>Процент заказов, выполненных вовремя, полностью, без повреждений и с корректными документами. Ключевой интегральный показатель качества SCM.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">своевременность доставка в срок надежность перевозчика</span>
+                    <h3>On-Time Delivery (OTD)</h3>
+                    <p><strong>Формула:</strong> (Кол-во доставок вовремя / Общее кол-во доставок) × 100%</p>
+                    <p>Доля заказов, доставленных в согласованный срок. Отражает надёжность перевозчика.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">полнота отгрузка без замен</span>
+                    <h3>Delivery In Full (DI)</h3>
+                    <p><strong>Формула:</strong> (Кол-во полностью отгруженных заказов / Общее кол-во заказов) × 100%</p>
+                    <p>Доля заказов, отгруженных в полном объёме без замен.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">цикл выполнения заказа время от получения до отгрузки скорость реакции</span>
+                    <h3>Order Fulfillment Cycle Time</h3>
+                    <p><strong>Формула:</strong> Среднее (Фактическая дата отгрузки - Дата получения заказа)</p>
+                    <p>Среднее время от получения заказа до его отгрузки. Отражает скорость реакции.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">общие затраты на scm планирование закупки производство доставка возвраты склад</span>
+                    <h3>Total Supply Chain Cost</h3>
+                    <p><strong>Формула:</strong> Суммарные затраты на SCM (планирование, закупки, производство, доставка, возвраты, склад)</p>
+                    <p>Общие затраты на управление цепочкой поставок. Часто выражается в % от выручки.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">cash-to-cash финансовый цикл ликвидность dio dso dpo</span>
+                    <h3>Cash-to-Cash Cycle Time</h3>
+                    <p><strong>Формула:</strong> DIO + DSO – DPO</p>
+                    <p>Время от оплаты сырья до получения денег от клиента. Чем короче, тем лучше для ликвидности.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">инвентаризация дни запаса запас</span>
+                    <h3>Inventory Days of Supply</h3>
+                    <p><strong>Формула:</strong> (Средний остаток запасов / Себестоимость продаж) × 365</p>
+                    <p>На сколько дней текущей деятельности хватит имеющихся запасов.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">gmroi валовая прибыль инвестиции в запасы эффективность</span>
+                    <h3>Gross Margin Return on Investment (GMROI)</h3>
+                    <p><strong>Формула:</strong> Валовая прибыль / Средние инвестиции в запасы</p>
+                    <p>Сколько валовой прибыли приносит каждый рубль, вложенный в запасы.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">cpu стоимость перевозки единицы транспорт</span>
+                    <h3>Cost Per Unit (CPU)</h3>
+                    <p><strong>Формула:</strong> Общие транспортные затраты / Количество отгруженных единиц</p>
+                    <p>Стоимость перевозки одной единицы товара.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">рентабельность логистики прибыль выручка</span>
+                    <h3>Profit Margin (логистическая)</h3>
+                    <p><strong>Формула:</strong> (Выручка – Логистические расходы) / Выручка × 100%</p>
+                    <p>Рентабельность логистической деятельности.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">брак дефекты качество продукции бракованные товары</span>
+                    <h3>Defect Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во дефектных товаров / Общее кол-во товаров) × 100%</p>
+                    <p>Долю бракованной продукции в поставках или на складе.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">повреждения при транспортировке или хранении порча</span>
+                    <h3>Damage Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во повреждённых товаров / Общее кол-во отгруженных товаров) × 100%</p>
+                    <p>Долю товаров, повреждённых при транспортировке или хранении.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">возвраты возврат товара обратная логистика</span>
+                    <h3>Return Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во возвращённых товаров / Общее кол-во проданных товаров) × 100%</p>
+                    <p>Доля возвращённых заказов (по разным причинам).</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">инвентаризация оборачиваемость запасов cogs средний запас сколько раз обновились</span>
+                    <h3>Inventory Turnover</h3>
+                    <p><strong>Формула:</strong> Себестоимость проданных товаров (COGS) / Средняя стоимость запасов</p>
+                    <p>Оборачиваемость запасов (сколько раз за период они обновились).</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">уровень удовлетворения спроса наличие товара без дефицита fill rate</span>
+                    <h3>Fill Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во доставленных единиц с первой попытки / Общее кол-во заказанных единиц) × 100%</p>
+                    <p>Уровень удовлетворения спроса из наличного запаса без дефицита.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">дефицит отсутствие товара на складе stockout частота дефицита</span>
+                    <h3>Stockout Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во дней с дефицитом / Общее кол-во дней в периоде) × 100%</p>
+                    <p>Частоту отсутствия товара на складе.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">точность учёта запасов инвентаризация</span>
+                    <h3>Inventory Accuracy</h3>
+                    <p><strong>Формула:</strong> (Кол-во позиций с точным остатком / Общее кол-во позиций) × 100%</p>
+                    <p>Точность учёта запасов по данным инвентаризации.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">точность сборки заказов на складе pick accuracy</span>
+                    <h3>Pick Accuracy</h3>
+                    <p><strong>Формула:</strong> (Кол-во правильно собранных позиций / Общее кол-во отобранных позиций) × 100%</p>
+                    <p>Точность сборки заказов на складе.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">производительность сборщиков отобранные позиции человеко-часы</span>
+                    <h3>Order Picking Productivity</h3>
+                    <p><strong>Формула:</strong> Отобранные позиции (или заказы) / Затраченные человеко-часы</p>
+                    <p>Производительность труда сборщиков.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">использование складских площадей занятая площадь общая площадь склад</span>
+                    <h3>Space Utilization</h3>
+                    <p><strong>Формула:</strong> (Занятая площадь / Общая площадь склада) × 100%</p>
+                    <p>Использование складских площадей.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">dock-to-stock время от получения до размещения в ячейке</span>
+                    <h3>Dock-to-Stock Cycle Time</h3>
+                    <p><strong>Формула:</strong> Время размещения - Время прибытия</p>
+                    <p>Среднее время от получения товара до его размещения в ячейке хранения.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">холостой пробег без груза deadhead процент</span>
+                    <h3>Deadhead Percentage</h3>
+                    <p><strong>Формула:</strong> (Пробег без груза / Общий пробег) × 100%</p>
+                    <p>Долю холостого пробега, снижающую эффективность транспорта.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">загрузка транспорта utilization вес грузоподъёмность</span>
+                    <h3>Transport Utilization</h3>
+                    <p><strong>Формула:</strong> (Загруженный вес / Полная грузоподъёмность) × 100%</p>
+                    <p>Загрузку транспорта.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">стоимость километра пробега cpk cost per kilometer</span>
+                    <h3>Cost Per Kilometer (CPK)</h3>
+                    <p><strong>Формула:</strong> Общие затраты на перевозку / Общий пробег в километрах</p>
+                    <p>Стоимость одного километра пробега.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">своевременность поставок поставщик on-time delivery</span>
+                    <h3>Supplier On-Time Delivery</h3>
+                    <p><strong>Формула:</strong> (Кол-во поставок вовремя / Общее кол-во поставок) × 100%</p>
+                    <p>Своевременность поставок от поставщиков.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">качество поставщика дефекты на миллион ppm</span>
+                    <h3>Supplier Quality Rating</h3>
+                    <p><strong>Формула:</strong> (1 – Дефекты на миллион / 1 000 000) × 100%</p>
+                    <p>Оценку качества продукции поставщика.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">tco совокупная стоимость владения цена закупки доставка таможня хранение обслуживание утилизация</span>
+                    <h3>Total Cost of Ownership (TCO)</h3>
+                    <p><strong>Формула:</strong> Цена закупки + Доставка + Таможня + Хранение + Обслуживание + Утилизация</p>
+                    <p>Совокупную стоимость владения товаром.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">лояльность клиентов nps csi удовлетворённость</span>
+                    <h3>Customer Satisfaction Index (CSI) / NPS</h3>
+                    <p><strong>Формула NPS:</strong> (% промоутеров - % критиков)</p>
+                    <p>Лояльность клиентов, готовность рекомендовать.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">точность выполнения заказа order accuracy</span>
+                    <h3>Order Accuracy</h3>
+                    <p><strong>Формула:</strong> (Кол-во заказов без ошибок / Общее кол-во заказов) × 100%</p>
+                    <p>Точность выполнения заказа (ассортимент, количество).</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">углеродный след co2 выбросы парниковые газы</span>
+                    <h3>Carbon Footprint (CO₂ emissions)</h3>
+                    <p><strong>Формула:</strong> Σ (Объём топлива × Коэффициент эмиссии)</p>
+                    <p>Общий объём выбросов парниковых газов (тонны CO₂-экв).</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">co2 на единицу продукции углеродный след на единицу</span>
+                    <h3>CO₂ Emissions per Unit</h3>
+                    <p><strong>Формула:</strong> Общие выбросы CO₂ / Количество отгруженных единиц (или тонно-километры)</p>
+                    <p>Углеродный след на единицу продукции.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 3: РАСШИРЕННЫЕ ПОКАЗАТЕЛИ (закупки, безопасность, тендеры, аудит) -->
+        <div class="card" data-card>
+            <h2>Расширенные показатели: закупки, безопасность, тендеры, аудит</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">экономия затрат cost savings переговоры тендеры</span>
+                    <h3>Cost Savings (Экономия затрат)</h3>
+                    <p><strong>Формула:</strong> ((Базовые затраты - Фактические затраты) / Базовые затраты) × 100%</p>
+                    <p>Финансовый эффект от работы отдела закупок (переговоры, тендеры).</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">управляемый бюджет закупок spend under management централизованные закупки</span>
+                    <h3>Spend Under Management</h3>
+                    <p><strong>Формула:</strong> (Закупки через централизованные каналы / Общие закупки) × 100%</p>
+                    <p>Долю закупок под контролем отдела снабжения.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">нерегламентированные закупки maverick spend обход правил</span>
+                    <h3>Maverick Spend</h3>
+                    <p><strong>Формула:</strong> (Закупки вне процедур / Общие закупки) × 100%</p>
+                    <p>Процент закупок, сделанных в обход правил.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">время выполнения заказа поставщиком supplier lead time</span>
+                    <h3>Supplier Lead Time</h3>
+                    <p><strong>Формула:</strong> Средняя разница (Дата отгрузки - Дата размещения заказа)</p>
+                    <p>Время от заказа до получения товара от поставщика.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">брак поставщика defect rate качество</span>
+                    <h3>Supplier Defect Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во бракованных товаров / Общее кол-во товаров) × 100%</p>
+                    <p>Долю бракованной продукции от поставщика.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">окупаемость инвестиций в закупки procurement roi</span>
+                    <h3>Procurement ROI</h3>
+                    <p><strong>Формула:</strong> ((Экономия + Предотвращённые затраты) - Затраты на закупки) / Затраты на закупки × 100%</p>
+                    <p>Возврат на инвестиции в функцию закупок.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">esg поставщика устойчивое развитие экология социальная ответственность управление</span>
+                    <h3>Supplier ESG Score</h3>
+                    <p>Оценка по категориям (Окружающая среда, Социальная политика, Управление).</p>
+                    <p>Уровень устойчивого развития поставщика.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">вендорская оценка рисков безопасность поставщика кибербезопасность mfa</span>
+                    <h3>Вендорская оценка рисков (Security)</h3>
+                    <p>Система показателей для оценки безопасности поставщика (наличие формальной программы кибербезопасности, MFA, тестирование уязвимостей).</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">тендер выигранные тендеры win rate эффективность тендерного отдела</span>
+                    <h3>Tender Win Rate</h3>
+                    <p><strong>Формула:</strong> (Кол-во выигранных тендеров / Кол-во поданных заявок) × 100%</p>
+                    <p>Эффективность тендерного отдела.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">конверсия заявок в контракты bid-to-win ratio</span>
+                    <h3>Bid-to-Win Ratio</h3>
+                    <p>Количество выигранных тендеров / Количество поданных заявок</p>
+                    <p>Коэффициент конверсии заявок в контракты.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">индекс качества выполнения заказа difotai полнота своевременность точность</span>
+                    <h3>DIFOTAI</h3>
+                    <p>Комплексный индекс качества выполнения заказа.</p>
+                    <p>Общую эффективность цепи поставок по полноте, своевременности и точности.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">предотвращение затрат cost avoidance повышение цен штрафы</span>
+                    <h3>Cost Avoidance</h3>
+                    <p>Сумма предотвращённых повышений цен + Снижение штрафов</p>
+                    <p>Способность закупок предотвращать ненужные траты.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">eoq экономичный размер заказа оптимальный заказ</span>
+                    <h3>EOQ (Экономичный размер заказа)</h3>
+                    <p><strong>Формула:</strong> √(2DS/H), где D – годовой спрос, S – затраты на заказ, H – затраты на хранение.</p>
+                    <p>Оптимальный размер заказа для минимизации общих затрат на пополнение запасов.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">страховой запас safety stock защита от колебаний спроса</span>
+                    <h3>Safety Stock (Страховой запас)</h3>
+                    <p><strong>Формула:</strong> Z × σ × √LT, где Z – уровень обслуживания, σ – стандартное отклонение спроса, LT – время выполнения заказа.</p>
+                    <p>Количество товара для защиты от непредвиденных колебаний спроса или задержек поставок.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 4: РОБОТИЗАЦИЯ (RPA) И ЦИФРОВАЯ ТРАНСФОРМАЦИЯ -->
+        <div class="card" data-card>
+            <h2>Роботизация (RPA) и цифровая трансформация SCM</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">fte-эквивалент робот заменяет сотрудников эффективность rpa</span>
+                    <h3>FTE-эквивалент (Full-Time Equivalent)</h3>
+                    <p>Количество человеко-часов, сэкономленных роботом / Нормативное количество часов одного сотрудника.</p>
+                    <p>Показывает, сколько сотрудников высвобождает один программный робот. Ключевая метрика для расчёта ROI от RPA.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">экономический эффект rpa финансовая выгода автоматизация</span>
+                    <h3>Экономический эффект RPA</h3>
+                    <p>Матрица из ~10 параметров: FTE-эквивалент × средняя зарплата + снижение ошибок + ускорение процессов – стоимость робота.</p>
+                    <p>Совокупную финансовую выгоду от внедрения роботизации.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">коэффициент автоматизации процессов уровень цифровизации рутинных задач</span>
+                    <h3>Коэффициент автоматизации процессов</h3>
+                    <p>(Количество автоматизированных операций / Общее количество операций) × 100%</p>
+                    <p>Уровень цифровизации рутинных задач. Лидеры достигают 95–98%.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">time-to-market скорость внедрения инноваций</span>
+                    <h3>Time-to-Market (TTM)</h3>
+                    <p>Время от возникновения потребности до внедрения решения (дни/недели).</p>
+                    <p>Скорость внедрения инноваций. В передовых компаниях измеряется неделями вместо месяцев.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">скорость адаптации цепочек поставок гибкость scm поиск нового поставщика</span>
+                    <h3>Скорость адаптации цепочек поставок</h3>
+                    <p>Количество дней на поиск нового поставщика и перенастройку логистики.</p>
+                    <p>Гибкость SCM в условиях кризиса. Снижение этого показателя — ключевая цель цифровой трансформации.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">цифровая вовлечённость сотрудников использование платформ</span>
+                    <h3>Цифровая вовлечённость сотрудников</h3>
+                    <p>(Количество сотрудников, активно использующих новые цифровые платформы / Общая численность) × 100%.</p>
+                    <p>Скорость и эффективность перехода на отечественные ИТ-решения.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">точность прогнозов ml-моделей машинное обучение mape</span>
+                    <h3>Точность прогнозов ML-моделей</h3>
+                    <p>1 – MAPE (средняя абсолютная процентная ошибка).</p>
+                    <p>Качество прогнозирования спроса.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">hyperautomation roi окупаемость комплексной автоматизации rpa+ai+ml</span>
+                    <h3>Hyperautomation ROI</h3>
+                    <p>((Экономия от автоматизации – Затраты на внедрение) / Затраты на внедрение) × 100%.</p>
+                    <p>Окупаемость комплексной автоматизации (RPA+AI+ML).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 5: МАТЕРИАЛЬНЫЕ И НЕМАТЕРИАЛЬНЫЕ ПОТОКИ -->
+        <div class="card" data-card>
+            <h2>Материальные и нематериальные потоки в логистике</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">материальный поток сырьё материалы готовая продукция движение</span>
+                    <h3>Материальный поток</h3>
+                    <p>Движение сырья, материалов, незавершённого производства и готовой продукции. Характеризуется ассортиментом, количеством, габаритами, временем и маршрутом. Эффективность оценивается через оборачиваемость, точность учёта и долю брака.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">информационный поток данные заказы накладные статусы отгрузки единая версия правды</span>
+                    <h3>Информационный поток</h3>
+                    <p>Сопровождает материальный поток: заказы, накладные, счета, статусы отгрузок, данные прогнозирования. Ключевые метрики: точность данных (Documentation Accuracy), скорость передачи (интеграция ERP/WMS/TMS), доступность информации для всех участников цепи («единая версия правды»).</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">финансовый поток денежные средства оплата поставщикам получение платежей cash-to-cash</span>
+                    <h3>Финансовый поток</h3>
+                    <p>Движение денежных средств между участниками SCM. Включает оплату поставщикам, получение платежей от клиентов, расчёты с перевозчиками. Метрики: Cash-to-Cash Cycle, DSO/DPO, точность счетов.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">поток знаний компетенции обучение сертификация cscp cltd ctsc</span>
+                    <h3>Поток знаний и компетенций</h3>
+                    <p>Передача экспертизы, обучение, стандартизация процессов. Оценивается через охват обучением, скорость адаптации новых сотрудников, количество сертифицированных специалистов (CSCP, CLTD, CTSC).</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">сервисный поток возвраты обратная логистика ремонт переработка утилизация</span>
+                    <h3>Сервисный поток (управление возвратами)</h3>
+                    <p>Обратная логистика: возвраты, ремонт, переработка, утилизация. Метрики: Return Rate, Time-to-Refund, Resale Yield, доля переработанных отходов.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 6: МОДЕЛИ АУТСОРСИНГА (1PL–5PL) -->
+        <div class="card" data-card>
+            <h2>Модели аутсорсинга в логистике: 1PL → 5PL</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">1pl первый уровень внутренняя логистика собственный транспорт склад</span>
+                    <h3>1PL (First Party Logistics)</h3>
+                    <p><strong>Суть:</strong> Внутренняя логистика силами компании. Владелец груза сам перевозит и хранит товары, используя собственный транспорт и склады.<br><strong>Плюсы:</strong> полный контроль.<br><strong>Минусы:</strong> высокие фиксированные затраты, отвлечение капитала.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">2pl второй уровень внешний перевозчик базовые услуги</span>
+                    <h3>2PL (Second Party Logistics)</h3>
+                    <p><strong>Суть:</strong> Привлечение внешнего перевозчика для базовых услуг (транспорт или склад).<br><strong>Пример:</strong> завод нанимает автотранспортное предприятие для доставки продукции.<br><strong>KPI:</strong> On-Time Delivery, Cost Per Kilometer, Deadhead Percentage.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">3pl третий уровень операционный аутсорсинг складирование комплектация доставка под ключ</span>
+                    <h3>3PL (Third Party Logistics)</h3>
+                    <p><strong>Суть:</strong> Полноценный операционный аутсорсинг: забор груза, складирование, комплектация, доставка «под ключ».<br><strong>KPI:</strong> Pick Accuracy, Dock-to-Stock, Fill Rate, OTIF.<br><strong>Бенчмарк:</strong> экономия затрат на логистику 10–20%.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">4pl четвёртый уровень стратегическое управление сетью поставок координация 3pl</span>
+                    <h3>4PL (Fourth Party Logistics)</h3>
+                    <p><strong>Суть:</strong> Стратегическое управление всей сетью поставок. 4PL-оператор координирует нескольких 3PL, внедряет IT-решения, оптимизирует затраты и берёт на себя управление цепочкой.<br><strong>KPI:</strong> Total Supply Chain Cost, Cash-to-Cash Cycle, OTIF по всей сети.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">5pl пятый уровень цифровой интегратор big data ai экосистема</span>
+                    <h3>5PL (Fifth Party Logistics)</h3>
+                    <p><strong>Суть:</strong> Цифровой интегратор на базе Big Data и AI. Строит экосистему для заказов, складов и транспорта. Идеален для e‑commerce и глобальных сетей.<br><strong>KPI:</strong> коэффициент автоматизации 95%+, точность прогнозов ML-моделей, время перенастройки сети (часы).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 7: SLA (Service Level Agreement) -->
+        <div class="card" data-card>
+            <h2>Соглашение об уровне обслуживания (SLA) в логистике</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">sla своевременность доставки otd</span>
+                    <h3>On-Time Delivery (OTD) по SLA</h3>
+                    <p><strong>Формула:</strong> (Кол-во доставок вовремя / Общее кол-во доставок) × 100%</p>
+                    <p>Соблюдение сроков доставки. Базовый SLA-показатель, типовое целевое значение: 95–99%.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">полнота доставки in-full</span>
+                    <h3>In-Full Delivery по SLA</h3>
+                    <p><strong>Формула:</strong> (Кол-во полностью отгруженных заказов / Общее кол-во заказов) × 100%</p>
+                    <p>Долю заказов без дефицита и замен. Цель: ≥ 98%.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">точность заказа order accuracy</span>
+                    <h3>Order Accuracy по SLA</h3>
+                    <p><strong>Формула:</strong> (Кол-во заказов без ошибок / Общее кол-во заказов) × 100%</p>
+                    <p>Качество комплектации и соответствия документам. Цель: ≥ 99,5%.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">первая попытка доставки fdsr последняя миля</span>
+                    <h3>First Attempt Delivery Success Rate (FDSR)</h3>
+                    <p><strong>Формула:</strong> (Кол-во успешных доставок с первой попытки / Общее кол-во доставок) × 100%</p>
+                    <p>Эффективность последней мили. Низкий показатель ведёт к дополнительным затратам на повторные доставки.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">время реакции на запрос клиента response time</span>
+                    <h3>Response Time по SLA</h3>
+                    <p>Среднее время реакции на запрос клиента или инцидент.</p>
+                    <p>Скорость обработки обращений. Для премиум-сервиса – минуты, для стандартного – часы.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">сохранность груза damage-free</span>
+                    <h3>Damage-Free Rate по SLA</h3>
+                    <p><strong>Формула:</strong> (Кол-во заказов без повреждений / Общее кол-во заказов) × 100%</p>
+                    <p>Сохранность груза. Цель: ≥ 99% для большинства категорий.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">идеальный заказ perfect order</span>
+                    <h3>Perfect Order Rate по SLA</h3>
+                    <p><strong>Формула:</strong> OTD × In-Full × Accuracy × Damage-Free</p>
+                    <p>Интегральный показатель идеального выполнения заказа. Лидеры рынка достигают 98–99%.</p>
+                </div>
+                <div class="kpi-card" data-searchable>
+                    <span class="synonyms">штрафы за невыполнение sla penalty compliance</span>
+                    <h3>Penalty Compliance по SLA</h3>
+                    <p>(Сумма начисленных штрафов за невыполнение SLA / Максимальная сумма штрафов) × 100%</p>
+                    <p>Степень соблюдения договорных обязательств перевозчиком.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 8: РАСШИРЕННЫЙ ГЛОССАРИЙ КЛЮЧЕВЫХ ТЕРМИНОВ -->
+        <div class="card" data-card>
+            <h2>Расширенный глоссарий ключевых терминов</h2>
+            <div class="two-columns">
+                <div>
+                    <dl class="glossary-list">
+                        <dt data-searchable>OTIF (On-Time In-Full) <span class="synonyms">своевременно и полностью</span></dt>
+                        <dd data-searchable>Ключевой KPI, измеряющий процент заказов, доставленных вовремя и в полном объёме без замен и повреждений.</dd>
+                        <dt data-searchable>Perfect Order Fulfillment <span class="synonyms">идеальный заказ</span></dt>
+                        <dd data-searchable>Показатель SCOR-модели, оценивающий долю идеальных заказов: вовремя, полностью, без повреждений и с корректными документами.</dd>
+                        <dt data-searchable>Inventory Turnover <span class="synonyms">оборачиваемость запасов инвентаризация</span></dt>
+                        <dd data-searchable>Оборачиваемость запасов, рассчитываемая как отношение себестоимости проданных товаров (COGS) к средней стоимости запасов.</dd>
+                        <dt data-searchable>Total Supply Chain Cost <span class="synonyms">общие затраты на scm</span></dt>
+                        <dd data-searchable>Общие затраты на управление цепочкой поставок, выраженные в процентах от выручки. Ключевая метрика эффективности SCM.</dd>
+                        <dt data-searchable>Cash-to-Cash Cycle <span class="synonyms">финансовый цикл</span></dt>
+                        <dd data-searchable>Финансовый цикл: DIO + DSO – DPO. Показывает, сколько дней требуется для конвертации вложений в запасы и дебиторскую задолженность в реальные деньги.</dd>
+                    </dl>
+                </div>
+                <div>
+                    <dl class="glossary-list">
+                        <dt data-searchable>Fill Rate <span class="synonyms">уровень выполнения заказа доступность товара</span></dt>
+                        <dd data-searchable>Показатель доступности товара, отражающий процент спроса, удовлетворённого из наличного запаса без дефицита.</dd>
+                        <dt data-searchable>TCO (Total Cost of Ownership) <span class="synonyms">совокупная стоимость владения</span></dt>
+                        <dd data-searchable>Совокупная стоимость владения, включающая не только цену закупки, но и логистику, таможню, хранение, обслуживание и утилизацию.</dd>
+                        <dt data-searchable>Forecast Accuracy <span class="synonyms">точность прогноза спроса</span></dt>
+                        <dd data-searchable>Точность прогноза спроса, обычно рассчитываемая как 1 — MAPE (средняя абсолютная процентная ошибка).</dd>
+                        <dt data-searchable>ESG (Environmental, Social, Governance) <span class="synonyms">устойчивое развитие экология социальная ответственность управление</span></dt>
+                        <dd data-searchable>Набор критериев для оценки устойчивости компании: экологическая ответственность, социальная политика и качество корпоративного управления.</dd>
+                        <dt data-searchable>Order Fulfillment Cycle Time <span class="synonyms">цикл выполнения заказа</span></dt>
+                        <dd data-searchable>Среднее время от получения заказа до его фактической отгрузки. Отражает скорость реагирования цепи поставок.</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 9: ЛУЧШИЕ ПРАКТИКИ ПО КЛЮЧЕВЫМ НАПРАВЛЕНИЯМ -->
+        <div class="card" data-card>
+            <h2>Лучшие практики по ключевым направлениям SCM</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">управление спросом и запасами прогнозирование abc-xyz страховые запасы</span>
+                    <h3>Управление спросом и запасами</h3>
+                    <p>Сбор POS-данных, прогнозирование на основе машинного обучения, ABC-XYZ анализ, Theory of Constraints и страховые запасы для обеспечения сервиса без избыточных остатков.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">управление транспортом tms маршрутизация edi отслеживание</span>
+                    <h3>Управление транспортом (TMS)</h3>
+                    <p>Динамическая маршрутизация, консолидация отправок, электронный обмен данными (EDI) с перевозчиками, отслеживание в реальном времени и контроль TMS для снижения затрат на 10-20%.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">управление складом wms адресное хранение тсд zone picking волновое планирование abc-анализ</span>
+                    <h3>Управление складом (WMS)</h3>
+                    <p>Адресное хранение, автоматизация приёмки и отгрузки с ТСД, зонное комплектование (zone picking), волновое планирование (wave planning) и регулярный ABC-анализ.</p>
+                </div>
+                <div class="methodology-card" data-searchable>
+                    <span class="synonyms">управление закупками strategic sourcing tco устойчивость e-procurement</span>
+                    <h3>Управление закупками (Strategic Sourcing)</h3>
+                    <p>Стратегический подход, учитывающий TCO и устойчивость, управление категориями, оценка и развитие поставщиков, цифровизация закупок (e-Procurement).</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    (function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchButton');
+        const resetBtn = document.getElementById('resetButton');
+        const resultsCountSpan = document.getElementById('searchResultsCount');
+
+        function removeHighlights(container) {
+            const marks = container.querySelectorAll('mark');
+            marks.forEach(mark => {
+                const parent = mark.parentNode;
+                parent.replaceChild(document.createTextNode(mark.textContent), mark);
+                parent.normalize();
+            });
+        }
+
+        function highlightText(node, term) {
+            if (!term.trim()) return;
+            const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            if (node.nodeType === Node.TEXT_NODE) {
+                if (regex.test(node.textContent)) {
+                    const span = document.createElement('span');
+                    span.innerHTML = node.textContent.replace(regex, `<mark>$1</mark>`);
+                    node.parentNode.replaceChild(span, node);
+                }
+            } else if (node.nodeType === Node.ELEMENT_NODE && !['SCRIPT', 'STYLE', 'MARK'].includes(node.tagName)) {
+                Array.from(node.childNodes).forEach(child => highlightText(child, term));
+            }
+        }
+
+        function performSearch() {
+            const term = searchInput.value.trim().toLowerCase();
+            const allCards = document.querySelectorAll('.card[data-card]');
+            const allSearchable = document.querySelectorAll('[data-searchable]');
+            const allGlossaryTerms = document.querySelectorAll('.glossary-list dt, .glossary-list dd');
+
+            allCards.forEach(card => card.style.display = '');
+            allSearchable.forEach(el => el.style.display = '');
+            allGlossaryTerms.forEach(term => term.style.display = '');
+            removeHighlights(document.body);
+
+            if (term === '') {
+                resultsCountSpan.innerHTML = '';
+                return;
+            }
+
+            let visibleCount = 0;
+            allSearchable.forEach(el => {
+                const text = el.textContent.toLowerCase();
+                if (!text.includes(term)) {
+                    el.style.display = 'none';
+                } else {
+                    visibleCount++;
+                    highlightText(el, term);
+                }
+            });
+
+            const dts = document.querySelectorAll('.glossary-list dt');
+            dts.forEach(dt => {
+                const dd = dt.nextElementSibling;
+                if (dd && dd.tagName === 'DD') {
+                    const dtText = dt.textContent.toLowerCase();
+                    const ddText = dd.textContent.toLowerCase();
+                    if (dtText.includes(term) || ddText.includes(term)) {
+                        dt.style.display = '';
+                        dd.style.display = '';
+                    } else {
+                        dt.style.display = 'none';
+                        dd.style.display = 'none';
+                    }
+                }
+            });
+
+            allCards.forEach(card => {
+                const visibleChildren = card.querySelectorAll('[data-searchable]:not([style*="display: none"]), .glossary-list dt:not([style*="display: none"])');
+                if (visibleChildren.length === 0) {
+                    card.style.display = 'none';
+                }
+            });
+
+            resultsCountSpan.innerHTML = `Найдено совпадений в ${visibleCount} элементах.`;
+        }
+
+        function resetSearch() {
+            searchInput.value = '';
+            const allCards = document.querySelectorAll('.card[data-card]');
+            const allSearchable = document.querySelectorAll('[data-searchable]');
+            const allGlossaryTerms = document.querySelectorAll('.glossary-list dt, .glossary-list dd');
+            allCards.forEach(card => card.style.display = '');
+            allSearchable.forEach(el => el.style.display = '');
+            allGlossaryTerms.forEach(term => term.style.display = '');
+            removeHighlights(document.body);
+            resultsCountSpan.innerHTML = '';
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        resetBtn.addEventListener('click', resetSearch);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+    })();
+</script>
+</body>
+</html>
