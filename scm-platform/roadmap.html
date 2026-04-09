@@ -1,1 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Дорожная карта трансформации SCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
+    <style>
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline:before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #1e40af;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 32px;
+        }
+        .timeline-marker {
+            position: absolute;
+            left: -22px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #1e40af;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #1e40af;
+        }
+        .timeline-content {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 16px;
+        }
+        .timeline-date {
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #1e40af;
+            width: 0%;
+            border-radius: 10px;
+        }
+        .badge {
+            background: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+        }
+        .task-item input {
+            width: 18px;
+            height: 18px;
+        }
+        .task-item label {
+            flex: 1;
+            cursor: pointer;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .print-btn { background: #f59e0b; }
+        .reset-btn { background: #94a3b8; }
+        .total-progress {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .total-progress h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .total-progress-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: #1e40af;
+        }
+        @media (max-width: 768px) {
+            .timeline {
+                padding-left: 20px;
+            }
+        }
+        @media print {
+            .sidebar, .btn-group, .task-item input {
+                display: none;
+            }
+            .task-item label {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">...</aside>
+    <main class="main-content">
+        <h1>🗺️ Дорожная карта трансформации SCM</h1>
+        <p>План внедрения улучшений на 2026–2027 годы. Отмечайте выполненные этапы и задачи – прогресс сохраняется.</p>
 
+        <div class="btn-group">
+            <button id="printRoadmapBtn" class="print-btn">🖨️ Печать дорожной карты</button>
+            <button id="resetRoadmapBtn" class="reset-btn">🔄 Сбросить весь прогресс</button>
+        </div>
+
+        <div class="total-progress">
+            <h2>Общий прогресс трансформации</h2>
+            <div class="total-progress-number" id="totalProgressPercent">0%</div>
+            <div class="progress-bar"><div class="progress-fill" id="totalProgressFill"></div></div>
+        </div>
+
+        <div class="timeline" id="roadmapContainer"></div>
+    </main>
+</div>
+
+<script>
+    // ------------------ КОНФИГУРАЦИЯ ДОРОЖНОЙ КАРТЫ ------------------
+    const roadmapData = [
+        {
+            id: "phase1",
+            name: "Квартал 1-2 2026 (сейчас)",
+            tasks: [
+                "Проведение аудита склада и логистики",
+                "Внедрение KPI-премирования для комплектовщиков (пилот)",
+                "Сбор данных для цифрового двойника (Excel-модель)",
+                "Оценка текущего Fill Rate и OTD"
+            ]
+        },
+        {
+            id: "phase2",
+            name: "Квартал 3-4 2026",
+            tasks: [
+                "Внедрение RF-терминалов на складе",
+                "Запуск RPA-ботов для ввода накладных",
+                "Разработка прототипа цифрового двойника",
+                "Обучение персонала цифровой грамотности"
+            ]
+        },
+        {
+            id: "phase3",
+            name: "Квартал 1-2 2027",
+            tasks: [
+                "Полное внедрение WMS на всех складах",
+                "Интеграция TMS для оптимизации маршрутов",
+                "Внедрение системы управления запасами (EOQ, страховой запас)",
+                "Создание корпоративного дашборда SCM (Power BI)"
+            ]
+        },
+        {
+            id: "phase4",
+            name: "Квартал 3-4 2027",
+            tasks: [
+                "Внедрение цифрового двойника полной цепи поставок",
+                "Автоматическое прогнозирование спроса (ML)",
+                "ESG-отчётность (CO₂, отходы, зелёные закупки)",
+                "Создание центра компетенций SCM"
+            ]
+        }
+    ];
+
+    // Загрузка сохранённого прогресса
+    function loadProgress() {
+        const saved = SCMData.loadRoadmapProgress();
+        return saved;
+    }
+
+    function saveProgress(progress) {
+        for (const [phaseId, tasksProgress] of Object.entries(progress)) {
+            SCMData.saveRoadmapProgress(phaseId, tasksProgress);
+        }
+    }
+
+    function renderRoadmap() {
+        const container = document.getElementById('roadmapContainer');
+        const savedProgress = loadProgress();
+        container.innerHTML = '';
+        let totalTasks = 0;
+        let completedTasks = 0;
+
+        roadmapData.forEach(phase => {
+            const phaseProgress = savedProgress[phase.id] || {};
+            const phaseDiv = document.createElement('div');
+            phaseDiv.className = 'timeline-item';
+            phaseDiv.innerHTML = `
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">${phase.name}</div>
+                    <div id="tasks_${phase.id}"></div>
+                    <div class="progress-bar"><div class="progress-fill" id="progress_${phase.id}"></div></div>
+                    <span class="badge" id="badge_${phase.id}">0%</span>
+                </div>
+            `;
+            container.appendChild(phaseDiv);
+
+            const tasksContainer = phaseDiv.querySelector(`#tasks_${phase.id}`);
+            let phaseCompleted = 0;
+            phase.tasks.forEach((task, idx) => {
+                const taskId = `${phase.id}_task_${idx}`;
+                const isChecked = phaseProgress[taskId] === true;
+                if (isChecked) phaseCompleted++;
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task-item';
+                taskDiv.innerHTML = `
+                    <input type="checkbox" id="${taskId}" ${isChecked ? 'checked' : ''}>
+                    <label for="${taskId}">${task}</label>
+                `;
+                tasksContainer.appendChild(taskDiv);
+                const cb = taskDiv.querySelector('input');
+                cb.addEventListener('change', () => {
+                    const newProgress = loadProgress();
+                    if (!newProgress[phase.id]) newProgress[phase.id] = {};
+                    newProgress[phase.id][taskId] = cb.checked;
+                    saveProgress(newProgress);
+                    updatePhaseProgress(phase.id, phase.tasks.length);
+                    updateTotalProgress();
+                });
+            });
+            updatePhaseProgress(phase.id, phase.tasks.length);
+            totalTasks += phase.tasks.length;
+            completedTasks += phaseCompleted;
+        });
+        updateTotalProgress();
+    }
+
+    function updatePhaseProgress(phaseId, totalTasks) {
+        const saved = loadProgress();
+        const phaseProgress = saved[phaseId] || {};
+        let completed = 0;
+        for (let i = 0; i < totalTasks; i++) {
+            if (phaseProgress[`${phaseId}_task_${i}`] === true) completed++;
+        }
+        const percent = totalTasks === 0 ? 0 : (completed / totalTasks) * 100;
+        const fill = document.getElementById(`progress_${phaseId}`);
+        if (fill) fill.style.width = `${percent}%`;
+        const badge = document.getElementById(`badge_${phaseId}`);
+        if (badge) badge.innerText = `${Math.round(percent)}%`;
+    }
+
+    function updateTotalProgress() {
+        let totalTasks = 0;
+        let completedTasks = 0;
+        const saved = loadProgress();
+        for (const phase of roadmapData) {
+            const phaseProgress = saved[phase.id] || {};
+            for (let i = 0; i < phase.tasks.length; i++) {
+                totalTasks++;
+                if (phaseProgress[`${phase.id}_task_${i}`] === true) completedTasks++;
+            }
+        }
+        const totalPercent = totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
+        document.getElementById('totalProgressPercent').innerText = `${Math.round(totalPercent)}%`;
+        document.getElementById('totalProgressFill').style.width = `${totalPercent}%`;
+    }
+
+    function resetAllProgress() {
+        if (confirm('Сбросить весь прогресс выполнения задач?')) {
+            for (const phase of roadmapData) {
+                SCMData.saveRoadmapProgress(phase.id, {});
+            }
+            renderRoadmap();
+        }
+    }
+
+    function printRoadmap() {
+        const printWindow = window.open('', '_blank');
+        let html = `<html><head><title>Дорожная карта трансформации SCM</title><style>
+            body{font-family:Inter;margin:20px}h1{color:#1e40af}.timeline-item{margin-bottom:20px}.timeline-date{font-weight:bold}.task-item{margin:8px 0}.progress-bar{height:8px;background:#e2e8f0;border-radius:10px}.progress-fill{height:100%;background:#1e40af}</style></head><body>
+            <h1>Дорожная карта трансформации SCM</h1>
+            <p>Дата: ${new Date().toLocaleString()}</p>`;
+        const saved = loadProgress();
+        for (const phase of roadmapData) {
+            const phaseProgress = saved[phase.id] || {};
+            let completed = 0;
+            phase.tasks.forEach((task, idx) => {
+                if (phaseProgress[`${phase.id}_task_${idx}`] === true) completed++;
+            });
+            const percent = (completed / phase.tasks.length) * 100;
+            html += `<div class="timeline-item"><div class="timeline-date">${phase.name}</div>`;
+            phase.tasks.forEach((task, idx) => {
+                const isChecked = phaseProgress[`${phase.id}_task_${idx}`] === true;
+                html += `<div class="task-item">${isChecked ? '✅' : '⬜'} ${task}</div>`;
+            });
+            html += `<div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
+                     <p>Выполнение: ${Math.round(percent)}%</p></div>`;
+        }
+        html += `</body></html>`;
+        printWindow.document.write(html);
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    document.getElementById('printRoadmapBtn').addEventListener('click', printRoadmap);
+    document.getElementById('resetRoadmapBtn').addEventListener('click', resetAllProgress);
+    renderRoadmap();
+</script>
+</body>
+</html>
