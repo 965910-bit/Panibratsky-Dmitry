@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>KPI-центр – полная версия</title>
+    <title>KPI-центр – полная версия с печатью</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="scm-style.css">
@@ -93,6 +93,18 @@
             flex-wrap: wrap;
             margin-bottom: 16px;
         }
+        .print-kpi-btn {
+            background: #f59e0b;
+            margin-left: 8px;
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+        .card-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
     </style>
 </head>
 <body>
@@ -157,7 +169,6 @@
         pickErrors: { name: "Ошибки сборки, %", category: "operations", lowerIsBetter: true, good: 0.8, target: 0.5, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Ошибки сборки, %", id: "pickErrors_val", type: "number", step: 0.1 }] },
         productivity: { name: "Производительность склада (строк/чел.-час)", category: "operations", lowerIsBetter: false, good: 80, target: 100, unit: "строк/час", calc: (vals) => vals[0], inputs: [{ label: "Строк/чел.-час", id: "productivity_val", type: "number" }] },
         spaceUtil: { name: "Загрузка склада, %", category: "operations", lowerIsBetter: false, good: 75, target: 85, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Загрузка, %", id: "spaceUtil_val", type: "number" }] },
-        // Транспорт
         transportCost: { name: "Стоимость доставки (руб./т-км)", category: "operations", lowerIsBetter: true, good: 12, target: 10, unit: "руб./т-км", calc: (vals) => vals[0], inputs: [{ label: "руб./т-км", id: "transportCost_val", type: "number" }] },
         deadhead: { name: "Порожний пробег (Deadhead), %", category: "operations", lowerIsBetter: true, good: 25, target: 20, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Порожний пробег, %", id: "deadhead_val", type: "number" }] },
         // Управление запасами
@@ -198,8 +209,12 @@
         });
         html += `<div class="kpi-result" id="result_${kpiId}">—</div>`;
         html += `<div class="benchmark" id="bench_${kpiId}"></div>`;
-        html += `<button class="calc-kpi" data-kpi="${kpiId}">Рассчитать и сохранить</button>`;
+        html += `<div class="card-buttons">
+                    <button class="calc-kpi" data-kpi="${kpiId}">Рассчитать и сохранить</button>
+                    <button class="print-kpi-btn" data-kpi="${kpiId}">🖨️ Печать отчёта</button>
+                 </div>`;
         card.innerHTML = html;
+
         const calcBtn = card.querySelector('.calc-kpi');
         calcBtn.addEventListener('click', () => {
             const values = def.inputs.map(inp => parseFloat(document.getElementById(inp.id).value) || 0);
@@ -225,6 +240,12 @@
             updateChartOptions();
             if (document.getElementById('kpiSelect').value === kpiId) updateChart();
         });
+
+        const printBtn = card.querySelector('.print-kpi-btn');
+        printBtn.addEventListener('click', () => {
+            window.open(`report-generator.html?type=kpi&kpi=${kpiId}`, '_blank');
+        });
+
         return card;
     }
 
