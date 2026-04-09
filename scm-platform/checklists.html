@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Чек-листы SCM – полная версия</title>
+    <title>Чек-листы SCM – полная версия с печатью</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="scm-style.css">
@@ -28,6 +28,7 @@
         .progress-fill { height: 100%; background: #1e40af; width: 0%; border-radius: 10px; }
         .add-item-form { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
         .add-item-form input { flex: 2; padding: 8px 12px; border-radius: 30px; border: 1px solid #e2e8f0; }
+        .new-category-form { background: #f8fafc; border-radius: 20px; padding: 20px; margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
         .btn-group { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
         .constructor-section { background: white; border-radius: 20px; padding: 24px; margin-bottom: 24px; }
         .item-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
@@ -36,8 +37,9 @@
         .template-list { margin-top: 20px; }
         .template-item { background: #f8fafc; border-radius: 16px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
         .template-selector { background: white; border-radius: 20px; padding: 16px 24px; margin-bottom: 24px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; border: 1px solid #e2e8f0; }
+        .print-category-btn { background: #f59e0b; margin-left: 8px; }
         @media (max-width: 768px) { .category-header { flex-direction: column; align-items: flex-start; gap: 12px; } }
-        @media print { .sidebar, .btn-group, .mode-switch, .category-actions, .add-item-form, .template-selector { display: none; } }
+        @media print { .sidebar, .btn-group, .mode-switch, .category-actions, .add-item-form, .new-category-form, .template-selector, .print-category-btn { display: none; } }
     </style>
 </head>
 <body>
@@ -111,9 +113,7 @@
 </div>
 
 <script>
-    // --------------------------------------------------------------
-    // 1. ПОЛНЫЙ ПЕРЕЧЕНЬ ПУНКТОВ ЧЕК-ЛИСТОВ (12 категорий, >120 пунктов)
-    // --------------------------------------------------------------
+    // ------------------------------ ПОЛНЫЙ ПЕРЕЧЕНЬ ПУНКТОВ (12 категорий) ------------------------------
     let masterItems = {
         // ----- 1. Склад и логистика -----
         wh01: { section: "warehouse", text: "Точность учёта запасов (инвентаризация)", recommend: "≥99,5%", inputType: "number", unit: "%", target: 99.5, condition: "greater" },
@@ -130,7 +130,6 @@
         wh12: { section: "warehouse", text: "Внедрена система WMS", recommend: "Да", inputType: "none", unit: "" },
         wh13: { section: "warehouse", text: "Автоматизирован учёт сроков годности (FEFO)", recommend: "Да", inputType: "none", unit: "" },
         wh14: { section: "warehouse", text: "Проведена инвентаризация А-класса (последние 3 мес.)", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 2. Транспорт и доставка -----
         tr01: { section: "transport", text: "OTD доставки клиентам (вовремя)", recommend: "≥96%", inputType: "number", unit: "%", target: 96, condition: "greater" },
         tr02: { section: "transport", text: "Доля повреждённых грузов при транспортировке", recommend: "<0,5%", inputType: "number", unit: "%", target: 0.5, condition: "less" },
@@ -144,7 +143,6 @@
         tr10: { section: "transport", text: "Доля перевозок с электронным документооборотом", recommend: "≥90%", inputType: "number", unit: "%", target: 90, condition: "greater" },
         tr11: { section: "transport", text: "Наличие договоров с перевозчиками (SLA)", recommend: "Да", inputType: "none", unit: "" },
         tr12: { section: "transport", text: "Проведён аудит страховок грузов", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 3. Закупки и управление поставщиками -----
         pu01: { section: "procurement", text: "Доля закупок у сертифицированных поставщиков", recommend: "≥80%", inputType: "number", unit: "%", target: 80, condition: "greater" },
         pu02: { section: "procurement", text: "Своевременность поставок от поставщиков (OTD)", recommend: "≥96%", inputType: "number", unit: "%", target: 96, condition: "greater" },
@@ -158,7 +156,6 @@
         pu10: { section: "procurement", text: "Автоматизация согласования закупок (EDI, SAP Ariba)", recommend: "Да", inputType: "none", unit: "" },
         pu11: { section: "procurement", text: "Наличие процедуры возврата брака поставщику", recommend: "Да", inputType: "none", unit: "" },
         pu12: { section: "procurement", text: "Проведён анализ TCO (совокупная стоимость владения)", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 4. Управление запасами -----
         im01: { section: "inventory", text: "Оборачиваемость запасов (раз в год)", recommend: "≥6", inputType: "number", unit: "раз", target: 6, condition: "greater" },
         im02: { section: "inventory", text: "Доля неликвидов в общем объёме запасов", recommend: "<5%", inputType: "number", unit: "%", target: 5, condition: "less" },
@@ -170,7 +167,6 @@
         im08: { section: "inventory", text: "Средний уровень дефицита (Stockout Rate)", recommend: "<5%", inputType: "number", unit: "%", target: 5, condition: "less" },
         im09: { section: "inventory", text: "Автоматический пересчёт точки заказа (ROP)", recommend: "Да", inputType: "none", unit: "" },
         im10: { section: "inventory", text: "Наличие сезонных коэффициентов в планировании", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 5. Персонал и ФОТ -----
         hr01: { section: "hr", text: "Численность персонала рассчитана driver-based", recommend: "Да", inputType: "none", unit: "" },
         hr02: { section: "hr", text: "Северные надбавки и районный коэффициент корректны", recommend: "Да", inputType: "none", unit: "" },
@@ -184,7 +180,6 @@
         hr10: { section: "hr", text: "Средняя зарплата комплектовщика (регион)", recommend: "не ниже рынка", inputType: "number", unit: "руб.", target: 50000, condition: "greater" },
         hr11: { section: "hr", text: "Использование временного персонала в пик (аутстаффинг)", recommend: "Да", inputType: "none", unit: "" },
         hr12: { section: "hr", text: "Проведена оценка удовлетворённости сотрудников (опрос)", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 6. Финансы и бюджетирование -----
         fn01: { section: "finance", text: "Бюджет SCM утверждён и не превышен более чем на 5%", recommend: "Да", inputType: "none", unit: "" },
         fn02: { section: "finance", text: "Доля ФОТ в выручке SCM", recommend: "≤5%", inputType: "number", unit: "%", target: 5, condition: "less" },
@@ -196,7 +191,6 @@
         fn08: { section: "finance", text: "Доля неликвидов в общем объёме запасов", recommend: "<5%", inputType: "number", unit: "%", target: 5, condition: "less" },
         fn09: { section: "finance", text: "Средняя стоимость обработки заказа (руб./заказ)", recommend: "≤300 руб.", inputType: "number", unit: "руб.", target: 300, condition: "less" },
         fn10: { section: "finance", text: "Проведён расчёт себестоимости доставки по клиентам", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 7. IT и автоматизация -----
         it01: { section: "it", text: "Внедрена WMS с адресным хранением", recommend: "Да", inputType: "none", unit: "" },
         it02: { section: "it", text: "Точность данных в WMS (выборочная инвентаризация)", recommend: "≥99%", inputType: "number", unit: "%", target: 99, condition: "greater" },
@@ -208,7 +202,6 @@
         it08: { section: "it", text: "Внедрены RPA-боты (роботизация рутинных операций)", recommend: "Да", inputType: "none", unit: "" },
         it09: { section: "it", text: "Доля ручного ввода данных в учётных системах", recommend: "<10%", inputType: "number", unit: "%", target: 10, condition: "less" },
         it10: { section: "it", text: "Проведена оценка кибербезопасности SCM-систем", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 8. Охрана труда -----
         os01: { section: "ohs", text: "Назначен ответственный за охрану труда", recommend: "Да", inputType: "none", unit: "" },
         os02: { section: "ohs", text: "Разработана и утверждена СУОТ", recommend: "Да", inputType: "none", unit: "" },
@@ -222,7 +215,6 @@
         os10: { section: "ohs", text: "Наличие плана мероприятий по улучшению условий труда", recommend: "Да", inputType: "none", unit: "" },
         os11: { section: "ohs", text: "Проверка знаний электробезопасности (группы допуска)", recommend: "Да", inputType: "none", unit: "" },
         os12: { section: "ohs", text: "Наличие аптечек и их укомплектованность", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 9. Пожарная безопасность -----
         pb01: { section: "fire", text: "Назначен ответственный за пожарную безопасность", recommend: "Да", inputType: "none", unit: "" },
         pb02: { section: "fire", text: "Проведён противопожарный инструктаж (журналы)", recommend: "Да", inputType: "none", unit: "" },
@@ -234,7 +226,6 @@
         pb08: { section: "fire", text: "Пути эвакуации не загромождены", recommend: "Да", inputType: "none", unit: "" },
         pb09: { section: "fire", text: "Проведены практические тренировки по эвакуации", recommend: "Да", inputType: "none", unit: "" },
         pb10: { section: "fire", text: "Наличие журнала проверки противопожарного состояния", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 10. Устойчивое развитие (ESG) -----
         es01: { section: "esg", text: "Учёт Scope 1,2,3 выбросов CO₂", recommend: "Да", inputType: "none", unit: "" },
         es02: { section: "esg", text: "Снижение выбросов CO₂ на единицу продукции за год", recommend: "≥5%", inputType: "number", unit: "%", target: 5, condition: "greater" },
@@ -244,7 +235,6 @@
         es06: { section: "esg", text: "Использование возобновляемой энергии (солнце, ветер)", recommend: "Да", inputType: "none", unit: "" },
         es07: { section: "esg", text: "Социальные программы для сотрудников (ДМС, обучение)", recommend: "Да", inputType: "none", unit: "" },
         es08: { section: "esg", text: "Публичная ESG-отчётность (нефинансовая отчётность)", recommend: "Да", inputType: "none", unit: "" },
-
         // ----- 11. Клиентский сервис -----
         cs01: { section: "customer", text: "NPS по логистике (Net Promoter Score)", recommend: "≥50", inputType: "number", unit: "баллов", target: 50, condition: "greater" },
         cs02: { section: "customer", text: "Customer Effort Score (CES) – лёгкость решения проблем", recommend: "≤2", inputType: "number", unit: "баллов", target: 2, condition: "less" },
@@ -254,7 +244,6 @@
         cs06: { section: "customer", text: "Доля клиентов, использующих электронный документооборот", recommend: "≥70%", inputType: "number", unit: "%", target: 70, condition: "greater" },
         cs07: { section: "customer", text: "Наличие системы отслеживания заказа (трекинг)", recommend: "Да", inputType: "none", unit: "" },
         cs08: { section: "customer", text: "Средняя оценка качества доставки (по 5-балльной шкале)", recommend: "≥4,5", inputType: "number", unit: "баллов", target: 4.5, condition: "greater" },
-
         // ----- 12. Процессы и управление качеством -----
         qm01: { section: "quality", text: "Наличие сертификата ISO 9001 (менеджмент качества)", recommend: "Да", inputType: "none", unit: "" },
         qm02: { section: "quality", text: "Проведён внутренний аудит процессов SCM за год", recommend: "Да", inputType: "none", unit: "" },
@@ -364,17 +353,12 @@
     }
 
     let currentFilterIds = null;
-
     function renderAuditSections(filterIds = null) {
         const all = getAllItems();
         let itemsToShow = {};
         if (filterIds && filterIds.length > 0) {
-            for (let id of filterIds) {
-                if (all[id]) itemsToShow[id] = all[id];
-            }
-        } else {
-            itemsToShow = all;
-        }
+            for (let id of filterIds) if (all[id]) itemsToShow[id] = all[id];
+        } else itemsToShow = all;
         const groups = {};
         for (let [id, item] of Object.entries(itemsToShow)) {
             if (!groups[item.section]) groups[item.section] = [];
@@ -389,6 +373,7 @@
                                 <h2><i class="fas fa-list-check"></i> ${sectionTitles[sec]}</h2>
                                 <div class="category-actions">
                                     <button class="reset-category" data-section="${sec}">Сбросить отметки</button>
+                                    <button class="print-category-btn" data-category="${sec}">🖨️ Печать отчёта</button>
                                 </div>
                              </div>
                              <div class="checklist-items" id="items_${sec}"></div>
@@ -432,6 +417,10 @@
             btn.removeEventListener('click', handleAddItem);
             btn.addEventListener('click', handleAddItem);
         });
+        document.querySelectorAll('.print-category-btn').forEach(btn => {
+            btn.removeEventListener('click', handlePrintCategory);
+            btn.addEventListener('click', handlePrintCategory);
+        });
     }
 
     function handleResetCategory(e) {
@@ -461,6 +450,12 @@
         saveCustomItems();
         renderAuditSections(currentFilterIds);
         input.value = '';
+    }
+
+    function handlePrintCategory(e) {
+        const sectionKey = e.currentTarget.getAttribute('data-category');
+        const categoryName = sectionTitles[sectionKey];
+        window.open(`report-generator.html?type=checklist&name=${encodeURIComponent(categoryName)}`, '_blank');
     }
 
     function resetAll() {
@@ -536,6 +531,7 @@
         reader.readAsText(file);
     }
 
+    // ---------------------- КОНСТРУКТОР ШАБЛОНОВ ----------------------
     function renderConstructor() {
         const container = document.getElementById('allItemsPicker');
         let all = getAllItems();
@@ -589,7 +585,7 @@
             btn.addEventListener('click', (e) => { applyTemplate(btn.getAttribute('data-id')); });
         });
         document.querySelectorAll('.delete-template').forEach(btn => {
-            btn.addEventListener('click', (e) => { templates = templates.filter(t => t.id !== btn.getAttribute('data-id')); saveTemplates(); renderTemplatesList(); populateAuditTemplateSelect(); });
+            btn.addEventListener('click', (e) => { templates = templates.filter(t => t.id !== btn.getAttribute('data-id')); saveTemplates(); renderTemplatesList(); populateTemplateSelect(); });
         });
     }
 
@@ -604,7 +600,7 @@
         }
     }
 
-    function populateAuditTemplateSelect() {
+    function populateTemplateSelect() {
         const select = document.getElementById('auditTemplateSelect');
         if (!select) return;
         select.innerHTML = '<option value="">-- Без шаблона (все пункты) --</option>';
@@ -614,21 +610,6 @@
             opt.textContent = `${tmpl.name} (${tmpl.itemIds.length} пунктов)`;
             select.appendChild(opt);
         });
-    }
-
-    function onApplyAuditTemplate() {
-        const select = document.getElementById('auditTemplateSelect');
-        const templateId = select.value;
-        if (templateId) {
-            const tmpl = templates.find(t => t.id === templateId);
-            if (tmpl) {
-                currentFilterIds = tmpl.itemIds;
-                renderAuditSections(currentFilterIds);
-            }
-        } else {
-            currentFilterIds = null;
-            renderAuditSections(null);
-        }
     }
 
     document.getElementById('addCustomItemBtn').addEventListener('click', () => {
@@ -654,7 +635,7 @@
         saveTemplates();
         document.getElementById('newTemplateName').value = '';
         renderTemplatesList();
-        populateAuditTemplateSelect();
+        populateTemplateSelect();
     });
 
     const auditPanel = document.getElementById('auditModePanel');
@@ -666,7 +647,7 @@
         constructorPanel.style.display = 'none';
         auditModeBtn.classList.add('active');
         constructorModeBtn.classList.remove('active');
-        populateAuditTemplateSelect();
+        populateTemplateSelect();
         if (currentFilterIds) renderAuditSections(currentFilterIds);
         else renderAuditSections(null);
     });
@@ -683,10 +664,15 @@
     document.getElementById('exportChecklistsBtn').addEventListener('click', exportData);
     document.getElementById('importChecklistsBtn').addEventListener('click', () => document.getElementById('importFileInput').click());
     document.getElementById('importFileInput').addEventListener('change', (e) => { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''; });
-    document.getElementById('applyAuditTemplateBtn').addEventListener('click', onApplyAuditTemplate);
+    document.getElementById('applyAuditTemplateBtn').addEventListener('click', () => {
+        const select = document.getElementById('auditTemplateSelect');
+        const templateId = select.value;
+        if (templateId) applyTemplate(templateId);
+        else { currentFilterIds = null; renderAuditSections(null); }
+    });
 
     loadCustomItems(); loadTemplates();
-    populateAuditTemplateSelect();
+    populateTemplateSelect();
     renderAuditSections(null);
 </script>
 </body>
