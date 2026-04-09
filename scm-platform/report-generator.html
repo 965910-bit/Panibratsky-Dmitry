@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>SCM – Отчётный шаблон</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="scm-common.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            padding: 40px 20px;
+        }
+        .report-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .report-header {
+            background: #1e40af;
+            color: white;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: #1e40af;
+        }
+        /* Если есть реальный логотип, раскомментировать и указать путь */
+        /*
+        .logo-image {
+            width: 60px;
+            height: 60px;
+            background: url('logo.png') no-repeat center;
+            background-size: contain;
+        }
+        */
+        .company-name {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .report-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 40px;
+        }
+        .report-content {
+            padding: 32px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .info-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e40af;
+            margin: 24px 0 16px 0;
+            border-left: 4px solid #1e40af;
+            padding-left: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #eef2ff;
+            font-weight: 600;
+        }
+        .nonconform-item {
+            background: #fef2f2;
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #dc2626;
+        }
+        .badge {
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 32px;
+            padding-bottom: 24px;
+            padding-right: 32px;
+        }
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            font-family: inherit;
+        }
+        button.mail-btn {
+            background: #10b981;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .btn-group {
+                display: none;
+            }
+            .report-container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .report-header {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="report-container" id="reportContainer">
+    <div class="report-header">
+        <div class="logo-area">
+            <div class="logo-placeholder">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <!-- Для реального логотипа замените блок выше на:
+            <div class="logo-image"></div>
+            -->
+            <div class="company-name">
+                ООО «Логистик-Сервис»<br>
+                <span style="font-size: 12px;">Управление цепями поставок</span>
+            </div>
+        </div>
+        <div class="report-title" id="reportTypeTitle">Отчёт</div>
+    </div>
+    <div class="report-content" id="reportContent">
+        <div style="text-align:center; padding:40px;">Загрузка данных...</div>
+    </div>
+    <div class="btn-group">
+        <button id="printBtn"><i class="fas fa-print"></i> Печать</button>
+        <button id="emailBtn" class="mail-btn"><i class="fas fa-envelope"></i> Отправить на почту</button>
+    </div>
+    <div class="footer">
+        Сформировано автоматически в SCM-платформе. Данные актуальны на момент создания отчёта.
+    </div>
+</div>
+<script>
+    // Получение параметров из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get('type');      // 'audit', 'checklist', 'kpi'
+    const id = urlParams.get('id');          // для аудита – ID
+    const name = urlParams.get('name');      // для чек-листа – название категории
+    const kpiId = urlParams.get('kpi');      // для KPI – идентификатор
+
+    let reportData = null;
+
+    async function loadReport() {
+        let html = '';
+        if (type === 'audit' && id) {
+            const audit = SCMData.getAuditById(id);
+            if (audit) {
+                document.getElementById('reportTypeTitle').innerText = 'Отчёт по аудиту';
+                html = renderAuditReport(audit);
+            } else {
+                html = '<div class="badge">Аудит не найден</div>';
+            }
+        } else if (type === 'checklist' && name) {
+            const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
+            const items = categories[name];
+            const state = SCMData.loadChecklist(name) || {};
+            if (items) {
+                document.getElementById('reportTypeTitle').innerText = `Чек-лист: ${name}`;
+                html = renderChecklistReport(name, items, state);
+            } else {
+                html = '<div class="badge">Чек-лист не найден</div>';
+            }
+        } else if (type === 'kpi' && kpiId) {
+            const kpiData = SCMData.loadKPI(kpiId);
+            if (kpiData) {
+                document.getElementById('reportTypeTitle').innerText = `Отчёт по KPI: ${kpiId.toUpperCase()}`;
+                html = renderKpiReport(kpiId, kpiData);
+            } else {
+                html = '<div class="badge">KPI не найден</div>';
+            }
+        } else {
+            html = '<div class="badge">Неверные параметры запроса. Укажите type, id/name/kpi.</div>';
+        }
+        document.getElementById('reportContent').innerHTML = html;
+    }
+
+    function renderAuditReport(audit) {
+        const dateStr = new Date(audit.date).toLocaleString();
+        let nonconformHtml = '';
+        if (audit.nonConformances && audit.nonConformances.length) {
+            nonconformHtml = audit.nonConformances.map(nc => `
+                <div class="nonconform-item">
+                    <strong>${escapeHtml(nc.text)}</strong><br>
+                    Причина: ${escapeHtml(nc.reason)}<br>
+                    Рекомендация: ${escapeHtml(nc.recommendation || '—')}
+                </div>
+            `).join('');
+        } else {
+            nonconformHtml = '<p>Нет несоответствий</p>';
+        }
+        return `
+            <div class="info-grid">
+                <div class="info-item"><span class="info-label">Тип аудита</span><span class="info-value">${audit.type}</span></div>
+                <div class="info-item"><span class="info-label">Дата проведения</span><span class="info-value">${dateStr}</span></div>
+                <div class="info-item"><span class="info-label">Общий уровень зрелости</span><span class="info-value">${audit.totalPercent}%</span></div>
+            </div>
+            <div class="section-title">Оценки по секциям</div>
+            <table>
+                <thead><tr><th>Секция</th><th>Процент</th></tr></thead>
+                <tbody>
+                    ${Object.entries(audit.sectionScores).map(([sec, score]) => `<tr><td>${sec}</td><td>${Math.round(score)}%</td></tr>`).join('')}
+                </tbody>
+            </table>
+            <div class="section-title">Несоответствия и рекомендации</div>
+            ${nonconformHtml}
+        `;
+    }
+
+    function renderChecklistReport(name, items, state) {
+        let total = items.length;
+        let completed = 0;
+        items.forEach((_, idx) => {
+            const itemId = `${name}_${idx}`;
+            if (state[itemId] === true) completed++;
+        });
+        const percent = total === 0 ? 0 : (completed / total) * 100;
+        let itemsHtml = '<table><thead><tr><th>Пункт</th><th>Статус</th></tr></thead><tbody>';
+        items.forEach((text, idx) => {
+            const itemId = `${name}_${idx}`;
+            const isChecked = state[itemId] === true;
+            itemsHtml += `<tr><td>${escapeHtml(text)}</td><td>${isChecked ? '✅ Выполнено' : '❌ Не выполнено'}</td></tr>`;
+        });
+        itemsHtml += '</tbody></table>';
+        return `
+            <div class="info-grid">
+                <div class="info-item"><span class="info-label">Категория</span><span class="info-value">${escapeHtml(name)}</span></div>
+                <div class="info-item"><span class="info-label">Дата отчёта</span><span class="info-value">${new Date().toLocaleString()}</span></div>
+                <div class="info-item"><span class="info-label">Выполнение</span><span class="info-value">${Math.round(percent)}% (${completed}/${total})</span></div>
+            </div>
+            <div class="section-title">Список пунктов</div>
+            ${itemsHtml}
+        `;
+    }
+
+    function renderKpiReport(kpiId, kpiData) {
+        const value = kpiData.result;
+        const date = new Date(kpiData.timestamp).toLocaleString();
+        return `
+            <div class="info-grid">
+                <div class="info-item"><span class="info-label">KPI</span><span class="info-value">${kpiId.toUpperCase()}</span></div>
+                <div class="info-item"><span class="info-label">Значение</span><span class="info-value">${value}</span></div>
+                <div class="info-item"><span class="info-label">Дата расчёта</span><span class="info-value">${date}</span></div>
+            </div>
+            <div class="section-title">Исходные данные</div>
+            <table>
+                <thead><tr><th>Параметр</th><th>Значение</th></tr></thead>
+                <tbody>
+                    ${Object.entries(kpiData.values || {}).map(([key, val]) => `<tr><td>${key}</td><td>${val}</td></tr>`).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    document.getElementById('emailBtn').addEventListener('click', () => {
+        // Получаем HTML содержимое отчёта (без кнопок и лишних элементов)
+        const reportHtml = document.getElementById('reportContent').innerHTML;
+        const subject = encodeURIComponent(document.getElementById('reportTypeTitle').innerText);
+        const body = encodeURIComponent(reportHtml.replace(/<[^>]*>/g, '').substring(0, 2000)); // простой текст
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    });
+
+    loadReport();
+</script>
+</body>
+</html>
