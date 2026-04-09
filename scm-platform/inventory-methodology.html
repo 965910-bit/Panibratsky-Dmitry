@@ -1,1 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Методология управления запасами – инструменты и расчёты SCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
+    <style>
+        .formula {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 12px;
+            font-family: monospace;
+            margin: 12px 0;
+        }
+        .calc-group {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 16px 0;
+        }
+        .calc-group input, .calc-group select {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin: 8px 0;
+            width: 100%;
+            max-width: 300px;
+        }
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .calc-result {
+            margin-top: 12px;
+            font-weight: 700;
+        }
+        .badge {
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+        .section-card h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">...</aside>
+    <main class="main-content">
+        <h1>📦 Методология управления запасами</h1>
+        <p>Ключевые показатели, классификация, алгоритмы поиска неликвидов и мотивация закупщиков. Интерактивные калькуляторы и ссылки на смежные разделы.</p>
 
+        <div class="section-card">
+            <h2>1. Базовые показатели</h2>
+            <h3>📊 Оборачиваемость запасов</h3>
+            <div class="formula">
+                <strong>В днях:</strong> Оборачиваемость (дни) = Средний остаток / Средние продажи в день<br>
+                <strong>В разах:</strong> Коэффициент оборачиваемости = Сумма продаж / Средний остаток
+            </div>
+            <p><strong>Нормативы:</strong> A (хиты) – 10–30 дней; B – 30–60 дней; C – 60–90 дней. Сверхнорматив >90 дней.</p>
+            <p>👉 <a href="calculators.html#turnover">Перейти к калькулятору оборачиваемости</a></p>
+
+            <h3>💰 GMROI</h3>
+            <div class="formula">GMROI = Валовая прибыль / Средний остаток (в закупочных ценах)<br>>1 – норма, >2 – хорошо.</div>
+            <p>👉 <a href="calculators.html#gmroi">Калькулятор GMROI</a></p>
+
+            <h3>⏳ Глубина остатка (дни до нуля)</h3>
+            <div class="formula">Глубина остатка = Текущий остаток (шт) / Средние продажи в день (шт)</div>
+            <p>👉 <a href="calculators.html#depth">Калькулятор глубины остатка</a></p>
+        </div>
+
+        <div class="section-card">
+            <h2>2. Классификация товаров и запасов</h2>
+            <p><span class="badge">Закрытые</span> <span class="badge">Складской запас</span> <span class="badge">Нерегуляры</span> <span class="badge">Под заказ</span> <span class="badge">Новинка</span> <span class="badge">Акция</span> <span class="badge">Сезон</span></p>
+            <h3>Типы запасов</h3>
+            <ul>
+                <li><strong>Рабочий:</strong> Оперативный, Страховой, Под заказ, В пути</li>
+                <li><strong>Рыночный:</strong> Сверхнормативный, Сезонный, Промо, Ошибочный</li>
+                <li><strong>Мёртвый:</strong> Неликвид, Брак, Рекламации</li>
+            </ul>
+        </div>
+
+        <div class="section-card">
+            <h2>3. Поиск неликвидов (алгоритм)</h2>
+            <ol>
+                <li>Удалить товары с нулевым остатком.</li>
+                <li>Оставить товары, у которых Дней на складе > Норматив для новинки (например, 60 дней).</li>
+                <li><strong>Супернеликвиды:</strong> продажи = 0.</li>
+                <li><strong>Обычные неликвиды:</strong> продажи > 0, Глубина остатка > КСХ (или > 180 дней), и GMROI &lt; 2.</li>
+                <li>Присвоить статусы в учётной системе.</li>
+            </ol>
+            <p>👉 <a href="calculators.html#depth">Калькулятор глубины остатка</a> | <a href="calculators.html#gmroi">Калькулятор GMROI</a></p>
+        </div>
+
+        <div class="section-card">
+            <h2>4. Критический срок хранения (КСХ)</h2>
+            <div class="formula">
+                КСХ = (Р + АД × (ОтПост – ОтПок)) / (АД + З)<br>
+                Р – рентабельность продаж; АД – альтернативная доходность (ставка по депозиту / 365);<br>
+                ОтПост – отсрочка поставщика; ОтПок – отсрочка клиентам; З – затраты на хранение (% к себестоимости в день)
+            </div>
+            <p>👉 <a href="calculators.html#ksh">Калькулятор КСХ</a></p>
+        </div>
+
+        <div class="section-card">
+            <h2>5. Мотивация закупщиков (на основе глубины остатка)</h2>
+            <div class="formula">
+                Премия = (Макс_премия × 50% × (1 – %невып_обнуление)) + (Макс_премия × 40% × (1 – %невып_мертвый)) + (Макс_премия × 10% × коэф_снижения_затрат)
+            </div>
+            <p>👉 <a href="calculators.html#procurement_bonus">Калькулятор премии закупщика</a></p>
+        </div>
+
+        <div class="section-card">
+            <h2>6. Сквозной пример расчёта по одному товару</h2>
+            <p><strong>Товар:</strong> Гребень для волос.<br>
+            Период: 181 день. Остаток: 29 шт. Продажи: 17 шт.<br>
+            Средние продажи в день = 17/181 ≈ 0,094 шт.<br>
+            Глубина остатка = 29/0,094 ≈ 308 дней.<br>
+            GMROI = 0,45 (очень низкий).<br>
+            КСХ = 175 дней (рассчитан).<br>
+            <strong>Вывод:</strong> товар – неликвид (глубина > КСХ, GMROI < 2).</p>
+        </div>
+
+        <div class="section-card">
+            <h2>7. Внедрение методологии (по шагам)</h2>
+            <ol>
+                <li>Настроить учётную систему (физические склады + виртуальные).</li>
+                <li>Присвоить товарам закупочные характеристики.</li>
+                <li>Рассчитать критические сроки хранения.</li>
+                <li>Ежедневно/еженедельно формировать отчёт по алгоритму поиска неликвидов.</li>
+                <li>Ежемесячно рассчитывать мотивацию закупщиков по глубине остатка.</li>
+                <li>Вывести на инфостену ключевые метрики (доля супернеликвидов, обеспеченность товаром).</li>
+            </ol>
+        </div>
+
+        <div class="section-card">
+            <h2>8. Связанные разделы</h2>
+            <ul>
+                <li><a href="calculators.html">Калькуляторы SCM</a> – EOQ, страховой запас, точка заказа, GMROI, глубина остатка, КСХ.</li>
+                <li><a href="kpi-center.html">KPI-центр</a> – оборачиваемость, GMROI, Fill Rate.</li>
+                <li><a href="standards.html">Нормативы</a> – отраслевые бенчмарки оборачиваемости.</li>
+                <li><a href="library.html">Библиотека</a> – методологии управления запасами.</li>
+            </ul>
+        </div>
+    </main>
+</div>
+</body>
+</html>
