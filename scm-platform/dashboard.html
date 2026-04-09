@@ -1,1 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>SCM-дашборд – аналитика и управление цепями поставок</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            transition: 0.2s;
+        }
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+        .kpi-good { color: #10b981; }
+        .kpi-bad { color: #dc2626; }
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #1e40af;
+            width: 0%;
+        }
+        .badge {
+            background: #eef2ff;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .notification {
+            background: #fef9c3;
+            border-left: 4px solid #f59e0b;
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .quick-link {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 16px;
+            text-align: center;
+            text-decoration: none;
+            color: #1e40af;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .quick-link:hover {
+            background: #eef2ff;
+        }
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+            </ul>
+        </nav>
+    </aside>
 
+    <main class="main-content">
+        <h1>📊 SCM-дашборд</h1>
+        <p>Сводная аналитика цепи поставок: ключевые показатели, прогресс трансформации, аудиты и рекомендации.</p>
+
+        <div class="dashboard-grid">
+            <!-- KPI виджеты -->
+            <div class="card">
+                <h3><i class="fas fa-chart-line"></i> Ключевые KPI</h3>
+                <div id="kpiWidgets"></div>
+                <div class="btn-group"><button onclick="window.location.href='kpi-center.html'">Все KPI →</button></div>
+            </div>
+
+            <!-- Прогресс дорожной карты -->
+            <div class="card">
+                <h3><i class="fas fa-road"></i> Трансформация SCM</h3>
+                <div id="roadmapProgress"></div>
+                <div class="progress-bar"><div class="progress-fill" id="roadmapFill"></div></div>
+                <div class="btn-group"><button onclick="window.location.href='roadmap.html'">Подробнее →</button></div>
+            </div>
+
+            <!-- Последние аудиты -->
+            <div class="card">
+                <h3><i class="fas fa-clipboard-list"></i> Последние аудиты</h3>
+                <div id="lastAudits"></div>
+                <div class="btn-group"><button onclick="window.location.href='audit-registry.html'">Все аудиты →</button></div>
+            </div>
+
+            <!-- Статус чек-листов -->
+            <div class="card">
+                <h3><i class="fas fa-check-square"></i> Чек-листы</h3>
+                <div id="checklistSummary"></div>
+                <div class="btn-group"><button onclick="window.location.href='checklists.html'">Все чек-листы →</button></div>
+            </div>
+
+            <!-- Рекомендации и уведомления -->
+            <div class="card">
+                <h3><i class="fas fa-bell"></i> Уведомления и рекомендации</h3>
+                <div id="notifications"></div>
+                <div class="btn-group"><button onclick="window.location.href='auditor.html'">Пройти аудит →</button></div>
+            </div>
+
+            <!-- График динамики KPI -->
+            <div class="card">
+                <h3><i class="fas fa-chart-line"></i> Динамика KPI</h3>
+                <select id="kpiSelect" style="width:100%; margin-bottom:12px;"></select>
+                <canvas id="kpiChart" height="150"></canvas>
+            </div>
+
+            <!-- Сводка по складу (нормативы) -->
+            <div class="card">
+                <h3><i class="fas fa-warehouse"></i> Эффективность склада</h3>
+                <div id="warehouseStats"></div>
+                <div class="btn-group"><button onclick="window.location.href='standards.html'">Нормативы →</button></div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button onclick="window.location.href='auditor.html'">🔍 Новый аудит</button>
+            <button onclick="window.location.href='checklists.html'">✅ Чек-листы</button>
+            <button onclick="window.location.href='calculators.html'">🧮 Калькуляторы</button>
+            <button onclick="window.location.href='kpi-center.html'">📈 KPI-центр</button>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Вспомогательные функции
+    function getLastKPI(kpiId) {
+        const saved = SCMData.loadKPI(kpiId);
+        return saved ? saved.result : null;
+    }
+
+    function getKPIHistory(kpiId) {
+        const history = JSON.parse(localStorage.getItem(`kpi_${kpiId}_history`) || '[]');
+        return history;
+    }
+
+    function getRoadmapProgress() {
+        let totalTasks = 0;
+        let completedTasks = 0;
+        const phases = ["phase1", "phase2", "phase3", "phase4"];
+        for (let phase of phases) {
+            const phaseProgress = SCMData.loadRoadmapProgress(phase) || {};
+            for (let i = 0; i < 4; i++) {
+                totalTasks++;
+                if (phaseProgress[`${phase}_task_${i}`] === true) completedTasks++;
+            }
+        }
+        return totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
+    }
+
+    function getLastAudits(limit = 5) {
+        const audits = SCMData.getAuditRegistry();
+        return audits.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
+    }
+
+    function getChecklistSummary() {
+        const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
+        const summary = [];
+        for (let [catName, items] of Object.entries(categories)) {
+            const savedState = SCMData.loadChecklist(catName) || {};
+            let completed = 0;
+            items.forEach((_, idx) => {
+                const itemId = `${catName}_${idx}`;
+                if (savedState[itemId] === true) completed++;
+            });
+            const percent = items.length === 0 ? 0 : (completed / items.length) * 100;
+            summary.push({ name: catName, percent: percent, total: items.length, completed: completed });
+        }
+        return summary;
+    }
+
+    function getLatestNonConformances() {
+        const audits = SCMData.getAuditRegistry();
+        const latest = audits.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+        if (latest && latest.nonConformances && latest.nonConformances.length) {
+            return latest.nonConformances.slice(0, 3);
+        }
+        return [];
+    }
+
+    function renderKPIWidgets() {
+        const container = document.getElementById('kpiWidgets');
+        const kpis = [
+            { id: 'otif', name: 'OTIF', unit: '%', target: 95, good: 90 },
+            { id: 'fillrate', name: 'Fill Rate', unit: '%', target: 98, good: 95 },
+            { id: 'otd', name: 'OTD', unit: '%', target: 98, good: 96 },
+            { id: 'turnover', name: 'Оборачиваемость', unit: 'раз', target: 6, good: 5 },
+            { id: 'ccc', name: 'CCC', unit: 'дней', target: 45, good: 60, lowerIsBetter: true },
+            { id: 'nps', name: 'NPS', unit: 'баллов', target: 50, good: 40 }
+        ];
+        container.innerHTML = '';
+        for (let kpi of kpis) {
+            let value = getLastKPI(kpi.id);
+            if (value === null) value = '—';
+            let statusClass = '';
+            let statusText = '';
+            if (value !== '—') {
+                if (kpi.lowerIsBetter) {
+                    if (value <= kpi.target) statusClass = 'kpi-good';
+                    else if (value <= kpi.good) statusClass = '';
+                    else statusClass = 'kpi-bad';
+                } else {
+                    if (value >= kpi.target) statusClass = 'kpi-good';
+                    else if (value >= kpi.good) statusClass = '';
+                    else statusClass = 'kpi-bad';
+                }
+            }
+            container.innerHTML += `
+                <div style="margin-bottom:16px; cursor:pointer;" onclick="window.location.href='kpi-center.html'">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>${kpi.name}</span>
+                        <span class="badge">цель ${kpi.target} ${kpi.unit}</span>
+                    </div>
+                    <div class="kpi-value ${statusClass}">${value} ${value !== '—' ? kpi.unit : ''}</div>
+                </div>
+            `;
+        }
+    }
+
+    function renderRoadmapProgress() {
+        const percent = getRoadmapProgress();
+        document.getElementById('roadmapFill').style.width = `${percent}%`;
+        document.getElementById('roadmapProgress').innerHTML = `<div>Общий прогресс трансформации</div><div style="font-size:24px; font-weight:700;">${Math.round(percent)}%</div>`;
+    }
+
+    function renderLastAudits() {
+        const audits = getLastAudits(3);
+        const container = document.getElementById('lastAudits');
+        if (audits.length === 0) {
+            container.innerHTML = '<div class="badge">Нет сохранённых аудитов</div>';
+            return;
+        }
+        container.innerHTML = audits.map(a => `
+            <div style="margin-bottom:12px;">
+                <div><strong>${new Date(a.date).toLocaleDateString()}</strong> — ${a.type}</div>
+                <div>Зрелость: ${a.totalPercent}%</div>
+            </div>
+        `).join('');
+    }
+
+    function renderChecklistSummary() {
+        const summary = getChecklistSummary();
+        const container = document.getElementById('checklistSummary');
+        if (summary.length === 0) {
+            container.innerHTML = '<div class="badge">Нет чек-листов</div>';
+            return;
+        }
+        container.innerHTML = summary.slice(0, 3).map(c => `
+            <div style="margin-bottom:12px;">
+                <div>${c.name}</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${c.percent}%"></div></div>
+                <div class="badge">${c.completed}/${c.total} выполнено</div>
+            </div>
+        `).join('');
+        if (summary.length > 3) container.innerHTML += '<div class="badge">и ещё ' + (summary.length-3) + ' категорий</div>';
+    }
+
+    function renderNotifications() {
+        const nonConform = getLatestNonConformances();
+        const container = document.getElementById('notifications');
+        if (nonConform.length === 0) {
+            container.innerHTML = '<div class="badge">Нет активных несоответствий</div>';
+            return;
+        }
+        container.innerHTML = nonConform.map(nc => `
+            <div class="notification">
+                <strong>⚠️ ${nc.text}</strong><br>
+                Причина: ${nc.reason}<br>
+                <small>Рекомендация: ${nc.recommendation || 'Проведите корректирующие действия'}</small>
+            </div>
+        `).join('');
+    }
+
+    function renderWarehouseStats() {
+        const productivity = getLastKPI('productivity') || '—';
+        const pickErrors = getLastKPI('pickErrors') || '—';
+        const otd = getLastKPI('otd') || '—';
+        const spaceUtil = getLastKPI('spaceUtil') || '—';
+        const container = document.getElementById('warehouseStats');
+        container.innerHTML = `
+            <div>Производительность: <strong>${productivity} ${productivity !== '—' ? 'строк/час' : ''}</strong></div>
+            <div>Ошибки сборки: <strong>${pickErrors} ${pickErrors !== '—' ? '%' : ''}</strong></div>
+            <div>OTD доставки: <strong>${otd} ${otd !== '—' ? '%' : ''}</strong></div>
+            <div>Загрузка склада: <strong>${spaceUtil} ${spaceUtil !== '—' ? '%' : ''}</strong></div>
+            <div class="badge" style="margin-top:8px;">По данным KPI-центра</div>
+        `;
+    }
+
+    // График динамики KPI
+    function populateKpiSelect() {
+        const select = document.getElementById('kpiSelect');
+        const kpis = [
+            { id: 'otif', name: 'OTIF (%)' },
+            { id: 'fillrate', name: 'Fill Rate (%)' },
+            { id: 'turnover', name: 'Оборачиваемость (разы)' },
+            { id: 'ccc', name: 'CCC (дни)' },
+            { id: 'nps', name: 'NPS' }
+        ];
+        select.innerHTML = kpis.map(k => `<option value="${k.id}">${k.name}</option>`).join('');
+        select.addEventListener('change', () => updateChart(select.value));
+        updateChart(select.value);
+    }
+
+    function updateChart(kpiId) {
+        const history = getKPIHistory(kpiId);
+        const labels = history.map(h => new Date(h.date).toLocaleDateString());
+        const data = history.map(h => h.value);
+        const ctx = document.getElementById('kpiChart').getContext('2d');
+        if (window.kpiChartInstance) window.kpiChartInstance.destroy();
+        window.kpiChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: { labels: labels, datasets: [{ label: kpiId.toUpperCase(), data: data, borderColor: '#1e40af', tension: 0.1 }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+    }
+
+    // Инициализация
+    renderKPIWidgets();
+    renderRoadmapProgress();
+    renderLastAudits();
+    renderChecklistSummary();
+    renderNotifications();
+    renderWarehouseStats();
+    populateKpiSelect();
+</script>
+</body>
+</html>
