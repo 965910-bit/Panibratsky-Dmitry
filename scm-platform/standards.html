@@ -1,1 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Нормативы и бенчмарки SCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <style>
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+        .section-card h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #eef2ff;
+            font-weight: 600;
+        }
+        .badge {
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .note {
+            background: #fef9c3;
+            padding: 12px;
+            border-radius: 16px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            table {
+                font-size: 13px;
+            }
+            th, td {
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html" class="active"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+            </ul>
+        </nav>
+    </aside>
 
+    <main class="main-content">
+        <h1>📊 Нормативы и бенчмарки SCM</h1>
+        <p>Справочные данные для оценки эффективности, планирования и аудита. Все значения средние по рынку РФ (2025–2026).</p>
+
+        <!-- 1. Складские операции -->
+        <div class="section-card">
+            <h2><i class="fas fa-warehouse"></i> Нормативы времени на складские операции</h2>
+            <table>
+                <thead><tr><th>Операция</th><th>Тип склада / технология</th><th>Норма времени</th><th>Производительность (ед./час)</th></tr></thead>
+                <tbody>
+                    <tr><td>Приёмка (1 ед.)</td><td>Ручная (бумага)</td><td>30–45 сек</td><td>80–120</td></tr>
+                    <tr><td>Приёмка (1 ед.)</td><td>RF-терминал + адресное хранение</td><td>12–18 сек</td><td>200–300</td></tr>
+                    <tr><td>Размещение (1 ед.)</td><td>RF-терминал</td><td>10–15 сек</td><td>240–360</td></tr>
+                    <tr><td>Комплектация (1 строка)</td><td>Бумажный лист</td><td>90–120 сек</td><td>30–40</td></tr>
+                    <tr><td>Комплектация (1 строка)</td><td>RF + оптимизация маршрута</td><td>35–45 сек</td><td>80–100</td></tr>
+                    <tr><td>Комплектация (1 строка)</td><td>Голосовая комплектация</td><td>25–30 сек</td><td>120–144</td></tr>
+                    <tr><td>Упаковка (1 заказ)</td><td>Ручная</td><td>60–90 сек</td><td>40–60</td></tr>
+                    <tr><td>Упаковка (1 заказ)</td><td>Полуавтомат</td><td>40–50 сек</td><td>72–90</td></tr>
+                    <tr><td>Отгрузка (1 паллета)</td><td>Электропогрузчик</td><td>60–90 сек</td><td>40–60 палл/час</td></tr>
+                </tbody>
+            </table>
+            <div class="note">⚠️ Нормативы даны для среднестатистического склада. Рекомендуется проводить локальный хронометраж.</div>
+        </div>
+
+        <!-- 2. Бенчмарки KPI -->
+        <div class="section-card">
+            <h2><i class="fas fa-chart-line"></i> Бенчмарки ключевых KPI</h2>
+            <table>
+                <thead><tr><th>Метрика</th><th>Хорошее значение</th><th>Целевое (лидеры)</th><th>Примечание</th></tr></thead>
+                <tbody>
+                    <tr><td>OTD (On-Time Delivery)</td><td>≥96%</td><td>98–99%</td><td>Своевременность доставки клиентам</td></tr>
+                    <tr><td>Fill Rate (наличие товара)</td><td>≥97%</td><td>99%</td><td>Процент удовлетворённого спроса</td></tr>
+                    <tr><td>Ошибки сборки</td><td>≤0,5%</td><td>≤0,2%</td><td>Доля неправильно собранных строк</td></tr>
+                    <tr><td>Оборачиваемость запасов (ритейл)</td><td>6–8 раз/год</td><td>10+ раз/год</td><td>Зависит от категории</td></tr>
+                    <tr><td>Оборачиваемость запасов (производство)</td><td>4–6 раз/год</td><td>8+ раз/год</td><td></td></tr>
+                    <tr><td>Cash-to-Cash цикл (CCC)</td><td>≤45 дней</td><td>≤30 дней</td><td>Чем короче, тем лучше</td></tr>
+                    <tr><td>Perfect Order Fulfillment</td><td>≥95%</td><td>98–99%</td><td>Вовремя, полностью, без повреждений, документы</td></tr>
+                    <tr><td>Точность прогноза (MAPE)</td><td>≤15%</td><td>≤10%</td><td>Для А-класса</td></tr>
+                    <tr><td>NPS (логистика)</td><td>≥50</td><td>≥70</td><td>Индекс лояльности клиентов</td></tr>
+                    <tr><td>Текучесть кадров (склад)</td><td><25%</td><td><15%</td><td>Годовая</td></tr>
+                    <tr><td>Доля ФОТ в выручке SCM</td><td>≤5%</td><td>≤3%</td><td></td></tr>
+                    <tr><td>GMROI для категории А</td><td>>2</td><td>>3</td><td>Валовая рентабельность запасов</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 3. Транспортные нормативы -->
+        <div class="section-card">
+            <h2><i class="fas fa-truck"></i> Транспортные нормативы (FTL, ставка за км, РФ 2026)</h2>
+            <table>
+                <thead><tr><th>Тип ТС</th><th>Грузоподъёмность (т)</th><th>Ставка (руб./км)</th><th>Примечание</th></tr></thead>
+                <tbody>
+                    <tr><td>Газель</td><td>1,5</td><td>30–35</td><td>Город / регион</td></tr>
+                    <tr><td>3-тонник</td><td>3</td><td>55–60</td><td></td></tr>
+                    <tr><td>5-тонник</td><td>5</td><td>65–70</td><td></td></tr>
+                    <tr><td>10-тонник</td><td>10</td><td>75–85</td><td></td></tr>
+                    <tr><td>Еврофура (20 т)</td><td>20</td><td>80–95</td><td>В зависимости от маршрута</td></tr>
+                </tbody>
+            </table>
+            <div class="note">❄️ Для северных регионов (ХМАО, ЯНАО) применяются коэффициенты сезонности 1,1–1,5 в зимний период.</div>
+        </div>
+
+        <!-- 4. Производительность персонала и зарплатные бенчмарки -->
+        <div class="section-card">
+            <h2><i class="fas fa-users"></i> Производительность и зарплаты (средние по РФ)</h2>
+            <table>
+                <thead><tr><th>Должность</th><th>Производительность (норма)</th><th>Средняя зарплата (руб./мес)</th><th>Регионы</th></tr></thead>
+                <tbody>
+                    <tr><td>Комплектовщик (ручной)</td><td>40–60 строк/час</td><td>35 000 – 45 000</td><td>Центр</td></tr>
+                    <tr><td>Комплектовщик (RF)</td><td>80–100 строк/час</td><td>45 000 – 60 000</td><td>Центр</td></tr>
+                    <tr><td>Комплектовщик (ХМАО/ЯНАО)</td><td>80–100 строк/час</td><td>90 000 – 140 000</td><td>С учётом северных</td></tr>
+                    <tr><td>Водитель погрузчика</td><td>30–40 палл/час</td><td>40 000 – 55 000</td><td>Центр</td></tr>
+                    <tr><td>Водитель фуры (междугород)</td><td>—</td><td>80 000 – 120 000</td><td>По РФ</td></tr>
+                    <tr><td>Кладовщик-приёмщик</td><td>200–300 ед./час</td><td>35 000 – 50 000</td><td>Центр</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 5. Северные коэффициенты (ХМАО/ЯНАО) -->
+        <div class="section-card">
+            <h2><i class="fas fa-snowflake"></i> Нормативы для районов Крайнего Севера (ХМАО, ЯНАО)</h2>
+            <table>
+                <thead><tr><th>Параметр</th><th>Значение</th><th>Примечание</th></tr></thead>
+                <tbody>
+                    <tr><td>Районный коэффициент</td><td>1,5 – 1,7</td><td>Для Сургута, Нижневартовска, Нового Уренгоя</td></tr>
+                    <tr><td>Северная надбавка (максимальная)</td><td>80%</td><td>Начисляется после 1 года работы, затем каждые 6 месяцев</td></tr>
+                    <tr><td>Дополнительный отпуск</td><td>16 календарных дней</td><td>К основному 28 дням</td></tr>
+                    <tr><td>Продолжительность отпуска (всего)</td><td>44 дня</td><td>Для женщин – 36-часовая рабочая неделя</td></tr>
+                    <tr><td>МРОТ с учётом коэффициентов (2026)</td><td>≈ 59 600 руб.</td><td>До вычета НДФЛ</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 6. Отраслевые нормативы (специфика) -->
+        <div class="section-card">
+            <h2><i class="fas fa-industry"></i> Отраслевые нормативы</h2>
+            <table>
+                <thead><tr><th>Отрасль / тип товара</th><th>Производительность (строк/час)</th><th>ФОТ на 1000 строк (руб.)</th><th>Текучесть (% год)</th></tr></thead>
+                <tbody>
+                    <tr><td>Электроника (DNS, М-Видео)</td><td>100–120</td><td>4 000 – 5 000</td><td>25%</td></tr>
+                    <tr><td>Одежда/обувь (маркетплейс)</td><td>70–90</td><td>6 000 – 7 500</td><td>35%</td></tr>
+                    <tr><td>Крупногабарит (мебель, DIY)</td><td>40–60</td><td>8 000 – 10 000</td><td>20%</td></tr>
+                    <tr><td>Продуктовый ритейл</td><td>80–100</td><td>5 000 – 6 500</td><td>30%</td></tr>
+                    <tr><td>Фармацевтика</td><td>60–80</td><td>7 000 – 8 500</td><td>15%</td></tr>
+                    <tr><td>E-commerce (смешанный)</td><td>80–100</td><td>5 500 – 6 500</td><td>30%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 7. Нормативы охраны труда и пожарной безопасности -->
+        <div class="section-card">
+            <h2><i class="fas fa-shield-alt"></i> Охрана труда и пожарная безопасность (базовые требования)</h2>
+            <table>
+                <thead><tr><th>Направление</th><th>Периодичность / Норматив</th><th>Ответственный</th></tr></thead>
+                <tbody>
+                    <tr><td>Вводный инструктаж по ОТ</td><td>При приёме на работу</td><td>Специалист по ОТ</td></tr>
+                    <tr><td>Первичный инструктаж на рабочем месте</td><td>До начала самостоятельной работы</td><td>Руководитель подразделения</td></tr>
+                    <tr><td>Повторный инструктаж</td><td>Не реже 1 раза в 6 месяцев</td><td>Руководитель подразделения</td></tr>
+                    <tr><td>Обучение по ОТ (руководители, специалисты)</td><td>1 раз в 3 года</td><td>Обучающая организация</td></tr>
+                    <tr><td>Медицинские осмотры</td><td>Ежегодно / по графику</td><td>Медорганизация</td></tr>
+                    <tr><td>Специальная оценка условий труда (СОУТ)</td><td>1 раз в 5 лет</td><td>Комиссия</td></tr>
+                    <tr><td>Противопожарный инструктаж</td><td>При приёме, далее 1 раз в год</td><td>Ответственный за ПБ</td></tr>
+                    <tr><td>Проверка АПС и СОУЭ</td><td>Ежемесячно / ежегодно</td><td>Специализированная организация</td></tr>
+                    <tr><td>Перезарядка огнетушителей</td><td>1 раз в 5 лет (порошковые)</td><td>Ответственный за ПБ</td></tr>
+                    <tr><td>Практическая тренировка по эвакуации</td><td>2 раза в год</td><td>Руководитель организации</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 8. Сезонные коэффициенты -->
+        <div class="section-card">
+            <h2><i class="fas fa-calendar-alt"></i> Сезонные коэффициенты для планирования персонала и ФОТ</h2>
+            <table>
+                <thead><tr><th>Отрасль</th><th>Пик (коэф.)</th><th>Межсезонье (коэф.)</th><th>Длительность пика (мес.)</th></tr></thead>
+                <tbody>
+                    <tr><td>E-commerce (общий)</td><td>1,8</td><td>0,65</td><td>2–3</td></tr>
+                    <tr><td>Электроника</td><td>1,8</td><td>0,70</td><td>2 (ноя–дек)</td></tr>
+                    <tr><td>Одежда</td><td>1,7</td><td>0,60</td><td>3 (сен–дек, март)</td></tr>
+                    <tr><td>Продукты</td><td>1,3</td><td>0,85</td><td>2 (дек, май)</td></tr>
+                    <tr><td>DIY (стройматериалы)</td><td>1,4</td><td>0,80</td><td>2 (авг–сен)</td></tr>
+                    <tr><td>Фарма</td><td>1,2</td><td>0,90</td><td>1 (сезон гриппа)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-card">
+            <h2><i class="fas fa-info-circle"></i> Применение нормативов</h2>
+            <p>Данные в этом разделе предназначены для:</p>
+            <ul>
+                <li>Расчёта потребности в персонале (driver-based модели).</li>
+                <li>Оценки эффективности (сравнение фактических KPI с бенчмарками).</li>
+                <li>Бюджетирования ФОТ и логистических затрат.</li>
+                <li>Проведения аудита (сравнение с целевыми значениями).</li>
+                <li>Обоснования инвестиций в автоматизацию (RF, WMS, TMS).</li>
+            </ul>
+            <div class="note">⚠️ Все значения являются среднерыночными. Для точной настройки рекомендуется использовать фактические данные компании после хронометража и анализа.</div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
