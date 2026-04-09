@@ -1,1 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Калькуляторы SCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
+    <style>
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+        }
+        .calc-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            transition: 0.2s;
+        }
+        .calc-card h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: inherit;
+        }
+        .result {
+            margin-top: 16px;
+            padding: 12px;
+            background: #eef2ff;
+            border-radius: 16px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 18px;
+        }
+        .result span {
+            font-weight: 400;
+            font-size: 14px;
+            display: block;
+            color: #1e40af;
+        }
+        hr {
+            margin: 16px 0;
+            border-color: #e2e8f0;
+        }
+        @media (max-width: 768px) {
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html" class="active"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+            </ul>
+        </nav>
+    </aside>
 
+    <main class="main-content">
+        <h1>🧮 Калькуляторы SCM</h1>
+        <p>Профессиональные расчёты для управления цепями поставок, запасами, персоналом и логистикой.</p>
+
+        <div class="calc-grid">
+            <!-- 1. Страховой запас (Safety Stock) -->
+            <div class="calc-card">
+                <h2><i class="fas fa-shield-alt"></i> Страховой запас</h2>
+                <div class="input-group">
+                    <label>Z-фактор (уровень обслуживания):</label>
+                    <input type="number" id="ss_z" value="1.65" step="0.01">
+                    <small>1.28 (90%), 1.65 (95%), 2.33 (99%)</small>
+                </div>
+                <div class="input-group">
+                    <label>Стандартное отклонение спроса (σ), ед.:</label>
+                    <input type="number" id="ss_sigma" value="50" step="1">
+                </div>
+                <div class="input-group">
+                    <label>Время выполнения заказа (дни):</label>
+                    <input type="number" id="ss_lt" value="7" step="1">
+                </div>
+                <div class="result" id="ss_result">
+                    Страховой запас: <strong>—</strong> ед.
+                </div>
+            </div>
+
+            <!-- 2. EOQ (Экономичный размер заказа) -->
+            <div class="calc-card">
+                <h2><i class="fas fa-chart-line"></i> EOQ (Economic Order Quantity)</h2>
+                <div class="input-group">
+                    <label>Годовой спрос (D), ед.:</label>
+                    <input type="number" id="eoq_d" value="12000" step="100">
+                </div>
+                <div class="input-group">
+                    <label>Затраты на один заказ (S), руб.:</label>
+                    <input type="number" id="eoq_s" value="5000" step="100">
+                </div>
+                <div class="input-group">
+                    <label>Затраты на хранение единицы в год (H), руб.:</label>
+                    <input type="number" id="eoq_h" value="200" step="10">
+                </div>
+                <div class="result" id="eoq_result">
+                    EOQ: <strong>—</strong> ед.
+                </div>
+            </div>
+
+            <!-- 3. Точка заказа (Reorder Point) -->
+            <div class="calc-card">
+                <h2><i class="fas fa-shopping-cart"></i> Точка заказа (ROP)</h2>
+                <div class="input-group">
+                    <label>Средний спрос в день (d), ед.:</label>
+                    <input type="number" id="rop_d" value="50" step="1">
+                </div>
+                <div class="input-group">
+                    <label>Время выполнения заказа (дни):</label>
+                    <input type="number" id="rop_lt" value="7" step="1">
+                </div>
+                <div class="input-group">
+                    <label>Страховой запас (ед.):</label>
+                    <input type="number" id="rop_ss" value="100" step="1">
+                </div>
+                <div class="result" id="rop_result">
+                    Точка заказа: <strong>—</strong> ед.
+                </div>
+            </div>
+
+            <!-- 4. Driver-based расчёт численности персонала -->
+            <div class="calc-card">
+                <h2><i class="fas fa-users"></i> Driver-based численность</h2>
+                <div class="input-group">
+                    <label>Объём строк в месяц (строк):</label>
+                    <input type="number" id="staff_volume" value="200000" step="10000">
+                </div>
+                <div class="input-group">
+                    <label>Норма времени на строку (сек):</label>
+                    <input type="number" id="staff_norm" value="45" step="5">
+                </div>
+                <div class="input-group">
+                    <label>Эффективный фонд времени (часов/мес):</label>
+                    <input type="number" id="staff_fond" value="130" step="5">
+                </div>
+                <div class="input-group">
+                    <label>Коэффициент выполнения норм (Kвып):</label>
+                    <input type="number" id="staff_kv" value="1.15" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label>Коэффициент невыходов (Kнев):</label>
+                    <input type="number" id="staff_kn" value="1.1" step="0.01">
+                </div>
+                <div class="result" id="staff_result">
+                    Численность: <strong>—</strong> чел.
+                </div>
+            </div>
+
+            <!-- 5. ФОТ с северными надбавками (ХМАО/ЯНАО) -->
+            <div class="calc-card">
+                <h2><i class="fas fa-ruble-sign"></i> ФОТ с северными надбавками</h2>
+                <div class="input-group">
+                    <label>Базовая зарплата (оклад), руб.:</label>
+                    <input type="number" id="fot_base" value="50000" step="5000">
+                </div>
+                <div class="input-group">
+                    <label>Районный коэффициент (1.5 для ХМАО/ЯНАО):</label>
+                    <input type="number" id="fot_rk" value="1.5" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>Северная надбавка (%):</label>
+                    <input type="number" id="fot_nad" value="80" step="5">
+                </div>
+                <div class="result" id="fot_result">
+                    Итоговая зарплата: <strong>—</strong> руб.
+                </div>
+            </div>
+
+            <!-- 6. Оборачиваемость запасов (в разах и днях) -->
+            <div class="calc-card">
+                <h2><i class="fas fa-exchange-alt"></i> Оборачиваемость запасов</h2>
+                <div class="input-group">
+                    <label>Себестоимость продаж (COGS) за период, руб.:</label>
+                    <input type="number" id="turn_cogs" value="10000000" step="100000">
+                </div>
+                <div class="input-group">
+                    <label>Средняя стоимость запасов, руб.:</label>
+                    <input type="number" id="turn_avg" value="2000000" step="100000">
+                </div>
+                <div class="result" id="turn_result">
+                    Оборачиваемость: <strong>—</strong> раз / <strong>—</strong> дней
+                </div>
+            </div>
+
+            <!-- 7. GMROI (Gross Margin Return on Inventory) -->
+            <div class="calc-card">
+                <h2><i class="fas fa-chart-pie"></i> GMROI</h2>
+                <div class="input-group">
+                    <label>Валовая прибыль за период, руб.:</label>
+                    <input type="number" id="gmroi_profit" value="2500000" step="50000">
+                </div>
+                <div class="input-group">
+                    <label>Средняя стоимость запасов, руб.:</label>
+                    <input type="number" id="gmroi_avg" value="2000000" step="50000">
+                </div>
+                <div class="result" id="gmroi_result">
+                    GMROI: <strong>—</strong>
+                </div>
+            </div>
+
+            <!-- 8. Расчёт тарифа перевозки (FTL, ставка за км) -->
+            <div class="calc-card">
+                <h2><i class="fas fa-truck"></i> Стоимость FTL перевозки</h2>
+                <div class="input-group">
+                    <label>Расстояние (км):</label>
+                    <input type="number" id="ftl_km" value="2100" step="100">
+                </div>
+                <div class="input-group">
+                    <label>Ставка за км (руб./км):</label>
+                    <input type="number" id="ftl_rate" value="85" step="5">
+                </div>
+                <div class="input-group">
+                    <label>Повышающий коэффициент (сезонность, север):</label>
+                    <input type="number" id="ftl_coef" value="1.0" step="0.05">
+                </div>
+                <div class="result" id="ftl_result">
+                    Стоимость рейса: <strong>—</strong> руб.
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Универсальная функция обновления всех калькуляторов
+    function updateAll() {
+        // 1. Страховой запас
+        let z = parseFloat(document.getElementById('ss_z').value) || 0;
+        let sigma = parseFloat(document.getElementById('ss_sigma').value) || 0;
+        let lt = parseFloat(document.getElementById('ss_lt').value) || 0;
+        let safetyStock = z * sigma * Math.sqrt(lt);
+        document.getElementById('ss_result').innerHTML = `Страховой запас: <strong>${Math.round(safetyStock)}</strong> ед.`;
+
+        // 2. EOQ
+        let D = parseFloat(document.getElementById('eoq_d').value) || 0;
+        let S = parseFloat(document.getElementById('eoq_s').value) || 0;
+        let H = parseFloat(document.getElementById('eoq_h').value) || 0;
+        let eoq = H > 0 ? Math.sqrt(2 * D * S / H) : 0;
+        document.getElementById('eoq_result').innerHTML = `EOQ: <strong>${Math.round(eoq)}</strong> ед.`;
+
+        // 3. Точка заказа
+        let d = parseFloat(document.getElementById('rop_d').value) || 0;
+        let lt_rop = parseFloat(document.getElementById('rop_lt').value) || 0;
+        let ss = parseFloat(document.getElementById('rop_ss').value) || 0;
+        let rop = d * lt_rop + ss;
+        document.getElementById('rop_result').innerHTML = `Точка заказа: <strong>${Math.round(rop)}</strong> ед.`;
+
+        // 4. Driver-based численность
+        let volume = parseFloat(document.getElementById('staff_volume').value) || 0;
+        let normSec = parseFloat(document.getElementById('staff_norm').value) || 0;
+        let normHour = normSec / 3600;
+        let fond = parseFloat(document.getElementById('staff_fond').value) || 0;
+        let kv = parseFloat(document.getElementById('staff_kv').value) || 1;
+        let kn = parseFloat(document.getElementById('staff_kn').value) || 1;
+        let labor = volume * normHour;
+        let base = labor / (fond * kv);
+        let staff = Math.ceil(base * kn);
+        document.getElementById('staff_result').innerHTML = `Численность: <strong>${staff}</strong> чел. (трудоёмкость ${labor.toFixed(1)} ч)`;
+
+        // 5. ФОТ с северными
+        let baseSalary = parseFloat(document.getElementById('fot_base').value) || 0;
+        let rk = parseFloat(document.getElementById('fot_rk').value) || 1;
+        let nadPercent = parseFloat(document.getElementById('fot_nad').value) || 0;
+        let totalSalary = baseSalary * (1 + nadPercent / 100) * rk;
+        document.getElementById('fot_result').innerHTML = `Итоговая зарплата: <strong>${Math.round(totalSalary)}</strong> руб.`;
+
+        // 6. Оборачиваемость
+        let cogs = parseFloat(document.getElementById('turn_cogs').value) || 0;
+        let avgInv = parseFloat(document.getElementById('turn_avg').value) || 0;
+        let turnover = avgInv > 0 ? cogs / avgInv : 0;
+        let days = turnover > 0 ? 365 / turnover : 0;
+        document.getElementById('turn_result').innerHTML = `Оборачиваемость: <strong>${turnover.toFixed(1)}</strong> раз / <strong>${Math.round(days)}</strong> дней`;
+
+        // 7. GMROI
+        let profit = parseFloat(document.getElementById('gmroi_profit').value) || 0;
+        let gmroiAvg = parseFloat(document.getElementById('gmroi_avg').value) || 0;
+        let gmroi = gmroiAvg > 0 ? profit / gmroiAvg : 0;
+        document.getElementById('gmroi_result').innerHTML = `GMROI: <strong>${gmroi.toFixed(2)}</strong> ${gmroi > 2 ? '✅ отлично' : (gmroi > 1 ? '⚠️ норма' : '🔴 плохо')}`;
+
+        // 8. FTL стоимость
+        let km = parseFloat(document.getElementById('ftl_km').value) || 0;
+        let rate = parseFloat(document.getElementById('ftl_rate').value) || 0;
+        let coef = parseFloat(document.getElementById('ftl_coef').value) || 1;
+        let cost = km * rate * coef;
+        document.getElementById('ftl_result').innerHTML = `Стоимость рейса: <strong>${Math.round(cost)}</strong> руб.`;
+    }
+
+    // Привязка событий ввода ко всем полям
+    const inputs = document.querySelectorAll('.input-group input');
+    inputs.forEach(input => {
+        input.addEventListener('input', updateAll);
+        input.addEventListener('change', updateAll);
+    });
+    updateAll();
+</script>
+</body>
+</html>
