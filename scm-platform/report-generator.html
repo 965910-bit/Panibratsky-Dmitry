@@ -205,9 +205,7 @@
             if (audit) {
                 document.getElementById('reportTypeTitle').innerText = 'Отчёт по аудиту';
                 html = renderAuditReport(audit);
-            } else {
-                html = '<div class="badge">Аудит не найден</div>';
-            }
+            } else html = '<div class="badge">Аудит не найден</div>';
         } else if (type === 'checklist' && name) {
             const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
             const items = categories[name];
@@ -215,17 +213,13 @@
             if (items) {
                 document.getElementById('reportTypeTitle').innerText = `Чек-лист: ${name}`;
                 html = renderChecklistReport(name, items, state);
-            } else {
-                html = '<div class="badge">Чек-лист не найден</div>';
-            }
+            } else html = '<div class="badge">Чек-лист не найден</div>';
         } else if (type === 'kpi' && kpiId) {
             const kpiData = SCMData.loadKPI(kpiId);
             if (kpiData) {
                 document.getElementById('reportTypeTitle').innerText = `Отчёт по KPI: ${kpiId.toUpperCase()}`;
                 html = renderKpiReport(kpiId, kpiData);
-            } else {
-                html = '<div class="badge">KPI не найден</div>';
-            }
+            } else html = '<div class="badge">KPI не найден</div>';
         } else {
             html = '<div class="badge">Неверные параметры запроса. Укажите type, id/name/kpi.</div>';
         }
@@ -243,9 +237,7 @@
                     Рекомендация: ${escapeHtml(nc.recommendation || '—')}
                 </div>
             `).join('');
-        } else {
-            nonconformHtml = '<p>Нет несоответствий</p>';
-        }
+        } else nonconformHtml = '<p>Нет несоответствий</p>';
         return `
             <div class="info-grid">
                 <div class="info-item"><span class="info-label">Тип аудита</span><span class="info-value">${audit.type}</span></div>
@@ -256,7 +248,7 @@
             <table>
                 <thead><tr><th>Секция</th><th>Процент</th></tr></thead>
                 <tbody>
-                    ${Object.entries(audit.sectionScores).map(([sec, score]) => `<tr><td>${sec}</td><td>${Math.round(score)}%</td></tr>`).join('')}
+                    ${Object.entries(audit.sectionScores).map(([sec, score]) => `<tr><td>${sec}</td><td>${Math.round(score)}%</td>`).join('')}
                 </tbody>
             </table>
             <div class="section-title">Несоответствия и рекомендации</div>
@@ -267,15 +259,11 @@
     function renderChecklistReport(name, items, state) {
         let total = items.length;
         let completed = 0;
-        items.forEach((_, idx) => {
-            const itemId = `${name}_${idx}`;
-            if (state[itemId] === true) completed++;
-        });
+        items.forEach((_, idx) => { if (state[`${name}_${idx}`] === true) completed++; });
         const percent = total === 0 ? 0 : (completed / total) * 100;
         let itemsHtml = '<table><thead><tr><th>Пункт</th><th>Статус</th></tr></thead><tbody>';
         items.forEach((text, idx) => {
-            const itemId = `${name}_${idx}`;
-            const isChecked = state[itemId] === true;
+            const isChecked = state[`${name}_${idx}`] === true;
             itemsHtml += `<tr><td>${escapeHtml(text)}</td><td>${isChecked ? '✅ Выполнено' : '❌ Не выполнено'}</td></tr>`;
         });
         itemsHtml += '</tbody></table>';
@@ -303,7 +291,7 @@
             <table>
                 <thead><tr><th>Параметр</th><th>Значение</th></tr></thead>
                 <tbody>
-                    ${Object.entries(kpiData.values || {}).map(([key, val]) => `<tr><td>${key}</td><td>${val}</td></tr>`).join('')}
+                    ${Object.entries(kpiData.values || {}).map(([key, val]) => `<tr><td>${key}</td><td>${val}</td>`).join('')}
                 </tbody>
             </table>
         `;
@@ -311,19 +299,13 @@
 
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
+        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
     }
 
     document.getElementById('printBtn').addEventListener('click', () => window.print());
     document.getElementById('emailBtn').addEventListener('click', () => {
-        const reportHtml = document.getElementById('reportContent').innerHTML;
         const subject = encodeURIComponent(document.getElementById('reportTypeTitle').innerText);
-        const body = encodeURIComponent(reportHtml.replace(/<[^>]*>/g, '').substring(0, 2000));
+        const body = encodeURIComponent(document.getElementById('reportContent').innerText.substring(0, 2000));
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     });
 
