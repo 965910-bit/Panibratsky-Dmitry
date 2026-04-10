@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <meta name="robots" content="noindex, nofollow">
     <title>SCM-дашборд – аналитика и управление цепями поставок</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,7 +10,6 @@
     <script src="scm-common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Дополнительные стили для дашборда */
         .theme-switch {
             position: fixed;
             top: 20px;
@@ -59,6 +57,10 @@
         }
         .card {
             transition: all 0.2s;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
         }
         .kpi-value {
             font-size: 32px;
@@ -158,7 +160,6 @@
             border: 1px solid #e2e8f0;
             background: white;
         }
-        /* Шапка интерфейса */
         .dashboard-header {
             display: flex;
             align-items: center;
@@ -202,10 +203,6 @@
             align-items: center;
             gap: 8px;
         }
-        .branch-selector-container label {
-            font-size: 13px;
-            font-weight: 500;
-        }
         #branchSelector {
             padding: 6px 10px;
             border-radius: 30px;
@@ -214,55 +211,19 @@
             font-family: inherit;
         }
         @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            .theme-switch {
-                top: 10px;
-                right: 10px;
-            }
-            .logo-image {
-                height: 40px;
-            }
-            .header-left {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .theme-switch { top: 10px; right: 10px; }
+            .logo-image { height: 40px; }
+            .header-left { flex-direction: column; align-items: flex-start; }
         }
-        /* Стили для печатной формы */
         @media print {
-            .sidebar, .btn-group, .theme-switch, .chart-controls, button, .header-right, .branch-selector-container {
-                display: none !important;
-            }
-            .dashboard-header {
-                border-bottom: 2px solid #1e40af;
-                margin-bottom: 20px;
-                padding-bottom: 10px;
-            }
-            .contact-info {
-                font-size: 10pt;
-                color: black;
-            }
-            .logo-image {
-                height: 40px;
-            }
-            .print-footer {
-                margin-top: 40px;
-                border-top: 1px solid #ccc;
-                padding-top: 20px;
-                display: flex;
-                justify-content: space-between;
-                gap: 20px;
-                font-size: 10pt;
-            }
-            .sign-line {
-                border-bottom: 1px solid #000;
-                display: inline-block;
-                min-width: 180px;
-            }
-            .card {
-                break-inside: avoid;
-            }
+            .sidebar, .btn-group, .theme-switch, .chart-controls, button, .header-right, .branch-selector-container { display: none !important; }
+            .dashboard-header { border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+            .contact-info { font-size: 10pt; color: black; }
+            .logo-image { height: 40px; }
+            .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; font-size: 10pt; }
+            .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+            .card { break-inside: avoid; }
         }
     </style>
 </head>
@@ -293,78 +254,79 @@
     </aside>
 
     <main class="main-content">
-        <div class="theme-switch" id="themeToggle">
-            <i class="fas fa-moon"></i> <span>Тёмная тема</span>
-        </div>
-
-        <!-- Шапка дашборда -->
+        <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
         <div class="dashboard-header">
             <div class="header-left">
-                <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" class="logo-image">
-                <div class="contact-info">
-                    Дмитрий Панибратский<br>
-                    Эксперт по SCM и логистике<br>
-                    scm-news.ru – экспертный портал<br>
-                    scm-news.online – Академия SCM<br>
-                    dmitry@scm-news.ru
-                </div>
+                <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" class="logo-image">
+                <div class="contact-info">Дмитрий Панибратский<br>Эксперт по SCM и логистике<br>scm-news.ru – экспертный портал<br>scm-news.online – Академия SCM<br>dmitry@scm-news.ru</div>
             </div>
             <div class="header-right">
-                <div class="branch-selector-container">
-                    <label><i class="fas fa-building"></i> Бизнес-единица:</label>
-                    <select id="branchSelector"></select>
-                </div>
+                <div class="branch-selector-container"><label><i class="fas fa-building"></i> Бизнес-единица:</label><select id="branchSelector"></select></div>
                 <button id="printDashboardBtn" class="print-btn"><i class="fas fa-print"></i> Печать на бланке</button>
-                <button id="emailDashboardBtn" style="background: #10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
+                <button id="emailDashboardBtn" style="background:#10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
             </div>
         </div>
-
         <h1>📊 SCM-дашборд</h1>
         <p>Сводная аналитика цепи поставок: ключевые показатели, прогресс трансформации, аудиты и рекомендации.</p>
 
         <div class="dashboard-grid">
+            <!-- 1. Ключевые KPI и бенчмарки -->
             <div class="card">
                 <h3><i class="fas fa-chart-line"></i> Ключевые KPI и бенчмарки</h3>
                 <div id="kpiWidgets"></div>
-                <div class="btn-group"><button onclick="window.location.href='kpi-center.html'">Все KPI →</button></div>
+                <div class="btn-group"><button onclick="location.href='kpi-center.html'">Все KPI →</button></div>
             </div>
+            <!-- 2. Прогноз KPI -->
             <div class="card">
                 <h3><i class="fas fa-chart-line"></i> Прогноз KPI на следующий месяц</h3>
                 <div id="forecastWidget"></div>
             </div>
+            <!-- 3. Тревоги и рекомендации -->
             <div class="card">
                 <h3><i class="fas fa-bell"></i> Тревоги и рекомендации</h3>
                 <div id="alertsWidget"></div>
-                <div class="btn-group"><button onclick="window.location.href='auditor.html'">Пройти аудит →</button></div>
+                <div class="btn-group"><button onclick="location.href='auditor.html'">Пройти аудит →</button></div>
             </div>
+            <!-- 4. Срочные задачи из планера -->
             <div class="card">
                 <h3><i class="fas fa-tasks"></i> Срочные задачи (планер)</h3>
                 <div id="urgentTasksWidget"></div>
-                <div class="btn-group"><button onclick="window.location.href='planner.html'">Все задачи →</button></div>
+                <div class="btn-group"><button onclick="location.href='planner.html'">Все задачи →</button></div>
             </div>
+            <!-- 5. Прогресс дорожной карты -->
             <div class="card">
                 <h3><i class="fas fa-road"></i> Трансформация SCM</h3>
                 <div id="roadmapProgress"></div>
                 <div class="progress-bar"><div class="progress-fill" id="roadmapFill"></div></div>
-                <div class="btn-group"><button onclick="window.location.href='roadmap.html'">Подробнее →</button></div>
+                <div class="btn-group"><button onclick="location.href='roadmap.html'">Подробнее →</button></div>
             </div>
+            <!-- 6. Последние аудиты -->
             <div class="card">
                 <h3><i class="fas fa-clipboard-list"></i> Последние аудиты</h3>
                 <div id="lastAudits"></div>
-                <div class="btn-group"><button onclick="window.location.href='audit-registry.html'">Все аудиты →</button></div>
+                <div class="btn-group"><button onclick="location.href='audit-registry.html'">Все аудиты →</button></div>
             </div>
+            <!-- 7. Чек-листы -->
             <div class="card">
                 <h3><i class="fas fa-check-square"></i> Чек-листы</h3>
                 <div id="checklistSummary"></div>
-                <div class="btn-group"><button onclick="window.location.href='checklists.html'">Все чек-листы →</button></div>
+                <div class="btn-group"><button onclick="location.href='checklists.html'">Все чек-листы →</button></div>
             </div>
+            <!-- 8. Эффективность склада -->
             <div class="card">
                 <h3><i class="fas fa-warehouse"></i> Эффективность склада</h3>
                 <div id="warehouseStats"></div>
-                <div class="btn-group"><button onclick="window.location.href='standards.html'">Нормативы →</button></div>
+                <div class="btn-group"><button onclick="location.href='standards.html'">Нормативы →</button></div>
+            </div>
+            <!-- 9. Бюджет и штатное расписание (НОВЫЙ ВИДЖЕТ) -->
+            <div class="card">
+                <h3><i class="fas fa-coins"></i> Бюджет и штатное расписание</h3>
+                <div id="budgetStaffWidget"></div>
+                <div class="btn-group"><button onclick="location.href='branches.html'">Управление →</button></div>
             </div>
         </div>
 
+        <!-- 10. Динамика KPI (мульти-график) -->
         <div class="card">
             <h3><i class="fas fa-chart-line"></i> Динамика KPI</h3>
             <div class="chart-controls">
@@ -387,406 +349,414 @@
         </div>
 
         <div class="btn-group">
-            <button onclick="window.location.href='auditor.html'">🔍 Новый аудит</button>
-            <button onclick="window.location.href='checklists.html'">✅ Чек-листы</button>
-            <button onclick="window.location.href='calculators.html'">🧮 Калькуляторы</button>
-            <button onclick="window.location.href='kpi-center.html'">📈 KPI-центр</button>
+            <button onclick="location.href='auditor.html'">🔍 Новый аудит</button>
+            <button onclick="location.href='checklists.html'">✅ Чек-листы</button>
+            <button onclick="location.href='calculators.html'">🧮 Калькуляторы</button>
+            <button onclick="location.href='kpi-center.html'">📈 KPI-центр</button>
         </div>
     </main>
 </div>
 
 <script>
-    (function() {
-        // ----- Тёмная тема -----
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const savedTheme = localStorage.getItem('scm_theme');
-        if (savedTheme === 'dark') body.classList.add('dark-theme');
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-theme');
-            localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
-        });
+(function() {
+    // ----- Тёмная тема -----
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    });
 
-        // ----- Работа с бизнес-единицами (филиалами) -----
-        let currentBranchId = 'default';
-        function loadBranchSelector() {
-            const branches = window.BranchManager.getBranches();
-            const tree = window.BranchManager.buildTree(branches);
-            const select = document.getElementById('branchSelector');
-            if (!select) return;
-            select.innerHTML = '';
-            const addOptions = (nodes, prefix = '') => {
-                for (let node of nodes) {
-                    const option = document.createElement('option');
-                    option.value = node.id;
-                    option.textContent = prefix + node.name + ' (' + node.type + ')';
-                    if (node.id === currentBranchId) option.selected = true;
-                    select.appendChild(option);
-                    if (node.children && node.children.length) {
-                        addOptions(node.children, prefix + '— ');
-                    }
-                }
-            };
-            addOptions(tree);
-            select.addEventListener('change', (e) => {
-                setCurrentBranch(e.target.value);
-                currentBranchId = e.target.value;
-                refreshAll();
-            });
-        }
-
-        // ----- Функции получения данных с учётом филиала -----
-        function getLastKPI(kpiId) {
-            const data = window.SCMData.loadKPI(kpiId, currentBranchId);
-            return data ? data.result : null;
-        }
-        function getKPIHistory(kpiId) {
-            return window.SCMData.getKPIHistory(kpiId, currentBranchId);
-        }
-        function getRoadmapProgress() {
-            const progress = window.SCMData.loadRoadmapProgress(currentBranchId);
-            let totalTasks = 0, completedTasks = 0;
-            const phases = ["phase1", "phase2", "phase3", "phase4"];
-            for (let phase of phases) {
-                const phaseProgress = progress[phase] || {};
-                for (let i = 0; i < 4; i++) {
-                    totalTasks++;
-                    if (phaseProgress[`${phase}_task_${i}`] === true) completedTasks++;
-                }
+    // ----- Филиал -----
+    let currentBranchId = 'default';
+    function loadBranchSelector() {
+        const branches = BranchManager.getBranches();
+        const tree = BranchManager.buildTree(branches);
+        const select = document.getElementById('branchSelector');
+        select.innerHTML = '';
+        const addOptions = (nodes, prefix = '') => {
+            for (let node of nodes) {
+                const opt = document.createElement('option');
+                opt.value = node.id;
+                opt.textContent = prefix + node.name + ' (' + node.type + ')';
+                if (node.id === currentBranchId) opt.selected = true;
+                select.appendChild(opt);
+                if (node.children) addOptions(node.children, prefix + '— ');
             }
-            return totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
-        }
-        function getLastAudits(limit = 3) {
-            const audits = window.SCMData.getAuditRegistry(currentBranchId);
-            return audits.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
-        }
-        function getChecklistSummary() {
-            const categories = JSON.parse(localStorage.getItem(`scm_checklists_${currentBranchId}`) || '{}');
-            const summary = [];
-            for (let [catName, items] of Object.entries(categories)) {
-                const savedState = window.SCMData.loadChecklist(catName, currentBranchId);
-                let completed = 0;
-                items.forEach((_, idx) => { if (savedState[`${catName}_${idx}`] === true) completed++; });
-                const percent = items.length === 0 ? 0 : (completed / items.length) * 100;
-                summary.push({ name: catName, percent: percent, total: items.length, completed: completed });
-            }
-            return summary;
-        }
-        function getUrgentTasks() {
-            const tasksData = getPlannerTasks(currentBranchId);
-            let allTasks = [];
-            for (let [date, list] of Object.entries(tasksData)) {
-                if (Array.isArray(list)) allTasks.push(...list.map(t => ({ ...t, date })));
-            }
-            return allTasks.filter(t => t.status === 'red' || t.status === 'yellow' || (t.priority === 'high' && (!t.date || t.date === 'backlog'))).slice(0, 5);
-        }
-        function getLatestNonConformances() {
-            const audits = getLastAudits(1);
-            const latest = audits[0];
-            return (latest && latest.nonConformances) ? latest.nonConformances.slice(0, 3) : [];
-        }
-        function linearRegressionForecast(history, steps=1) {
-            if (!history || history.length < 2) return null;
-            const n = history.length;
-            let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
-            for (let i = 0; i < n; i++) {
-                let x = i;
-                let y = history[i].value;
-                sumX += x;
-                sumY += y;
-                sumXY += x * y;
-                sumX2 += x * x;
-            }
-            const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-            const intercept = (sumY - slope * sumX) / n;
-            return intercept + slope * (n + steps - 1);
-        }
-        const benchmarks = {
-            otd: { good: 96, target: 98, unit: '%', lowerIsBetter: false },
-            fillrate: { good: 95, target: 98, unit: '%', lowerIsBetter: false },
-            turnover: { good: 5, target: 6, unit: 'раз', lowerIsBetter: false },
-            ccc: { good: 60, target: 45, unit: 'дней', lowerIsBetter: true },
-            nps: { good: 40, target: 50, unit: 'баллов', lowerIsBetter: false },
-            pickErrors: { good: 0.8, target: 0.5, unit: '%', lowerIsBetter: true }
         };
-
-        // ----- Отрисовка виджетов -----
-        function renderKPIWidgets() {
-            const container = document.getElementById('kpiWidgets');
-            const kpiList = ['otd', 'fillrate', 'turnover', 'ccc', 'nps', 'pickErrors'];
-            container.innerHTML = '';
-            for (let id of kpiList) {
-                let value = getLastKPI(id);
-                if (value === null) value = '—';
-                let benchmark = benchmarks[id] || { good: '—', target: '—', unit: '', lowerIsBetter: false };
-                let statusClass = '';
-                if (value !== '—') {
-                    if (benchmark.lowerIsBetter) {
-                        if (value <= benchmark.target) statusClass = 'kpi-good';
-                        else if (value <= benchmark.good) statusClass = '';
-                        else statusClass = 'kpi-bad';
-                    } else {
-                        if (value >= benchmark.target) statusClass = 'kpi-good';
-                        else if (value >= benchmark.good) statusClass = '';
-                        else statusClass = 'kpi-bad';
-                    }
-                }
-                let percentOfTarget = 0;
-                if (value !== '—' && benchmark.target) {
-                    if (benchmark.lowerIsBetter) {
-                        percentOfTarget = Math.min(100, (benchmark.target / value) * 100);
-                    } else {
-                        percentOfTarget = Math.min(100, (value / benchmark.target) * 100);
-                    }
-                }
-                container.innerHTML += `
-                    <div style="margin-bottom:20px;">
-                        <div style="display:flex; justify-content:space-between;">
-                            <span><strong>${id.toUpperCase()}</strong></span>
-                            <span class="badge">цель ${benchmark.target} ${benchmark.unit}</span>
-                        </div>
-                        <div class="kpi-value ${statusClass}">${value} ${value !== '—' ? benchmark.unit : ''}</div>
-                        <div class="benchmark-bar">
-                            <div class="benchmark-fill" style="width:${percentOfTarget}%;"></div>
-                            <div class="benchmark-marker" style="left:${(benchmark.good/benchmark.target)*100}%;"></div>
-                        </div>
-                        <div class="badge">Бенчмарк (хорошо): ${benchmark.good} ${benchmark.unit}</div>
-                    </div>
-                `;
-            }
-        }
-        function renderForecast() {
-            const container = document.getElementById('forecastWidget');
-            const kpis = ['otd', 'fillrate', 'turnover', 'ccc', 'nps'];
-            let html = '<div style="display:grid;gap:12px;">';
-            for (let id of kpis) {
-                const history = getKPIHistory(id);
-                const forecast = linearRegressionForecast(history, 1);
-                const lastValue = history.length ? history[history.length-1].value : null;
-                if (forecast !== null && lastValue !== null) {
-                    const diff = forecast - lastValue;
-                    const trendClass = diff >= 0 ? 'trend-up' : 'trend-down';
-                    const arrow = diff >= 0 ? '▲' : '▼';
-                    html += `<div><strong>${id.toUpperCase()}</strong>: текущий ${lastValue.toFixed(1)} → прогноз ${forecast.toFixed(1)} <span class="${trendClass}">${arrow} ${Math.abs(diff).toFixed(1)}</span></div>`;
-                } else {
-                    html += `<div><strong>${id.toUpperCase()}</strong>: недостаточно данных для прогноза</div>`;
-                }
-            }
-            html += '</div>';
-            container.innerHTML = html;
-        }
-        function renderAlerts() {
-            const container = document.getElementById('alertsWidget');
-            const alerts = [];
-            const kpiList = ['otd', 'fillrate', 'turnover', 'ccc', 'nps', 'pickErrors'];
-            for (let id of kpiList) {
-                let value = getLastKPI(id);
-                let bench = benchmarks[id];
-                if (value !== null && bench) {
-                    let isAlert = false;
-                    if (bench.lowerIsBetter && value > bench.good) isAlert = true;
-                    else if (!bench.lowerIsBetter && value < bench.good) isAlert = true;
-                    if (isAlert) {
-                        alerts.push(`⚠️ ${id.toUpperCase()} = ${value} ${bench.unit} (ниже бенчмарка ${bench.good})`);
-                    }
-                }
-            }
-            const nonConforms = getLatestNonConformances();
-            nonConforms.forEach(nc => alerts.push(`📋 Аудит: ${nc.text}`));
-            if (alerts.length === 0) {
-                container.innerHTML = '<div class="badge">Нет активных тревог</div>';
-            } else {
-                container.innerHTML = alerts.map(a => `<div class="notification">${a}</div>`).join('');
-            }
-        }
-        function renderUrgentTasks() {
-            const container = document.getElementById('urgentTasksWidget');
-            const tasks = getUrgentTasks();
-            if (tasks.length === 0) {
-                container.innerHTML = '<div class="badge">Нет срочных задач</div>';
-                return;
-            }
-            container.innerHTML = tasks.map(t => `
-                <div class="task-item task-priority-${t.priority || 'medium'}" onclick="window.location.href='planner.html'">
-                    <strong>${escapeHtml(t.text)}</strong><br>
-                    <small>${t.date || 'бэклог'} | ${t.status === 'red' ? '🔴 Срочно' : (t.status === 'yellow' ? '🟡 Важно' : '')}</small>
-                </div>
-            `).join('');
-        }
-        function renderRoadmapProgress() {
-            const percent = getRoadmapProgress();
-            document.getElementById('roadmapFill').style.width = `${percent}%`;
-            document.getElementById('roadmapProgress').innerHTML = `<div>Общий прогресс трансформации</div><div style="font-size:24px; font-weight:700;">${Math.round(percent)}%</div>`;
-        }
-        function renderLastAudits() {
-            const audits = getLastAudits(3);
-            const container = document.getElementById('lastAudits');
-            if (audits.length === 0) {
-                container.innerHTML = '<div class="badge">Нет сохранённых аудитов</div>';
-                return;
-            }
-            container.innerHTML = audits.map(a => `
-                <div style="margin-bottom:12px;">
-                    <div><strong>${new Date(a.date).toLocaleDateString()}</strong> — ${a.type}</div>
-                    <div>Зрелость: ${a.totalPercent}%</div>
-                </div>
-            `).join('');
-        }
-        function renderChecklistSummary() {
-            const summary = getChecklistSummary();
-            const container = document.getElementById('checklistSummary');
-            if (summary.length === 0) {
-                container.innerHTML = '<div class="badge">Нет чек-листов</div>';
-                return;
-            }
-            container.innerHTML = summary.slice(0, 3).map(c => `
-                <div style="margin-bottom:12px;">
-                    <div>${c.name}</div>
-                    <div class="progress-bar"><div class="progress-fill" style="width:${c.percent}%"></div></div>
-                    <div class="badge">${c.completed}/${c.total} выполнено</div>
-                </div>
-            `).join('');
-            if (summary.length > 3) container.innerHTML += '<div class="badge">и ещё ' + (summary.length-3) + ' категорий</div>';
-        }
-        function renderWarehouseStats() {
-            const productivity = getLastKPI('productivity') || '—';
-            const pickErrors = getLastKPI('pickErrors') || '—';
-            const otd = getLastKPI('otd') || '—';
-            const spaceUtil = getLastKPI('spaceUtil') || '—';
-            const container = document.getElementById('warehouseStats');
-            container.innerHTML = `
-                <div>Производительность: <strong>${productivity} ${productivity !== '—' ? 'строк/час' : ''}</strong></div>
-                <div>Ошибки сборки: <strong>${pickErrors} ${pickErrors !== '—' ? '%' : ''}</strong></div>
-                <div>OTD доставки: <strong>${otd} ${otd !== '—' ? '%' : ''}</strong></div>
-                <div>Загрузка склада: <strong>${spaceUtil} ${spaceUtil !== '—' ? '%' : ''}</strong></div>
-                <div class="badge" style="margin-top:8px;">По данным KPI-центра</div>
-            `;
-        }
-
-        let multiChart = null;
-        function updateMultiChart() {
-            const selectedKpis = Array.from(document.getElementById('kpiMultiSelect').selectedOptions).map(opt => opt.value);
-            const periodDays = parseInt(document.getElementById('periodSelect').value);
-            if (selectedKpis.length === 0) return;
-            const datasets = [];
-            let allLabels = [];
-            for (let kpiId of selectedKpis) {
-                let history = getKPIHistory(kpiId);
-                const now = new Date();
-                const cutoff = new Date(now.setDate(now.getDate() - periodDays));
-                history = history.filter(h => new Date(h.date) >= cutoff);
-                const labels = history.map(h => new Date(h.date).toLocaleDateString());
-                const data = history.map(h => h.value);
-                if (labels.length > 0 && allLabels.length === 0) allLabels = labels;
-                datasets.push({
-                    label: kpiId.toUpperCase(),
-                    data: data,
-                    borderColor: `hsl(${Math.random() * 360}, 70%, 50%)`,
-                    fill: false,
-                    tension: 0.1
-                });
-            }
-            const ctx = document.getElementById('multiKpiChart').getContext('2d');
-            if (multiChart) multiChart.destroy();
-            multiChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels: allLabels, datasets: datasets },
-                options: { responsive: true, maintainAspectRatio: true }
-            });
-        }
-
-        // ----- Печать на бланке (с логотипом и подписью) -----
-        window.printPageWithLogo = function() {
-            const mainContent = document.querySelector('.main-content');
-            if (!mainContent) return;
-            const clone = mainContent.cloneNode(true);
-            clone.querySelectorAll('.theme-switch, .btn-group, .chart-controls, button, .header-right, .sidebar, .no-print, .branch-selector-container').forEach(el => el.remove());
-            const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html><head><meta charset="UTF-8"><title>Дашборд SCM</title>
-                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-                <style>
-                    body { font-family: Inter; margin: 20px; }
-                    .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
-                    .logo-img { height: 50px; }
-                    .contact-info { font-size: 10pt; line-height: 1.4; }
-                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-                    .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
-                    .card { break-inside: avoid; }
-                    table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 4px; }
-                </style>
-                </head><body>
-                <div class="print-header">
-                    <div style="display: flex; align-items: center; gap: 20px;">
-                        <img src="${logoUrl}" alt="Логотип" class="logo-img">
-                        <div class="contact-info">
-                            Дмитрий Панибратский<br>
-                            Эксперт по SCM и логистике<br>
-                            scm-news.ru – экспертный портал<br>
-                            scm-news.online – Академия SCM<br>
-                            dmitry@scm-news.ru
-                        </div>
-                    </div>
-                    <div>${new Date().toLocaleString()}</div>
-                </div>
-                ${clone.innerHTML}
-                <div class="print-footer">
-                    <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
-                    <div>Подпись: <span class="sign-line">_________________________</span></div>
-                    <div>Дата: ${new Date().toLocaleDateString()}</div>
-                </div>
-                <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
-                </body></html>
-            `);
-            printWindow.document.close();
-        };
-        window.sendPageByEmail = function() {
-            const mainContent = document.querySelector('.main-content');
-            if (!mainContent) return;
-            const text = mainContent.innerText;
-            const subject = encodeURIComponent('Отчёт SCM дашборд');
-            const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
-            window.location.href = `mailto:?subject=${subject}&body=${body}`;
-        };
-        document.getElementById('printDashboardBtn').addEventListener('click', () => window.printPageWithLogo());
-        document.getElementById('emailDashboardBtn').addEventListener('click', () => window.sendPageByEmail());
-
-        // ----- Автообновление при смене филиала -----
-        function refreshAll() {
-            renderKPIWidgets();
-            renderForecast();
-            renderAlerts();
-            renderUrgentTasks();
-            renderRoadmapProgress();
-            renderLastAudits();
-            renderChecklistSummary();
-            renderWarehouseStats();
-            updateMultiChart();
-        }
-        window.addEventListener('branch-changed', () => {
-            currentBranchId = getCurrentBranch();
+        addOptions(tree);
+        select.addEventListener('change', (e) => {
+            setCurrentBranch(e.target.value);
+            currentBranchId = e.target.value;
             refreshAll();
         });
-        window.addEventListener('storage', (e) => {
-            if (e.key && (e.key.startsWith('kpi_') || e.key.includes(currentBranchId) || e.key === 'scm_planner_tasks_v5' || e.key.startsWith('checklist_'))) {
-                refreshAll();
-            }
-        });
-
-        // Инициализация
-        window.BranchManager.ensureDefaultBranch();
-        currentBranchId = getCurrentBranch();
-        loadBranchSelector();
-        refreshAll();
-        document.getElementById('updateChartBtn').addEventListener('click', updateMultiChart);
-    })();
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
     }
+
+    // ----- Функции получения данных с учётом филиала -----
+    function getLastKPI(kpiId) {
+        const data = SCMData.loadKPI(kpiId, currentBranchId);
+        return data ? data.result : null;
+    }
+    function getKPIHistory(kpiId) {
+        return SCMData.getKPIHistory(kpiId, currentBranchId);
+    }
+    function getRoadmapProgress() {
+        const progress = SCMData.loadRoadmapProgress(currentBranchId);
+        let total = 0, completed = 0;
+        const phases = ["phase1", "phase2", "phase3", "phase4"];
+        for (let phase of phases) {
+            const phaseProgress = progress[phase] || {};
+            for (let i = 0; i < 4; i++) {
+                total++;
+                if (phaseProgress[`${phase}_task_${i}`] === true) completed++;
+            }
+        }
+        return total === 0 ? 0 : (completed / total) * 100;
+    }
+    function getLastAudits(limit = 3) {
+        const audits = SCMData.getAuditRegistry(currentBranchId);
+        return audits.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
+    }
+    function getChecklistSummary() {
+        const categories = JSON.parse(localStorage.getItem(`scm_checklists_${currentBranchId}`) || '{}');
+        const summary = [];
+        for (let [catName, items] of Object.entries(categories)) {
+            const savedState = SCMData.loadChecklist(catName, currentBranchId);
+            let completed = 0;
+            items.forEach((_, idx) => { if (savedState[`${catName}_${idx}`] === true) completed++; });
+            const percent = items.length === 0 ? 0 : (completed / items.length) * 100;
+            summary.push({ name: catName, percent: percent, total: items.length, completed: completed });
+        }
+        return summary;
+    }
+    function getUrgentTasks() {
+        const tasksData = getPlannerTasks(currentBranchId);
+        let allTasks = [];
+        for (let [date, list] of Object.entries(tasksData)) {
+            if (Array.isArray(list)) allTasks.push(...list.map(t => ({ ...t, date })));
+        }
+        return allTasks.filter(t => t.status === 'red' || t.status === 'yellow' || (t.priority === 'high' && (!t.date || t.date === 'backlog'))).slice(0, 5);
+    }
+    function getLatestNonConformances() {
+        const audits = getLastAudits(1);
+        const latest = audits[0];
+        return (latest && latest.nonConformances) ? latest.nonConformances.slice(0, 3) : [];
+    }
+    function linearRegressionForecast(history, steps = 1) {
+        if (!history || history.length < 2) return null;
+        const n = history.length;
+        let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+        for (let i = 0; i < n; i++) {
+            let x = i;
+            let y = history[i].value;
+            sumX += x;
+            sumY += y;
+            sumXY += x * y;
+            sumX2 += x * x;
+        }
+        const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+        const intercept = (sumY - slope * sumX) / n;
+        return intercept + slope * (n + steps - 1);
+    }
+    const benchmarks = {
+        otd: { good: 96, target: 98, unit: '%', lowerIsBetter: false },
+        fillrate: { good: 95, target: 98, unit: '%', lowerIsBetter: false },
+        turnover: { good: 5, target: 6, unit: 'раз', lowerIsBetter: false },
+        ccc: { good: 60, target: 45, unit: 'дней', lowerIsBetter: true },
+        nps: { good: 40, target: 50, unit: 'баллов', lowerIsBetter: false },
+        pickErrors: { good: 0.8, target: 0.5, unit: '%', lowerIsBetter: true }
+    };
+
+    // ----- Отрисовка виджетов -----
+    function renderKPIWidgets() {
+        const container = document.getElementById('kpiWidgets');
+        const kpiList = ['otd', 'fillrate', 'turnover', 'ccc', 'nps', 'pickErrors'];
+        container.innerHTML = '';
+        for (let id of kpiList) {
+            let value = getLastKPI(id);
+            if (value === null) value = '—';
+            let b = benchmarks[id];
+            let statusClass = '';
+            if (value !== '—') {
+                if (b.lowerIsBetter) {
+                    if (value <= b.target) statusClass = 'kpi-good';
+                    else if (value <= b.good) statusClass = '';
+                    else statusClass = 'kpi-bad';
+                } else {
+                    if (value >= b.target) statusClass = 'kpi-good';
+                    else if (value >= b.good) statusClass = '';
+                    else statusClass = 'kpi-bad';
+                }
+            }
+            let percentOfTarget = 0;
+            if (value !== '—' && b.target) {
+                if (b.lowerIsBetter) percentOfTarget = Math.min(100, (b.target / value) * 100);
+                else percentOfTarget = Math.min(100, (value / b.target) * 100);
+            }
+            container.innerHTML += `
+                <div style="margin-bottom:20px;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span><strong>${id.toUpperCase()}</strong></span>
+                        <span class="badge">цель ${b.target} ${b.unit}</span>
+                    </div>
+                    <div class="kpi-value ${statusClass}">${value} ${value !== '—' ? b.unit : ''}</div>
+                    <div class="benchmark-bar">
+                        <div class="benchmark-fill" style="width:${percentOfTarget}%;"></div>
+                        <div class="benchmark-marker" style="left:${(b.good/b.target)*100}%;"></div>
+                    </div>
+                    <div class="badge">Бенчмарк (хорошо): ${b.good} ${b.unit}</div>
+                </div>
+            `;
+        }
+    }
+    function renderForecast() {
+        const container = document.getElementById('forecastWidget');
+        const kpis = ['otd', 'fillrate', 'turnover', 'ccc', 'nps'];
+        let html = '<div style="display:grid;gap:12px;">';
+        for (let id of kpis) {
+            const history = getKPIHistory(id);
+            const forecast = linearRegressionForecast(history, 1);
+            const lastValue = history.length ? history[history.length-1].value : null;
+            if (forecast !== null && lastValue !== null) {
+                const diff = forecast - lastValue;
+                const trendClass = diff >= 0 ? 'trend-up' : 'trend-down';
+                const arrow = diff >= 0 ? '▲' : '▼';
+                html += `<div><strong>${id.toUpperCase()}</strong>: текущий ${lastValue.toFixed(1)} → прогноз ${forecast.toFixed(1)} <span class="${trendClass}">${arrow} ${Math.abs(diff).toFixed(1)}</span></div>`;
+            } else {
+                html += `<div><strong>${id.toUpperCase()}</strong>: недостаточно данных для прогноза</div>`;
+            }
+        }
+        html += '</div>';
+        container.innerHTML = html;
+    }
+    function renderAlerts() {
+        const container = document.getElementById('alertsWidget');
+        const alerts = [];
+        for (let id of ['otd', 'fillrate', 'turnover', 'ccc', 'nps', 'pickErrors']) {
+            let value = getLastKPI(id);
+            let b = benchmarks[id];
+            if (value !== null && b) {
+                let isAlert = false;
+                if (b.lowerIsBetter && value > b.good) isAlert = true;
+                else if (!b.lowerIsBetter && value < b.good) isAlert = true;
+                if (isAlert) alerts.push(`⚠️ ${id.toUpperCase()} = ${value} ${b.unit} (ниже бенчмарка ${b.good})`);
+            }
+        }
+        const nonConforms = getLatestNonConformances();
+        nonConforms.forEach(nc => alerts.push(`📋 Аудит: ${nc.text}`));
+        if (alerts.length === 0) {
+            container.innerHTML = '<div class="badge">Нет активных тревог</div>';
+        } else {
+            container.innerHTML = alerts.map(a => `<div class="notification">${a}</div>`).join('');
+        }
+    }
+    function renderUrgentTasks() {
+        const container = document.getElementById('urgentTasksWidget');
+        const tasks = getUrgentTasks();
+        if (tasks.length === 0) {
+            container.innerHTML = '<div class="badge">Нет срочных задач</div>';
+            return;
+        }
+        container.innerHTML = tasks.map(t => `
+            <div class="task-item task-priority-${t.priority || 'medium'}" onclick="location.href='planner.html'">
+                <strong>${escapeHtml(t.text)}</strong><br>
+                <small>${t.date || 'бэклог'} | ${t.status === 'red' ? '🔴 Срочно' : (t.status === 'yellow' ? '🟡 Важно' : '')}</small>
+            </div>
+        `).join('');
+    }
+    function renderRoadmapProgress() {
+        const percent = getRoadmapProgress();
+        document.getElementById('roadmapFill').style.width = `${percent}%`;
+        document.getElementById('roadmapProgress').innerHTML = `<div>Общий прогресс трансформации</div><div style="font-size:24px; font-weight:700;">${Math.round(percent)}%</div>`;
+    }
+    function renderLastAudits() {
+        const audits = getLastAudits(3);
+        const container = document.getElementById('lastAudits');
+        if (audits.length === 0) {
+            container.innerHTML = '<div class="badge">Нет сохранённых аудитов</div>';
+            return;
+        }
+        container.innerHTML = audits.map(a => `
+            <div style="margin-bottom:12px;">
+                <div><strong>${new Date(a.date).toLocaleDateString()}</strong> — ${a.type}</div>
+                <div>Зрелость: ${a.totalPercent}%</div>
+            </div>
+        `).join('');
+    }
+    function renderChecklistSummary() {
+        const summary = getChecklistSummary();
+        const container = document.getElementById('checklistSummary');
+        if (summary.length === 0) {
+            container.innerHTML = '<div class="badge">Нет чек-листов</div>';
+            return;
+        }
+        container.innerHTML = summary.slice(0, 3).map(c => `
+            <div style="margin-bottom:12px;">
+                <div>${c.name}</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${c.percent}%"></div></div>
+                <div class="badge">${c.completed}/${c.total} выполнено</div>
+            </div>
+        `).join('');
+        if (summary.length > 3) container.innerHTML += '<div class="badge">и ещё ' + (summary.length-3) + ' категорий</div>';
+    }
+    function renderWarehouseStats() {
+        const productivity = getLastKPI('productivity') || '—';
+        const pickErrors = getLastKPI('pickErrors') || '—';
+        const otd = getLastKPI('otd') || '—';
+        const spaceUtil = getLastKPI('spaceUtil') || '—';
+        const container = document.getElementById('warehouseStats');
+        container.innerHTML = `
+            <div>Производительность: <strong>${productivity} ${productivity !== '—' ? 'строк/час' : ''}</strong></div>
+            <div>Ошибки сборки: <strong>${pickErrors} ${pickErrors !== '—' ? '%' : ''}</strong></div>
+            <div>OTD доставки: <strong>${otd} ${otd !== '—' ? '%' : ''}</strong></div>
+            <div>Загрузка склада: <strong>${spaceUtil} ${spaceUtil !== '—' ? '%' : ''}</strong></div>
+            <div class="badge" style="margin-top:8px;">По данным KPI-центра</div>
+        `;
+    }
+    // ----- НОВЫЙ ВИДЖЕТ: Бюджет и штат -----
+    function renderBudgetStaff() {
+        const container = document.getElementById('budgetStaffWidget');
+        const year = new Date().getFullYear();
+        const budget = getBranchBudget(currentBranchId, year);
+        const currentMonth = new Date().toLocaleString('ru', { month: 'short' });
+        const monthBudget = budget[currentMonth] || { opex: 0, payroll: 0, transport: 0, capex: 0 };
+        const staff = getBranchStaff(currentBranchId);
+        const totalPayrollPlan = staff.reduce((sum, pos) => sum + (pos.salary_base||0)*(pos.region_coef||1)*(1+(pos.north_bonus||0)/100)*(pos.count||0), 0);
+        container.innerHTML = `
+            <div><strong>Бюджет на ${currentMonth}:</strong></div>
+            <div>OPEX: ${monthBudget.opex.toLocaleString()} ₽</div>
+            <div>ФОТ (план): ${monthBudget.payroll.toLocaleString()} ₽</div>
+            <div>Транспорт: ${monthBudget.transport.toLocaleString()} ₽</div>
+            <div>CAPEX: ${monthBudget.capex.toLocaleString()} ₽</div>
+            <div style="margin-top:12px;"><strong>Штат:</strong> ${staff.length} должностей, плановый ФОТ в месяц ≈ ${Math.round(totalPayrollPlan).toLocaleString()} ₽</div>
+        `;
+    }
+
+    // ----- Мульти-график -----
+    let multiChart = null;
+    function updateMultiChart() {
+        const selectedKpis = Array.from(document.getElementById('kpiMultiSelect').selectedOptions).map(opt => opt.value);
+        const periodDays = parseInt(document.getElementById('periodSelect').value);
+        if (selectedKpis.length === 0) return;
+        const datasets = [];
+        let allLabels = [];
+        for (let kpiId of selectedKpis) {
+            let history = getKPIHistory(kpiId);
+            const now = new Date();
+            const cutoff = new Date(now.setDate(now.getDate() - periodDays));
+            history = history.filter(h => new Date(h.date) >= cutoff);
+            const labels = history.map(h => new Date(h.date).toLocaleDateString());
+            const data = history.map(h => h.value);
+            if (labels.length > 0 && allLabels.length === 0) allLabels = labels;
+            datasets.push({
+                label: kpiId.toUpperCase(),
+                data: data,
+                borderColor: `hsl(${Math.random() * 360}, 70%, 50%)`,
+                fill: false,
+                tension: 0.1
+            });
+        }
+        const ctx = document.getElementById('multiKpiChart').getContext('2d');
+        if (multiChart) multiChart.destroy();
+        multiChart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: allLabels, datasets: datasets },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+    }
+
+    // ----- Печать на бланке (с логотипом и подписью) -----
+    window.printPageWithLogo = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const clone = mainContent.cloneNode(true);
+        clone.querySelectorAll('.theme-switch, .btn-group, .chart-controls, button, .header-right, .sidebar, .no-print, .branch-selector-container').forEach(el => el.remove());
+        const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html><head><meta charset="UTF-8"><title>Дашборд SCM</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: Inter; margin: 20px; }
+                .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                .logo-img { height: 50px; }
+                .contact-info { font-size: 10pt; line-height: 1.4; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; }
+                .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                .card { break-inside: avoid; }
+                table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 4px; }
+            </style>
+            </head><body>
+            <div class="print-header">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="${logoUrl}" class="logo-img">
+                    <div class="contact-info">
+                        Дмитрий Панибратский<br>
+                        Эксперт по SCM и логистике<br>
+                        scm-news.ru – экспертный портал<br>
+                        scm-news.online – Академия SCM<br>
+                        dmitry@scm-news.ru
+                    </div>
+                </div>
+                <div>${new Date().toLocaleString()}</div>
+            </div>
+            ${clone.innerHTML}
+            <div class="print-footer">
+                <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                <div>Подпись: <span class="sign-line">_________________________</span></div>
+                <div>Дата: ${new Date().toLocaleDateString()}</div>
+            </div>
+            <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    };
+    window.sendPageByEmail = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const text = mainContent.innerText;
+        const subject = encodeURIComponent('Отчёт SCM дашборд');
+        const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    };
+    document.getElementById('printDashboardBtn').addEventListener('click', () => window.printPageWithLogo());
+    document.getElementById('emailDashboardBtn').addEventListener('click', () => window.sendPageByEmail());
+
+    // ----- Автообновление при смене филиала или данных -----
+    function refreshAll() {
+        renderKPIWidgets();
+        renderForecast();
+        renderAlerts();
+        renderUrgentTasks();
+        renderRoadmapProgress();
+        renderLastAudits();
+        renderChecklistSummary();
+        renderWarehouseStats();
+        renderBudgetStaff();
+        updateMultiChart();
+    }
+    window.addEventListener('branch-changed', () => {
+        currentBranchId = getCurrentBranch();
+        refreshAll();
+    });
+    window.addEventListener('storage', (e) => {
+        if (e.key && (e.key.includes(currentBranchId) || e.key.startsWith('kpi_') || e.key === 'scm_planner_tasks_v5')) refreshAll();
+    });
+
+    // ----- Инициализация -----
+    BranchManager.ensureDefaultBranch();
+    currentBranchId = getCurrentBranch();
+    loadBranchSelector();
+    refreshAll();
+    document.getElementById('updateChartBtn').addEventListener('click', updateMultiChart);
+})();
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+}
 </script>
 </body>
 </html>
