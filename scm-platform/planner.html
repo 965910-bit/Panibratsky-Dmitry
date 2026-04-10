@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Планер SCM – финальная версия</title>
+    <title>Планер SCM – финальная рабочая версия</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="scm-style.css">
@@ -122,8 +122,8 @@
 
 <script>
     let tasks = {};
-    function loadTasks() { const s = localStorage.getItem('scm_planner_tasks_v4'); if(s) tasks = JSON.parse(s); else tasks = { backlog: [] }; }
-    function saveTasks() { localStorage.setItem('scm_planner_tasks_v4', JSON.stringify(tasks)); }
+    function loadTasks() { const s = localStorage.getItem('scm_planner_tasks_v5'); if(s) tasks = JSON.parse(s); else tasks = { backlog: [] }; }
+    function saveTasks() { localStorage.setItem('scm_planner_tasks_v5', JSON.stringify(tasks)); }
     function addTask(target, data) { if(!tasks[target]) tasks[target]=[]; const id = Date.now().toString(); tasks[target].push({ id, createdAt: new Date().toISOString(), subtasks:[], tags:[], priority:'medium', status:'gray', ...data }); saveTasks(); renderCurrentView(); }
     function updateTask(target, tid, nd) { const idx = tasks[target].findIndex(t=>t.id===tid); if(idx!==-1){ tasks[target][idx]={...tasks[target][idx],...nd}; saveTasks(); renderCurrentView(); } }
     function deleteTask(target, tid) { tasks[target]=tasks[target].filter(t=>t.id!==tid); if(tasks[target].length===0 && target!=='backlog') delete tasks[target]; saveTasks(); renderCurrentView(); }
@@ -379,9 +379,12 @@
             renderCurrentView();
         });
         document.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>setView(btn.dataset.view)));
+        // ИСПРАВЛЕНИЕ: в Канбане создаём задачу на сегодняшнюю дату, а не в бэклог
         document.getElementById('newTaskBtn').addEventListener('click',()=>{
-            if(currentView==='kanban') openTaskModalForBacklog();
-            else if(currentView==='backlog') openTaskModalForBacklog();
+            if(currentView==='kanban') {
+                const today = formatDateKey(new Date());
+                openTaskModalForDate(today);
+            } else if(currentView==='backlog') openTaskModalForBacklog();
             else { const today = formatDateKey(currentDate); openTaskModalForDate(today); }
         });
         const modalHtml = `<div id="taskModal" class="modal"><div class="modal-content"><h3>Задача</h3><input type="text" id="modalTaskText" placeholder="Текст задачи"><select id="modalTaskStatus"><option value="gray">⚪ Не распределено</option><option value="purple">📌 Запланировано</option><option value="red">🔴 Срочно</option><option value="yellow">🟡 Важно</option><option value="blue">🔵 В работе</option><option value="green">🟢 Выполнено</option></select><select id="modalPriority"><option value="high">Высокий</option><option value="medium">Средний</option><option value="low">Низкий</option></select><div style="display:flex; gap:8px;"><input type="time" id="modalStartTime" placeholder="Начало"><input type="time" id="modalEndTime" placeholder="Конец"></div><input type="text" id="modalTags" placeholder="Теги (через запятую)"><div style="display:flex; justify-content:flex-end; gap:12px; margin-top:16px;"><button id="modalDeleteBtn" style="background:#dc2626;">Удалить</button><button id="modalCancelBtn">Отмена</button><button id="modalSaveBtn">Сохранить</button></div></div></div>`;
