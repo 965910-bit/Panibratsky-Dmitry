@@ -11,7 +11,7 @@
     <script src="scm-common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Дополнительные стили для дашборда (повповерх scm-style.css) */
+        /* Дополнительные стили для дашборда (поверх scm-style.css) */
         .theme-switch {
             position: fixed;
             top: 20px;
@@ -157,6 +157,19 @@
             border: 1px solid #e2e8f0;
             background: white;
         }
+        /* Логотип в шапке */
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            gap: 16px;
+        }
+        .logo-image {
+            height: 50px;
+            width: auto;
+        }
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -164,6 +177,9 @@
             .theme-switch {
                 top: 10px;
                 right: 10px;
+            }
+            .logo-image {
+                height: 40px;
             }
         }
         @media print {
@@ -179,7 +195,10 @@
 <body>
 <div class="app-container">
     <aside class="sidebar">
-        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
         <nav>
             <ul>
                 <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
@@ -202,11 +221,17 @@
         <div class="theme-switch" id="themeToggle">
             <i class="fas fa-moon"></i> <span>Тёмная тема</span>
         </div>
-        <h1>📊 SCM-дашборд</h1>
-        <p>Сводная аналитика цепи поставок: ключевые показатели, прогресс трансформации, аудиты и рекомендации.</p>
-        <div style="text-align: right; margin-bottom: 16px;">
-            <button id="printDashboardBtn" class="print-btn"><i class="fas fa-print"></i> Печать дашборда (бланк)</button>
-            <button id="emailDashboardBtn" style="background: #10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
+        <!-- Шапка дашборда с логотипом -->
+        <div class="dashboard-header">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" class="logo-image">
+            <div>
+                <h1>📊 SCM-дашборд</h1>
+                <p>Сводная аналитика цепи поставок: ключевые показатели, прогресс трансформации, аудиты и рекомендации.</p>
+            </div>
+            <div style="text-align: right;">
+                <button id="printDashboardBtn" class="print-btn"><i class="fas fa-print"></i> Печать дашборда (бланк)</button>
+                <button id="emailDashboardBtn" style="background: #10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
+            </div>
         </div>
 
         <div class="dashboard-grid">
@@ -313,7 +338,10 @@
 
         // ========== 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
         function getLastKPI(kpiId) {
-            const saved = SCMData.loadKPI(kpiId);
+            const saved = window.SCMData?.loadKPI ? window.SCMData.loadKPI(kpiId) : (() => {
+                const raw = localStorage.getItem(`kpi_${kpiId}`);
+                return raw ? JSON.parse(raw) : null;
+            })();
             return saved ? saved.result : null;
         }
         function getKPIHistory(kpiId) {
@@ -324,7 +352,7 @@
             let totalTasks = 0, completedTasks = 0;
             const phases = ["phase1", "phase2", "phase3", "phase4"];
             for (let phase of phases) {
-                const phaseProgress = SCMData.loadRoadmapProgress(phase) || {};
+                const phaseProgress = window.SCMData?.loadRoadmapProgress ? window.SCMData.loadRoadmapProgress(phase) : (JSON.parse(localStorage.getItem('roadmap_progress') || '{}')[phase] || {});
                 for (let i = 0; i < 4; i++) {
                     totalTasks++;
                     if (phaseProgress[`${phase}_task_${i}`] === true) completedTasks++;
@@ -333,14 +361,14 @@
             return totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
         }
         function getLastAudits(limit = 3) {
-            const audits = SCMData.getAuditRegistry();
+            const audits = window.SCMData?.getAuditRegistry ? window.SCMData.getAuditRegistry() : (JSON.parse(localStorage.getItem('audit_registry') || '[]'));
             return audits.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
         }
         function getChecklistSummary() {
             const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
             const summary = [];
             for (let [catName, items] of Object.entries(categories)) {
-                const savedState = SCMData.loadChecklist(catName) || {};
+                const savedState = window.SCMData?.loadChecklist ? window.SCMData.loadChecklist(catName) : (JSON.parse(localStorage.getItem(`checklist_${catName}`) || '{}'));
                 let completed = 0;
                 items.forEach((_, idx) => { if (savedState[`${catName}_${idx}`] === true) completed++; });
                 const percent = items.length === 0 ? 0 : (completed / items.length) * 100;
@@ -354,7 +382,6 @@
             for (let [date, list] of Object.entries(tasksData)) {
                 if (Array.isArray(list)) allTasks.push(...list.map(t => ({ ...t, date })));
             }
-            // Срочные: статус red или yellow, а также без даты (backlog) приоритет high
             const urgent = allTasks.filter(t => {
                 if (t.status === 'red') return true;
                 if (t.status === 'yellow') return true;
@@ -364,14 +391,13 @@
             return urgent;
         }
         function getLatestNonConformances() {
-            const audits = SCMData.getAuditRegistry();
-            const latest = audits.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+            const audits = getLastAudits(1);
+            const latest = audits[0];
             if (latest && latest.nonConformances && latest.nonConformances.length) {
                 return latest.nonConformances.slice(0, 3);
             }
             return [];
         }
-        // Линейная регрессия для прогноза
         function linearRegressionForecast(history, steps=1) {
             if (!history || history.length < 2) return null;
             const n = history.length;
@@ -388,7 +414,6 @@
             const intercept = (sumY - slope * sumX) / n;
             return intercept + slope * (n + steps - 1);
         }
-        // Бенчмарки (из standards.html)
         const benchmarks = {
             otd: { good: 96, target: 98, unit: '%', lowerIsBetter: false },
             fillrate: { good: 95, target: 98, unit: '%', lowerIsBetter: false },
@@ -419,7 +444,6 @@
                         else statusClass = 'kpi-bad';
                     }
                 }
-                // Бенчмарк визуализация
                 let percentOfTarget = 0;
                 if (value !== '—' && benchmark.target) {
                     if (benchmark.lowerIsBetter) {
@@ -482,7 +506,6 @@
                     }
                 }
             }
-            // Несоответствия из аудитов
             const nonConforms = getLatestNonConformances();
             nonConforms.forEach(nc => alerts.push(`📋 Аудит: ${nc.text}`));
             if (alerts.length === 0) {
@@ -567,14 +590,15 @@
             const periodDays = parseInt(document.getElementById('periodSelect').value);
             if (selectedKpis.length === 0) return;
             const datasets = [];
+            let allLabels = [];
             for (let kpiId of selectedKpis) {
                 let history = getKPIHistory(kpiId);
-                // Фильтрация по периоду (последние N дней)
                 const now = new Date();
                 const cutoff = new Date(now.setDate(now.getDate() - periodDays));
                 history = history.filter(h => new Date(h.date) >= cutoff);
                 const labels = history.map(h => new Date(h.date).toLocaleDateString());
                 const data = history.map(h => h.value);
+                if (labels.length > 0 && allLabels.length === 0) allLabels = labels;
                 datasets.push({
                     label: kpiId.toUpperCase(),
                     data: data,
@@ -582,24 +606,23 @@
                     fill: false,
                     tension: 0.1
                 });
-                if (labels.length > 0 && !window.multiChartLabels) window.multiChartLabels = labels;
             }
             const ctx = document.getElementById('multiKpiChart').getContext('2d');
             if (multiChart) multiChart.destroy();
             multiChart = new Chart(ctx, {
                 type: 'line',
-                data: { labels: window.multiChartLabels || [], datasets: datasets },
+                data: { labels: allLabels, datasets: datasets },
                 options: { responsive: true, maintainAspectRatio: true }
             });
         }
 
-        // ========== 5. ПЕЧАТЬ НА БЛАНКЕ И ОТПРАВКА НА ПОЧТУ ==========
-        // Используем универсальные функции из scm-common.js (если они там есть) или свои
-        window.printPageWithLogo = window.printPageWithLogo || function() {
+        // ========== 5. ПЕЧАТЬ НА БЛАНКЕ С ЛОГОТИПОМ И ПОДПИСЬЮ ==========
+        window.printPageWithLogo = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
             const clone = mainContent.cloneNode(true);
             clone.querySelectorAll('.btn-group, .theme-switch, .chart-controls, button, .sidebar, .print-btn, .no-print').forEach(el => el.remove());
+            const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
                 <!DOCTYPE html>
@@ -607,25 +630,30 @@
                 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
                 <style>
                     body { font-family: Inter; margin: 20px; }
-                    .print-header { display: flex; justify-content: space-between; border-bottom: 2px solid #1e40af; margin-bottom: 20px; }
-                    .logo-text { font-size: 24px; font-weight: 800; color: #1e40af; }
-                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; }
+                    .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                    .logo-img { height: 50px; }
+                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
                     .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
                     table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 4px; }
+                    .card { break-inside: avoid; }
                 </style>
                 </head><body>
-                <div class="print-header"><div class="logo-text">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</div><div>${new Date().toLocaleString()}</div></div>
+                <div class="print-header">
+                    <img src="${logoUrl}" alt="Логотип" class="logo-img">
+                    <div>${new Date().toLocaleString()}</div>
+                </div>
                 ${clone.outerHTML}
                 <div class="print-footer">
                     <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
                     <div>Подпись: <span class="sign-line">_________________________</span></div>
+                    <div>Дата: ${new Date().toLocaleDateString()}</div>
                 </div>
                 <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
                 </body></html>
             `);
             printWindow.document.close();
         };
-        window.sendPageByEmail = window.sendPageByEmail || function() {
+        window.sendPageByEmail = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
             const text = mainContent.innerText;
@@ -656,7 +684,6 @@
         window.addEventListener('kpi-updated', refreshAll);
         window.addEventListener('task-updated', refreshAll);
 
-        // Первоначальная отрисовка
         refreshAll();
         document.getElementById('updateChartBtn').addEventListener('click', updateMultiChart);
     })();
