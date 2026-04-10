@@ -157,7 +157,6 @@
             border: 1px solid #e2e8f0;
             background: white;
         }
-        /* Логотип в шапке */
         .dashboard-header {
             display: flex;
             align-items: center;
@@ -221,7 +220,6 @@
         <div class="theme-switch" id="themeToggle">
             <i class="fas fa-moon"></i> <span>Тёмная тема</span>
         </div>
-        <!-- Шапка дашборда с логотипом -->
         <div class="dashboard-header">
             <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" class="logo-image">
             <div>
@@ -235,56 +233,41 @@
         </div>
 
         <div class="dashboard-grid">
-            <!-- Карточка: Ключевые KPI + бенчмарки -->
             <div class="card">
                 <h3><i class="fas fa-chart-line"></i> Ключевые KPI и бенчмарки</h3>
                 <div id="kpiWidgets"></div>
                 <div class="btn-group"><button onclick="window.location.href='kpi-center.html'">Все KPI →</button></div>
             </div>
-
-            <!-- Карточка: Прогноз KPI (тренд) -->
             <div class="card">
                 <h3><i class="fas fa-chart-line"></i> Прогноз KPI на следующий месяц</h3>
                 <div id="forecastWidget"></div>
             </div>
-
-            <!-- Карточка: Тревоги и рекомендации -->
             <div class="card">
                 <h3><i class="fas fa-bell"></i> Тревоги и рекомендации</h3>
                 <div id="alertsWidget"></div>
                 <div class="btn-group"><button onclick="window.location.href='auditor.html'">Пройти аудит →</button></div>
             </div>
-
-            <!-- Карточка: Срочные задачи из планера -->
             <div class="card">
                 <h3><i class="fas fa-tasks"></i> Срочные задачи (планер)</h3>
                 <div id="urgentTasksWidget"></div>
                 <div class="btn-group"><button onclick="window.location.href='planner.html'">Все задачи →</button></div>
             </div>
-
-            <!-- Карточка: Прогресс дорожной карты -->
             <div class="card">
                 <h3><i class="fas fa-road"></i> Трансформация SCM</h3>
                 <div id="roadmapProgress"></div>
                 <div class="progress-bar"><div class="progress-fill" id="roadmapFill"></div></div>
                 <div class="btn-group"><button onclick="window.location.href='roadmap.html'">Подробнее →</button></div>
             </div>
-
-            <!-- Карточка: Последние аудиты -->
             <div class="card">
                 <h3><i class="fas fa-clipboard-list"></i> Последние аудиты</h3>
                 <div id="lastAudits"></div>
                 <div class="btn-group"><button onclick="window.location.href='audit-registry.html'">Все аудиты →</button></div>
             </div>
-
-            <!-- Карточка: Чек-листы -->
             <div class="card">
                 <h3><i class="fas fa-check-square"></i> Чек-листы</h3>
                 <div id="checklistSummary"></div>
                 <div class="btn-group"><button onclick="window.location.href='checklists.html'">Все чек-листы →</button></div>
             </div>
-
-            <!-- Карточка: Эффективность склада -->
             <div class="card">
                 <h3><i class="fas fa-warehouse"></i> Эффективность склада</h3>
                 <div id="warehouseStats"></div>
@@ -292,7 +275,6 @@
             </div>
         </div>
 
-        <!-- Карточка: Динамика KPI (мульти-выбор, период) -->
         <div class="card">
             <h3><i class="fas fa-chart-line"></i> Динамика KPI</h3>
             <div class="chart-controls">
@@ -324,9 +306,8 @@
 </div>
 
 <script>
-    // ------------------------------ ПОЛНОСТЬЮ РАБОЧИЙ ДАШБОРД С УЛУЧШЕНИЯМИ ------------------------------
     (function() {
-        // ========== 1. ТЁМНАЯ ТЕМА ==========
+        // Тёмная тема
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const savedTheme = localStorage.getItem('scm_theme');
@@ -336,7 +317,7 @@
             localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
         });
 
-        // ========== 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+        // Вспомогательные функции
         function getLastKPI(kpiId) {
             const saved = window.SCMData?.loadKPI ? window.SCMData.loadKPI(kpiId) : (() => {
                 const raw = localStorage.getItem(`kpi_${kpiId}`);
@@ -345,8 +326,7 @@
             return saved ? saved.result : null;
         }
         function getKPIHistory(kpiId) {
-            const history = JSON.parse(localStorage.getItem(`kpi_${kpiId}_history`) || '[]');
-            return history;
+            return JSON.parse(localStorage.getItem(`kpi_${kpiId}_history`) || '[]');
         }
         function getRoadmapProgress() {
             let totalTasks = 0, completedTasks = 0;
@@ -382,21 +362,12 @@
             for (let [date, list] of Object.entries(tasksData)) {
                 if (Array.isArray(list)) allTasks.push(...list.map(t => ({ ...t, date })));
             }
-            const urgent = allTasks.filter(t => {
-                if (t.status === 'red') return true;
-                if (t.status === 'yellow') return true;
-                if (t.priority === 'high' && (!t.date || t.date === 'backlog')) return true;
-                return false;
-            }).slice(0, 5);
-            return urgent;
+            return allTasks.filter(t => t.status === 'red' || t.status === 'yellow' || (t.priority === 'high' && (!t.date || t.date === 'backlog'))).slice(0, 5);
         }
         function getLatestNonConformances() {
             const audits = getLastAudits(1);
             const latest = audits[0];
-            if (latest && latest.nonConformances && latest.nonConformances.length) {
-                return latest.nonConformances.slice(0, 3);
-            }
-            return [];
+            return (latest && latest.nonConformances) ? latest.nonConformances.slice(0, 3) : [];
         }
         function linearRegressionForecast(history, steps=1) {
             if (!history || history.length < 2) return null;
@@ -423,7 +394,6 @@
             pickErrors: { good: 0.8, target: 0.5, unit: '%', lowerIsBetter: true }
         };
 
-        // ========== 3. ОТРИСОВКА ВСЕХ ВИДЖЕТОВ ==========
         function renderKPIWidgets() {
             const container = document.getElementById('kpiWidgets');
             const kpiList = ['otd', 'fillrate', 'turnover', 'ccc', 'nps', 'pickErrors'];
@@ -583,7 +553,6 @@
             `;
         }
 
-        // ========== 4. МУЛЬТИ-ГРАФИК С ВЫБОРОМ ПЕРИОДА ==========
         let multiChart = null;
         function updateMultiChart() {
             const selectedKpis = Array.from(document.getElementById('kpiMultiSelect').selectedOptions).map(opt => opt.value);
@@ -616,7 +585,7 @@
             });
         }
 
-        // ========== 5. ПЕЧАТЬ НА БЛАНКЕ С ЛОГОТИПОМ И ПОДПИСЬЮ ==========
+        // ========== ПЕЧАТЬ НА БЛАНКЕ С ЛОГОТИПОМ И НИЖНИМ КОЛОНТИТУЛОМ (без телефона) ==========
         window.printPageWithLogo = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
@@ -632,7 +601,9 @@
                     body { font-family: Inter; margin: 20px; }
                     .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
                     .logo-img { height: 50px; }
-                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; }
+                    .contact-info { margin-bottom: 20px; font-size: 10pt; line-height: 1.4; color: #334155; }
+                    .sign-block { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
                     .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
                     table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 4px; }
                     .card { break-inside: avoid; }
@@ -644,15 +615,25 @@
                 </div>
                 ${clone.outerHTML}
                 <div class="print-footer">
-                    <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
-                    <div>Подпись: <span class="sign-line">_________________________</span></div>
-                    <div>Дата: ${new Date().toLocaleDateString()}</div>
+                    <div class="contact-info">
+                        <strong>Дмитрий Панибратский</strong><br>
+                        Эксперт по SCM и логистике<br>
+                        scm-news.ru – экспертный портал<br>
+                        scm-news.online – Академия SCM<br>
+                        dmitry@scm-news.ru
+                    </div>
+                    <div class="sign-block">
+                        <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                        <div>Подпись: <span class="sign-line">_________________________</span></div>
+                        <div>Дата: ${new Date().toLocaleDateString()}</div>
+                    </div>
                 </div>
                 <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
                 </body></html>
             `);
             printWindow.document.close();
         };
+
         window.sendPageByEmail = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
@@ -664,7 +645,7 @@
         document.getElementById('printDashboardBtn').addEventListener('click', () => window.printPageWithLogo());
         document.getElementById('emailDashboardBtn').addEventListener('click', () => window.sendPageByEmail());
 
-        // ========== 6. АВТООБНОВЛЕНИЕ ПРИ ИЗМЕНЕНИИ ДАННЫХ ==========
+        // Автообновление
         function refreshAll() {
             renderKPIWidgets();
             renderForecast();
@@ -677,9 +658,7 @@
             updateMultiChart();
         }
         window.addEventListener('storage', (e) => {
-            if (e.key && (e.key.startsWith('kpi_') || e.key === 'audit_registry' || e.key === 'scm_planner_tasks_v5' || e.key.startsWith('checklist_'))) {
-                refreshAll();
-            }
+            if (e.key && (e.key.startsWith('kpi_') || e.key === 'audit_registry' || e.key === 'scm_planner_tasks_v5' || e.key.startsWith('checklist_'))) refreshAll();
         });
         window.addEventListener('kpi-updated', refreshAll);
         window.addEventListener('task-updated', refreshAll);
