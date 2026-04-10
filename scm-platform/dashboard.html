@@ -207,22 +207,13 @@
                 align-items: flex-start;
             }
         }
-        /* Стили для печатной формы */
+        /* Стили для печатной формы (будут применены только в окне печати) */
         @media print {
             .sidebar, .btn-group, .theme-switch, .chart-controls, button, .header-right {
                 display: none !important;
             }
             .dashboard-header {
-                border-bottom: 2px solid #1e40af;
-                margin-bottom: 20px;
-                padding-bottom: 10px;
-            }
-            .contact-info {
-                font-size: 10pt;
-                color: black;
-            }
-            .logo-image {
-                height: 40px;
+                display: none !important; /* скрываем оригинальную шапку, чтобы не дублировать */
             }
             .print-footer {
                 margin-top: 40px;
@@ -274,7 +265,7 @@
             <i class="fas fa-moon"></i> <span>Тёмная тема</span>
         </div>
 
-        <!-- Шапка на экране и в печати (в печати кнопки скроются) -->
+        <!-- Шапка на экране (при печати будет скрыта) -->
         <div class="dashboard-header">
             <div class="header-left">
                 <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" class="logo-image">
@@ -380,7 +371,7 @@
             localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
         });
 
-        // ----- Вспомогательные функции работы с данными (без изменений) -----
+        // ----- Вспомогательные функции работы с данными -----
         function getLastKPI(kpiId) {
             const saved = window.SCMData?.loadKPI ? window.SCMData.loadKPI(kpiId) : (() => {
                 const raw = localStorage.getItem(`kpi_${kpiId}`);
@@ -642,51 +633,23 @@
             });
         }
 
-        // ----- ПЕЧАТЬ НА БЛАНКЕ (без дублирования) -----
+        // ----- ПЕЧАТЬ НА БЛАНКЕ (новая версия, без дублирования) -----
         window.printPageWithLogo = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
-            // Клонируем содержимое
+
+            // Клонируем основное содержимое
             const clone = mainContent.cloneNode(true);
-            // Удаляем всё, что не должно быть в печати
-            clone.querySelectorAll('.theme-switch, .btn-group, .chart-controls, button, .header-right, .sidebar, .no-print').forEach(el => el.remove());
-            // Получаем шапку и оставляем только левую часть (логотип + контакты)
-            const header = clone.querySelector('.dashboard-header');
-            if (header) {
-                const leftPart = header.querySelector('.header-left');
-                if (leftPart) {
-                    header.innerHTML = '';
-                    header.appendChild(leftPart.cloneNode(true));
-                    // Добавляем дату справа
-                    const dateDiv = document.createElement('div');
-                    dateDiv.style.textAlign = 'right';
-                    dateDiv.style.fontSize = '10pt';
-                    dateDiv.innerHTML = new Date().toLocaleString();
-                    header.appendChild(dateDiv);
-                }
-            }
+            // Удаляем всё, что не должно быть в печати (кнопки, сайдбар, шапку с кнопками и т.д.)
+            clone.querySelectorAll('.theme-switch, .btn-group, .chart-controls, button, .header-right, .sidebar, .no-print, .dashboard-header').forEach(el => el.remove());
+
+            // Формируем новую шапку для печати (без дублирования)
             const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html><head><meta charset="UTF-8"><title>Дашборд SCM</title>
-                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-                <style>
-                    body { font-family: Inter; margin: 20px; }
-                    .dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
-                    .header-left { display: flex; align-items: center; gap: 20px; }
-                    .logo-image { height: 50px; }
-                    .contact-info { font-size: 10pt; line-height: 1.4; }
-                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-                    .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
-                    .card { break-inside: avoid; }
-                    table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 4px; }
-                </style>
-                </head><body>
-                <div class="dashboard-header">
-                    <div class="header-left">
-                        <img src="${logoUrl}" alt="Логотип" class="logo-image">
-                        <div class="contact-info">
+            const printHeader = `
+                <div class="print-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <img src="${logoUrl}" alt="Логотип" style="height: 50px;">
+                        <div style="font-size: 10pt; line-height: 1.4;">
                             Дмитрий Панибратский<br>
                             Эксперт по SCM и логистике<br>
                             scm-news.ru – экспертный портал<br>
@@ -694,16 +657,76 @@
                             dmitry@scm-news.ru
                         </div>
                     </div>
-                    <div style="text-align:right;">${new Date().toLocaleString()}</div>
+                    <div style="text-align: right; font-size: 10pt;">${new Date().toLocaleString()}</div>
                 </div>
-                ${clone.innerHTML}
-                <div class="print-footer">
-                    <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
-                    <div>Подпись: <span class="sign-line">_________________________</span></div>
-                    <div>Дата: ${new Date().toLocaleDateString()}</div>
-                </div>
-                <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
-                </body></html>
+            `;
+
+            // Получаем HTML содержимое клона
+            const contentHtml = clone.innerHTML;
+
+            // Открываем окно печати
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Дашборд SCM</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body {
+                            font-family: 'Inter', sans-serif;
+                            margin: 20px;
+                            font-size: 12pt;
+                        }
+                        .print-header {
+                            margin-bottom: 20px;
+                        }
+                        .card {
+                            break-inside: avoid;
+                            page-break-inside: avoid;
+                        }
+                        table, th, td {
+                            border: 1px solid #ccc;
+                            border-collapse: collapse;
+                            padding: 4px;
+                        }
+                        .print-footer {
+                            margin-top: 40px;
+                            border-top: 1px solid #ccc;
+                            padding-top: 20px;
+                            display: flex;
+                            justify-content: space-between;
+                            flex-wrap: wrap;
+                            gap: 20px;
+                            font-size: 10pt;
+                        }
+                        .sign-line {
+                            border-bottom: 1px solid #000;
+                            display: inline-block;
+                            min-width: 180px;
+                        }
+                        button, .btn-group, .theme-switch, .chart-controls {
+                            display: none;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printHeader}
+                    ${contentHtml}
+                    <div class="print-footer">
+                        <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                        <div>Подпись: <span class="sign-line">_________________________</span></div>
+                        <div>Дата: ${new Date().toLocaleDateString()}</div>
+                    </div>
+                    <script>
+                        window.onload = () => {
+                            window.print();
+                            window.onafterprint = () => window.close();
+                        };
+                    <\/script>
+                </body>
+                </html>
             `);
             printWindow.document.close();
         };
