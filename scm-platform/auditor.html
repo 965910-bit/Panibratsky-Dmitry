@@ -100,9 +100,21 @@
         .custom-item-form { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
         .template-list { margin-top: 20px; }
         .template-item { background: #f8fafc; border-radius: 16px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .branch-selector-container {
+            float: right;
+            margin-bottom: 16px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
         @media (max-width: 768px) {
             .checklist-item { flex-direction: column; align-items: flex-start; }
             .fact-input { width: 100%; }
+            .branch-selector-container { float: none; margin-bottom: 16px; display: flex; }
         }
         @media print {
             .sidebar, .btn-group, .audit-type-selector, .template-selector, .branch-selector-container, .theme-switch, .mode-switch {
@@ -116,7 +128,7 @@
     <aside class="sidebar">...</aside>
     <main class="main-content">
         <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
-        <div class="branch-selector-container" style="float:right; margin-bottom:16px;">
+        <div class="branch-selector-container">
             <label><i class="fas fa-building"></i> Бизнес-единица:</label>
             <select id="branchSelector"></select>
         </div>
@@ -174,7 +186,7 @@
 
 <script>
 (function() {
-    // ---- Тёмная тема ----
+    // ========== 1. Тёмная тема ==========
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -183,7 +195,7 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---- Филиал ----
+    // ========== 2. Филиал ==========
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -213,7 +225,7 @@
         });
     }
 
-    // ==================== ПОЛНЫЙ ПЕРЕЧЕНЬ ПУНКТОВ АУДИТА (11 секций, 135+ пунктов) ====================
+    // ========== 3. ПОЛНЫЙ ПЕРЕЧЕНЬ ПУНКТОВ АУДИТА (11 секций, 135+ пунктов) ==========
     const sectionTitles = {
         personnel: '1. Персонал и ФОТ',
         operations: '2. Операционная эффективность (склад)',
@@ -230,7 +242,7 @@
     const sectionsOrder = ['personnel','operations','transport','procurement','finance','data_it','compliance','esg','customer','digital','safety'];
 
     let masterItems = {
-        // personnel
+        // ---------- 1. Персонал и ФОТ ----------
         p1: { section: "personnel", text: "Численность персонала рассчитана driver-based (привязка к объёму работ)", recommend: "Да", inputType: "none", unit: "" },
         p2: { section: "personnel", text: "Северные надбавки и районный коэффициент начисляются корректно", recommend: "Да", inputType: "none", unit: "" },
         p3: { section: "personnel", text: "Учтены льготы для женщин (36-часовая неделя, перерывы на кормление)", recommend: "Да", inputType: "none", unit: "" },
@@ -243,7 +255,7 @@
         p10: { section: "personnel", text: "Средняя зарплата комплектовщика (регион)", recommend: "не ниже рынка", inputType: "number", unit: "руб.", target: 50000, condition: "greater" },
         p11: { section: "personnel", text: "Использование временного персонала (аутстаффинг) в пик", recommend: "Да", inputType: "none", unit: "" },
         p12: { section: "personnel", text: "Доля сотрудников, охваченных KPI-премированием", recommend: "≥90%", inputType: "number", unit: "%", target: 90, condition: "greater" },
-        // operations
+        // ---------- 2. Операционная эффективность (склад) ----------
         o1: { section: "operations", text: "Производительность склада (строк/чел.-час)", recommend: "≥80", inputType: "number", unit: "строк/час", target: 80, condition: "greater" },
         o2: { section: "operations", text: "Ошибки сборки", recommend: "<0,5%", inputType: "number", unit: "%", target: 0.5, condition: "less" },
         o3: { section: "operations", text: "OTD отгрузки со склада (от получения заказа до отгрузки)", recommend: "≥98%", inputType: "number", unit: "%", target: 98, condition: "greater" },
@@ -256,7 +268,7 @@
         o10: { section: "operations", text: "Использование складских площадей (загрузка)", recommend: "75–85%", inputType: "number", unit: "%", target: 80, condition: "greater" },
         o11: { section: "operations", text: "Внедрена система WMS (управление складом)", recommend: "Да", inputType: "none", unit: "" },
         o12: { section: "operations", text: "Автоматизация учёта сроков годности (FEFO)", recommend: "Да", inputType: "none", unit: "" },
-        // transport
+        // ---------- 3. Транспорт и логистика ----------
         t1: { section: "transport", text: "OTD доставки клиентам (вовремя)", recommend: "≥96%", inputType: "number", unit: "%", target: 96, condition: "greater" },
         t2: { section: "transport", text: "Доля повреждённых грузов при транспортировке", recommend: "<0,5%", inputType: "number", unit: "%", target: 0.5, condition: "less" },
         t3: { section: "transport", text: "Средняя стоимость доставки 1 тонно-километра", recommend: "≤12 руб.", inputType: "number", unit: "руб.", target: 12, condition: "less" },
@@ -267,7 +279,7 @@
         t8: { section: "transport", text: "Наличие системы отслеживания грузов в реальном времени (GPS/ГЛОНАСС)", recommend: "Да", inputType: "none", unit: "" },
         t9: { section: "transport", text: "Доля перевозок, выполненных собственным транспортом", recommend: "любое", inputType: "number", unit: "%", target: 0, condition: "greater" },
         t10: { section: "transport", text: "Средний расход топлива (л/100 км) по парку", recommend: "≤32 л", inputType: "number", unit: "л", target: 32, condition: "less" },
-        // procurement
+        // ---------- 4. Закупки и управление поставщиками ----------
         pr1: { section: "procurement", text: "Доля закупок у сертифицированных поставщиков", recommend: "≥80%", inputType: "number", unit: "%", target: 80, condition: "greater" },
         pr2: { section: "procurement", text: "Своевременность поставок от поставщиков (OTD)", recommend: "≥96%", inputType: "number", unit: "%", target: 96, condition: "greater" },
         pr3: { section: "procurement", text: "Доля брака от поставщиков", recommend: "<1%", inputType: "number", unit: "%", target: 1, condition: "less" },
@@ -278,7 +290,7 @@
         pr8: { section: "procurement", text: "Проведена оценка рисков поставщиков (финансовых, геополитических)", recommend: "Да", inputType: "none", unit: "" },
         pr9: { section: "procurement", text: "Доля закупок по рамочным договорам (долгосрочным)", recommend: "≥60%", inputType: "number", unit: "%", target: 60, condition: "greater" },
         pr10: { section: "procurement", text: "Автоматизация процесса согласования закупок (EDI, SAP Ariba)", recommend: "Да", inputType: "none", unit: "" },
-        // finance
+        // ---------- 5. Финансы и бюджетирование ----------
         f1: { section: "finance", text: "Бюджет SCM утверждён и не превышает плановый более чем на 5%", recommend: "Да", inputType: "none", unit: "" },
         f2: { section: "finance", text: "Доля ФОТ в выручке SCM", recommend: "≤5%", inputType: "number", unit: "%", target: 5, condition: "less" },
         f3: { section: "finance", text: "Cash-to-Cash цикл (CCC)", recommend: "≤45 дней", inputType: "number", unit: "дней", target: 45, condition: "less" },
@@ -289,7 +301,7 @@
         f8: { section: "finance", text: "ROI на инвестиции в автоматизацию (WMS, RF, роботы)", recommend: ">100%", inputType: "number", unit: "%", target: 100, condition: "greater" },
         f9: { section: "finance", text: "Оборачиваемость запасов (раз в год)", recommend: "≥6", inputType: "number", unit: "раз", target: 6, condition: "greater" },
         f10: { section: "finance", text: "Доля неликвидов в общем объёме запасов", recommend: "<5%", inputType: "number", unit: "%", target: 5, condition: "less" },
-        // data_it
+        // ---------- 6. Данные и IT ----------
         d1: { section: "data_it", text: "Внедрена WMS с адресным хранением", recommend: "Да", inputType: "none", unit: "" },
         d2: { section: "data_it", text: "Точность данных в WMS (выборочная инвентаризация)", recommend: "≥99%", inputType: "number", unit: "%", target: 99, condition: "greater" },
         d3: { section: "data_it", text: "Data Latency (задержка обновления данных)", recommend: "<1 минуты", inputType: "number", unit: "сек", target: 60, condition: "less" },
@@ -300,7 +312,7 @@
         d8: { section: "data_it", text: "Автоматическое прогнозирование спроса (ML/AI)", recommend: "Да", inputType: "none", unit: "" },
         d9: { section: "data_it", text: "Доля ручного ввода данных в учётных системах", recommend: "<10%", inputType: "number", unit: "%", target: 10, condition: "less" },
         d10: { section: "data_it", text: "Проведена оценка кибербезопасности SCM-систем", recommend: "Да", inputType: "none", unit: "" },
-        // compliance
+        // ---------- 7. Комплаенс и риски ----------
         c1: { section: "compliance", text: "Все сотрудники прошли инструктаж по охране труда", recommend: "Да", inputType: "none", unit: "" },
         c2: { section: "compliance", text: "Страхование грузов и складов (доля застрахованных)", recommend: "100%", inputType: "number", unit: "%", target: 100, condition: "greater" },
         c3: { section: "compliance", text: "Оценка рисков ключевых поставщиков (финансовых, геополитических, ESG)", recommend: "Да", inputType: "none", unit: "" },
@@ -309,7 +321,7 @@
         c6: { section: "compliance", text: "Проведён аудит безопасности данных (GDPR, 152-ФЗ)", recommend: "Да", inputType: "none", unit: "" },
         c7: { section: "compliance", text: "Соблюдение таможенного законодательства (доля корректных деклараций)", recommend: "≥99%", inputType: "number", unit: "%", target: 99, condition: "greater" },
         c8: { section: "compliance", text: "Наличие сертификатов ISO (9001, 14001, 45001)", recommend: "Да", inputType: "none", unit: "" },
-        // esg
+        // ---------- 8. Устойчивое развитие (ESG) ----------
         e1: { section: "esg", text: "Учёт Scope 1,2,3 выбросов CO₂", recommend: "Да", inputType: "none", unit: "" },
         e2: { section: "esg", text: "Снижение выбросов CO₂ на единицу продукции за год", recommend: "≥5%", inputType: "number", unit: "%", target: 5, condition: "greater" },
         e3: { section: "esg", text: "Доля переработанных материалов в упаковке", recommend: "≥30%", inputType: "number", unit: "%", target: 30, condition: "greater" },
@@ -318,7 +330,7 @@
         e6: { section: "esg", text: "Использование возобновляемой энергии (солнечные панели, зелёный тариф)", recommend: "Да", inputType: "none", unit: "" },
         e7: { section: "esg", text: "Социальные программы для сотрудников (ДМС, обучение, жильё)", recommend: "Да", inputType: "none", unit: "" },
         e8: { section: "esg", text: "Публичная ESG-отчётность (нефинансовая отчётность)", recommend: "Да", inputType: "none", unit: "" },
-        // customer
+        // ---------- 9. Клиентский сервис и качество ----------
         cs1: { section: "customer", text: "NPS по логистике (Net Promoter Score)", recommend: "≥50", inputType: "number", unit: "баллов", target: 50, condition: "greater" },
         cs2: { section: "customer", text: "CES (Customer Effort Score) – лёгкость решения проблем", recommend: "≤2", inputType: "number", unit: "баллов", target: 2, condition: "less" },
         cs3: { section: "customer", text: "FCR (First Contact Resolution) – доля проблем, решённых с первого обращения", recommend: "≥80%", inputType: "number", unit: "%", target: 80, condition: "greater" },
@@ -327,7 +339,7 @@
         cs6: { section: "customer", text: "Доля клиентов, использующих электронный документооборот", recommend: "≥70%", inputType: "number", unit: "%", target: 70, condition: "greater" },
         cs7: { section: "customer", text: "Наличие системы отслеживания заказа для клиента (трекинг)", recommend: "Да", inputType: "none", unit: "" },
         cs8: { section: "customer", text: "Средняя оценка качества доставки (по 5-балльной шкале)", recommend: "≥4,5", inputType: "number", unit: "баллов", target: 4.5, condition: "greater" },
-        // digital
+        // ---------- 10. Цифровая трансформация и инновации ----------
         x1: { section: "digital", text: "Внедрены RPA-боты (роботизация рутинных операций)", recommend: "Да", inputType: "none", unit: "" },
         x2: { section: "digital", text: "Доля процессов, автоматизированных с помощью RPA (от общего числа)", recommend: "≥20%", inputType: "number", unit: "%", target: 20, condition: "greater" },
         x3: { section: "digital", text: "Использование машинного обучения для прогнозирования спроса", recommend: "Да", inputType: "none", unit: "" },
@@ -338,7 +350,7 @@
         x8: { section: "digital", text: "Внедрена система управления эффективностью (WFM) для персонала", recommend: "Да", inputType: "none", unit: "" },
         x9: { section: "digital", text: "Использование цифровых двойников для симуляции сценариев", recommend: "Да", inputType: "none", unit: "" },
         x10: { section: "digital", text: "Доля процессов, переведённых в электронный документооборот", recommend: "≥90%", inputType: "number", unit: "%", target: 90, condition: "greater" },
-        // safety
+        // ---------- 11. Охрана труда, пожарная и промышленная безопасность ----------
         s1: { section: "safety", text: "Назначен ответственный за охрану труда (специалист или возложены обязанности)", recommend: "Да", inputType: "none", unit: "" },
         s2: { section: "safety", text: "Разработана и утверждена система управления охраной труда (СУОТ)", recommend: "Да", inputType: "none", unit: "" },
         s3: { section: "safety", text: "Проведены вводные и первичные инструктажи по охране труда (журналы)", recommend: "Да", inputType: "none", unit: "" },
@@ -454,7 +466,7 @@
         }
         let avg = count === 0 ? 0 : total / count;
         document.getElementById('totalScorePercent').innerText = `${Math.round(avg)}%`;
-        let maturity = avg<30?'🔴 Критический':avg<50?'🟠 Низкий':avg<70?'🟡 Средний':avg<85?'🟢 Высокий':'🏆 Отличный';
+        let maturity = avg<30?'🔴 Критический уровень':avg<50?'🟠 Низкий уровень':avg<70?'🟡 Средний уровень':avg<85?'🟢 Высокий уровень':'🏆 Отличный уровень';
         document.getElementById('maturityLabel').innerHTML = maturity;
         saveCurrentFormState();
     }
@@ -516,7 +528,8 @@
             updateAllScores();
         }
     }
-    // Сохранение аудита и создание поручений
+
+    // ========== 4. СОХРАНЕНИЕ АУДИТА И СОЗДАНИЕ ПОРУЧЕНИЙ ==========
     function addTaskToRegistry(task) {
         const registryKey = `tasks_registry_${currentBranchId}`;
         let registry = JSON.parse(localStorage.getItem(registryKey) || '[]');
@@ -618,6 +631,8 @@
         saveAuditToRegistry(true);
         resetAll();
     }
+
+    // ========== 5. ЗАГРУЗКА АУДИТОВ ИЗ РЕЕСТРА ==========
     function populateAuditLoadSelect() {
         const select = document.getElementById('loadAuditSelect');
         const registryKey = `audit_registry_${currentBranchId}`;
@@ -647,7 +662,8 @@
         updateAllScores();
         alert(`Загружен аудит от ${new Date(audit.date).toLocaleString()}`);
     }
-    // Конструктор шаблонов
+
+    // ========== 6. КОНСТРУКТОР ШАБЛОНОВ ==========
     function renderConstructor() {
         const container = document.getElementById('allItemsPicker');
         let all = getAllItems();
@@ -745,7 +761,8 @@
         renderTemplatesList();
         populateTemplateSelect();
     });
-    // Переключение режимов
+
+    // ========== 7. ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ ==========
     const auditPanel = document.getElementById('auditModePanel');
     const constructorPanel = document.getElementById('constructorModePanel');
     const auditModeBtn = document.getElementById('auditModeBtn');
@@ -765,7 +782,8 @@
         constructorModeBtn.classList.add('active');
         renderConstructor();
     });
-    // Печать
+
+    // ========== 8. ПЕЧАТЬ ОТЧЁТА НА БЛАНКЕ ==========
     window.printAuditReport = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -817,14 +835,31 @@
         `);
         printWindow.document.close();
     };
+    window.sendAuditByEmail = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const text = mainContent.innerText;
+        const subject = encodeURIComponent('Отчёт аудита SCM');
+        const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    };
+    document.getElementById('printReportBtn').addEventListener('click', () => window.printAuditReport());
+    // Добавляем кнопку отправки на почту, если её нет в btn-group
+    const emailBtn = document.createElement('button');
+    emailBtn.innerHTML = '<i class="fas fa-envelope"></i> Отправить на почту';
+    emailBtn.style.background = '#10b981';
+    emailBtn.addEventListener('click', () => window.sendAuditByEmail());
+    document.querySelector('#auditModePanel .btn-group').appendChild(emailBtn);
+
+    // ========== 9. КНОПКИ УПРАВЛЕНИЯ ==========
     document.getElementById('saveAuditBtn').addEventListener('click', () => saveAuditToRegistry(false));
     document.getElementById('finishAuditBtn').addEventListener('click', finishAudit);
     document.getElementById('calculateBtn').addEventListener('click', updateAllScores);
     document.getElementById('resetAuditBtn').addEventListener('click', resetAll);
-    document.getElementById('printReportBtn').addEventListener('click', () => window.printAuditReport());
     document.getElementById('templateSelectForAudit').addEventListener('change', (e) => { if (e.target.value) applyTemplate(e.target.value); else renderAuditSections(); });
     document.getElementById('loadAuditSelect').addEventListener('change', (e) => { if (e.target.value) loadAuditById(e.target.value); });
-    // Инициализация
+
+    // ========== 10. ИНИЦИАЛИЗАЦИЯ ==========
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
