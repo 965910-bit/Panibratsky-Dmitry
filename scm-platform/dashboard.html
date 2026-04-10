@@ -11,7 +11,7 @@
     <script src="scm-common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Дополнительные стили */
+        /* Дополнительные стили для дашборда */
         .theme-switch {
             position: fixed;
             top: 20px;
@@ -33,7 +33,8 @@
         }
         body.dark-theme .card,
         body.dark-theme .sidebar,
-        body.dark-theme .theme-switch {
+        body.dark-theme .theme-switch,
+        body.dark-theme .branch-selector-container {
             background: #1e293b;
             border-color: #334155;
             color: #e2e8f0;
@@ -157,7 +158,7 @@
             border: 1px solid #e2e8f0;
             background: white;
         }
-        /* Шапка интерфейса (на экране) */
+        /* Шапка интерфейса */
         .dashboard-header {
             display: flex;
             align-items: center;
@@ -190,6 +191,27 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
+        }
+        .branch-selector-container {
+            background: white;
+            border-radius: 30px;
+            padding: 4px 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .branch-selector-container label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        #branchSelector {
+            padding: 6px 10px;
+            border-radius: 30px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            font-family: inherit;
         }
         @media (max-width: 768px) {
             .dashboard-grid {
@@ -207,13 +229,22 @@
                 align-items: flex-start;
             }
         }
-        /* Стили для печатной формы (будут применены только в окне печати) */
+        /* Стили для печатной формы */
         @media print {
-            .sidebar, .btn-group, .theme-switch, .chart-controls, button, .header-right {
+            .sidebar, .btn-group, .theme-switch, .chart-controls, button, .header-right, .branch-selector-container {
                 display: none !important;
             }
             .dashboard-header {
-                display: none !important; /* скрываем оригинальную шапку, чтобы не дублировать */
+                border-bottom: 2px solid #1e40af;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+            }
+            .contact-info {
+                font-size: 10pt;
+                color: black;
+            }
+            .logo-image {
+                height: 40px;
             }
             .print-footer {
                 margin-top: 40px;
@@ -256,6 +287,7 @@
                 <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
                 <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
                 <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
             </ul>
         </nav>
     </aside>
@@ -265,7 +297,7 @@
             <i class="fas fa-moon"></i> <span>Тёмная тема</span>
         </div>
 
-        <!-- Шапка на экране (при печати будет скрыта) -->
+        <!-- Шапка дашборда -->
         <div class="dashboard-header">
             <div class="header-left">
                 <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" class="logo-image">
@@ -278,6 +310,10 @@
                 </div>
             </div>
             <div class="header-right">
+                <div class="branch-selector-container">
+                    <label><i class="fas fa-building"></i> Бизнес-единица:</label>
+                    <select id="branchSelector"></select>
+                </div>
                 <button id="printDashboardBtn" class="print-btn"><i class="fas fa-print"></i> Печать на бланке</button>
                 <button id="emailDashboardBtn" style="background: #10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
             </div>
@@ -371,22 +407,48 @@
             localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
         });
 
-        // ----- Вспомогательные функции работы с данными -----
+        // ----- Работа с бизнес-единицами (филиалами) -----
+        let currentBranchId = 'default';
+        function loadBranchSelector() {
+            const branches = window.BranchManager.getBranches();
+            const tree = window.BranchManager.buildTree(branches);
+            const select = document.getElementById('branchSelector');
+            if (!select) return;
+            select.innerHTML = '';
+            const addOptions = (nodes, prefix = '') => {
+                for (let node of nodes) {
+                    const option = document.createElement('option');
+                    option.value = node.id;
+                    option.textContent = prefix + node.name + ' (' + node.type + ')';
+                    if (node.id === currentBranchId) option.selected = true;
+                    select.appendChild(option);
+                    if (node.children && node.children.length) {
+                        addOptions(node.children, prefix + '— ');
+                    }
+                }
+            };
+            addOptions(tree);
+            select.addEventListener('change', (e) => {
+                setCurrentBranch(e.target.value);
+                currentBranchId = e.target.value;
+                refreshAll();
+            });
+        }
+
+        // ----- Функции получения данных с учётом филиала -----
         function getLastKPI(kpiId) {
-            const saved = window.SCMData?.loadKPI ? window.SCMData.loadKPI(kpiId) : (() => {
-                const raw = localStorage.getItem(`kpi_${kpiId}`);
-                return raw ? JSON.parse(raw) : null;
-            })();
-            return saved ? saved.result : null;
+            const data = window.SCMData.loadKPI(kpiId, currentBranchId);
+            return data ? data.result : null;
         }
         function getKPIHistory(kpiId) {
-            return JSON.parse(localStorage.getItem(`kpi_${kpiId}_history`) || '[]');
+            return window.SCMData.getKPIHistory(kpiId, currentBranchId);
         }
         function getRoadmapProgress() {
+            const progress = window.SCMData.loadRoadmapProgress(currentBranchId);
             let totalTasks = 0, completedTasks = 0;
             const phases = ["phase1", "phase2", "phase3", "phase4"];
             for (let phase of phases) {
-                const phaseProgress = window.SCMData?.loadRoadmapProgress ? window.SCMData.loadRoadmapProgress(phase) : (JSON.parse(localStorage.getItem('roadmap_progress') || '{}')[phase] || {});
+                const phaseProgress = progress[phase] || {};
                 for (let i = 0; i < 4; i++) {
                     totalTasks++;
                     if (phaseProgress[`${phase}_task_${i}`] === true) completedTasks++;
@@ -395,14 +457,14 @@
             return totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
         }
         function getLastAudits(limit = 3) {
-            const audits = window.SCMData?.getAuditRegistry ? window.SCMData.getAuditRegistry() : (JSON.parse(localStorage.getItem('audit_registry') || '[]'));
+            const audits = window.SCMData.getAuditRegistry(currentBranchId);
             return audits.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, limit);
         }
         function getChecklistSummary() {
-            const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
+            const categories = JSON.parse(localStorage.getItem(`scm_checklists_${currentBranchId}`) || '{}');
             const summary = [];
             for (let [catName, items] of Object.entries(categories)) {
-                const savedState = window.SCMData?.loadChecklist ? window.SCMData.loadChecklist(catName) : (JSON.parse(localStorage.getItem(`checklist_${catName}`) || '{}'));
+                const savedState = window.SCMData.loadChecklist(catName, currentBranchId);
                 let completed = 0;
                 items.forEach((_, idx) => { if (savedState[`${catName}_${idx}`] === true) completed++; });
                 const percent = items.length === 0 ? 0 : (completed / items.length) * 100;
@@ -411,7 +473,7 @@
             return summary;
         }
         function getUrgentTasks() {
-            const tasksData = JSON.parse(localStorage.getItem('scm_planner_tasks_v5') || '{"backlog":[]}');
+            const tasksData = getPlannerTasks(currentBranchId);
             let allTasks = [];
             for (let [date, list] of Object.entries(tasksData)) {
                 if (Array.isArray(list)) allTasks.push(...list.map(t => ({ ...t, date })));
@@ -633,23 +695,33 @@
             });
         }
 
-        // ----- ПЕЧАТЬ НА БЛАНКЕ (новая версия, без дублирования) -----
+        // ----- Печать на бланке (с логотипом и подписью) -----
         window.printPageWithLogo = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
-
-            // Клонируем основное содержимое
             const clone = mainContent.cloneNode(true);
-            // Удаляем всё, что не должно быть в печати (кнопки, сайдбар, шапку с кнопками и т.д.)
-            clone.querySelectorAll('.theme-switch, .btn-group, .chart-controls, button, .header-right, .sidebar, .no-print, .dashboard-header').forEach(el => el.remove());
-
-            // Формируем новую шапку для печати (без дублирования)
+            clone.querySelectorAll('.theme-switch, .btn-group, .chart-controls, button, .header-right, .sidebar, .no-print, .branch-selector-container').forEach(el => el.remove());
             const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
-            const printHeader = `
-                <div class="print-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px;">
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html><head><meta charset="UTF-8"><title>Дашборд SCM</title>
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                <style>
+                    body { font-family: Inter; margin: 20px; }
+                    .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                    .logo-img { height: 50px; }
+                    .contact-info { font-size: 10pt; line-height: 1.4; }
+                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+                    .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                    .card { break-inside: avoid; }
+                    table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 4px; }
+                </style>
+                </head><body>
+                <div class="print-header">
                     <div style="display: flex; align-items: center; gap: 20px;">
-                        <img src="${logoUrl}" alt="Логотип" style="height: 50px;">
-                        <div style="font-size: 10pt; line-height: 1.4;">
+                        <img src="${logoUrl}" alt="Логотип" class="logo-img">
+                        <div class="contact-info">
                             Дмитрий Панибратский<br>
                             Эксперт по SCM и логистике<br>
                             scm-news.ru – экспертный портал<br>
@@ -657,80 +729,19 @@
                             dmitry@scm-news.ru
                         </div>
                     </div>
-                    <div style="text-align: right; font-size: 10pt;">${new Date().toLocaleString()}</div>
+                    <div>${new Date().toLocaleString()}</div>
                 </div>
-            `;
-
-            // Получаем HTML содержимое клона
-            const contentHtml = clone.innerHTML;
-
-            // Открываем окно печати
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Дашборд SCM</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-                    <style>
-                        body {
-                            font-family: 'Inter', sans-serif;
-                            margin: 20px;
-                            font-size: 12pt;
-                        }
-                        .print-header {
-                            margin-bottom: 20px;
-                        }
-                        .card {
-                            break-inside: avoid;
-                            page-break-inside: avoid;
-                        }
-                        table, th, td {
-                            border: 1px solid #ccc;
-                            border-collapse: collapse;
-                            padding: 4px;
-                        }
-                        .print-footer {
-                            margin-top: 40px;
-                            border-top: 1px solid #ccc;
-                            padding-top: 20px;
-                            display: flex;
-                            justify-content: space-between;
-                            flex-wrap: wrap;
-                            gap: 20px;
-                            font-size: 10pt;
-                        }
-                        .sign-line {
-                            border-bottom: 1px solid #000;
-                            display: inline-block;
-                            min-width: 180px;
-                        }
-                        button, .btn-group, .theme-switch, .chart-controls {
-                            display: none;
-                        }
-                    </style>
-                </head>
-                <body>
-                    ${printHeader}
-                    ${contentHtml}
-                    <div class="print-footer">
-                        <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
-                        <div>Подпись: <span class="sign-line">_________________________</span></div>
-                        <div>Дата: ${new Date().toLocaleDateString()}</div>
-                    </div>
-                    <script>
-                        window.onload = () => {
-                            window.print();
-                            window.onafterprint = () => window.close();
-                        };
-                    <\/script>
-                </body>
-                </html>
+                ${clone.innerHTML}
+                <div class="print-footer">
+                    <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                    <div>Подпись: <span class="sign-line">_________________________</span></div>
+                    <div>Дата: ${new Date().toLocaleDateString()}</div>
+                </div>
+                <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+                </body></html>
             `);
             printWindow.document.close();
         };
-
         window.sendPageByEmail = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
@@ -742,7 +753,7 @@
         document.getElementById('printDashboardBtn').addEventListener('click', () => window.printPageWithLogo());
         document.getElementById('emailDashboardBtn').addEventListener('click', () => window.sendPageByEmail());
 
-        // ----- Автообновление -----
+        // ----- Автообновление при смене филиала -----
         function refreshAll() {
             renderKPIWidgets();
             renderForecast();
@@ -754,12 +765,20 @@
             renderWarehouseStats();
             updateMultiChart();
         }
-        window.addEventListener('storage', (e) => {
-            if (e.key && (e.key.startsWith('kpi_') || e.key === 'audit_registry' || e.key === 'scm_planner_tasks_v5' || e.key.startsWith('checklist_'))) refreshAll();
+        window.addEventListener('branch-changed', () => {
+            currentBranchId = getCurrentBranch();
+            refreshAll();
         });
-        window.addEventListener('kpi-updated', refreshAll);
-        window.addEventListener('task-updated', refreshAll);
+        window.addEventListener('storage', (e) => {
+            if (e.key && (e.key.startsWith('kpi_') || e.key.includes(currentBranchId) || e.key === 'scm_planner_tasks_v5' || e.key.startsWith('checklist_'))) {
+                refreshAll();
+            }
+        });
 
+        // Инициализация
+        window.BranchManager.ensureDefaultBranch();
+        currentBranchId = getCurrentBranch();
+        loadBranchSelector();
         refreshAll();
         document.getElementById('updateChartBtn').addEventListener('click', updateMultiChart);
     })();
