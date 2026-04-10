@@ -78,6 +78,15 @@
             color: #64748b;
             margin-top: 8px;
         }
+        .open-task-item {
+            background: #eef2ff;
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         @media print {
             .sidebar, .btn-group, .tabs, .btn-icon, .add-decision, .delete-decision {
                 display: none;
@@ -124,7 +133,7 @@
                 <div class="protocol-section">
                     <h3>📌 Открытые задачи (контроль с прошлого совещания)</h3>
                     <div id="openTasksContainer"></div>
-                    <button type="button" id="addOpenTaskBtn" class="btn-icon"><i class="fas fa-plus"></i> Добавить задачу</button>
+                    <button type="button" id="refreshOpenTasksBtn" class="btn-icon"><i class="fas fa-sync-alt"></i> Обновить из реестра</button>
                 </div>
             </div>
 
@@ -200,7 +209,27 @@
         select.addEventListener('change', (e) => {
             setCurrentBranch(e.target.value);
             currentBranchId = e.target.value;
+            loadOpenTasksFromRegistry();
         });
+    }
+
+    // ---- Загрузка открытых задач из реестра поручений ----
+    function loadOpenTasksFromRegistry() {
+        const registryKey = `tasks_registry_${currentBranchId}`;
+        const tasks = JSON.parse(localStorage.getItem(registryKey) || '[]');
+        // Показываем задачи, которые ещё не закрыты (статус new или progress)
+        const openTasks = tasks.filter(t => t.status !== 'done' && t.status !== 'review');
+        const container = document.getElementById('openTasksContainer');
+        if (!openTasks.length) {
+            container.innerHTML = '<div class="badge">Нет открытых поручений</div>';
+            return;
+        }
+        container.innerHTML = openTasks.map(t => `
+            <div class="open-task-item">
+                <div><strong>${escapeHtml(t.text)}</strong><br>Ответственный: ${escapeHtml(t.assignee)} | Срок: ${t.dueDate || '—'}</div>
+                <div><span class="badge">${t.status === 'new' ? 'Новое' : 'В работе'}</span></div>
+            </div>
+        `).join('');
     }
 
     // ---- Переключение типа совещания ----
@@ -222,7 +251,7 @@
 
     // ---- Динамические списки ----
     let criticalIssues = [];
-    let openTasks = [];
+    let openTasks = []; // это ручной ввод (можно оставить, но основной теперь из реестра)
     let decisions = []; // каждый элемент: { listened, spoke, decided, assignee, dueDate }
 
     function renderCriticalIssues() {
@@ -254,32 +283,8 @@
         criticalIssues.push('');
         renderCriticalIssues();
     });
-
-    function renderOpenTasks() {
-        const container = document.getElementById('openTasksContainer');
-        container.innerHTML = openTasks.map((task, idx) => `
-            <div class="decision-row">
-                <input type="text" value="${escapeHtml(task)}" data-idx="${idx}" data-field="task" style="width:100%;">
-                <button class="delete-task-btn btn-icon" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
-            </div>
-        `).join('');
-        document.querySelectorAll('#openTasksContainer input').forEach(inp => {
-            inp.addEventListener('change', (e) => {
-                const idx = inp.getAttribute('data-idx');
-                openTasks[idx] = inp.value;
-            });
-        });
-        document.querySelectorAll('.delete-task-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = btn.getAttribute('data-idx');
-                openTasks.splice(idx, 1);
-                renderOpenTasks();
-            });
-        });
-    }
-    document.getElementById('addOpenTaskBtn').addEventListener('click', () => {
-        openTasks.push('');
-        renderOpenTasks();
+    document.getElementById('refreshOpenTasksBtn').addEventListener('click', () => {
+        loadOpenTasksFromRegistry();
     });
 
     function renderDecisions() {
@@ -317,7 +322,46 @@
         renderDecisions();
     });
 
-    // ---- Сохранение протокола и создание поручений ----
+    // ---- Сохранение протокола и создание поручений в реестре + синхронизация с планером ----
+    function addTaskToRegistry(task) {
+        const registryKey = `tasks_registry_${currentBranchId}`;
+        let registry = JSON.parse(localStorage.getItem(registryKey) || '[]');
+        const newId = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6);
+        const newTask = {
+            id: newId,
+            text: task.text,
+            assignee: task.assignee,
+            dueDate: task.dueDate,
+            priority: task.priority || 'high',
+            status: 'new',
+            controller: task.controller,
+            theme: task.theme || 'Протокол совещания',
+            meetingLink: task.meetingLink,
+            createdAt: new Date().toISOString()
+        };
+        registry.push(newTask);
+        localStorage.setItem(registryKey, JSON.stringify(registry));
+
+        // Также синхронизируем с планером (задача на дату срока или в бэклог)
+        const plannerTasks = getPlannerTasks(currentBranchId);
+        const targetDate = task.dueDate || 'backlog';
+        if (!plannerTasks[targetDate]) plannerTasks[targetDate] = [];
+        plannerTasks[targetDate].push({
+            id: `reg_${newId}`,
+            text: task.text,
+            completed: false,
+            priority: task.priority || 'high',
+            category: 'Поручения',
+            source: 'registry',
+            originalId: newId,
+            dueDate: task.dueDate,
+            assignee: task.assignee,
+            status: 'new',
+            branchId: currentBranchId
+        });
+        savePlannerTasks(plannerTasks, currentBranchId);
+    }
+
     function saveProtocol() {
         const protocolId = 'mtg_' + Date.now();
         const protocolData = {
@@ -331,7 +375,7 @@
             attendees: document.getElementById('attendees').value,
             agenda: document.getElementById('agenda').value,
             criticalIssues: criticalIssues,
-            openTasks: openTasks,
+            openTasksNote: 'См. реестр поручений',
             decisions: decisions,
             branchId: currentBranchId,
             createdAt: new Date().toISOString()
@@ -350,28 +394,22 @@
         localStorage.setItem(protocolsKey, JSON.stringify(protocols));
 
         // Создаём поручения в реестре для каждого ПОСТАНОВИЛИ
-        const registryKey = `tasks_registry_${currentBranchId}`;
-        let registry = JSON.parse(localStorage.getItem(registryKey) || '[]');
+        let createdCount = 0;
         for (let dec of decisions) {
             if (dec.decided.trim()) {
-                const newTask = {
-                    id: Date.now().toString() + Math.random(),
+                addTaskToRegistry({
                     text: dec.decided,
                     assignee: dec.assignee || document.getElementById('chairperson').value,
                     dueDate: dec.dueDate || '',
                     priority: 'high',
-                    status: 'new',
                     controller: document.getElementById('chairperson').value,
                     theme: meetingType === 'operational' ? 'Оперативное совещание' : 'S&OP',
-                    meetingLink: protocolId,
-                    createdAt: new Date().toISOString()
-                };
-                registry.push(newTask);
+                    meetingLink: protocolId
+                });
+                createdCount++;
             }
         }
-        localStorage.setItem(registryKey, JSON.stringify(registry));
-        // Синхронизация с планером (вызов функции из tasks-registry, но здесь мы просто обновим реестр)
-        alert('Протокол сохранён. Создано поручений: ' + decisions.filter(d => d.decided.trim()).length);
+        alert(`Протокол сохранён. Создано поручений: ${createdCount}`);
         // Очистка формы (опционально)
         // window.location.href = 'meetings-list.html';
     }
@@ -432,15 +470,55 @@
     document.getElementById('printProtocolBtn').addEventListener('click', () => window.printProtocolWithLogo());
     document.getElementById('emailProtocolBtn').addEventListener('click', () => window.sendProtocolByEmail());
 
+    // ---- Загрузка существующего протокола для редактирования (если передан параметр edit) ----
+    function loadProtocolForEdit(protocolId) {
+        const protocolsKey = `meeting_protocols_${currentBranchId}`;
+        const protocols = JSON.parse(localStorage.getItem(protocolsKey) || '[]');
+        const protocol = protocols.find(p => p.id === protocolId);
+        if (!protocol) return;
+        // Заполняем поля формы
+        document.getElementById('meetingDate').value = protocol.date;
+        document.getElementById('meetingTime').value = protocol.time || '';
+        document.getElementById('meetingPlace').value = protocol.place || '';
+        document.getElementById('chairperson').value = protocol.chairperson || '';
+        document.getElementById('secretary').value = protocol.secretary || '';
+        document.getElementById('attendees').value = protocol.attendees || '';
+        document.getElementById('agenda').value = protocol.agenda || '';
+        meetingType = protocol.type || 'operational';
+        // Переключить таб
+        document.querySelectorAll('.tab').forEach(tab => {
+            if (tab.getAttribute('data-type') === meetingType) tab.click();
+        });
+        criticalIssues = protocol.criticalIssues || [];
+        renderCriticalIssues();
+        decisions = protocol.decisions || [];
+        renderDecisions();
+        if (meetingType === 'sop') {
+            document.getElementById('salesForecast').value = protocol.salesForecast || '';
+            document.getElementById('productionCapacity').value = protocol.productionCapacity || '';
+            document.getElementById('inventoryManagement').value = protocol.inventoryManagement || '';
+            document.getElementById('financialPlan').value = protocol.financialPlan || '';
+            document.getElementById('balancedPlan').value = protocol.balancedPlan || '';
+        }
+        // ВНИМАНИЕ: При редактировании мы будем сохранять как новый протокол, а старый останется.
+        // Можно добавить обновление, но для простоты оставляем как есть.
+    }
+
     // ---- Инициализация ----
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
         loadBranchSelector();
         document.getElementById('meetingDate').value = new Date().toISOString().split('T')[0];
-        // Установка текущего времени
         const now = new Date();
         document.getElementById('meetingTime').value = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        loadOpenTasksFromRegistry();
+        // Проверяем URL параметр edit
+        const urlParams = new URLSearchParams(window.location.search);
+        const editId = urlParams.get('edit');
+        if (editId) {
+            loadProtocolForEdit(editId);
+        }
     }
     init();
 })();
