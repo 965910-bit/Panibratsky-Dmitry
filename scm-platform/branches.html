@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Структура бизнес-единиц SCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <style>
+        .branches-container {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+        .tree {
+            list-style: none;
+            padding-left: 0;
+        }
+        .tree ul {
+            padding-left: 24px;
+            list-style: none;
+        }
+        .tree li {
+            margin: 8px 0;
+            padding: 6px 8px;
+            border-radius: 12px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .branch-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .branch-name {
+            font-weight: 600;
+        }
+        .branch-type {
+            background: #eef2ff;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .branch-actions button {
+            background: none;
+            border: none;
+            color: #1e40af;
+            cursor: pointer;
+            margin: 0 4px;
+            font-size: 14px;
+        }
+        .branch-actions button.danger {
+            color: #dc2626;
+        }
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        button.secondary {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">...</aside>
+    <main class="main-content">
+        <h1>🏢 Структура бизнес-единиц</h1>
+        <p>Управление филиалами, складами и другими подразделениями.</p>
+
+        <div class="form-card">
+            <h3>➕ Добавить бизнес-единицу</h3>
+            <div class="form-group">
+                <label>Название</label>
+                <input type="text" id="branchName" placeholder="Например: РЦ Москва">
+            </div>
+            <div class="form-group">
+                <label>Тип</label>
+                <select id="branchType">
+                    <option value="РЦ">РЦ (Распределительный центр)</option>
+                    <option value="ФЦ">ФЦ (Фулфилмент-центр)</option>
+                    <option value="ХАБ">ХАБ (Узловой центр)</option>
+                    <option value="Склад">Склад</option>
+                    <option value="Зона">Зона / Участок</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Родительская единица</label>
+                <select id="parentBranch">
+                    <option value="">-- Нет (корневой уровень) --</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="saveBranchBtn">Сохранить</button>
+                <button id="cancelEditBtn" class="secondary" style="display:none;">Отмена</button>
+            </div>
+        </div>
+
+        <div class="branches-container">
+            <h3>📋 Текущая структура</h3>
+            <div id="treeContainer"></div>
+            <div class="btn-group" style="margin-top: 20px;">
+                <button id="exportBranchesBtn">📎 Экспорт (JSON)</button>
+                <button id="importBranchesBtn">📂 Импорт (JSON)</button>
+                <input type="file" id="importFile" accept=".json" style="display:none;">
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="scm-common.js"></script>
+<script>
+    (function() {
+        // Получение дерева и отрисовка
+        function renderTree() {
+            const branches = window.BranchManager.getBranches();
+            const tree = window.BranchManager.buildTree(branches);
+            const container = document.getElementById('treeContainer');
+            if (!container) return;
+            container.innerHTML = renderTreeNodes(tree);
+            attachTreeEvents();
+        }
+
+        function renderTreeNodes(nodes, level = 0) {
+            if (!nodes || nodes.length === 0) return '<div>Нет бизнес-единиц. Добавьте первую.</div>';
+            let html = '<ul class="tree">';
+            for (let node of nodes) {
+                html += `
+                    <li data-id="${node.id}">
+                        <div class="branch-info">
+                            <span class="branch-name">${escapeHtml(node.name)}</span>
+                            <span class="branch-type">${node.type}</span>
+                        </div>
+                        <div class="branch-actions">
+                            <button class="edit-branch" data-id="${node.id}"><i class="fas fa-edit"></i></button>
+                            <button class="delete-branch" data-id="${node.id}"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                        ${node.children ? renderTreeNodes(node.children, level+1) : ''}
+                    </li>
+                `;
+            }
+            html += '</ul>';
+            return html;
+        }
+
+        function attachTreeEvents() {
+            document.querySelectorAll('.edit-branch').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.getAttribute('data-id');
+                    editBranch(id);
+                });
+            });
+            document.querySelectorAll('.delete-branch').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.getAttribute('data-id');
+                    if (confirm('Удалить бизнес-единицу и все её дочерние? Данные (KPI, аудиты, задачи) не будут удалены, но будут отвязаны.')) {
+                        window.BranchManager.deleteBranch(id);
+                        renderTree();
+                        updateParentSelect();
+                    }
+                });
+            });
+        }
+
+        let editingId = null;
+        function editBranch(id) {
+            const branch = window.BranchManager.getBranchById(id);
+            if (!branch) return;
+            editingId = id;
+            document.getElementById('branchName').value = branch.name;
+            document.getElementById('branchType').value = branch.type;
+            document.getElementById('saveBranchBtn').textContent = 'Обновить';
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+            // Заполним select родителя (включим текущий родитель)
+            updateParentSelect(branch.parentId);
+        }
+
+        function cancelEdit() {
+            editingId = null;
+            document.getElementById('branchName').value = '';
+            document.getElementById('branchType').value = 'РЦ';
+            document.getElementById('saveBranchBtn').textContent = 'Сохранить';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            updateParentSelect();
+        }
+
+        function updateParentSelect(selectedId = null) {
+            const select = document.getElementById('parentBranch');
+            const branches = window.BranchManager.getBranches();
+            select.innerHTML = '<option value="">-- Нет (корневой) --</option>';
+            const buildOptions = (items, prefix = '') => {
+                for (let item of items) {
+                    if (editingId && item.id === editingId) continue; // нельзя выбрать себя
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = prefix + item.name + ' (' + item.type + ')';
+                    if (selectedId === item.id) option.selected = true;
+                    select.appendChild(option);
+                    if (item.children && item.children.length) {
+                        buildOptions(item.children, prefix + '— ');
+                    }
+                }
+            };
+            const tree = window.BranchManager.buildTree(branches);
+            buildOptions(tree);
+        }
+
+        function saveBranch() {
+            const name = document.getElementById('branchName').value.trim();
+            const type = document.getElementById('branchType').value;
+            const parentId = document.getElementById('parentBranch').value || null;
+            if (!name) {
+                alert('Введите название');
+                return;
+            }
+            if (editingId) {
+                window.BranchManager.updateBranch(editingId, { name, type, parentId });
+            } else {
+                window.BranchManager.addBranch({ name, type, parentId });
+            }
+            cancelEdit();
+            renderTree();
+            updateParentSelect();
+        }
+
+        function exportBranches() {
+            const data = window.BranchManager.getBranches();
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `branches_${Date.now()}.json`;
+            a.click();
+        }
+
+        function importBranches(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const branches = JSON.parse(e.target.result);
+                    window.BranchManager.importBranches(branches);
+                    renderTree();
+                    updateParentSelect();
+                    alert('Импорт выполнен');
+                } catch(err) {
+                    alert('Ошибка импорта: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        document.getElementById('saveBranchBtn').addEventListener('click', saveBranch);
+        document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
+        document.getElementById('exportBranchesBtn').addEventListener('click', exportBranches);
+        document.getElementById('importBranchesBtn').addEventListener('click', () => document.getElementById('importFile').click());
+        document.getElementById('importFile').addEventListener('change', (e) => {
+            if (e.target.files[0]) importBranches(e.target.files[0]);
+            e.target.value = '';
+        });
+
+        // Инициализация
+        window.BranchManager.ensureDefaultBranch();
+        renderTree();
+        updateParentSelect();
+    })();
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
+</script>
+</body>
+</html>
