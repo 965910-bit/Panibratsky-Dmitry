@@ -11,7 +11,7 @@
     <script src="scm-common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Дополнительные стили для дашборда */
+        /* Дополнительные стили */
         .theme-switch {
             position: fixed;
             top: 20px;
@@ -207,7 +207,7 @@
                 align-items: flex-start;
             }
         }
-        /* Стили для печатной формы (будут применены только в окне печати) */
+        /* Стили для печатной формы */
         @media print {
             .sidebar, .btn-group, .theme-switch, .chart-controls, button, .header-right {
                 display: none !important;
@@ -274,7 +274,7 @@
             <i class="fas fa-moon"></i> <span>Тёмная тема</span>
         </div>
 
-        <!-- Шапка на экране и в печати (в печати будет видна, но кнопки скроются) -->
+        <!-- Шапка на экране и в печати (в печати кнопки скроются) -->
         <div class="dashboard-header">
             <div class="header-left">
                 <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" class="logo-image">
@@ -370,7 +370,7 @@
 
 <script>
     (function() {
-        // ----- 1. Тёмная тема -----
+        // ----- Тёмная тема -----
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const savedTheme = localStorage.getItem('scm_theme');
@@ -380,7 +380,7 @@
             localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
         });
 
-        // ----- 2. Вспомогательные функции работы с данными -----
+        // ----- Вспомогательные функции работы с данными (без изменений) -----
         function getLastKPI(kpiId) {
             const saved = window.SCMData?.loadKPI ? window.SCMData.loadKPI(kpiId) : (() => {
                 const raw = localStorage.getItem(`kpi_${kpiId}`);
@@ -457,7 +457,7 @@
             pickErrors: { good: 0.8, target: 0.5, unit: '%', lowerIsBetter: true }
         };
 
-        // ----- 3. Отрисовка виджетов -----
+        // ----- Отрисовка виджетов -----
         function renderKPIWidgets() {
             const container = document.getElementById('kpiWidgets');
             const kpiList = ['otd', 'fillrate', 'turnover', 'ccc', 'nps', 'pickErrors'];
@@ -642,28 +642,28 @@
             });
         }
 
-        // ----- 4. Печать на бланке (без дублирования, только верхний левый блок с контактами) -----
+        // ----- ПЕЧАТЬ НА БЛАНКЕ (без дублирования) -----
         window.printPageWithLogo = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
-            // Клонируем содержимое, убираем ненужные элементы управления
+            // Клонируем содержимое
             const clone = mainContent.cloneNode(true);
+            // Удаляем всё, что не должно быть в печати
             clone.querySelectorAll('.theme-switch, .btn-group, .chart-controls, button, .header-right, .sidebar, .no-print').forEach(el => el.remove());
-            // Получаем логотип и контакты из шапки (они останутся)
-            const headerClone = clone.querySelector('.dashboard-header');
-            if (headerClone) {
-                // Оставляем только левую часть (логотип + контакты), правую (кнопки) уже удалили
-                const leftPart = headerClone.querySelector('.header-left');
+            // Получаем шапку и оставляем только левую часть (логотип + контакты)
+            const header = clone.querySelector('.dashboard-header');
+            if (header) {
+                const leftPart = header.querySelector('.header-left');
                 if (leftPart) {
-                    headerClone.innerHTML = '';
-                    headerClone.appendChild(leftPart.cloneNode(true));
+                    header.innerHTML = '';
+                    header.appendChild(leftPart.cloneNode(true));
+                    // Добавляем дату справа
+                    const dateDiv = document.createElement('div');
+                    dateDiv.style.textAlign = 'right';
+                    dateDiv.style.fontSize = '10pt';
+                    dateDiv.innerHTML = new Date().toLocaleString();
+                    header.appendChild(dateDiv);
                 }
-                // Добавляем дату справа (в печатной форме в правом верхнем углу)
-                const dateSpan = document.createElement('div');
-                dateSpan.style.textAlign = 'right';
-                dateSpan.style.fontSize = '10pt';
-                dateSpan.innerHTML = new Date().toLocaleString();
-                headerClone.appendChild(dateSpan);
             }
             const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
             const printWindow = window.open('', '_blank');
@@ -719,7 +719,7 @@
         document.getElementById('printDashboardBtn').addEventListener('click', () => window.printPageWithLogo());
         document.getElementById('emailDashboardBtn').addEventListener('click', () => window.sendPageByEmail());
 
-        // ----- 5. Автообновление -----
+        // ----- Автообновление -----
         function refreshAll() {
             renderKPIWidgets();
             renderForecast();
