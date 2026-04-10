@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список протоколов совещаний SCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
+    <style>
+        .meetings-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .meetings-table th, .meetings-table td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .meetings-table th {
+            background: #eef2ff;
+            font-weight: 600;
+        }
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin: 0 4px;
+            font-size: 16px;
+        }
+        .filter-bar {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            border: 1px solid #e2e8f0;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .filter-group input, .filter-group select {
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 1px solid #cbd5e1;
+            background: white;
+        }
+        .badge-operational {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .badge-sop {
+            background: #fef3c7;
+            color: #b45309;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .meetings-table { font-size: 12px; }
+            .filter-bar { flex-direction: column; align-items: stretch; }
+        }
+        @media print {
+            .sidebar, .filter-bar, .btn-group, .branch-selector-container, .theme-switch, .btn-icon {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">...</aside>
+    <main class="main-content">
+        <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+            <h1>📂 Список протоколов совещаний</h1>
+            <div class="branch-selector-container">
+                <label><i class="fas fa-building"></i> Бизнес-единица:</label>
+                <select id="branchSelector"></select>
+            </div>
+            <div>
+                <button id="newProtocolBtn"><i class="fas fa-plus"></i> Новый протокол</button>
+                <button id="printListBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать списка</button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-group"><label>Тип</label><select id="filterType"><option value="">Все</option><option value="operational">Оперативное</option><option value="sop">S&OP</option></select></div>
+            <div class="filter-group"><label>Дата от</label><input type="date" id="filterDateFrom"></div>
+            <div class="filter-group"><label>Дата до</label><input type="date" id="filterDateTo"></div>
+            <div class="filter-group"><label>Председатель</label><input type="text" id="filterChairperson" placeholder="ФИО"></div>
+            <button id="resetFiltersBtn">Сбросить</button>
+        </div>
+
+        <table class="meetings-table" id="meetingsTable">
+            <thead>
+                <tr><th>Дата / Время</th><th>Тип</th><th>Председатель</th><th>Участники</th><th>Решений</th><th>Действия</th></tr>
+            </thead>
+            <tbody id="meetingsTableBody"></tbody>
+        </table>
+    </main>
+</div>
+
+<script>
+(function() {
+    // ---- Тёмная тема ----
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    });
+
+    // ---- Филиал ----
+    let currentBranchId = 'default';
+    function loadBranchSelector() {
+        const branches = BranchManager.getBranches();
+        const tree = BranchManager.buildTree(branches);
+        const select = document.getElementById('branchSelector');
+        select.innerHTML = '';
+        const addOptions = (nodes, prefix = '') => {
+            for (let node of nodes) {
+                const opt = document.createElement('option');
+                opt.value = node.id;
+                opt.textContent = prefix + node.name + ' (' + node.type + ')';
+                if (node.id === currentBranchId) opt.selected = true;
+                select.appendChild(opt);
+                if (node.children) addOptions(node.children, prefix + '— ');
+            }
+        };
+        addOptions(tree);
+        select.addEventListener('change', (e) => {
+            setCurrentBranch(e.target.value);
+            currentBranchId = e.target.value;
+            loadMeetings();
+        });
+    }
+
+    // ---- Получение всех протоколов для текущего филиала ----
+    function getMeetings() {
+        const key = `meeting_protocols_${currentBranchId}`;
+        return JSON.parse(localStorage.getItem(key) || '[]');
+    }
+
+    // ---- Отображение списка с фильтрацией ----
+    function loadMeetings() {
+        let meetings = getMeetings();
+        const typeFilter = document.getElementById('filterType').value;
+        const dateFrom = document.getElementById('filterDateFrom').value;
+        const dateTo = document.getElementById('filterDateTo').value;
+        const chairpersonFilter = document.getElementById('filterChairperson').value.toLowerCase();
+
+        if (typeFilter) meetings = meetings.filter(m => m.type === typeFilter);
+        if (dateFrom) meetings = meetings.filter(m => m.date >= dateFrom);
+        if (dateTo) meetings = meetings.filter(m => m.date <= dateTo);
+        if (chairpersonFilter) meetings = meetings.filter(m => (m.chairperson || '').toLowerCase().includes(chairpersonFilter));
+
+        // Сортировка по дате и времени (сначала новые)
+        meetings.sort((a, b) => (b.date + ' ' + b.time).localeCompare(a.date + ' ' + a.time));
+
+        const tbody = document.getElementById('meetingsTableBody');
+        tbody.innerHTML = '';
+        for (let m of meetings) {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerHTML = `${m.date} ${m.time || ''}`;
+            row.insertCell(1).innerHTML = m.type === 'operational' ? '<span class="badge-operational">Оперативное</span>' : '<span class="badge-sop">S&OP</span>';
+            row.insertCell(2).textContent = m.chairperson || '—';
+            row.insertCell(3).textContent = (m.attendees || '').substring(0, 60) + ((m.attendees || '').length > 60 ? '…' : '');
+            const decisionsCount = (m.decisions || []).filter(d => d.decided && d.decided.trim()).length;
+            row.insertCell(4).textContent = decisionsCount;
+            const actions = row.insertCell(5);
+            // Кнопка просмотра (открыть протокол только для чтения – параметр view)
+            const viewBtn = document.createElement('button'); viewBtn.innerHTML = '<i class="fas fa-eye"></i>'; viewBtn.className = 'btn-icon'; viewBtn.title = 'Просмотр'; viewBtn.onclick = () => window.open(`meeting-protocol.html?view=${m.id}`, '_blank');
+            // Кнопка редактирования
+            const editBtn = document.createElement('button'); editBtn.innerHTML = '<i class="fas fa-edit"></i>'; editBtn.className = 'btn-icon'; editBtn.title = 'Редактировать'; editBtn.onclick = () => window.location.href = `meeting-protocol.html?edit=${m.id}`;
+            // Кнопка удаления
+            const deleteBtn = document.createElement('button'); deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>'; deleteBtn.className = 'btn-icon'; deleteBtn.style.color = '#dc2626'; deleteBtn.title = 'Удалить'; deleteBtn.onclick = () => { if(confirm('Удалить протокол? Связанные поручения в реестре останутся.')) { let ms = getMeetings(); ms = ms.filter(p => p.id !== m.id); localStorage.setItem(`meeting_protocols_${currentBranchId}`, JSON.stringify(ms)); loadMeetings(); } };
+            actions.appendChild(viewBtn);
+            actions.appendChild(editBtn);
+            actions.appendChild(deleteBtn);
+        }
+        if (meetings.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Нет протоколов</td></tr>';
+        }
+    }
+
+    // ---- Фильтры и кнопки ----
+    document.getElementById('filterType').addEventListener('change', loadMeetings);
+    document.getElementById('filterDateFrom').addEventListener('change', loadMeetings);
+    document.getElementById('filterDateTo').addEventListener('change', loadMeetings);
+    document.getElementById('filterChairperson').addEventListener('input', loadMeetings);
+    document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+        document.getElementById('filterType').value = '';
+        document.getElementById('filterDateFrom').value = '';
+        document.getElementById('filterDateTo').value = '';
+        document.getElementById('filterChairperson').value = '';
+        loadMeetings();
+    });
+    document.getElementById('newProtocolBtn').addEventListener('click', () => {
+        window.location.href = 'meeting-protocol.html';
+    });
+
+    // ---- Печать списка протоколов на бланке ----
+    window.printListWithLogo = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const clone = mainContent.cloneNode(true);
+        clone.querySelectorAll('.filter-bar, .branch-selector-container, .theme-switch, .btn-icon, #newProtocolBtn, #printListBtn, .btn-group').forEach(el => el.remove());
+        const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html><head><meta charset="UTF-8"><title>Список протоколов SCM</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: Inter; margin: 20px; }
+                .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                .logo-img { height: 50px; }
+                .contact-info { font-size: 10pt; line-height: 1.4; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; }
+                .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid #ccc; padding: 6px; }
+            </style>
+            </head><body>
+            <div class="print-header">
+                <div style="display:flex;align-items:center;gap:20px"><img src="${logoUrl}" class="logo-img"><div class="contact-info">Дмитрий Панибратский<br>Эксперт по SCM и логистике<br>scm-news.ru – экспертный портал<br>scm-news.online – Академия SCM<br>dmitry@scm-news.ru</div></div>
+                <div>${new Date().toLocaleString()}</div>
+            </div>
+            ${clone.innerHTML}
+            <div class="print-footer">
+                <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                <div>Подпись: <span class="sign-line">_________________________</span></div>
+                <div>Дата: ${new Date().toLocaleDateString()}</div>
+            </div>
+            <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    };
+    document.getElementById('printListBtn').addEventListener('click', () => window.printListWithLogo());
+
+    // ---- Инициализация ----
+    function init() {
+        BranchManager.ensureDefaultBranch();
+        currentBranchId = getCurrentBranch();
+        loadBranchSelector();
+        loadMeetings();
+        // Слушаем изменение филиала из других вкладок
+        window.addEventListener('branch-changed', () => {
+            currentBranchId = getCurrentBranch();
+            loadMeetings();
+        });
+    }
+    init();
+})();
+</script>
+</body>
+</html>
