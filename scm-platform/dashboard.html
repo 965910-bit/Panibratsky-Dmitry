@@ -11,7 +11,7 @@
     <script src="scm-common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Дополнительные стили для дашборда (поверх scm-style.css) */
+        /* Дополнительные стили для дашборда */
         .theme-switch {
             position: fixed;
             top: 20px;
@@ -157,53 +157,39 @@
             border: 1px solid #e2e8f0;
             background: white;
         }
+        /* Шапка интерфейса (на экране) */
         .dashboard-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             margin-bottom: 24px;
-            gap: 20px;
-            background: white;
-            border-radius: 20px;
-            padding: 16px 24px;
-            border: 1px solid #e2e8f0;
+            gap: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 16px;
         }
-        body.dark-theme .dashboard-header {
-            background: #1e293b;
-            border-color: #334155;
-        }
-        .logo-area {
+        .header-left {
             display: flex;
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
         }
         .logo-image {
-            height: 60px;
+            height: 50px;
             width: auto;
         }
         .contact-info {
             font-size: 13px;
             line-height: 1.4;
             color: #334155;
-            border-left: 1px solid #e2e8f0;
-            padding-left: 16px;
         }
         body.dark-theme .contact-info {
             color: #cbd5e1;
-            border-left-color: #334155;
         }
-        .contact-info strong {
-            font-size: 15px;
-            color: #1e40af;
-        }
-        body.dark-theme .contact-info strong {
-            color: #90cdf4;
-        }
-        .header-buttons {
+        .header-right {
             display: flex;
             gap: 12px;
+            align-items: center;
         }
         @media (max-width: 768px) {
             .dashboard-grid {
@@ -216,26 +202,44 @@
             .logo-image {
                 height: 40px;
             }
-            .contact-info {
-                font-size: 11px;
-                padding-left: 10px;
-            }
-            .dashboard-header {
+            .header-left {
                 flex-direction: column;
                 align-items: flex-start;
             }
         }
+        /* Стили для печатной формы (будут применены только в окне печати) */
         @media print {
-            .sidebar, .btn-group, .theme-switch, .chart-controls, button, .header-buttons {
-                display: none;
+            .sidebar, .btn-group, .theme-switch, .chart-controls, button, .header-right {
+                display: none !important;
+            }
+            .dashboard-header {
+                border-bottom: 2px solid #1e40af;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+            }
+            .contact-info {
+                font-size: 10pt;
+                color: black;
+            }
+            .logo-image {
+                height: 40px;
+            }
+            .print-footer {
+                margin-top: 40px;
+                border-top: 1px solid #ccc;
+                padding-top: 20px;
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+                font-size: 10pt;
+            }
+            .sign-line {
+                border-bottom: 1px solid #000;
+                display: inline-block;
+                min-width: 180px;
             }
             .card {
                 break-inside: avoid;
-            }
-            .dashboard-header {
-                border: none;
-                padding: 0;
-                margin-bottom: 20px;
             }
         }
     </style>
@@ -270,20 +274,20 @@
             <i class="fas fa-moon"></i> <span>Тёмная тема</span>
         </div>
 
-        <!-- Верхняя панель с логотипом и контактами -->
+        <!-- Шапка на экране и в печати (в печати будет видна, но кнопки скроются) -->
         <div class="dashboard-header">
-            <div class="logo-area">
+            <div class="header-left">
                 <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" class="logo-image">
                 <div class="contact-info">
-                    <strong>Дмитрий Панибратский</strong><br>
+                    Дмитрий Панибратский<br>
                     Эксперт по SCM и логистике<br>
                     scm-news.ru – экспертный портал<br>
                     scm-news.online – Академия SCM<br>
                     dmitry@scm-news.ru
                 </div>
             </div>
-            <div class="header-buttons">
-                <button id="printDashboardBtn" class="print-btn"><i class="fas fa-print"></i> Печать дашборда (бланк)</button>
+            <div class="header-right">
+                <button id="printDashboardBtn" class="print-btn"><i class="fas fa-print"></i> Печать на бланке</button>
                 <button id="emailDashboardBtn" style="background: #10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
             </div>
         </div>
@@ -366,7 +370,7 @@
 
 <script>
     (function() {
-        // Тёмная тема
+        // ----- 1. Тёмная тема -----
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const savedTheme = localStorage.getItem('scm_theme');
@@ -376,7 +380,7 @@
             localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
         });
 
-        // Вспомогательные функции (получение данных)
+        // ----- 2. Вспомогательные функции работы с данными -----
         function getLastKPI(kpiId) {
             const saved = window.SCMData?.loadKPI ? window.SCMData.loadKPI(kpiId) : (() => {
                 const raw = localStorage.getItem(`kpi_${kpiId}`);
@@ -453,7 +457,7 @@
             pickErrors: { good: 0.8, target: 0.5, unit: '%', lowerIsBetter: true }
         };
 
-        // Рендер виджетов (аналогично предыдущему, но сокращённо для экономии места)
+        // ----- 3. Отрисовка виджетов -----
         function renderKPIWidgets() {
             const container = document.getElementById('kpiWidgets');
             const kpiList = ['otd', 'fillrate', 'turnover', 'ccc', 'nps', 'pickErrors'];
@@ -461,7 +465,7 @@
             for (let id of kpiList) {
                 let value = getLastKPI(id);
                 if (value === null) value = '—';
-                let benchmark = benchmarks[id];
+                let benchmark = benchmarks[id] || { good: '—', target: '—', unit: '', lowerIsBetter: false };
                 let statusClass = '';
                 if (value !== '—') {
                     if (benchmark.lowerIsBetter) {
@@ -498,7 +502,6 @@
                 `;
             }
         }
-
         function renderForecast() {
             const container = document.getElementById('forecastWidget');
             const kpis = ['otd', 'fillrate', 'turnover', 'ccc', 'nps'];
@@ -519,7 +522,6 @@
             html += '</div>';
             container.innerHTML = html;
         }
-
         function renderAlerts() {
             const container = document.getElementById('alertsWidget');
             const alerts = [];
@@ -544,7 +546,6 @@
                 container.innerHTML = alerts.map(a => `<div class="notification">${a}</div>`).join('');
             }
         }
-
         function renderUrgentTasks() {
             const container = document.getElementById('urgentTasksWidget');
             const tasks = getUrgentTasks();
@@ -559,13 +560,11 @@
                 </div>
             `).join('');
         }
-
         function renderRoadmapProgress() {
             const percent = getRoadmapProgress();
             document.getElementById('roadmapFill').style.width = `${percent}%`;
             document.getElementById('roadmapProgress').innerHTML = `<div>Общий прогресс трансформации</div><div style="font-size:24px; font-weight:700;">${Math.round(percent)}%</div>`;
         }
-
         function renderLastAudits() {
             const audits = getLastAudits(3);
             const container = document.getElementById('lastAudits');
@@ -580,7 +579,6 @@
                 </div>
             `).join('');
         }
-
         function renderChecklistSummary() {
             const summary = getChecklistSummary();
             const container = document.getElementById('checklistSummary');
@@ -597,7 +595,6 @@
             `).join('');
             if (summary.length > 3) container.innerHTML += '<div class="badge">и ещё ' + (summary.length-3) + ' категорий</div>';
         }
-
         function renderWarehouseStats() {
             const productivity = getLastKPI('productivity') || '—';
             const pickErrors = getLastKPI('pickErrors') || '—';
@@ -645,14 +642,30 @@
             });
         }
 
-        // ПЕЧАТЬ НА БЛАНКЕ С ЛОГОТИПОМ И КОНТАКТАМИ РЯДОМ, ВНИЗУ ТОЛЬКО ПОДПИСЬ
+        // ----- 4. Печать на бланке (без дублирования, только верхний левый блок с контактами) -----
         window.printPageWithLogo = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
+            // Клонируем содержимое, убираем ненужные элементы управления
             const clone = mainContent.cloneNode(true);
-            clone.querySelectorAll('.btn-group, .theme-switch, .chart-controls, button, .sidebar, .print-btn, .no-print, .header-buttons').forEach(el => el.remove());
+            clone.querySelectorAll('.theme-switch, .btn-group, .chart-controls, button, .header-right, .sidebar, .no-print').forEach(el => el.remove());
+            // Получаем логотип и контакты из шапки (они останутся)
+            const headerClone = clone.querySelector('.dashboard-header');
+            if (headerClone) {
+                // Оставляем только левую часть (логотип + контакты), правую (кнопки) уже удалили
+                const leftPart = headerClone.querySelector('.header-left');
+                if (leftPart) {
+                    headerClone.innerHTML = '';
+                    headerClone.appendChild(leftPart.cloneNode(true));
+                }
+                // Добавляем дату справа (в печатной форме в правом верхнем углу)
+                const dateSpan = document.createElement('div');
+                dateSpan.style.textAlign = 'right';
+                dateSpan.style.fontSize = '10pt';
+                dateSpan.innerHTML = new Date().toLocaleString();
+                headerClone.appendChild(dateSpan);
+            }
             const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
-            const contactText = `Дмитрий Панибратский\nЭксперт по SCM и логистике\nscm-news.ru – экспертный портал\nscm-news.online – Академия SCM\ndmitry@scm-news.ru`;
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
                 <!DOCTYPE html>
@@ -660,24 +673,30 @@
                 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
                 <style>
                     body { font-family: Inter; margin: 20px; }
-                    .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
-                    .logo-area-print { display: flex; align-items: center; gap: 20px; }
-                    .logo-img { height: 50px; }
-                    .contact-print { font-size: 10pt; line-height: 1.4; color: #334155; }
+                    .dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                    .header-left { display: flex; align-items: center; gap: 20px; }
+                    .logo-image { height: 50px; }
+                    .contact-info { font-size: 10pt; line-height: 1.4; }
                     .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
                     .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
-                    table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 4px; }
                     .card { break-inside: avoid; }
+                    table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 4px; }
                 </style>
                 </head><body>
-                <div class="print-header">
-                    <div class="logo-area-print">
-                        <img src="${logoUrl}" alt="Логотип" class="logo-img">
-                        <div class="contact-print">${contactText.replace(/\n/g,'<br>')}</div>
+                <div class="dashboard-header">
+                    <div class="header-left">
+                        <img src="${logoUrl}" alt="Логотип" class="logo-image">
+                        <div class="contact-info">
+                            Дмитрий Панибратский<br>
+                            Эксперт по SCM и логистике<br>
+                            scm-news.ru – экспертный портал<br>
+                            scm-news.online – Академия SCM<br>
+                            dmitry@scm-news.ru
+                        </div>
                     </div>
-                    <div>${new Date().toLocaleString()}</div>
+                    <div style="text-align:right;">${new Date().toLocaleString()}</div>
                 </div>
-                ${clone.outerHTML}
+                ${clone.innerHTML}
                 <div class="print-footer">
                     <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
                     <div>Подпись: <span class="sign-line">_________________________</span></div>
@@ -700,7 +719,7 @@
         document.getElementById('printDashboardBtn').addEventListener('click', () => window.printPageWithLogo());
         document.getElementById('emailDashboardBtn').addEventListener('click', () => window.sendPageByEmail());
 
-        // Автообновление
+        // ----- 5. Автообновление -----
         function refreshAll() {
             renderKPIWidgets();
             renderForecast();
