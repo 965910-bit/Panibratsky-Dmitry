@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Протокол совещания SCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
+    <style>
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+        .form-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+        }
+        .protocol-section {
+            margin-top: 24px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 16px;
+        }
+        .decision-row {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+        .decision-row input, .decision-row textarea {
+            margin-bottom: 8px;
+        }
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #1e40af;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 30px;
+        }
+        .tab.active {
+            background: #1e40af;
+            color: white;
+        }
+        .meeting-link {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 8px;
+        }
+        @media print {
+            .sidebar, .btn-group, .tabs, .btn-icon, .add-decision, .delete-decision {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">...</aside>
+    <main class="main-content">
+        <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
+        <div class="branch-selector-container" style="float:right; margin-bottom:16px;">
+            <label><i class="fas fa-building"></i> Бизнес-единица:</label>
+            <select id="branchSelector"></select>
+        </div>
+        <h1>📝 Протокол совещания</h1>
+
+        <div class="tabs">
+            <button class="tab active" data-type="operational">Оперативное совещание (логистика/закупки)</button>
+            <button class="tab" data-type="sop">S&OP-совещание</button>
+        </div>
+
+        <form id="protocolForm" class="form-card">
+            <div class="form-row">
+                <div class="form-group"><label>Дата совещания</label><input type="date" id="meetingDate" required></div>
+                <div class="form-group"><label>Время</label><input type="time" id="meetingTime"></div>
+                <div class="form-group"><label>Место / ссылка</label><input type="text" id="meetingPlace" placeholder="офис / Zoom"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Председатель</label><input type="text" id="chairperson"></div>
+                <div class="form-group"><label>Секретарь</label><input type="text" id="secretary"></div>
+            </div>
+            <div class="form-group"><label>Участники (через запятую)</label><input type="text" id="attendees" placeholder="Иванов И.И., Петров П.П."></div>
+            <div class="form-group"><label>Повестка дня</label><textarea id="agenda" rows="3"></textarea></div>
+
+            <!-- Блок для оперативного совещания -->
+            <div id="operationalBlock">
+                <div class="protocol-section">
+                    <h3>🔴 Красная зона (критические проблемы)</h3>
+                    <div id="criticalIssuesContainer"></div>
+                    <button type="button" id="addCriticalIssueBtn" class="btn-icon"><i class="fas fa-plus"></i> Добавить проблему</button>
+                </div>
+                <div class="protocol-section">
+                    <h3>📌 Открытые задачи (контроль с прошлого совещания)</h3>
+                    <div id="openTasksContainer"></div>
+                    <button type="button" id="addOpenTaskBtn" class="btn-icon"><i class="fas fa-plus"></i> Добавить задачу</button>
+                </div>
+            </div>
+
+            <!-- Общий блок решений (СЛУШАЛИ – ВЫСТУПИЛИ – ПОСТАНОВИЛИ) -->
+            <div class="protocol-section">
+                <h3>📋 Решения (СЛУШАЛИ – ВЫСТУПИЛИ – ПОСТАНОВИЛИ)</h3>
+                <div id="decisionsContainer"></div>
+                <button type="button" id="addDecisionBtn" class="btn-icon"><i class="fas fa-plus"></i> Добавить решение</button>
+            </div>
+
+            <!-- Блок для S&OP (дополнительные поля) -->
+            <div id="sopBlock" style="display:none;">
+                <div class="protocol-section">
+                    <h3>📈 Прогноз продаж</h3>
+                    <textarea id="salesForecast" rows="2" placeholder="Утверждённый прогноз на следующий месяц..."></textarea>
+                </div>
+                <div class="protocol-section">
+                    <h3>🏭 Производственные мощности</h3>
+                    <textarea id="productionCapacity" rows="2" placeholder="Подтверждение объёмов, узкие места..."></textarea>
+                </div>
+                <div class="protocol-section">
+                    <h3>📦 Управление запасами</h3>
+                    <textarea id="inventoryManagement" rows="2" placeholder="Неликвиды, новые SKU, страховые запасы..."></textarea>
+                </div>
+                <div class="protocol-section">
+                    <h3>💰 Финансовый план</h3>
+                    <textarea id="financialPlan" rows="2" placeholder="Влияние на бюджет, оборотный капитал..."></textarea>
+                </div>
+                <div class="protocol-section">
+                    <h3>✅ Итоговый сбалансированный план</h3>
+                    <textarea id="balancedPlan" rows="2" placeholder="Утверждённый план на следующий период..."></textarea>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top:24px;">
+                <button type="button" id="saveProtocolBtn">💾 Сохранить протокол</button>
+                <button type="button" id="printProtocolBtn" style="background:#f59e0b;">🖨️ Печать протокола</button>
+                <button type="button" id="emailProtocolBtn" style="background:#10b981;">📧 Отправить на почту</button>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script>
+(function() {
+    // ---- Тёмная тема ----
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    });
+
+    // ---- Филиал ----
+    let currentBranchId = 'default';
+    function loadBranchSelector() {
+        const branches = BranchManager.getBranches();
+        const tree = BranchManager.buildTree(branches);
+        const select = document.getElementById('branchSelector');
+        select.innerHTML = '';
+        const addOptions = (nodes, prefix = '') => {
+            for (let node of nodes) {
+                const opt = document.createElement('option');
+                opt.value = node.id;
+                opt.textContent = prefix + node.name + ' (' + node.type + ')';
+                if (node.id === currentBranchId) opt.selected = true;
+                select.appendChild(opt);
+                if (node.children) addOptions(node.children, prefix + '— ');
+            }
+        };
+        addOptions(tree);
+        select.addEventListener('change', (e) => {
+            setCurrentBranch(e.target.value);
+            currentBranchId = e.target.value;
+        });
+    }
+
+    // ---- Переключение типа совещания ----
+    let meetingType = 'operational';
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            meetingType = tab.getAttribute('data-type');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            if (meetingType === 'operational') {
+                document.getElementById('operationalBlock').style.display = 'block';
+                document.getElementById('sopBlock').style.display = 'none';
+            } else {
+                document.getElementById('operationalBlock').style.display = 'none';
+                document.getElementById('sopBlock').style.display = 'block';
+            }
+        });
+    });
+
+    // ---- Динамические списки ----
+    let criticalIssues = [];
+    let openTasks = [];
+    let decisions = []; // каждый элемент: { listened, spoke, decided, assignee, dueDate }
+
+    function renderCriticalIssues() {
+        const container = document.getElementById('criticalIssuesContainer');
+        container.innerHTML = criticalIssues.map((issue, idx) => `
+            <div class="decision-row">
+                <input type="text" value="${escapeHtml(issue)}" data-idx="${idx}" data-field="issue" style="width:100%;">
+                <button class="delete-issue btn-icon" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        `).join('');
+        attachCriticalEvents();
+    }
+    function attachCriticalEvents() {
+        document.querySelectorAll('#criticalIssuesContainer input').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                const idx = inp.getAttribute('data-idx');
+                criticalIssues[idx] = inp.value;
+            });
+        });
+        document.querySelectorAll('.delete-issue').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = btn.getAttribute('data-idx');
+                criticalIssues.splice(idx, 1);
+                renderCriticalIssues();
+            });
+        });
+    }
+    document.getElementById('addCriticalIssueBtn').addEventListener('click', () => {
+        criticalIssues.push('');
+        renderCriticalIssues();
+    });
+
+    function renderOpenTasks() {
+        const container = document.getElementById('openTasksContainer');
+        container.innerHTML = openTasks.map((task, idx) => `
+            <div class="decision-row">
+                <input type="text" value="${escapeHtml(task)}" data-idx="${idx}" data-field="task" style="width:100%;">
+                <button class="delete-task-btn btn-icon" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        `).join('');
+        document.querySelectorAll('#openTasksContainer input').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                const idx = inp.getAttribute('data-idx');
+                openTasks[idx] = inp.value;
+            });
+        });
+        document.querySelectorAll('.delete-task-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = btn.getAttribute('data-idx');
+                openTasks.splice(idx, 1);
+                renderOpenTasks();
+            });
+        });
+    }
+    document.getElementById('addOpenTaskBtn').addEventListener('click', () => {
+        openTasks.push('');
+        renderOpenTasks();
+    });
+
+    function renderDecisions() {
+        const container = document.getElementById('decisionsContainer');
+        container.innerHTML = decisions.map((dec, idx) => `
+            <div class="decision-row">
+                <div><strong>СЛУШАЛИ:</strong> <input type="text" value="${escapeHtml(dec.listened)}" data-idx="${idx}" data-field="listened" style="width:100%; margin-bottom:8px;"></div>
+                <div><strong>ВЫСТУПИЛИ:</strong> <input type="text" value="${escapeHtml(dec.spoke)}" data-idx="${idx}" data-field="spoke" style="width:100%; margin-bottom:8px;"></div>
+                <div><strong>ПОСТАНОВИЛИ:</strong> <input type="text" value="${escapeHtml(dec.decided)}" data-idx="${idx}" data-field="decided" style="width:100%; margin-bottom:8px;"></div>
+                <div><strong>Ответственный:</strong> <input type="text" value="${escapeHtml(dec.assignee || '')}" data-idx="${idx}" data-field="assignee" style="width:45%; display:inline-block; margin-right:8px;">
+                <strong>Срок:</strong> <input type="date" value="${dec.dueDate || ''}" data-idx="${idx}" data-field="dueDate" style="width:45%; display:inline-block;"></div>
+                <button class="delete-decision btn-icon" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        `).join('');
+        attachDecisionEvents();
+    }
+    function attachDecisionEvents() {
+        document.querySelectorAll('#decisionsContainer input').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                const idx = inp.getAttribute('data-idx');
+                const field = inp.getAttribute('data-field');
+                if (decisions[idx]) decisions[idx][field] = inp.value;
+            });
+        });
+        document.querySelectorAll('.delete-decision').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = btn.getAttribute('data-idx');
+                decisions.splice(idx, 1);
+                renderDecisions();
+            });
+        });
+    }
+    document.getElementById('addDecisionBtn').addEventListener('click', () => {
+        decisions.push({ listened: '', spoke: '', decided: '', assignee: '', dueDate: '' });
+        renderDecisions();
+    });
+
+    // ---- Сохранение протокола и создание поручений ----
+    function saveProtocol() {
+        const protocolId = 'mtg_' + Date.now();
+        const protocolData = {
+            id: protocolId,
+            type: meetingType,
+            date: document.getElementById('meetingDate').value,
+            time: document.getElementById('meetingTime').value,
+            place: document.getElementById('meetingPlace').value,
+            chairperson: document.getElementById('chairperson').value,
+            secretary: document.getElementById('secretary').value,
+            attendees: document.getElementById('attendees').value,
+            agenda: document.getElementById('agenda').value,
+            criticalIssues: criticalIssues,
+            openTasks: openTasks,
+            decisions: decisions,
+            branchId: currentBranchId,
+            createdAt: new Date().toISOString()
+        };
+        if (meetingType === 'sop') {
+            protocolData.salesForecast = document.getElementById('salesForecast').value;
+            protocolData.productionCapacity = document.getElementById('productionCapacity').value;
+            protocolData.inventoryManagement = document.getElementById('inventoryManagement').value;
+            protocolData.financialPlan = document.getElementById('financialPlan').value;
+            protocolData.balancedPlan = document.getElementById('balancedPlan').value;
+        }
+        // Сохраняем протокол в localStorage
+        const protocolsKey = `meeting_protocols_${currentBranchId}`;
+        let protocols = JSON.parse(localStorage.getItem(protocolsKey) || '[]');
+        protocols.push(protocolData);
+        localStorage.setItem(protocolsKey, JSON.stringify(protocols));
+
+        // Создаём поручения в реестре для каждого ПОСТАНОВИЛИ
+        const registryKey = `tasks_registry_${currentBranchId}`;
+        let registry = JSON.parse(localStorage.getItem(registryKey) || '[]');
+        for (let dec of decisions) {
+            if (dec.decided.trim()) {
+                const newTask = {
+                    id: Date.now().toString() + Math.random(),
+                    text: dec.decided,
+                    assignee: dec.assignee || document.getElementById('chairperson').value,
+                    dueDate: dec.dueDate || '',
+                    priority: 'high',
+                    status: 'new',
+                    controller: document.getElementById('chairperson').value,
+                    theme: meetingType === 'operational' ? 'Оперативное совещание' : 'S&OP',
+                    meetingLink: protocolId,
+                    createdAt: new Date().toISOString()
+                };
+                registry.push(newTask);
+            }
+        }
+        localStorage.setItem(registryKey, JSON.stringify(registry));
+        // Синхронизация с планером (вызов функции из tasks-registry, но здесь мы просто обновим реестр)
+        alert('Протокол сохранён. Создано поручений: ' + decisions.filter(d => d.decided.trim()).length);
+        // Очистка формы (опционально)
+        // window.location.href = 'meetings-list.html';
+    }
+
+    // ---- Печать протокола на бланке ----
+    window.printProtocolWithLogo = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const clone = mainContent.cloneNode(true);
+        clone.querySelectorAll('.tabs, .btn-icon, .branch-selector-container, .theme-switch, .btn-group, #addCriticalIssueBtn, #addOpenTaskBtn, #addDecisionBtn, .delete-issue, .delete-task-btn, .delete-decision').forEach(el => el.remove());
+        // Заменим текстовые поля на простой текст
+        clone.querySelectorAll('input, textarea, select').forEach(el => {
+            const span = document.createElement('span');
+            span.textContent = el.value || el.innerText;
+            el.parentNode.replaceChild(span, el);
+        });
+        const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html><head><meta charset="UTF-8"><title>Протокол совещания SCM</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: Inter; margin: 20px; }
+                .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                .logo-img { height: 50px; }
+                .contact-info { font-size: 10pt; line-height: 1.4; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; }
+                .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                .decision-row { border: 1px solid #ddd; margin-bottom: 12px; padding: 8px; }
+            </style>
+            </head><body>
+            <div class="print-header">
+                <div style="display:flex;align-items:center;gap:20px"><img src="${logoUrl}" class="logo-img"><div class="contact-info">Дмитрий Панибратский<br>Эксперт по SCM и логистике<br>scm-news.ru – экспертный портал<br>scm-news.online – Академия SCM<br>dmitry@scm-news.ru</div></div>
+                <div>${new Date().toLocaleString()}</div>
+            </div>
+            ${clone.innerHTML}
+            <div class="print-footer">
+                <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                <div>Подпись: <span class="sign-line">_________________________</span></div>
+                <div>Дата: ${new Date().toLocaleDateString()}</div>
+            </div>
+            <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    };
+    window.sendProtocolByEmail = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const text = mainContent.innerText;
+        const subject = encodeURIComponent('Протокол совещания SCM');
+        const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    };
+
+    document.getElementById('saveProtocolBtn').addEventListener('click', saveProtocol);
+    document.getElementById('printProtocolBtn').addEventListener('click', () => window.printProtocolWithLogo());
+    document.getElementById('emailProtocolBtn').addEventListener('click', () => window.sendProtocolByEmail());
+
+    // ---- Инициализация ----
+    function init() {
+        BranchManager.ensureDefaultBranch();
+        currentBranchId = getCurrentBranch();
+        loadBranchSelector();
+        document.getElementById('meetingDate').value = new Date().toISOString().split('T')[0];
+        // Установка текущего времени
+        const now = new Date();
+        document.getElementById('meetingTime').value = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    }
+    init();
+})();
+function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+</script>
+</body>
+</html>
