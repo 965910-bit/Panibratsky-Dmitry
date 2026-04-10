@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Планер SCM – продвинутая версия</title>
+    <title>Планер SCM – полная версия с бэклогом и перетаскиванием</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="scm-style.css">
@@ -27,51 +27,29 @@
         .nav-buttons { display: flex; gap: 8px; align-items: center; }
         .nav-buttons button { background: #e2e8f0; color: #1e40af; border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer; }
         .date-picker { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 30px; }
-        .calendar-grid { background: white; border-radius: 24px; border: 1px solid #e2e8f0; overflow-x: auto; }
-        .month-grid { display: grid; grid-template-columns: repeat(7, 1fr); min-width: 700px; }
-        .week-grid { display: grid; grid-template-columns: 80px repeat(7, 1fr); min-width: 800px; }
-        .day-view, .myday-view { background: white; border-radius: 24px; padding: 20px; }
-        .week-day-header, .month-day-header { text-align: center; font-weight: 600; padding: 12px; background: #eef2ff; border-bottom: 1px solid #e2e8f0; }
-        .month-cell, .week-cell { min-height: 100px; padding: 8px; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
-        .week-hour-cell { background: #f8fafc; font-size: 12px; text-align: center; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
-        .date-number { font-weight: 500; margin-bottom: 8px; }
-        .task-item { background: #eef2ff; border-radius: 12px; padding: 4px 8px; margin-bottom: 4px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.1s; }
-        .task-item.red { background: #fee2e2; border-left: 3px solid #dc2626; }
-        .task-item.yellow { background: #fef9c3; border-left: 3px solid #f59e0b; }
-        .task-item.green { background: #d1fae5; border-left: 3px solid #10b981; }
-        .task-item.blue { background: #dbeafe; border-left: 3px solid #1e40af; }
-        .task-item.gray { background: #f1f5f9; border-left: 3px solid #94a3b8; }
-        .task-item.purple { background: #e9d5ff; border-left: 3px solid #8b5cf6; }
-        .task-text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .task-time { font-size: 10px; color: #64748b; margin-left: 8px; }
-        .delete-task { background: none; border: none; color: #dc2626; cursor: pointer; font-size: 10px; margin-left: 4px; }
-        .add-task-btn { background: none; border: none; color: #1e40af; cursor: pointer; font-size: 14px; margin-top: 4px; }
-        /* Канбан-доска и бэклог */
-        .kanban-board { display: flex; gap: 20px; overflow-x: auto; padding: 16px 0; }
-        .kanban-column { background: #f8fafc; border-radius: 20px; min-width: 280px; padding: 16px; border: 1px solid #e2e8f0; }
-        .kanban-column h3 { font-size: 16px; margin-bottom: 12px; color: #1e40af; }
-        .kanban-task { background: white; border-radius: 12px; padding: 8px; margin-bottom: 8px; cursor: grab; border-left: 3px solid; }
-        .kanban-task:active { cursor: grabbing; }
-        .backlog-column { background: #fef9c3; border: 1px dashed #f59e0b; }
-        /* Теги и приоритеты */
-        .tag { display: inline-block; background: #e2e8f0; border-radius: 20px; padding: 2px 6px; font-size: 10px; margin-right: 4px; }
-        .priority-high { border-left-color: #dc2626; }
-        .priority-medium { border-left-color: #f59e0b; }
-        .priority-low { border-left-color: #10b981; }
         .filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
         .filter-bar select, .filter-bar input { padding: 6px 12px; border-radius: 30px; border: 1px solid #e2e8f0; background: white; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: white; border-radius: 24px; padding: 24px; width: 550px; max-width: 90%; max-height: 80%; overflow-y: auto; }
-        .subtask-item { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
         .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
         button { background: #1e40af; color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; }
         .print-btn { background: #f59e0b; }
         .report-btn { background: #10b981; }
-        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; border-radius: 24px; padding: 24px; width: 550px; max-width: 90%; max-height: 80%; overflow-y: auto; }
+        .task-item { background: #eef2ff; border-radius: 12px; padding: 8px; margin-bottom: 8px; cursor: pointer; border-left: 4px solid; }
+        .kanban-board { display: flex; gap: 20px; overflow-x: auto; padding: 16px 0; }
+        .kanban-column { background: #f8fafc; border-radius: 20px; min-width: 280px; padding: 16px; border: 1px solid #e2e8f0; }
+        .kanban-column h3 { font-size: 16px; margin-bottom: 12px; color: #1e40af; }
+        .kanban-tasks { min-height: 200px; }
+        .kanban-task { background: white; border-radius: 12px; padding: 8px; margin-bottom: 8px; cursor: grab; border-left: 3px solid; }
+        .kanban-task:active { cursor: grabbing; }
+        .backlog-list { background: white; border-radius: 20px; padding: 20px; }
+        .backlog-item { background: #f8fafc; border-radius: 16px; padding: 12px; margin-bottom: 12px; cursor: grab; border-left: 4px solid; }
+        .tag { display: inline-block; background: #e2e8f0; border-radius: 20px; padding: 2px 6px; font-size: 10px; margin-right: 4px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin: 16px 0; }
         .stat-item { background: #f8fafc; padding: 12px; border-radius: 16px; text-align: center; }
         .stat-count { font-size: 28px; font-weight: 700; }
         @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 16px; } }
-        @media print { .sidebar, .view-switch, .controls, .btn-group, .add-task-btn, .delete-task, .filter-bar { display: none; } }
+        @media print { .sidebar, .controls, .filter-bar, .btn-group, .view-switch { display: none; } }
     </style>
 </head>
 <body>
@@ -113,64 +91,80 @@
                 <input type="date" id="datePicker" class="date-picker">
             </div>
             <div style="display: flex; gap: 8px;">
-                <button id="reportBtn" class="report-btn"><i class="fas fa-chart-pie"></i> Отчёт по статусам</button>
-                <button id="exportIcsBtn" class="print-btn"><i class="fas fa-calendar-plus"></i> Экспорт iCalendar</button>
-                <button id="exportJsonBtn"><i class="fas fa-download"></i> Экспорт JSON</button>
-                <button id="importJsonBtn"><i class="fas fa-upload"></i> Импорт JSON</button>
+                <button id="reportBtn" class="report-btn"><i class="fas fa-chart-pie"></i> Отчёт</button>
+                <button id="exportIcsBtn" class="print-btn"><i class="fas fa-calendar-plus"></i> iCalendar</button>
+                <button id="exportJsonBtn"><i class="fas fa-download"></i> JSON</button>
+                <button id="importJsonBtn"><i class="fas fa-upload"></i> Импорт</button>
                 <input type="file" id="importFile" accept=".json" style="display: none;">
                 <button id="printViewBtn" class="print-btn"><i class="fas fa-print"></i> Печать</button>
+                <button id="newTaskBtn"><i class="fas fa-plus"></i> Новая задача</button>
             </div>
         </div>
         <div class="filter-bar">
-            <select id="filterStatus"><option value="">Все статусы</option><option value="gray">Не распределено</option><option value="purple">Запланировано</option><option value="red">Срочно</option><option value="yellow">Важно</option><option value="blue">В работе</option><option value="green">Выполнено</option></select>
+            <select id="filterStatus"><option value="">Все статусы</option><option value="gray">⚪ Не распределено</option><option value="purple">📌 Запланировано</option><option value="red">🔴 Срочно</option><option value="yellow">🟡 Важно</option><option value="blue">🔵 В работе</option><option value="green">🟢 Выполнено</option></select>
             <select id="filterPriority"><option value="">Все приоритеты</option><option value="high">Высокий</option><option value="medium">Средний</option><option value="low">Низкий</option></select>
             <input type="text" id="filterTag" placeholder="Тег">
-            <input type="text" id="searchText" placeholder="Поиск по тексту">
-            <button id="clearFilters">Сбросить фильтры</button>
+            <input type="text" id="searchText" placeholder="Поиск">
+            <button id="clearFilters">Сбросить</button>
         </div>
         <div id="calendarContainer"></div>
     </main>
 </div>
 
 <script>
-    // ---------- Хранилище задач ----------
-    let tasks = {}; // ключ: "YYYY-MM-DD" или "backlog" для нераспределённых
-    let currentView = 'week';
-    let currentDate = new Date();
+    // ------------------------------ ХРАНИЛИЩЕ ------------------------------
+    let tasks = {}; // ключ: "YYYY-MM-DD" или "backlog" для задач без даты
 
     function loadTasks() {
-        const saved = localStorage.getItem('scm_planner_tasks');
+        const saved = localStorage.getItem('scm_planner_tasks_v2');
         if (saved) tasks = JSON.parse(saved);
-        else tasks = {};
+        else tasks = { backlog: [] };
     }
     function saveTasks() {
-        localStorage.setItem('scm_planner_tasks', JSON.stringify(tasks));
+        localStorage.setItem('scm_planner_tasks_v2', JSON.stringify(tasks));
     }
 
-    function addTask(date, taskData) {
-        if (!tasks[date]) tasks[date] = [];
+    function addTask(target, taskData) {
+        if (!tasks[target]) tasks[target] = [];
         const newId = Date.now().toString();
-        tasks[date].push({ id: newId, createdAt: new Date().toISOString(), subtasks: [], tags: [], priority: 'medium', ...taskData });
+        tasks[target].push({ id: newId, createdAt: new Date().toISOString(), subtasks: [], tags: [], priority: 'medium', status: 'gray', ...taskData });
         saveTasks();
         renderCurrentView();
     }
-    function updateTask(date, taskId, newData) {
-        const index = tasks[date].findIndex(t => t.id === taskId);
+
+    function updateTask(target, taskId, newData) {
+        const index = tasks[target].findIndex(t => t.id === taskId);
         if (index !== -1) {
-            tasks[date][index] = { ...tasks[date][index], ...newData };
+            tasks[target][index] = { ...tasks[target][index], ...newData };
             saveTasks();
             renderCurrentView();
         }
     }
-    function deleteTask(date, taskId) {
-        tasks[date] = tasks[date].filter(t => t.id !== taskId);
-        if (tasks[date].length === 0) delete tasks[date];
+
+    function deleteTask(target, taskId) {
+        tasks[target] = tasks[target].filter(t => t.id !== taskId);
+        if (tasks[target].length === 0 && target !== 'backlog') delete tasks[target];
         saveTasks();
         renderCurrentView();
     }
 
+    function moveTaskToDate(taskId, fromTarget, toDate) {
+        const task = tasks[fromTarget].find(t => t.id === taskId);
+        if (!task) return;
+        deleteTask(fromTarget, taskId);
+        if (!tasks[toDate]) tasks[toDate] = [];
+        tasks[toDate].push({ ...task, date: toDate });
+        saveTasks();
+        renderCurrentView();
+    }
+
+    // ------------------------------ ВСПОМОГАТЕЛЬНЫЕ ------------------------------
     function formatTime(timeStr) { return timeStr ? timeStr.substring(0,5) : ''; }
     function formatDateKey(date) { return date.toISOString().split('T')[0]; }
+    function escapeHtml(str) { return str ? str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;') : ''; }
+
+    let currentView = 'week';
+    let currentDate = new Date();
 
     function getWeekDates(date) {
         const start = new Date(date);
@@ -207,7 +201,7 @@
         const tag = document.getElementById('filterTag').value.trim().toLowerCase();
         const search = document.getElementById('searchText').value.trim().toLowerCase();
         return dayTasks.filter(task => {
-            if (status && task.color !== status) return false;
+            if (status && task.status !== status) return false;
             if (priority && task.priority !== priority) return false;
             if (tag && !(task.tags || []).some(t => t.toLowerCase().includes(tag))) return false;
             if (search && !task.text.toLowerCase().includes(search)) return false;
@@ -215,123 +209,103 @@
         });
     }
 
-    // Рендер дня
+    // ------------------------------ РЕНДЕРИНГ ------------------------------
+    function renderCurrentView() {
+        if (currentView === 'day') renderDayView();
+        else if (currentView === 'week') renderWeekView();
+        else if (currentView === 'month') renderMonthView();
+        else if (currentView === 'kanban') renderKanban();
+        else if (currentView === 'backlog') renderBacklog();
+        else if (currentView === 'myday') renderMyDay();
+    }
+
     function renderDayView() {
-        const date = currentDate;
-        const dateKey = formatDateKey(date);
-        let dayTasks = getFilteredTasksForDate(dateKey);
+        const dateKey = formatDateKey(currentDate);
+        const dayTasks = getFilteredTasksForDate(dateKey);
         dayTasks.sort((a,b) => (a.startTime || '00:00').localeCompare(b.startTime || '00:00'));
         const container = document.getElementById('calendarContainer');
         container.innerHTML = `
-            <div class="day-view">
-                <h3 style="margin-bottom:16px;">${date.toLocaleDateString('ru-RU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
+            <div style="background:white; border-radius:24px; padding:20px;">
+                <h3>${currentDate.toLocaleDateString('ru-RU', { weekday:'long', year:'numeric', month:'long', day:'numeric' })}</h3>
                 <div id="dayTasksList"></div>
-                <button class="add-task-btn" onclick="openTaskModal('${dateKey}')"><i class="fas fa-plus"></i> Добавить задачу</button>
+                <button class="add-task-btn" onclick="openTaskModalForDate('${dateKey}')"><i class="fas fa-plus"></i> Добавить задачу</button>
             </div>
         `;
         const tasksDiv = document.getElementById('dayTasksList');
-        if (dayTasks.length === 0) tasksDiv.innerHTML = '<div class="badge">Нет задач на этот день</div>';
+        if (dayTasks.length === 0) tasksDiv.innerHTML = '<div class="badge">Нет задач</div>';
         else {
             tasksDiv.innerHTML = dayTasks.map(task => `
-                <div class="task-item ${task.color || 'gray'}" style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                    <span style="flex:1; cursor:pointer;" onclick="openTaskModal('${dateKey}', '${task.id}')">
-                        ${escapeHtml(task.text)} <span class="task-time">${task.startTime || ''}${task.endTime ? '-'+task.endTime : ''}</span>
-                        ${(task.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
-                    </span>
-                    <button class="delete-task" onclick="deleteTask('${dateKey}', '${task.id}')"><i class="fas fa-trash"></i></button>
+                <div class="task-item" style="border-left-color: ${getColorForStatus(task.status)}; background:#f8fafc;" onclick="openTaskModal('${dateKey}', '${task.id}')">
+                    <div><strong>${escapeHtml(task.text)}</strong> <span class="task-time">${task.startTime || ''}${task.endTime ? '-'+task.endTime : ''}</span></div>
+                    <div>${(task.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
                 </div>
             `).join('');
         }
     }
 
-    // Рендер недели (почасовая сетка)
     function renderWeekView() {
         const weekDates = getWeekDates(currentDate);
-        const container = document.getElementById('calendarContainer');
-        container.innerHTML = `
-            <div class="calendar-grid">
-                <div class="week-grid">
-                    <div class="week-day-header" style="background:#f8fafc;">Время</div>
-                    ${weekDates.map(d => `<div class="week-day-header">${d.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric' })}</div>`).join('')}
-                    ${renderHourRows(weekDates)}
-                </div>
-            </div>
-        `;
-    }
-
-    function renderHourRows(weekDates) {
-        let html = '';
+        let html = `<div class="calendar-grid"><div class="week-grid"><div class="week-day-header">Время</div>`;
+        weekDates.forEach(d => html += `<div class="week-day-header">${d.toLocaleDateString('ru-RU', { weekday:'short', day:'numeric' })}</div>`);
+        html += `</div>`;
         for (let hour = 0; hour < 24; hour++) {
-            html += `<div style="display:contents;"><div class="week-hour-cell" style="background:#f8fafc; font-size:12px; text-align:center;">${hour}:00</div>`;
+            html += `<div class="week-grid"><div class="week-hour-cell">${hour}:00</div>`;
             for (let d of weekDates) {
                 const dateKey = formatDateKey(d);
                 const dayTasks = getFilteredTasksForDate(dateKey);
-                const hourTasks = dayTasks.filter(task => {
-                    if (!task.startTime) return false;
-                    const startHour = parseInt(task.startTime.split(':')[0]);
-                    const endHour = task.endTime ? parseInt(task.endTime.split(':')[0]) : startHour;
+                const hourTasks = dayTasks.filter(t => {
+                    if (!t.startTime) return false;
+                    const startHour = parseInt(t.startTime.split(':')[0]);
+                    const endHour = t.endTime ? parseInt(t.endTime.split(':')[0]) : startHour;
                     return hour >= startHour && hour <= endHour;
                 });
-                const tasksHtml = hourTasks.map(task => `
-                    <div class="task-item ${task.color || 'gray'}" style="margin-bottom:2px; font-size:10px;" onclick="openTaskModal('${dateKey}', '${task.id}')">
-                        ${escapeHtml(task.text)}<span class="task-time">${formatTime(task.startTime)}${task.endTime ? '-'+formatTime(task.endTime) : ''}</span>
-                    </div>
-                `).join('');
-                html += `<div class="week-cell">${tasksHtml}<button class="add-task-btn" style="font-size:10px;" onclick="openTaskModal('${dateKey}')">+</button></div>`;
+                html += `<div class="week-cell">${hourTasks.map(t => `<div class="task-item" style="border-left-color:${getColorForStatus(t.status)}; margin-bottom:2px;" onclick="openTaskModal('${dateKey}','${t.id}')">${escapeHtml(t.text)}</div>`).join('')}<button class="add-task-btn" style="font-size:10px;" onclick="openTaskModalForDate('${dateKey}')">+</button></div>`;
             }
             html += `</div>`;
         }
-        return html;
+        html += `</div>`;
+        document.getElementById('calendarContainer').innerHTML = html;
     }
 
-    // Рендер месяца
     function renderMonthView() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const days = getMonthDates(year, month);
-        const container = document.getElementById('calendarContainer');
-        container.innerHTML = `
-            <div class="calendar-grid">
-                <div class="month-grid">
-                    ${['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(d => `<div class="month-day-header">${d}</div>`).join('')}
-                    ${days.map(d => {
-                        const dateKey = formatDateKey(d);
-                        const dayTasks = getFilteredTasksForDate(dateKey);
-                        const isCurrentMonth = d.getMonth() === month;
-                        const tasksHtml = dayTasks.map(task => `<div class="task-item ${task.color || 'gray'}" onclick="openTaskModal('${dateKey}', '${task.id}')">${escapeHtml(task.text)}</div>`).join('');
-                        return `<div class="month-cell" style="${!isCurrentMonth ? 'background:#f8fafc; color:#94a3b8;' : ''}">
-                                    <div class="date-number">${d.getDate()}</div>
-                                    ${tasksHtml}
-                                    <button class="add-task-btn" onclick="openTaskModal('${dateKey}')">+</button>
-                                </div>`;
-                    }).join('')}
-                </div>
-            </div>
-        `;
+        let html = `<div class="calendar-grid"><div class="month-grid">${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d => `<div class="month-day-header">${d}</div>`).join('')}`;
+        days.forEach(d => {
+            const dateKey = formatDateKey(d);
+            const dayTasks = getFilteredTasksForDate(dateKey);
+            const isCurrentMonth = d.getMonth() === month;
+            html += `<div class="month-cell" style="${!isCurrentMonth ? 'background:#f8fafc; color:#94a3b8;' : ''}">
+                        <div class="date-number">${d.getDate()}</div>
+                        ${dayTasks.map(t => `<div class="task-item" style="border-left-color:${getColorForStatus(t.status)}; margin-bottom:2px;" onclick="openTaskModal('${dateKey}','${t.id}')">${escapeHtml(t.text)}</div>`).join('')}
+                        <button class="add-task-btn" onclick="openTaskModalForDate('${dateKey}')">+</button>
+                    </div>`;
+        });
+        html += `</div></div>`;
+        document.getElementById('calendarContainer').innerHTML = html;
     }
 
-    // Канбан-доска (все задачи, сгруппированные по статусу)
     function renderKanban() {
         const statuses = [
-            { key: 'gray', title: '⚪ Не распределено', color: 'gray' },
-            { key: 'purple', title: '📌 Запланировано', color: 'purple' },
-            { key: 'red', title: '🔴 Срочно', color: 'red' },
-            { key: 'yellow', title: '🟡 Важно', color: 'yellow' },
-            { key: 'blue', title: '🔵 В работе', color: 'blue' },
-            { key: 'green', title: '🟢 Выполнено', color: 'green' }
+            { key: 'gray', title: '⚪ Не распределено', color: '#94a3b8' },
+            { key: 'purple', title: '📌 Запланировано', color: '#8b5cf6' },
+            { key: 'red', title: '🔴 Срочно', color: '#dc2626' },
+            { key: 'yellow', title: '🟡 Важно', color: '#f59e0b' },
+            { key: 'blue', title: '🔵 В работе', color: '#1e40af' },
+            { key: 'green', title: '🟢 Выполнено', color: '#10b981' }
         ];
         let allTasks = [];
         for (const [date, taskList] of Object.entries(tasks)) {
-            for (const task of taskList) {
-                allTasks.push({ ...task, date });
-            }
+            if (date === 'backlog') continue;
+            for (const task of taskList) allTasks.push({ ...task, date });
         }
         const filtered = allTasks.filter(task => {
             const status = document.getElementById('filterStatus').value;
             const priority = document.getElementById('filterPriority').value;
             const tag = document.getElementById('filterTag').value.trim().toLowerCase();
             const search = document.getElementById('searchText').value.trim().toLowerCase();
-            if (status && task.color !== status) return false;
+            if (status && task.status !== status) return false;
             if (priority && task.priority !== priority) return false;
             if (tag && !(task.tags || []).some(t => t.toLowerCase().includes(tag))) return false;
             if (search && !task.text.toLowerCase().includes(search)) return false;
@@ -339,86 +313,31 @@
         });
         let html = `<div class="kanban-board">`;
         for (let s of statuses) {
-            const columnTasks = filtered.filter(t => (t.color || 'gray') === s.key);
+            const columnTasks = filtered.filter(t => (t.status || 'gray') === s.key);
             html += `<div class="kanban-column" data-status="${s.key}">
                         <h3>${s.title}</h3>
-                        <div class="kanban-tasks-container">`;
-            columnTasks.forEach(task => {
-                html += `<div class="kanban-task" draggable="true" data-id="${task.id}" data-date="${task.date}" style="border-left-color: ${s.color === 'gray' ? '#94a3b8' : s.color}">
-                            <div><strong>${escapeHtml(task.text)}</strong></div>
-                            <div style="font-size:10px; color:#64748b;">${task.date !== 'backlog' ? task.date : 'Без даты'} ${task.startTime || ''}</div>
-                            <div>${(task.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
-                         </div>`;
-            });
-            html += `</div></div>`;
+                        <div class="kanban-tasks" data-status="${s.key}">
+                            ${columnTasks.map(task => `
+                                <div class="kanban-task" draggable="true" data-id="${task.id}" data-date="${task.date}" data-status="${task.status}" style="border-left-color:${s.color}">
+                                    <div><strong>${escapeHtml(task.text)}</strong></div>
+                                    <div style="font-size:10px;">${task.date} ${task.startTime || ''}</div>
+                                    <div>${(task.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
         }
         html += `</div>`;
         document.getElementById('calendarContainer').innerHTML = html;
-        attachDragAndDrop();
+        attachKanbanDragDrop();
     }
 
-    // Бэклог – задачи без даты (хранятся в tasks['backlog'])
-    function renderBacklog() {
-        const backlogTasks = getFilteredTasksForDate('backlog');
-        backlogTasks.sort((a,b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
-        const container = document.getElementById('calendarContainer');
-        container.innerHTML = `
-            <div class="day-view">
-                <h3>📋 Бэклог – не распределённые задачи</h3>
-                <p style="font-size:13px; color:#64748b; margin-bottom:16px;">Задачи без даты. Перетащите их в Канбан или назначьте дату при редактировании.</p>
-                <div id="backlogTasksList"></div>
-                <button class="add-task-btn" onclick="openTaskModal('backlog')"><i class="fas fa-plus"></i> Добавить задачу в бэклог</button>
-            </div>
-        `;
-        const tasksDiv = document.getElementById('backlogTasksList');
-        if (backlogTasks.length === 0) tasksDiv.innerHTML = '<div class="badge">Бэклог пуст</div>';
-        else {
-            tasksDiv.innerHTML = backlogTasks.map(task => `
-                <div class="task-item ${task.color || 'gray'}" style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                    <span style="flex:1; cursor:pointer;" onclick="openTaskModal('backlog', '${task.id}')">
-                        ${escapeHtml(task.text)} ${(task.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
-                    </span>
-                    <button class="delete-task" onclick="deleteTask('backlog', '${task.id}')"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
-        }
-    }
-
-    // Мой день – задачи на сегодня
-    function renderMyDay() {
-        const today = formatDateKey(new Date());
-        let dayTasks = getFilteredTasksForDate(today);
-        dayTasks.sort((a,b) => (a.startTime || '00:00').localeCompare(b.startTime || '00:00'));
-        const container = document.getElementById('calendarContainer');
-        container.innerHTML = `
-            <div class="myday-view">
-                <h3>Мой день – ${new Date().toLocaleDateString('ru-RU')}</h3>
-                <div id="mydayTasksList"></div>
-                <button class="add-task-btn" onclick="openTaskModal('${today}')"><i class="fas fa-plus"></i> Добавить задачу</button>
-            </div>
-        `;
-        const tasksDiv = document.getElementById('mydayTasksList');
-        if (dayTasks.length === 0) tasksDiv.innerHTML = '<div class="badge">Нет задач на сегодня</div>';
-        else {
-            tasksDiv.innerHTML = dayTasks.map(task => `
-                <div class="task-item ${task.color || 'gray'}" style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                    <span style="flex:1; cursor:pointer;" onclick="openTaskModal('${today}', '${task.id}')">
-                        ${escapeHtml(task.text)} <span class="task-time">${task.startTime || ''}${task.endTime ? '-'+task.endTime : ''}</span>
-                        ${(task.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
-                    </span>
-                    <button class="delete-task" onclick="deleteTask('${today}', '${task.id}')"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
-        }
-    }
-
-    // Drag & Drop для Канбана
-    function attachDragAndDrop() {
+    function attachKanbanDragDrop() {
         const draggables = document.querySelectorAll('.kanban-task');
-        const containers = document.querySelectorAll('.kanban-tasks-container');
+        const containers = document.querySelectorAll('.kanban-tasks');
         draggables.forEach(drag => {
             drag.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', JSON.stringify({ id: drag.dataset.id, date: drag.dataset.date }));
+                e.dataTransfer.setData('text/plain', JSON.stringify({ id: drag.dataset.id, date: drag.dataset.date, status: drag.dataset.status }));
                 drag.style.opacity = '0.5';
             });
             drag.addEventListener('dragend', (e) => { drag.style.opacity = '1'; });
@@ -430,193 +349,224 @@
                 const data = JSON.parse(e.dataTransfer.getData('text/plain'));
                 const newStatus = container.parentElement.dataset.status;
                 const taskDate = data.date;
-                const taskId = data.id;
-                updateTask(taskDate, taskId, { color: newStatus });
+                updateTask(taskDate, data.id, { status: newStatus });
             });
         });
     }
 
-    // Модальное окно для задачи
-    let currentModalDate = null;
-    let currentModalTaskId = null;
-
-    function openTaskModal(dateKey, taskId = null) {
-        currentModalDate = dateKey;
-        currentModalTaskId = taskId;
-        let task = null;
-        if (taskId && tasks[dateKey]) task = tasks[dateKey].find(t => t.id === taskId);
-        document.getElementById('modalTaskText').value = task ? task.text : '';
-        document.getElementById('modalTaskColor').value = task ? task.color : 'gray';
-        document.getElementById('modalTaskPriority').value = task ? (task.priority || 'medium') : 'medium';
-        document.getElementById('modalStartTime').value = task ? (task.startTime || '09:00') : '09:00';
-        document.getElementById('modalEndTime').value = task ? (task.endTime || '10:00') : '10:00';
-        document.getElementById('modalTags').value = task ? (task.tags || []).join(', ') : '';
-        // подзадачи
-        const subtasksDiv = document.getElementById('modalSubtasks');
-        if (task && task.subtasks) {
-            subtasksDiv.innerHTML = task.subtasks.map((st, idx) => `
-                <div class="subtask-item">
-                    <input type="checkbox" ${st.done ? 'checked' : ''} data-idx="${idx}">
-                    <input type="text" value="${escapeHtml(st.text)}" data-idx="${idx}" style="flex:1;">
-                    <button type="button" class="remove-subtask" data-idx="${idx}">❌</button>
+    function renderBacklog() {
+        const backlogTasks = tasks.backlog || [];
+        const filtered = backlogTasks.filter(task => {
+            const status = document.getElementById('filterStatus').value;
+            const priority = document.getElementById('filterPriority').value;
+            const tag = document.getElementById('filterTag').value.trim().toLowerCase();
+            const search = document.getElementById('searchText').value.trim().toLowerCase();
+            if (status && task.status !== status) return false;
+            if (priority && task.priority !== priority) return false;
+            if (tag && !(task.tags || []).some(t => t.toLowerCase().includes(tag))) return false;
+            if (search && !task.text.toLowerCase().includes(search)) return false;
+            return true;
+        });
+        const container = document.getElementById('calendarContainer');
+        container.innerHTML = `
+            <div class="backlog-list">
+                <h3>📋 Бэклог (задачи без даты)</h3>
+                <div id="backlogTasksList"></div>
+                <button class="add-task-btn" onclick="openTaskModalForBacklog()"><i class="fas fa-plus"></i> Новая задача в бэклог</button>
+            </div>
+        `;
+        const tasksDiv = document.getElementById('backlogTasksList');
+        if (filtered.length === 0) tasksDiv.innerHTML = '<div class="badge">Нет задач в бэклоге</div>';
+        else {
+            tasksDiv.innerHTML = filtered.map(task => `
+                <div class="backlog-item" draggable="true" data-id="${task.id}" style="border-left-color: ${getColorForStatus(task.status)}">
+                    <div><strong>${escapeHtml(task.text)}</strong></div>
+                    <div>${(task.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+                    <div style="display:flex; gap:8px; margin-top:8px;">
+                        <button class="edit-backlog" data-id="${task.id}">✏️ Редактировать</button>
+                        <button class="assign-date" data-id="${task.id}">📅 Назначить дату</button>
+                        <button class="delete-backlog" data-id="${task.id}">🗑️</button>
+                    </div>
                 </div>
             `).join('');
-        } else {
-            subtasksDiv.innerHTML = '';
+            attachBacklogEvents();
+        }
+    }
+
+    function attachBacklogEvents() {
+        document.querySelectorAll('.edit-backlog').forEach(btn => btn.addEventListener('click', (e) => { const id = btn.dataset.id; openTaskModal('backlog', id); e.stopPropagation(); }));
+        document.querySelectorAll('.delete-backlog').forEach(btn => btn.addEventListener('click', (e) => { if(confirm('Удалить?')) deleteTask('backlog', btn.dataset.id); e.stopPropagation(); }));
+        document.querySelectorAll('.assign-date').forEach(btn => btn.addEventListener('click', (e) => {
+            const taskId = btn.dataset.id;
+            const date = prompt('Введите дату в формате ГГГГ-ММ-ДД', new Date().toISOString().split('T')[0]);
+            if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                moveTaskToDate(taskId, 'backlog', date);
+            } else alert('Неверный формат');
+            e.stopPropagation();
+        }));
+        const draggables = document.querySelectorAll('.backlog-item');
+        draggables.forEach(drag => {
+            drag.setAttribute('draggable', 'true');
+            drag.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', JSON.stringify({ id: drag.dataset.id, from: 'backlog' }));
+            });
+        });
+        const kanbanColumns = document.querySelectorAll('.kanban-tasks');
+        if (kanbanColumns.length) {
+            kanbanColumns.forEach(col => {
+                col.addEventListener('dragover', (e) => e.preventDefault());
+                col.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                    if (data.from === 'backlog') {
+                        const newStatus = col.parentElement.dataset.status;
+                        const task = tasks.backlog.find(t => t.id === data.id);
+                        if (task) {
+                            deleteTask('backlog', data.id);
+                            const today = formatDateKey(new Date());
+                            if (!tasks[today]) tasks[today] = [];
+                            tasks[today].push({ ...task, status: newStatus, date: today });
+                            saveTasks();
+                            renderCurrentView();
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    function renderMyDay() {
+        const today = formatDateKey(new Date());
+        const dayTasks = getFilteredTasksForDate(today);
+        dayTasks.sort((a,b) => (a.startTime || '00:00').localeCompare(b.startTime || '00:00'));
+        const container = document.getElementById('calendarContainer');
+        container.innerHTML = `
+            <div style="background:white; border-radius:24px; padding:20px;">
+                <h3>Мой день – ${new Date().toLocaleDateString('ru-RU')}</h3>
+                <div id="mydayTasksList"></div>
+                <button class="add-task-btn" onclick="openTaskModalForDate('${today}')"><i class="fas fa-plus"></i> Добавить задачу</button>
+            </div>
+        `;
+        const tasksDiv = document.getElementById('mydayTasksList');
+        if (dayTasks.length === 0) tasksDiv.innerHTML = '<div class="badge">Нет задач на сегодня</div>';
+        else {
+            tasksDiv.innerHTML = dayTasks.map(task => `
+                <div class="task-item" style="border-left-color: ${getColorForStatus(task.status)};" onclick="openTaskModal('${today}', '${task.id}')">
+                    <div><strong>${escapeHtml(task.text)}</strong> ${task.startTime ? formatTime(task.startTime) : ''}</div>
+                    <div>${(task.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+                </div>
+            `).join('');
+        }
+    }
+
+    function getColorForStatus(status) {
+        const colors = { gray:'#94a3b8', purple:'#8b5cf6', red:'#dc2626', yellow:'#f59e0b', blue:'#1e40af', green:'#10b981' };
+        return colors[status] || '#94a3b8';
+    }
+
+    // ------------------------------ МОДАЛЬНОЕ ОКНО ------------------------------
+    let currentModalTarget = null;
+    let currentModalTaskId = null;
+
+    function openTaskModalForDate(dateKey) {
+        currentModalTarget = dateKey;
+        currentModalTaskId = null;
+        document.getElementById('modalTaskText').value = '';
+        document.getElementById('modalTaskStatus').value = 'gray';
+        document.getElementById('modalPriority').value = 'medium';
+        document.getElementById('modalStartTime').value = '09:00';
+        document.getElementById('modalEndTime').value = '10:00';
+        document.getElementById('modalTags').value = '';
+        document.getElementById('taskModal').style.display = 'flex';
+    }
+
+    function openTaskModalForBacklog() {
+        currentModalTarget = 'backlog';
+        currentModalTaskId = null;
+        document.getElementById('modalTaskText').value = '';
+        document.getElementById('modalTaskStatus').value = 'gray';
+        document.getElementById('modalPriority').value = 'medium';
+        document.getElementById('modalStartTime').value = '';
+        document.getElementById('modalEndTime').value = '';
+        document.getElementById('modalTags').value = '';
+        document.getElementById('taskModal').style.display = 'flex';
+    }
+
+    function openTaskModal(target, taskId) {
+        currentModalTarget = target;
+        currentModalTaskId = taskId;
+        const task = tasks[target].find(t => t.id === taskId);
+        if (task) {
+            document.getElementById('modalTaskText').value = task.text;
+            document.getElementById('modalTaskStatus').value = task.status || 'gray';
+            document.getElementById('modalPriority').value = task.priority || 'medium';
+            document.getElementById('modalStartTime').value = task.startTime || '';
+            document.getElementById('modalEndTime').value = task.endTime || '';
+            document.getElementById('modalTags').value = (task.tags || []).join(', ');
         }
         document.getElementById('taskModal').style.display = 'flex';
     }
 
-    function closeModal() {
-        document.getElementById('taskModal').style.display = 'none';
-        currentModalDate = null;
-        currentModalTaskId = null;
-    }
-
     function saveModalTask() {
         const text = document.getElementById('modalTaskText').value.trim();
-        const color = document.getElementById('modalTaskColor').value;
-        const priority = document.getElementById('modalTaskPriority').value;
+        if (!text) return;
+        const status = document.getElementById('modalTaskStatus').value;
+        const priority = document.getElementById('modalPriority').value;
         const startTime = document.getElementById('modalStartTime').value;
         const endTime = document.getElementById('modalEndTime').value;
-        const tagsStr = document.getElementById('modalTags').value;
-        const tags = tagsStr.split(',').map(s => s.trim()).filter(s => s);
-        // сбор подзадач
-        const subtasks = [];
-        document.querySelectorAll('#modalSubtasks .subtask-item').forEach(item => {
-            const cb = item.querySelector('input[type="checkbox"]');
-            const inp = item.querySelector('input[type="text"]');
-            if (inp && inp.value.trim()) {
-                subtasks.push({ text: inp.value.trim(), done: cb ? cb.checked : false });
-            }
-        });
-        if (!text) return;
+        const tags = document.getElementById('modalTags').value.split(',').map(s => s.trim()).filter(s => s);
         if (currentModalTaskId) {
-            updateTask(currentModalDate, currentModalTaskId, { text, color, priority, startTime, endTime, tags, subtasks });
+            updateTask(currentModalTarget, currentModalTaskId, { text, status, priority, startTime, endTime, tags });
         } else {
-            addTask(currentModalDate, { text, color, priority, startTime, endTime, tags, subtasks });
+            addTask(currentModalTarget, { text, status, priority, startTime, endTime, tags });
         }
         closeModal();
     }
 
     function deleteModalTask() {
         if (currentModalTaskId && confirm('Удалить задачу?')) {
-            deleteTask(currentModalDate, currentModalTaskId);
+            deleteTask(currentModalTarget, currentModalTaskId);
             closeModal();
         }
     }
 
-    function addSubtask() {
-        const container = document.getElementById('modalSubtasks');
-        const idx = container.children.length;
-        const div = document.createElement('div'); div.className = 'subtask-item';
-        div.innerHTML = `<input type="checkbox" data-idx="${idx}"><input type="text" placeholder="Подзадача" data-idx="${idx}" style="flex:1;"><button type="button" class="remove-subtask" data-idx="${idx}">❌</button>`;
-        container.appendChild(div);
-        div.querySelector('.remove-subtask').addEventListener('click', () => div.remove());
+    function closeModal() {
+        document.getElementById('taskModal').style.display = 'none';
+        currentModalTarget = null;
+        currentModalTaskId = null;
     }
 
-    // Навигация
-    function updateDateLabel() {
-        const label = document.getElementById('currentDateLabel');
-        if (currentView === 'day') {
-            label.innerText = currentDate.toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' });
-        } else if (currentView === 'week') {
-            const week = getWeekDates(currentDate);
-            label.innerText = `${week[0].toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })} - ${week[6].toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })}`;
-        } else {
-            label.innerText = currentDate.toLocaleDateString('ru-RU', { year: 'numeric', month: 'long' });
-        }
-        document.getElementById('datePicker').value = formatDateKey(currentDate);
-    }
-
-    function prev() {
-        if (currentView === 'day') currentDate.setDate(currentDate.getDate() - 1);
-        else if (currentView === 'week') currentDate.setDate(currentDate.getDate() - 7);
-        else currentDate.setMonth(currentDate.getMonth() - 1);
-        updateDateLabel();
-        renderCurrentView();
-    }
-
-    function next() {
-        if (currentView === 'day') currentDate.setDate(currentDate.getDate() + 1);
-        else if (currentView === 'week') currentDate.setDate(currentDate.getDate() + 7);
-        else currentDate.setMonth(currentDate.getMonth() + 1);
-        updateDateLabel();
-        renderCurrentView();
-    }
-
-    function goToDate() {
-        const picker = document.getElementById('datePicker');
-        const newDate = new Date(picker.value);
-        if (!isNaN(newDate.getTime())) {
-            if (currentView === 'day') currentDate = newDate;
-            else if (currentView === 'week') currentDate = newDate;
-            else currentDate = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
-            updateDateLabel();
-            renderCurrentView();
-        }
-    }
-
-    function setView(view) {
-        currentView = view;
-        document.querySelectorAll('[data-view]').forEach(btn => {
-            if (btn.getAttribute('data-view') === view) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-        updateDateLabel();
-        renderCurrentView();
-    }
-
-    function printView() {
-        window.print();
-    }
-
-    // Отчёт по статусам
+    // ------------------------------ ОТЧЁТ, ЭКСПОРТ, ИМПОРТ ------------------------------
     function showStatusReport() {
         let allTasks = [];
         for (const [date, taskList] of Object.entries(tasks)) {
+            if (date === 'backlog') continue;
             for (const task of taskList) allTasks.push(task);
         }
         const stats = { gray:0, purple:0, red:0, yellow:0, blue:0, green:0 };
-        allTasks.forEach(t => { const c = t.color || 'gray'; if (stats[c]!==undefined) stats[c]++; else stats.gray++; });
+        allTasks.forEach(t => { const c = t.status || 'gray'; stats[c]++; });
         const total = allTasks.length;
         const modal = document.createElement('div'); modal.className = 'modal'; modal.style.display = 'flex';
         modal.innerHTML = `
-            <div class="modal-content" style="width:600px;">
+            <div class="modal-content">
                 <h3>📊 Отчёт по статусам задач</h3>
                 <div class="stat-grid">
-                    <div class="stat-item"><div>⚪ Не распределено</div><div class="stat-count">${stats.gray}</div></div>
-                    <div class="stat-item"><div>📌 Запланировано</div><div class="stat-count">${stats.purple}</div></div>
-                    <div class="stat-item"><div>🔴 Срочно</div><div class="stat-count">${stats.red}</div></div>
-                    <div class="stat-item"><div>🟡 Важно</div><div class="stat-count">${stats.yellow}</div></div>
-                    <div class="stat-item"><div>🔵 В работе</div><div class="stat-count">${stats.blue}</div></div>
-                    <div class="stat-item"><div>🟢 Выполнено</div><div class="stat-count">${stats.green}</div></div>
-                </div>
-                <p><strong>Всего задач: ${total}</strong></p>
-                <div class="btn-group"><button id="printReportBtn">🖨️ Печать отчёта</button><button id="closeReportBtn">Закрыть</button></div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        modal.querySelector('#closeReportBtn').addEventListener('click', () => modal.remove());
-        modal.querySelector('#printReportBtn').addEventListener('click', () => {
-            const printWin = window.open('', '_blank');
-            printWin.document.write(`
-                <html><head><title>Отчёт по статусам задач</title><style>body{font-family:Inter;margin:20px}.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.stat-item{background:#f8fafc;padding:12px;border-radius:16px;text-align:center}.stat-count{font-size:28px;font-weight:700}</style></head>
-                <body><h1>Отчёт по статусам задач</h1><div class="stat-grid">
                     <div class="stat-item">⚪ Не распределено<br><span class="stat-count">${stats.gray}</span></div>
                     <div class="stat-item">📌 Запланировано<br><span class="stat-count">${stats.purple}</span></div>
                     <div class="stat-item">🔴 Срочно<br><span class="stat-count">${stats.red}</span></div>
                     <div class="stat-item">🟡 Важно<br><span class="stat-count">${stats.yellow}</span></div>
                     <div class="stat-item">🔵 В работе<br><span class="stat-count">${stats.blue}</span></div>
                     <div class="stat-item">🟢 Выполнено<br><span class="stat-count">${stats.green}</span></div>
-                </div><p>Всего задач: ${total}</p></body></html>
-            `);
-            printWin.document.close(); printWin.print();
-        });
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+                </div>
+                <p>Всего задач: ${total}</p>
+                <div class="btn-group"><button id="printReportBtn">🖨️ Печать</button><button id="closeReportBtn">Закрыть</button></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.querySelector('#closeReportBtn').addEventListener('click', () => modal.remove());
+        modal.querySelector('#printReportBtn').addEventListener('click', () => { window.print(); modal.remove(); });
     }
 
-    // Экспорт iCalendar
     function exportICS() {
         let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SCM Planner//RU\n";
         for (const [date, taskList] of Object.entries(tasks)) {
@@ -624,7 +574,7 @@
             for (const task of taskList) {
                 const start = task.startTime ? `${date}T${task.startTime.replace(':', '')}00` : `${date}T000000`;
                 const end = task.endTime ? `${date}T${task.endTime.replace(':', '')}00` : `${date}T010000`;
-                ics += `BEGIN:VEVENT\nUID:${task.id}\nDTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:${escapeHtml(task.text)}\nDESCRIPTION:Приоритет: ${task.priority}\\nТеги: ${(task.tags || []).join(', ')}\nEND:VEVENT\n`;
+                ics += `BEGIN:VEVENT\nUID:${task.id}\nDTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:${escapeHtml(task.text)}\nEND:VEVENT\n`;
             }
         }
         ics += "END:VCALENDAR";
@@ -647,50 +597,43 @@
         reader.readAsText(file);
     }
 
-    function handleUrlParams() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const from = urlParams.get('from');
-        const id = urlParams.get('id');
-        const name = urlParams.get('name');
-        if (from === 'audit' && id && window.SCMData) {
-            const audit = SCMData.getAuditById(id);
-            if (audit) addTask('backlog', { text: `Аудит: ${audit.type} от ${new Date(audit.date).toLocaleDateString()}`, color: 'yellow', priority: 'high', tags: ['аудит'] });
-        } else if (from === 'roadmap' && id) {
-            addTask('backlog', { text: `Дорожная карта: задача ${id}`, color: 'blue', priority: 'high', tags: ['дорожная карта'] });
-        } else if (from === 'checklist' && name) {
-            addTask('backlog', { text: `Чек-лист: ${name}`, color: 'purple', priority: 'medium', tags: ['чек-лист'] });
+    // ------------------------------ НАВИГАЦИЯ ------------------------------
+    function updateDateLabel() {
+        const label = document.getElementById('currentDateLabel');
+        if (currentView === 'day') label.innerText = currentDate.toLocaleDateString('ru-RU', { year:'numeric', month:'long', day:'numeric' });
+        else if (currentView === 'week') { const week = getWeekDates(currentDate); label.innerText = `${week[0].toLocaleDateString('ru-RU',{day:'numeric',month:'short'})} - ${week[6].toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'})}`; }
+        else label.innerText = currentDate.toLocaleDateString('ru-RU', { year:'numeric', month:'long' });
+        document.getElementById('datePicker').value = formatDateKey(currentDate);
+    }
+
+    function prev() {
+        if (currentView === 'day') currentDate.setDate(currentDate.getDate() - 1);
+        else if (currentView === 'week') currentDate.setDate(currentDate.getDate() - 7);
+        else currentDate.setMonth(currentDate.getMonth() - 1);
+        updateDateLabel(); renderCurrentView();
+    }
+    function next() {
+        if (currentView === 'day') currentDate.setDate(currentDate.getDate() + 1);
+        else if (currentView === 'week') currentDate.setDate(currentDate.getDate() + 7);
+        else currentDate.setMonth(currentDate.getMonth() + 1);
+        updateDateLabel(); renderCurrentView();
+    }
+    function goToDate() {
+        const newDate = new Date(document.getElementById('datePicker').value);
+        if (!isNaN(newDate.getTime())) {
+            if (currentView === 'day') currentDate = newDate;
+            else if (currentView === 'week') currentDate = newDate;
+            else currentDate = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
+            updateDateLabel(); renderCurrentView();
         }
     }
-
-    function checkNotifications() {
-        if (!("Notification" in window)) return;
-        if (Notification.permission === "granted") {
-            const today = formatDateKey(new Date());
-            const tomorrow = formatDateKey(new Date(Date.now() + 86400000));
-            const todayTasks = tasks[today] || [];
-            const tomorrowTasks = tasks[tomorrow] || [];
-            if (todayTasks.length) new Notification(`На сегодня ${todayTasks.length} задач`, { body: todayTasks.map(t=>t.text).join(', ') });
-            else if (tomorrowTasks.length) new Notification(`На завтра ${tomorrowTasks.length} задач`, { body: tomorrowTasks.map(t=>t.text).join(', ') });
-        } else if (Notification.permission !== "denied") {
-            Notification.requestPermission();
-        }
+    function setView(view) {
+        currentView = view;
+        document.querySelectorAll('[data-view]').forEach(btn => { if (btn.dataset.view === view) btn.classList.add('active'); else btn.classList.remove('active'); });
+        updateDateLabel(); renderCurrentView();
     }
 
-    function renderCurrentView() {
-        if (currentView === 'day') renderDayView();
-        else if (currentView === 'week') renderWeekView();
-        else if (currentView === 'month') renderMonthView();
-        else if (currentView === 'kanban') renderKanban();
-        else if (currentView === 'backlog') renderBacklog();
-        else if (currentView === 'myday') renderMyDay();
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-    }
-
-    // Инициализация
+    // ------------------------------ ИНИЦИАЛИЗАЦИЯ ------------------------------
     document.addEventListener('DOMContentLoaded', () => {
         loadTasks();
         currentDate = new Date();
@@ -698,7 +641,7 @@
         document.getElementById('prevBtn').addEventListener('click', prev);
         document.getElementById('nextBtn').addEventListener('click', next);
         document.getElementById('datePicker').addEventListener('change', goToDate);
-        document.getElementById('printViewBtn').addEventListener('click', printView);
+        document.getElementById('printViewBtn').addEventListener('click', () => window.print());
         document.getElementById('reportBtn').addEventListener('click', showStatusReport);
         document.getElementById('exportIcsBtn').addEventListener('click', exportICS);
         document.getElementById('exportJsonBtn').addEventListener('click', exportJSON);
@@ -712,16 +655,20 @@
             renderCurrentView();
         });
         document.querySelectorAll('[data-view]').forEach(btn => btn.addEventListener('click', () => setView(btn.dataset.view)));
-        handleUrlParams();
-        checkNotifications();
-
+        document.getElementById('newTaskBtn').addEventListener('click', () => {
+            if (currentView === 'backlog') openTaskModalForBacklog();
+            else if (currentView === 'day' || currentView === 'week' || currentView === 'month') {
+                const today = formatDateKey(currentDate);
+                openTaskModalForDate(today);
+            } else openTaskModalForBacklog();
+        });
         // Модальное окно
         const modalHtml = `
             <div id="taskModal" class="modal">
                 <div class="modal-content">
-                    <h3>${currentModalTaskId ? 'Редактировать задачу' : 'Новая задача'}</h3>
+                    <h3 id="modalTitle">Задача</h3>
                     <input type="text" id="modalTaskText" placeholder="Текст задачи">
-                    <select id="modalTaskColor">
+                    <select id="modalTaskStatus">
                         <option value="gray">⚪ Не распределено</option>
                         <option value="purple">📌 Запланировано</option>
                         <option value="red">🔴 Срочно</option>
@@ -729,7 +676,7 @@
                         <option value="blue">🔵 В работе</option>
                         <option value="green">🟢 Выполнено</option>
                     </select>
-                    <select id="modalTaskPriority">
+                    <select id="modalPriority">
                         <option value="high">Высокий приоритет</option>
                         <option value="medium">Средний приоритет</option>
                         <option value="low">Низкий приоритет</option>
@@ -739,10 +686,8 @@
                         <input type="time" id="modalEndTime" placeholder="Конец">
                     </div>
                     <input type="text" id="modalTags" placeholder="Теги (через запятую)">
-                    <div><label>Подзадачи:</label><button type="button" id="addSubtaskBtn">+ Добавить подзадачу</button></div>
-                    <div id="modalSubtasks"></div>
-                    <div class="modal-buttons">
-                        ${currentModalTaskId ? '<button id="modalDeleteBtn" style="background:#dc2626;">Удалить</button>' : ''}
+                    <div class="modal-buttons" style="display:flex; justify-content:flex-end; gap:12px; margin-top:16px;">
+                        <button id="modalDeleteBtn" style="background:#dc2626;">Удалить</button>
                         <button id="modalCancelBtn">Отмена</button>
                         <button id="modalSaveBtn">Сохранить</button>
                     </div>
@@ -750,13 +695,12 @@
             </div>
         `;
         document.body.insertAdjacentHTML('beforeend', modalHtml);
-        document.getElementById('taskModal').addEventListener('click', (e) => { if (e.target === document.getElementById('taskModal')) closeModal(); });
+        document.getElementById('taskModal').addEventListener('click', (e) => { if(e.target===document.getElementById('taskModal')) closeModal(); });
         document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
         document.getElementById('modalSaveBtn').addEventListener('click', saveModalTask);
-        document.getElementById('addSubtaskBtn').addEventListener('click', addSubtask);
-        if (document.getElementById('modalDeleteBtn')) {
-            document.getElementById('modalDeleteBtn').addEventListener('click', deleteModalTask);
-        }
+        document.getElementById('modalDeleteBtn').addEventListener('click', deleteModalTask);
+        window.openTaskModalForDate = openTaskModalForDate;
+        window.openTaskModalForBacklog = openTaskModalForBacklog;
         window.openTaskModal = openTaskModal;
         window.deleteTask = deleteTask;
         window.updateTask = updateTask;
