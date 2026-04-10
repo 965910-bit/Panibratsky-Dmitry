@@ -162,12 +162,48 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            margin-bottom: 16px;
-            gap: 16px;
+            margin-bottom: 24px;
+            gap: 20px;
+            background: white;
+            border-radius: 20px;
+            padding: 16px 24px;
+            border: 1px solid #e2e8f0;
+        }
+        body.dark-theme .dashboard-header {
+            background: #1e293b;
+            border-color: #334155;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         .logo-image {
-            height: 50px;
+            height: 60px;
             width: auto;
+        }
+        .contact-info {
+            font-size: 13px;
+            line-height: 1.4;
+            color: #334155;
+            border-left: 1px solid #e2e8f0;
+            padding-left: 16px;
+        }
+        body.dark-theme .contact-info {
+            color: #cbd5e1;
+            border-left-color: #334155;
+        }
+        .contact-info strong {
+            font-size: 15px;
+            color: #1e40af;
+        }
+        body.dark-theme .contact-info strong {
+            color: #90cdf4;
+        }
+        .header-buttons {
+            display: flex;
+            gap: 12px;
         }
         @media (max-width: 768px) {
             .dashboard-grid {
@@ -180,13 +216,26 @@
             .logo-image {
                 height: 40px;
             }
+            .contact-info {
+                font-size: 11px;
+                padding-left: 10px;
+            }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
         @media print {
-            .sidebar, .btn-group, .theme-switch, .chart-controls, button {
+            .sidebar, .btn-group, .theme-switch, .chart-controls, button, .header-buttons {
                 display: none;
             }
             .card {
                 break-inside: avoid;
+            }
+            .dashboard-header {
+                border: none;
+                padding: 0;
+                margin-bottom: 20px;
             }
         }
     </style>
@@ -220,17 +269,27 @@
         <div class="theme-switch" id="themeToggle">
             <i class="fas fa-moon"></i> <span>Тёмная тема</span>
         </div>
+
+        <!-- Верхняя панель с логотипом и контактами -->
         <div class="dashboard-header">
-            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" class="logo-image">
-            <div>
-                <h1>📊 SCM-дашборд</h1>
-                <p>Сводная аналитика цепи поставок: ключевые показатели, прогресс трансформации, аудиты и рекомендации.</p>
+            <div class="logo-area">
+                <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" class="logo-image">
+                <div class="contact-info">
+                    <strong>Дмитрий Панибратский</strong><br>
+                    Эксперт по SCM и логистике<br>
+                    scm-news.ru – экспертный портал<br>
+                    scm-news.online – Академия SCM<br>
+                    dmitry@scm-news.ru
+                </div>
             </div>
-            <div style="text-align: right;">
+            <div class="header-buttons">
                 <button id="printDashboardBtn" class="print-btn"><i class="fas fa-print"></i> Печать дашборда (бланк)</button>
                 <button id="emailDashboardBtn" style="background: #10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
             </div>
         </div>
+
+        <h1>📊 SCM-дашборд</h1>
+        <p>Сводная аналитика цепи поставок: ключевые показатели, прогресс трансформации, аудиты и рекомендации.</p>
 
         <div class="dashboard-grid">
             <div class="card">
@@ -317,7 +376,7 @@
             localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
         });
 
-        // Вспомогательные функции
+        // Вспомогательные функции (получение данных)
         function getLastKPI(kpiId) {
             const saved = window.SCMData?.loadKPI ? window.SCMData.loadKPI(kpiId) : (() => {
                 const raw = localStorage.getItem(`kpi_${kpiId}`);
@@ -394,6 +453,7 @@
             pickErrors: { good: 0.8, target: 0.5, unit: '%', lowerIsBetter: true }
         };
 
+        // Рендер виджетов (аналогично предыдущему, но сокращённо для экономии места)
         function renderKPIWidgets() {
             const container = document.getElementById('kpiWidgets');
             const kpiList = ['otd', 'fillrate', 'turnover', 'ccc', 'nps', 'pickErrors'];
@@ -401,7 +461,7 @@
             for (let id of kpiList) {
                 let value = getLastKPI(id);
                 if (value === null) value = '—';
-                let benchmark = benchmarks[id] || { good: '—', target: '—', unit: '', lowerIsBetter: false };
+                let benchmark = benchmarks[id];
                 let statusClass = '';
                 if (value !== '—') {
                     if (benchmark.lowerIsBetter) {
@@ -585,13 +645,14 @@
             });
         }
 
-        // ========== ПЕЧАТЬ НА БЛАНКЕ С ЛОГОТИПОМ И НИЖНИМ КОЛОНТИТУЛОМ (без телефона) ==========
+        // ПЕЧАТЬ НА БЛАНКЕ С ЛОГОТИПОМ И КОНТАКТАМИ РЯДОМ, ВНИЗУ ТОЛЬКО ПОДПИСЬ
         window.printPageWithLogo = function() {
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) return;
             const clone = mainContent.cloneNode(true);
-            clone.querySelectorAll('.btn-group, .theme-switch, .chart-controls, button, .sidebar, .print-btn, .no-print').forEach(el => el.remove());
+            clone.querySelectorAll('.btn-group, .theme-switch, .chart-controls, button, .sidebar, .print-btn, .no-print, .header-buttons').forEach(el => el.remove());
             const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+            const contactText = `Дмитрий Панибратский\nЭксперт по SCM и логистике\nscm-news.ru – экспертный портал\nscm-news.online – Академия SCM\ndmitry@scm-news.ru`;
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
                 <!DOCTYPE html>
@@ -600,33 +661,27 @@
                 <style>
                     body { font-family: Inter; margin: 20px; }
                     .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                    .logo-area-print { display: flex; align-items: center; gap: 20px; }
                     .logo-img { height: 50px; }
-                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; }
-                    .contact-info { margin-bottom: 20px; font-size: 10pt; line-height: 1.4; color: #334155; }
-                    .sign-block { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
+                    .contact-print { font-size: 10pt; line-height: 1.4; color: #334155; }
+                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
                     .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
                     table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 4px; }
                     .card { break-inside: avoid; }
                 </style>
                 </head><body>
                 <div class="print-header">
-                    <img src="${logoUrl}" alt="Логотип" class="logo-img">
+                    <div class="logo-area-print">
+                        <img src="${logoUrl}" alt="Логотип" class="logo-img">
+                        <div class="contact-print">${contactText.replace(/\n/g,'<br>')}</div>
+                    </div>
                     <div>${new Date().toLocaleString()}</div>
                 </div>
                 ${clone.outerHTML}
                 <div class="print-footer">
-                    <div class="contact-info">
-                        <strong>Дмитрий Панибратский</strong><br>
-                        Эксперт по SCM и логистике<br>
-                        scm-news.ru – экспертный портал<br>
-                        scm-news.online – Академия SCM<br>
-                        dmitry@scm-news.ru
-                    </div>
-                    <div class="sign-block">
-                        <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
-                        <div>Подпись: <span class="sign-line">_________________________</span></div>
-                        <div>Дата: ${new Date().toLocaleDateString()}</div>
-                    </div>
+                    <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                    <div>Подпись: <span class="sign-line">_________________________</span></div>
+                    <div>Дата: ${new Date().toLocaleDateString()}</div>
                 </div>
                 <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
                 </body></html>
