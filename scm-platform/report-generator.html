@@ -42,8 +42,9 @@
         .logo-image {
             width: 60px;
             height: 60px;
-            background: url('assets/LargeTile.scale-200.png') no-repeat center;
             background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
         .company-name {
             font-size: 20px;
@@ -149,6 +150,24 @@
             padding: 20px;
             margin-top: 20px;
         }
+        .branch-selector-container {
+            float: right;
+            margin-bottom: 16px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        @media (max-width: 768px) {
+            .branch-selector-container {
+                float: none;
+                margin-bottom: 16px;
+                display: flex;
+            }
+        }
         @media print {
             body {
                 background: white;
@@ -169,37 +188,110 @@
     </style>
 </head>
 <body>
-<div class="report-container" id="reportContainer">
-    <div class="report-header">
-        <div class="logo-area">
-            <div class="logo-image"></div>
-            <div class="company-name">
-                ООО «Логистик-Сервис»<br>
-                <span style="font-size: 12px;">Управление цепями поставок</span>
+<div class="app-container">
+    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
+        <div class="branch-selector-container">
+            <label><i class="fas fa-building"></i> Бизнес-единица:</label>
+            <select id="branchSelector"></select>
+        </div>
+        <div class="report-container" id="reportContainer">
+            <div class="report-header">
+                <div class="logo-area">
+                    <div class="logo-image" style="background-image: url('https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png');"></div>
+                    <div class="company-name">
+                        ООО «Логистик-Сервис»<br>
+                        <span style="font-size: 12px;">Управление цепями поставок</span>
+                    </div>
+                </div>
+                <div class="report-title" id="reportTypeTitle">Отчёт</div>
+            </div>
+            <div class="report-content" id="reportContent">
+                <div style="text-align:center; padding:40px;">Загрузка данных...</div>
+            </div>
+            <div class="btn-group">
+                <button id="printBtn"><i class="fas fa-print"></i> Печать</button>
+                <button id="emailBtn" class="mail-btn"><i class="fas fa-envelope"></i> Отправить на почту</button>
+            </div>
+            <div class="footer">
+                Сформировано автоматически в SCM-платформе. Данные актуальны на момент создания отчёта.
             </div>
         </div>
-        <div class="report-title" id="reportTypeTitle">Отчёт</div>
-    </div>
-    <div class="report-content" id="reportContent">
-        <div style="text-align:center; padding:40px;">Загрузка данных...</div>
-    </div>
-    <div class="btn-group">
-        <button id="printBtn"><i class="fas fa-print"></i> Печать</button>
-        <button id="emailBtn" class="mail-btn"><i class="fas fa-envelope"></i> Отправить на почту</button>
-    </div>
-    <div class="footer">
-        Сформировано автоматически в SCM-платформе. Данные актуальны на момент создания отчёта.
-    </div>
+    </main>
 </div>
+
 <script>
+(function() {
+    // ---- Тёмная тема ----
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    });
+
+    // ---- Филиал ----
+    let currentBranchId = 'default';
+    function loadBranchSelector() {
+        const branches = BranchManager.getBranches();
+        const tree = BranchManager.buildTree(branches);
+        const select = document.getElementById('branchSelector');
+        select.innerHTML = '';
+        const addOptions = (nodes, prefix = '') => {
+            for (let node of nodes) {
+                const opt = document.createElement('option');
+                opt.value = node.id;
+                opt.textContent = prefix + node.name + ' (' + node.type + ')';
+                if (node.id === currentBranchId) opt.selected = true;
+                select.appendChild(opt);
+                if (node.children) addOptions(node.children, prefix + '— ');
+            }
+        };
+        addOptions(tree);
+        select.addEventListener('change', (e) => {
+            setCurrentBranch(e.target.value);
+            currentBranchId = e.target.value;
+            loadReport();
+        });
+    }
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
+    }
+
+    // ---- Парсинг URL параметров ----
     const urlParams = new URLSearchParams(window.location.search);
     const type = urlParams.get('type');
     const id = urlParams.get('id');
     const name = urlParams.get('name');
     const kpiId = urlParams.get('kpi');
-
-    // Получение текущей бизнес-единицы (из глобального контекста)
-    let currentBranchId = getCurrentBranch();
 
     function loadReport() {
         let html = '';
@@ -243,16 +335,15 @@
         } else nonconformHtml = '<p>Нет несоответствий</p>';
         return `
             <div class="info-grid">
-                <div class="info-item"><span class="info-label">Тип аудита</span><span class="info-value">${audit.type}</span></div>
+                <div class="info-item"><span class="info-label">Тип аудита</span><span class="info-value">${escapeHtml(audit.type)}</span></div>
                 <div class="info-item"><span class="info-label">Дата проведения</span><span class="info-value">${dateStr}</span></div>
                 <div class="info-item"><span class="info-label">Общий уровень зрелости</span><span class="info-value">${audit.totalPercent}%</span></div>
-                <div class="info-item"><span class="info-label">Бизнес-единица</span><span class="info-value">${audit.branchId || currentBranchId}</span></div>
             </div>
             <div class="section-title">Оценки по секциям</div>
             <table>
                 <thead><tr><th>Секция</th><th>Процент</th></tr></thead>
                 <tbody>
-                    ${Object.entries(audit.sectionScores || {}).map(([sec, score]) => `<tr><td>${sec}</td><td>${Math.round(score)}%</td>`).join('')}
+                    ${Object.entries(audit.sectionScores || {}).map(([sec, score]) => `<tr><td>${escapeHtml(sec)}</td><td>${Math.round(score)}%</td></tr>`).join('')}
                 </tbody>
             </table>
             <div class="section-title">Несоответствия и рекомендации</div>
@@ -276,7 +367,6 @@
                 <div class="info-item"><span class="info-label">Категория</span><span class="info-value">${escapeHtml(name)}</span></div>
                 <div class="info-item"><span class="info-label">Дата отчёта</span><span class="info-value">${new Date().toLocaleString()}</span></div>
                 <div class="info-item"><span class="info-label">Выполнение</span><span class="info-value">${Math.round(percent)}% (${completed}/${total})</span></div>
-                <div class="info-item"><span class="info-label">Бизнес-единица</span><span class="info-value">${currentBranchId}</span></div>
             </div>
             <div class="section-title">Список пунктов</div>
             ${itemsHtml}
@@ -286,19 +376,17 @@
     function renderKpiReport(kpiId, kpiData) {
         const value = kpiData.result;
         const date = new Date(kpiData.timestamp).toLocaleString();
-        const unit = kpiData.unit || '';
         return `
             <div class="info-grid">
                 <div class="info-item"><span class="info-label">KPI</span><span class="info-value">${kpiId.toUpperCase()}</span></div>
-                <div class="info-item"><span class="info-label">Значение</span><span class="info-value">${value} ${unit}</span></div>
+                <div class="info-item"><span class="info-label">Значение</span><span class="info-value">${value}</span></div>
                 <div class="info-item"><span class="info-label">Дата расчёта</span><span class="info-value">${date}</span></div>
-                <div class="info-item"><span class="info-label">Бизнес-единица</span><span class="info-value">${kpiData.branchId || currentBranchId}</span></div>
             </div>
             <div class="section-title">Исходные данные</div>
             <table>
                 <thead><tr><th>Параметр</th><th>Значение</th></tr></thead>
                 <tbody>
-                    ${Object.entries(kpiData.values || {}).map(([key, val]) => `<tr><td>${key}</td><td>${val}</td>`).join('')}
+                    ${Object.entries(kpiData.values || {}).map(([key, val]) => `<tr><td>${escapeHtml(key)}</td><td>${escapeHtml(val)}</td></tr>`).join('')}
                 </tbody>
             </table>
         `;
@@ -309,68 +397,65 @@
         return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
     }
 
-    // Печать на бланке с логотипом и подписью (поверх стандартной печати)
-    function printWithLogo() {
-        const reportContent = document.getElementById('reportContent').cloneNode(true);
-        const header = document.querySelector('.report-header').cloneNode(true);
-        const footer = document.querySelector('.footer').cloneNode(true);
+    // Печать на бланке (специальная для отчёта)
+    window.printReportWithLogo = function() {
+        const reportContainer = document.getElementById('reportContainer');
+        if (!reportContainer) return;
+        const clone = reportContainer.cloneNode(true);
+        clone.querySelectorAll('.btn-group, .branch-selector-container, .theme-switch, .sidebar, button').forEach(el => el.remove());
         const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
             <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Отчёт SCM</title>
-                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-                <style>
-                    body { font-family: Inter; margin: 20px; }
-                    .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
-                    .logo-img { height: 50px; }
-                    .contact-info { font-size: 10pt; line-height: 1.4; }
-                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-                    .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
-                    table { border-collapse: collapse; width: 100%; }
-                    th, td { border: 1px solid #ccc; padding: 6px; }
-                    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 10px; margin-bottom: 20px; }
-                </style>
-            </head>
-            <body>
-                <div class="print-header">
-                    <div style="display:flex; align-items:center; gap:20px;">
-                        <img src="${logoUrl}" class="logo-img">
-                        <div class="contact-info">
-                            Дмитрий Панибратский<br>
-                            Эксперт по SCM и логистике<br>
-                            scm-news.ru – экспертный портал<br>
-                            scm-news.online – Академия SCM<br>
-                            dmitry@scm-news.ru
-                        </div>
-                    </div>
-                    <div>${new Date().toLocaleString()}</div>
-                </div>
-                ${header.outerHTML}
-                ${reportContent.outerHTML}
-                <div class="print-footer">
-                    <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
-                    <div>Подпись: <span class="sign-line">_________________________</span></div>
-                    <div>Дата: ${new Date().toLocaleDateString()}</div>
-                </div>
-                <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); };<\/script>
-            </body>
-            </html>
+            <html><head><meta charset="UTF-8"><title>Отчёт SCM</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: Inter; margin: 20px; }
+                .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                .logo-img { height: 50px; }
+                .contact-info { font-size: 10pt; line-height: 1.4; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+                .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                .report-header { background: #1e40af; color: white; padding: 12px; -webkit-print-color-adjust: exact; }
+            </style>
+            </head><body>
+            <div class="print-header">
+                <div style="display:flex;align-items:center;gap:20px"><img src="${logoUrl}" class="logo-img"><div class="contact-info">Дмитрий Панибратский<br>Эксперт по SCM и логистике<br>scm-news.ru – экспертный портал<br>scm-news.online – Академия SCM<br>dmitry@scm-news.ru</div></div>
+                <div>${new Date().toLocaleString()}</div>
+            </div>
+            ${clone.innerHTML}
+            <div class="print-footer">
+                <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                <div>Подпись: <span class="sign-line">_________________________</span></div>
+                <div>Дата: ${new Date().toLocaleDateString()}</div>
+            </div>
+            <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+            </body></html>
         `);
         printWindow.document.close();
-    }
+    };
 
-    document.getElementById('printBtn').addEventListener('click', () => printWithLogo());
-    document.getElementById('emailBtn').addEventListener('click', () => {
+    window.sendReportByEmail = function() {
+        const reportContent = document.getElementById('reportContent');
+        if (!reportContent) return;
+        const text = reportContent.innerText;
         const subject = encodeURIComponent(document.getElementById('reportTypeTitle').innerText);
-        const body = encodeURIComponent(document.getElementById('reportContent').innerText.substring(0, 2000));
+        const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
-    });
+    };
 
-    loadReport();
+    document.getElementById('printBtn').addEventListener('click', () => window.printReportWithLogo());
+    document.getElementById('emailBtn').addEventListener('click', () => window.sendReportByEmail());
+
+    // Инициализация
+    function init() {
+        BranchManager.ensureDefaultBranch();
+        currentBranchId = getCurrentBranch();
+        loadBranchSelector();
+        loadReport();
+    }
+    init();
+})();
 </script>
 </body>
 </html>
