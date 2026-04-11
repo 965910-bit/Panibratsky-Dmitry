@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="scm-style.css">
     <script src="scm-common.js"></script>
     <style>
-        /* дополнительные стили для ежедневника */
         .daily-header {
             display: flex;
             justify-content: space-between;
@@ -26,6 +25,7 @@
             gap: 24px;
             flex-wrap: wrap;
             border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
         }
         .kpi-item {
             text-align: center;
@@ -104,9 +104,39 @@
             align-items: center;
             gap: 12px;
         }
+        .branch-selector-container {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 6px 14px;
+            border-radius: 30px;
+            background: #f1f5f9;
+            cursor: pointer;
+            border: none;
+        }
+        .tab.active {
+            background: #1e40af;
+            color: white;
+        }
         @media (max-width: 768px) {
             .two-columns, .frog-elephant {
                 grid-template-columns: 1fr;
+            }
+            .daily-header {
+                flex-direction: column;
+                align-items: stretch;
             }
         }
         @media print {
@@ -133,7 +163,7 @@
                 <button id="todayBtn">Сегодня</button>
             </div>
             <div>
-                <button id="printDayBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать дня</button>
+                <button id="printDayBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать дня (бланк)</button>
                 <button id="emailDayBtn" style="background:#10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
             </div>
         </div>
@@ -152,9 +182,12 @@
             <!-- Правая колонка: Гибкие задачи по категориям -->
             <div class="card">
                 <h3><i class="fas fa-tasks"></i> Гибкие задачи</h3>
-                <div id="categoryTabs" class="tabs" style="display:flex; gap:8px; margin-bottom:16px;"></div>
+                <div id="categoryTabs" class="tabs"></div>
                 <div id="categoryTasksContainer"></div>
                 <button id="addTaskInCurrentCategoryBtn" class="btn-icon"><i class="fas fa-plus"></i> Добавить задачу</button>
+                <div style="margin-top:12px;">
+                    <button id="importFromRegistryBtn" class="btn-icon"><i class="fas fa-download"></i> Импорт из реестра поручений</button>
+                </div>
             </div>
         </div>
 
@@ -181,13 +214,14 @@
 
         <div class="btn-group" style="margin-top: 16px;">
             <button id="saveAllBtn">💾 Сохранить весь день</button>
+            <button id="syncWithRegistryBtn">🔄 Синхронизировать с реестром поручений</button>
         </div>
     </main>
 </div>
 
 <script>
 (function() {
-    // ---------- 1. Тёмная тема ----------
+    // ---- Тёмная тема ----
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -196,7 +230,7 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---------- 2. Филиал ----------
+    // ---- Филиал ----
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -217,18 +251,18 @@
         select.addEventListener('change', (e) => {
             setCurrentBranch(e.target.value);
             currentBranchId = e.target.value;
-            loadDayData();
             renderKPIWidget();
+            loadDayData();
         });
     }
 
-    // ---------- 3. KPI дня ----------
+    // ---- KPI дня ----
     function renderKPIWidget() {
         const container = document.getElementById('kpiWidget');
         const kpis = [
-            { id: 'otd', label: 'OTD (%)', target: 96 },
-            { id: 'fillrate', label: 'Fill Rate (%)', target: 95 },
-            { id: 'turnover', label: 'Оборачиваемость (раз)', target: 5 },
+            { id: 'otd', label: 'OTD (%)', target: 96, lowerBetter: false },
+            { id: 'fillrate', label: 'Fill Rate (%)', target: 95, lowerBetter: false },
+            { id: 'turnover', label: 'Оборачиваемость (раз)', target: 5, lowerBetter: false },
             { id: 'pickErrors', label: 'Ошибки сборки (%)', target: 0.8, lowerBetter: true }
         ];
         let html = '';
@@ -245,16 +279,16 @@
         container.innerHTML = html;
     }
 
-    // ---------- 4. Работа с данными дня (хранилище) ----------
+    // ---- Данные дня (хранилище) ----
     let currentDate = new Date();
     let dayData = {
         events: [],      // { id, time, title }
-        tasks: [],       // { id, category, text, completed, priority, frog, elephant, parentId, subtasks }
+        tasks: [],       // { id, category, text, completed, priority, frog, elephant, parentId, subtasks, source, registryId }
         frogTaskId: null,
         elephantTaskId: null,
         memo: ''
     };
-    const categories = ['Закупки', 'Логистика', 'S&OP', 'Проекты'];
+    const categories = ['Закупки', 'Логистика', 'S&OP', 'Проекты', 'Поручения'];
     let currentCategory = categories[0];
 
     function getStorageKey() {
@@ -270,28 +304,25 @@
         } else {
             dayData = { events: [], tasks: [], frogTaskId: null, elephantTaskId: null, memo: '' };
         }
-        // синхронизация с глобальными задачами планера (scm_planner_tasks_v5) – импортируем задачи, у которых есть поле date = текущая дата и branchId
+        // Импорт задач из глобального планера (на случай, если они были созданы вне ежедневника)
         const plannerTasks = getPlannerTasks(currentBranchId);
         const dateStr = currentDate.toISOString().split('T')[0];
-        const dayPlannerTasks = [];
-        for (let [date, list] of Object.entries(plannerTasks)) {
-            if (date === dateStr && Array.isArray(list)) {
-                for (let t of list) {
-                    if (!dayData.tasks.find(tt => tt.id === t.id)) {
-                        dayData.tasks.push({
-                            id: t.id,
-                            category: t.category || 'Закупки',
-                            text: t.text,
-                            completed: t.completed || false,
-                            priority: t.priority,
-                            frog: t.frog || false,
-                            elephant: t.elephant || false,
-                            parentId: t.parentId || null,
-                            subtasks: t.subtasks || []
-                        });
-                    }
-                }
-                break;
+        const dayPlannerTasks = plannerTasks[dateStr] || [];
+        for (let t of dayPlannerTasks) {
+            if (!dayData.tasks.find(tt => tt.id === t.id)) {
+                dayData.tasks.push({
+                    id: t.id,
+                    category: t.category || 'Поручения',
+                    text: t.text,
+                    completed: t.completed || false,
+                    priority: t.priority,
+                    frog: t.frog || false,
+                    elephant: t.elephant || false,
+                    parentId: t.parentId || null,
+                    subtasks: t.subtasks || [],
+                    source: t.source || 'planner',
+                    registryId: t.originalId || null
+                });
             }
         }
         renderEvents();
@@ -304,11 +335,11 @@
     function saveDayData() {
         const key = getStorageKey();
         localStorage.setItem(key, JSON.stringify(dayData));
-        // также синхронизируем задачи с глобальным планером
+        // Синхронизация с глобальным планером
         const plannerTasks = getPlannerTasks(currentBranchId);
         const dateStr = currentDate.toISOString().split('T')[0];
         if (!plannerTasks[dateStr]) plannerTasks[dateStr] = [];
-        // обновляем/добавляем задачи из dayData.tasks
+        // Обновляем/добавляем задачи из dayData.tasks
         for (let task of dayData.tasks) {
             const existingIndex = plannerTasks[dateStr].findIndex(t => t.id === task.id);
             const plannerTask = {
@@ -321,6 +352,8 @@
                 elephant: task.elephant,
                 parentId: task.parentId,
                 subtasks: task.subtasks,
+                source: task.source || 'daily',
+                originalId: task.registryId,
                 date: dateStr,
                 branchId: currentBranchId
             };
@@ -330,11 +363,14 @@
                 plannerTasks[dateStr].push(plannerTask);
             }
         }
+        // Удаляем из планера задачи, которые были удалены из dayData
+        const currentIds = new Set(dayData.tasks.map(t => t.id));
+        plannerTasks[dateStr] = plannerTasks[dateStr].filter(t => currentIds.has(t.id));
         savePlannerTasks(plannerTasks, currentBranchId);
         alert('День сохранён');
     }
 
-    // ---------- 5. Жёсткая сетка (события) ----------
+    // ---- Жёсткая сетка (события) ----
     function renderEvents() {
         const container = document.getElementById('eventsContainer');
         if (!dayData.events.length) {
@@ -366,7 +402,7 @@
         saveDayData();
     });
 
-    // ---------- 6. Гибкие задачи по категориям ----------
+    // ---- Гибкие задачи по категориям ----
     function renderCategoryTabs() {
         const container = document.getElementById('categoryTabs');
         container.innerHTML = categories.map(cat => `<button class="tab ${currentCategory === cat ? 'active' : ''}" data-category="${cat}">${cat}</button>`).join('');
@@ -390,6 +426,7 @@
                 <div style="display:flex; align-items:center; gap:8px;">
                     <input type="checkbox" class="task-complete" data-id="${task.id}" ${task.completed ? 'checked' : ''}>
                     <span style="${task.completed ? 'text-decoration:line-through; color:#94a3b8;' : ''}">${escapeHtml(task.text)}</span>
+                    ${task.source === 'registry' ? '<span class="badge" style="font-size:10px;">реестр</span>' : ''}
                 </div>
                 <div>
                     <button class="edit-task btn-icon" data-id="${task.id}"><i class="fas fa-edit"></i></button>
@@ -443,14 +480,52 @@
             frog: false,
             elephant: false,
             parentId: null,
-            subtasks: []
+            subtasks: [],
+            source: 'daily'
         };
         dayData.tasks.push(newTask);
         saveDayData();
         renderCategoryTasks();
     });
 
-    // ---------- 7. Лягушка и Слон ----------
+    // ---- Импорт из реестра поручений ----
+    document.getElementById('importFromRegistryBtn').addEventListener('click', () => {
+        const registryKey = `tasks_registry_${currentBranchId}`;
+        const registryTasks = JSON.parse(localStorage.getItem(registryKey) || '[]');
+        const openRegistryTasks = registryTasks.filter(t => t.status !== 'done' && t.status !== 'review');
+        if (!openRegistryTasks.length) {
+            alert('Нет открытых поручений в реестре');
+            return;
+        }
+        let imported = 0;
+        for (let rt of openRegistryTasks) {
+            if (!dayData.tasks.some(t => t.registryId === rt.id)) {
+                dayData.tasks.push({
+                    id: `reg_${rt.id}`,
+                    category: 'Поручения',
+                    text: rt.text,
+                    completed: false,
+                    priority: rt.priority || 'medium',
+                    frog: false,
+                    elephant: false,
+                    parentId: null,
+                    subtasks: [],
+                    source: 'registry',
+                    registryId: rt.id
+                });
+                imported++;
+            }
+        }
+        if (imported) {
+            saveDayData();
+            renderCategoryTasks();
+            alert(`Импортировано ${imported} поручений`);
+        } else {
+            alert('Все поручения уже добавлены');
+        }
+    });
+
+    // ---- Лягушка и Слон ----
     function renderFrogElephant() {
         const frogTask = dayData.tasks.find(t => t.id === dayData.frogTaskId);
         const frogContainer = document.getElementById('frogContainer');
@@ -460,7 +535,6 @@
         } else {
             frogContainer.innerHTML = '<div class="badge">Лягушка не назначена</div>';
         }
-
         const elephantTask = dayData.tasks.find(t => t.id === dayData.elephantTaskId);
         const elephantContainer = document.getElementById('elephantContainer');
         if (elephantTask) {
@@ -486,7 +560,8 @@
             frog: true,
             elephant: false,
             parentId: null,
-            subtasks: []
+            subtasks: [],
+            source: 'daily'
         };
         dayData.tasks.push(newTask);
         dayData.frogTaskId = newTask.id;
@@ -506,7 +581,8 @@
             frog: false,
             elephant: true,
             parentId: null,
-            subtasks: []
+            subtasks: [],
+            source: 'daily'
         };
         dayData.tasks.push(newTask);
         dayData.elephantTaskId = newTask.id;
@@ -522,7 +598,6 @@
             elephant.subtasks = subtasksInput.split(',').map(s => s.trim());
             saveDayData();
             renderFrogElephant();
-            // также создаём эти подзадачи как отдельные задачи в категории "Проекты" (бифштексы)
             for (let sub of elephant.subtasks) {
                 dayData.tasks.push({
                     id: Date.now().toString() + Math.random(),
@@ -533,7 +608,8 @@
                     frog: false,
                     elephant: false,
                     parentId: elephant.id,
-                    subtasks: []
+                    subtasks: [],
+                    source: 'daily'
                 });
             }
             saveDayData();
@@ -541,13 +617,36 @@
         }
     });
 
-    // ---------- 8. Мемуарник ----------
+    // ---- Мемуарник ----
     document.getElementById('memoText').addEventListener('change', () => {
         dayData.memo = document.getElementById('memoText').value;
         saveDayData();
     });
 
-    // ---------- 9. Сохранение и навигация по дням ----------
+    // ---- Синхронизация с реестром (обновление статусов) ----
+    document.getElementById('syncWithRegistryBtn').addEventListener('click', () => {
+        const registryKey = `tasks_registry_${currentBranchId}`;
+        let registryTasks = JSON.parse(localStorage.getItem(registryKey) || '[]');
+        let updated = 0;
+        for (let task of dayData.tasks) {
+            if (task.registryId) {
+                const regTask = registryTasks.find(rt => rt.id === task.registryId);
+                if (regTask && regTask.status !== (task.completed ? 'done' : 'new')) {
+                    regTask.status = task.completed ? 'done' : 'new';
+                    updated++;
+                }
+            }
+        }
+        if (updated) {
+            localStorage.setItem(registryKey, JSON.stringify(registryTasks));
+            alert(`Обновлено ${updated} поручений в реестре`);
+        } else {
+            alert('Нет изменений для синхронизации');
+        }
+        saveDayData();
+    });
+
+    // ---- Навигация по дням ----
     document.getElementById('saveAllBtn').addEventListener('click', () => {
         dayData.memo = document.getElementById('memoText').value;
         saveDayData();
@@ -556,26 +655,33 @@
         currentDate.setDate(currentDate.getDate() + delta);
         updateDatePicker();
         loadDayData();
+        renderKPIWidget();
     }
     function updateDatePicker() {
         const dateStr = currentDate.toISOString().split('T')[0];
         document.getElementById('datePicker').value = dateStr;
-        document.querySelector('.daily-header h2')?.remove();
     }
     document.getElementById('prevDayBtn').addEventListener('click', () => changeDate(-1));
     document.getElementById('nextDayBtn').addEventListener('click', () => changeDate(1));
-    document.getElementById('todayBtn').addEventListener('click', () => { currentDate = new Date(); updateDatePicker(); loadDayData(); });
+    document.getElementById('todayBtn').addEventListener('click', () => { currentDate = new Date(); updateDatePicker(); loadDayData(); renderKPIWidget(); });
     document.getElementById('datePicker').addEventListener('change', (e) => {
         currentDate = new Date(e.target.value);
         loadDayData();
+        renderKPIWidget();
     });
 
-    // ---------- 10. Печать на бланке и отправка на почту ----------
+    // ---- Печать на бланке ----
     window.printDayWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
         const clone = mainContent.cloneNode(true);
-        clone.querySelectorAll('.theme-switch, .btn-group, .btn-icon, .branch-selector-container, .date-nav button, .add-event, .add-task-category, .remove-frog, .remove-elephant, .delete-event, .edit-task, .delete-task, .task-complete, #saveAllBtn').forEach(el => el.remove());
+        clone.querySelectorAll('.theme-switch, .btn-group, .btn-icon, .branch-selector-container, .date-nav button, .add-event, .add-task-category, .remove-frog, .remove-elephant, .delete-event, .edit-task, .delete-task, .task-complete, #saveAllBtn, #syncWithRegistryBtn, #importFromRegistryBtn').forEach(el => el.remove());
+        // Преобразуем чекбоксы в текст
+        clone.querySelectorAll('.task-category-item input[type="checkbox"]').forEach(cb => {
+            const span = document.createElement('span');
+            span.textContent = cb.checked ? '✅' : '⬜';
+            cb.parentNode.replaceChild(span, cb);
+        });
         const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
@@ -587,7 +693,7 @@
                 .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
                 .logo-img { height: 50px; }
                 .contact-info { font-size: 10pt; line-height: 1.4; }
-                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
                 .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
                 .card { break-inside: avoid; }
             </style>
@@ -618,7 +724,7 @@
     document.getElementById('printDayBtn').addEventListener('click', () => window.printDayWithLogo());
     document.getElementById('emailDayBtn').addEventListener('click', () => window.sendDayByEmail());
 
-    // ---------- 11. Инициализация ----------
+    // ---- Инициализация ----
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
