@@ -22,19 +22,47 @@
             flex-wrap: wrap;
         }
         .search-bar i { color: #94a3b8; font-size: 18px; }
-        .search-bar input { flex: 1; border: none; outline: none; font-size: 16px; background: transparent; font-family: inherit; }
-        .search-bar button { background: #1e40af; color: white; border: none; padding: 6px 16px; border-radius: 30px; cursor: pointer; }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            font-family: inherit;
+        }
+        .search-bar button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
         .search-bar button.reset { background: #94a3b8; }
-        .search-results-count { font-size: 14px; color: #64748b; margin-bottom: 16px; }
-        .card { background: white; border-radius: 20px; padding: 24px; margin-bottom: 24px; border: 1px solid #e2e8f0; }
-        .methodology-grid, .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 16px; }
+        .search-results-count {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+        .methodology-grid, .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
         .methodology-card, .kpi-card {
             background: #f8fafc;
             border-radius: 16px;
             padding: 20px;
             border-left: 4px solid #1e40af;
             position: relative;
-            transition: 0.2s;
         }
         .methodology-card h3, .kpi-card h3 {
             margin-bottom: 12px;
@@ -43,10 +71,22 @@
             justify-content: space-between;
             align-items: center;
         }
-        .favorite-star { cursor: pointer; color: #cbd5e1; transition: 0.2s; margin-left: 8px; }
-        .favorite-star.active { color: #f59e0b; }
-        .glossary-list dt { font-weight: 700; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .glossary-list dd { margin-left: 20px; color: #334155; margin-bottom: 8px; }
+        .favorite-star {
+            cursor: pointer;
+            color: #cbd5e1;
+            transition: 0.2s;
+        }
+        .favorite-star.active {
+            color: #f59e0b;
+        }
+        .glossary-list dt {
+            font-weight: 700;
+            margin-top: 12px;
+        }
+        .glossary-list dd {
+            margin-left: 20px;
+            color: #334155;
+        }
         .two-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
         mark { background: #fef08a; color: #0f172a; padding: 0 2px; border-radius: 4px; }
         .branch-selector-container {
@@ -60,10 +100,22 @@
             align-items: center;
             gap: 8px;
         }
-        .btn-group { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; justify-content: flex-end; }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
         @media (max-width: 768px) {
-            .methodology-grid, .kpi-grid { grid-template-columns: 1fr; }
-            .branch-selector-container { float: none; margin-bottom: 16px; display: flex; }
+            .methodology-grid, .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            .branch-selector-container {
+                float: none;
+                margin-bottom: 16px;
+                display: flex;
+            }
         }
         @media print {
             .sidebar, .btn-group, .branch-selector-container, .theme-switch, .search-bar, .favorite-star {
@@ -74,7 +126,31 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">...</aside>
+    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html" class="active"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main class="main-content">
         <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
@@ -107,55 +183,19 @@
             <div class="methodology-grid" id="methodologiesGrid"></div>
         </div>
 
-        <!-- БЛОК 2: ПОЛНЫЙ СПРАВОЧНИК KPI (все метрики) -->
+        <!-- БЛОК 2: ПОЛНЫЙ СПРАВОЧНИК KPI -->
         <div class="card" data-card>
             <h2>Полный справочник KPI (показатели эффективности)</h2>
             <div class="kpi-grid" id="kpiGrid"></div>
         </div>
 
-        <!-- БЛОК 3: РАСШИРЕННЫЕ ПОКАЗАТЕЛИ (закупки, безопасность, тендеры, аудит) -->
-        <div class="card" data-card>
-            <h2>Расширенные показатели: закупки, безопасность, тендеры, аудит</h2>
-            <div class="kpi-grid" id="extendedKpiGrid"></div>
-        </div>
-
-        <!-- БЛОК 4: РОБОТИЗАЦИЯ (RPA) И ЦИФРОВАЯ ТРАНСФОРМАЦИЯ -->
-        <div class="card" data-card>
-            <h2>Роботизация (RPA) и цифровая трансформация SCM</h2>
-            <div class="kpi-grid" id="digitalKpiGrid"></div>
-        </div>
-
-        <!-- БЛОК 5: МАТЕРИАЛЬНЫЕ И НЕМАТЕРИАЛЬНЫЕ ПОТОКИ -->
-        <div class="card" data-card>
-            <h2>Материальные и нематериальные потоки в логистике</h2>
-            <div class="methodology-grid" id="flowsGrid"></div>
-        </div>
-
-        <!-- БЛОК 6: МОДЕЛИ АУТСОРСИНГА (1PL–5PL) -->
-        <div class="card" data-card>
-            <h2>Модели аутсорсинга в логистике: 1PL → 5PL</h2>
-            <div class="methodology-grid" id="outsourcingGrid"></div>
-        </div>
-
-        <!-- БЛОК 7: SLA (Service Level Agreement) -->
-        <div class="card" data-card>
-            <h2>Соглашение об уровне обслуживания (SLA) в логистике</h2>
-            <div class="kpi-grid" id="slaGrid"></div>
-        </div>
-
-        <!-- БЛОК 8: РАСШИРЕННЫЙ ГЛОССАРИЙ КЛЮЧЕВЫХ ТЕРМИНОВ -->
+        <!-- БЛОК 3: РАСШИРЕННЫЙ ГЛОССАРИЙ -->
         <div class="card" data-card>
             <h2>Расширенный глоссарий ключевых терминов</h2>
             <div class="two-columns">
                 <div id="glossaryCol1"></div>
                 <div id="glossaryCol2"></div>
             </div>
-        </div>
-
-        <!-- БЛОК 9: ЛУЧШИЕ ПРАКТИКИ ПО КЛЮЧЕВЫМ НАПРАВЛЕНИЯМ -->
-        <div class="card" data-card>
-            <h2>Лучшие практики по ключевым направлениям SCM</h2>
-            <div class="methodology-grid" id="practicesGrid"></div>
         </div>
     </main>
 </div>
@@ -196,143 +236,58 @@
             renderAll();
         });
     }
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
+    }
 
-    // ---- ДАННЫЕ БИБЛИОТЕКИ (ПОЛНЫЙ КОНТЕНТ ИЗ ИСХОДНОГО ФАЙЛА) ----
+    // ---- Данные библиотеки ----
     const methodologies = [
-        { name: "SCOR (Supply Chain Operations Reference)", desc: "Сквозная референсная модель для описания, измерения и улучшения цепей поставок. Включает 6 процессов: Plan, Source, Make, Deliver, Return, Enable. Позволяет проводить бенчмаркинг и выявлять узкие места.", tags: "scor модель эталон цепочка поставок бенчмаркинг" },
-        { name: "DCOR (Design Chain Operations Reference)", desc: "Расширение SCOR для управления жизненным циклом продукта: Research, Design, Integrate, Amplify. Используется для повышения эффективности R&D и инжиниринга в цепочке поставок.", tags: "dcor жизненный цикл продукта r&d инжиниринг" },
-        { name: "CCOR (Customer Chain Operations Reference)", desc: "Модель, фокусирующаяся на взаимодействии с клиентами, охватывая процессы маркетинга, продаж и обслуживания для создания бесшовного клиентского опыта.", tags: "ccor клиентский опыт маркетинг продажи обслуживание" },
-        { name: "S&OP (Sales and Operations Planning)", desc: "Интегрированный ежемесячный процесс планирования, объединяющий продажи, производство, логистику и финансы. Балансирует спрос и предложение для согласования стратегических целей.", tags: "s&op планирование продажи операции спрос предложение" },
-        { name: "Lean Six Sigma", desc: "Подход, объединяющий Lean (устранение потерь) и Six Sigma (снижение вариабельности). В SCM помогает сокращать дефекты на 50-70%, уменьшать время выполнения заказов на 30-40% и повышать надежность поставщиков.", tags: "lean six sigma бережливое производство потери вариабельность дефекты" },
-        { name: "E2E (End-to-End) планирование", desc: "Сквозное планирование всей цепочки поставок — от поставщика до клиента — с учётом всех ограничений. Позволяет оптимизировать запасы и повысить скорость реакции.", tags: "e2e end-to-end сквозное планирование оптимизация запасов" },
-        { name: "Kraljic Matrix", desc: "Стратегическая модель для анализа и сегментации портфеля закупок, классифицирующая товары по двум осям: влияние на прибыль и риск поставки.", tags: "kraljic матрица закупки портфель прибыль риск" },
-        { name: "SCOR Digital Standard", desc: "Цифровая версия SCOR-модели, ориентированная на внедрение AI, машинного обучения и аналитики больших данных для повышения точности прогнозов и автономной оптимизации.", tags: "scor digital ai машинное обучение big data прогнозирование" }
+        { name: "SCOR (Supply Chain Operations Reference)", desc: "Сквозная референсная модель для описания, измерения и улучшения цепей поставок. Включает 6 процессов: Plan, Source, Make, Deliver, Return, Enable.", tags: "scor модель эталон цепочка поставок бенчмаркинг" },
+        { name: "DCOR (Design Chain Operations Reference)", desc: "Расширение SCOR для управления жизненным циклом продукта: Research, Design, Integrate, Amplify.", tags: "dcor жизненный цикл продукта r&d инжиниринг" },
+        { name: "CCOR (Customer Chain Operations Reference)", desc: "Модель, фокусирующаяся на взаимодействии с клиентами, охватывая процессы маркетинга, продаж и обслуживания.", tags: "ccor клиентский опыт маркетинг продажи обслуживание" },
+        { name: "S&OP (Sales and Operations Planning)", desc: "Интегрированный ежемесячный процесс планирования, объединяющий продажи, производство, логистику и финансы.", tags: "s&op планирование продажи операции спрос предложение" },
+        { name: "Lean Six Sigma", desc: "Подход, объединяющий Lean (устранение потерь) и Six Sigma (снижение вариабельности).", tags: "lean six sigma бережливое производство потери вариабельность дефекты" },
+        { name: "Kraljic Matrix", desc: "Стратегическая модель для анализа и сегментации портфеля закупок по двум осям: влияние на прибыль и риск поставки.", tags: "kraljic матрица закупки портфель прибыль риск" },
+        { name: "Цифровой двойник в SCM", desc: "Динамическая модель, синхронизированная с реальными процессами, для what-if анализа и оптимизации.", tags: "цифровой двойник what-if моделирование" }
     ];
 
     const kpiList = [
-        { name: "Perfect Order Fulfillment", formula: "(Кол-во идеально выполненных заказов / Общее кол-во заказов) × 100%", desc: "Процент заказов, выполненных вовремя, полностью, без повреждений и с корректными документами. Ключевой интегральный показатель качества SCM.", tags: "идеальный заказ выполнение вовремя без повреждений точность документов интегральный показатель качество" },
-        { name: "On-Time Delivery (OTD)", formula: "(Кол-во доставок вовремя / Общее кол-во доставок) × 100%", desc: "Доля заказов, доставленных в согласованный срок. Отражает надёжность перевозчика.", tags: "своевременность доставка в срок надежность перевозчика" },
-        { name: "Delivery In Full (DI)", formula: "(Кол-во полностью отгруженных заказов / Общее кол-во заказов) × 100%", desc: "Доля заказов, отгруженных в полном объёме без замен.", tags: "полнота отгрузка без замен" },
-        { name: "Order Fulfillment Cycle Time", formula: "Среднее (Фактическая дата отгрузки - Дата получения заказа)", desc: "Среднее время от получения заказа до его отгрузки. Отражает скорость реакции.", tags: "цикл выполнения заказа время от получения до отгрузки скорость реакции" },
-        { name: "Total Supply Chain Cost", formula: "Суммарные затраты на SCM (планирование, закупки, производство, доставка, возвраты, склад)", desc: "Общие затраты на управление цепочкой поставок. Часто выражается в % от выручки.", tags: "общие затраты на scm планирование закупки производство доставка возвраты склад" },
-        { name: "Cash-to-Cash Cycle Time", formula: "DIO + DSO – DPO", desc: "Время от оплаты сырья до получения денег от клиента. Чем короче, тем лучше для ликвидности.", tags: "cash-to-cash финансовый цикл ликвидность dio dso dpo" },
-        { name: "Inventory Days of Supply", formula: "(Средний остаток запасов / Себестоимость продаж) × 365", desc: "На сколько дней текущей деятельности хватит имеющихся запасов.", tags: "инвентаризация дни запаса запас" },
-        { name: "Gross Margin Return on Investment (GMROI)", formula: "Валовая прибыль / Средние инвестиции в запасы", desc: "Сколько валовой прибыли приносит каждый рубль, вложенный в запасы.", tags: "gmroi валовая прибыль инвестиции в запасы эффективность" },
-        { name: "Cost Per Unit (CPU)", formula: "Общие транспортные затраты / Количество отгруженных единиц", desc: "Стоимость перевозки одной единицы товара.", tags: "cpu стоимость перевозки единицы транспорт" },
-        { name: "Profit Margin (логистическая)", formula: "(Выручка – Логистические расходы) / Выручка × 100%", desc: "Рентабельность логистической деятельности.", tags: "рентабельность логистики прибыль выручка" },
-        { name: "Defect Rate", formula: "(Кол-во дефектных товаров / Общее кол-во товаров) × 100%", desc: "Долю бракованной продукции в поставках или на складе.", tags: "брак дефекты качество продукции бракованные товары" },
-        { name: "Damage Rate", formula: "(Кол-во повреждённых товаров / Общее кол-во отгруженных товаров) × 100%", desc: "Долю товаров, повреждённых при транспортировке или хранении.", tags: "повреждения при транспортировке или хранении порча" },
-        { name: "Return Rate", formula: "(Кол-во возвращённых товаров / Общее кол-во проданных товаров) × 100%", desc: "Доля возвращённых заказов (по разным причинам).", tags: "возвраты возврат товара обратная логистика" },
-        { name: "Inventory Turnover", formula: "Себестоимость проданных товаров (COGS) / Средняя стоимость запасов", desc: "Оборачиваемость запасов (сколько раз за период они обновились).", tags: "инвентаризация оборачиваемость запасов cogs средний запас сколько раз обновились" },
-        { name: "Fill Rate", formula: "(Кол-во доставленных единиц с первой попытки / Общее кол-во заказанных единиц) × 100%", desc: "Уровень удовлетворения спроса из наличного запаса без дефицита.", tags: "уровень удовлетворения спроса наличие товара без дефицита fill rate" },
-        { name: "Stockout Rate", formula: "(Кол-во дней с дефицитом / Общее кол-во дней в периоде) × 100%", desc: "Частоту отсутствия товара на складе.", tags: "дефицит отсутствие товара на складе stockout частота дефицита" },
-        { name: "Inventory Accuracy", formula: "(Кол-во позиций с точным остатком / Общее кол-во позиций) × 100%", desc: "Точность учёта запасов по данным инвентаризации.", tags: "точность учёта запасов инвентаризация" },
-        { name: "Pick Accuracy", formula: "(Кол-во правильно собранных позиций / Общее кол-во отобранных позиций) × 100%", desc: "Точность сборки заказов на складе.", tags: "точность сборки заказов на складе pick accuracy" },
-        { name: "Order Picking Productivity", formula: "Отобранные позиции (или заказы) / Затраченные человеко-часы", desc: "Производительность труда сборщиков.", tags: "производительность сборщиков отобранные позиции человеко-часы" },
-        { name: "Space Utilization", formula: "(Занятая площадь / Общая площадь склада) × 100%", desc: "Использование складских площадей.", tags: "использование складских площадей занятая площадь общая площадь склад" },
-        { name: "Dock-to-Stock Cycle Time", formula: "Время размещения - Время прибытия", desc: "Среднее время от получения товара до его размещения в ячейке хранения.", tags: "dock-to-stock время от получения до размещения в ячейке" },
-        { name: "Deadhead Percentage", formula: "(Пробег без груза / Общий пробег) × 100%", desc: "Долю холостого пробега, снижающую эффективность транспорта.", tags: "холостой пробег без груза deadhead процент" },
-        { name: "Transport Utilization", formula: "(Загруженный вес / Полная грузоподъёмность) × 100%", desc: "Загрузку транспорта.", tags: "загрузка транспорта utilization вес грузоподъёмность" },
-        { name: "Cost Per Kilometer (CPK)", formula: "Общие затраты на перевозку / Общий пробег в километрах", desc: "Стоимость одного километра пробега.", tags: "стоимость километра пробега cpk cost per kilometer" },
-        { name: "Supplier On-Time Delivery", formula: "(Кол-во поставок вовремя / Общее кол-во поставок) × 100%", desc: "Своевременность поставок от поставщиков.", tags: "своевременность поставок поставщик on-time delivery" },
-        { name: "Supplier Quality Rating", formula: "(1 – Дефекты на миллион / 1 000 000) × 100%", desc: "Оценку качества продукции поставщика.", tags: "качество поставщика дефекты на миллион ppm" },
-        { name: "Total Cost of Ownership (TCO)", formula: "Цена закупки + Доставка + Таможня + Хранение + Обслуживание + Утилизация", desc: "Совокупную стоимость владения товаром.", tags: "tco совокупная стоимость владения цена закупки доставка таможня хранение обслуживание утилизация" },
-        { name: "Customer Satisfaction Index (CSI) / NPS", formula: "NPS: (% промоутеров - % критиков)", desc: "Лояльность клиентов, готовность рекомендовать.", tags: "лояльность клиентов nps csi удовлетворённость" },
-        { name: "Order Accuracy", formula: "(Кол-во заказов без ошибок / Общее кол-во заказов) × 100%", desc: "Точность выполнения заказа (ассортимент, количество).", tags: "точность выполнения заказа order accuracy" },
-        { name: "Carbon Footprint (CO₂ emissions)", formula: "Σ (Объём топлива × Коэффициент эмиссии)", desc: "Общий объём выбросов парниковых газов (тонны CO₂-экв).", tags: "углеродный след co2 выбросы парниковые газы" },
-        { name: "CO₂ Emissions per Unit", formula: "Общие выбросы CO₂ / Количество отгруженных единиц (или тонно-километры)", desc: "Углеродный след на единицу продукции.", tags: "co2 на единицу продукции углеродный след на единицу" }
-    ];
-
-    const extendedKpi = [
-        { name: "Cost Savings (Экономия затрат)", formula: "((Базовые затраты - Фактические затраты) / Базовые затраты) × 100%", desc: "Финансовый эффект от работы отдела закупок (переговоры, тендеры).", tags: "экономия затрат cost savings переговоры тендеры" },
-        { name: "Spend Under Management", formula: "(Закупки через централизованные каналы / Общие закупки) × 100%", desc: "Долю закупок под контролем отдела снабжения.", tags: "управляемый бюджет закупок spend under management централизованные закупки" },
-        { name: "Maverick Spend", formula: "(Закупки вне процедур / Общие закупки) × 100%", desc: "Процент закупок, сделанных в обход правил.", tags: "нерегламентированные закупки maverick spend обход правил" },
-        { name: "Supplier Lead Time", formula: "Средняя разница (Дата отгрузки - Дата размещения заказа)", desc: "Время от заказа до получения товара от поставщика.", tags: "время выполнения заказа поставщиком supplier lead time" },
-        { name: "Supplier Defect Rate", formula: "(Кол-во бракованных товаров / Общее кол-во товаров) × 100%", desc: "Долю бракованной продукции от поставщика.", tags: "брак поставщика defect rate качество" },
-        { name: "Procurement ROI", formula: "((Экономия + Предотвращённые затраты) - Затраты на закупки) / Затраты на закупки × 100%", desc: "Возврат на инвестиции в функцию закупок.", tags: "окупаемость инвестиций в закупки procurement roi" },
-        { name: "Supplier ESG Score", desc: "Оценка по категориям (Окружающая среда, Социальная политика, Управление). Уровень устойчивого развития поставщика.", tags: "esg поставщика устойчивое развитие экология социальная ответственность управление" },
-        { name: "Вендорская оценка рисков (Security)", desc: "Система показателей для оценки безопасности поставщика (наличие формальной программы кибербезопасности, MFA, тестирование уязвимостей).", tags: "вендорская оценка рисков безопасность поставщика кибербезопасность mfa" },
-        { name: "Tender Win Rate", formula: "(Кол-во выигранных тендеров / Кол-во поданных заявок) × 100%", desc: "Эффективность тендерного отдела.", tags: "тендер выигранные тендеры win rate эффективность тендерного отдела" },
-        { name: "Bid-to-Win Ratio", desc: "Количество выигранных тендеров / Количество поданных заявок. Коэффициент конверсии заявок в контракты.", tags: "конверсия заявок в контракты bid-to-win ratio" },
-        { name: "DIFOTAI", desc: "Комплексный индекс качества выполнения заказа. Общую эффективность цепи поставок по полноте, своевременности и точности.", tags: "индекс качества выполнения заказа difotai полнота своевременность точность" },
-        { name: "Cost Avoidance", formula: "Сумма предотвращённых повышений цен + Снижение штрафов", desc: "Способность закупок предотвращать ненужные траты.", tags: "предотвращение затрат cost avoidance повышение цен штрафы" },
-        { name: "EOQ (Экономичный размер заказа)", formula: "√(2DS/H), где D – годовой спрос, S – затраты на заказ, H – затраты на хранение.", desc: "Оптимальный размер заказа для минимизации общих затрат на пополнение запасов.", tags: "eoq экономичный размер заказа оптимальный заказ" },
-        { name: "Safety Stock (Страховой запас)", formula: "Z × σ × √LT, где Z – уровень обслуживания, σ – стандартное отклонение спроса, LT – время выполнения заказа.", desc: "Количество товара для защиты от непредвиденных колебаний спроса или задержек поставок.", tags: "страховой запас safety stock защита от колебаний спроса" }
-    ];
-
-    const digitalKpi = [
-        { name: "FTE-эквивалент (Full-Time Equivalent)", formula: "Количество человеко-часов, сэкономленных роботом / Нормативное количество часов одного сотрудника.", desc: "Показывает, сколько сотрудников высвобождает один программный робот. Ключевая метрика для расчёта ROI от RPA.", tags: "fte-эквивалент робот заменяет сотрудников эффективность rpa" },
-        { name: "Экономический эффект RPA", desc: "Матрица из ~10 параметров: FTE-эквивалент × средняя зарплата + снижение ошибок + ускорение процессов – стоимость робота. Совокупную финансовую выгоду от внедрения роботизации.", tags: "экономический эффект rpa финансовая выгода автоматизация" },
-        { name: "Коэффициент автоматизации процессов", formula: "(Количество автоматизированных операций / Общее количество операций) × 100%", desc: "Уровень цифровизации рутинных задач. Лидеры достигают 95–98%.", tags: "коэффициент автоматизации процессов уровень цифровизации рутинных задач" },
-        { name: "Time-to-Market (TTM)", desc: "Время от возникновения потребности до внедрения решения (дни/недели). Скорость внедрения инноваций. В передовых компаниях измеряется неделями вместо месяцев.", tags: "time-to-market скорость внедрения инноваций" },
-        { name: "Скорость адаптации цепочек поставок", desc: "Количество дней на поиск нового поставщика и перенастройку логистики. Гибкость SCM в условиях кризиса. Снижение этого показателя — ключевая цель цифровой трансформации.", tags: "скорость адаптации цепочек поставок гибкость scm поиск нового поставщика" },
-        { name: "Цифровая вовлечённость сотрудников", formula: "(Количество сотрудников, активно использующих новые цифровые платформы / Общая численность) × 100%.", desc: "Скорость и эффективность перехода на отечественные ИТ-решения.", tags: "цифровая вовлечённость сотрудников использование платформ" },
-        { name: "Точность прогнозов ML-моделей", formula: "1 – MAPE (средняя абсолютная процентная ошибка).", desc: "Качество прогнозирования спроса.", tags: "точность прогнозов ml-моделей машинное обучение mape" },
-        { name: "Hyperautomation ROI", formula: "((Экономия от автоматизации – Затраты на внедрение) / Затраты на внедрение) × 100%.", desc: "Окупаемость комплексной автоматизации (RPA+AI+ML).", tags: "hyperautomation roi окупаемость комплексной автоматизации rpa+ai+ml" }
-    ];
-
-    const flows = [
-        { name: "Материальный поток", desc: "Движение сырья, материалов, незавершённого производства и готовой продукции. Характеризуется ассортиментом, количеством, габаритами, временем и маршрутом. Эффективность оценивается через оборачиваемость, точность учёта и долю брака.", tags: "материальный поток сырьё материалы готовая продукция движение" },
-        { name: "Информационный поток", desc: "Сопровождает материальный поток: заказы, накладные, счета, статусы отгрузок, данные прогнозирования. Ключевые метрики: точность данных (Documentation Accuracy), скорость передачи (интеграция ERP/WMS/TMS), доступность информации для всех участников цепи («единая версия правды»).", tags: "информационный поток данные заказы накладные статусы отгрузки единая версия правды" },
-        { name: "Финансовый поток", desc: "Движение денежных средств между участниками SCM. Включает оплату поставщикам, получение платежей от клиентов, расчёты с перевозчиками. Метрики: Cash-to-Cash Cycle, DSO/DPO, точность счетов.", tags: "финансовый поток денежные средства оплата поставщикам получение платежей cash-to-cash" },
-        { name: "Поток знаний и компетенций", desc: "Передача экспертизы, обучение, стандартизация процессов. Оценивается через охват обучением, скорость адаптации новых сотрудников, количество сертифицированных специалистов (CSCP, CLTD, CTSC).", tags: "поток знаний компетенции обучение сертификация cscp cltd ctsc" },
-        { name: "Сервисный поток (управление возвратами)", desc: "Обратная логистика: возвраты, ремонт, переработка, утилизация. Метрики: Return Rate, Time-to-Refund, Resale Yield, доля переработанных отходов.", tags: "сервисный поток возвраты обратная логистика ремонт переработка утилизация" }
-    ];
-
-    const outsourcingModels = [
-        { name: "1PL (First Party Logistics)", desc: "Суть: Внутренняя логистика силами компании. Владелец груза сам перевозит и хранит товары, используя собственный транспорт и склады. Плюсы: полный контроль. Минусы: высокие фиксированные затраты, отвлечение капитала.", tags: "1pl первый уровень внутренняя логистика собственный транспорт склад" },
-        { name: "2PL (Second Party Logistics)", desc: "Суть: Привлечение внешнего перевозчика для базовых услуг (транспорт или склад). Пример: завод нанимает автотранспортное предприятие для доставки продукции. KPI: On-Time Delivery, Cost Per Kilometer, Deadhead Percentage.", tags: "2pl второй уровень внешний перевозчик базовые услуги" },
-        { name: "3PL (Third Party Logistics)", desc: "Суть: Полноценный операционный аутсорсинг: забор груза, складирование, комплектация, доставка «под ключ». KPI: Pick Accuracy, Dock-to-Stock, Fill Rate, OTIF. Бенчмарк: экономия затрат на логистику 10–20%.", tags: "3pl третий уровень операционный аутсорсинг складирование комплектация доставка под ключ" },
-        { name: "4PL (Fourth Party Logistics)", desc: "Суть: Стратегическое управление всей сетью поставок. 4PL-оператор координирует нескольких 3PL, внедряет IT-решения, оптимизирует затраты и берёт на себя управление цепочкой. KPI: Total Supply Chain Cost, Cash-to-Cash Cycle, OTIF по всей сети.", tags: "4pl четвёртый уровень стратегическое управление сетью поставок координация 3pl" },
-        { name: "5PL (Fifth Party Logistics)", desc: "Суть: Цифровой интегратор на базе Big Data и AI. Строит экосистему для заказов, складов и транспорта. Идеален для e‑commerce и глобальных сетей. KPI: коэффициент автоматизации 95%+, точность прогнозов ML-моделей, время перенастройки сети (часы).", tags: "5pl пятый уровень цифровой интегратор big data ai экосистема" }
-    ];
-
-    const slaMetrics = [
-        { name: "On-Time Delivery (OTD) по SLA", formula: "(Кол-во доставок вовремя / Общее кол-во доставок) × 100%", desc: "Соблюдение сроков доставки. Базовый SLA-показатель, типовое целевое значение: 95–99%.", tags: "sla своевременность доставки otd" },
-        { name: "In-Full Delivery по SLA", formula: "(Кол-во полностью отгруженных заказов / Общее кол-во заказов) × 100%", desc: "Долю заказов без дефицита и замен. Цель: ≥ 98%.", tags: "полнота доставки in-full" },
-        { name: "Order Accuracy по SLA", formula: "(Кол-во заказов без ошибок / Общее кол-во заказов) × 100%", desc: "Качество комплектации и соответствия документам. Цель: ≥ 99,5%.", tags: "точность заказа order accuracy" },
-        { name: "First Attempt Delivery Success Rate (FDSR)", formula: "(Кол-во успешных доставок с первой попытки / Общее кол-во доставок) × 100%", desc: "Эффективность последней мили. Низкий показатель ведёт к дополнительным затратам на повторные доставки.", tags: "первая попытка доставки fdsr последняя миля" },
-        { name: "Response Time по SLA", desc: "Среднее время реакции на запрос клиента или инцидент. Скорость обработки обращений. Для премиум-сервиса – минуты, для стандартного – часы.", tags: "время реакции на запрос клиента response time" },
-        { name: "Damage-Free Rate по SLA", formula: "(Кол-во заказов без повреждений / Общее кол-во заказов) × 100%", desc: "Сохранность груза. Цель: ≥ 99% для большинства категорий.", tags: "сохранность груза damage-free" },
-        { name: "Perfect Order Rate по SLA", formula: "OTD × In-Full × Accuracy × Damage-Free", desc: "Интегральный показатель идеального выполнения заказа. Лидеры рынка достигают 98–99%.", tags: "идеальный заказ perfect order" },
-        { name: "Penalty Compliance по SLA", formula: "(Сумма начисленных штрафов за невыполнение SLA / Максимальная сумма штрафов) × 100%", desc: "Степень соблюдения договорных обязательств перевозчиком.", tags: "штрафы за невыполнение sla penalty compliance" }
+        { name: "Perfect Order Fulfillment", formula: "(Идеально выполненные заказы / Всего заказов) × 100%", desc: "Процент заказов, выполненных вовремя, полностью, без повреждений и с корректными документами.", tags: "идеальный заказ качество" },
+        { name: "On-Time Delivery (OTD)", formula: "(Доставки вовремя / Всего доставок) × 100%", desc: "Доля заказов, доставленных в согласованный срок.", tags: "своевременность доставка" },
+        { name: "Fill Rate", formula: "(Доставленные единицы / Заказанные единицы) × 100%", desc: "Уровень удовлетворения спроса из наличного запаса.", tags: "наличие товара уровень сервиса" },
+        { name: "Inventory Turnover", formula: "COGS / Средний запас", desc: "Оборачиваемость запасов (сколько раз за период обновились).", tags: "оборачиваемость запасов" },
+        { name: "Cash-to-Cash Cycle", formula: "DIO + DSO – DPO", desc: "Время от оплаты сырья до получения денег от клиента.", tags: "финансовый цикл ликвидность" },
+        { name: "GMROI", formula: "Валовая прибыль / Средний запас", desc: "Сколько валовой прибыли приносит каждый рубль, вложенный в запасы.", tags: "рентабельность инвестиций" },
+        { name: "NPS (Net Promoter Score)", formula: "% промоутеров - % критиков", desc: "Лояльность клиентов, готовность рекомендовать.", tags: "лояльность клиенты" },
+        { name: "CO₂ на тонно-километр", formula: "Выбросы CO₂ / Тонно-километры", desc: "Углеродный след на единицу транспортной работы.", tags: "esg экология углерод" }
     ];
 
     const glossary = [
-        { term: "OTIF (On-Time In-Full)", definition: "Ключевой KPI, измеряющий процент заказов, доставленных вовремя и в полном объёме без замен и повреждений.", tags: "своевременно и полностью" },
+        { term: "OTIF (On-Time In-Full)", definition: "Ключевой KPI, измеряющий процент заказов, доставленных вовремя и в полном объёме без замен и повреждений.", tags: "своевременно полно" },
         { term: "Perfect Order Fulfillment", definition: "Показатель SCOR-модели, оценивающий долю идеальных заказов: вовремя, полностью, без повреждений и с корректными документами.", tags: "идеальный заказ" },
-        { term: "Inventory Turnover", definition: "Оборачиваемость запасов, рассчитываемая как отношение себестоимости проданных товаров (COGS) к средней стоимости запасов.", tags: "оборачиваемость запасов инвентаризация" },
-        { term: "Total Supply Chain Cost", definition: "Общие затраты на управление цепочкой поставок, выраженные в процентах от выручки. Ключевая метрика эффективности SCM.", tags: "общие затраты на scm" },
-        { term: "Cash-to-Cash Cycle", definition: "Финансовый цикл: DIO + DSO – DPO. Показывает, сколько дней требуется для конвертации вложений в запасы и дебиторскую задолженность в реальные деньги.", tags: "финансовый цикл" },
-        { term: "Fill Rate", definition: "Показатель доступности товара, отражающий процент спроса, удовлетворённого из наличного запаса без дефицита.", tags: "уровень выполнения заказа доступность товара" },
-        { term: "TCO (Total Cost of Ownership)", definition: "Совокупная стоимость владения, включающая не только цену закупки, но и логистику, таможню, хранение, обслуживание и утилизацию.", tags: "совокупная стоимость владения" },
-        { term: "Forecast Accuracy", definition: "Точность прогноза спроса, обычно рассчитываемая как 1 — MAPE (средняя абсолютная процентная ошибка).", tags: "точность прогноза спроса" },
-        { term: "ESG (Environmental, Social, Governance)", definition: "Набор критериев для оценки устойчивости компании: экологическая ответственность, социальная политика и качество корпоративного управления.", tags: "устойчивое развитие экология социальная ответственность управление" },
-        { term: "Order Fulfillment Cycle Time", definition: "Среднее время от получения заказа до его фактической отгрузки. Отражает скорость реагирования цепи поставок.", tags: "цикл выполнения заказа" }
+        { term: "Total Supply Chain Cost", definition: "Общие затраты на управление цепочкой поставок, выраженные в процентах от выручки.", tags: "затраты" },
+        { term: "TCO (Total Cost of Ownership)", definition: "Совокупная стоимость владения, включающая цену закупки, логистику, таможню, хранение, обслуживание и утилизацию.", tags: "владение стоимость" },
+        { term: "Forecast Accuracy", definition: "Точность прогноза спроса, обычно рассчитываемая как 1 — MAPE.", tags: "прогноз точность" },
+        { term: "ESG (Environmental, Social, Governance)", definition: "Критерии оценки устойчивости компании: экология, соцполитика и корпоративное управление.", tags: "устойчивое развитие" }
     ];
 
-    const bestPractices = [
-        { name: "Управление спросом и запасами", desc: "Сбор POS-данных, прогнозирование на основе машинного обучения, ABC-XYZ анализ, Theory of Constraints и страховые запасы для обеспечения сервиса без избыточных остатков.", tags: "управление спросом и запасами прогнозирование abc-xyz страховые запасы" },
-        { name: "Управление транспортом (TMS)", desc: "Динамическая маршрутизация, консолидация отправок, электронный обмен данными (EDI) с перевозчиками, отслеживание в реальном времени и контроль TMS для снижения затрат на 10-20%.", tags: "управление транспортом tms маршрутизация edi отслеживание" },
-        { name: "Управление складом (WMS)", desc: "Адресное хранение, автоматизация приёмки и отгрузки с ТСД, зонное комплектование (zone picking), волновое планирование (wave planning) и регулярный ABC-анализ.", tags: "управление складом wms адресное хранение тсд zone picking волновое планирование abc-анализ" },
-        { name: "Управление закупками (Strategic Sourcing)", desc: "Стратегический подход, учитывающий TCO и устойчивость, управление категориями, оценка и развитие поставщиков, цифровизация закупок (e-Procurement).", tags: "управление закупками strategic sourcing tco устойчивость e-procurement" }
-    ];
-
-    // ---- Избранное ----
-    let favorites = { methodologies: [], kpis: [], extendedKpi: [], digitalKpi: [], flows: [], outsourcing: [], sla: [], glossary: [], practices: [] };
+    // ---- Избранное (сохраняется для каждого филиала) ----
+    let favorites = { methodologies: [], kpis: [], glossary: [] };
     function loadFavorites() {
         const saved = localStorage.getItem(`library_favorites_${currentBranchId}`);
         if (saved) favorites = JSON.parse(saved);
-        else favorites = { methodologies: [], kpis: [], extendedKpi: [], digitalKpi: [], flows: [], outsourcing: [], sla: [], glossary: [], practices: [] };
+        else favorites = { methodologies: [], kpis: [], glossary: [] };
     }
     function saveFavorites() {
         localStorage.setItem(`library_favorites_${currentBranchId}`, JSON.stringify(favorites));
     }
-    function toggleFavorite(category, idx) {
-        let arr = favorites[category];
-        if (arr.includes(idx)) arr = arr.filter(i => i !== idx);
-        else arr.push(idx);
-        favorites[category] = arr;
+    function toggleFavorite(type, index) {
+        let arr = favorites[type];
+        if (arr.includes(index)) arr = arr.filter(i => i !== index);
+        else arr.push(index);
+        favorites[type] = arr;
         saveFavorites();
         renderAll();
     }
@@ -340,107 +295,97 @@
     // ---- Поиск и фильтрация ----
     let searchTerm = '';
     let showOnlyFavorites = false;
+
     function matchesSearch(text, tags, term) {
         if (!term) return true;
         const lowerTerm = term.toLowerCase();
-        return (text.toLowerCase().includes(lowerTerm) || tags.toLowerCase().includes(lowerTerm));
+        return text.toLowerCase().includes(lowerTerm) || tags.toLowerCase().includes(lowerTerm);
     }
 
-    function renderGrid(containerId, items, category, type) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        let filtered = items.filter((item, idx) => {
-            if (showOnlyFavorites && !favorites[category]?.includes(idx)) return false;
-            const fullText = item.name + ' ' + (item.desc || '') + ' ' + (item.formula || '');
-            const tags = item.tags || '';
-            if (searchTerm && !matchesSearch(fullText, tags, searchTerm)) return false;
+    function renderMethodologies() {
+        const container = document.getElementById('methodologiesGrid');
+        let filtered = methodologies.filter((m, idx) => {
+            if (showOnlyFavorites && !favorites.methodologies.includes(idx)) return false;
+            if (searchTerm && !matchesSearch(m.name + ' ' + m.desc, m.tags, searchTerm)) return false;
             return true;
         });
-        if (filtered.length === 0) {
-            container.innerHTML = '<div class="badge" style="text-align:center; padding:20px;">Нет элементов по заданным критериям</div>';
-            return;
-        }
-        container.innerHTML = filtered.map((item, origIdx) => {
-            const idx = items.findIndex(orig => (orig.name === item.name && (orig.formula || '') === (item.formula || '')));
-            const isFav = favorites[category]?.includes(idx) || false;
-            let content = '';
-            if (type === 'kpi') {
-                content = `
-                    <div class="kpi-card">
-                        <h3>${escapeHtml(item.name)} <i class="fas fa-star favorite-star ${isFav ? 'active' : ''}" data-category="${category}" data-idx="${idx}"></i></h3>
-                        <p><strong>Формула:</strong> ${escapeHtml(item.formula || '—')}</p>
-                        <p>${escapeHtml(item.desc)}</p>
-                    </div>
-                `;
-            } else {
-                content = `
-                    <div class="methodology-card">
-                        <h3>${escapeHtml(item.name)} <i class="fas fa-star favorite-star ${isFav ? 'active' : ''}" data-category="${category}" data-idx="${idx}"></i></h3>
-                        <p>${escapeHtml(item.desc)}</p>
-                    </div>
-                `;
-            }
-            return content;
+        container.innerHTML = filtered.map((m, origIdx) => {
+            const idx = methodologies.findIndex(orig => orig.name === m.name);
+            const isFav = favorites.methodologies.includes(idx);
+            return `
+                <div class="methodology-card">
+                    <h3>${escapeHtml(m.name)} <i class="fas fa-star favorite-star ${isFav ? 'active' : ''}" data-type="methodologies" data-idx="${idx}"></i></h3>
+                    <p>${escapeHtml(m.desc)}</p>
+                </div>
+            `;
         }).join('');
-        attachStarEvents(container);
+        attachStarEvents();
+    }
+
+    function renderKPI() {
+        const container = document.getElementById('kpiGrid');
+        let filtered = kpiList.filter((k, idx) => {
+            if (showOnlyFavorites && !favorites.kpis.includes(idx)) return false;
+            if (searchTerm && !matchesSearch(k.name + ' ' + k.formula + ' ' + k.desc, k.tags, searchTerm)) return false;
+            return true;
+        });
+        container.innerHTML = filtered.map((k, origIdx) => {
+            const idx = kpiList.findIndex(orig => orig.name === k.name);
+            const isFav = favorites.kpis.includes(idx);
+            return `
+                <div class="kpi-card">
+                    <h3>${escapeHtml(k.name)} <i class="fas fa-star favorite-star ${isFav ? 'active' : ''}" data-type="kpis" data-idx="${idx}"></i></h3>
+                    <p><strong>Формула:</strong> ${escapeHtml(k.formula)}</p>
+                    <p>${escapeHtml(k.desc)}</p>
+                </div>
+            `;
+        }).join('');
+        attachStarEvents();
     }
 
     function renderGlossary() {
-        let filtered = glossary.filter((item, idx) => {
-            if (showOnlyFavorites && !favorites.glossary?.includes(idx)) return false;
-            const fullText = item.term + ' ' + item.definition;
-            const tags = item.tags || '';
-            if (searchTerm && !matchesSearch(fullText, tags, searchTerm)) return false;
+        let filtered = glossary.filter((g, idx) => {
+            if (showOnlyFavorites && !favorites.glossary.includes(idx)) return false;
+            if (searchTerm && !matchesSearch(g.term + ' ' + g.definition, g.tags, searchTerm)) return false;
             return true;
         });
         const half = Math.ceil(filtered.length / 2);
         const col1 = filtered.slice(0, half);
         const col2 = filtered.slice(half);
         const renderCol = (items) => {
-            return items.map((item, origIdx) => {
-                const idx = glossary.findIndex(orig => orig.term === item.term);
-                const isFav = favorites.glossary?.includes(idx) || false;
+            return items.map((g, origIdx) => {
+                const idx = glossary.findIndex(orig => orig.term === g.term);
+                const isFav = favorites.glossary.includes(idx);
                 return `
-                    <dt>
-                        <strong>${escapeHtml(item.term)}</strong>
-                        <i class="fas fa-star favorite-star ${isFav ? 'active' : ''}" data-category="glossary" data-idx="${idx}" style="float:right; font-size:12px;"></i>
-                    </dt>
-                    <dd>${escapeHtml(item.definition)}</dd>
+                    <dt><strong>${escapeHtml(g.term)}</strong> <i class="fas fa-star favorite-star ${isFav ? 'active' : ''}" data-type="glossary" data-idx="${idx}" style="float:right; font-size:12px;"></i></dt>
+                    <dd>${escapeHtml(g.definition)}</dd>
                 `;
             }).join('');
         };
         document.getElementById('glossaryCol1').innerHTML = `<dl class="glossary-list">${renderCol(col1)}</dl>`;
         document.getElementById('glossaryCol2').innerHTML = `<dl class="glossary-list">${renderCol(col2)}</dl>`;
-        attachStarEvents(document.getElementById('glossaryCol1'));
-        attachStarEvents(document.getElementById('glossaryCol2'));
+        attachStarEvents();
     }
 
-    function attachStarEvents(container) {
-        if (!container) container = document;
-        container.querySelectorAll('.favorite-star').forEach(star => {
+    function attachStarEvents() {
+        document.querySelectorAll('.favorite-star').forEach(star => {
             star.removeEventListener('click', starClickHandler);
             star.addEventListener('click', starClickHandler);
         });
     }
     function starClickHandler(e) {
         e.stopPropagation();
-        const category = this.getAttribute('data-category');
+        const type = this.getAttribute('data-type');
         const idx = parseInt(this.getAttribute('data-idx'));
-        toggleFavorite(category, idx);
+        toggleFavorite(type, idx);
     }
 
     function renderAll() {
-        renderGrid('methodologiesGrid', methodologies, 'methodologies', 'methodology');
-        renderGrid('kpiGrid', kpiList, 'kpis', 'kpi');
-        renderGrid('extendedKpiGrid', extendedKpi, 'extendedKpi', 'kpi');
-        renderGrid('digitalKpiGrid', digitalKpi, 'digitalKpi', 'kpi');
-        renderGrid('flowsGrid', flows, 'flows', 'methodology');
-        renderGrid('outsourcingGrid', outsourcingModels, 'outsourcing', 'methodology');
-        renderGrid('slaGrid', slaMetrics, 'sla', 'kpi');
-        renderGrid('practicesGrid', bestPractices, 'practices', 'methodology');
+        renderMethodologies();
+        renderKPI();
         renderGlossary();
-        const totalVisible = document.querySelectorAll('.methodology-card, .kpi-card, .glossary-list dt').length;
-        document.getElementById('searchResultsCount').innerHTML = searchTerm ? `Найдено элементов: ${totalVisible}` : '';
+        const count = document.querySelectorAll('.methodology-card, .kpi-card, .glossary-list dt').length;
+        document.getElementById('searchResultsCount').innerHTML = searchTerm ? `Найдено элементов: ${count}` : '';
     }
 
     // ---- Поиск и фильтры ----
