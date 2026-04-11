@@ -198,24 +198,27 @@
     const name = urlParams.get('name');
     const kpiId = urlParams.get('kpi');
 
+    // Получение текущей бизнес-единицы (из глобального контекста)
+    let currentBranchId = getCurrentBranch();
+
     function loadReport() {
         let html = '';
         if (type === 'audit' && id) {
-            const audit = SCMData.getAuditById(id);
+            const audit = SCMData.getAuditById(id, currentBranchId);
             if (audit) {
                 document.getElementById('reportTypeTitle').innerText = 'Отчёт по аудиту';
                 html = renderAuditReport(audit);
             } else html = '<div class="badge">Аудит не найден</div>';
         } else if (type === 'checklist' && name) {
-            const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
+            const categories = JSON.parse(localStorage.getItem(`scm_checklists_${currentBranchId}`) || '{}');
             const items = categories[name];
-            const state = SCMData.loadChecklist(name) || {};
+            const state = SCMData.loadChecklist(name, currentBranchId) || {};
             if (items) {
                 document.getElementById('reportTypeTitle').innerText = `Чек-лист: ${name}`;
                 html = renderChecklistReport(name, items, state);
             } else html = '<div class="badge">Чек-лист не найден</div>';
         } else if (type === 'kpi' && kpiId) {
-            const kpiData = SCMData.loadKPI(kpiId);
+            const kpiData = SCMData.loadKPI(kpiId, currentBranchId);
             if (kpiData) {
                 document.getElementById('reportTypeTitle').innerText = `Отчёт по KPI: ${kpiId.toUpperCase()}`;
                 html = renderKpiReport(kpiId, kpiData);
@@ -243,12 +246,13 @@
                 <div class="info-item"><span class="info-label">Тип аудита</span><span class="info-value">${audit.type}</span></div>
                 <div class="info-item"><span class="info-label">Дата проведения</span><span class="info-value">${dateStr}</span></div>
                 <div class="info-item"><span class="info-label">Общий уровень зрелости</span><span class="info-value">${audit.totalPercent}%</span></div>
+                <div class="info-item"><span class="info-label">Бизнес-единица</span><span class="info-value">${audit.branchId || currentBranchId}</span></div>
             </div>
             <div class="section-title">Оценки по секциям</div>
             <table>
                 <thead><tr><th>Секция</th><th>Процент</th></tr></thead>
                 <tbody>
-                    ${Object.entries(audit.sectionScores).map(([sec, score]) => `<tr><td>${sec}</td><td>${Math.round(score)}%</td>`).join('')}
+                    ${Object.entries(audit.sectionScores || {}).map(([sec, score]) => `<tr><td>${sec}</td><td>${Math.round(score)}%</td>`).join('')}
                 </tbody>
             </table>
             <div class="section-title">Несоответствия и рекомендации</div>
@@ -272,6 +276,7 @@
                 <div class="info-item"><span class="info-label">Категория</span><span class="info-value">${escapeHtml(name)}</span></div>
                 <div class="info-item"><span class="info-label">Дата отчёта</span><span class="info-value">${new Date().toLocaleString()}</span></div>
                 <div class="info-item"><span class="info-label">Выполнение</span><span class="info-value">${Math.round(percent)}% (${completed}/${total})</span></div>
+                <div class="info-item"><span class="info-label">Бизнес-единица</span><span class="info-value">${currentBranchId}</span></div>
             </div>
             <div class="section-title">Список пунктов</div>
             ${itemsHtml}
@@ -281,17 +286,19 @@
     function renderKpiReport(kpiId, kpiData) {
         const value = kpiData.result;
         const date = new Date(kpiData.timestamp).toLocaleString();
+        const unit = kpiData.unit || '';
         return `
             <div class="info-grid">
                 <div class="info-item"><span class="info-label">KPI</span><span class="info-value">${kpiId.toUpperCase()}</span></div>
-                <div class="info-item"><span class="info-label">Значение</span><span class="info-value">${value}</span></div>
+                <div class="info-item"><span class="info-label">Значение</span><span class="info-value">${value} ${unit}</span></div>
                 <div class="info-item"><span class="info-label">Дата расчёта</span><span class="info-value">${date}</span></div>
+                <div class="info-item"><span class="info-label">Бизнес-единица</span><span class="info-value">${kpiData.branchId || currentBranchId}</span></div>
             </div>
             <div class="section-title">Исходные данные</div>
             <table>
                 <thead><tr><th>Параметр</th><th>Значение</th></tr></thead>
                 <tbody>
-                    ${Object.entries(kpiData.values || {}).map(([key, val]) => `<tr><td>${key}</td><td>${val}</td></td>`).join('')}
+                    ${Object.entries(kpiData.values || {}).map(([key, val]) => `<tr><td>${key}</td><td>${val}</td>`).join('')}
                 </tbody>
             </table>
         `;
@@ -302,7 +309,61 @@
         return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
     }
 
-    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    // Печать на бланке с логотипом и подписью (поверх стандартной печати)
+    function printWithLogo() {
+        const reportContent = document.getElementById('reportContent').cloneNode(true);
+        const header = document.querySelector('.report-header').cloneNode(true);
+        const footer = document.querySelector('.footer').cloneNode(true);
+        const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Отчёт SCM</title>
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                <style>
+                    body { font-family: Inter; margin: 20px; }
+                    .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                    .logo-img { height: 50px; }
+                    .contact-info { font-size: 10pt; line-height: 1.4; }
+                    .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+                    .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                    table { border-collapse: collapse; width: 100%; }
+                    th, td { border: 1px solid #ccc; padding: 6px; }
+                    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 10px; margin-bottom: 20px; }
+                </style>
+            </head>
+            <body>
+                <div class="print-header">
+                    <div style="display:flex; align-items:center; gap:20px;">
+                        <img src="${logoUrl}" class="logo-img">
+                        <div class="contact-info">
+                            Дмитрий Панибратский<br>
+                            Эксперт по SCM и логистике<br>
+                            scm-news.ru – экспертный портал<br>
+                            scm-news.online – Академия SCM<br>
+                            dmitry@scm-news.ru
+                        </div>
+                    </div>
+                    <div>${new Date().toLocaleString()}</div>
+                </div>
+                ${header.outerHTML}
+                ${reportContent.outerHTML}
+                <div class="print-footer">
+                    <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                    <div>Подпись: <span class="sign-line">_________________________</span></div>
+                    <div>Дата: ${new Date().toLocaleDateString()}</div>
+                </div>
+                <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); };<\/script>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+    }
+
+    document.getElementById('printBtn').addEventListener('click', () => printWithLogo());
     document.getElementById('emailBtn').addEventListener('click', () => {
         const subject = encodeURIComponent(document.getElementById('reportTypeTitle').innerText);
         const body = encodeURIComponent(document.getElementById('reportContent').innerText.substring(0, 2000));
