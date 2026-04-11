@@ -117,7 +117,6 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
     <aside class="sidebar">
         <a href="dashboard.html" class="logo">
             <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
@@ -164,7 +163,6 @@
 
 <script>
 (function() {
-    // Тёмная тема
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -173,7 +171,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // Филиал
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -194,7 +191,6 @@
         select.addEventListener('change', (e) => {
             setCurrentBranch(e.target.value);
             currentBranchId = e.target.value;
-            // Перезагружать калькуляторы не нужно, но можно обновить сохранённые значения (опционально)
         });
     }
     function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
@@ -203,7 +199,6 @@
         window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
     }
 
-    // Функция сохранения расчёта в localStorage
     function saveCalculation(calcId, values, result) {
         const key = `calc_${calcId}_${currentBranchId}`;
         const saved = JSON.parse(localStorage.getItem(key) || '[]');
@@ -213,7 +208,6 @@
         alert(`Расчёт сохранён (всего сохранено: ${saved.length})`);
     }
 
-    // Функция отправки результата в KPI-центр
     function sendToKPI(kpiId, value, unit) {
         const existing = SCMData.loadKPI(kpiId, currentBranchId);
         const newData = {
@@ -231,7 +225,6 @@
         window.dispatchEvent(new CustomEvent('kpi-updated', { detail: { kpiId, value } }));
     }
 
-    // Конфигурация калькуляторов
     const calculators = [
         { id: "safety_stock", name: "Страховой запас (Safety Stock)", fields: [
             { label: "Z-фактор (уровень обслуживания):", id: "ss_z", type: "number", default: 1.65, step: 0.01, help: "1.28(90%) 1.65(95%) 2.33(99%)" },
@@ -336,7 +329,6 @@
         ], formula: "Fill Rate = Отгружено / Заказано × 100%", unit: "%", calc: (vals) => (vals[0] / vals[1]) * 100, kpiId: "fillrate" }
     ];
 
-    // Рендер всех калькуляторов
     function renderCalculators() {
         const container = document.getElementById('calculatorsGrid');
         container.innerHTML = '';
@@ -435,7 +427,6 @@
         }
     }
 
-    // Печать и отправка на почту
     window.printCalculatorsWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -483,7 +474,6 @@
     document.getElementById('printCalculatorsBtn').addEventListener('click', () => window.printCalculatorsWithLogo());
     document.getElementById('emailCalculatorsBtn').addEventListener('click', () => window.sendCalculatorsByEmail());
 
-    // Инициализация
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
