@@ -33,6 +33,7 @@
             gap: 12px;
             margin-bottom: 24px;
             flex-wrap: wrap;
+            justify-content: flex-end;
         }
         button {
             background: #1e40af;
@@ -41,7 +42,6 @@
             padding: 8px 16px;
             border-radius: 30px;
             cursor: pointer;
-            font-weight: 500;
         }
         button.danger {
             background: #dc2626;
@@ -97,6 +97,43 @@
             font-size: 24px;
             color: #1e40af;
         }
+        .branch-selector-container {
+            float: right;
+            margin-bottom: 16px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-bar {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            border: 1px solid #e2e8f0;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .filter-group input, .filter-group select {
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 1px solid #cbd5e1;
+            background: white;
+        }
         @media (max-width: 768px) {
             .registry-table {
                 font-size: 12px;
@@ -104,46 +141,46 @@
             th, td {
                 padding: 8px;
             }
+            .branch-selector-container {
+                float: none;
+                margin-bottom: 16px;
+                display: flex;
+            }
         }
         @media print {
-            .sidebar, .btn-group, .modal {
+            .sidebar, .btn-group, .filter-bar, .branch-selector-container, .theme-switch, .modal {
                 display: none;
-            }
-            .registry-table {
-                box-shadow: none;
             }
         }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">
-        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
-        <nav>
-            <ul>
-                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
-                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
-                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
-                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
-                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
-                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
-                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
-                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
-                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
-                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
-                <li><a href="audit-registry.html" class="active"><i class="fas fa-history"></i> Реестр аудитов</a></li>
-            </ul>
-        </nav>
-    </aside>
-
+    <aside class="sidebar">...</aside>
     <main class="main-content">
-        <h1>📋 Реестр аудитов и чек-листов</h1>
-        <p>Просмотр, удаление, экспорт, импорт и печать сохранённых аудитов и чек-листов.</p>
+        <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+            <h1>📋 Реестр аудитов и чек-листов</h1>
+            <div class="branch-selector-container">
+                <label><i class="fas fa-building"></i> Бизнес-единица:</label>
+                <select id="branchSelector"></select>
+            </div>
+        </div>
+        <p>Просмотр, удаление, экспорт, импорт и печать сохранённых аудитов и чек-листов для выбранной бизнес-единицы.</p>
         <div class="btn-group">
             <button id="exportRegistryBtn">📎 Экспорт реестра (JSON)</button>
             <button id="importRegistryBtn">📂 Импорт реестра (JSON)</button>
             <button id="deleteAllBtn" class="danger">🗑️ Удалить всё</button>
             <button id="printAllBtn" class="warning">🖨️ Печать сводного отчёта</button>
+        </div>
+
+        <!-- Фильтры для аудитов -->
+        <div class="filter-bar">
+            <div class="filter-group"><label>Тип аудита</label><select id="filterAuditType"><option value="">Все</option><option value="Плановый">Плановый</option><option value="Внеплановый">Внеплановый</option><option value="Целевой">Целевой</option></select></div>
+            <div class="filter-group"><label>Дата от</label><input type="date" id="filterDateFrom"></div>
+            <div class="filter-group"><label>Дата до</label><input type="date" id="filterDateTo"></div>
+            <div class="filter-group"><label>Мин. зрелость (%)</label><input type="number" id="filterMinScore" placeholder="0-100" min="0" max="100"></div>
+            <button id="resetFiltersBtn">Сбросить</button>
         </div>
 
         <div id="auditsSection">
@@ -159,16 +196,57 @@
 </div>
 
 <script>
-    // Получение реестра аудитов из localStorage (через SCMData)
-    function getAuditRegistry() { return SCMData.getAuditRegistry(); }
-    function saveAuditRegistry(registry) { SCMData.saveAuditRegistry(registry); }
+(function() {
+    // ---- Тёмная тема ----
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    });
 
-    // Получение сохранённых чек-листов (результаты прохождения)
+    // ---- Филиал ----
+    let currentBranchId = 'default';
+    function loadBranchSelector() {
+        const branches = BranchManager.getBranches();
+        const tree = BranchManager.buildTree(branches);
+        const select = document.getElementById('branchSelector');
+        select.innerHTML = '';
+        const addOptions = (nodes, prefix = '') => {
+            for (let node of nodes) {
+                const opt = document.createElement('option');
+                opt.value = node.id;
+                opt.textContent = prefix + node.name + ' (' + node.type + ')';
+                if (node.id === currentBranchId) opt.selected = true;
+                select.appendChild(opt);
+                if (node.children) addOptions(node.children, prefix + '— ');
+            }
+        };
+        addOptions(tree);
+        select.addEventListener('change', (e) => {
+            setCurrentBranch(e.target.value);
+            currentBranchId = e.target.value;
+            renderAudits();
+            renderChecklists();
+        });
+    }
+
+    // ---- Получение данных для текущего филиала ----
+    function getAuditRegistry() {
+        const key = `audit_registry_${currentBranchId}`;
+        return JSON.parse(localStorage.getItem(key) || '[]');
+    }
+    function saveAuditRegistry(registry) {
+        const key = `audit_registry_${currentBranchId}`;
+        localStorage.setItem(key, JSON.stringify(registry));
+    }
     function getChecklistResults() {
         const results = [];
-        const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
+        const categoriesKey = `scm_checklists_${currentBranchId}`;
+        const categories = JSON.parse(localStorage.getItem(categoriesKey) || '{}');
         for (let [catName, items] of Object.entries(categories)) {
-            const savedState = SCMData.loadChecklist(catName) || {};
+            const savedState = SCMData.loadChecklist(catName, currentBranchId);
             let completed = 0;
             for (let i = 0; i < items.length; i++) {
                 const itemId = `${catName}_${i}`;
@@ -179,7 +257,7 @@
                 id: `checklist_${catName}`,
                 type: 'Чек-лист',
                 name: catName,
-                date: localStorage.getItem(`checklist_last_modified_${catName}`) || new Date().toISOString(),
+                date: localStorage.getItem(`checklist_last_modified_${catName}_${currentBranchId}`) || new Date().toISOString(),
                 totalPercent: percent,
                 items: items,
                 state: savedState
@@ -188,8 +266,18 @@
         return results;
     }
 
+    // ---- Рендер аудитов с фильтрацией ----
     function renderAudits() {
-        const audits = getAuditRegistry();
+        let audits = getAuditRegistry();
+        const typeFilter = document.getElementById('filterAuditType').value;
+        const dateFrom = document.getElementById('filterDateFrom').value;
+        const dateTo = document.getElementById('filterDateTo').value;
+        const minScore = parseInt(document.getElementById('filterMinScore').value);
+        if (typeFilter) audits = audits.filter(a => a.type === typeFilter);
+        if (dateFrom) audits = audits.filter(a => a.date >= dateFrom);
+        if (dateTo) audits = audits.filter(a => a.date <= dateTo);
+        if (!isNaN(minScore)) audits = audits.filter(a => a.totalPercent >= minScore);
+        audits.sort((a,b) => new Date(b.date) - new Date(a.date));
         const container = document.getElementById('auditsList');
         if (!audits.length) {
             container.innerHTML = '<div class="empty-state">Нет сохранённых аудитов</div>';
@@ -211,7 +299,7 @@
             const printBtn = document.createElement('button'); printBtn.textContent = '🖨️ Печать'; printBtn.className = 'small warning';
             printBtn.onclick = () => { window.open(`report-generator.html?type=audit&id=${audit.id}`, '_blank'); };
             const deleteBtn = document.createElement('button'); deleteBtn.textContent = 'Удалить'; deleteBtn.className = 'small danger';
-            deleteBtn.onclick = () => { if(confirm('Удалить аудит?')) { SCMData.deleteAudit(audit.id); renderAudits(); } };
+            deleteBtn.onclick = () => { if(confirm('Удалить аудит?')) { let reg = getAuditRegistry(); reg = reg.filter(a => a.id !== audit.id); saveAuditRegistry(reg); renderAudits(); } };
             actions.appendChild(viewBtn); actions.appendChild(loadBtn); actions.appendChild(printBtn); actions.appendChild(deleteBtn);
         });
         container.innerHTML = ''; container.appendChild(table);
@@ -240,10 +328,11 @@
             const deleteBtn = document.createElement('button'); deleteBtn.textContent = 'Удалить'; deleteBtn.className = 'small danger';
             deleteBtn.onclick = () => {
                 if(confirm(`Удалить чек-лист "${cl.name}"?`)) {
-                    const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
+                    const categories = JSON.parse(localStorage.getItem(`scm_checklists_${currentBranchId}`) || '{}');
                     delete categories[cl.name];
-                    localStorage.setItem('scm_checklists', JSON.stringify(categories));
-                    localStorage.removeItem(`checklist_${cl.name}`);
+                    localStorage.setItem(`scm_checklists_${currentBranchId}`, JSON.stringify(categories));
+                    localStorage.removeItem(`checklist_${cl.name}_${currentBranchId}`);
+                    localStorage.removeItem(`checklist_last_modified_${cl.name}_${currentBranchId}`);
                     renderChecklists();
                 }
             };
@@ -260,9 +349,9 @@
                 <p><strong>Тип:</strong> ${audit.type}</p>
                 <p><strong>Общий уровень зрелости:</strong> ${audit.totalPercent}%</p>
                 <p><strong>Оценки по секциям:</strong></p>
-                <ul>${Object.entries(audit.sectionScores).map(([sec, score]) => `<li>${sec}: ${Math.round(score)}%</li>`).join('')}</ul>
+                <ul>${Object.entries(audit.sectionScores || {}).map(([sec, score]) => `<li>${sec}: ${Math.round(score)}%</li>`).join('')}</ul>
                 <p><strong>Несоответствия (${audit.nonConformances?.length || 0}):</strong></p>
-                <div>${(audit.nonConformances || []).map(nc => `<div class="nonconform-item"><strong>${nc.text}</strong><br>Причина: ${nc.reason}<br>Рекомендация: ${nc.recommendation || '—'}</div>`).join('')}</div>
+                <div>${(audit.nonConformances || []).map(nc => `<div class="nonconform-item"><strong>${escapeHtml(nc.text)}</strong><br>Причина: ${escapeHtml(nc.reason)}<br>Рекомендация: ${escapeHtml(nc.recommendation || '—')}</div>`).join('')}</div>
                 <div style="margin-top: 16px;"><button class="print-report" data-id="${audit.id}">🖨️ Распечатать отчёт</button><button class="close-modal">Закрыть</button></div>
             </div>
         `;
@@ -280,11 +369,11 @@
         cl.items.forEach((item, idx) => {
             const itemId = `${cl.name}_${idx}`;
             const checked = cl.state[itemId] === true;
-            itemsHtml += `<div class="nonconform-item">${item} — ${checked ? '✅ Выполнено' : '❌ Не выполнено'}</div>`;
+            itemsHtml += `<div class="nonconform-item">${escapeHtml(item)} — ${checked ? '✅ Выполнено' : '❌ Не выполнено'}</div>`;
         });
         modal.innerHTML = `
             <div class="modal-content">
-                <h3>Чек-лист: ${cl.name}</h3>
+                <h3>Чек-лист: ${escapeHtml(cl.name)}</h3>
                 <p><strong>Дата:</strong> ${new Date(cl.date).toLocaleString()}</p>
                 <p><strong>Выполнение:</strong> ${Math.round(cl.totalPercent)}%</p>
                 <p><strong>Пункты:</strong></p>
@@ -305,10 +394,14 @@
         const checklists = getChecklistResults();
         const win = window.open('', '_blank');
         win.document.write(`
-            <html><head><title>Сводный отчёт SCM</title><style>
+            <!DOCTYPE html>
+            <html><head><title>Сводный отчёт SCM</title>
+            <style>
                 body{font-family:Inter;margin:20px}h1{color:#1e40af}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:8px}
-            </style></head><body>
+            </style>
+            </head><body>
             <h1>Сводный отчёт по аудитам и чек-листам</h1>
+            <p>Бизнес-единица: ${currentBranchId}</p>
             <p>Дата: ${new Date().toLocaleString()}</p>
             <h2>Аудиты</h2>
             <table><thead><tr><th>Дата</th><th>Тип</th><th>Зрелость</th></tr></thead><tbody>
@@ -325,9 +418,9 @@
     }
 
     function exportRegistry() {
-        const data = { audits: getAuditRegistry(), checklists: getChecklistResults(), exportDate: new Date().toISOString() };
+        const data = { audits: getAuditRegistry(), checklists: getChecklistResults(), exportDate: new Date().toISOString(), branchId: currentBranchId };
         const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `scm_registry_${Date.now()}.json`; a.click();
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `scm_registry_${currentBranchId}_${Date.now()}.json`; a.click();
     }
 
     function importRegistry(file) {
@@ -338,11 +431,11 @@
                 if (data.audits) { saveAuditRegistry(data.audits); }
                 if (data.checklists) {
                     for (let cl of data.checklists) {
-                        const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
+                        const categories = JSON.parse(localStorage.getItem(`scm_checklists_${currentBranchId}`) || '{}');
                         if (!categories[cl.name]) categories[cl.name] = cl.items;
-                        localStorage.setItem('scm_checklists', JSON.stringify(categories));
-                        localStorage.setItem(`checklist_${cl.name}`, JSON.stringify(cl.state));
-                        localStorage.setItem(`checklist_last_modified_${cl.name}`, cl.date);
+                        localStorage.setItem(`scm_checklists_${currentBranchId}`, JSON.stringify(categories));
+                        localStorage.setItem(`checklist_${cl.name}_${currentBranchId}`, JSON.stringify(cl.state));
+                        localStorage.setItem(`checklist_last_modified_${cl.name}_${currentBranchId}`, cl.date);
                     }
                 }
                 renderAudits(); renderChecklists();
@@ -353,14 +446,16 @@
     }
 
     function deleteAll() {
-        if (confirm('Удалить ВСЕ аудиты и результаты чек-листов? Это действие необратимо.')) {
-            localStorage.removeItem('audit_registry');
-            const categories = JSON.parse(localStorage.getItem('scm_checklists') || '{}');
-            for (let cat of Object.keys(categories)) {
-                localStorage.removeItem(`checklist_${cat}`);
-                localStorage.removeItem(`checklist_last_modified_${cat}`);
+        if (confirm('Удалить ВСЕ аудиты и результаты чек-листов для выбранной бизнес-единицы? Это действие необратимо.')) {
+            saveAuditRegistry([]);
+            localStorage.setItem(`scm_checklists_${currentBranchId}`, '{}');
+            // удаляем также отдельные чек-листы
+            const keys = Object.keys(localStorage);
+            for (let key of keys) {
+                if (key.startsWith(`checklist_`) && key.endsWith(`_${currentBranchId}`)) {
+                    localStorage.removeItem(key);
+                }
             }
-            localStorage.setItem('scm_checklists', '{}');
             renderAudits(); renderChecklists();
         }
     }
@@ -373,8 +468,73 @@
     });
     document.getElementById('deleteAllBtn').addEventListener('click', deleteAll);
     document.getElementById('printAllBtn').addEventListener('click', printAllSummary);
+    document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+        document.getElementById('filterAuditType').value = '';
+        document.getElementById('filterDateFrom').value = '';
+        document.getElementById('filterDateTo').value = '';
+        document.getElementById('filterMinScore').value = '';
+        renderAudits();
+    });
+    document.getElementById('filterAuditType').addEventListener('change', renderAudits);
+    document.getElementById('filterDateFrom').addEventListener('change', renderAudits);
+    document.getElementById('filterDateTo').addEventListener('change', renderAudits);
+    document.getElementById('filterMinScore').addEventListener('input', renderAudits);
 
-    renderAudits(); renderChecklists();
+    // Печать всей страницы на бланке
+    window.printRegistryWithLogo = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const clone = mainContent.cloneNode(true);
+        clone.querySelectorAll('.btn-group, .filter-bar, .branch-selector-container, .theme-switch, button, .small').forEach(el => el.remove());
+        const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html><head><meta charset="UTF-8"><title>Реестр аудитов и чек-листов</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: Inter; margin: 20px; }
+                .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                .logo-img { height: 50px; }
+                .contact-info { font-size: 10pt; line-height: 1.4; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; }
+                .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                .registry-table { font-size: 9pt; }
+            </style>
+            </head><body>
+            <div class="print-header">
+                <div style="display:flex;align-items:center;gap:20px"><img src="${logoUrl}" class="logo-img"><div class="contact-info">Дмитрий Панибратский<br>Эксперт по SCM и логистике<br>scm-news.ru – экспертный портал<br>scm-news.online – Академия SCM<br>dmitry@scm-news.ru</div></div>
+                <div>${new Date().toLocaleString()}</div>
+            </div>
+            ${clone.innerHTML}
+            <div class="print-footer">
+                <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                <div>Подпись: <span class="sign-line">_________________________</span></div>
+                <div>Дата: ${new Date().toLocaleDateString()}</div>
+            </div>
+            <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    };
+    // Добавляем кнопку печати страницы, если её нет
+    const printPageBtn = document.createElement('button');
+    printPageBtn.innerHTML = '<i class="fas fa-print"></i> Печать страницы (бланк)';
+    printPageBtn.style.background = '#f59e0b';
+    printPageBtn.addEventListener('click', () => window.printRegistryWithLogo());
+    document.querySelector('.btn-group').appendChild(printPageBtn);
+
+    // Инициализация
+    function init() {
+        BranchManager.ensureDefaultBranch();
+        currentBranchId = getCurrentBranch();
+        loadBranchSelector();
+        renderAudits();
+        renderChecklists();
+    }
+    init();
+})();
+function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 </script>
 </body>
 </html>
