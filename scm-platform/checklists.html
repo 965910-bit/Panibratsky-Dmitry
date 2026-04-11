@@ -225,7 +225,30 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">...</aside>
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html" class="active"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main class="main-content">
         <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
@@ -285,7 +308,6 @@
 
 <script>
 (function() {
-    // ========== 1. Тёмная тема ==========
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -294,7 +316,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ========== 2. Филиал ==========
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -315,15 +336,18 @@
         select.addEventListener('change', (e) => {
             setCurrentBranch(e.target.value);
             currentBranchId = e.target.value;
-            // Перезагружаем всё
             loadCustomItems();
             loadTemplates();
             renderAuditSections(currentFilterIds);
             populateTemplateSelect();
         });
     }
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
+    }
 
-    // ========== 3. ПОЛНЫЙ ПЕРЕЧЕНЬ ПУНКТОВ (12 категорий) ==========
     const sectionTitles = {
         warehouse: "📦 Склад и логистика",
         transport: "🚛 Транспорт и доставка",
@@ -340,8 +364,9 @@
     };
     const sectionsOrder = ["warehouse","transport","procurement","inventory","hr","finance","it","ohs","fire","esg","customer","quality"];
 
+    // Полный перечень пунктов (сокращён для примера, но в реальном файле он полный – более 100 пунктов)
+    // Для экономии места в сообщении приведены лишь несколько пунктов, но в финальном файле они будут все.
     let masterItems = {
-        // warehouse
         wh01: { section: "warehouse", text: "Точность учёта запасов (инвентаризация)", recommend: "≥99,5%", inputType: "number", unit: "%", target: 99.5, condition: "greater" },
         wh02: { section: "warehouse", text: "Соблюдение FIFO/FEFO (проверка по 10 позициям)", recommend: "Да", inputType: "none", unit: "" },
         wh03: { section: "warehouse", text: "RF-терминалы в работе, прошивка обновлена", recommend: "Да", inputType: "none", unit: "" },
@@ -356,7 +381,6 @@
         wh12: { section: "warehouse", text: "Внедрена система WMS", recommend: "Да", inputType: "none", unit: "" },
         wh13: { section: "warehouse", text: "Автоматизирован учёт сроков годности (FEFO)", recommend: "Да", inputType: "none", unit: "" },
         wh14: { section: "warehouse", text: "Проведена инвентаризация А-класса (последние 3 мес.)", recommend: "Да", inputType: "none", unit: "" },
-        // transport
         tr01: { section: "transport", text: "OTD доставки клиентам (вовремя)", recommend: "≥96%", inputType: "number", unit: "%", target: 96, condition: "greater" },
         tr02: { section: "transport", text: "Доля повреждённых грузов при транспортировке", recommend: "<0,5%", inputType: "number", unit: "%", target: 0.5, condition: "less" },
         tr03: { section: "transport", text: "Средняя стоимость доставки 1 тонно-километра", recommend: "≤12 руб.", inputType: "number", unit: "руб.", target: 12, condition: "less" },
@@ -369,7 +393,6 @@
         tr10: { section: "transport", text: "Доля перевозок с электронным документооборотом", recommend: "≥90%", inputType: "number", unit: "%", target: 90, condition: "greater" },
         tr11: { section: "transport", text: "Наличие договоров с перевозчиками (SLA)", recommend: "Да", inputType: "none", unit: "" },
         tr12: { section: "transport", text: "Проведён аудит страховок грузов", recommend: "Да", inputType: "none", unit: "" },
-        // procurement
         pu01: { section: "procurement", text: "Доля закупок у сертифицированных поставщиков", recommend: "≥80%", inputType: "number", unit: "%", target: 80, condition: "greater" },
         pu02: { section: "procurement", text: "Своевременность поставок от поставщиков (OTD)", recommend: "≥96%", inputType: "number", unit: "%", target: 96, condition: "greater" },
         pu03: { section: "procurement", text: "Доля брака от поставщиков", recommend: "<1%", inputType: "number", unit: "%", target: 1, condition: "less" },
@@ -382,7 +405,6 @@
         pu10: { section: "procurement", text: "Автоматизация согласования закупок (EDI, SAP Ariba)", recommend: "Да", inputType: "none", unit: "" },
         pu11: { section: "procurement", text: "Наличие процедуры возврата брака поставщику", recommend: "Да", inputType: "none", unit: "" },
         pu12: { section: "procurement", text: "Проведён анализ TCO (совокупная стоимость владения)", recommend: "Да", inputType: "none", unit: "" },
-        // inventory
         im01: { section: "inventory", text: "Оборачиваемость запасов (раз в год)", recommend: "≥6", inputType: "number", unit: "раз", target: 6, condition: "greater" },
         im02: { section: "inventory", text: "Доля неликвидов в общем объёме запасов", recommend: "<5%", inputType: "number", unit: "%", target: 5, condition: "less" },
         im03: { section: "inventory", text: "GMROI для категории А", recommend: ">2", inputType: "number", unit: "", target: 2, condition: "greater" },
@@ -393,7 +415,6 @@
         im08: { section: "inventory", text: "Средний уровень дефицита (Stockout Rate)", recommend: "<5%", inputType: "number", unit: "%", target: 5, condition: "less" },
         im09: { section: "inventory", text: "Автоматический пересчёт точки заказа (ROP)", recommend: "Да", inputType: "none", unit: "" },
         im10: { section: "inventory", text: "Наличие сезонных коэффициентов в планировании", recommend: "Да", inputType: "none", unit: "" },
-        // hr
         hr01: { section: "hr", text: "Численность персонала рассчитана driver-based", recommend: "Да", inputType: "none", unit: "" },
         hr02: { section: "hr", text: "Северные надбавки и районный коэффициент корректны", recommend: "Да", inputType: "none", unit: "" },
         hr03: { section: "hr", text: "Учтены льготы для женщин (36-часовая неделя, перерывы)", recommend: "Да", inputType: "none", unit: "" },
@@ -406,7 +427,6 @@
         hr10: { section: "hr", text: "Средняя зарплата комплектовщика (регион)", recommend: "не ниже рынка", inputType: "number", unit: "руб.", target: 50000, condition: "greater" },
         hr11: { section: "hr", text: "Использование временного персонала в пик (аутстаффинг)", recommend: "Да", inputType: "none", unit: "" },
         hr12: { section: "hr", text: "Проведена оценка удовлетворённости сотрудников (опрос)", recommend: "Да", inputType: "none", unit: "" },
-        // finance
         fn01: { section: "finance", text: "Бюджет SCM утверждён и не превышен более чем на 5%", recommend: "Да", inputType: "none", unit: "" },
         fn02: { section: "finance", text: "Доля ФОТ в выручке SCM", recommend: "≤5%", inputType: "number", unit: "%", target: 5, condition: "less" },
         fn03: { section: "finance", text: "Cash-to-Cash цикл (CCC)", recommend: "≤45 дней", inputType: "number", unit: "дней", target: 45, condition: "less" },
@@ -417,7 +437,6 @@
         fn08: { section: "finance", text: "Доля неликвидов в общем объёме запасов", recommend: "<5%", inputType: "number", unit: "%", target: 5, condition: "less" },
         fn09: { section: "finance", text: "Средняя стоимость обработки заказа (руб./заказ)", recommend: "≤300 руб.", inputType: "number", unit: "руб.", target: 300, condition: "less" },
         fn10: { section: "finance", text: "Проведён расчёт себестоимости доставки по клиентам", recommend: "Да", inputType: "none", unit: "" },
-        // it
         it01: { section: "it", text: "Внедрена WMS с адресным хранением", recommend: "Да", inputType: "none", unit: "" },
         it02: { section: "it", text: "Точность данных в WMS (выборочная инвентаризация)", recommend: "≥99%", inputType: "number", unit: "%", target: 99, condition: "greater" },
         it03: { section: "it", text: "Data Latency (задержка обновления)", recommend: "<1 минуты", inputType: "number", unit: "сек", target: 60, condition: "less" },
@@ -428,7 +447,6 @@
         it08: { section: "it", text: "Внедрены RPA-боты (роботизация рутинных операций)", recommend: "Да", inputType: "none", unit: "" },
         it09: { section: "it", text: "Доля ручного ввода данных в учётных системах", recommend: "<10%", inputType: "number", unit: "%", target: 10, condition: "less" },
         it10: { section: "it", text: "Проведена оценка кибербезопасности SCM-систем", recommend: "Да", inputType: "none", unit: "" },
-        // ohs
         os01: { section: "ohs", text: "Назначен ответственный за охрану труда", recommend: "Да", inputType: "none", unit: "" },
         os02: { section: "ohs", text: "Разработана и утверждена СУОТ", recommend: "Да", inputType: "none", unit: "" },
         os03: { section: "ohs", text: "Проведены вводные и первичные инструктажи (журналы)", recommend: "Да", inputType: "none", unit: "" },
@@ -441,7 +459,6 @@
         os10: { section: "ohs", text: "Наличие плана мероприятий по улучшению условий труда", recommend: "Да", inputType: "none", unit: "" },
         os11: { section: "ohs", text: "Проверка знаний электробезопасности (группы допуска)", recommend: "Да", inputType: "none", unit: "" },
         os12: { section: "ohs", text: "Наличие аптечек и их укомплектованность", recommend: "Да", inputType: "none", unit: "" },
-        // fire
         pb01: { section: "fire", text: "Назначен ответственный за пожарную безопасность", recommend: "Да", inputType: "none", unit: "" },
         pb02: { section: "fire", text: "Проведён противопожарный инструктаж (журналы)", recommend: "Да", inputType: "none", unit: "" },
         pb03: { section: "fire", text: "Наличие планов эвакуации людей при пожаре", recommend: "Да", inputType: "none", unit: "" },
@@ -452,7 +469,6 @@
         pb08: { section: "fire", text: "Пути эвакуации не загромождены", recommend: "Да", inputType: "none", unit: "" },
         pb09: { section: "fire", text: "Проведены практические тренировки по эвакуации", recommend: "Да", inputType: "none", unit: "" },
         pb10: { section: "fire", text: "Наличие журнала проверки противопожарного состояния", recommend: "Да", inputType: "none", unit: "" },
-        // esg
         es01: { section: "esg", text: "Учёт Scope 1,2,3 выбросов CO₂", recommend: "Да", inputType: "none", unit: "" },
         es02: { section: "esg", text: "Снижение выбросов CO₂ на единицу продукции за год", recommend: "≥5%", inputType: "number", unit: "%", target: 5, condition: "greater" },
         es03: { section: "esg", text: "Доля переработанных материалов в упаковке", recommend: "≥30%", inputType: "number", unit: "%", target: 30, condition: "greater" },
@@ -461,7 +477,6 @@
         es06: { section: "esg", text: "Использование возобновляемой энергии (солнце, ветер)", recommend: "Да", inputType: "none", unit: "" },
         es07: { section: "esg", text: "Социальные программы для сотрудников (ДМС, обучение)", recommend: "Да", inputType: "none", unit: "" },
         es08: { section: "esg", text: "Публичная ESG-отчётность (нефинансовая отчётность)", recommend: "Да", inputType: "none", unit: "" },
-        // customer
         cs01: { section: "customer", text: "NPS по логистике (Net Promoter Score)", recommend: "≥50", inputType: "number", unit: "баллов", target: 50, condition: "greater" },
         cs02: { section: "customer", text: "Customer Effort Score (CES) – лёгкость решения проблем", recommend: "≤2", inputType: "number", unit: "баллов", target: 2, condition: "less" },
         cs03: { section: "customer", text: "First Contact Resolution (FCR) – доля проблем с 1 раза", recommend: "≥80%", inputType: "number", unit: "%", target: 80, condition: "greater" },
@@ -470,7 +485,6 @@
         cs06: { section: "customer", text: "Доля клиентов, использующих электронный документооборот", recommend: "≥70%", inputType: "number", unit: "%", target: 70, condition: "greater" },
         cs07: { section: "customer", text: "Наличие системы отслеживания заказа (трекинг)", recommend: "Да", inputType: "none", unit: "" },
         cs08: { section: "customer", text: "Средняя оценка качества доставки (по 5-балльной шкале)", recommend: "≥4,5", inputType: "number", unit: "баллов", target: 4.5, condition: "greater" },
-        // quality
         qm01: { section: "quality", text: "Наличие сертификата ISO 9001 (менеджмент качества)", recommend: "Да", inputType: "none", unit: "" },
         qm02: { section: "quality", text: "Проведён внутренний аудит процессов SCM за год", recommend: "Да", inputType: "none", unit: "" },
         qm03: { section: "quality", text: "Утверждены стандартные операционные процедуры (СОП)", recommend: "Да", inputType: "none", unit: "" },
@@ -485,7 +499,6 @@
     let templates = [];
 
     function getAllItems() { return { ...masterItems, ...customItems }; }
-
     function loadCustomItems() { const saved = localStorage.getItem(`checklist_custom_items_${currentBranchId}`); if(saved) customItems = JSON.parse(saved); }
     function saveCustomItems() { localStorage.setItem(`checklist_custom_items_${currentBranchId}`, JSON.stringify(customItems)); }
     function loadTemplates() { const saved = localStorage.getItem(`checklist_templates_${currentBranchId}`); if(saved) templates = JSON.parse(saved); else templates = []; }
@@ -493,7 +506,6 @@
 
     let currentFilterIds = null;
 
-    // Состояние формы
     function saveCurrentFormState() {
         const state = {};
         for (let id of Object.keys(getAllItems())) {
@@ -515,7 +527,6 @@
             }
         }
     }
-
     function isFactCompliant(itemId, factValue) {
         const item = getAllItems()[itemId];
         if (!item || item.inputType === 'none') return true;
@@ -526,7 +537,6 @@
         if (item.condition === 'greater') return num > item.target;
         return false;
     }
-
     function computeSectionProgress(itemIds) {
         let total = 0, compliant = 0;
         for (let id of itemIds) {
@@ -546,7 +556,6 @@
         }
         return total === 0 ? 0 : (compliant / total) * 100;
     }
-
     function updateAllScores() {
         const all = getAllItems();
         const groups = {};
@@ -560,7 +569,6 @@
         }
         saveCurrentFormState();
     }
-
     function renderAuditSections(filterIds = null) {
         const all = getAllItems();
         let itemsToShow = {};
@@ -609,7 +617,6 @@
         updateAllScores();
         attachAuditEvents();
     }
-
     function attachAuditEvents() {
         document.querySelectorAll('.checklist-item select, .checklist-item input').forEach(el => {
             el.removeEventListener('change', updateAllScores);
@@ -630,7 +637,6 @@
             btn.addEventListener('click', handlePrintCategory);
         });
     }
-
     function handleResetCategory(e) {
         const section = e.currentTarget.getAttribute('data-section');
         if (confirm(`Сбросить все ответы в категории "${sectionTitles[section]}"?`)) {
@@ -647,7 +653,6 @@
             updateAllScores();
         }
     }
-
     function handleAddItem(e) {
         const section = e.currentTarget.getAttribute('data-section');
         const input = e.currentTarget.parentElement.querySelector('.new-item-input');
@@ -659,13 +664,11 @@
         renderAuditSections(currentFilterIds);
         input.value = '';
     }
-
     function handlePrintCategory(e) {
         const sectionKey = e.currentTarget.getAttribute('data-category');
         const categoryName = sectionTitles[sectionKey];
         window.open(`report-generator.html?type=checklist&name=${encodeURIComponent(categoryName)}`, '_blank');
     }
-
     function resetAll() {
         if (confirm('Сбросить все ответы во всех категориях?')) {
             for (let id of Object.keys(getAllItems())) {
@@ -678,7 +681,6 @@
             updateAllScores();
         }
     }
-
     function printPending() {
         let pending = [];
         const all = getAllItems();
@@ -702,8 +704,6 @@
         <h1>Невыполненные пункты чек-листов</h1><p>Дата: ${new Date().toLocaleString()}</p><ul>${pending.map(p => `<li><strong>${p.category}</strong>: ${p.text} ${p.reason ? '('+p.reason+')' : ''}</li>`).join('')}</ul></body></html>`);
         win.document.close(); win.print();
     }
-
-    // Создание поручений из невыполненных пунктов
     function createTasksFromPending() {
         const all = getAllItems();
         const pending = [];
@@ -739,7 +739,6 @@
             };
             registry.push(newTask);
             created++;
-            // Синхронизация с планером
             const plannerTasks = getPlannerTasks(currentBranchId);
             const targetDate = new Date().toISOString().split('T')[0];
             if (!plannerTasks[targetDate]) plannerTasks[targetDate] = [];
@@ -758,7 +757,6 @@
         localStorage.setItem(registryKey, JSON.stringify(registry));
         alert(`Создано поручений: ${created}`);
     }
-
     function exportData() {
         const allStates = {};
         for (let id of Object.keys(getAllItems())) {
@@ -770,7 +768,6 @@
         const blob = new Blob([JSON.stringify(exportObj, null, 2)], {type: 'application/json'});
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `checklists_${currentBranchId}_${Date.now()}.json`; a.click();
     }
-
     function importData(file) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -794,8 +791,6 @@
         };
         reader.readAsText(file);
     }
-
-    // Конструктор шаблонов
     function renderConstructor() {
         const container = document.getElementById('allItemsPicker');
         let all = getAllItems();
@@ -834,7 +829,6 @@
         });
         renderTemplatesList();
     }
-
     function renderTemplatesList() {
         let container = document.getElementById('templatesList');
         container.innerHTML = '';
@@ -852,7 +846,6 @@
             btn.addEventListener('click', (e) => { templates = templates.filter(t => t.id !== btn.getAttribute('data-id')); saveTemplates(); renderTemplatesList(); populateTemplateSelect(); });
         });
     }
-
     function applyTemplate(templateId) {
         const tmpl = templates.find(t => t.id === templateId);
         if (tmpl) {
@@ -863,7 +856,6 @@
             if (select) select.value = templateId;
         }
     }
-
     function populateTemplateSelect() {
         const select = document.getElementById('auditTemplateSelect');
         if (!select) return;
@@ -875,7 +867,6 @@
             select.appendChild(opt);
         });
     }
-
     document.getElementById('addCustomItemBtn').addEventListener('click', () => {
         let text = document.getElementById('newItemText').value.trim();
         let condition = document.getElementById('newItemCondition').value;
@@ -888,7 +879,6 @@
         document.getElementById('newItemText').value = ''; document.getElementById('newItemTarget').value = ''; document.getElementById('newItemUnit').value = '';
         renderConstructor();
     });
-
     document.getElementById('saveTemplateBtn').addEventListener('click', () => {
         let name = document.getElementById('newTemplateName').value.trim();
         if (!name) return alert('Введите название шаблона');
@@ -901,8 +891,6 @@
         renderTemplatesList();
         populateTemplateSelect();
     });
-
-    // Переключение режимов
     const auditPanel = document.getElementById('auditModePanel');
     const constructorPanel = document.getElementById('constructorModePanel');
     const auditModeBtn = document.getElementById('auditModeBtn');
@@ -923,8 +911,6 @@
         constructorModeBtn.classList.add('active');
         renderConstructor();
     });
-
-    // Кнопки
     document.getElementById('resetAllChecklistsBtn').addEventListener('click', resetAll);
     document.getElementById('printPendingChecklistsBtn').addEventListener('click', printPending);
     document.getElementById('exportChecklistsBtn').addEventListener('click', exportData);
@@ -937,8 +923,6 @@
         else { currentFilterIds = null; renderAuditSections(null); }
     });
     document.getElementById('createTasksFromPendingBtn').addEventListener('click', createTasksFromPending);
-
-    // Печать всей страницы (бланк)
     window.printChecklistsWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -993,7 +977,6 @@
         const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     };
-    // Добавляем кнопки печати и отправки в btn-group
     const printAllBtn = document.createElement('button');
     printAllBtn.innerHTML = '<i class="fas fa-print"></i> Печать всех чек-листов (бланк)';
     printAllBtn.style.background = '#f59e0b';
@@ -1005,7 +988,6 @@
     document.querySelector('#auditModePanel .btn-group').appendChild(printAllBtn);
     document.querySelector('#auditModePanel .btn-group').appendChild(emailAllBtn);
 
-    // Инициализация
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
@@ -1017,6 +999,7 @@
     }
     init();
 })();
+function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 </script>
 </body>
 </html>
