@@ -111,9 +111,29 @@
             border: 1px solid #e2e8f0;
             border-radius: 12px;
         }
+        .branch-selector-container {
+            background: white;
+            border-radius: 30px;
+            padding: 4px 12px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
         @media (max-width: 768px) {
-            .filter-bar { flex-direction: column; align-items: stretch; }
-            .tasks-table { font-size: 12px; }
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .tasks-table {
+                font-size: 12px;
+            }
         }
         @media print {
             .sidebar, .filter-bar, .btn-group, .branch-selector-container, .theme-switch, .btn-icon, .modal {
@@ -124,7 +144,30 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">...</aside>
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main class="main-content">
         <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
         <div class="registry-header">
@@ -145,16 +188,14 @@
             <div class="filter-group"><label>Приоритет</label><select id="filterPriority"><option value="">Все</option><option value="high">Высокий</option><option value="medium">Средний</option><option value="low">Низкий</option></select></div>
             <div class="filter-group"><label>Ответственный</label><input type="text" id="filterAssignee" placeholder="ФИО"></div>
             <div class="filter-group"><label>Срок до</label><input type="date" id="filterDueDate"></div>
-            <div class="filter-group"><label>Категория (тема)</label><select id="filterTheme"><option value="">Все</option><option value="Импорт из Китая">Импорт из Китая</option><option value="Запуск поставщика">Запуск поставщика</option><option value="Внедрение WMS">Внедрение WMS</option><option value="Оптимизация маршрутов">Оптимизация маршрутов</option><option value="Таможня">Таможня</option></select></div>
-            <button id="resetFiltersBtn" class="secondary">Сбросить</button>
+            <div class="filter-group"><label>Категория (тема)</label><select id="filterTheme"><option value="">Все</option><option value="Импорт из Китая">Импорт из Китая</option><option value="Запуск поставщика">Запуск поставщика</option><option value="Внедрение WMS">Внедрение WMS</option><option value="Оптимизация маршрутов">Оптимизация маршрутов</option><option value="Таможня">Таможня</option><option value="Аудит SCM">Аудит SCM</option><option value="Чек-лист SCM">Чек-лист SCM</option><option value="Протокол совещания">Протокол совещания</option></select></div>
+            <button id="resetFiltersBtn">Сбросить</button>
         </div>
 
         <div style="overflow-x: auto;">
             <table class="tasks-table" id="tasksTable">
                 <thead>
-                    <tr>
-                        <th>ID</th><th>Содержание</th><th>Ответственный</th><th>Срок</th><th>Приоритет</th><th>Статус</th><th>Контролёр</th><th>Факт выполнения</th><th>Связь с совещанием</th><th>Категория</th><th>Действия</th>
-                    </tr>
+                    <tr><th>ID</th><th>Содержание</th><th>Ответственный</th><th>Срок</th><th>Приоритет</th><th>Статус</th><th>Контролёр</th><th>Факт выполнения</th><th>Связь с совещанием</th><th>Категория</th><th>Действия</th>
                 </thead>
                 <tbody id="tasksTableBody"></tbody>
             </table>
@@ -162,7 +203,6 @@
     </main>
 </div>
 
-<!-- Модальное окно для создания/редактирования поручения -->
 <div id="taskModal" class="modal">
     <div class="modal-content">
         <h3 id="modalTitle">Новое поручение</h3>
@@ -172,7 +212,7 @@
         <div class="form-group"><label>Приоритет</label><select id="taskPriority"><option value="high">Высокий</option><option value="medium">Средний</option><option value="low">Низкий</option></select></div>
         <div class="form-group"><label>Статус</label><select id="taskStatus"><option value="new">Новое</option><option value="progress">В работе</option><option value="review">На согласовании</option><option value="done">Готово</option></select></div>
         <div class="form-group"><label>Контролёр</label><input type="text" id="taskController"></div>
-        <div class="form-group"><label>Категория (тематическая выборка)</label><select id="taskTheme"><option value="">-- Без категории --</option><option value="Импорт из Китая">Импорт из Китая</option><option value="Запуск поставщика">Запуск поставщика</option><option value="Внедрение WMS">Внедрение WMS</option><option value="Оптимизация маршрутов">Оптимизация маршрутов</option><option value="Таможня">Таможня</option></select></div>
+        <div class="form-group"><label>Категория (тематическая выборка)</label><select id="taskTheme"><option value="">-- Без категории --</option><option value="Импорт из Китая">Импорт из Китая</option><option value="Запуск поставщика">Запуск поставщика</option><option value="Внедрение WMS">Внедрение WMS</option><option value="Оптимизация маршрутов">Оптимизация маршрутов</option><option value="Таможня">Таможня</option><option value="Аудит SCM">Аудит SCM</option><option value="Чек-лист SCM">Чек-лист SCM</option><option value="Протокол совещания">Протокол совещания</option></select></div>
         <div class="form-group"><label>Связь с совещанием (ID протокола)</label><input type="text" id="taskMeetingLink" placeholder="например, mtg_123"></div>
         <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
             <button id="modalCancelBtn">Отмена</button>
@@ -216,6 +256,11 @@
             loadTasks();
         });
     }
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
+    }
 
     // ---- Хранилище поручений ----
     function getStorageKey() { return `tasks_registry_${currentBranchId}`; }
@@ -227,15 +272,12 @@
         localStorage.setItem(getStorageKey(), JSON.stringify(tasks));
     }
 
-    // ---- Синхронизация с планером (задачи, у которых есть date) ----
+    // ---- Синхронизация с планером ----
     function syncWithPlanner(tasks) {
-        // получаем все задачи планера для текущего филиала
         const plannerTasks = getPlannerTasks(currentBranchId);
-        // удаляем из планера старые задачи с типом registry_task (если они были)
         for (let date in plannerTasks) {
             plannerTasks[date] = plannerTasks[date].filter(t => t.source !== 'registry');
         }
-        // Добавляем поручения как задачи в планер (на дату срока, если срок указан, иначе в бэклог)
         for (let task of tasks) {
             const targetDate = task.dueDate ? task.dueDate : 'backlog';
             if (!plannerTasks[targetDate]) plannerTasks[targetDate] = [];
@@ -256,7 +298,7 @@
         savePlannerTasks(plannerTasks, currentBranchId);
     }
 
-    // ---- Рендер таблицы с фильтрацией ----
+    // ---- Рендер таблицы ----
     let allTasks = [];
     function renderTasks() {
         const statusFilter = document.getElementById('filterStatus').value;
@@ -274,7 +316,6 @@
             return true;
         });
 
-        // Определяем просроченные
         const today = new Date().toISOString().split('T')[0];
         filtered = filtered.map(t => ({
             ...t,
@@ -338,7 +379,7 @@
         saveTasksAndSync();
     }
 
-    // ---- Модальное окно для создания/редактирования ----
+    // ---- Модальное окно ----
     let editId = null;
     function openEditModal(id) {
         editId = id;
@@ -461,7 +502,6 @@
         currentBranchId = getCurrentBranch();
         loadBranchSelector();
         loadTasks();
-        // Подписываемся на изменение филиала из других вкладок
         window.addEventListener('branch-changed', () => {
             currentBranchId = getCurrentBranch();
             loadTasks();
