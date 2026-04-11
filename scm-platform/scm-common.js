@@ -258,17 +258,6 @@ function saveBranchBudget(branchId, year, budgetData) {
     const key = `branch_budget_${branchId}_${year}`;
     localStorage.setItem(key, JSON.stringify(budgetData));
 }
-function getBudgetMonths(branchId, year) {
-    const budget = getBranchBudget(branchId, year);
-    const months = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
-    return months.map(month => ({
-        month,
-        opex: budget[month]?.opex || 0,
-        payroll: budget[month]?.payroll || 0,
-        transport: budget[month]?.transport || 0,
-        capex: budget[month]?.capex || 0
-    }));
-}
 function saveBudgetMonth(branchId, year, month, values) {
     const budget = getBranchBudget(branchId, year);
     budget[month] = { ...budget[month], ...values };
@@ -290,14 +279,6 @@ function addStaffPosition(branchId, position) {
     staff.push({ id: Date.now().toString(), ...position });
     saveBranchStaff(branchId, staff);
 }
-function updateStaffPosition(branchId, positionId, updates) {
-    const staff = getBranchStaff(branchId);
-    const index = staff.findIndex(p => p.id === positionId);
-    if (index !== -1) {
-        staff[index] = { ...staff[index], ...updates };
-        saveBranchStaff(branchId, staff);
-    }
-}
 function deleteStaffPosition(branchId, positionId) {
     let staff = getBranchStaff(branchId);
     staff = staff.filter(p => p.id !== positionId);
@@ -313,11 +294,6 @@ function getBranchKPITargets(branchId, year) {
 function saveBranchKPITargets(branchId, year, targets) {
     const key = `branch_kpi_targets_${branchId}_${year}`;
     localStorage.setItem(key, JSON.stringify(targets));
-}
-function setBranchKPITarget(branchId, year, kpiId, value) {
-    const targets = getBranchKPITargets(branchId, year);
-    targets[kpiId] = value;
-    saveBranchKPITargets(branchId, year, targets);
 }
 
 // ---------- 7. ЗАДАЧИ ПЛАНЕРА С ПРИВЯЗКОЙ К ФИЛИАЛУ ----------
