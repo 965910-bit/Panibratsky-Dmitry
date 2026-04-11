@@ -148,7 +148,30 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">...</aside>
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html" class="active"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main class="main-content">
         <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
         <div class="daily-header">
@@ -168,18 +191,14 @@
             </div>
         </div>
 
-        <!-- KPI дня -->
         <div class="kpi-day-widget" id="kpiWidget"></div>
 
         <div class="two-columns">
-            <!-- Левая колонка: Жёсткая сетка (встречи, дедлайны) -->
             <div class="card">
                 <h3><i class="fas fa-calendar-alt"></i> Жёсткая сетка (встречи и сроки)</h3>
                 <div id="eventsContainer"></div>
                 <button id="addEventBtn" class="btn-icon"><i class="fas fa-plus"></i> Добавить событие</button>
             </div>
-
-            <!-- Правая колонка: Гибкие задачи по категориям -->
             <div class="card">
                 <h3><i class="fas fa-tasks"></i> Гибкие задачи</h3>
                 <div id="categoryTabs" class="tabs"></div>
@@ -191,7 +210,6 @@
             </div>
         </div>
 
-        <!-- Лягушка и Слон -->
         <div class="frog-elephant">
             <div class="card">
                 <h3><i class="fas fa-frog"></i> Лягушка (самое неприятное дело дня)</h3>
@@ -206,7 +224,6 @@
             </div>
         </div>
 
-        <!-- Мемуарник -->
         <div class="card">
             <h3><i class="fas fa-pencil-alt"></i> Мемуарник (быстрые заметки)</h3>
             <textarea id="memoText" class="memo-area" placeholder="Идеи, вопросы, важная информация..."></textarea>
@@ -221,7 +238,6 @@
 
 <script>
 (function() {
-    // ---- Тёмная тема ----
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -230,7 +246,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---- Филиал ----
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -255,8 +270,12 @@
             loadDayData();
         });
     }
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
+    }
 
-    // ---- KPI дня ----
     function renderKPIWidget() {
         const container = document.getElementById('kpiWidget');
         const kpis = [
@@ -279,11 +298,10 @@
         container.innerHTML = html;
     }
 
-    // ---- Данные дня (хранилище) ----
     let currentDate = new Date();
     let dayData = {
-        events: [],      // { id, time, title }
-        tasks: [],       // { id, category, text, completed, priority, frog, elephant, parentId, subtasks, source, registryId }
+        events: [],
+        tasks: [],
         frogTaskId: null,
         elephantTaskId: null,
         memo: ''
@@ -304,7 +322,6 @@
         } else {
             dayData = { events: [], tasks: [], frogTaskId: null, elephantTaskId: null, memo: '' };
         }
-        // Импорт задач из глобального планера (на случай, если они были созданы вне ежедневника)
         const plannerTasks = getPlannerTasks(currentBranchId);
         const dateStr = currentDate.toISOString().split('T')[0];
         const dayPlannerTasks = plannerTasks[dateStr] || [];
@@ -335,11 +352,9 @@
     function saveDayData() {
         const key = getStorageKey();
         localStorage.setItem(key, JSON.stringify(dayData));
-        // Синхронизация с глобальным планером
         const plannerTasks = getPlannerTasks(currentBranchId);
         const dateStr = currentDate.toISOString().split('T')[0];
         if (!plannerTasks[dateStr]) plannerTasks[dateStr] = [];
-        // Обновляем/добавляем задачи из dayData.tasks
         for (let task of dayData.tasks) {
             const existingIndex = plannerTasks[dateStr].findIndex(t => t.id === task.id);
             const plannerTask = {
@@ -363,14 +378,12 @@
                 plannerTasks[dateStr].push(plannerTask);
             }
         }
-        // Удаляем из планера задачи, которые были удалены из dayData
         const currentIds = new Set(dayData.tasks.map(t => t.id));
         plannerTasks[dateStr] = plannerTasks[dateStr].filter(t => currentIds.has(t.id));
         savePlannerTasks(plannerTasks, currentBranchId);
         alert('День сохранён');
     }
 
-    // ---- Жёсткая сетка (события) ----
     function renderEvents() {
         const container = document.getElementById('eventsContainer');
         if (!dayData.events.length) {
@@ -402,7 +415,6 @@
         saveDayData();
     });
 
-    // ---- Гибкие задачи по категориям ----
     function renderCategoryTabs() {
         const container = document.getElementById('categoryTabs');
         container.innerHTML = categories.map(cat => `<button class="tab ${currentCategory === cat ? 'active' : ''}" data-category="${cat}">${cat}</button>`).join('');
@@ -488,7 +500,6 @@
         renderCategoryTasks();
     });
 
-    // ---- Импорт из реестра поручений ----
     document.getElementById('importFromRegistryBtn').addEventListener('click', () => {
         const registryKey = `tasks_registry_${currentBranchId}`;
         const registryTasks = JSON.parse(localStorage.getItem(registryKey) || '[]');
@@ -525,7 +536,6 @@
         }
     });
 
-    // ---- Лягушка и Слон ----
     function renderFrogElephant() {
         const frogTask = dayData.tasks.find(t => t.id === dayData.frogTaskId);
         const frogContainer = document.getElementById('frogContainer');
@@ -617,13 +627,11 @@
         }
     });
 
-    // ---- Мемуарник ----
     document.getElementById('memoText').addEventListener('change', () => {
         dayData.memo = document.getElementById('memoText').value;
         saveDayData();
     });
 
-    // ---- Синхронизация с реестром (обновление статусов) ----
     document.getElementById('syncWithRegistryBtn').addEventListener('click', () => {
         const registryKey = `tasks_registry_${currentBranchId}`;
         let registryTasks = JSON.parse(localStorage.getItem(registryKey) || '[]');
@@ -646,7 +654,6 @@
         saveDayData();
     });
 
-    // ---- Навигация по дням ----
     document.getElementById('saveAllBtn').addEventListener('click', () => {
         dayData.memo = document.getElementById('memoText').value;
         saveDayData();
@@ -670,13 +677,11 @@
         renderKPIWidget();
     });
 
-    // ---- Печать на бланке ----
     window.printDayWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
         const clone = mainContent.cloneNode(true);
         clone.querySelectorAll('.theme-switch, .btn-group, .btn-icon, .branch-selector-container, .date-nav button, .add-event, .add-task-category, .remove-frog, .remove-elephant, .delete-event, .edit-task, .delete-task, .task-complete, #saveAllBtn, #syncWithRegistryBtn, #importFromRegistryBtn').forEach(el => el.remove());
-        // Преобразуем чекбоксы в текст
         clone.querySelectorAll('.task-category-item input[type="checkbox"]').forEach(cb => {
             const span = document.createElement('span');
             span.textContent = cb.checked ? '✅' : '⬜';
@@ -724,7 +729,6 @@
     document.getElementById('printDayBtn').addEventListener('click', () => window.printDayWithLogo());
     document.getElementById('emailDayBtn').addEventListener('click', () => window.sendDayByEmail());
 
-    // ---- Инициализация ----
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
