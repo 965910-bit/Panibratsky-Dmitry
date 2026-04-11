@@ -276,7 +276,8 @@ function saveBranchStaff(branchId, staffData) {
 }
 function addStaffPosition(branchId, position) {
     const staff = getBranchStaff(branchId);
-    staff.push({ id: Date.now().toString(), ...position });
+    const newId = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6);
+    staff.push({ id: newId, ...position });
     saveBranchStaff(branchId, staff);
 }
 function deleteStaffPosition(branchId, positionId) {
