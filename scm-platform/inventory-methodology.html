@@ -89,7 +89,31 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">...</aside>
+    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html" class="active"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main class="main-content">
         <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
@@ -235,7 +259,7 @@
 
 <script>
 (function() {
-    // ---- Тёмная тема ----
+    // Тёмная тема
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -244,7 +268,7 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---- Филиал ----
+    // Филиал
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -265,11 +289,15 @@
         select.addEventListener('change', (e) => {
             setCurrentBranch(e.target.value);
             currentBranchId = e.target.value;
-            // Страница не зависит от филиала, но сохраняем контекст
         });
     }
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
+    }
 
-    // ---- Печать и отправка на почту ----
+    // Печать и отправка
     window.printMethodologyWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -317,7 +345,7 @@
     document.getElementById('printMethodologyBtn').addEventListener('click', () => window.printMethodologyWithLogo());
     document.getElementById('emailMethodologyBtn').addEventListener('click', () => window.sendMethodologyByEmail());
 
-    // ---- Инициализация ----
+    // Инициализация
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
