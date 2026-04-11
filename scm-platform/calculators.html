@@ -21,6 +21,7 @@
             padding: 24px;
             border: 1px solid #e2e8f0;
             transition: 0.2s;
+            position: relative;
         }
         .calc-card h2 {
             font-size: 20px;
@@ -61,372 +62,410 @@
             display: block;
             color: #1e40af;
         }
+        .calc-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            justify-content: flex-end;
+        }
+        .calc-actions button {
+            background: #e2e8f0;
+            color: #1e40af;
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+        .calc-actions button.save-btn { background: #10b981; color: white; }
+        .calc-actions button.kpi-btn { background: #f59e0b; color: white; }
         hr {
             margin: 16px 0;
             border-color: #e2e8f0;
         }
+        .branch-selector-container {
+            float: right;
+            margin-bottom: 16px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
         @media (max-width: 768px) {
             .calc-grid {
                 grid-template-columns: 1fr;
+            }
+            .branch-selector-container {
+                float: none;
+                margin-bottom: 16px;
+                display: flex;
+            }
+        }
+        @media print {
+            .sidebar, .btn-group, .branch-selector-container, .theme-switch, .calc-actions {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">
-        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
-        <nav>
-            <ul>
-                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
-                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
-                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
-                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
-                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
-                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
-                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
-                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
-                <li><a href="calculators.html" class="active"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
-                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
-                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
-            </ul>
-        </nav>
-    </aside>
-
+    <aside class="sidebar">...</aside>
     <main class="main-content">
-        <h1>🧮 Калькуляторы SCM</h1>
-        <p>Профессиональные расчёты для управления цепями поставок, запасами, логистикой, персоналом и финансами.</p>
-
-        <div class="calc-grid">
-            <!-- 1. Страховой запас -->
-            <div class="calc-card">
-                <h2><i class="fas fa-shield-alt"></i> Страховой запас (Safety Stock)</h2>
-                <div class="input-group"><label>Z-фактор (уровень обслуживания):</label><input type="number" id="ss_z" value="1.65" step="0.01"><small>1.28(90%) 1.65(95%) 2.33(99%)</small></div>
-                <div class="input-group"><label>Стандартное отклонение спроса (σ), ед.:</label><input type="number" id="ss_sigma" value="50" step="1"></div>
-                <div class="input-group"><label>Время выполнения заказа (дни):</label><input type="number" id="ss_lt" value="7" step="1"></div>
-                <div class="result" id="ss_result">Страховой запас: <strong>—</strong> ед.</div>
-            </div>
-
-            <!-- 2. EOQ (Экономичный размер заказа) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-chart-line"></i> EOQ (Economic Order Quantity)</h2>
-                <div class="input-group"><label>Годовой спрос (D), ед.:</label><input type="number" id="eoq_d" value="12000" step="100"></div>
-                <div class="input-group"><label>Затраты на один заказ (S), руб.:</label><input type="number" id="eoq_s" value="5000" step="100"></div>
-                <div class="input-group"><label>Затраты на хранение единицы в год (H), руб.:</label><input type="number" id="eoq_h" value="200" step="10"></div>
-                <div class="result" id="eoq_result">EOQ: <strong>—</strong> ед.</div>
-            </div>
-
-            <!-- 3. Точка заказа (ROP) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-shopping-cart"></i> Точка заказа (Reorder Point)</h2>
-                <div class="input-group"><label>Средний спрос в день (d), ед.:</label><input type="number" id="rop_d" value="50" step="1"></div>
-                <div class="input-group"><label>Время выполнения заказа (дни):</label><input type="number" id="rop_lt" value="7" step="1"></div>
-                <div class="input-group"><label>Страховой запас (ед.):</label><input type="number" id="rop_ss" value="100" step="1"></div>
-                <div class="result" id="rop_result">Точка заказа: <strong>—</strong> ед.</div>
-            </div>
-
-            <!-- 4. Driver-based численность персонала -->
-            <div class="calc-card">
-                <h2><i class="fas fa-users"></i> Driver-based численность</h2>
-                <div class="input-group"><label>Объём строк в месяц (строк):</label><input type="number" id="staff_volume" value="200000" step="10000"></div>
-                <div class="input-group"><label>Норма времени на строку (сек):</label><input type="number" id="staff_norm" value="45" step="5"></div>
-                <div class="input-group"><label>Эффективный фонд времени (часов/мес):</label><input type="number" id="staff_fond" value="130" step="5"></div>
-                <div class="input-group"><label>Коэффициент выполнения норм (Kвып):</label><input type="number" id="staff_kv" value="1.15" step="0.01"></div>
-                <div class="input-group"><label>Коэффициент невыходов (Kнев):</label><input type="number" id="staff_kn" value="1.1" step="0.01"></div>
-                <div class="result" id="staff_result">Численность: <strong>—</strong> чел.</div>
-            </div>
-
-            <!-- 5. ФОТ с северными надбавками -->
-            <div class="calc-card">
-                <h2><i class="fas fa-ruble-sign"></i> ФОТ с северными надбавками</h2>
-                <div class="input-group"><label>Базовая зарплата (оклад), руб.:</label><input type="number" id="fot_base" value="50000" step="5000"></div>
-                <div class="input-group"><label>Районный коэффициент (1.5 для ХМАО/ЯНАО):</label><input type="number" id="fot_rk" value="1.5" step="0.1"></div>
-                <div class="input-group"><label>Северная надбавка (%):</label><input type="number" id="fot_nad" value="80" step="5"></div>
-                <div class="result" id="fot_result">Итоговая зарплата: <strong>—</strong> руб.</div>
-            </div>
-
-            <!-- 6. Оборачиваемость запасов -->
-            <div class="calc-card">
-                <h2><i class="fas fa-exchange-alt"></i> Оборачиваемость запасов</h2>
-                <div class="input-group"><label>Себестоимость продаж (COGS) за период, руб.:</label><input type="number" id="turn_cogs" value="10000000" step="100000"></div>
-                <div class="input-group"><label>Средняя стоимость запасов, руб.:</label><input type="number" id="turn_avg" value="2000000" step="100000"></div>
-                <div class="result" id="turn_result">Оборачиваемость: <strong>—</strong> раз / <strong>—</strong> дней</div>
-            </div>
-
-            <!-- 7. GMROI -->
-            <div class="calc-card">
-                <h2><i class="fas fa-chart-pie"></i> GMROI</h2>
-                <div class="input-group"><label>Валовая прибыль за период, руб.:</label><input type="number" id="gmroi_profit" value="2500000" step="50000"></div>
-                <div class="input-group"><label>Средняя стоимость запасов, руб.:</label><input type="number" id="gmroi_avg" value="2000000" step="50000"></div>
-                <div class="result" id="gmroi_result">GMROI: <strong>—</strong></div>
-            </div>
-
-            <!-- 8. FTL стоимость перевозки -->
-            <div class="calc-card">
-                <h2><i class="fas fa-truck"></i> Стоимость FTL перевозки</h2>
-                <div class="input-group"><label>Расстояние (км):</label><input type="number" id="ftl_km" value="2100" step="100"></div>
-                <div class="input-group"><label>Ставка за км (руб./км):</label><input type="number" id="ftl_rate" value="85" step="5"></div>
-                <div class="input-group"><label>Повышающий коэффициент (сезонность, север):</label><input type="number" id="ftl_coef" value="1.0" step="0.05"></div>
-                <div class="result" id="ftl_result">Стоимость рейса: <strong>—</strong> руб.</div>
-            </div>
-
-            <!-- 9. Объёмный вес для LTL / авиа -->
-            <div class="calc-card">
-                <h2><i class="fas fa-cube"></i> Объёмный вес (Dim weight)</h2>
-                <div class="input-group"><label>Длина (см):</label><input type="number" id="dim_l" value="60" step="1"></div>
-                <div class="input-group"><label>Ширина (см):</label><input type="number" id="dim_w" value="40" step="1"></div>
-                <div class="input-group"><label>Высота (см):</label><input type="number" id="dim_h" value="30" step="1"></div>
-                <div class="input-group"><label>Фактический вес (кг):</label><input type="number" id="dim_actual" value="10" step="1"></div>
-                <div class="input-group"><label>Коэффициент (5000 для авиа, 6000 для авто):</label><input type="number" id="dim_coef" value="5000" step="100"></div>
-                <div class="result" id="dim_result">Объёмный вес: <strong>—</strong> кг, оплачиваемый: <strong>—</strong> кг</div>
-            </div>
-
-            <!-- 10. Точность прогноза (MAPE) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-chart-line"></i> Точность прогноза (MAPE)</h2>
-                <div class="input-group"><label>Фактический спрос (ед.):</label><input type="number" id="mape_actual" value="1000" step="10"></div>
-                <div class="input-group"><label>Прогнозируемый спрос (ед.):</label><input type="number" id="mape_forecast" value="850" step="10"></div>
-                <div class="result" id="mape_result">MAPE: <strong>—</strong>%</div>
-            </div>
-
-            <!-- 11. OTIF (On-Time In-Full) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-check-double"></i> OTIF</h2>
-                <div class="input-group"><label>Своевременные доставки (On-Time, %):</label><input type="number" id="otif_ot" value="95" step="1"></div>
-                <div class="input-group"><label>Полные доставки (In-Full, %):</label><input type="number" id="otif_if" value="96" step="1"></div>
-                <div class="result" id="otif_result">OTIF: <strong>—</strong>%</div>
-            </div>
-
-            <!-- 12. Cash-to-Cash цикл (CCC) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-money-bill-wave"></i> Cash-to-Cash цикл (CCC)</h2>
-                <div class="input-group"><label>Дни запаса (DIO):</label><input type="number" id="ccc_dio" value="45" step="1"></div>
-                <div class="input-group"><label>Дни дебиторской задолженности (DSO):</label><input type="number" id="ccc_dso" value="30" step="1"></div>
-                <div class="input-group"><label>Дни кредиторской задолженности (DPO):</label><input type="number" id="ccc_dpo" value="20" step="1"></div>
-                <div class="result" id="ccc_result">CCC: <strong>—</strong> дней</div>
-            </div>
-
-            <!-- 13. ROI автоматизации (простой) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-microchip"></i> ROI автоматизации</h2>
-                <div class="input-group"><label>Экономия от автоматизации (руб./год):</label><input type="number" id="roi_saving" value="5000000" step="100000"></div>
-                <div class="input-group"><label>Затраты на внедрение (руб.):</label><input type="number" id="roi_cost" value="1500000" step="100000"></div>
-                <div class="result" id="roi_result">ROI: <strong>—</strong>%</div>
-            </div>
-
-            <!-- 14. Загрузка склада (ёмкость) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-warehouse"></i> Загрузка склада</h2>
-                <div class="input-group"><label>Занятые паллето-места:</label><input type="number" id="space_used" value="800" step="10"></div>
-                <div class="input-group"><label>Общая ёмкость (паллето-мест):</label><input type="number" id="space_total" value="1000" step="10"></div>
-                <div class="result" id="space_result">Загрузка: <strong>—</strong>%</div>
-            </div>
-
-            <!-- 15. Потребность в паллето-местах -->
-            <div class="calc-card">
-                <h2><i class="fas fa-pallet"></i> Потребность в паллето-местах</h2>
-                <div class="input-group"><label>Средний остаток товара (ед.):</label><input type="number" id="pallet_stock" value="5000" step="100"></div>
-                <div class="input-group"><label>Количество единиц на паллете:</label><input type="number" id="pallet_per" value="50" step="1"></div>
-                <div class="input-group"><label>Коэффициент страхового запаса (1.1–1.3):</label><input type="number" id="pallet_coef" value="1.2" step="0.05"></div>
-                <div class="result" id="pallet_result">Потребность: <strong>—</strong> паллето-мест</div>
-            </div>
-
-            <!-- 16. Производительность склада (строк/чел.-час) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-tachometer-alt"></i> Производительность склада</h2>
-                <div class="input-group"><label>Собрано строк за смену:</label><input type="number" id="prod_lines" value="12000" step="100"></div>
-                <div class="input-group"><label>Затрачено человеко-часов:</label><input type="number" id="prod_hours" value="150" step="1"></div>
-                <div class="result" id="prod_result">Производительность: <strong>—</strong> строк/чел.-час</div>
-            </div>
-
-            <!-- 17. Стоимость доставки курьерской службой (по весу) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-motorcycle"></i> Курьерская доставка (по весу)</h2>
-                <div class="input-group"><label>Вес отправления (кг):</label><input type="number" id="courier_weight" value="2" step="0.5"></div>
-                <div class="input-group"><label>Базовая ставка за кг (руб.):</label><input type="number" id="courier_rate" value="150" step="10"></div>
-                <div class="input-group"><label>Минимальная стоимость (руб.):</label><input type="number" id="courier_min" value="500" step="50"></div>
-                <div class="result" id="courier_result">Стоимость: <strong>—</strong> руб.</div>
-            </div>
-
-            <!-- 18. Время цикла заказа (Order Cycle Time) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-hourglass-half"></i> Время цикла заказа</h2>
-                <div class="input-group"><label>Время от получения заказа до отгрузки (часы):</label><input type="number" id="cycle_order" value="4" step="0.5"></div>
-                <div class="input-group"><label>Время транспортировки (часы):</label><input type="number" id="cycle_transit" value="24" step="1"></div>
-                <div class="input-group"><label>Время доставки last mile (часы):</label><input type="number" id="cycle_last" value="2" step="0.5"></div>
-                <div class="result" id="cycle_result">Общий цикл: <strong>—</strong> часов</div>
-            </div>
-
-            <!-- 19. Расчёт точки безубыточности (BEP) для склада -->
-            <div class="calc-card">
-                <h2><i class="fas fa-chart-simple"></i> Точка безубыточности склада</h2>
-                <div class="input-group"><label>Постоянные затраты (руб./мес):</label><input type="number" id="bep_fixed" value="2000000" step="100000"></div>
-                <div class="input-group"><label>Переменные затраты на единицу (руб.):</label><input type="number" id="bep_var" value="50" step="5"></div>
-                <div class="input-group"><label>Доход на единицу (руб.):</label><input type="number" id="bep_rev" value="120" step="10"></div>
-                <div class="result" id="bep_result">Точка безубыточности: <strong>—</strong> ед./мес</div>
-            </div>
-
-            <!-- 20. Уровень сервиса (Fill Rate) -->
-            <div class="calc-card">
-                <h2><i class="fas fa-percent"></i> Fill Rate (уровень сервиса)</h2>
-                <div class="input-group"><label>Отгружено полностью (единиц):</label><input type="number" id="fill_shipped" value="9500" step="100"></div>
-                <div class="input-group"><label>Заказано всего (единиц):</label><input type="number" id="fill_ordered" value="10000" step="100"></div>
-                <div class="result" id="fill_result">Fill Rate: <strong>—</strong>%</div>
+        <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+            <h1>🧮 Калькуляторы SCM</h1>
+            <div class="branch-selector-container">
+                <label><i class="fas fa-building"></i> Бизнес-единица:</label>
+                <select id="branchSelector"></select>
             </div>
         </div>
+        <p>Профессиональные расчёты для управления цепями поставок, запасами, логистикой, персоналом и финансами.</p>
+
+        <div class="btn-group">
+            <button id="printCalculatorsBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать калькуляторов</button>
+            <button id="emailCalculatorsBtn" style="background:#10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
+        </div>
+
+        <div class="calc-grid" id="calculatorsGrid"></div>
     </main>
 </div>
 
 <script>
-    function updateAllCalculators() {
-        // 1. Страховой запас
-        let z = parseFloat(document.getElementById('ss_z').value) || 0;
-        let sigma = parseFloat(document.getElementById('ss_sigma').value) || 0;
-        let lt = parseFloat(document.getElementById('ss_lt').value) || 0;
-        let ss = z * sigma * Math.sqrt(lt);
-        document.getElementById('ss_result').innerHTML = `Страховой запас: <strong>${Math.round(ss)}</strong> ед.`;
+(function() {
+    // Тёмная тема
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    });
 
-        // 2. EOQ
-        let D = parseFloat(document.getElementById('eoq_d').value) || 0;
-        let S = parseFloat(document.getElementById('eoq_s').value) || 0;
-        let H = parseFloat(document.getElementById('eoq_h').value) || 0;
-        let eoq = H > 0 ? Math.sqrt(2 * D * S / H) : 0;
-        document.getElementById('eoq_result').innerHTML = `EOQ: <strong>${Math.round(eoq)}</strong> ед.`;
-
-        // 3. Точка заказа
-        let d = parseFloat(document.getElementById('rop_d').value) || 0;
-        let lt_rop = parseFloat(document.getElementById('rop_lt').value) || 0;
-        let ss_rop = parseFloat(document.getElementById('rop_ss').value) || 0;
-        let rop = d * lt_rop + ss_rop;
-        document.getElementById('rop_result').innerHTML = `Точка заказа: <strong>${Math.round(rop)}</strong> ед.`;
-
-        // 4. Driver-based численность
-        let vol = parseFloat(document.getElementById('staff_volume').value) || 0;
-        let normSec = parseFloat(document.getElementById('staff_norm').value) || 0;
-        let normHour = normSec / 3600;
-        let fond = parseFloat(document.getElementById('staff_fond').value) || 0;
-        let kv = parseFloat(document.getElementById('staff_kv').value) || 1;
-        let kn = parseFloat(document.getElementById('staff_kn').value) || 1;
-        let labor = vol * normHour;
-        let base = labor / (fond * kv);
-        let staff = Math.ceil(base * kn);
-        document.getElementById('staff_result').innerHTML = `Численность: <strong>${staff}</strong> чел. (трудоёмкость ${labor.toFixed(1)} ч)`;
-
-        // 5. ФОТ с северными
-        let baseSal = parseFloat(document.getElementById('fot_base').value) || 0;
-        let rk = parseFloat(document.getElementById('fot_rk').value) || 1;
-        let nad = parseFloat(document.getElementById('fot_nad').value) || 0;
-        let totalSal = baseSal * (1 + nad / 100) * rk;
-        document.getElementById('fot_result').innerHTML = `Итоговая зарплата: <strong>${Math.round(totalSal)}</strong> руб.`;
-
-        // 6. Оборачиваемость
-        let cogs = parseFloat(document.getElementById('turn_cogs').value) || 0;
-        let avgInv = parseFloat(document.getElementById('turn_avg').value) || 0;
-        let turn = avgInv > 0 ? cogs / avgInv : 0;
-        let days = turn > 0 ? 365 / turn : 0;
-        document.getElementById('turn_result').innerHTML = `Оборачиваемость: <strong>${turn.toFixed(1)}</strong> раз / <strong>${Math.round(days)}</strong> дней`;
-
-        // 7. GMROI
-        let profit = parseFloat(document.getElementById('gmroi_profit').value) || 0;
-        let gmroiAvg = parseFloat(document.getElementById('gmroi_avg').value) || 0;
-        let gmroi = gmroiAvg > 0 ? profit / gmroiAvg : 0;
-        document.getElementById('gmroi_result').innerHTML = `GMROI: <strong>${gmroi.toFixed(2)}</strong> ${gmroi > 2 ? '✅ отлично' : (gmroi > 1 ? '⚠️ норма' : '🔴 плохо')}`;
-
-        // 8. FTL стоимость
-        let km = parseFloat(document.getElementById('ftl_km').value) || 0;
-        let rate = parseFloat(document.getElementById('ftl_rate').value) || 0;
-        let coef = parseFloat(document.getElementById('ftl_coef').value) || 1;
-        let ftlCost = km * rate * coef;
-        document.getElementById('ftl_result').innerHTML = `Стоимость рейса: <strong>${Math.round(ftlCost)}</strong> руб.`;
-
-        // 9. Объёмный вес
-        let l = parseFloat(document.getElementById('dim_l').value) || 0;
-        let w = parseFloat(document.getElementById('dim_w').value) || 0;
-        let h = parseFloat(document.getElementById('dim_h').value) || 0;
-        let actual = parseFloat(document.getElementById('dim_actual').value) || 0;
-        let coefDim = parseFloat(document.getElementById('dim_coef').value) || 5000;
-        let dimWeight = (l * w * h) / coefDim;
-        let payable = Math.max(actual, dimWeight);
-        document.getElementById('dim_result').innerHTML = `Объёмный вес: <strong>${dimWeight.toFixed(1)}</strong> кг, оплачиваемый: <strong>${payable.toFixed(1)}</strong> кг`;
-
-        // 10. MAPE
-        let actualMape = parseFloat(document.getElementById('mape_actual').value) || 0;
-        let forecast = parseFloat(document.getElementById('mape_forecast').value) || 0;
-        let mape = actualMape !== 0 ? Math.abs(actualMape - forecast) / actualMape * 100 : 0;
-        document.getElementById('mape_result').innerHTML = `MAPE: <strong>${mape.toFixed(1)}</strong>%`;
-
-        // 11. OTIF
-        let ot = parseFloat(document.getElementById('otif_ot').value) || 0;
-        let infull = parseFloat(document.getElementById('otif_if').value) || 0;
-        let otif = (ot * infull) / 100;
-        document.getElementById('otif_result').innerHTML = `OTIF: <strong>${otif.toFixed(1)}</strong>%`;
-
-        // 12. CCC
-        let dio = parseFloat(document.getElementById('ccc_dio').value) || 0;
-        let dso = parseFloat(document.getElementById('ccc_dso').value) || 0;
-        let dpo = parseFloat(document.getElementById('ccc_dpo').value) || 0;
-        let ccc = dio + dso - dpo;
-        document.getElementById('ccc_result').innerHTML = `CCC: <strong>${Math.round(ccc)}</strong> дней`;
-
-        // 13. ROI автоматизации
-        let saving = parseFloat(document.getElementById('roi_saving').value) || 0;
-        let cost = parseFloat(document.getElementById('roi_cost').value) || 0;
-        let roi = cost > 0 ? (saving - cost) / cost * 100 : 0;
-        document.getElementById('roi_result').innerHTML = `ROI: <strong>${roi.toFixed(0)}</strong>%`;
-
-        // 14. Загрузка склада
-        let used = parseFloat(document.getElementById('space_used').value) || 0;
-        let total = parseFloat(document.getElementById('space_total').value) || 0;
-        let util = total > 0 ? (used / total) * 100 : 0;
-        document.getElementById('space_result').innerHTML = `Загрузка: <strong>${util.toFixed(1)}</strong>%`;
-
-        // 15. Потребность в паллето-местах
-        let stock = parseFloat(document.getElementById('pallet_stock').value) || 0;
-        let perPal = parseFloat(document.getElementById('pallet_per').value) || 1;
-        let palCoef = parseFloat(document.getElementById('pallet_coef').value) || 1;
-        let palletsNeeded = Math.ceil((stock / perPal) * palCoef);
-        document.getElementById('pallet_result').innerHTML = `Потребность: <strong>${palletsNeeded}</strong> паллето-мест`;
-
-        // 16. Производительность склада
-        let lines = parseFloat(document.getElementById('prod_lines').value) || 0;
-        let hours = parseFloat(document.getElementById('prod_hours').value) || 1;
-        let productivity = lines / hours;
-        document.getElementById('prod_result').innerHTML = `Производительность: <strong>${productivity.toFixed(1)}</strong> строк/чел.-час`;
-
-        // 17. Курьерская доставка
-        let weight = parseFloat(document.getElementById('courier_weight').value) || 0;
-        let rateCourier = parseFloat(document.getElementById('courier_rate').value) || 0;
-        let minCost = parseFloat(document.getElementById('courier_min').value) || 0;
-        let courierCost = Math.max(weight * rateCourier, minCost);
-        document.getElementById('courier_result').innerHTML = `Стоимость: <strong>${Math.round(courierCost)}</strong> руб.`;
-
-        // 18. Время цикла заказа
-        let orderTime = parseFloat(document.getElementById('cycle_order').value) || 0;
-        let transit = parseFloat(document.getElementById('cycle_transit').value) || 0;
-        let lastMile = parseFloat(document.getElementById('cycle_last').value) || 0;
-        let totalCycle = orderTime + transit + lastMile;
-        document.getElementById('cycle_result').innerHTML = `Общий цикл: <strong>${totalCycle}</strong> часов`;
-
-        // 19. Точка безубыточности
-        let fixed = parseFloat(document.getElementById('bep_fixed').value) || 0;
-        let varCost = parseFloat(document.getElementById('bep_var').value) || 0;
-        let revenue = parseFloat(document.getElementById('bep_rev').value) || 0;
-        let bepUnits = revenue > varCost ? fixed / (revenue - varCost) : 0;
-        document.getElementById('bep_result').innerHTML = `Точка безубыточности: <strong>${Math.ceil(bepUnits)}</strong> ед./мес`;
-
-        // 20. Fill Rate
-        let shipped = parseFloat(document.getElementById('fill_shipped').value) || 0;
-        let ordered = parseFloat(document.getElementById('fill_ordered').value) || 0;
-        let fillRate = ordered > 0 ? (shipped / ordered) * 100 : 0;
-        document.getElementById('fill_result').innerHTML = `Fill Rate: <strong>${fillRate.toFixed(1)}</strong>%`;
+    // Филиал
+    let currentBranchId = 'default';
+    function loadBranchSelector() {
+        const branches = BranchManager.getBranches();
+        const tree = BranchManager.buildTree(branches);
+        const select = document.getElementById('branchSelector');
+        select.innerHTML = '';
+        const addOptions = (nodes, prefix = '') => {
+            for (let node of nodes) {
+                const opt = document.createElement('option');
+                opt.value = node.id;
+                opt.textContent = prefix + node.name + ' (' + node.type + ')';
+                if (node.id === currentBranchId) opt.selected = true;
+                select.appendChild(opt);
+                if (node.children) addOptions(node.children, prefix + '— ');
+            }
+        };
+        addOptions(tree);
+        select.addEventListener('change', (e) => {
+            setCurrentBranch(e.target.value);
+            currentBranchId = e.target.value;
+        });
     }
 
-    const allInputs = document.querySelectorAll('.input-group input');
-    allInputs.forEach(input => {
-        input.addEventListener('input', updateAllCalculators);
-        input.addEventListener('change', updateAllCalculators);
-    });
-    updateAllCalculators();
+    // Функция сохранения расчёта в localStorage
+    function saveCalculation(calcId, values, result) {
+        const key = `calc_${calcId}_${currentBranchId}`;
+        const saved = JSON.parse(localStorage.getItem(key) || '[]');
+        saved.push({ values, result, timestamp: new Date().toISOString() });
+        if (saved.length > 20) saved.shift();
+        localStorage.setItem(key, JSON.stringify(saved));
+        alert(`Расчёт сохранён (всего сохранено: ${saved.length})`);
+    }
+
+    // Функция отправки результата в KPI-центр (создание/обновление KPI)
+    function sendToKPI(kpiId, value, unit) {
+        const existing = SCMData.loadKPI(kpiId, currentBranchId);
+        const newData = {
+            result: value,
+            values: { calculated: value, source: 'calculator', unit: unit },
+            timestamp: new Date().toISOString(),
+            branchId: currentBranchId
+        };
+        SCMData.saveKPI(kpiId, newData, currentBranchId);
+        // также обновляем историю
+        const history = SCMData.getKPIHistory(kpiId, currentBranchId);
+        history.push({ value: value, date: new Date().toISOString() });
+        if (history.length > 10) history.shift();
+        SCMData.saveKPIHistory(kpiId, history, currentBranchId);
+        alert(`Значение ${value} ${unit} отправлено в KPI "${kpiId.toUpperCase()}"`);
+        window.dispatchEvent(new CustomEvent('kpi-updated', { detail: { kpiId, value } }));
+    }
+
+    // Конфигурация калькуляторов
+    const calculators = [
+        { id: "safety_stock", name: "Страховой запас (Safety Stock)", fields: [
+            { label: "Z-фактор (уровень обслуживания):", id: "ss_z", type: "number", default: 1.65, step: 0.01, help: "1.28(90%) 1.65(95%) 2.33(99%)" },
+            { label: "Стандартное отклонение спроса (σ), ед.:", id: "ss_sigma", type: "number", default: 50, step: 1 },
+            { label: "Время выполнения заказа (дни):", id: "ss_lt", type: "number", default: 7, step: 1 }
+        ], formula: "ss = Z * σ * √LT", unit: "ед.", calc: (vals) => vals[0] * vals[1] * Math.sqrt(vals[2]), kpiId: null },
+        { id: "eoq", name: "EOQ (Economic Order Quantity)", fields: [
+            { label: "Годовой спрос (D), ед.:", id: "eoq_d", type: "number", default: 12000, step: 100 },
+            { label: "Затраты на один заказ (S), руб.:", id: "eoq_s", type: "number", default: 5000, step: 100 },
+            { label: "Затраты на хранение единицы в год (H), руб.:", id: "eoq_h", type: "number", default: 200, step: 10 }
+        ], formula: "EOQ = √(2DS/H)", unit: "ед.", calc: (vals) => Math.sqrt(2 * vals[0] * vals[1] / vals[2]), kpiId: null },
+        { id: "rop", name: "Точка заказа (Reorder Point)", fields: [
+            { label: "Средний спрос в день (d), ед.:", id: "rop_d", type: "number", default: 50, step: 1 },
+            { label: "Время выполнения заказа (дни):", id: "rop_lt", type: "number", default: 7, step: 1 },
+            { label: "Страховой запас (ед.):", id: "rop_ss", type: "number", default: 100, step: 1 }
+        ], formula: "ROP = d * LT + SS", unit: "ед.", calc: (vals) => vals[0] * vals[1] + vals[2], kpiId: null },
+        { id: "staff_driver", name: "Driver-based численность", fields: [
+            { label: "Объём строк в месяц (строк):", id: "staff_volume", type: "number", default: 200000, step: 10000 },
+            { label: "Норма времени на строку (сек):", id: "staff_norm", type: "number", default: 45, step: 5 },
+            { label: "Эффективный фонд времени (часов/мес):", id: "staff_fond", type: "number", default: 130, step: 5 },
+            { label: "Коэффициент выполнения норм (Kвып):", id: "staff_kv", type: "number", default: 1.15, step: 0.01 },
+            { label: "Коэффициент невыходов (Kнев):", id: "staff_kn", type: "number", default: 1.1, step: 0.01 }
+        ], formula: "Численность = (Объём * Норма_час) / (Фонд * Kвып) * Kнев", unit: "чел.", calc: (vals) => {
+            let normHour = vals[1] / 3600;
+            let labor = vals[0] * normHour;
+            let base = labor / (vals[2] * vals[3]);
+            return Math.ceil(base * vals[4]);
+        }, kpiId: null },
+        { id: "salary_north", name: "ФОТ с северными надбавками", fields: [
+            { label: "Базовая зарплата (оклад), руб.:", id: "fot_base", type: "number", default: 50000, step: 5000 },
+            { label: "Районный коэффициент (1.5 для ХМАО/ЯНАО):", id: "fot_rk", type: "number", default: 1.5, step: 0.1 },
+            { label: "Северная надбавка (%):", id: "fot_nad", type: "number", default: 80, step: 5 }
+        ], formula: "Итого = Оклад * (1 + Надбавка/100) * РК", unit: "руб.", calc: (vals) => vals[0] * (1 + vals[2]/100) * vals[1], kpiId: null },
+        { id: "turnover", name: "Оборачиваемость запасов", fields: [
+            { label: "Себестоимость продаж (COGS) за период, руб.:", id: "turn_cogs", type: "number", default: 10000000, step: 100000 },
+            { label: "Средняя стоимость запасов, руб.:", id: "turn_avg", type: "number", default: 2000000, step: 100000 }
+        ], formula: "Оборачиваемость = COGS / Средний запас", unit: "раз", calc: (vals) => vals[0] / vals[1], kpiId: "turnover" },
+        { id: "gmroi", name: "GMROI", fields: [
+            { label: "Валовая прибыль за период, руб.:", id: "gmroi_profit", type: "number", default: 2500000, step: 50000 },
+            { label: "Средняя стоимость запасов, руб.:", id: "gmroi_avg", type: "number", default: 2000000, step: 50000 }
+        ], formula: "GMROI = Валовая прибыль / Средний запас", unit: "", calc: (vals) => vals[0] / vals[1], kpiId: "gmroi" },
+        { id: "ftl_cost", name: "Стоимость FTL перевозки", fields: [
+            { label: "Расстояние (км):", id: "ftl_km", type: "number", default: 2100, step: 100 },
+            { label: "Ставка за км (руб./км):", id: "ftl_rate", type: "number", default: 85, step: 5 },
+            { label: "Повышающий коэффициент (сезонность, север):", id: "ftl_coef", type: "number", default: 1.0, step: 0.05 }
+        ], formula: "Стоимость = Км × Ставка × Коэф", unit: "руб.", calc: (vals) => vals[0] * vals[1] * vals[2], kpiId: "transportCost" },
+        { id: "dim_weight", name: "Объёмный вес (Dim weight)", fields: [
+            { label: "Длина (см):", id: "dim_l", type: "number", default: 60, step: 1 },
+            { label: "Ширина (см):", id: "dim_w", type: "number", default: 40, step: 1 },
+            { label: "Высота (см):", id: "dim_h", type: "number", default: 30, step: 1 },
+            { label: "Фактический вес (кг):", id: "dim_actual", type: "number", default: 10, step: 1 },
+            { label: "Коэффициент (5000 для авиа, 6000 для авто):", id: "dim_coef", type: "number", default: 5000, step: 100 }
+        ], formula: "Объёмный вес = (Д×Ш×В) / Коэф", unit: "кг", calc: (vals) => (vals[0]*vals[1]*vals[2]) / vals[4], additional: (vals, calcVal) => Math.max(vals[3], calcVal), kpiId: null },
+        { id: "mape", name: "Точность прогноза (MAPE)", fields: [
+            { label: "Фактический спрос (ед.):", id: "mape_actual", type: "number", default: 1000, step: 10 },
+            { label: "Прогнозируемый спрос (ед.):", id: "mape_forecast", type: "number", default: 850, step: 10 }
+        ], formula: "MAPE = |Факт - Прогноз| / Факт × 100%", unit: "%", calc: (vals) => Math.abs(vals[0] - vals[1]) / vals[0] * 100, kpiId: null },
+        { id: "otif", name: "OTIF (On-Time In-Full)", fields: [
+            { label: "Своевременные доставки (On-Time, %):", id: "otif_ot", type: "number", default: 95, step: 1 },
+            { label: "Полные доставки (In-Full, %):", id: "otif_if", type: "number", default: 96, step: 1 }
+        ], formula: "OTIF = OT% × IF% / 100", unit: "%", calc: (vals) => (vals[0] * vals[1]) / 100, kpiId: "otif" },
+        { id: "ccc", name: "Cash-to-Cash цикл (CCC)", fields: [
+            { label: "Дни запаса (DIO):", id: "ccc_dio", type: "number", default: 45, step: 1 },
+            { label: "Дни дебиторской задолженности (DSO):", id: "ccc_dso", type: "number", default: 30, step: 1 },
+            { label: "Дни кредиторской задолженности (DPO):", id: "ccc_dpo", type: "number", default: 20, step: 1 }
+        ], formula: "CCC = DIO + DSO – DPO", unit: "дней", calc: (vals) => vals[0] + vals[1] - vals[2], kpiId: "ccc" },
+        { id: "roi_automation", name: "ROI автоматизации", fields: [
+            { label: "Экономия от автоматизации (руб./год):", id: "roi_saving", type: "number", default: 5000000, step: 100000 },
+            { label: "Затраты на внедрение (руб.):", id: "roi_cost", type: "number", default: 1500000, step: 100000 }
+        ], formula: "ROI = (Экономия - Затраты) / Затраты × 100%", unit: "%", calc: (vals) => ((vals[0] - vals[1]) / vals[1]) * 100, kpiId: null },
+        { id: "space_util", name: "Загрузка склада", fields: [
+            { label: "Занятые паллето-места:", id: "space_used", type: "number", default: 800, step: 10 },
+            { label: "Общая ёмкость (паллето-мест):", id: "space_total", type: "number", default: 1000, step: 10 }
+        ], formula: "Загрузка = Занято / Общая ёмкость × 100%", unit: "%", calc: (vals) => (vals[0] / vals[1]) * 100, kpiId: "spaceUtil" },
+        { id: "pallet_needs", name: "Потребность в паллето-местах", fields: [
+            { label: "Средний остаток товара (ед.):", id: "pallet_stock", type: "number", default: 5000, step: 100 },
+            { label: "Количество единиц на паллете:", id: "pallet_per", type: "number", default: 50, step: 1 },
+            { label: "Коэффициент страхового запаса (1.1–1.3):", id: "pallet_coef", type: "number", default: 1.2, step: 0.05 }
+        ], formula: "Потребность = (Остаток / Ед_на_паллете) × Коэф", unit: "паллето-мест", calc: (vals) => Math.ceil((vals[0] / vals[1]) * vals[2]), kpiId: null },
+        { id: "productivity", name: "Производительность склада", fields: [
+            { label: "Собрано строк за смену:", id: "prod_lines", type: "number", default: 12000, step: 100 },
+            { label: "Затрачено человеко-часов:", id: "prod_hours", type: "number", default: 150, step: 1 }
+        ], formula: "Производительность = Строки / Человеко-часы", unit: "строк/чел.-час", calc: (vals) => vals[0] / vals[1], kpiId: "productivity" },
+        { id: "courier_cost", name: "Курьерская доставка (по весу)", fields: [
+            { label: "Вес отправления (кг):", id: "courier_weight", type: "number", default: 2, step: 0.5 },
+            { label: "Базовая ставка за кг (руб.):", id: "courier_rate", type: "number", default: 150, step: 10 },
+            { label: "Минимальная стоимость (руб.):", id: "courier_min", type: "number", default: 500, step: 50 }
+        ], formula: "Стоимость = max(Вес × Ставка, Мин)", unit: "руб.", calc: (vals) => Math.max(vals[0] * vals[1], vals[2]), kpiId: null },
+        { id: "order_cycle", name: "Время цикла заказа", fields: [
+            { label: "Время от получения заказа до отгрузки (часы):", id: "cycle_order", type: "number", default: 4, step: 0.5 },
+            { label: "Время транспортировки (часы):", id: "cycle_transit", type: "number", default: 24, step: 1 },
+            { label: "Время доставки last mile (часы):", id: "cycle_last", type: "number", default: 2, step: 0.5 }
+        ], formula: "Общий цикл = Заказ + Транзит + Last mile", unit: "часов", calc: (vals) => vals[0] + vals[1] + vals[2], kpiId: null },
+        { id: "bep_warehouse", name: "Точка безубыточности склада", fields: [
+            { label: "Постоянные затраты (руб./мес):", id: "bep_fixed", type: "number", default: 2000000, step: 100000 },
+            { label: "Переменные затраты на единицу (руб.):", id: "bep_var", type: "number", default: 50, step: 5 },
+            { label: "Доход на единицу (руб.):", id: "bep_rev", type: "number", default: 120, step: 10 }
+        ], formula: "BEP = Постоянные затраты / (Доход - Переменные)", unit: "ед./мес", calc: (vals) => Math.ceil(vals[0] / (vals[2] - vals[1])), kpiId: null },
+        { id: "fill_rate", name: "Fill Rate (уровень сервиса)", fields: [
+            { label: "Отгружено полностью (единиц):", id: "fill_shipped", type: "number", default: 9500, step: 100 },
+            { label: "Заказано всего (единиц):", id: "fill_ordered", type: "number", default: 10000, step: 100 }
+        ], formula: "Fill Rate = Отгружено / Заказано × 100%", unit: "%", calc: (vals) => (vals[0] / vals[1]) * 100, kpiId: "fillrate" }
+    ];
+
+    // Рендер всех калькуляторов
+    function renderCalculators() {
+        const container = document.getElementById('calculatorsGrid');
+        container.innerHTML = '';
+        for (let calc of calculators) {
+            const card = document.createElement('div');
+            card.className = 'calc-card';
+            card.id = `calc_${calc.id}`;
+            let fieldsHtml = '';
+            for (let f of calc.fields) {
+                fieldsHtml += `
+                    <div class="input-group">
+                        <label>${f.label}</label>
+                        <input type="number" id="${f.id}" value="${f.default}" step="${f.step || 'any'}">
+                        ${f.help ? `<small>${f.help}</small>` : ''}
+                    </div>
+                `;
+            }
+            card.innerHTML = `
+                <h2><i class="fas fa-calculator"></i> ${calc.name}</h2>
+                ${fieldsHtml}
+                <div class="result" id="result_${calc.id}">Результат: <strong>—</strong> ${calc.unit}</div>
+                <div class="calc-actions">
+                    <button class="save-btn" data-id="${calc.id}"><i class="fas fa-save"></i> Сохранить расчёт</button>
+                    ${calc.kpiId ? `<button class="kpi-btn" data-id="${calc.id}" data-kpi="${calc.kpiId}"><i class="fas fa-chart-line"></i> Отправить в KPI</button>` : ''}
+                </div>
+            `;
+            container.appendChild(card);
+        }
+        attachCalcEvents();
+        updateAllCalculators();
+    }
+
+    function attachCalcEvents() {
+        // Привязываем события на все поля ввода
+        document.querySelectorAll('.input-group input').forEach(input => {
+            input.removeEventListener('input', updateAllCalculators);
+            input.addEventListener('input', updateAllCalculators);
+        });
+        // Кнопки сохранения
+        document.querySelectorAll('.save-btn').forEach(btn => {
+            btn.removeEventListener('click', handleSave);
+            btn.addEventListener('click', handleSave);
+        });
+        // Кнопки отправки в KPI
+        document.querySelectorAll('.kpi-btn').forEach(btn => {
+            btn.removeEventListener('click', handleSendToKPI);
+            btn.addEventListener('click', handleSendToKPI);
+        });
+    }
+
+    function handleSave(e) {
+        const calcId = e.currentTarget.getAttribute('data-id');
+        const calc = calculators.find(c => c.id === calcId);
+        if (!calc) return;
+        const values = calc.fields.map(f => parseFloat(document.getElementById(f.id).value) || 0);
+        let result = calc.calc(values);
+        if (calc.additional) {
+            const dimWeight = calc.calc(values);
+            result = calc.additional(values, dimWeight);
+        }
+        result = typeof result === 'number' ? Math.round(result * 100) / 100 : result;
+        saveCalculation(calcId, values, result);
+    }
+
+    function handleSendToKPI(e) {
+        const calcId = e.currentTarget.getAttribute('data-id');
+        const kpiId = e.currentTarget.getAttribute('data-kpi');
+        const calc = calculators.find(c => c.id === calcId);
+        if (!calc || !kpiId) return;
+        const values = calc.fields.map(f => parseFloat(document.getElementById(f.id).value) || 0);
+        let result = calc.calc(values);
+        if (calc.additional) {
+            const dimWeight = calc.calc(values);
+            result = calc.additional(values, dimWeight);
+        }
+        result = typeof result === 'number' ? Math.round(result * 100) / 100 : result;
+        sendToKPI(kpiId, result, calc.unit);
+    }
+
+    function updateAllCalculators() {
+        for (let calc of calculators) {
+            const values = calc.fields.map(f => parseFloat(document.getElementById(f.id).value) || 0);
+            let result = calc.calc(values);
+            if (calc.additional) {
+                const dimWeight = calc.calc(values);
+                result = calc.additional(values, dimWeight);
+            }
+            result = typeof result === 'number' ? result.toFixed(2).replace(/\.?0+$/, '') : result;
+            const resultDiv = document.getElementById(`result_${calc.id}`);
+            if (resultDiv) {
+                resultDiv.innerHTML = `Результат: <strong>${result}</strong> ${calc.unit}`;
+                if (calc.kpiId) {
+                    const currentKPI = SCMData.loadKPI(calc.kpiId, currentBranchId);
+                    if (currentKPI) {
+                        resultDiv.innerHTML += `<span>Текущее значение KPI: ${currentKPI.result} ${calc.unit}</span>`;
+                    }
+                }
+            }
+        }
+    }
+
+    // Печать и отправка на почту
+    window.printCalculatorsWithLogo = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const clone = mainContent.cloneNode(true);
+        clone.querySelectorAll('.btn-group, .branch-selector-container, .theme-switch, .calc-actions, button').forEach(el => el.remove());
+        const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html><head><meta charset="UTF-8"><title>Калькуляторы SCM</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: Inter; margin: 20px; }
+                .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                .logo-img { height: 50px; }
+                .contact-info { font-size: 10pt; line-height: 1.4; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; }
+                .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                .calc-card { break-inside: avoid; }
+            </style>
+            </head><body>
+            <div class="print-header">
+                <div style="display:flex;align-items:center;gap:20px"><img src="${logoUrl}" class="logo-img"><div class="contact-info">Дмитрий Панибратский<br>Эксперт по SCM и логистике<br>scm-news.ru – экспертный портал<br>scm-news.online – Академия SCM<br>dmitry@scm-news.ru</div></div>
+                <div>${new Date().toLocaleString()}</div>
+            </div>
+            ${clone.innerHTML}
+            <div class="print-footer">
+                <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                <div>Подпись: <span class="sign-line">_________________________</span></div>
+                <div>Дата: ${new Date().toLocaleDateString()}</div>
+            </div>
+            <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    };
+    window.sendCalculatorsByEmail = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const text = mainContent.innerText;
+        const subject = encodeURIComponent('Калькуляторы SCM');
+        const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    };
+    document.getElementById('printCalculatorsBtn').addEventListener('click', () => window.printCalculatorsWithLogo());
+    document.getElementById('emailCalculatorsBtn').addEventListener('click', () => window.sendCalculatorsByEmail());
+
+    // Инициализация
+    function init() {
+        BranchManager.ensureDefaultBranch();
+        currentBranchId = getCurrentBranch();
+        loadBranchSelector();
+        renderCalculators();
+    }
+    init();
+})();
 </script>
 </body>
 </html>
