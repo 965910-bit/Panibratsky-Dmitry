@@ -74,9 +74,37 @@
             border-radius: 20px;
             font-size: 12px;
         }
+        .branch-selector-container {
+            float: right;
+            margin-bottom: 16px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
         @media (max-width: 768px) {
-            .meetings-table { font-size: 12px; }
-            .filter-bar { flex-direction: column; align-items: stretch; }
+            .meetings-table {
+                font-size: 12px;
+            }
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .branch-selector-container {
+                float: none;
+                margin-bottom: 16px;
+                display: flex;
+            }
         }
         @media print {
             .sidebar, .filter-bar, .btn-group, .branch-selector-container, .theme-switch, .btn-icon {
@@ -87,7 +115,31 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">...</aside>
+    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main class="main-content">
         <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
@@ -96,10 +148,13 @@
                 <label><i class="fas fa-building"></i> Бизнес-единица:</label>
                 <select id="branchSelector"></select>
             </div>
-            <div>
-                <button id="newProtocolBtn"><i class="fas fa-plus"></i> Новый протокол</button>
-                <button id="printListBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать списка</button>
-            </div>
+        </div>
+        <p>Просмотр, редактирование, удаление и печать протоколов совещаний.</p>
+
+        <div class="btn-group">
+            <button id="newProtocolBtn"><i class="fas fa-plus"></i> Новый протокол</button>
+            <button id="printListBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать списка</button>
+            <button id="emailListBtn" style="background:#10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
         </div>
 
         <div class="filter-bar">
@@ -154,8 +209,13 @@
             loadMeetings();
         });
     }
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
+    }
 
-    // ---- Получение всех протоколов для текущего филиала ----
+    // ---- Получение протоколов для текущего филиала ----
     function getMeetings() {
         const key = `meeting_protocols_${currentBranchId}`;
         return JSON.parse(localStorage.getItem(key) || '[]');
@@ -174,7 +234,6 @@
         if (dateTo) meetings = meetings.filter(m => m.date <= dateTo);
         if (chairpersonFilter) meetings = meetings.filter(m => (m.chairperson || '').toLowerCase().includes(chairpersonFilter));
 
-        // Сортировка по дате и времени (сначала новые)
         meetings.sort((a, b) => (b.date + ' ' + b.time).localeCompare(a.date + ' ' + a.time));
 
         const tbody = document.getElementById('meetingsTableBody');
@@ -188,11 +247,8 @@
             const decisionsCount = (m.decisions || []).filter(d => d.decided && d.decided.trim()).length;
             row.insertCell(4).textContent = decisionsCount;
             const actions = row.insertCell(5);
-            // Кнопка просмотра (открыть протокол только для чтения – параметр view)
             const viewBtn = document.createElement('button'); viewBtn.innerHTML = '<i class="fas fa-eye"></i>'; viewBtn.className = 'btn-icon'; viewBtn.title = 'Просмотр'; viewBtn.onclick = () => window.open(`meeting-protocol.html?view=${m.id}`, '_blank');
-            // Кнопка редактирования
             const editBtn = document.createElement('button'); editBtn.innerHTML = '<i class="fas fa-edit"></i>'; editBtn.className = 'btn-icon'; editBtn.title = 'Редактировать'; editBtn.onclick = () => window.location.href = `meeting-protocol.html?edit=${m.id}`;
-            // Кнопка удаления
             const deleteBtn = document.createElement('button'); deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>'; deleteBtn.className = 'btn-icon'; deleteBtn.style.color = '#dc2626'; deleteBtn.title = 'Удалить'; deleteBtn.onclick = () => { if(confirm('Удалить протокол? Связанные поручения в реестре останутся.')) { let ms = getMeetings(); ms = ms.filter(p => p.id !== m.id); localStorage.setItem(`meeting_protocols_${currentBranchId}`, JSON.stringify(ms)); loadMeetings(); } };
             actions.appendChild(viewBtn);
             actions.appendChild(editBtn);
@@ -224,7 +280,7 @@
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
         const clone = mainContent.cloneNode(true);
-        clone.querySelectorAll('.filter-bar, .branch-selector-container, .theme-switch, .btn-icon, #newProtocolBtn, #printListBtn, .btn-group').forEach(el => el.remove());
+        clone.querySelectorAll('.filter-bar, .branch-selector-container, .theme-switch, .btn-icon, #newProtocolBtn, #printListBtn, #emailListBtn, .btn-group').forEach(el => el.remove());
         const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
@@ -257,7 +313,16 @@
         `);
         printWindow.document.close();
     };
+    window.sendListByEmail = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const text = mainContent.innerText;
+        const subject = encodeURIComponent('Список протоколов SCM');
+        const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    };
     document.getElementById('printListBtn').addEventListener('click', () => window.printListWithLogo());
+    document.getElementById('emailListBtn').addEventListener('click', () => window.sendListByEmail());
 
     // ---- Инициализация ----
     function init() {
@@ -265,7 +330,6 @@
         currentBranchId = getCurrentBranch();
         loadBranchSelector();
         loadMeetings();
-        // Слушаем изменение филиала из других вкладок
         window.addEventListener('branch-changed', () => {
             currentBranchId = getCurrentBranch();
             loadMeetings();
