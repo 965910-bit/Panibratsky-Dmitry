@@ -161,7 +161,6 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
     <aside class="sidebar">
         <a href="dashboard.html" class="logo">
             <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
@@ -215,7 +214,6 @@
 
 <script>
 (function() {
-    // ---- Тёмная тема ----
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -224,7 +222,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---- Филиал ----
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -254,7 +251,6 @@
         window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
     }
 
-    // ---- Конфигурация дорожной карты (расширенная версия) ----
     const roadmapData = [
         {
             id: "phase1",
@@ -298,7 +294,6 @@
         }
     ];
 
-    // ---- Функции работы с прогрессом (привязка к филиалу) ----
     function getProgressKey() {
         return `roadmap_progress_${currentBranchId}`;
     }
@@ -315,12 +310,10 @@
         syncWithPlanner(progress);
     }
 
-    // Синхронизация с планером (создаёт задачи в ежедневнике)
     function syncWithPlanner(progress) {
         const plannerTasks = getPlannerTasks(currentBranchId);
         const today = new Date().toISOString().split('T')[0];
         if (!plannerTasks[today]) plannerTasks[today] = [];
-        // Очищаем старые задачи из roadmap, чтобы не дублировать
         plannerTasks[today] = plannerTasks[today].filter(t => t.source !== 'roadmap');
         for (let phase of roadmapData) {
             for (let i = 0; i < phase.tasks.length; i++) {
@@ -344,7 +337,6 @@
         savePlannerTasks(plannerTasks, currentBranchId);
     }
 
-    // ---- Рендер дорожной карты ----
     function renderRoadmap() {
         const container = document.getElementById('roadmapContainer');
         const savedProgress = loadProgress();
@@ -431,13 +423,11 @@
         }
     }
 
-    // ---- Печать на бланке и отправка на почту ----
     window.printRoadmapWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
         const clone = mainContent.cloneNode(true);
         clone.querySelectorAll('.btn-group, .branch-selector-container, .theme-switch, button').forEach(el => el.remove());
-        // Преобразуем чекбоксы в текст
         clone.querySelectorAll('.task-item').forEach(item => {
             const cb = item.querySelector('input');
             const label = item.querySelector('label');
@@ -492,7 +482,6 @@
     document.getElementById('emailRoadmapBtn').addEventListener('click', () => window.sendRoadmapByEmail());
     document.getElementById('resetRoadmapBtn').addEventListener('click', resetAllProgress);
 
-    // ---- Инициализация ----
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
