@@ -115,7 +115,6 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
     <aside class="sidebar">
         <a href="dashboard.html" class="logo">
             <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
@@ -176,7 +175,6 @@
 
 <script>
 (function() {
-    // ---- Тёмная тема ----
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -185,7 +183,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---- Филиал ----
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -215,13 +212,11 @@
         window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
     }
 
-    // ---- Получение протоколов для текущего филиала ----
     function getMeetings() {
         const key = `meeting_protocols_${currentBranchId}`;
         return JSON.parse(localStorage.getItem(key) || '[]');
     }
 
-    // ---- Отображение списка с фильтрацией ----
     function loadMeetings() {
         let meetings = getMeetings();
         const typeFilter = document.getElementById('filterType').value;
@@ -259,7 +254,6 @@
         }
     }
 
-    // ---- Фильтры и кнопки ----
     document.getElementById('filterType').addEventListener('change', loadMeetings);
     document.getElementById('filterDateFrom').addEventListener('change', loadMeetings);
     document.getElementById('filterDateTo').addEventListener('change', loadMeetings);
@@ -275,7 +269,6 @@
         window.location.href = 'meeting-protocol.html';
     });
 
-    // ---- Печать списка протоколов на бланке ----
     window.printListWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -324,7 +317,6 @@
     document.getElementById('printListBtn').addEventListener('click', () => window.printListWithLogo());
     document.getElementById('emailListBtn').addEventListener('click', () => window.sendListByEmail());
 
-    // ---- Инициализация ----
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
