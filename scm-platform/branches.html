@@ -162,7 +162,6 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
     <aside class="sidebar">
         <a href="dashboard.html" class="logo">
             <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
@@ -236,7 +235,6 @@
             </div>
         </div>
 
-        <!-- Панель редактирования выбранного филиала (вкладки) -->
         <div id="branchDetailPanel" style="display:none; margin-top: 30px;">
             <div class="tabs" id="branchTabs">
                 <button class="tab active" data-tab="budget">📊 Бюджет</button>
@@ -257,7 +255,7 @@
             </div>
             <div id="tabKPI" class="tab-content">
                 <h4>Целевые KPI на год</h4>
-                <table class="kpi-targets-table" id="kpiTargetsTable"><thead><tr><th>KPI</th><th>Целевое значение</th><th>Ед. изм.</th><th></th></tr></thead><tbody></tbody></table>
+                <table class="kpi-targets-table" id="kpiTargetsTable"><thead><tr><th>KPI</th><th>Целевое значение</th><th>Ед. изм.</th><th></th></tr></thead><tbody></tbody></tr>
                 <button id="inheritKPIBtn" class="secondary">Наследовать от родителя</button>
                 <button id="saveKPITargetsBtn" style="margin-top:10px;">💾 Сохранить цели KPI</button>
             </div>
@@ -267,7 +265,6 @@
 
 <script>
 (function() {
-    // ---- Тёмная тема ----
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -276,7 +273,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---- Филиал (для выбора в селекторе) ----
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -297,9 +293,9 @@
         select.addEventListener('change', (e) => {
             setCurrentBranch(e.target.value);
             currentBranchId = e.target.value;
-            // Перезагрузка страницы не требуется, так как мы находимся в branches.html
-            // Но можно обновить данные (например, перерисовать дерево)
             renderTree();
+            updateParentSelect();
+            if (currentDetailBranchId) showBranchDetail(currentDetailBranchId);
         });
     }
     function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
@@ -308,7 +304,6 @@
         window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
     }
 
-    // ---- Дерево филиалов ----
     function renderTree() {
         const branches = BranchManager.getBranches();
         const tree = BranchManager.buildTree(branches);
@@ -392,7 +387,6 @@
         updateParentSelect();
     }
 
-    // ---- Детали филиала (бюджет, штат, KPI) ----
     let currentDetailBranchId = null;
     let currentYear = new Date().getFullYear();
 
@@ -532,7 +526,6 @@
         };
     }
 
-    // ---- Экспорт/импорт ----
     function exportBranches() {
         const data = BranchManager.getBranches();
         const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
@@ -561,7 +554,6 @@
         e.target.value = '';
     });
 
-    // Вкладки
     document.querySelectorAll('.tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -571,7 +563,6 @@
         });
     });
 
-    // Печать всей страницы на бланке
     window.printBranchesWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -612,14 +603,12 @@
         `);
         printWindow.document.close();
     };
-    // Добавляем кнопку печати в интерфейс
     const printBtn = document.createElement('button');
     printBtn.innerHTML = '<i class="fas fa-print"></i> Печать страницы (бланк)';
     printBtn.style.background = '#f59e0b';
     printBtn.addEventListener('click', () => window.printBranchesWithLogo());
     document.querySelector('.btn-group').appendChild(printBtn);
 
-    // ---- Инициализация ----
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
