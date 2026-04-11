@@ -73,22 +73,33 @@
             background: #1e40af;
             color: white;
         }
-        .meeting-link {
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 8px;
-        }
-        .open-task-item {
-            background: #eef2ff;
-            padding: 8px 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
+        .branch-selector-container {
+            float: right;
+            margin-bottom: 16px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
             align-items: center;
+            gap: 8px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        @media (max-width: 768px) {
+            .branch-selector-container {
+                float: none;
+                margin-bottom: 16px;
+                display: flex;
+            }
         }
         @media print {
-            .sidebar, .btn-group, .tabs, .btn-icon, .add-decision, .delete-decision {
+            .sidebar, .btn-group, .tabs, .btn-icon, .branch-selector-container, .theme-switch {
                 display: none;
             }
         }
@@ -96,10 +107,34 @@
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">...</aside>
+    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main class="main-content">
         <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
-        <div class="branch-selector-container" style="float:right; margin-bottom:16px;">
+        <div class="branch-selector-container">
             <label><i class="fas fa-building"></i> Бизнес-единица:</label>
             <select id="branchSelector"></select>
         </div>
@@ -168,7 +203,7 @@
                 </div>
             </div>
 
-            <div class="btn-group" style="margin-top:24px;">
+            <div class="btn-group">
                 <button type="button" id="saveProtocolBtn">💾 Сохранить протокол</button>
                 <button type="button" id="printProtocolBtn" style="background:#f59e0b;">🖨️ Печать протокола</button>
                 <button type="button" id="emailProtocolBtn" style="background:#10b981;">📧 Отправить на почту</button>
@@ -212,12 +247,16 @@
             loadOpenTasksFromRegistry();
         });
     }
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
+    }
 
     // ---- Загрузка открытых задач из реестра поручений ----
     function loadOpenTasksFromRegistry() {
         const registryKey = `tasks_registry_${currentBranchId}`;
         const tasks = JSON.parse(localStorage.getItem(registryKey) || '[]');
-        // Показываем задачи, которые ещё не закрыты (статус new или progress)
         const openTasks = tasks.filter(t => t.status !== 'done' && t.status !== 'review');
         const container = document.getElementById('openTasksContainer');
         if (!openTasks.length) {
@@ -225,7 +264,7 @@
             return;
         }
         container.innerHTML = openTasks.map(t => `
-            <div class="open-task-item">
+            <div class="open-task-item" style="background:#eef2ff; padding:8px; border-radius:12px; margin-bottom:8px;">
                 <div><strong>${escapeHtml(t.text)}</strong><br>Ответственный: ${escapeHtml(t.assignee)} | Срок: ${t.dueDate || '—'}</div>
                 <div><span class="badge">${t.status === 'new' ? 'Новое' : 'В работе'}</span></div>
             </div>
@@ -251,8 +290,7 @@
 
     // ---- Динамические списки ----
     let criticalIssues = [];
-    let openTasks = []; // это ручной ввод (можно оставить, но основной теперь из реестра)
-    let decisions = []; // каждый элемент: { listened, spoke, decided, assignee, dueDate }
+    let decisions = [];
 
     function renderCriticalIssues() {
         const container = document.getElementById('criticalIssuesContainer');
@@ -283,9 +321,7 @@
         criticalIssues.push('');
         renderCriticalIssues();
     });
-    document.getElementById('refreshOpenTasksBtn').addEventListener('click', () => {
-        loadOpenTasksFromRegistry();
-    });
+    document.getElementById('refreshOpenTasksBtn').addEventListener('click', loadOpenTasksFromRegistry);
 
     function renderDecisions() {
         const container = document.getElementById('decisionsContainer');
@@ -342,9 +378,9 @@
         registry.push(newTask);
         localStorage.setItem(registryKey, JSON.stringify(registry));
 
-        // Также синхронизируем с планером (задача на дату срока или в бэклог)
+        // Синхронизация с планером
         const plannerTasks = getPlannerTasks(currentBranchId);
-        const targetDate = task.dueDate || 'backlog';
+        const targetDate = task.dueDate || new Date().toISOString().split('T')[0];
         if (!plannerTasks[targetDate]) plannerTasks[targetDate] = [];
         plannerTasks[targetDate].push({
             id: `reg_${newId}`,
@@ -410,8 +446,6 @@
             }
         }
         alert(`Протокол сохранён. Создано поручений: ${createdCount}`);
-        // Очистка формы (опционально)
-        // window.location.href = 'meetings-list.html';
     }
 
     // ---- Печать протокола на бланке ----
@@ -419,8 +453,7 @@
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
         const clone = mainContent.cloneNode(true);
-        clone.querySelectorAll('.tabs, .btn-icon, .branch-selector-container, .theme-switch, .btn-group, #addCriticalIssueBtn, #addOpenTaskBtn, #addDecisionBtn, .delete-issue, .delete-task-btn, .delete-decision').forEach(el => el.remove());
-        // Заменим текстовые поля на простой текст
+        clone.querySelectorAll('.tabs, .btn-icon, .branch-selector-container, .theme-switch, .btn-group, #addCriticalIssueBtn, #addDecisionBtn, .delete-issue, .delete-decision').forEach(el => el.remove());
         clone.querySelectorAll('input, textarea, select').forEach(el => {
             const span = document.createElement('span');
             span.textContent = el.value || el.innerText;
@@ -465,7 +498,6 @@
         const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     };
-
     document.getElementById('saveProtocolBtn').addEventListener('click', saveProtocol);
     document.getElementById('printProtocolBtn').addEventListener('click', () => window.printProtocolWithLogo());
     document.getElementById('emailProtocolBtn').addEventListener('click', () => window.sendProtocolByEmail());
@@ -476,7 +508,6 @@
         const protocols = JSON.parse(localStorage.getItem(protocolsKey) || '[]');
         const protocol = protocols.find(p => p.id === protocolId);
         if (!protocol) return;
-        // Заполняем поля формы
         document.getElementById('meetingDate').value = protocol.date;
         document.getElementById('meetingTime').value = protocol.time || '';
         document.getElementById('meetingPlace').value = protocol.place || '';
@@ -485,7 +516,6 @@
         document.getElementById('attendees').value = protocol.attendees || '';
         document.getElementById('agenda').value = protocol.agenda || '';
         meetingType = protocol.type || 'operational';
-        // Переключить таб
         document.querySelectorAll('.tab').forEach(tab => {
             if (tab.getAttribute('data-type') === meetingType) tab.click();
         });
@@ -500,8 +530,6 @@
             document.getElementById('financialPlan').value = protocol.financialPlan || '';
             document.getElementById('balancedPlan').value = protocol.balancedPlan || '';
         }
-        // ВНИМАНИЕ: При редактировании мы будем сохранять как новый протокол, а старый останется.
-        // Можно добавить обновление, но для простоты оставляем как есть.
     }
 
     // ---- Инициализация ----
@@ -513,12 +541,9 @@
         const now = new Date();
         document.getElementById('meetingTime').value = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
         loadOpenTasksFromRegistry();
-        // Проверяем URL параметр edit
         const urlParams = new URLSearchParams(window.location.search);
         const editId = urlParams.get('edit');
-        if (editId) {
-            loadProtocolForEdit(editId);
-        }
+        if (editId) loadProtocolForEdit(editId);
     }
     init();
 })();
