@@ -189,7 +189,6 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
     <aside class="sidebar">
         <a href="dashboard.html" class="logo">
             <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
@@ -247,7 +246,6 @@
 
 <script>
 (function() {
-    // ---- Тёмная тема ----
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -256,7 +254,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---- Филиал ----
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -286,7 +283,6 @@
         window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
     }
 
-    // ---- Парсинг URL параметров ----
     const urlParams = new URLSearchParams(window.location.search);
     const type = urlParams.get('type');
     const id = urlParams.get('id');
@@ -397,7 +393,6 @@
         return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
     }
 
-    // Печать на бланке (специальная для отчёта)
     window.printReportWithLogo = function() {
         const reportContainer = document.getElementById('reportContainer');
         if (!reportContainer) return;
@@ -434,7 +429,6 @@
         `);
         printWindow.document.close();
     };
-
     window.sendReportByEmail = function() {
         const reportContent = document.getElementById('reportContent');
         if (!reportContent) return;
@@ -443,11 +437,9 @@
         const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     };
-
     document.getElementById('printBtn').addEventListener('click', () => window.printReportWithLogo());
     document.getElementById('emailBtn').addEventListener('click', () => window.sendReportByEmail());
 
-    // Инициализация
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
