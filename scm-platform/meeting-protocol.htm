@@ -107,7 +107,6 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
     <aside class="sidebar">
         <a href="dashboard.html" class="logo">
             <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
@@ -214,7 +213,6 @@
 
 <script>
 (function() {
-    // ---- Тёмная тема ----
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -223,7 +221,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---- Филиал ----
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -253,7 +250,6 @@
         window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
     }
 
-    // ---- Загрузка открытых задач из реестра поручений ----
     function loadOpenTasksFromRegistry() {
         const registryKey = `tasks_registry_${currentBranchId}`;
         const tasks = JSON.parse(localStorage.getItem(registryKey) || '[]');
@@ -271,7 +267,6 @@
         `).join('');
     }
 
-    // ---- Переключение типа совещания ----
     let meetingType = 'operational';
     document.querySelectorAll('.tab').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -288,7 +283,6 @@
         });
     });
 
-    // ---- Динамические списки ----
     let criticalIssues = [];
     let decisions = [];
 
@@ -358,7 +352,6 @@
         renderDecisions();
     });
 
-    // ---- Сохранение протокола и создание поручений в реестре + синхронизация с планером ----
     function addTaskToRegistry(task) {
         const registryKey = `tasks_registry_${currentBranchId}`;
         let registry = JSON.parse(localStorage.getItem(registryKey) || '[]');
@@ -377,8 +370,6 @@
         };
         registry.push(newTask);
         localStorage.setItem(registryKey, JSON.stringify(registry));
-
-        // Синхронизация с планером
         const plannerTasks = getPlannerTasks(currentBranchId);
         const targetDate = task.dueDate || new Date().toISOString().split('T')[0];
         if (!plannerTasks[targetDate]) plannerTasks[targetDate] = [];
@@ -423,13 +414,10 @@
             protocolData.financialPlan = document.getElementById('financialPlan').value;
             protocolData.balancedPlan = document.getElementById('balancedPlan').value;
         }
-        // Сохраняем протокол в localStorage
         const protocolsKey = `meeting_protocols_${currentBranchId}`;
         let protocols = JSON.parse(localStorage.getItem(protocolsKey) || '[]');
         protocols.push(protocolData);
         localStorage.setItem(protocolsKey, JSON.stringify(protocols));
-
-        // Создаём поручения в реестре для каждого ПОСТАНОВИЛИ
         let createdCount = 0;
         for (let dec of decisions) {
             if (dec.decided.trim()) {
@@ -448,7 +436,6 @@
         alert(`Протокол сохранён. Создано поручений: ${createdCount}`);
     }
 
-    // ---- Печать протокола на бланке ----
     window.printProtocolWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -502,7 +489,6 @@
     document.getElementById('printProtocolBtn').addEventListener('click', () => window.printProtocolWithLogo());
     document.getElementById('emailProtocolBtn').addEventListener('click', () => window.sendProtocolByEmail());
 
-    // ---- Загрузка существующего протокола для редактирования (если передан параметр edit) ----
     function loadProtocolForEdit(protocolId) {
         const protocolsKey = `meeting_protocols_${currentBranchId}`;
         const protocols = JSON.parse(localStorage.getItem(protocolsKey) || '[]');
@@ -532,7 +518,6 @@
         }
     }
 
-    // ---- Инициализация ----
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
