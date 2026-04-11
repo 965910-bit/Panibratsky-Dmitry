@@ -105,12 +105,38 @@
             align-items: center;
             gap: 8px;
         }
+        .branch-selector-container {
+            float: right;
+            margin-bottom: 16px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        @media (max-width: 768px) {
+            .branch-selector-container {
+                float: none;
+                margin-bottom: 16px;
+                display: flex;
+            }
+        }
+        @media print {
+            .sidebar, .btn-group, .filter-bar, .branch-selector-container, .theme-switch {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="app-container">
     <aside class="sidebar">
-        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
         <nav>
             <ul>
                 <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
@@ -124,11 +150,18 @@
                 <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
                 <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
                 <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
             </ul>
         </nav>
     </aside>
 
     <main class="main-content">
+        <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
+        <div class="branch-selector-container">
+            <label><i class="fas fa-building"></i> Бизнес-единица:</label>
+            <select id="branchSelector"></select>
+        </div>
         <h1>📈 KPI-центр (расширенная версия)</h1>
         <p>Расчёт, сохранение и анализ всех ключевых показателей эффективности цепи поставок.</p>
 
@@ -163,7 +196,6 @@
 <script>
     // ------------------ КОНФИГУРАЦИЯ ВСЕХ KPI ------------------
     const kpiDefinitions = {
-        // Операционные
         otd: { name: "OTD (On-Time Delivery), %", category: "operations", lowerIsBetter: false, good: 96, target: 98, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Доставки вовремя, %", id: "otd_val", type: "number" }] },
         fillrate: { name: "Fill Rate (уровень сервиса), %", category: "operations", lowerIsBetter: false, good: 95, target: 98, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Fill Rate, %", id: "fillrate_val", type: "number" }] },
         pickErrors: { name: "Ошибки сборки, %", category: "operations", lowerIsBetter: true, good: 0.8, target: 0.5, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Ошибки сборки, %", id: "pickErrors_val", type: "number", step: 0.1 }] },
@@ -171,41 +203,67 @@
         spaceUtil: { name: "Загрузка склада, %", category: "operations", lowerIsBetter: false, good: 75, target: 85, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Загрузка, %", id: "spaceUtil_val", type: "number" }] },
         transportCost: { name: "Стоимость доставки (руб./т-км)", category: "operations", lowerIsBetter: true, good: 12, target: 10, unit: "руб./т-км", calc: (vals) => vals[0], inputs: [{ label: "руб./т-км", id: "transportCost_val", type: "number" }] },
         deadhead: { name: "Порожний пробег (Deadhead), %", category: "operations", lowerIsBetter: true, good: 25, target: 20, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Порожний пробег, %", id: "deadhead_val", type: "number" }] },
-        // Управление запасами
         turnover: { name: "Оборачиваемость запасов (раз в год)", category: "inventory", lowerIsBetter: false, good: 5, target: 6, unit: "раз", calc: (vals) => vals[0], inputs: [{ label: "Оборачиваемость, раз/год", id: "turnover_val", type: "number" }] },
         ccc: { name: "Cash-to-Cash цикл (дни)", category: "finance", lowerIsBetter: true, good: 60, target: 45, unit: "дней", calc: (vals) => vals[0], inputs: [{ label: "CCC, дни", id: "ccc_val", type: "number" }] },
         gmroi: { name: "GMROI", category: "inventory", lowerIsBetter: false, good: 1.5, target: 2, unit: "", calc: (vals) => vals[0], inputs: [{ label: "GMROI", id: "gmroi_val", type: "number", step: 0.1 }] },
         stockout: { name: "Дефицит (Stockout Rate), %", category: "inventory", lowerIsBetter: true, good: 5, target: 3, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Stockout, %", id: "stockout_val", type: "number" }] },
-        // Финансовые
         scmCostPercent: { name: "Затраты на SCM (% от выручки)", category: "finance", lowerIsBetter: true, good: 10, target: 8, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Затраты SCM / Выручка, %", id: "scmCostPercent_val", type: "number" }] },
-        // Качество и сервис
         nps: { name: "NPS (Net Promoter Score)", category: "quality", lowerIsBetter: false, good: 40, target: 50, unit: "баллов", calc: (vals) => vals[0], inputs: [{ label: "NPS", id: "nps_val", type: "number" }] },
         ces: { name: "CES (Customer Effort Score)", category: "quality", lowerIsBetter: true, good: 3, target: 2, unit: "баллов", calc: (vals) => vals[0], inputs: [{ label: "CES", id: "ces_val", type: "number", step: 0.1 }] },
         fcr: { name: "FCR (First Contact Resolution), %", category: "quality", lowerIsBetter: false, good: 75, target: 85, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "FCR, %", id: "fcr_val", type: "number" }] },
-        // ESG
         co2: { name: "CO₂ на тонно-километр, кг", category: "esg", lowerIsBetter: true, good: 0.15, target: 0.1, unit: "кг/(т·км)", calc: (vals) => vals[0], inputs: [{ label: "CO₂, кг/(т·км)", id: "co2_val", type: "number", step: 0.01 }] },
         wasteRate: { name: "Доля отходов, %", category: "esg", lowerIsBetter: true, good: 5, target: 3, unit: "%", calc: (vals) => vals[0], inputs: [{ label: "Отходы, %", id: "wasteRate_val", type: "number" }] }
     };
 
-    // Функции сохранения истории
-    function saveHistory(kpiId, value) {
-        let history = JSON.parse(localStorage.getItem(`kpi_${kpiId}_history`) || '[]');
-        history.push({ value: value, date: new Date().toISOString() });
-        if (history.length > 10) history.shift();
-        localStorage.setItem(`kpi_${kpiId}_history`, JSON.stringify(history));
-    }
-    function getHistory(kpiId) {
-        return JSON.parse(localStorage.getItem(`kpi_${kpiId}_history`) || '[]');
+    let currentBranchId = 'default';
+
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
     }
 
-    // Создание карточки KPI
+    function loadBranchSelector() {
+        const branches = BranchManager.getBranches();
+        const tree = BranchManager.buildTree(branches);
+        const select = document.getElementById('branchSelector');
+        select.innerHTML = '';
+        const addOptions = (nodes, prefix = '') => {
+            for (let node of nodes) {
+                const opt = document.createElement('option');
+                opt.value = node.id;
+                opt.textContent = prefix + node.name + ' (' + node.type + ')';
+                if (node.id === currentBranchId) opt.selected = true;
+                select.appendChild(opt);
+                if (node.children) addOptions(node.children, prefix + '— ');
+            }
+        };
+        addOptions(tree);
+        select.addEventListener('change', (e) => {
+            setCurrentBranch(e.target.value);
+            currentBranchId = e.target.value;
+            renderKPICards();
+            updateChartOptions();
+        });
+    }
+
+    function saveHistory(kpiId, value) {
+        let history = JSON.parse(localStorage.getItem(`kpi_${kpiId}_${currentBranchId}_history`) || '[]');
+        history.push({ value: value, date: new Date().toISOString() });
+        if (history.length > 10) history.shift();
+        localStorage.setItem(`kpi_${kpiId}_${currentBranchId}_history`, JSON.stringify(history));
+    }
+    function getHistory(kpiId) {
+        return JSON.parse(localStorage.getItem(`kpi_${kpiId}_${currentBranchId}_history`) || '[]');
+    }
+
     function createKPICard(kpiId, def) {
         const card = document.createElement('div');
         card.className = 'kpi-card';
         card.setAttribute('data-category', def.category);
         let html = `<h3>${def.name}</h3>`;
         def.inputs.forEach(inp => {
-            html += `<div class="input-group"><label>${inp.label}</label><input type="${inp.type}" id="${inp.id}" step="${inp.step || 'any'}"></div>`;
+            html += `<div class="input-group"><label>${inp.label}</label><input type="${inp.type}" id="${inp.id}_${kpiId}" step="${inp.step || 'any'}"></div>`;
         });
         html += `<div class="kpi-result" id="result_${kpiId}">—</div>`;
         html += `<div class="benchmark" id="bench_${kpiId}"></div>`;
@@ -217,7 +275,7 @@
 
         const calcBtn = card.querySelector('.calc-kpi');
         calcBtn.addEventListener('click', () => {
-            const values = def.inputs.map(inp => parseFloat(document.getElementById(inp.id).value) || 0);
+            const values = def.inputs.map(inp => parseFloat(document.getElementById(`${inp.id}_${kpiId}`).value) || 0);
             let result = def.calc(values);
             result = typeof result === 'number' ? (def.name.includes('GMROI') || def.name.includes('CES') ? result.toFixed(2) : Math.round(result)) : result;
             document.getElementById(`result_${kpiId}`).innerHTML = `${result} ${def.unit}`;
@@ -234,11 +292,29 @@
             }
             document.getElementById(`bench_${kpiId}`).innerHTML = `Бенчмарк: целевой ${bench.target} ${def.unit} | Ваш: ${result} ${def.unit} — ${status}`;
             const valuesObj = {};
-            def.inputs.forEach(inp => { valuesObj[inp.id] = document.getElementById(inp.id).value; });
-            SCMData.saveKPI(kpiId, { result: result, values: valuesObj, timestamp: new Date().toISOString() });
+            def.inputs.forEach(inp => { valuesObj[inp.id] = document.getElementById(`${inp.id}_${kpiId}`).value; });
+            SCMData.saveKPI(kpiId, { result: result, values: valuesObj, timestamp: new Date().toISOString() }, currentBranchId);
             saveHistory(kpiId, result);
             updateChartOptions();
             if (document.getElementById('kpiSelect').value === kpiId) updateChart();
+            // Автоматическое создание задачи в планере при красной зоне
+            if (status.includes('🔴')) {
+                const plannerTasks = getPlannerTasks(currentBranchId);
+                const today = new Date().toISOString().split('T')[0];
+                if (!plannerTasks[today]) plannerTasks[today] = [];
+                const taskId = `auto_kpi_${kpiId}_${Date.now()}`;
+                plannerTasks[today].push({
+                    id: taskId,
+                    text: `⚠️ Улучшить ${def.name} с ${result} до ${bench.target} ${def.unit}`,
+                    completed: false,
+                    priority: 'high',
+                    category: 'KPI',
+                    source: 'kpi_alert',
+                    branchId: currentBranchId
+                });
+                savePlannerTasks(plannerTasks, currentBranchId);
+                alert(`Создана задача в планере: улучшить ${def.name}`);
+            }
         });
 
         const printBtn = card.querySelector('.print-kpi-btn');
@@ -257,11 +333,10 @@
             if (categoryFilter !== 'all' && def.category !== categoryFilter) continue;
             const card = createKPICard(kpiId, def);
             container.appendChild(card);
-            // Загрузка сохранённого значения
-            const saved = SCMData.loadKPI(kpiId);
+            const saved = SCMData.loadKPI(kpiId, currentBranchId);
             if (saved && saved.values) {
                 for (let [key, val] of Object.entries(saved.values)) {
-                    const inp = document.getElementById(key);
+                    const inp = document.getElementById(`${key}_${kpiId}`);
                     if (inp) inp.value = val;
                 }
                 const calcBtn = card.querySelector('.calc-kpi');
@@ -299,13 +374,13 @@
     function exportKPI() {
         const allKPI = {};
         for (const kpiId of Object.keys(kpiDefinitions)) {
-            allKPI[kpiId] = SCMData.loadKPI(kpiId);
+            allKPI[kpiId] = SCMData.loadKPI(kpiId, currentBranchId);
             allKPI[`${kpiId}_history`] = getHistory(kpiId);
         }
         const blob = new Blob([JSON.stringify(allKPI, null, 2)], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `kpi_export_${new Date().toISOString().slice(0,19)}.json`;
+        a.download = `kpi_export_${currentBranchId}_${new Date().toISOString().slice(0,19)}.json`;
         a.click();
     }
 
@@ -316,9 +391,9 @@
                 const data = JSON.parse(e.target.result);
                 for (const kpiId of Object.keys(kpiDefinitions)) {
                     if (data[kpiId]) {
-                        SCMData.saveKPI(kpiId, data[kpiId]);
+                        SCMData.saveKPI(kpiId, data[kpiId], currentBranchId);
                         if (data[`${kpiId}_history`]) {
-                            localStorage.setItem(`kpi_${kpiId}_history`, JSON.stringify(data[`${kpiId}_history`]));
+                            localStorage.setItem(`kpi_${kpiId}_${currentBranchId}_history`, JSON.stringify(data[`${kpiId}_history`]));
                         }
                     }
                 }
@@ -336,8 +411,61 @@
     document.getElementById('categoryFilter').addEventListener('change', () => renderKPICards());
     document.getElementById('kpiSelect').addEventListener('change', updateChart);
 
-    renderKPICards();
-    updateChartOptions();
+    window.printKpiCenterWithLogo = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const clone = mainContent.cloneNode(true);
+        clone.querySelectorAll('.btn-group, .filter-bar, .branch-selector-container, .theme-switch, button, .print-kpi-btn, .calc-kpi, .card-buttons button').forEach(el => el.remove());
+        clone.querySelectorAll('.input-group input').forEach(inp => {
+            const span = document.createElement('span');
+            span.textContent = inp.value;
+            inp.parentNode.replaceChild(span, inp);
+        });
+        const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html><head><meta charset="UTF-8"><title>KPI-центр SCM</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: Inter; margin: 20px; }
+                .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                .logo-img { height: 50px; }
+                .contact-info { font-size: 10pt; line-height: 1.4; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; }
+                .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                .kpi-card { break-inside: avoid; }
+            </style>
+            </head><body>
+            <div class="print-header">
+                <div style="display:flex;align-items:center;gap:20px"><img src="${logoUrl}" class="logo-img"><div class="contact-info">Дмитрий Панибратский<br>Эксперт по SCM и логистике<br>scm-news.ru – экспертный портал<br>scm-news.online – Академия SCM<br>dmitry@scm-news.ru</div></div>
+                <div>${new Date().toLocaleString()}</div>
+            </div>
+            ${clone.innerHTML}
+            <div class="print-footer">
+                <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                <div>Подпись: <span class="sign-line">_________________________</span></div>
+                <div>Дата: ${new Date().toLocaleDateString()}</div>
+            </div>
+            <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    };
+    const printAllBtn = document.createElement('button');
+    printAllBtn.innerHTML = '<i class="fas fa-print"></i> Печать всех KPI (бланк)';
+    printAllBtn.style.background = '#f59e0b';
+    printAllBtn.addEventListener('click', () => window.printKpiCenterWithLogo());
+    document.querySelector('.btn-group').appendChild(printAllBtn);
+
+    function init() {
+        BranchManager.ensureDefaultBranch();
+        currentBranchId = getCurrentBranch();
+        loadBranchSelector();
+        renderKPICards();
+        updateChartOptions();
+    }
+    init();
 </script>
 </body>
 </html>
