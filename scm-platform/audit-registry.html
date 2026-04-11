@@ -156,7 +156,6 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
     <aside class="sidebar">
         <a href="dashboard.html" class="logo">
             <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
@@ -198,7 +197,6 @@
             <button id="printAllBtn" class="warning">🖨️ Печать сводного отчёта</button>
         </div>
 
-        <!-- Фильтры для аудитов -->
         <div class="filter-bar">
             <div class="filter-group"><label>Тип аудита</label><select id="filterAuditType"><option value="">Все</option><option value="Плановый">Плановый</option><option value="Внеплановый">Внеплановый</option><option value="Целевой">Целевой</option></select></div>
             <div class="filter-group"><label>Дата от</label><input type="date" id="filterDateFrom"></div>
@@ -221,7 +219,6 @@
 
 <script>
 (function() {
-    // ---- Тёмная тема ----
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -230,7 +227,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // ---- Филиал ----
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -261,7 +257,6 @@
         window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
     }
 
-    // ---- Получение данных для текущего филиала ----
     function getAuditRegistry() {
         const key = `audit_registry_${currentBranchId}`;
         return JSON.parse(localStorage.getItem(key) || '[]');
@@ -295,7 +290,6 @@
         return results;
     }
 
-    // ---- Рендер аудитов с фильтрацией ----
     function renderAudits() {
         let audits = getAuditRegistry();
         const typeFilter = document.getElementById('filterAuditType').value;
@@ -342,7 +336,7 @@
             return;
         }
         const table = document.createElement('table'); table.className = 'registry-table';
-        table.innerHTML = `<thead><tr><th>Название</th><th>Дата</th><th>Выполнение</th><th>Действия</th></tr></thead><tbody></tbody>`;
+        table.innerHTML = `<thead><tr><th>Название</th><th>Дата</th><th>Выполнение</th><th>Действия</th><tr></thead><tbody></tbody>`;
         const tbody = table.querySelector('tbody');
         checklists.forEach(cl => {
             const row = tbody.insertRow();
@@ -508,7 +502,6 @@
     document.getElementById('filterDateTo').addEventListener('change', renderAudits);
     document.getElementById('filterMinScore').addEventListener('input', renderAudits);
 
-    // Печать всей страницы на бланке
     window.printRegistryWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -551,7 +544,6 @@
     printPageBtn.addEventListener('click', () => window.printRegistryWithLogo());
     document.querySelector('.btn-group').appendChild(printPageBtn);
 
-    // Инициализация
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
