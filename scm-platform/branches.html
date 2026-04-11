@@ -7,69 +7,236 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
     <style>
-        .branches-container { background: white; border-radius: 20px; padding: 24px; margin-top: 20px; }
-        .tree { list-style: none; padding-left: 0; }
-        .tree ul { padding-left: 24px; list-style: none; }
-        .tree li { margin: 8px 0; padding: 6px 8px; border-radius: 12px; background: #f8fafc; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-        .branch-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-        .branch-name { font-weight: 600; }
-        .branch-type { background: #eef2ff; padding: 2px 8px; border-radius: 20px; font-size: 12px; }
-        .branch-actions button { background: none; border: none; color: #1e40af; cursor: pointer; margin: 0 4px; }
-        .branch-actions button.danger { color: #dc2626; }
-        .form-card { background: white; border-radius: 20px; padding: 24px; margin-bottom: 24px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; }
-        .form-group input, .form-group select { width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 12px; }
-        .btn-group { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
-        button { background: #1e40af; color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; }
-        button.secondary { background: #94a3b8; }
-        .tabs { display: flex; gap: 8px; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px; }
-        .tab { padding: 8px 16px; cursor: pointer; background: none; border: none; border-radius: 30px; }
-        .tab.active { background: #1e40af; color: white; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .budget-table, .staff-table, .kpi-targets-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        .branches-container {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+        .tree {
+            list-style: none;
+            padding-left: 0;
+        }
+        .tree ul {
+            padding-left: 24px;
+            list-style: none;
+        }
+        .tree li {
+            margin: 8px 0;
+            padding: 6px 8px;
+            border-radius: 12px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .branch-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .branch-name {
+            font-weight: 600;
+        }
+        .branch-type {
+            background: #eef2ff;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .branch-actions button {
+            background: none;
+            border: none;
+            color: #1e40af;
+            cursor: pointer;
+            margin: 0 4px;
+        }
+        .branch-actions button.danger {
+            color: #dc2626;
+        }
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        button.secondary {
+            background: #94a3b8;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            border-radius: 30px;
+        }
+        .tab.active {
+            background: #1e40af;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .budget-table, .staff-table, .kpi-targets-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
         .budget-table th, .budget-table td, .staff-table th, .staff-table td, .kpi-targets-table th, .kpi-targets-table td {
             border: 1px solid #e2e8f0;
             padding: 8px;
             text-align: left;
         }
-        .budget-table input, .staff-table input, .kpi-targets-table input { width: 100px; padding: 4px; }
-        .staff-table input[type="number"] { width: 80px; }
-        .sidebar { width: 260px; background: white; border-right: 1px solid #e2e8f0; padding: 24px 16px; position: fixed; height: 100vh; overflow-y: auto; }
-        .sidebar .logo { font-size: 18px; font-weight: 700; margin-bottom: 32px; display: block; text-decoration: none; color: #0f172a; }
-        .sidebar .logo span { color: #d4af37; }
-        .sidebar nav ul { list-style: none; }
-        .sidebar nav ul li { margin-bottom: 8px; }
-        .sidebar nav ul li a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; text-decoration: none; color: #334155; font-weight: 500; transition: 0.2s; }
-        .sidebar nav ul li a:hover, .sidebar nav ul li a.active { background: #eef2ff; color: #1e40af; }
-        .main-content { margin-left: 260px; flex: 1; padding: 24px 32px; }
-        @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } }
+        .budget-table input, .staff-table input, .kpi-targets-table input {
+            width: 100px;
+            padding: 4px;
+        }
+        .staff-table input[type="number"] {
+            width: 80px;
+        }
+        .branch-selector-container {
+            float: right;
+            margin-bottom: 16px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        @media (max-width: 768px) {
+            .branch-selector-container {
+                float: none;
+                margin-bottom: 16px;
+                display: flex;
+            }
+        }
+        @media print {
+            .sidebar, .btn-group, .branch-selector-container, .theme-switch {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">...</aside>
+    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
+    <aside class="sidebar">
+        <a href="dashboard.html" class="logo">
+            <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
+            ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ
+        </a>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
+                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
+                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
+                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
+                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
+                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
+                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
+                <li><a href="standards.html"><i class="fas fa-table"></i> Нормативы</a></li>
+                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
+                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
+                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
+                <li><a href="planner.html"><i class="fas fa-calendar-alt"></i> Планер</a></li>
+                <li><a href="branches.html" class="active"><i class="fas fa-building"></i> Бизнес-единицы</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main class="main-content">
-        <h1>🏢 Структура бизнес-единиц</h1>
-        <p>Управление филиалами, бюджетами и штатным расписанием.</p>
+        <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+            <h1>🏢 Структура бизнес-единиц</h1>
+            <div class="branch-selector-container">
+                <label><i class="fas fa-building"></i> Текущая бизнес-единица:</label>
+                <select id="branchSelector"></select>
+            </div>
+        </div>
+        <p>Управление филиалами, складами и другими подразделениями.</p>
 
         <div class="form-card">
             <h3>➕ Добавить бизнес-единицу</h3>
-            <div class="form-group"><label>Название</label><input type="text" id="branchName" placeholder="Например: РЦ Москва"></div>
-            <div class="form-group"><label>Тип</label><select id="branchType"><option value="РЦ">РЦ</option><option value="ФЦ">ФЦ</option><option value="ХАБ">ХАБ</option><option value="Склад">Склад</option><option value="Зона">Зона</option></select></div>
-            <div class="form-group"><label>Родитель</label><select id="parentBranch"><option value="">-- Нет --</option></select></div>
-            <div class="btn-group"><button id="saveBranchBtn">Сохранить</button><button id="cancelEditBtn" class="secondary" style="display:none;">Отмена</button></div>
+            <div class="form-group">
+                <label>Название</label>
+                <input type="text" id="branchName" placeholder="Например: РЦ Москва">
+            </div>
+            <div class="form-group">
+                <label>Тип</label>
+                <select id="branchType">
+                    <option value="РЦ">РЦ (Распределительный центр)</option>
+                    <option value="ФЦ">ФЦ (Фулфилмент-центр)</option>
+                    <option value="ХАБ">ХАБ (Узловой центр)</option>
+                    <option value="Склад">Склад</option>
+                    <option value="Зона">Зона / Участок</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Родительская единица</label>
+                <select id="parentBranch">
+                    <option value="">-- Нет (корневой уровень) --</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="saveBranchBtn">Сохранить</button>
+                <button id="cancelEditBtn" class="secondary" style="display:none;">Отмена</button>
+            </div>
         </div>
 
         <div class="branches-container">
             <h3>📋 Дерево бизнес-единиц</h3>
             <div id="treeContainer"></div>
-            <div class="btn-group"><button id="exportBranchesBtn">📎 Экспорт (JSON)</button><button id="importBranchesBtn">📂 Импорт (JSON)</button><input type="file" id="importFile" accept=".json" style="display:none;"></div>
+            <div class="btn-group" style="margin-top:20px;">
+                <button id="exportBranchesBtn">📎 Экспорт (JSON)</button>
+                <button id="importBranchesBtn">📂 Импорт (JSON)</button>
+                <input type="file" id="importFile" accept=".json" style="display:none;">
+            </div>
         </div>
 
-        <!-- Панель редактирования выбранного филиала -->
+        <!-- Панель редактирования выбранного филиала (вкладки) -->
         <div id="branchDetailPanel" style="display:none; margin-top: 30px;">
             <div class="tabs" id="branchTabs">
                 <button class="tab active" data-tab="budget">📊 Бюджет</button>
@@ -98,12 +265,50 @@
     </main>
 </div>
 
-<script src="scm-common.js"></script>
 <script>
-    let currentBranchId = null;
-    let currentYear = new Date().getFullYear();
+(function() {
+    // ---- Тёмная тема ----
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    });
 
-    // ---------- ДЕРЕВО ФИЛИАЛОВ ----------
+    // ---- Филиал (для выбора в селекторе) ----
+    let currentBranchId = 'default';
+    function loadBranchSelector() {
+        const branches = BranchManager.getBranches();
+        const tree = BranchManager.buildTree(branches);
+        const select = document.getElementById('branchSelector');
+        select.innerHTML = '';
+        const addOptions = (nodes, prefix = '') => {
+            for (let node of nodes) {
+                const opt = document.createElement('option');
+                opt.value = node.id;
+                opt.textContent = prefix + node.name + ' (' + node.type + ')';
+                if (node.id === currentBranchId) opt.selected = true;
+                select.appendChild(opt);
+                if (node.children) addOptions(node.children, prefix + '— ');
+            }
+        };
+        addOptions(tree);
+        select.addEventListener('change', (e) => {
+            setCurrentBranch(e.target.value);
+            currentBranchId = e.target.value;
+            // Перезагрузка страницы не требуется, так как мы находимся в branches.html
+            // Но можно обновить данные (например, перерисовать дерево)
+            renderTree();
+        });
+    }
+    function getCurrentBranch() { return localStorage.getItem('scm_current_branch') || 'default'; }
+    function setCurrentBranch(branchId) {
+        localStorage.setItem('scm_current_branch', branchId);
+        window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
+    }
+
+    // ---- Дерево филиалов ----
     function renderTree() {
         const branches = BranchManager.getBranches();
         const tree = BranchManager.buildTree(branches);
@@ -134,7 +339,7 @@
     }
     function attachTreeEvents() {
         document.querySelectorAll('.edit-branch').forEach(btn => btn.addEventListener('click', (e) => { const id = btn.getAttribute('data-id'); editBranch(id); }));
-        document.querySelectorAll('.delete-branch').forEach(btn => btn.addEventListener('click', (e) => { const id = btn.getAttribute('data-id'); if(confirm('Удалить?')) { BranchManager.deleteBranch(id); renderTree(); updateParentSelect(); if(currentBranchId===id) closeDetailPanel(); } }));
+        document.querySelectorAll('.delete-branch').forEach(btn => btn.addEventListener('click', (e) => { const id = btn.getAttribute('data-id'); if(confirm('Удалить бизнес-единицу и все её дочерние? Данные (KPI, аудиты, задачи) не будут удалены, но будут отвязаны.')) { BranchManager.deleteBranch(id); renderTree(); updateParentSelect(); if(currentBranchId===id) closeDetailPanel(); } }));
         document.querySelectorAll('.select-branch').forEach(btn => btn.addEventListener('click', (e) => { const id = btn.getAttribute('data-id'); showBranchDetail(id); }));
     }
 
@@ -187,9 +392,12 @@
         updateParentSelect();
     }
 
-    // ---------- ДЕТАЛИ ФИЛИАЛА ----------
+    // ---- Детали филиала (бюджет, штат, KPI) ----
+    let currentDetailBranchId = null;
+    let currentYear = new Date().getFullYear();
+
     function showBranchDetail(branchId) {
-        currentBranchId = branchId;
+        currentDetailBranchId = branchId;
         document.getElementById('branchDetailPanel').style.display = 'block';
         loadBudgetUI();
         loadStaffUI();
@@ -197,12 +405,11 @@
     }
     function closeDetailPanel() {
         document.getElementById('branchDetailPanel').style.display = 'none';
-        currentBranchId = null;
+        currentDetailBranchId = null;
     }
 
-    // Бюджет
     function loadBudgetUI() {
-        const budget = getBranchBudget(currentBranchId, currentYear);
+        const budget = getBranchBudget(currentDetailBranchId, currentYear);
         const months = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
         const tbody = document.querySelector('#budgetTable tbody');
         tbody.innerHTML = '';
@@ -222,15 +429,15 @@
                 const payroll = parseInt(row.cells[2].querySelector('input').value) || 0;
                 const transport = parseInt(row.cells[3].querySelector('input').value) || 0;
                 const capex = parseInt(row.cells[4].querySelector('input').value) || 0;
-                saveBudgetMonth(currentBranchId, currentYear, month, { opex, payroll, transport, capex });
+                saveBudgetMonth(currentDetailBranchId, currentYear, month, { opex, payroll, transport, capex });
             });
             alert('Бюджет сохранён');
         };
         document.getElementById('copyBudgetFromPrevBtn').onclick = () => {
-            const prevBudget = getBranchBudget(currentBranchId, currentYear-1);
+            const prevBudget = getBranchBudget(currentDetailBranchId, currentYear-1);
             for (let month of months) {
                 if (prevBudget[month]) {
-                    saveBudgetMonth(currentBranchId, currentYear, month, prevBudget[month]);
+                    saveBudgetMonth(currentDetailBranchId, currentYear, month, prevBudget[month]);
                 }
             }
             loadBudgetUI();
@@ -238,9 +445,8 @@
         };
     }
 
-    // Штатное расписание
     function loadStaffUI() {
-        const staff = getBranchStaff(currentBranchId);
+        const staff = getBranchStaff(currentDetailBranchId);
         const tbody = document.querySelector('#staffTable tbody');
         tbody.innerHTML = '';
         staff.forEach(pos => {
@@ -253,11 +459,11 @@
             row.insertCell(5).innerHTML = `<input type="number" value="${pos.effective_hours || 168}" data-field="effective_hours" data-id="${pos.id}">`;
             const total = (pos.salary_base || 0) * (pos.region_coef || 1) * (1 + (pos.north_bonus || 0)/100) * (pos.count || 0);
             row.insertCell(6).textContent = Math.round(total);
-            const delBtn = document.createElement('button'); delBtn.textContent = '🗑️'; delBtn.onclick = () => { deleteStaffPosition(currentBranchId, pos.id); loadStaffUI(); };
+            const delBtn = document.createElement('button'); delBtn.textContent = '🗑️'; delBtn.onclick = () => { deleteStaffPosition(currentDetailBranchId, pos.id); loadStaffUI(); };
             row.insertCell(7).appendChild(delBtn);
         });
         document.getElementById('addStaffBtn').onclick = () => {
-            addStaffPosition(currentBranchId, { title: 'Новая должность', count: 1, salary_base: 30000, region_coef: 1, north_bonus: 0, effective_hours: 168 });
+            addStaffPosition(currentDetailBranchId, { title: 'Новая должность', count: 1, salary_base: 30000, region_coef: 1, north_bonus: 0, effective_hours: 168 });
             loadStaffUI();
         };
         document.getElementById('saveStaffBtn').onclick = () => {
@@ -277,15 +483,14 @@
                     effective_hours: parseFloat(inputs[5]?.value) || 168
                 });
             });
-            saveBranchStaff(currentBranchId, updatedStaff);
+            saveBranchStaff(currentDetailBranchId, updatedStaff);
             loadStaffUI();
             alert('Штатное расписание сохранено');
         };
     }
 
-    // Цели KPI
     function loadKPITargetsUI() {
-        const targets = getBranchKPITargets(currentBranchId, currentYear);
+        const targets = getBranchKPITargets(currentDetailBranchId, currentYear);
         const kpiList = ['otd','fillrate','turnover','ccc','nps','pickErrors'];
         const units = { otd:'%', fillrate:'%', turnover:'раз', ccc:'дней', nps:'баллов', pickErrors:'%' };
         const tbody = document.querySelector('#kpiTargetsTable tbody');
@@ -309,11 +514,11 @@
                 const val = parseFloat(inp.value);
                 if (!isNaN(val)) newTargets[kpi] = val;
             });
-            saveBranchKPITargets(currentBranchId, currentYear, newTargets);
+            saveBranchKPITargets(currentDetailBranchId, currentYear, newTargets);
             alert('Цели KPI сохранены');
         };
         document.getElementById('inheritKPIBtn').onclick = () => {
-            const branch = BranchManager.getBranchById(currentBranchId);
+            const branch = BranchManager.getBranchById(currentDetailBranchId);
             if (branch.parentId) {
                 const parentTargets = getBranchKPITargets(branch.parentId, currentYear);
                 for (let kpi of kpiList) {
@@ -327,47 +532,104 @@
         };
     }
 
-    // Инициализация
+    // ---- Экспорт/импорт ----
+    function exportBranches() {
+        const data = BranchManager.getBranches();
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `branches_${Date.now()}.json`; a.click();
+    }
+    function importBranches(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const branches = JSON.parse(e.target.result);
+                BranchManager.importBranches(branches);
+                renderTree();
+                updateParentSelect();
+                alert('Импорт выполнен');
+            } catch(err) { alert('Ошибка импорта'); }
+        };
+        reader.readAsText(file);
+    }
+
+    document.getElementById('saveBranchBtn').addEventListener('click', saveBranch);
+    document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
+    document.getElementById('exportBranchesBtn').addEventListener('click', exportBranches);
+    document.getElementById('importBranchesBtn').addEventListener('click', () => document.getElementById('importFile').click());
+    document.getElementById('importFile').addEventListener('change', (e) => {
+        if (e.target.files[0]) importBranches(e.target.files[0]);
+        e.target.value = '';
+    });
+
+    // Вкладки
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tab${tab.dataset.tab.charAt(0).toUpperCase()+tab.dataset.tab.slice(1)}`).classList.add('active');
+        });
+    });
+
+    // Печать всей страницы на бланке
+    window.printBranchesWithLogo = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const clone = mainContent.cloneNode(true);
+        clone.querySelectorAll('.btn-group, .branch-selector-container, .theme-switch, button, .tab, .branch-actions button, .edit-branch, .delete-branch, .select-branch, #addStaffBtn, #saveStaffBtn, #saveBudgetBtn, #copyBudgetFromPrevBtn, #saveKPITargetsBtn, #inheritKPIBtn').forEach(el => el.remove());
+        clone.querySelectorAll('input').forEach(inp => {
+            const span = document.createElement('span');
+            span.textContent = inp.value;
+            inp.parentNode.replaceChild(span, inp);
+        });
+        const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html><head><meta charset="UTF-8"><title>Бизнес-единицы SCM</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: Inter; margin: 20px; }
+                .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                .logo-img { height: 50px; }
+                .contact-info { font-size: 10pt; line-height: 1.4; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; }
+                .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+            </style>
+            </head><body>
+            <div class="print-header">
+                <div style="display:flex;align-items:center;gap:20px"><img src="${logoUrl}" class="logo-img"><div class="contact-info">Дмитрий Панибратский<br>Эксперт по SCM и логистике<br>scm-news.ru – экспертный портал<br>scm-news.online – Академия SCM<br>dmitry@scm-news.ru</div></div>
+                <div>${new Date().toLocaleString()}</div>
+            </div>
+            ${clone.innerHTML}
+            <div class="print-footer">
+                <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                <div>Подпись: <span class="sign-line">_________________________</span></div>
+                <div>Дата: ${new Date().toLocaleDateString()}</div>
+            </div>
+            <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    };
+    // Добавляем кнопку печати в интерфейс
+    const printBtn = document.createElement('button');
+    printBtn.innerHTML = '<i class="fas fa-print"></i> Печать страницы (бланк)';
+    printBtn.style.background = '#f59e0b';
+    printBtn.addEventListener('click', () => window.printBranchesWithLogo());
+    document.querySelector('.btn-group').appendChild(printBtn);
+
+    // ---- Инициализация ----
     function init() {
         BranchManager.ensureDefaultBranch();
+        currentBranchId = getCurrentBranch();
+        loadBranchSelector();
         renderTree();
         updateParentSelect();
-        document.getElementById('saveBranchBtn').addEventListener('click', saveBranch);
-        document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
-        document.getElementById('exportBranchesBtn').addEventListener('click', () => {
-            const data = BranchManager.getBranches();
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `branches_${Date.now()}.json`; a.click();
-        });
-        document.getElementById('importBranchesBtn').addEventListener('click', () => document.getElementById('importFile').click());
-        document.getElementById('importFile').addEventListener('change', (e) => {
-            if (e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    try {
-                        const branches = JSON.parse(ev.target.result);
-                        BranchManager.importBranches(branches);
-                        renderTree(); updateParentSelect();
-                        alert('Импорт выполнен');
-                    } catch(err) { alert('Ошибка импорта'); }
-                };
-                reader.readAsText(e.target.files[0]);
-            }
-            e.target.value = '';
-        });
-        // вкладки
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.getElementById(`tab${tab.dataset.tab.charAt(0).toUpperCase()+tab.dataset.tab.slice(1)}`).classList.add('active');
-            });
-        });
     }
     init();
-
-    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+})();
+function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 </script>
 </body>
 </html>
