@@ -89,7 +89,6 @@
 </head>
 <body>
 <div class="app-container">
-    <!-- ========== ПОЛНЫЙ САЙДБАР (БЕЗ ЗАГЛУШКИ) ========== -->
     <aside class="sidebar">
         <a href="dashboard.html" class="logo">
             <img src="https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png" alt="Логотип" style="height: 30px; vertical-align: middle; margin-right: 8px;">
@@ -259,7 +258,6 @@
 
 <script>
 (function() {
-    // Тёмная тема
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
@@ -268,7 +266,6 @@
         localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
     });
 
-    // Филиал
     let currentBranchId = 'default';
     function loadBranchSelector() {
         const branches = BranchManager.getBranches();
@@ -297,7 +294,6 @@
         window.dispatchEvent(new CustomEvent('branch-changed', { detail: { branchId } }));
     }
 
-    // Печать и отправка
     window.printMethodologyWithLogo = function() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -345,7 +341,6 @@
     document.getElementById('printMethodologyBtn').addEventListener('click', () => window.printMethodologyWithLogo());
     document.getElementById('emailMethodologyBtn').addEventListener('click', () => window.sendMethodologyByEmail());
 
-    // Инициализация
     function init() {
         BranchManager.ensureDefaultBranch();
         currentBranchId = getCurrentBranch();
