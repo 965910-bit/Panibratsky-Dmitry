@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="scm-style.css">
+    <script src="scm-common.js"></script>
     <style>
         .section-card {
             background: white;
@@ -58,6 +59,24 @@
             padding-top: 16px;
             border-top: 1px dashed #cbd5e1;
         }
+        .branch-selector-container {
+            float: right;
+            margin-bottom: 16px;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
         @media (max-width: 768px) {
             table {
                 font-size: 12px;
@@ -65,35 +84,39 @@
             th, td {
                 padding: 6px;
             }
+            .branch-selector-container {
+                float: none;
+                margin-bottom: 16px;
+                display: flex;
+            }
+        }
+        @media print {
+            .sidebar, .btn-group, .branch-selector-container, .theme-switch {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <aside class="sidebar">
-        <a href="dashboard.html" class="logo">ДМИТРИЙ<span>.</span>ПАНИБРАТСКИЙ</a>
-        <nav>
-            <ul>
-                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Дашборд</a></li>
-                <li><a href="kpi-center.html"><i class="fas fa-chart-line"></i> KPI-центр</a></li>
-                <li><a href="auditor.html"><i class="fas fa-clipboard-list"></i> Аудитор</a></li>
-                <li><a href="library.html"><i class="fas fa-book"></i> Библиотека</a></li>
-                <li><a href="inventory-methodology.html"><i class="fas fa-boxes"></i> Управление запасами</a></li>
-                <li><a href="roadmap.html"><i class="fas fa-road"></i> Дорожная карта</a></li>
-                <li><a href="checklists.html"><i class="fas fa-check-square"></i> Чек-листы</a></li>
-                <li><a href="standards.html" class="active"><i class="fas fa-table"></i> Нормативы</a></li>
-                <li><a href="calculators.html"><i class="fas fa-calculator"></i> Калькуляторы</a></li>
-                <li><a href="processes.html"><i class="fas fa-diagram-project"></i> Процессы SCM</a></li>
-                <li><a href="audit-registry.html"><i class="fas fa-history"></i> Реестр аудитов</a></li>
-            </ul>
-        </nav>
-    </aside>
-
+    <aside class="sidebar">...</aside>
     <main class="main-content">
-        <h1>📊 Полные нормативы и бенчмарки SCM</h1>
+        <div class="theme-switch" id="themeToggle"><i class="fas fa-moon"></i> <span>Тёмная тема</span></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+            <h1>📊 Полные нормативы и бенчмарки SCM</h1>
+            <div class="branch-selector-container">
+                <label><i class="fas fa-building"></i> Бизнес-единица:</label>
+                <select id="branchSelector"></select>
+            </div>
+        </div>
         <p>Сводные данные для всех аспектов управления цепями поставок: склад, транспорт, персонал, финансы, ESG, безопасность, цифровая трансформация, аутсорсинг, SLA, объёмный вес, сезонность и др.</p>
 
-        <!-- 1. Складские операции (нормы времени) -->
+        <div class="btn-group">
+            <button id="printStandardsBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать нормативов</button>
+            <button id="emailStandardsBtn" style="background:#10b981;"><i class="fas fa-envelope"></i> Отправить на почту</button>
+        </div>
+
+        <!-- 1. Складские операции – нормативы времени -->
         <div class="section-card">
             <h2><i class="fas fa-warehouse"></i> 1. Складские операции – нормативы времени</h2>
             <table>
@@ -208,7 +231,7 @@
             </div>
         </div>
 
-        <!-- 4. Производительность и зарплаты персонала -->
+        <!-- 4. Производительность и зарплаты (средние по РФ) -->
         <div class="section-card">
             <h2><i class="fas fa-users"></i> 4. Производительность и зарплаты (средние по РФ)</h2>
             <table>
@@ -261,41 +284,35 @@
         <div class="section-card">
             <h2><i class="fas fa-shield-alt"></i> 7. Охрана труда, пожарная и промышленная безопасность</h2>
             <div class="sub-section"><strong>Охрана труда</strong>
-                <table>
-                    <thead><tr><th>Мероприятие</th><th>Периодичность</th></tr></thead>
-                    <tbody>
-                        <tr><td>Вводный инструктаж</td><td>при приёме</td></tr>
-                        <tr><td>Первичный инструктаж</td><td>до начала работы</td></tr>
-                        <tr><td>Повторный инструктаж</td><td>не реже 1 раза в 6 мес</td></tr>
-                        <tr><td>Обучение по ОТ руководителей</td><td>1 раз в 3 года</td></tr>
-                        <tr><td>Медосмотры</td><td>ежегодно / по графику</td></tr>
-                        <tr><td>СОУТ</td><td>1 раз в 5 лет</td></tr>
-                        <tr><td>Журнал выдачи СИЗ</td><td>постоянно</td></tr>
-                    </tbody>
-                </table>
+                <table><thead><tr><th>Мероприятие</th><th>Периодичность</th></tr></thead>
+                <tbody>
+                    <tr><td>Вводный инструктаж</td><td>при приёме</td></tr>
+                    <tr><td>Первичный инструктаж</td><td>до начала работы</td></tr>
+                    <tr><td>Повторный инструктаж</td><td>не реже 1 раза в 6 мес</td></tr>
+                    <tr><td>Обучение по ОТ руководителей</td><td>1 раз в 3 года</td></tr>
+                    <tr><td>Медосмотры</td><td>ежегодно / по графику</td></tr>
+                    <tr><td>СОУТ</td><td>1 раз в 5 лет</td></tr>
+                    <tr><td>Журнал выдачи СИЗ</td><td>постоянно</td></tr>
+                </tbody></table>
             </div>
             <div class="sub-section"><strong>Пожарная безопасность</strong>
-                <table>
-                    <thead><tr><th>Мероприятие</th><th>Периодичность</th></tr></thead>
-                    <tbody>
-                        <tr><td>Противопожарный инструктаж</td><td>при приёме, далее 1 раз/год</td></tr>
-                        <tr><td>Планы эвакуации</td><td>утверждены, размещены</td></tr>
-                        <tr><td>АПС и СОУЭ</td><td>ежемесячная проверка, ТО по графику</td></tr>
-                        <tr><td>Огнетушители</td><td>перезарядка 1 раз/5 лет</td></tr>
-                        <tr><td>Тренировки по эвакуации</td><td>2 раза в год</td></tr>
-                    </tbody>
-                </table>
+                <table><thead><tr><th>Мероприятие</th><th>Периодичность</th></tr></thead>
+                <tbody>
+                    <tr><td>Противопожарный инструктаж</td><td>при приёме, далее 1 раз/год</td></tr>
+                    <tr><td>Планы эвакуации</td><td>утверждены, размещены</td></tr>
+                    <tr><td>АПС и СОУЭ</td><td>ежемесячная проверка, ТО по графику</td></tr>
+                    <tr><td>Огнетушители</td><td>перезарядка 1 раз/5 лет</td></tr>
+                    <tr><td>Тренировки по эвакуации</td><td>2 раза в год</td></tr>
+                </tbody></table>
             </div>
             <div class="sub-section"><strong>Промышленная безопасность (для ОПО)</strong>
-                <table>
-                    <thead><tr><th>Требование</th><th>Примечание</th></tr></thead>
-                    <tbody>
-                        <tr><td>Идентификация ОПО</td><td>регистрация в реестре</td></tr>
-                        <tr><td>Лицензия на эксплуатацию</td><td>для ОПО I–III классов</td></tr>
-                        <tr><td>Декларация промбезопасности</td><td>для ОПО I, II классов</td></tr>
-                        <tr><td>Страхование ответственности</td><td>обязательно</td></tr>
-                    </tbody>
-                </table>
+                <table><thead><tr><th>Требование</th><th>Примечание</th></tr></thead>
+                <tbody>
+                    <tr><td>Идентификация ОПО</td><td>регистрация в реестре</td></tr>
+                    <tr><td>Лицензия на эксплуатацию</td><td>для ОПО I–III классов</td></tr>
+                    <tr><td>Декларация промбезопасности</td><td>для ОПО I, II классов</td></tr>
+                    <tr><td>Страхование ответственности</td><td>обязательно</td></tr>
+                </tbody></table>
             </div>
         </div>
 
@@ -357,7 +374,7 @@
             </table>
         </div>
 
-        <!-- 11. ESG-метрики (выбросы, отходы, энергия) -->
+        <!-- 11. ESG-метрики (бенчмарки) -->
         <div class="section-card">
             <h2><i class="fas fa-leaf"></i> 11. ESG-метрики (бенчмарки)</h2>
             <table>
@@ -475,5 +492,99 @@
         </div>
     </main>
 </div>
+
+<script>
+(function() {
+    // Тёмная тема
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    if (localStorage.getItem('scm_theme') === 'dark') body.classList.add('dark-theme');
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        localStorage.setItem('scm_theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    });
+
+    // Филиал
+    let currentBranchId = 'default';
+    function loadBranchSelector() {
+        const branches = BranchManager.getBranches();
+        const tree = BranchManager.buildTree(branches);
+        const select = document.getElementById('branchSelector');
+        select.innerHTML = '';
+        const addOptions = (nodes, prefix = '') => {
+            for (let node of nodes) {
+                const opt = document.createElement('option');
+                opt.value = node.id;
+                opt.textContent = prefix + node.name + ' (' + node.type + ')';
+                if (node.id === currentBranchId) opt.selected = true;
+                select.appendChild(opt);
+                if (node.children) addOptions(node.children, prefix + '— ');
+            }
+        };
+        addOptions(tree);
+        select.addEventListener('change', (e) => {
+            setCurrentBranch(e.target.value);
+            currentBranchId = e.target.value;
+        });
+    }
+
+    // Печать и отправка
+    window.printStandardsWithLogo = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const clone = mainContent.cloneNode(true);
+        clone.querySelectorAll('.btn-group, .branch-selector-container, .theme-switch, button').forEach(el => el.remove());
+        const logoUrl = 'https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/scm-platform/assets/LargeTile.scale-200.png';
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html><head><meta charset="UTF-8"><title>Нормативы SCM</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                body { font-family: Inter; margin: 20px; }
+                .print-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e40af; margin-bottom: 20px; padding-bottom: 10px; }
+                .logo-img { height: 50px; }
+                .contact-info { font-size: 10pt; line-height: 1.4; }
+                .print-footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; }
+                .sign-line { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; }
+                .section-card { break-inside: avoid; }
+                table { font-size: 10pt; }
+            </style>
+            </head><body>
+            <div class="print-header">
+                <div style="display:flex;align-items:center;gap:20px"><img src="${logoUrl}" class="logo-img"><div class="contact-info">Дмитрий Панибратский<br>Эксперт по SCM и логистике<br>scm-news.ru – экспертный портал<br>scm-news.online – Академия SCM<br>dmitry@scm-news.ru</div></div>
+                <div>${new Date().toLocaleString()}</div>
+            </div>
+            ${clone.innerHTML}
+            <div class="print-footer">
+                <div>Ф.И.О. исполнителя: <span class="sign-line">_________________________</span></div>
+                <div>Подпись: <span class="sign-line">_________________________</span></div>
+                <div>Дата: ${new Date().toLocaleDateString()}</div>
+            </div>
+            <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    };
+    window.sendStandardsByEmail = function() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+        const text = mainContent.innerText;
+        const subject = encodeURIComponent('Нормативы и бенчмарки SCM');
+        const body = encodeURIComponent(`Добрый день!\n\n${text}\n\n--\nСгенерировано автоматически.`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    };
+    document.getElementById('printStandardsBtn').addEventListener('click', () => window.printStandardsWithLogo());
+    document.getElementById('emailStandardsBtn').addEventListener('click', () => window.sendStandardsByEmail());
+
+    // Инициализация
+    function init() {
+        BranchManager.ensureDefaultBranch();
+        currentBranchId = getCurrentBranch();
+        loadBranchSelector();
+    }
+    init();
+})();
+</script>
 </body>
 </html>
