@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Новости SCM и тренды управления цепями поставок 2026-2030 | Дмитрий Панибратский</title>
-    <meta name="description" content="Актуальные новости, аналитика и ключевые тренды SCM на 2026-2030 годы: Agentic AI, регионализация, цифровые двойники, компетенции будущего и обучение. Аналитика от эксперта.">
+    <title>Новости и тренды SCM – управление цепями поставок, аналитика, прогнозы | Дмитрий Панибратский</title>
+    <meta name="description" content="Актуальные новости и глобальные тренды в управлении цепями поставок (SCM) на 2026-2030: Agentic AI, регионализация, цифровые двойники, компетенции будущего. Аналитика и прогнозы.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="canonical" href="https://scm-news.ru/trends.html" />
@@ -24,6 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Google tag (gtag.js) - GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
@@ -47,7 +48,7 @@
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
     <style>
-        /* Все стили такие же, как на других страницах, с добавлением стилей для трендов */
+        /* Все стили сохранены из исходного trends.html (на основе expertise, но с адаптацией) */
         * {
             margin: 0;
             padding: 0;
@@ -290,28 +291,22 @@
             font-weight: 700;
             margin-bottom: 30px;
         }
-        .trends-analysis {
-            background: var(--bg-primary);
-            border-radius: 24px;
-            padding: 40px;
-            margin: 40px 0;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
-        }
-        .trends-grid {
+        .trends-grid, .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
-            margin: 40px 0;
+            margin-bottom: 50px;
         }
-        .trend-card {
-            background: var(--bg-secondary);
+        .trend-card, .news-card {
+            background: var(--bg-primary);
             border-radius: 20px;
             padding: 24px;
-            transition: transform 0.2s;
+            box-shadow: var(--card-shadow);
             border: 1px solid var(--border);
+            transition: transform 0.2s;
+            cursor: pointer;
         }
-        .trend-card:hover {
+        .trend-card:hover, .news-card:hover {
             transform: translateY(-4px);
         }
         .trend-icon {
@@ -322,70 +317,53 @@
         .trend-title {
             font-size: 24px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            color: var(--accent);
+        }
+        .trend-stats {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 16px 0;
+            font-weight: 600;
             color: var(--accent);
         }
         .trend-list {
             padding-left: 20px;
-            margin: 15px 0;
+            margin: 16px 0;
         }
         .trend-list li {
             margin-bottom: 8px;
         }
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
-        }
-        .news-card {
-            background: var(--bg-primary);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
-            transition: transform 0.2s;
-        }
-        .news-card:hover {
-            transform: translateY(-4px);
-        }
-        .news-date {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .news-source {
-            background: var(--border);
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+        .btn-outline {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid var(--accent);
             color: var(--accent);
-        }
-        .news-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        .news-excerpt {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-        .news-link {
-            color: var(--accent);
+            padding: 8px 16px;
+            border-radius: 30px;
             text-decoration: none;
             font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            margin-top: 12px;
+            transition: 0.2s;
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .cta-section {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            border-radius: 24px;
+            margin: 40px 0;
         }
         .cta-button {
             display: inline-block;
             background: var(--gold);
             color: #0f172a;
-            padding: 12px 24px;
+            padding: 12px 30px;
             border-radius: 40px;
             font-weight: 700;
             text-decoration: none;
@@ -452,7 +430,45 @@
         }
         @media (max-width: 768px) {
             .page-header h1 { font-size: 32px; }
-            .trends-analysis { padding: 20px; }
+        }
+        .faq-block {
+            margin: 40px 0 20px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+        .faq-item {
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .faq-question {
+            font-weight: 700;
+            cursor: pointer;
+            padding: 16px 0;
+            position: relative;
+            padding-right: 30px;
+            font-size: 18px;
+        }
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            top: 16px;
+            font-size: 22px;
+            font-weight: 400;
+        }
+        .faq-question.active::after {
+            content: '−';
+        }
+        .faq-answer {
+            display: none;
+            padding-bottom: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .faq-answer.show {
+            display: block;
         }
     </style>
 </head>
@@ -484,83 +500,112 @@
 
     <div class="page-header fade-up">
         <div class="container">
-            <h1>Новости и аналитика SCM</h1>
-            <p>Актуальные события, экспертные обзоры и прогнозы развития управления цепями поставок на 2026–2030 годы.</p>
+            <h1>Новости и глобальные тренды SCM</h1>
+            <p>Актуальные события, аналитика и прогнозы в управлении цепями поставок. Будьте в курсе изменений, которые формируют будущее логистики.</p>
         </div>
     </div>
 
     <div class="container">
-        <!-- БЛОК АНАЛИТИКИ: ТРЕНДЫ 2026-2030 -->
-        <div class="trends-analysis fade-up">
-            <h2 class="section-title">🔮 Ключевые тренды SCM 2026–2030</h2>
-            <p style="font-size: 18px; margin-bottom: 30px;">Технологические и стратегические сдвиги, которые переопределят цепи поставок. И главное — как подготовить команду к этим изменениям через обучение и внутреннюю академию.</p>
-            <div class="trends-grid">
-                <!-- Тренд 1: Agentic AI -->
-                <div class="trend-card">
-                    <div class="trend-icon"><i class="fas fa-robot"></i></div>
-                    <h3 class="trend-title">Агентный ИИ (Agentic AI)</h3>
-                    <p>К 2030 году 60% компаний внедрят автономные SCM-системы. Искусственный интеллект переходит от аналитики к самостоятельному принятию решений.</p>
-                    <ul class="trend-list">
-                        <li>Автономное перепланирование поставок при сбоях</li>
-                        <li>RPA-боты для интеграции 1С, WMS, TMS</li>
-                        <li>Снижение ручного труда на 70%</li>
-                    </ul>
-                    <div style="margin-top: 16px; background: rgba(30,64,175,0.05); padding: 12px; border-radius: 12px;">
-                        <i class="fas fa-graduation-cap"></i> <strong>Обучение:</strong> Программы Академии SCM по Agentic AI, RPA и автономным системам.
-                    </div>
-                </div>
-                <!-- Тренд 2: Регионализация и устойчивость -->
-                <div class="trend-card">
-                    <div class="trend-icon"><i class="fas fa-map-marked-alt"></i></div>
-                    <h3 class="trend-title">Регионализация цепей поставок</h3>
-                    <p>Почти 60% руководителей прогнозируют переход к локализованным цепочкам к 2030 году. Устойчивость (Resilience) становится важнее глобальной оптимизации.</p>
-                    <ul class="trend-list">
-                        <li>Диверсификация поставщиков</li>
-                        <li>Near-shoring и локальные склады</li>
-                        <li>Устойчивость как KPI</li>
-                    </ul>
-                    <div style="margin-top: 16px; background: rgba(30,64,175,0.05); padding: 12px; border-radius: 12px;">
-                        <i class="fas fa-graduation-cap"></i> <strong>Обучение:</strong> Курсы по проектированию устойчивых цепей поставок, управлению региональными рисками.
-                    </div>
-                </div>
-                <!-- Тренд 3: Цифровые двойники и SCM 4.0 -->
-                <div class="trend-card">
-                    <div class="trend-icon"><i class="fas fa-cubes"></i></div>
-                    <h3 class="trend-title">Цифровые двойники и SCM 4.0</h3>
-                    <p>Рынок Logistics 4.0 вырастет до $74 млрд к 2030 году. Цифровые двойники позволяют моделировать всю цепочку поставок.</p>
-                    <ul class="trend-list">
-                        <li>Виртуальные копии складов и транспорта</li>
-                        <li>Предиктивная аналитика</li>
-                        <li>Киберустойчивость логистических систем</li>
-                    </ul>
-                    <div style="margin-top: 16px; background: rgba(30,64,175,0.05); padding: 12px; border-radius: 12px;">
-                        <i class="fas fa-graduation-cap"></i> <strong>Обучение:</strong> Практикумы по созданию цифровых двойников, кибербезопасность в SCM.
-                    </div>
-                </div>
-                <!-- Тренд 4: Компетенции будущего и непрерывное обучение -->
-                <div class="trend-card">
-                    <div class="trend-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                    <h3 class="trend-title">Навыки будущего и обучение</h3>
-                    <p>Период полураспада IT-навыков сократится до 5 лет. Без системного обучения команды не смогут внедрять новые технологии.</p>
-                    <ul class="trend-list">
-                        <li>Микрообучение и дельта‑обучение</li>
-                        <li>Сертификация внутренних тренеров (TWI)</li>
-                        <li>Академия SCM как корпоративный центр компетенций</li>
-                    </ul>
-                    <div style="margin-top: 16px; background: rgba(30,64,175,0.05); padding: 12px; border-radius: 12px;">
-                        <i class="fas fa-graduation-cap"></i> <strong>Решение:</strong> Готовая система обучения на базе TWI, программы повышения квалификации.
-                    </div>
-                </div>
+        <!-- НОВЫЙ БЛОК: ГЛОБАЛЬНЫЕ ТРЕНДЫ SCM 2026-2030 (ДЕТАЛЬНО) -->
+        <h2 class="section-title fade-up">🌍 Глобальные тренды SCM 2026–2030</h2>
+        <div class="trends-grid">
+            <!-- Тренд 1: Agentic AI -->
+            <div class="trend-card fade-up" data-trend="agentic-ai">
+                <div class="trend-icon"><i class="fas fa-robot"></i></div>
+                <h3 class="trend-title">Агентный ИИ (Agentic AI)</h3>
+                <p>Искусственный интеллект переходит от аналитики к автономным действиям. К 2030 году 60% компаний, использующих SCM-software, внедрят агентный ИИ (Gartner). Рынок AI-решений для SCM вырастет до $620 млрд (CAGR 46%).</p>
+                <div class="trend-stats">📊 Прогноз: $620 млрд к 2030 году</div>
+                <ul class="trend-list">
+                    <li>Автономное перепланирование поставок при сбоях</li>
+                    <li>Самостоятельная перенастройка складских зон (WMS)</li>
+                    <li>RPA-боты для интеграции 1С, TMS, ERP</li>
+                    <li>Снижение ручного труда на 70%</li>
+                </ul>
+                <div class="trend-stats" style="background: rgba(30,64,175,0.1);">🎓 Как подготовить команду: курсы Академии SCM по Agentic AI, RPA и автономным системам. Обучение на реальных кейсах.</div>
+                <a href="contact.html" class="btn-outline">Запросить внедрение →</a>
             </div>
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="contact.html" class="cta-button">Обсудить внедрение трендов и обучение команды →</a>
+            <!-- Тренд 2: Регионализация -->
+            <div class="trend-card fade-up" data-trend="regionalization">
+                <div class="trend-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <h3 class="trend-title">Регионализация цепей поставок</h3>
+                <p>Почти 60% руководителей прогнозируют переход к локализованным цепочкам к 2030 году (опросы). Геополитика, тарифы и волатильность заставляют пересматривать глобальную оптимизацию в пользу устойчивости.</p>
+                <div class="trend-stats">📊 55% компаний уже диверсифицируют поставщиков</div>
+                <ul class="trend-list">
+                    <li>Near-shoring и локальные склады</li>
+                    <li>Устойчивость (Resilience) как ключевой KPI</li>
+                    <li>Снижение зависимости от глобальных сбоев</li>
+                </ul>
+                <div class="trend-stats" style="background: rgba(30,64,175,0.1);">🎓 Обучение: курсы по проектированию устойчивых цепей поставок, управлению региональными рисками, переговорам с локальными поставщиками.</div>
+                <a href="contact.html" class="btn-outline">Обсудить стратегию регионализации →</a>
+            </div>
+            <!-- Тренд 3: Цифровые двойники и SCM 4.0 -->
+            <div class="trend-card fade-up" data-trend="digital-twins">
+                <div class="trend-icon"><i class="fas fa-cubes"></i></div>
+                <h3 class="trend-title">Цифровые двойники и SCM 4.0</h3>
+                <p>Рынок Logistics 4.0 вырастет с $33,7 млрд (2024) до $74,3 млрд к 2030 году (CAGR 14,1%). Цифровые двойники позволяют моделировать всю цепочку поставок и прогнозировать сбои.</p>
+                <div class="trend-stats">📊 Рост рынка Logistics 4.0: +14% ежегодно</div>
+                <ul class="trend-list">
+                    <li>Виртуальные копии складов и транспорта</li>
+                    <li>Предиктивная аналитика и тестирование сценариев</li>
+                    <li>Киберустойчивость логистических систем</li>
+                </ul>
+                <div class="trend-stats" style="background: rgba(30,64,175,0.1);">🎓 Обучение: практикумы по созданию цифровых двойников, работа с симуляторами, кибербезопасность в SCM.</div>
+                <a href="contact.html" class="btn-outline">Узнать о внедрении →</a>
+            </div>
+            <!-- Тренд 4: Компетенции будущего и обучение -->
+            <div class="trend-card fade-up" data-trend="skills">
+                <div class="trend-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                <h3 class="trend-title">Навыки будущего и непрерывное обучение</h3>
+                <p>Период полураспада IT-навыков сократится с 8–12 лет до менее 5 лет к 2030 году (Gartner). Без системного обучения команды не смогут внедрять новые технологии.</p>
+                <div class="trend-stats">📊 94% сотрудников готовы переучиваться, но лишь 40% компаний имеют план обучения</div>
+                <ul class="trend-list">
+                    <li>Микрообучение и дельта‑обучение при изменениях</li>
+                    <li>Сертификация внутренних тренеров (TWI)</li>
+                    <li>Академия SCM как корпоративный центр компетенций</li>
+                    <li>Оценка ROI обучения (модель Киркпатрика)</li>
+                </ul>
+                <div class="trend-stats" style="background: rgba(30,64,175,0.1);">🎓 Решение: готовая система обучения на базе TWI, программы повышения квалификации, оценка ROI.</div>
+                <a href="contact.html" class="btn-outline">Заказать аудит системы обучения →</a>
             </div>
         </div>
 
-        <!-- БЛОК НОВОСТЕЙ -->
-        <h2 class="section-title fade-up">📰 Последние новости индустрии</h2>
-        <div id="newsGrid" class="news-grid fade-up">
-            <div class="news-card">Загрузка новостей...</div>
+        <!-- Существующий блок новостей -->
+        <h2 class="section-title fade-up">📰 Последние новости SCM</h2>
+        <div id="newsGrid" class="news-grid">
+            <div class="news-card news-loading">Загрузка новостей...</div>
+        </div>
+        <div style="text-align: center; margin: 20px 0 40px;">
+            <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="cta-button" style="background: var(--accent); color: white;">Подписаться на Telegram-канал с ежедневными новостями</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="faq-block">
+            <h2 class="section-title">Часто задаваемые вопросы</h2>
+            <div class="faq-item">
+                <div class="faq-question">Что такое Agentic AI и как он изменит SCM?</div>
+                <div class="faq-answer">Агентный ИИ — это системы, способные самостоятельно принимать операционные решения (перепланирование, перенастройка складов, автономные закупки). К 2030 году 60% компаний внедрят такие решения, что сократит ручной труд на 70% и повысит скорость реакции на сбои.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Почему регионализация цепей поставок становится приоритетом?</div>
+                <div class="faq-answer">Геополитические риски, тарифные войны и сбои в глобальной логистике заставляют компании диверсифицировать поставщиков и создавать локальные хабы. Это повышает устойчивость, хотя и может увеличивать затраты в краткосрочной перспективе.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Что такое цифровой двойник в SCM и какие результаты он даёт?</div>
+                <div class="faq-answer">Цифровой двойник — это виртуальная копия всей цепи поставок (склады, транспорт, заказы). Позволяет моделировать сценарии, прогнозировать сбои и тестировать изменения без риска. Компании сокращают время реакции на сбои на 30–50%.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Как подготовить команду к трендам 2026–2030?</div>
+                <div class="faq-answer">Необходима система непрерывного обучения: микрообучение при изменениях, сертификация внутренних тренеров (TWI), программы по Agentic AI и цифровым двойникам. Академия SCM предлагает готовые модули и аудит существующей системы обучения.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="cta-section fade-up">
+            <h2>Хотите быть на шаг впереди?</h2>
+            <p>Помогу вашему бизнесу адаптироваться к трендам: внедрение Agentic AI, перестройка цепей поставок, цифровые двойники и обучение команд. Обсудим ваш проект.</p>
+            <a href="contact.html" class="cta-button" id="trendsCtaBtn">Обсудить стратегию →</a>
         </div>
     </div>
 
@@ -568,9 +613,30 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
-                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li></ul></div>
-                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
-                <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button><p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер</p></div>
+                <div class="footer-column">
+                    <h3>Навигация</h3>
+                    <ul>
+                        <li><a href="about.html">Обо мне</a></li>
+                        <li><a href="expertise.html">Экспертиза</a></li>
+                        <li><a href="experience.html">Опыт</a></li>
+                        <li><a href="index.html">Стратегия</a></li>
+                        <li><a href="trends.html">Новости SCM</a></li>
+                        <li><a href="contact.html">Контакты</a></li>
+                        <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
+                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Приложение</h3>
+                    <button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button>
+                    <p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер</p>
+                </div>
                 <div class="footer-column">
                     <h3>Присоединяйтесь</h3>
                     <ul>
@@ -600,35 +666,26 @@
         </div>
     </div>
 
+    <script src="js/subscribe.js"></script>
     <script>
-        // Загрузка новостей из data/news.json
+        // Загрузка новостей (аналогично исходному trends.html)
         async function loadNews() {
             const container = document.getElementById('newsGrid');
             if (!container) return;
-            container.innerHTML = '<div class="news-card">Загрузка новостей...</div>';
+            container.innerHTML = '<div class="news-card news-loading">Загрузка новостей...</div>';
             try {
                 const response = await fetch('data/news.json?_=' + Date.now());
                 if (!response.ok) throw new Error();
                 const news = await response.json();
-                if (news.length === 0) {
-                    container.innerHTML = '<div class="news-card">Новостей пока нет.</div>';
-                    return;
-                }
-                function formatDate(d) {
-                    return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-                }
-                function escapeHtml(s) {
-                    return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
-                }
-                container.innerHTML = news.map(item => `
+                if (news.length === 0) { container.innerHTML = '<div class="news-card">Новостей пока нет.</div>'; return; }
+                function formatDate(d) { return d.toLocaleDateString('ru-RU', { day:'numeric', month:'long', year:'numeric' }); }
+                function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+                container.innerHTML = news.map(n => `
                     <div class="news-card">
-                        <div class="news-date">
-                            <span>${formatDate(new Date(item.pubDate))}</span>
-                            <span class="news-source">${escapeHtml(item.source)}</span>
-                        </div>
-                        <h3 class="news-title">${escapeHtml(item.title)}</h3>
-                        <p class="news-excerpt">${escapeHtml(item.description)}</p>
-                        <a href="${item.link}" target="_blank" class="news-link" data-news-link="${escapeHtml(item.link)}">Читать на источнике →</a>
+                        <div class="news-date"><span>${formatDate(new Date(n.pubDate))}</span><span class="news-source">${escapeHtml(n.source)}</span></div>
+                        <h3 class="news-title">${escapeHtml(n.title)}</h3>
+                        <p class="news-excerpt">${escapeHtml(n.description)}</p>
+                        <a href="${n.link}" target="_blank" class="news-link" data-news-link="${escapeHtml(n.link)}">Читать на источнике →</a>
                     </div>
                 `).join('');
                 document.querySelectorAll('.news-link').forEach(link => {
@@ -637,14 +694,30 @@
                         gtag('event', 'news_link_click', { event_category: 'news', event_label: link.getAttribute('data-news-link') });
                     });
                 });
-            } catch (e) {
-                console.error(e);
-                container.innerHTML = '<div class="news-card">Не удалось загрузить новости. Попробуйте позже.</div>';
-            }
+            } catch(e) { container.innerHTML = '<div class="news-card">Не удалось загрузить новости.</div>'; }
         }
         loadNews();
 
-        // Обработчики для навигации и аналитики
+        // Обработчики кликов по карточкам трендов
+        document.querySelectorAll('.trend-card[data-trend]').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Не срабатывает при клике на кнопку или ссылку внутри карточки
+                if (e.target.closest('.btn-outline') || e.target.closest('a')) return;
+                const trend = card.getAttribute('data-trend');
+                ym(108401876, 'reachGoal', 'trend_card_click_' + trend);
+                gtag('event', 'trend_card_click', { event_category: 'trends', event_label: trend });
+            });
+        });
+
+        const trendsCtaBtn = document.getElementById('trendsCtaBtn');
+        if (trendsCtaBtn) {
+            trendsCtaBtn.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'trends_cta_click');
+                gtag('event', 'trends_cta_click', { event_category: 'engagement', event_label: 'trends_cta' });
+            });
+        }
+
+        // Остальные стандартные скрипты (навигация, тема, прогресс, чат и т.д.)
         document.querySelectorAll('#nav-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -707,6 +780,17 @@
             mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
             document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const questions = document.querySelectorAll('.faq-question');
+            questions.forEach(q => {
+                q.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const answer = this.nextElementSibling;
+                    answer.classList.toggle('show');
+                });
+            });
+        });
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
