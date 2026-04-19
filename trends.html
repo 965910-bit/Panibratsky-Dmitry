@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Новости и тренды SCM – аналитика, прогнозы, события | Дмитрий Панибратский</title>
-    <meta name="description" content="Актуальные новости управления цепями поставок и аналитика ключевых трендов SCM 2026-2030: Agentic AI, регионализация, цифровые двойники, компетенции будущего. Прогнозы и исследования.">
+    <title>инновации, бережливо, эффективно, выбрать, систему: Новости логистики и SCM April 2026 | Тренды управления цепями поставок</title>
+    <meta name="description" content="Актуальные новости логистики, транспорта, склада и цифровой трансформации. инновации, бережливо, эффективно, выбрать, систему, практическое, рынок, маркетплейсов, растет, журнал. Ежедневное обновление. Аналитика трендов SCM 2026-2030.">
     <meta name="yandex-verification" content="108fc8ce05da4c6d" />
     <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
     <link rel="canonical" href="https://scm-news.ru/trends.html" />
@@ -24,6 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Google tag (gtag.js) - GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
@@ -46,8 +47,57 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
+    <!-- Микроразметка FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Откуда берутся новости на сайте?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Автоматический сбор из открытых RSS-лент, sitemap и Google Alerts по ключевым словам (логистика, SCM, цифровая трансформация). Новости обновляются каждые 5 минут."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как искать новости по тегам?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Нажмите на любой тег в «Облаке тегов» — лента отфильтруется. Также можно использовать поиск по заголовку и описанию. Фильтр сохраняется при перезагрузке страницы."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Можно ли поделиться новостью в соцсетях?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Да, под каждой новостью есть кнопки «Поделиться» в Telegram, VK и Twitter. При клике открывается готовое окно для отправки."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как часто обновляется лента?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Новости загружаются автоматически каждые 5 минут. Также есть ручное обновление — просто перезагрузите страницу."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Как подписаться на уведомления о новых новостях?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Используйте форму подписки в футере сайта. Вы будете получать дайджест самых важных новостей SCM на указанный email."
+          }
+        }
+      ]
+    }
+    </script>
+
     <style>
-        /* все стили без изменений (аналогично expertise.html и index.html) */
         * {
             margin: 0;
             padding: 0;
@@ -55,15 +105,15 @@
         }
         :root {
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --text-primary: #0f172a;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
+            --bg-secondary: #f9fafb;
+            --text-primary: #1f2937;
+            --text-secondary: #374151;
+            --text-muted: #6b7280;
             --border: #e2e8f0;
-            --accent: #1e40af;
+            --accent: #0077ff;
             --accent-light: #3b82f6;
             --gold: #d4af37;
-            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.05);
             --transition: all 0.3s ease;
         }
         body.dark {
@@ -73,24 +123,28 @@
             --text-secondary: #cbd5e1;
             --text-muted: #94a3b8;
             --border: #334155;
-            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
+            background: var(--bg-secondary);
             color: var(--text-primary);
             line-height: 1.5;
             transition: background 0.3s, color 0.3s;
             font-size: 16px;
+            padding: 20px;
         }
         .container {
-            max-width: 1280px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 24px;
+            background: var(--bg-primary);
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
         }
         @media (max-width: 768px) {
-            .container { padding: 0 20px; }
-            body { font-size: 15px; }
+            body { padding: 12px; }
+            .container { padding: 1rem; }
         }
         .progress-container {
             position: fixed;
@@ -134,7 +188,7 @@
             position: fixed;
             bottom: 30px;
             left: 30px;
-            background: var(--bg-secondary);
+            background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: 40px;
             padding: 8px 16px;
@@ -152,7 +206,7 @@
         }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
         .breadcrumb {
-            padding: 100px 0 20px;
+            padding: 0 0 20px;
             font-size: 14px;
             color: var(--text-muted);
         }
@@ -163,15 +217,18 @@
             border-bottom: 1px solid var(--border);
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
             z-index: 1000;
         }
         body.dark header { background-color: rgba(15,23,42,0.95); }
         .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 0;
+            padding: 16px 20px;
         }
         .logo {
             font-size: 20px;
@@ -202,6 +259,7 @@
             color: var(--text-primary);
         }
         @media (max-width: 768px) {
+            .nav-container { padding: 12px 16px; }
             nav ul {
                 display: none;
                 position: absolute;
@@ -270,51 +328,40 @@
             .chat-widget { bottom: 80px; right: 20px; }
             .chat-box { width: 260px; }
         }
-        .page-header {
-            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
-            padding: 120px 0 40px;
-            text-align: center;
-        }
-        .page-header h1 {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 20px;
-        }
-        .page-header p {
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        .section-title {
-            font-size: 32px;
+        h1 {
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
-        .card {
-            background: var(--bg-primary);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
-            margin-bottom: 30px;
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        /* Стили для блока трендов */
+        .trends-section {
+            margin: 2rem 0 2rem;
         }
         .trends-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 30px 0;
         }
         .trend-card {
             background: var(--bg-primary);
             border-radius: 20px;
             padding: 24px;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             border: 1px solid var(--border);
-            transition: transform 0.2s;
-            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         .trend-card:hover {
             transform: translateY(-4px);
+            box-shadow: 0 12px 20px -10px rgba(0,0,0,0.15);
         }
         .trend-icon {
             font-size: 36px;
@@ -327,83 +374,276 @@
             margin-bottom: 12px;
             color: var(--accent);
         }
-        .trend-stat {
-            background: var(--bg-secondary);
+        .trend-description {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .trend-stats {
+            background: rgba(0,119,255,0.05);
             border-left: 3px solid var(--gold);
             padding: 12px;
             margin: 16px 0;
-            font-size: 14px;
+            font-size: 0.9rem;
+            border-radius: 8px;
         }
-        .timeline-svg {
-            margin: 30px 0;
-            text-align: center;
+        .trend-stats strong {
+            color: var(--accent);
         }
-        .timeline-svg svg {
-            max-width: 100%;
-            height: auto;
+        .trend-learning {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
+        .trend-learning i {
+            color: var(--gold);
+            margin-right: 6px;
         }
-        .news-card {
+        .trend-button {
+            display: inline-block;
+            margin-top: 16px;
+            background: var(--accent);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+        .trend-button:hover {
+            background: var(--gold);
+            color: #0f172a;
+        }
+        /* Остальные стили из оригинала */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .search-bar button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .search-bar button:hover { background: var(--gold); }
+        .chart-container, .tagcloud-container, .sources-container {
             background: var(--bg-primary);
             border-radius: 20px;
-            padding: 24px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
             box-shadow: var(--card-shadow);
             border: 1px solid var(--border);
-            transition: transform 0.2s;
         }
-        .news-card:hover {
-            transform: translateY(-4px);
+        .tagcloud {
+            text-align: center;
+            line-height: 2.2;
+            margin: 1rem 0;
         }
-        .news-date {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 12px;
+        .tagcloud span {
+            cursor: pointer;
+            transition: 0.1s;
+            display: inline-block;
+            margin: 0 6px;
+            color: var(--text-secondary);
+        }
+        .tagcloud span:hover { color: var(--accent); transform: scale(1.05); }
+        .filter-bar {
+            margin: 1rem 0;
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .active-filter {
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .clear-filter {
+            background: var(--border);
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+        .news-item {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            transition: box-shadow 0.2s;
+        }
+        .news-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .news-title a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .news-title a:hover { color: var(--accent); text-decoration: underline; }
+        .news-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .news-source {
+            background: rgba(30,64,175,0.1);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent);
+        }
+        .news-description {
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+        .news-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.5rem 0;
+        }
+        .tag {
+            background: rgba(30,64,175,0.1);
+            color: var(--accent);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .news-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            padding-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .share-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .share-btn:hover { color: var(--accent); }
+        .like-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 10px;
+        }
+        .like-btn.liked { color: #e74c3c; }
+        .like-btn:hover { color: #e74c3c; }
+        .status-badge {
+            display: inline-block;
             background: var(--border);
             padding: 2px 8px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--accent);
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
-        .news-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        .news-excerpt {
-            color: var(--text-secondary);
+        .auto-update-info {
+            background: var(--bg-secondary);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
             margin-bottom: 20px;
         }
-        .news-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+        .sources-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
         }
-        .cta-button {
-            display: inline-block;
-            background: var(--gold);
-            color: #0f172a;
-            padding: 12px 30px;
-            border-radius: 40px;
+        .source-item {
+            text-align: center;
+            min-width: 80px;
+            cursor: pointer;
+        }
+        .source-count {
+            font-size: 1.4rem;
             font-weight: 700;
-            text-decoration: none;
-            transition: 0.2s;
+            color: var(--accent);
         }
-        .cta-button:hover {
-            background: #c19b2c;
-            transform: translateY(-2px);
+        .source-name {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .pagination button {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-primary);
+        }
+        .pagination button:hover:not(:disabled) {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         footer {
             background: #0f172a;
@@ -460,12 +700,8 @@
             color: rgba(255,255,255,0.6);
             font-size: 13px;
         }
-        @media (max-width: 768px) {
-            .page-header h1 { font-size: 32px; }
-            .trends-grid, .news-grid { grid-template-columns: 1fr; }
-        }
         .faq-block {
-            margin: 60px 0 40px;
+            margin: 40px 0 20px;
             padding: 20px;
             background: var(--bg-secondary);
             border-radius: 24px;
@@ -503,12 +739,17 @@
         .faq-answer.show {
             display: block;
         }
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
     <header>
-        <div class="container nav-container">
+        <div class="nav-container">
             <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
             <button class="mobile-menu-btn" aria-label="Меню"><i class="fas fa-bars"></i></button>
             <nav>
@@ -525,175 +766,140 @@
         </div>
     </header>
 
-    <div class="container">
+    <div style="padding-top: 80px;"></div>
+
+    <div class="container fade-up">
         <div class="breadcrumb">
-            <a href="index.html">Главная</a> / <span>Новости и тренды SCM</span>
+            <a href="index.html">Главная</a> / <span>Новости SCM</span>
         </div>
-    </div>
 
-    <div class="page-header fade-up">
-        <div class="container">
-            <h1>Глобальные тренды и новости SCM</h1>
-            <p>Аналитика ключевых изменений в управлении цепями поставок на 2026–2030 годы, прогнозы исследований и актуальные события отрасли.</p>
-        </div>
-    </div>
+        <h1>📰 Лента логистических новостей</h1>
+        <div class="subtitle">Автоматический сбор новостей по логистике, управлению цепями поставок и цифровизации. Обновление каждые 5 минут.</div>
 
-    <div class="container">
-        <!-- Блок аналитики трендов -->
-        <h2 class="section-title fade-up">Ключевые тренды SCM 2026–2030</h2>
-        <div class="trends-grid">
-            <!-- Тренд 1: Agentic AI -->
-            <div class="trend-card fade-up" data-trend="agentic-ai">
-                <div class="trend-icon"><i class="fas fa-robot"></i></div>
-                <h3 class="trend-title">Агентный ИИ (Agentic AI)</h3>
-                <p>Искусственный интеллект переходит от роли советника к автономному агенту, способному самостоятельно принимать операционные решения в цепочке поставок.</p>
-                <div class="trend-stat">
-                    <strong>Прогноз Gartner:</strong> к 2030 году 60% компаний, использующих SCM-software, внедрят функции агентного ИИ (в 2025 году — лишь 5%).
+        <!-- НОВЫЙ БЛОК: Глобальные тренды SCM 2026–2030 -->
+        <div class="trends-section">
+            <h2 class="section-title">🌍 Глобальные тренды SCM 2026–2030</h2>
+            <p class="subtitle" style="border-bottom: none; margin-bottom: 0;">Ключевые технологические и стратегические сдвиги, которые меняют логистику и управление цепями поставок. И главное — как подготовить команду через обучение и внутреннюю Академию.</p>
+            <div class="trends-grid">
+                <!-- Тренд 1: Agentic AI -->
+                <div class="trend-card">
+                    <div class="trend-icon"><i class="fas fa-robot"></i></div>
+                    <h3 class="trend-title">Агентный ИИ (Agentic AI)</h3>
+                    <div class="trend-description">
+                        К 2030 году 60% компаний внедрят автономные SCM-системы. Искусственный интеллект переходит от аналитики к самостоятельному принятию решений: перепланирование поставок, перенастройка складов, автоматическое перераспределение ресурсов.
+                    </div>
+                    <div class="trend-stats">
+                        📈 <strong>Прогноз Gartner:</strong> рынок AI-решений для SCM вырастет со $100 млрд (2026) до $620 млрд (2030).
+                    </div>
+                    <div class="trend-learning">
+                        <i class="fas fa-graduation-cap"></i> <strong>Обучение в Академии SCM:</strong> курсы по Agentic AI, RPA, автономным системам для руководителей и ИТ-специалистов. Практические кейсы внедрения.
+                    </div>
+                    <a href="contact.html" class="trend-button">Записаться на курс →</a>
                 </div>
-                <ul style="margin: 16px 0 0 20px;">
-                    <li>Автономное перепланирование поставок при сбоях</li>
-                    <li>Самостоятельная перенастройка складских зон (WMS)</li>
-                    <li>RPA-боты для интеграции 1С, TMS, ERP без участия человека</li>
-                    <li>Экономия до 70% времени на рутинных операциях</li>
-                </ul>
-                <div style="margin-top: 20px; background: var(--bg-secondary); padding: 12px; border-radius: 12px;">
-                    <i class="fas fa-graduation-cap"></i> <strong>Как подготовить команду:</strong> Академия SCM предлагает курсы по Agentic AI и RPA для руководителей и ИТ-специалистов.
+                <!-- Тренд 2: Регионализация -->
+                <div class="trend-card">
+                    <div class="trend-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3 class="trend-title">Регионализация цепей поставок</h3>
+                    <div class="trend-description">
+                        Почти 60% руководителей прогнозируют переход к локализованным цепочкам к 2030 году. Геополитика, тарифы и волатильность заставляют пересматривать глобальную оптимизацию в пользу устойчивости.
+                    </div>
+                    <div class="trend-stats">
+                        🔄 <strong>Ключевые драйверы:</strong> геополитическая нестабильность (38%), тарифы и торговые барьеры (48%), экономическая волатильность (55%).
+                    </div>
+                    <div class="trend-learning">
+                        <i class="fas fa-graduation-cap"></i> <strong>Обучение в Академии SCM:</strong> курсы по проектированию устойчивых (resilient) цепей поставок, управлению региональными рисками, переговорам с локальными поставщиками.
+                    </div>
+                    <a href="contact.html" class="trend-button">Записаться на курс →</a>
+                </div>
+                <!-- Тренд 3: Цифровые двойники и SCM 4.0 -->
+                <div class="trend-card">
+                    <div class="trend-icon"><i class="fas fa-cubes"></i></div>
+                    <h3 class="trend-title">Цифровые двойники и SCM 4.0</h3>
+                    <div class="trend-description">
+                        Рынок Logistics 4.0 вырастет до $74 млрд к 2030 году. Цифровые двойники позволяют моделировать всю цепочку поставок, прогнозировать сбои и тестировать сценарии без риска.
+                    </div>
+                    <div class="trend-stats">
+                        💡 <strong>Эффект:</strong> снижение простоев до 30%, повышение точности прогнозов на 40%, сокращение страховых запасов.
+                    </div>
+                    <div class="trend-learning">
+                        <i class="fas fa-graduation-cap"></i> <strong>Обучение в Академии SCM:</strong> практикумы по созданию цифровых двойников, работа с симуляторами, кибербезопасность в SCM.
+                    </div>
+                    <a href="contact.html" class="trend-button">Записаться на курс →</a>
+                </div>
+                <!-- Тренд 4: Навыки будущего и непрерывное обучение -->
+                <div class="trend-card">
+                    <div class="trend-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <h3 class="trend-title">Навыки будущего и обучение</h3>
+                    <div class="trend-description">
+                        Период полураспада IT-навыков сократится до 5 лет. Без системного обучения команды не смогут внедрять новые технологии. Обучение — не затраты, а инвестиция в адаптивность.
+                    </div>
+                    <div class="trend-stats">
+                        🧠 <strong>Прогноз Gartner:</strong> к 2030 году 70% навыков, используемых сегодня, станут неактуальны без постоянного обновления.
+                    </div>
+                    <div class="trend-learning">
+                        <i class="fas fa-graduation-cap"></i> <strong>Решение Академии SCM:</strong> готовая система обучения на базе TWI, микрообучение, дельта-обучение при изменениях, оценка ROI. Программы для линейного персонала, руководителей и топ-менеджмента.
+                    </div>
+                    <a href="contact.html" class="trend-button">Подробнее об Академии →</a>
                 </div>
             </div>
-            <!-- Тренд 2: Регионализация -->
-            <div class="trend-card fade-up" data-trend="regionalization">
-                <div class="trend-icon"><i class="fas fa-map-marked-alt"></i></div>
-                <h3 class="trend-title">Регионализация цепей поставок</h3>
-                <p>Глобальная оптимизация уступает место устойчивости и локализации. Компании перестраивают сети поставок, снижая зависимость от межконтинентальных маршрутов.</p>
-                <div class="trend-stat">
-                    <strong>Опрос руководителей:</strong> почти 6 из 10 прогнозируют переход к более локализованным цепям поставок к 2030 году.
-                </div>
-                <ul style="margin: 16px 0 0 20px;">
-                    <li>Диверсификация поставщиков (near-shoring)</li>
-                    <li>Устойчивость (Resilience) как ключевой KPI</li>
-                    <li>Сокращение времени доставки и углеродного следа</li>
-                </ul>
-                <div style="margin-top: 20px; background: var(--bg-secondary); padding: 12px; border-radius: 12px;">
-                    <i class="fas fa-graduation-cap"></i> <strong>Обучение:</strong> Курс «Устойчивые цепи поставок: проектирование и управление рисками» в Академии SCM.
-                </div>
-            </div>
-            <!-- Тренд 3: Цифровые двойники и SCM 4.0 -->
-            <div class="trend-card fade-up" data-trend="digital-twins">
-                <div class="trend-icon"><i class="fas fa-cubes"></i></div>
-                <h3 class="trend-title">Цифровые двойники и SCM 4.0</h3>
-                <p>Виртуальные копии складов, транспорта и всей логистической сети позволяют моделировать сценарии, прогнозировать сбои и оптимизировать операции без риска.</p>
-                <div class="trend-stat">
-                    <strong>Рынок Logistics 4.0:</strong> вырастет с $33,7 млрд в 2024 году до $74,3 млрд к 2030 году (CAGR 14,1%).
-                </div>
-                <ul style="margin: 16px 0 0 20px;">
-                    <li>Предиктивная аналитика и оптимизация маршрутов</li>
-                    <li>Тестирование сценариев «что если» без остановки операций</li>
-                    <li>Киберустойчивость логистических систем</li>
-                </ul>
-                <div style="margin-top: 20px; background: var(--bg-secondary); padding: 12px; border-radius: 12px;">
-                    <i class="fas fa-graduation-cap"></i> <strong>Практикум:</strong> В Академии SCM — мастер-классы по созданию цифровых двойников и работе с симуляторами.
-                </div>
-            </div>
-            <!-- Тренд 4: Компетенции и обучение -->
-            <div class="trend-card fade-up" data-trend="skills">
-                <div class="trend-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                <h3 class="trend-title">Компетенции будущего</h3>
-                <p>Период полураспада навыков сокращается до 5 лет. Без системного обучения команды не успевают за технологиями. Инвестиции в обучение становятся главным фактором конкурентоспособности.</p>
-                <div class="trend-stat">
-                    <strong>Gartner:</strong> к 2030 году период полураспада IT-навыков сократится с 8–12 лет до менее 5 лет.
-                </div>
-                <ul style="margin: 16px 0 0 20px;">
-                    <li>Микрообучение и дельта‑обучение при изменениях</li>
-                    <li>Сертификация внутренних тренеров по TWI</li>
-                    <li>Академия SCM как корпоративный центр компетенций</li>
-                </ul>
-                <div style="margin-top: 20px; background: var(--bg-secondary); padding: 12px; border-radius: 12px;">
-                    <i class="fas fa-graduation-cap"></i> <strong>Решение:</strong> Готовая система обучения на базе TWI, программы повышения квалификации, оценка ROI обучения.
-                </div>
+            <div style="text-align: center; margin: 20px 0 30px;">
+                <a href="contact.html" class="trend-button" style="background: var(--gold); color: #0f172a; font-size: 1rem; padding: 12px 28px;">Обсудить внедрение трендов и обучение команды →</a>
             </div>
         </div>
 
-        <!-- Интерактивный таймлайн эволюции SCM (простая SVG-схема) -->
-        <div class="card fade-up">
-            <h3 style="margin-bottom: 16px;">📈 Эволюция SCM: от 1.0 к 4.0 и прогноз до 2030</h3>
-            <div class="timeline-svg">
-                <svg width="100%" height="auto" viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; background: transparent;">
-                    <rect x="10" y="20" width="180" height="50" rx="8" fill="#1e40af" stroke="#d4af37" stroke-width="1.5"/>
-                    <text x="100" y="50" fill="white" text-anchor="middle" font-size="12" font-weight="bold">SCM 1.0</text>
-                    <text x="100" y="65" fill="white" text-anchor="middle" font-size="10">Локальная оптимизация</text>
-                    <line x1="190" y1="45" x2="210" y2="45" stroke="#d4af37" stroke-width="2" marker-end="url(#arrow)"/>
-                    
-                    <rect x="210" y="20" width="180" height="50" rx="8" fill="#1e40af" stroke="#d4af37" stroke-width="1.5"/>
-                    <text x="300" y="50" fill="white" text-anchor="middle" font-size="12" font-weight="bold">SCM 2.0</text>
-                    <text x="300" y="65" fill="white" text-anchor="middle" font-size="10">Интеграция ERP</text>
-                    <line x1="390" y1="45" x2="410" y2="45" stroke="#d4af37" stroke-width="2" marker-end="url(#arrow)"/>
-                    
-                    <rect x="410" y="20" width="180" height="50" rx="8" fill="#1e40af" stroke="#d4af37" stroke-width="1.5"/>
-                    <text x="500" y="50" fill="white" text-anchor="middle" font-size="12" font-weight="bold">SCM 3.0</text>
-                    <text x="500" y="65" fill="white" text-anchor="middle" font-size="10">Облачные платформы</text>
-                    <line x1="590" y1="45" x2="610" y2="45" stroke="#d4af37" stroke-width="2" marker-end="url(#arrow)"/>
-                    
-                    <rect x="610" y="20" width="180" height="50" rx="8" fill="#2e7d32" stroke="#d4af37" stroke-width="1.5"/>
-                    <text x="700" y="50" fill="white" text-anchor="middle" font-size="12" font-weight="bold">SCM 4.0</text>
-                    <text x="700" y="65" fill="white" text-anchor="middle" font-size="10">Цифровые двойники, AI</text>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Поиск по заголовку или описанию...">
+            <button id="searchBtn"><i class="fas fa-search"></i> Найти</button>
+        </div>
 
-                    <line x1="100" y1="75" x2="100" y2="100" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
-                    <text x="100" y="115" fill="#64748b" text-anchor="middle" font-size="10">1990–2000</text>
-                    
-                    <line x1="300" y1="75" x2="300" y2="100" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
-                    <text x="300" y="115" fill="#64748b" text-anchor="middle" font-size="10">2000–2015</text>
-                    
-                    <line x1="500" y1="75" x2="500" y2="100" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
-                    <text x="500" y="115" fill="#64748b" text-anchor="middle" font-size="10">2015–2025</text>
-                    
-                    <line x1="700" y1="75" x2="700" y2="100" stroke="#d4af37" stroke-width="2"/>
-                    <text x="700" y="115" fill="#d4af37" text-anchor="middle" font-size="10" font-weight="bold">2026–2030</text>
+        <div class="auto-update-info">
+            <i class="fas fa-sync-alt"></i> Новости обновляются автоматически каждые 5 минут <span id="update-timer" class="status-badge">⏳ загрузка...</span>
+        </div>
 
-                    <defs>
-                        <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-                            <polygon points="0 0, 8 3, 0 6" fill="#d4af37" />
-                        </marker>
-                    </defs>
-                </svg>
+        <div class="chart-container">
+            <canvas id="newsChart" width="800" height="400"></canvas>
+        </div>
+
+        <div class="sources-container">
+            <h3>🏆 Топ-5 источников</h3>
+            <div id="sources-list" class="sources-list"></div>
+        </div>
+
+        <div class="tagcloud-container">
+            <h3>🏷️ Облако тегов (нажмите для фильтрации)</h3>
+            <div id="tagcloud" class="tagcloud"></div>
+            <div class="filter-bar" id="filter-bar" style="display: none;">
+                <span class="active-filter" id="active-tag"></span>
+                <button id="clear-filter" class="clear-filter">Сбросить фильтр</button>
             </div>
-            <p style="margin-top: 20px; color: var(--text-muted);">К 2030 году SCM 4.0 станет стандартом: полностью цифровые, автономные и устойчивые цепи поставок.</p>
         </div>
 
-        <!-- Блок актуальных новостей -->
-        <h2 class="section-title fade-up">🌍 Последние новости SCM</h2>
-        <div id="trendsNewsGrid" class="news-grid">
-            <div class="news-card">Загрузка новостей...</div>
-        </div>
-        <div style="text-align: center; margin: 20px 0 40px;">
-            <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="cta-button" style="background: var(--accent); color: white;">Подписаться на Telegram-дайджест</a>
-        </div>
-
-        <!-- CTA -->
-        <div class="card fade-up" style="text-align: center; background: var(--accent); color: white; border: none;">
-            <h3 style="color: white;">Хотите быть на шаг впереди?</h3>
-            <p style="margin: 15px 0;">Обсудим, как адаптировать вашу цепь поставок к трендам 2026–2030 и выстроить систему обучения команды.</p>
-            <a href="contact.html" class="cta-button" style="background: var(--gold); color: #0f172a; margin-top: 10px;">Заказать консультацию</a>
-        </div>
+        <div id="news-list"></div>
+        <div id="pagination" class="pagination"></div>
     </div>
 
     <div class="container">
         <div class="faq-block">
-            <h2 class="section-title">Часто задаваемые вопросы о трендах SCM</h2>
+            <h2 class="section-title">Часто задаваемые вопросы</h2>
             <div class="faq-item">
-                <div class="faq-question">Что такое агентный ИИ и чем он отличается от обычного ИИ в SCM?</div>
-                <div class="faq-answer">Обычный ИИ анализирует данные и даёт рекомендации человеку. Агентный ИИ самостоятельно принимает операционные решения (например, переназначает поставки при сбое, перестраивает зоны хранения на складе) и только в исключительных случаях привлекает человека. По прогнозам Gartner, к 2030 году 60% компаний внедрят такие системы.</div>
+                <div class="faq-question">Откуда берутся новости на сайте?</div>
+                <div class="faq-answer">Автоматический сбор из открытых RSS-лент, sitemap и Google Alerts по ключевым словам (логистика, SCM, цифровая трансформация). Новости обновляются каждые 5 минут.</div>
             </div>
             <div class="faq-item">
-                <div class="faq-question">Почему регионализация становится приоритетом?</div>
-                <div class="faq-answer">Геополитические риски, тарифы и сбои в глобальной логистике заставляют компании пересматривать глобальную оптимизацию. Локализация поставок (near-shoring) повышает устойчивость, сокращает время доставки и снижает зависимость от одного региона. К 2030 году большинство крупных игроков будут иметь региональные производственные и складские хабы.</div>
+                <div class="faq-question">Как искать новости по тегам?</div>
+                <div class="faq-answer">Нажмите на любой тег в «Облаке тегов» — лента отфильтруется. Также можно использовать поиск по заголовку и описанию. Фильтр сохраняется при перезагрузке страницы.</div>
             </div>
             <div class="faq-item">
-                <div class="faq-question">Как цифровые двойники помогают в SCM?</div>
-                <div class="faq-answer">Цифровой двойник — это виртуальная копия склада, транспортной сети или всей цепи поставок. Вы можете протестировать любой сценарий (например, «что, если поставщик задержит сырьё на 2 недели?») без риска для реальной операции. Это позволяет принимать более взвешенные решения и снижать потери.</div>
+                <div class="faq-question">Можно ли поделиться новостью в соцсетях?</div>
+                <div class="faq-answer">Да, под каждой новостью есть кнопки «Поделиться» в Telegram, VK и Twitter. При клике открывается готовое окно для отправки.</div>
             </div>
             <div class="faq-item">
-                <div class="faq-question">Как подготовить команду к новым трендам?</div>
-                <div class="faq-answer">Необходима системная программа обучения: от базовых курсов по Agentic AI и цифровым двойникам до практикумов по управлению устойчивыми цепями поставок. В Академии SCM мы предлагаем модульные программы с микрообучением, сертификацией тренеров и оценкой ROI. Обучение должно быть непрерывным — только так компания успевает за технологиями.</div>
+                <div class="faq-question">Как часто обновляется лента?</div>
+                <div class="faq-answer">Новости загружаются автоматически каждые 5 минут. Также есть ручное обновление — просто перезагрузите страницу.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Как подписаться на уведомления о новых новостях?</div>
+                <div class="faq-answer">Используйте форму подписки в футере сайта. Вы будете получать дайджест самых важных новостей SCM на указанный email.</div>
             </div>
         </div>
     </div>
@@ -736,48 +942,318 @@
 
     <script src="js/subscribe.js"></script>
     <script>
-        // Загрузка новостей из data/news.json (как на главной)
-        async function loadTrendsNews() {
-            const container = document.getElementById('trendsNewsGrid');
-            if (!container) return;
-            container.innerHTML = '<div class="news-card">Загрузка новостей...</div>';
+        let allNews = [];
+        let filteredNews = [];
+        let currentPage = 1;
+        const perPage = 10;
+        let currentTagFilter = localStorage.getItem('tagFilter') || null;
+        let currentSearch = '';
+        let chartInstance = null;
+        let updateInterval = null;
+
+        async function loadNews() {
             try {
                 const response = await fetch('data/news.json?_=' + Date.now());
-                if (!response.ok) throw new Error();
-                const allNews = await response.json();
-                // можно показать больше новостей, чем на главной
-                const latest = allNews.slice(0, 9);
-                if (latest.length === 0) { container.innerHTML = '<div class="news-card">Новостей пока нет.</div>'; return; }
-                function formatDate(d) { return d.toLocaleDateString('ru-RU', { day:'numeric', month:'long', year:'numeric' }); }
-                function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
-                container.innerHTML = latest.map(n => `
-                    <div class="news-card">
-                        <div class="news-date"><span>${formatDate(new Date(n.pubDate))}</span><span class="news-source">${escapeHtml(n.source)}</span></div>
-                        <h3 class="news-title">${escapeHtml(n.title)}</h3>
-                        <p class="news-excerpt">${escapeHtml(n.description)}</p>
-                        <a href="${n.link}" target="_blank" class="news-link trends-news-link" data-news-link="${escapeHtml(n.link)}">Читать на источнике →</a>
-                    </div>
-                `).join('');
-                document.querySelectorAll('.trends-news-link').forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        ym(108401876, 'reachGoal', 'trends_news_link_click');
-                        gtag('event', 'trends_news_link_click', { event_category: 'news', event_label: link.getAttribute('data-news-link') });
-                    });
-                });
-            } catch(e) { container.innerHTML = '<div class="news-card">Не удалось загрузить новости.</div>'; }
+                if (!response.ok) throw new Error('Network error');
+                const data = await response.json();
+                allNews = data;
+                applyFilters();
+            } catch (error) {
+                console.error('Ошибка загрузки новостей:', error);
+                document.getElementById('news-list').innerHTML = '<p>Не удалось загрузить новости. Попробуйте позже.</p>';
+            }
         }
-        loadTrendsNews();
 
-        // Обработчики кликов по карточкам трендов
-        document.querySelectorAll('.trend-card[data-trend]').forEach(card => {
-            card.addEventListener('click', () => {
-                const trend = card.getAttribute('data-trend');
-                ym(108401876, 'reachGoal', 'trend_card_click_' + trend);
-                gtag('event', 'trend_card_click', { event_category: 'trends', event_label: trend });
+        function applyFilters() {
+            let result = [...allNews];
+            if (currentTagFilter) {
+                result = result.filter(item => item.tags && item.tags.some(tag => tag.toLowerCase() === currentTagFilter.toLowerCase()));
+            }
+            if (currentSearch) {
+                const searchLower = currentSearch.toLowerCase();
+                result = result.filter(item =>
+                    item.title.toLowerCase().includes(searchLower) ||
+                    (item.description && item.description.toLowerCase().includes(searchLower))
+                );
+            }
+            filteredNews = result;
+            currentPage = 1;
+            renderNews();
+            buildChart(filteredNews);
+            buildTagCloud(filteredNews);
+            buildSourcesRank(filteredNews);
+        }
+
+        function renderNews() {
+            const container = document.getElementById('news-list');
+            const start = (currentPage - 1) * perPage;
+            const end = start + perPage;
+            const pageNews = filteredNews.slice(start, end);
+            if (!pageNews.length) {
+                container.innerHTML = '<p>Новостей по выбранному фильтру не найдено.</p>';
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+            container.innerHTML = pageNews.map(item => {
+                if (item.dead) return '';
+                const tagsHtml = item.tags && item.tags.length
+                    ? `<div class="news-tags">${item.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>`
+                    : '';
+                const likes = localStorage.getItem(`like_${item.link}`) || '0';
+                const isLiked = localStorage.getItem(`liked_${item.link}`) === 'true';
+                return `
+                    <div class="news-item" data-link="${escapeHtml(item.link)}" data-title="${escapeHtml(item.title)}">
+                        <div class="news-title"><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener" class="news-title-link">${escapeHtml(item.title)}</a></div>
+                        <div class="news-meta">
+                            <span class="news-source">${escapeHtml(item.source)}</span>
+                            <span>📅 ${new Date(item.pubDate).toLocaleString('ru-RU')}</span>
+                        </div>
+                        <div class="news-description">${escapeHtml(item.description)}</div>
+                        ${tagsHtml}
+                        <div class="news-footer">
+                            <span>Категория: ${escapeHtml(item.category || 'логистика')}</span>
+                            <div style="display: flex; align-items: center;">
+                                <div class="share-buttons">
+                                    <button class="share-btn" data-share="tg" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-telegram"></i> Поделиться</button>
+                                    <button class="share-btn" data-share="vk" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-vk"></i> VK</button>
+                                    <button class="share-btn" data-share="tw" data-url="${item.link}" data-title="${item.title}"><i class="fab fa-twitter"></i> X</button>
+                                </div>
+                                <button class="like-btn ${isLiked ? 'liked' : ''}" data-link="${item.link}"><i class="fas fa-heart"></i> <span class="like-count">${likes}</span></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.news-title-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const href = link.getAttribute('href');
+                    ym(108401876, 'reachGoal', 'news_click_read_more');
+                    gtag('event', 'news_click_read_more', { event_category: 'news', event_label: href });
+                });
             });
+            document.querySelectorAll('.share-btn').forEach(btn => {
+                btn.removeEventListener('click', shareHandler);
+                btn.addEventListener('click', shareHandler);
+            });
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.removeEventListener('click', likeHandler);
+                btn.addEventListener('click', likeHandler);
+            });
+            renderPagination();
+        }
+
+        function shareHandler(e) {
+            e.preventDefault();
+            const btn = e.currentTarget;
+            const url = btn.getAttribute('data-url');
+            const title = btn.getAttribute('data-title');
+            const shareType = btn.getAttribute('data-share');
+            let shareUrl = '';
+            if (shareType === 'tg') {
+                shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+                ym(108401876, 'reachGoal', 'share_tg');
+                gtag('event', 'share', { event_category: 'engagement', event_label: 'telegram' });
+            } else if (shareType === 'vk') {
+                shareUrl = `https://vk.com/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+                ym(108401876, 'reachGoal', 'share_vk');
+                gtag('event', 'share', { event_category: 'engagement', event_label: 'vk' });
+            } else if (shareType === 'tw') {
+                shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+                ym(108401876, 'reachGoal', 'share_tw');
+                gtag('event', 'share', { event_category: 'engagement', event_label: 'twitter' });
+            }
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=500');
+            }
+        }
+
+        function likeHandler(e) {
+            e.stopPropagation();
+            const btn = e.currentTarget;
+            const link = btn.getAttribute('data-link');
+            let count = parseInt(localStorage.getItem(`like_${link}`) || '0');
+            const wasLiked = localStorage.getItem(`liked_${link}`) === 'true';
+            if (wasLiked) {
+                count--;
+                localStorage.setItem(`liked_${link}`, 'false');
+            } else {
+                count++;
+                localStorage.setItem(`liked_${link}`, 'true');
+            }
+            localStorage.setItem(`like_${link}`, count.toString());
+            btn.querySelector('.like-count').textContent = count;
+            if (count > 0) btn.classList.add('liked');
+            else btn.classList.remove('liked');
+            ym(108401876, 'reachGoal', 'news_like');
+            gtag('event', 'news_like', { event_category: 'engagement', event_label: link });
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredNews.length / perPage);
+            const paginationDiv = document.getElementById('pagination');
+            if (totalPages <= 1) {
+                paginationDiv.innerHTML = '';
+                return;
+            }
+            let html = `<button id="prevPage" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Назад</button>`;
+            html += `<span style="margin: 0 15px;">Страница ${currentPage} из ${totalPages}</span>`;
+            html += `<button id="nextPage" ${currentPage === totalPages ? 'disabled' : ''}>Вперед <i class="fas fa-chevron-right"></i></button>`;
+            paginationDiv.innerHTML = html;
+            document.getElementById('prevPage')?.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderNews(); } });
+            document.getElementById('nextPage')?.addEventListener('click', () => { if (currentPage < totalPages) { currentPage++; renderNews(); } });
+        }
+
+        function buildChart(news) {
+            const counts = {};
+            news.forEach(item => {
+                const date = new Date(item.pubDate);
+                if (isNaN(date)) return;
+                const key = date.toISOString().slice(0,10);
+                counts[key] = (counts[key] || 0) + 1;
+            });
+            const today = new Date();
+            const labels = [];
+            const dataPoints = [];
+            for (let i = 29; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(today.getDate() - i);
+                const key = d.toISOString().slice(0,10);
+                labels.push(key.slice(5));
+                dataPoints.push(counts[key] || 0);
+            }
+            const ctx = document.getElementById('newsChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Количество новостей',
+                        data: dataPoints,
+                        borderColor: '#0077ff',
+                        backgroundColor: 'rgba(0, 119, 255, 0.1)',
+                        tension: 0.2,
+                        fill: true,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#0077ff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Динамика публикаций за последние 30 дней' }
+                    }
+                }
+            });
+        }
+
+        function buildTagCloud(news) {
+            const tagCount = {};
+            news.forEach(item => {
+                if (item.tags && Array.isArray(item.tags)) {
+                    item.tags.forEach(tag => {
+                        const normalized = tag.toLowerCase().trim();
+                        if (normalized) tagCount[normalized] = (tagCount[normalized] || 0) + 1;
+                    });
+                }
+            });
+            const container = document.getElementById('tagcloud');
+            if (!container) return;
+            container.innerHTML = '';
+            const sorted = Object.entries(tagCount).sort((a,b) => b[1] - a[1]).slice(0, 50);
+            sorted.forEach(([tag, count]) => {
+                const span = document.createElement('span');
+                span.textContent = tag;
+                const size = 12 + Math.min(24, count * 1.5);
+                span.style.fontSize = size + 'px';
+                span.style.fontWeight = count > 5 ? '600' : '400';
+                span.title = `${count} новостей`;
+                span.onclick = () => { 
+                    currentTagFilter = tag; 
+                    localStorage.setItem('tagFilter', tag); 
+                    applyFilters(); 
+                    document.getElementById('filter-bar').style.display = 'block'; 
+                    document.getElementById('active-tag').textContent = `Фильтр: ${tag}`;
+                    ym(108401876, 'reachGoal', 'tag_click', { tag: tag });
+                    gtag('event', 'tag_click', { event_category: 'news', event_label: tag });
+                };
+                container.appendChild(span);
+            });
+        }
+
+        function buildSourcesRank(news) {
+            const sourceCount = {};
+            news.forEach(item => {
+                const source = item.source;
+                sourceCount[source] = (sourceCount[source] || 0) + 1;
+            });
+            const sorted = Object.entries(sourceCount).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            const container = document.getElementById('sources-list');
+            if (!container) return;
+            container.innerHTML = sorted.map(([name, count]) => `
+                <div class="source-item" data-source="${escapeHtml(name)}">
+                    <div class="source-count">${count}</div>
+                    <div class="source-name">${escapeHtml(name)}</div>
+                </div>
+            `).join('');
+            document.querySelectorAll('.source-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const source = el.getAttribute('data-source');
+                    ym(108401876, 'reachGoal', 'source_click', { source: source });
+                    gtag('event', 'source_click', { event_category: 'news', event_label: source });
+                });
+            });
+            if (sorted.length === 0) container.innerHTML = '<p>Нет данных об источниках.</p>';
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+        }
+
+        async function updateNews() {
+            await loadNews();
+            const timerSpan = document.getElementById('update-timer');
+            if (timerSpan) {
+                const now = new Date();
+                timerSpan.innerHTML = `✅ обновлено в ${now.toLocaleTimeString()}`;
+                setTimeout(() => { if (timerSpan.innerHTML.includes('✅')) timerSpan.innerHTML = '⏳ ожидание обновления...'; }, 3000);
+            }
+        }
+
+        function startAutoUpdate(intervalMinutes = 5) {
+            if (updateInterval) clearInterval(updateInterval);
+            updateInterval = setInterval(updateNews, intervalMinutes * 60 * 1000);
+            updateNews();
+        }
+
+        document.getElementById('clear-filter')?.addEventListener('click', () => {
+            currentTagFilter = null;
+            localStorage.removeItem('tagFilter');
+            document.getElementById('filter-bar').style.display = 'none';
+            applyFilters();
         });
 
-        // Обработчики навигации
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            currentSearch = document.getElementById('searchInput').value.trim();
+            currentTagFilter = null;
+            localStorage.removeItem('tagFilter');
+            document.getElementById('filter-bar').style.display = 'none';
+            applyFilters();
+            if (currentSearch) {
+                ym(108401876, 'reachGoal', 'news_search');
+                gtag('event', 'news_search', { event_category: 'news', event_label: currentSearch });
+            }
+        });
+
+        if (currentTagFilter) {
+            document.getElementById('filter-bar').style.display = 'block';
+            document.getElementById('active-tag').textContent = `Фильтр: ${currentTagFilter}`;
+        }
+
         document.querySelectorAll('#nav-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -795,22 +1271,34 @@
             });
         });
 
-        const footerEmailLink = document.getElementById('footerEmailLink');
-        if (footerEmailLink) {
-            footerEmailLink.addEventListener('click', () => {
-                ym(108401876, 'reachGoal', 'footer_email_click');
-                gtag('event', 'footer_email_click', { event_category: 'footer', event_label: 'email' });
+        const rssFooterLink = document.querySelector('footer a[href="rss.xml"]');
+        if (rssFooterLink) {
+            rssFooterLink.addEventListener('click', () => {
+                ym(108401876, 'reachGoal', 'footer_rss_click');
+                gtag('event', 'footer_rss_click', { event_category: 'footer', event_label: 'rss' });
             });
         }
-        const footerTelegramLink = document.getElementById('footerTelegramLink');
-        if (footerTelegramLink) {
-            footerTelegramLink.addEventListener('click', () => {
-                ym(108401876, 'reachGoal', 'footer_telegram_click');
-                gtag('event', 'footer_telegram_click', { event_category: 'footer', event_label: 'telegram' });
-            });
-        }
+        document.querySelectorAll('.footer-column a').forEach(link => {
+            if (link.closest('.footer-column') && link.href) {
+                link.addEventListener('click', () => {
+                    let label = '';
+                    if (link.href.includes('mailto:')) label = 'email';
+                    else if (link.href.includes('t.me')) label = 'telegram';
+                    else if (link.href.includes('rss.xml')) label = 'rss';
+                    else if (link.href.includes('about.html')) label = 'about';
+                    else if (link.href.includes('expertise.html')) label = 'expertise';
+                    else if (link.href.includes('experience.html')) label = 'experience';
+                    else if (link.href.includes('index.html')) label = 'home';
+                    else if (link.href.includes('trends.html')) label = 'trends';
+                    else if (link.href.includes('contact.html')) label = 'contact';
+                    if (label) {
+                        ym(108401876, 'reachGoal', 'footer_link_click_' + label);
+                        gtag('event', 'footer_link_click', { event_category: 'footer', event_label: label });
+                    }
+                });
+            }
+        });
 
-        // Прогресс-бар, тема, скролл, чат, мобильное меню, FAQ-аккордеон
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -837,6 +1325,10 @@
             mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
             document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
+
+        loadNews();
+        startAutoUpdate(5);
+
         document.addEventListener('DOMContentLoaded', function() {
             const questions = document.querySelectorAll('.faq-question');
             questions.forEach(q => {
