@@ -47,7 +47,6 @@
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
     <style>
-        /* все стили без изменений (как в предыдущей версии career.html) */
         * {
             margin: 0;
             padding: 0;
@@ -300,7 +299,7 @@
         }
         .two-columns {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
         }
         .skills-grid {
@@ -371,6 +370,46 @@
         .resume-link:hover {
             background: var(--accent);
             color: white;
+        }
+        .executive-summary {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--gold);
+            padding: 24px;
+            margin: 30px 0;
+            border-radius: 16px;
+        }
+        .executive-summary p {
+            font-size: 18px;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+        .expectations {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 30px 0;
+            border: 1px solid var(--border);
+        }
+        .expectations h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        .expectations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+        .expect-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+        }
+        .expect-item i {
+            width: 32px;
+            color: var(--gold);
+            font-size: 20px;
         }
         footer {
             background: #0f172a;
@@ -467,6 +506,13 @@
         </div>
     </div>
 
+    <!-- Executive summary (краткое ценностное предложение) -->
+    <div class="container fade-up">
+        <div class="executive-summary">
+            <p><strong>💡 Ценность для бизнеса:</strong> Системный подход к SCM, который снижает операционные ошибки на 30–50%, ускоряет ввод новых сотрудников в 2–3 раза и повышает точность инвентаризации до 99,5%. Готов взять на себя ответственность за построение устойчивых процессов и развитие команды.</p>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Интересующие позиции и отрасли -->
         <div class="card fade-up">
@@ -525,7 +571,19 @@
             </div>
         </div>
 
-        <!-- Методология и обучение -->
+        <!-- НОВЫЙ БЛОК: Мои ожидания от вакансии -->
+        <div class="expectations fade-up">
+            <h3>📋 Мои ожидания от вакансии</h3>
+            <div class="expectations-grid">
+                <div class="expect-item"><i class="fas fa-map-marker-alt"></i> <span>Готов к переезду в <strong>Санкт‑Петербург</strong></span></div>
+                <div class="expect-item"><i class="fas fa-laptop-house"></i> <span><strong>Удалённая работа</strong> возможна</span></div>
+                <div class="expect-item"><i class="fas fa-ruble-sign"></i> <span>Ожидаемый уровень дохода – <strong>от 150 000 ₽ на руки</strong></span></div>
+                <div class="expect-item"><i class="fas fa-plane"></i> <span>Готов к <strong>постоянным командировкам</strong></span></div>
+                <div class="expect-item"><i class="fas fa-boxes"></i> <span>При переезде – <strong>релокационный пакет</strong></span></div>
+            </div>
+        </div>
+
+        <!-- Методология и обучение (расширено до трёх колонок) -->
         <div class="card fade-up">
             <h2 class="section-title">⚙️ Что я предлагаю работодателю</h2>
             <div class="two-columns">
@@ -540,6 +598,10 @@
                     <p>Сертифицированный метод Training Within Industry. Сокращение времени ввода в должность с 3 недель до 10 дней. Готов выстроить корпоративную Академию SCM «с нуля».</p>
                     <h3 style="margin-top: 20px;">Цифровая трансформация и тренды</h3>
                     <p>Внедрение агентного ИИ, цифровых двойников, RPA. Подготовка команд к SCM 4.0.</p>
+                </div>
+                <div>
+                    <h3>Кросс-функциональное лидерство</h3>
+                    <p>Выстраиваю единое информационное поле между логистикой, продажами, маркетингом, финансами и производством. Регулярно собираю обратную связь, провожу мозговые штурмы, готовлю детальную аналитику для руководства. Держу все отделы в курсе статуса изменений. Любая потребность клиента, замеченная продажами, становится драйвером для улучшения логистических процессов.</p>
                 </div>
             </div>
         </div>
