@@ -833,6 +833,74 @@
         .btn-all-news:hover {
             background: var(--gold);
         }
+        /* Стили для визуализации цепи поставок будущего */
+        .future-sc-section {
+            padding: 70px 0;
+            background: var(--bg-primary);
+        }
+        .future-sc-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+        }
+        .future-sc-canvas {
+            flex: 1;
+            min-width: 280px;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+        .future-sc-text {
+            flex: 1;
+            min-width: 280px;
+        }
+        .future-sc-text h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .feature-list li {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .feature-list i {
+            width: 28px;
+            color: var(--gold);
+            font-size: 18px;
+        }
+        /* Стили для блока Telegram-экспертного центра */
+        .telegram-expert {
+            background: linear-gradient(135deg, #1e3a8a, #0f172a);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 40px 0;
+            color: white;
+            text-align: center;
+        }
+        .telegram-expert h3 {
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+        .telegram-expert p {
+            max-width: 700px;
+            margin: 0 auto 20px;
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .telegram-expert .cta-button {
+            background: var(--gold);
+            color: #0f172a;
+            margin-top: 0;
+        }
         footer {
             background: #0f172a;
             color: white;
@@ -911,6 +979,9 @@
             }
             .book-cover {
                 margin: 0 auto;
+            }
+            .future-sc-container {
+                flex-direction: column;
             }
         }
         /* Дополнительные стили для FAQ-аккордеона */
@@ -1007,6 +1078,7 @@
                     <li><a href="trends.html">Новости SCM</a></li>
                     <li><a href="contact.html">Контакты</a></li>
                     <li><a href="career.html">Карьера</a></li>
+                    <li><a href="blog.html">Блог</a></li>
                     <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
                 </ul>
             </nav>
@@ -1025,8 +1097,10 @@
             <li><a href="#executive">Ценность</a></li>
             <li><a href="#philosophy">Философия</a></li>
             <li><a href="#results">Результаты</a></li>
+            <li><a href="#future-sc">Цепь будущего</a></li>
             <li><a href="#methodologies">Методологии</a></li>
             <li><a href="#trends">Тренды 2026-2030</a></li>
+            <li><a href="#telegram">Экспертный канал</a></li>
             <li><a href="#leadership">Лидерство</a></li>
             <li><a href="#academy">Академия</a></li>
             <li><a href="#news">Новости</a></li>
@@ -1059,7 +1133,6 @@
         </div>
     </section>
 
-    <!-- Executive summary (краткое ценностное предложение) -->
     <section id="executive" class="container fade-up">
         <div class="executive-summary">
             <p><strong>💡 Для работодателей:</strong> Я — руководитель, который не просто оптимизирует логистику, а выстраивает системное управление цепями поставок, внедряет стандарты и обучает команды. Снижаю операционные ошибки на 30–50%, сокращаю время ввода в должность с 3 недель до 10 дней, повышаю точность инвентаризации до 99,5%. Готов принести системность, прозрачность и измеримые результаты в вашу компанию.</p>
@@ -1132,6 +1205,59 @@
         </div>
     </section>
 
+    <!-- НОВЫЙ БЛОК: Визуализация "Цепь поставок будущего" -->
+    <section id="future-sc" class="future-sc-section fade-up">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🔮 Цепь поставок будущего: моё видение</h2>
+                <p class="section-subtitle">Интеграция технологий, стандартизации и человеческого капитала для создания устойчивой и адаптивной системы.</p>
+            </div>
+            <div class="future-sc-container">
+                <div class="future-sc-canvas">
+                    <svg width="100%" height="auto" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="background: transparent;">
+                        <defs>
+                            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#1e40af;stop-opacity:0.8" />
+                                <stop offset="100%" style="stop-color:#d4af37;stop-opacity:0.8" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="80" cy="150" r="40" fill="url(#grad)" stroke="#fff" stroke-width="2"/>
+                        <text x="80" y="145" fill="white" text-anchor="middle" font-size="10" font-weight="bold">AI</text>
+                        <text x="80" y="160" fill="white" text-anchor="middle" font-size="8">Агентный ИИ</text>
+                        <circle cx="200" cy="60" r="40" fill="url(#grad)" stroke="#fff" stroke-width="2"/>
+                        <text x="200" y="55" fill="white" text-anchor="middle" font-size="10" font-weight="bold">SOP</text>
+                        <text x="200" y="70" fill="white" text-anchor="middle" font-size="8">Стандарты</text>
+                        <circle cx="320" cy="150" r="40" fill="url(#grad)" stroke="#fff" stroke-width="2"/>
+                        <text x="320" y="145" fill="white" text-anchor="middle" font-size="10" font-weight="bold">TWI</text>
+                        <text x="320" y="160" fill="white" text-anchor="middle" font-size="8">Обучение</text>
+                        <circle cx="200" cy="240" r="40" fill="url(#grad)" stroke="#fff" stroke-width="2"/>
+                        <text x="200" y="235" fill="white" text-anchor="middle" font-size="10" font-weight="bold">Цифр.</text>
+                        <text x="200" y="250" fill="white" text-anchor="middle" font-size="8">двойники</text>
+                        <!-- Связи -->
+                        <line x1="120" y1="150" x2="160" y2="90" stroke="#d4af37" stroke-width="2" stroke-dasharray="4"/>
+                        <line x1="240" y1="80" x2="280" y2="130" stroke="#d4af37" stroke-width="2" stroke-dasharray="4"/>
+                        <line x1="280" y1="170" x2="240" y2="220" stroke="#d4af37" stroke-width="2" stroke-dasharray="4"/>
+                        <line x1="160" y1="220" x2="120" y2="170" stroke="#d4af37" stroke-width="2" stroke-dasharray="4"/>
+                        <line x1="80" y1="190" x2="80" y2="200" stroke="#d4af37" stroke-width="2"/>
+                        <line x1="320" y1="190" x2="320" y2="200" stroke="#d4af37" stroke-width="2"/>
+                        <text x="200" y="20" fill="var(--accent)" text-anchor="middle" font-size="12" font-weight="bold">Устойчивая</text>
+                        <text x="200" y="35" fill="var(--accent)" text-anchor="middle" font-size="12" font-weight="bold">цепь поставок</text>
+                    </svg>
+                </div>
+                <div class="future-sc-text">
+                    <h3>Как это работает</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-microchip"></i> <strong>Агентный ИИ</strong> – автономное управление запасами и маршрутами</li>
+                        <li><i class="fas fa-clipboard-list"></i> <strong>SOP (стандарты)</strong> – прозрачные и версионированные процессы</li>
+                        <li><i class="fas fa-chalkboard-user"></i> <strong>TWI (обучение)</strong> – быстрый ввод и дельта-обучение</li>
+                        <li><i class="fas fa-cubes"></i> <strong>Цифровые двойники</strong> – моделирование и прогнозирование</li>
+                    </ul>
+                    <p style="margin-top: 20px;">Все элементы интегрированы в единую систему, которая адаптируется к изменениям и обеспечивает непрерывное улучшение (kaizen).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="methodologies" class="methodologies-section fade-up">
         <div class="container">
             <div class="section-header">
@@ -1148,7 +1274,6 @@
         </div>
     </section>
 
-    <!-- НОВЫЙ БЛОК: КЛЮЧЕВЫЕ ТРЕНДЫ SCM 2026-2030 -->
     <section id="trends" class="methodologies-section fade-up" style="padding-top: 0;">
         <div class="container">
             <div class="section-header">
@@ -1214,8 +1339,18 @@
                 </div>
             </div>
             <div style="text-align: center; margin-top: 20px;">
-                <a href="career.html" class="cta-button" style="background: var(--accent); color: white;">Пригласить на собеседование</a>
+                <a href="blog.html" class="cta-button" style="background: var(--accent); color: white;">Читать авторский блог о трендах →</a>
             </div>
+        </div>
+    </section>
+
+    <!-- НОВЫЙ БЛОК: Telegram-канал как экспертный центр -->
+    <section id="telegram" class="container fade-up">
+        <div class="telegram-expert">
+            <h3>📲 Мой Telegram-канал – экспертный центр SCM</h3>
+            <p>Ежедневные инсайты, разбор кейсов, ответы на вопросы, анонсы статей и обсуждение трендов. Присоединяйтесь к профессиональному сообществу.</p>
+            <a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="cta-button" style="background: var(--gold); color: #0f172a;">Подписаться →</a>
+            <p style="margin-top: 16px; font-size: 14px; opacity: 0.8;">Более 150 участников уже получают пользу.</p>
         </div>
     </section>
 
@@ -1316,7 +1451,7 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
-                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="career.html">Карьера</a></li><li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li></ul></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="career.html">Карьера</a></li><li><a href="blog.html">Блог</a></li><li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li></ul></div>
                 <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
                 <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button><p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер</p></div>
                 <div class="footer-column">
@@ -1470,6 +1605,7 @@
                 else if (href.includes('trends.html')) page = 'trends';
                 else if (href.includes('contact.html')) page = 'contact';
                 else if (href.includes('career.html')) page = 'career';
+                else if (href.includes('blog.html')) page = 'blog';
                 if (page) {
                     ym(108401876, 'reachGoal', 'nav_click_' + page);
                     gtag('event', 'nav_click', { event_category: 'navigation', event_label: page });
