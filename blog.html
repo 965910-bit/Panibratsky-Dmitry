@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Блог – мой взгляд на тренды SCM | Дмитрий Панибратский</title>
+    <meta name="description" content="Авторские заметки и аналитика по управлению цепями поставок, цифровой трансформации, обучению и трендам SCM.">
+    <meta name="yandex-verification" content="108fc8ce05da4c6d" />
+    <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
+    <link rel="canonical" href="https://scm-news.ru/blog.html" />
+    <link rel="icon" href="1favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SCM News">
+    <link rel="apple-touch-icon" href="icons/ios/icon-180.png" sizes="180x180">
+    <link rel="apple-touch-icon" href="icons/ios/icon-152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="icons/ios/icon-120.png" sizes="120x120">
+    <meta name="msapplication-TileImage" content="icons/windows/LargeTile.scale-100.png">
+    <meta name="msapplication-TileColor" content="#1e40af">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google tag (gtag.js) - GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DM41FJYWX0');
+    </script>
+
+    <!-- Яндекс.Метрика -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108401876', 'ym');
+        ym(108401876, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+    <style>
+        /* Базовые стили (сохранены из предыдущей версии blog.html) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #1e40af;
+            --accent-light: #3b82f6;
+            --gold: #d4af37;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+        }
+        body.dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            transition: background 0.3s, color 0.3s;
+            font-size: 16px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            body { font-size: 15px; }
+        }
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            z-index: 1001;
+        }
+        .progress-bar {
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--accent-light));
+            width: 0%;
+            transition: width 0.1s;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            border: none;
+            font-size: 20px;
+        }
+        .scroll-top.show { opacity: 1; visibility: visible; }
+        .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
+        .theme-switch {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+        }
+        .theme-switch i { font-size: 18px; color: var(--text-primary); }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .breadcrumb {
+            padding: 100px 0 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+        header {
+            background-color: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        body.dark header { background-color: rgba(15,23,42,0.95); }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .logo-dot { color: var(--gold); }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        nav ul li a:hover, nav ul li a.active { color: var(--accent); }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 16px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                flex-direction: column;
+                gap: 12px;
+            }
+            nav ul.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+        }
+        .chat-widget {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .chat-button {
+            width: 55px;
+            height: 55px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .chat-button:hover { transform: scale(1.05); background: var(--gold); }
+        .chat-button i { font-size: 26px; color: white; }
+        .chat-box {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 280px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .chat-box.open { opacity: 1; visibility: visible; }
+        .chat-header { background: var(--accent); color: white; padding: 12px; font-weight: 600; }
+        .chat-body { padding: 12px; font-size: 14px; color: var(--text-secondary); }
+        .chat-quick button {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            margin: 4px;
+        }
+        @media (max-width: 768px) {
+            .chat-widget { bottom: 80px; right: 20px; }
+            .chat-box { width: 260px; }
+        }
+        .page-hero {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            padding: 120px 0 40px;
+            text-align: center;
+        }
+        .page-hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        .page-hero p {
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .blog-card {
+            background: var(--bg-primary);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+        .blog-card:hover {
+            transform: translateY(-4px);
+        }
+        .blog-date {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .blog-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+        .blog-excerpt {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .blog-readmore {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .blog-full {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 40px 0;
+            border: 1px solid var(--border);
+        }
+        .blog-full h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        .blog-full .meta {
+            margin-bottom: 20px;
+            color: var(--text-muted);
+        }
+        .blog-full p {
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        footer {
+            background: #0f172a;
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 35px;
+            height: 3px;
+            background: var(--gold);
+        }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 12px; }
+        .footer-column ul li a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .footer-column ul li a:hover { color: white; padding-left: 5px; }
+        .footer-install-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+        }
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ПАНИБРАТСКИЙ</a>
+            <button class="mobile-menu-btn" aria-label="Меню"><i class="fas fa-bars"></i></button>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="about.html">Обо мне</a></li>
+                    <li><a href="expertise.html">Экспертиза</a></li>
+                    <li><a href="experience.html">Опыт</a></li>
+                    <li><a href="index.html">Стратегия</a></li>
+                    <li><a href="trends.html">Новости SCM</a></li>
+                    <li><a href="contact.html">Контакты</a></li>
+                    <li><a href="career.html">Карьера</a></li>
+                    <li><a href="blog.html" class="active">Блог</a></li>
+                    <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Главная</a> / <span>Блог</span>
+        </div>
+    </div>
+
+    <div class="page-hero fade-up">
+        <div class="container">
+            <h1>📝 Мой взгляд на тренды SCM</h1>
+            <p>Авторские заметки, кейсы и аналитика по управлению цепями поставок, цифровой трансформации, обучению и будущему отрасли.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="blog-grid" id="blog-list"></div>
+        <div id="blog-full-content" style="display: none;"></div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="career.html">Карьера</a></li><li><a href="blog.html">Блог</a></li><li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li></ul></div>
+                <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
+                <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button><p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер.</p></div>
+                <div class="footer-column">
+                    <h3>Присоединяйтесь</h3>
+                    <ul>
+                        <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer"><i class="fas fa-comment-dots"></i> Канал в MAX</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">&copy; 2026 Дмитрий Панибратский.</div>
+        </div>
+    </footer>
+
+    <button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
+    <div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
+
+    <div class="chat-widget">
+        <div class="chat-button" id="chatButton"><i class="fas fa-comment-dots"></i></div>
+        <div class="chat-box" id="chatBox">
+            <div class="chat-header">📬 Чат с экспертом</div>
+            <div class="chat-body">
+                <p>Здравствуйте! Чем могу помочь?</p>
+                <div class="chat-quick">
+                    <button onclick="window.location.href='contact.html'">📝 Оставить заявку</button>
+                    <button onclick="window.open('https://t.me/LogisticaandSupplyChain','_blank')">✈️ Telegram</button>
+                    <button onclick="window.location.href='mailto:dmitry@scm-news.ru'">📧 Написать email</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/subscribe.js"></script>
+    <script>
+        const posts = [
+            {
+                id: "agentic-ai",
+                title: "Агентный ИИ в SCM: от аналитики к автономным решениям",
+                date: "15 апреля 2026",
+                excerpt: "К 2030 году 60% компаний внедрят автономные SCM-системы. Что это значит для руководителей и как подготовить команду? Разбираю прогнозы Gartner и даю практические шаги.",
+                content: `
+                    <p>Искусственный интеллект в управлении цепями поставок переходит из стадии «инструмента аналитики» в стадию «агента, принимающего решения». Согласно прогнозу Gartner, к 2030 году 60% компаний, использующих SCM-software, внедрят функции агентного ИИ, тогда как в 2025 году таких было лишь 5%.</p>
+                    <p>Что это значит на практике? Агентный ИИ способен самостоятельно перепланировать поставки при сбоях, перенастраивать складские зоны, перераспределять ресурсы в реальном времени без участия человека. RPA-боты интегрируют 1С, WMS и TMS, снижая ручной труд на 70%.</p>
+                    <p><strong>Как подготовить команду?</strong> В Академии SCM мы запустили курс по агентному ИИ и автономным системам. Основные компетенции: понимание архитектуры агентных систем, настройка правил автономного управления, кибербезопасность. Обучение построено на реальных кейсах из ритейла и дистрибуции.</p>
+                    <p>Мой совет: не ждите 2030 года. Начните с пилотного проекта на одном из процессов (например, автономное пополнение запасов по триггеру). Результаты не заставят себя ждать.</p>
+                `
+            },
+            {
+                id: "regionalization",
+                title: "Регионализация цепей поставок: почему глобальная оптимизация уходит в прошлое",
+                date: "10 апреля 2026",
+                excerpt: "Геополитика, тарифы и волатильность заставляют пересматривать глобальные цепочки. Рассказываю, как строить устойчивые (resilient) цепи поставок и какие навыки нужны командам.",
+                content: `
+                    <p>Почти 60% руководителей прогнозируют переход к локализованным цепочкам поставок к 2030 году. Основные драйверы: геополитическая нестабильность (38% опрошенных), тарифы и торговые барьеры (48%), экономическая волатильность (55%).</p>
+                    <p>Что это означает для компаний? Привычная модель «just-in-time» и глобальной оптимизации затрат уступает место модели «just-in-case» и устойчивости. Диверсификация поставщиков, near-shoring, локальные склады становятся не просто опцией, а необходимостью.</p>
+                    <p><strong>Как перестроить цепочку?</strong> Первый шаг – аудит текущих рисков: какие поставщики находятся в зонах геополитической нестабильности? Второй – создание региональных хабов. Третий – обучение команды управлению региональными рисками (курсы в Академии SCM).</p>
+                    <p>В нашем кейсе для «Леруа Мерлен» мы провели тендер с учётом не только тарифов, но и надёжности перевозчиков в разных регионах. Результат – снижение транспортных расходов на 10% при повышении устойчивости поставок.</p>
+                `
+            },
+            {
+                id: "learning-trend",
+                title: "Обучение как стратегический приоритет SCM",
+                date: "5 апреля 2026",
+                excerpt: "Период полураспада навыков сокращается до 5 лет. Как построить систему обучения, которая превращает новичков в экспертов за 10 дней и адаптируется к изменениям.",
+                content: `
+                    <p>Период полураспада IT-навыков сократится с 8–12 лет до менее 5 лет к 2030 году (Gartner). В SCM это означает, что команды, которые не обучаются системно, быстро теряют конкурентоспособность.</p>
+                    <p>Мой подход: замкнутый цикл «аудит → SOP → TWI → контроль → дельта-обучение». Разработал 24 стандартные операционные процедуры для склада 4000 м², обучил 79 сотрудников по методу TWI (4 шага: подготовь → покажи → проверь → закрепи). Результат: время ввода в должность сократилось с 3 недель до 10 дней, операционные ошибки снизились на 34%.</p>
+                    <p><strong>Что такое дельта-обучение?</strong> При любом изменении инструкции сотрудник проходит 15-минутное обучение (видео, чек-лист, тест). Это исключает работу по устаревшим стандартам и делает систему устойчивой.</p>
+                    <p>Готов выстроить корпоративную Академию SCM «с нуля» в вашей компании. Обучение – не затраты, а инвестиция с ROI 3:1.</p>
+                `
+            },
+            {
+                id: "twi-implementation",
+                title: "Как внедрить TWI на складе: пошаговый план",
+                date: "20 апреля 2026",
+                excerpt: "Конкретный алгоритм внедрения обучения на рабочем месте, основанный на реальном кейсе: 79 обученных сотрудников, снижение ошибок на 34%, ускорение ввода в 2 раза.",
+                content: `
+                    <p>Training Within Industry (TWI) – это не просто метод обучения, а целая философия стандартизации и передачи знаний. В нашем проекте для склада 4000 м² мы внедрили TWI за 4 месяца. Вот пошаговый план, который можно адаптировать под любую операционную среду.</p>
+                    <p><strong>Шаг 1. Отбор внутренних тренеров.</strong> Из 79 сотрудников выбрали 6 самых опытных кладовщиков. Критерии: стаж, отсутствие ошибок, умение объяснять. Провели для них 3-дневный интенсив по методике JIT (Job Instruction Training).</p>
+                    <p><strong>Шаг 2. Разработка SOP.</strong> Перед обучением мы стандартизировали 24 процесса (приёмка, размещение, сборка, отгрузка, инвентаризация). Каждая SOP состоит из основных этапов и ключевых моментов – так легче учить.</p>
+                    <p><strong>Шаг 3. Обучение по 4-шаговому методу.</strong> Подготовь → Покажи → Проверь → Закрепи. Каждый сотрудник проходил обучение на рабочем месте, без отрыва от производства. Общее время – 2 часа на человека в течение недели.</p>
+                    <p><strong>Шаг 4. Сертификация и контроль.</strong> После обучения – практический экзамен. Если сотрудник допускает ошибку, тренер возвращается к шагу «Покажи». Сертификат действителен 6 месяцев, затем – повторная проверка.</p>
+                    <p><strong>Результаты:</strong> снижение операционных ошибок на 34%, сокращение времени ввода нового сотрудника с 3 недель до 10 дней, повышение точности инвентаризации до 99,5%. Готов рассказать, как внедрить TWI в вашей компании.</p>
+                `
+            },
+            {
+                id: "delta-learning",
+                title: "Дельта-обучение: как мы обновляем инструкции без остановки производства",
+                date: "18 апреля 2026",
+                excerpt: "При любом изменении SOP сотрудник проходит 15-минутное обучение. Рассказываю, как настроить систему микрообучения и забыть о работе по устаревшим стандартам.",
+                content: `
+                    <p>В динамичной среде инструкции устаревают быстро. Новая версия WMS, изменение маршрутов доставки, новый формат отгрузки – каждое изменение требует донесения до персонала. Дельта-обучение решает эту проблему.</p>
+                    <p><strong>Что такое дельта-обучение?</strong> Это микрообучение, которое занимает не более 15 минут на человека. Состоит из трёх частей: короткое видео (1–2 минуты, «было – стало»), чек-лист изменённого шага, тест из 2–3 вопросов.</p>
+                    <p><strong>Как мы внедрили:</strong> Создали базу знаний на внутреннем портале. При изменении SOP автоматически генерируется уведомление в Telegram и email. Сотрудник смотрит видео, заполняет чек-лист и отвечает на тест. Результат фиксируется в LMS.</p>
+                    <p><strong>Почему это работает:</strong> Сотрудники не перегружены, обучение интегрировано в рабочий день. После дельты – обязательное наблюдение наставника при первом применении нового стандарта. Ошибки исключены.</p>
+                    <p>За год мы провели 12 дельта-обучений. Ни одного случая работы по устаревшей инструкции. Готов внедрить эту систему в вашей компании.</p>
+                `
+            },
+            {
+                id: "tender-case",
+                title: "Как я провёл тендер на доставку для 150 магазинов: методология и результаты",
+                date: "12 апреля 2026",
+                excerpt: "Анализ тарифов, сезонности, весов грузов, взаимодействие с финансовой дирекцией. Результат – снижение транспортных расходов на 10% без потери качества.",
+                content: `
+                    <p>В 2022 году перед нами стояла задача: выбрать транспортного партнёра для 150 магазинов сети. Я организовал полный цикл тендера, который длился 3 месяца.</p>
+                    <p><strong>Шаг 1. Сбор и анализ данных.</strong> Я выгрузил все заказы за 3 года – более 500 000 строк. Разбил их по сезонам (пик в декабре, спад в январе), направлениям (город / межгород), районам внутри города (центр vs окраины) и весовым характеристикам груза (до 5 кг, 5–20 кг, более 20 кг).</p>
+                    <p><strong>Шаг 2. Расчёт средней тарифной ставки.</strong> По каждому магазину вывел среднюю стоимость доставки у текущих перевозчиков. Затем определил целевую ставку – на 12% ниже текущей.</p>
+                    <p><strong>Шаг 3. Взаимодействие с финансами.</strong> Совместно с финдирекцией и бухгалтерией мы учли налоговую базу, маржу, маржинальность и SLA (уровень сервиса). Для каждого претендента рассчитали не только тариф, но и полную стоимость с учётом штрафов за опоздания и премий за качество.</p>
+                    <p><strong>Шаг 4. Проведение тендера.</strong> Пригласили 5 перевозчиков. Каждый получил детальные спецификации: прогнозные объёмы по сезонам, географии, весам. После двух раундов выбрали партнёра, который предложил тариф на 10% ниже целевого.</p>
+                    <p><strong>Результат:</strong> снижение транспортных расходов на 10% при сохранении качества (96% своевременных доставок). Опыт лёг в основу нашей системы управления тендерами.</p>
+                `
+            },
+            {
+                id: "why-projects-fail",
+                title: "Почему 70% SCM-проектов проваливаются из-за отсутствия стандартизации",
+                date: "8 апреля 2026",
+                excerpt: "Типичные ошибки: нет SOP, слабое обучение, отсутствие версионности. Как моя методология решает эти проблемы и гарантирует устойчивый результат.",
+                content: `
+                    <p>Исследования показывают, что до 70% проектов по оптимизации цепей поставок не достигают заявленных целей. Основная причина – не технологическая, а управленческая: отсутствие системной стандартизации и обучения.</p>
+                    <p><strong>Ошибка №1. Нет единых SOP.</strong> Каждый сотрудник работает «как привык». Результат – разнобой, ошибки, невозможность масштабировать успех.</p>
+                    <p><strong>Ошибка №2. Обучение «на лету».</strong> Новичкам показывают «как делать» один раз, и они запоминают с ошибками. Время ввода в должность – 3–4 недели, а то и больше.</p>
+                    <p><strong>Ошибка №3. Инструкции не обновляются.</strong> Изменился процесс – сотрудники продолжают работать по-старому. Контроля соблюдения нет.</p>
+                    <p><strong>Как я решаю эти проблемы:</strong> Внедряю замкнутый цикл «аудит → SOP → TWI → контроль → дельта-обучение». SOP версионируются, обучение проходит по 4-шаговому методу, дельта-обучение при каждом изменении. Аудиты соблюдения – еженедельно.</p>
+                    <p>Результат: ошибки снижаются на 34%, время ввода – с 3 недель до 10 дней, точность инвентаризации – 99,5%. Готов провести аудит ваших процессов и предложить дорожную карту исправления.</p>
+                `
+            }
+        ];
+
+        function renderBlogList() {
+            const container = document.getElementById('blog-list');
+            if (!container) return;
+            container.innerHTML = posts.map(post => `
+                <div class="blog-card" data-id="${post.id}">
+                    <div class="blog-date">${post.date}</div>
+                    <h2 class="blog-title">${post.title}</h2>
+                    <p class="blog-excerpt">${post.excerpt}</p>
+                    <a href="#" class="blog-readmore" data-id="${post.id}">Читать полностью →</a>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.blog-readmore').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const id = link.getAttribute('data-id');
+                    const post = posts.find(p => p.id === id);
+                    if (post) {
+                        const fullContentDiv = document.getElementById('blog-full-content');
+                        fullContentDiv.innerHTML = `
+                            <div class="blog-full">
+                                <h2>${post.title}</h2>
+                                <div class="meta">${post.date}</div>
+                                ${post.content}
+                                <a href="#" class="back-link" id="back-to-list">← Назад к списку статей</a>
+                            </div>
+                        `;
+                        document.getElementById('blog-list').style.display = 'none';
+                        fullContentDiv.style.display = 'block';
+                        document.getElementById('back-to-list').addEventListener('click', (e) => {
+                            e.preventDefault();
+                            document.getElementById('blog-list').style.display = 'grid';
+                            fullContentDiv.style.display = 'none';
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        });
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        ym(108401876, 'reachGoal', 'blog_readmore_' + id);
+                        gtag('event', 'blog_readmore', { event_category: 'blog', event_label: id });
+                    }
+                });
+            });
+        }
+
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                let page = '';
+                if (href.includes('about.html')) page = 'about';
+                else if (href.includes('expertise.html')) page = 'expertise';
+                else if (href.includes('experience.html')) page = 'experience';
+                else if (href.includes('index.html')) page = 'home';
+                else if (href.includes('trends.html')) page = 'trends';
+                else if (href.includes('contact.html')) page = 'contact';
+                else if (href.includes('career.html')) page = 'career';
+                else if (href.includes('blog.html')) page = 'blog';
+                if (page) {
+                    ym(108401876, 'reachGoal', 'nav_click_' + page);
+                    gtag('event', 'nav_click', { event_category: 'navigation', event_label: page });
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
+            if (window.scrollY > 300) document.getElementById('scrollTopBtn').classList.add('show');
+            else document.getElementById('scrollTopBtn').classList.remove('show');
+        });
+        document.getElementById('scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        const themeSwitch = document.getElementById('themeSwitch');
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
+        const chatButton = document.getElementById('chatButton');
+        const chatBox = document.getElementById('chatBox');
+        chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        if (mobileBtn && navMenu) {
+            mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
+            document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
+        }
+
+        renderBlogList();
+    </script>
+    <script src="js/register-sw.js"></script>
+    <script src="js/install-prompt.js"></script>
+</body>
+</html>
