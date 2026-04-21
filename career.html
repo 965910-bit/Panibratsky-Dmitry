@@ -47,7 +47,7 @@
     <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
     <style>
-        /* Базовые стили (сохранены из предыдущей версии) */
+        /* все стили без изменений (как в предыдущей версии career.html) */
         * {
             margin: 0;
             padding: 0;
@@ -412,96 +412,6 @@
             color: var(--gold);
             font-size: 20px;
         }
-        /* Стили для калькулятора */
-        .calculator-block {
-            background: var(--bg-secondary);
-            border-radius: 24px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid var(--border);
-        }
-        .calc-field {
-            margin-bottom: 20px;
-        }
-        .calc-field label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .calc-field input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 16px;
-        }
-        .calc-result {
-            background: var(--bg-primary);
-            border-radius: 16px;
-            padding: 20px;
-            margin-top: 20px;
-            border-left: 4px solid var(--gold);
-        }
-        .calc-result p {
-            margin: 8px 0;
-        }
-        .calc-result .big-number {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--accent);
-        }
-        /* Стили для дорожной карты */
-        .roadmap {
-            margin: 40px 0;
-            position: relative;
-            padding-left: 30px;
-        }
-        .roadmap::before {
-            content: '';
-            position: absolute;
-            left: 15px;
-            top: 20px;
-            bottom: 20px;
-            width: 2px;
-            background: var(--gold);
-        }
-        .roadmap-item {
-            position: relative;
-            margin-bottom: 40px;
-            padding-left: 30px;
-        }
-        .roadmap-item::before {
-            content: '';
-            position: absolute;
-            left: -15px;
-            top: 5px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--gold);
-            border: 3px solid var(--bg-primary);
-            z-index: 2;
-        }
-        .roadmap-date {
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 8px;
-        }
-        .roadmap-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .roadmap-desc {
-            color: var(--text-secondary);
-        }
-        @media (max-width: 768px) {
-            .roadmap { padding-left: 20px; }
-            .roadmap-item { padding-left: 20px; }
-            .roadmap-item::before { left: -10px; }
-        }
         footer {
             background: #0f172a;
             color: white;
@@ -578,6 +488,7 @@
                     <li><a href="trends.html">Новости SCM</a></li>
                     <li><a href="contact.html">Контакты</a></li>
                     <li><a href="career.html" class="active">Карьера</a></li>
+                    <li><a href="blog.html">Блог</a></li>
                     <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
                 </ul>
             </nav>
@@ -597,7 +508,7 @@
         </div>
     </div>
 
-    <!-- Executive summary (краткое ценностное предложение) -->
+    <!-- Executive summary -->
     <div class="container fade-up">
         <div class="executive-summary">
             <p><strong>💡 Ценность для бизнеса:</strong> Системный подход к SCM, который снижает операционные ошибки на 30–50%, ускоряет ввод новых сотрудников в 2–3 раза и повышает точность инвентаризации до 99,5%. Готов взять на себя ответственность за построение устойчивых процессов и развитие команды.</p>
@@ -605,7 +516,7 @@
     </div>
 
     <div class="container">
-        <!-- Интересующие позиции и отрасли (без изменений) -->
+        <!-- Интересующие позиции и отрасли -->
         <div class="card fade-up">
             <h2 class="section-title">🎯 Целевые позиции</h2>
             <div class="two-columns">
@@ -662,7 +573,7 @@
             </div>
         </div>
 
-        <!-- НОВЫЙ БЛОК: Мои ожидания от вакансии (без изменений) -->
+        <!-- Блок: Мои ожидания от вакансии -->
         <div class="expectations fade-up">
             <h3>📋 Мои ожидания от вакансии</h3>
             <div class="expectations-grid">
@@ -675,63 +586,70 @@
             </div>
         </div>
 
-        <!-- НОВЫЙ БЛОК: Калькулятор потерь -->
-        <div class="calculator-block fade-up">
+        <!-- Калькулятор потерь -->
+        <div class="calculator-block fade-up" style="background: var(--bg-secondary); border-radius: 24px; padding: 30px; margin: 30px 0; border: 1px solid var(--border);">
             <h3>💰 Калькулятор: сколько вы теряете без моей методологии?</h3>
             <p>Оцените текущие потери от операционных ошибок и узнайте, какую экономию принесёт внедрение системы стандартизации и обучения (SOP + TWI).</p>
-            <div class="calc-field">
+            <div class="calc-field" style="margin-bottom: 20px;">
                 <label>Количество операционных сотрудников (чел.)</label>
-                <input type="number" id="employees" placeholder="например, 50" value="50">
+                <input type="number" id="employees" placeholder="например, 50" value="50" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px;">
             </div>
-            <div class="calc-field">
+            <div class="calc-field" style="margin-bottom: 20px;">
                 <label>Средняя зарплата одного сотрудника (₽/мес)</label>
-                <input type="number" id="salary" placeholder="например, 50000" value="50000">
+                <input type="number" id="salary" placeholder="например, 50000" value="50000" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px;">
             </div>
-            <div class="calc-field">
+            <div class="calc-field" style="margin-bottom: 20px;">
                 <label>Текущий уровень операционных ошибок (%)</label>
-                <input type="number" id="errorRate" placeholder="например, 8" value="8" step="0.5">
+                <input type="number" id="errorRate" placeholder="например, 8" value="8" step="0.5" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px;">
             </div>
             <button id="calcLossBtn" style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer;">Рассчитать потери и экономию</button>
-            <div id="lossResult" class="calc-result" style="display: none;"></div>
+            <div id="lossResult" class="calc-result" style="display: none; background: var(--bg-primary); border-radius: 16px; padding: 20px; margin-top: 20px; border-left: 4px solid var(--gold);"></div>
             <div class="calc-result" style="margin-top: 15px; background: rgba(212,175,55,0.1);">
                 <p><strong>⚙️ Методология, заложенная в расчёт:</strong> снижение ошибок на <strong>34%</strong>, сокращение времени ввода в должность с 3 недель до 10 дней, повышение точности инвентаризации до 99,5% (на основе реальных кейсов).</p>
             </div>
         </div>
 
-        <!-- НОВЫЙ БЛОК: Дорожная карта внедрения изменений -->
+        <!-- Дорожная карта -->
         <div class="card fade-up">
             <h2 class="section-title">🗺️ Дорожная карта внедрения изменений</h2>
             <p class="section-subtitle" style="margin-bottom: 30px;">Чёткий план трансформации вашей цепи поставок – от аудита до устойчивой системы.</p>
-            <div class="roadmap">
-                <div class="roadmap-item">
-                    <div class="roadmap-date">Месяц 1</div>
-                    <div class="roadmap-title">Аудит и картирование процессов</div>
-                    <div class="roadmap-desc">Глубокий анализ текущих операций, выявление узких мест и потерь. Построение карты потока создания ценности (Value Stream Mapping).</div>
+            <div class="roadmap" style="margin: 40px 0; position: relative; padding-left: 30px;">
+                <div style="position: absolute; left: 15px; top: 20px; bottom: 20px; width: 2px; background: var(--gold);"></div>
+                <div style="position: relative; margin-bottom: 40px; padding-left: 30px;">
+                    <div style="position: absolute; left: -15px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); border: 3px solid var(--bg-primary);"></div>
+                    <div style="font-weight: 700; color: var(--accent); margin-bottom: 8px;">Месяц 1</div>
+                    <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Аудит и картирование процессов</div>
+                    <div style="color: var(--text-secondary);">Глубокий анализ текущих операций, выявление узких мест и потерь. Построение карты потока создания ценности (Value Stream Mapping).</div>
                 </div>
-                <div class="roadmap-item">
-                    <div class="roadmap-date">Месяц 2</div>
-                    <div class="roadmap-title">Разработка SOP (стандартных операционных процедур)</div>
-                    <div class="roadmap-desc">Создание 24 детальных инструкций для всех складских операций (приёмка, размещение, сборка, отгрузка, инвентаризация). Внедрение системы версионности и контроля.</div>
+                <div style="position: relative; margin-bottom: 40px; padding-left: 30px;">
+                    <div style="position: absolute; left: -15px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); border: 3px solid var(--bg-primary);"></div>
+                    <div style="font-weight: 700; color: var(--accent); margin-bottom: 8px;">Месяц 2</div>
+                    <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Разработка SOP (стандартных операционных процедур)</div>
+                    <div style="color: var(--text-secondary);">Создание 24 детальных инструкций для всех складских операций (приёмка, размещение, сборка, отгрузка, инвентаризация). Внедрение системы версионности и контроля.</div>
                 </div>
-                <div class="roadmap-item">
-                    <div class="roadmap-date">Месяц 3</div>
-                    <div class="roadmap-title">Обучение персонала по TWI и сертификация тренеров</div>
-                    <div class="roadmap-desc">Обучение всех сотрудников по 4-шаговому методу JIT (подготовь → покажи → проверь → закрепи). Сертификация внутренних тренеров из числа опытных кладовщиков.</div>
+                <div style="position: relative; margin-bottom: 40px; padding-left: 30px;">
+                    <div style="position: absolute; left: -15px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); border: 3px solid var(--bg-primary);"></div>
+                    <div style="font-weight: 700; color: var(--accent); margin-bottom: 8px;">Месяц 3</div>
+                    <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Обучение персонала по TWI и сертификация тренеров</div>
+                    <div style="color: var(--text-secondary);">Обучение всех сотрудников по 4-шаговому методу JIT (подготовь → покажи → проверь → закрепи). Сертификация внутренних тренеров из числа опытных кладовщиков.</div>
                 </div>
-                <div class="roadmap-item">
-                    <div class="roadmap-date">Месяц 4</div>
-                    <div class="roadmap-title">Пилотное внедрение и контроль соблюдения</div>
-                    <div class="roadmap-desc">Запуск новых стандартов на пилотном участке, еженедельные аудиты, сбор обратной связи, итеративная доработка.</div>
+                <div style="position: relative; margin-bottom: 40px; padding-left: 30px;">
+                    <div style="position: absolute; left: -15px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); border: 3px solid var(--bg-primary);"></div>
+                    <div style="font-weight: 700; color: var(--accent); margin-bottom: 8px;">Месяц 4</div>
+                    <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Пилотное внедрение и контроль соблюдения</div>
+                    <div style="color: var(--text-secondary);">Запуск новых стандартов на пилотном участке, еженедельные аудиты, сбор обратной связи, итеративная доработка.</div>
                 </div>
-                <div class="roadmap-item">
-                    <div class="roadmap-date">Месяц 5–6</div>
-                    <div class="roadmap-title">Масштабирование и дельта-обучение</div>
-                    <div class="roadmap-desc">Распространение успешных практик на все подразделения. Внедрение системы микрообучения при любых изменениях инструкций (видео, чек-листы, тесты).</div>
+                <div style="position: relative; margin-bottom: 40px; padding-left: 30px;">
+                    <div style="position: absolute; left: -15px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); border: 3px solid var(--bg-primary);"></div>
+                    <div style="font-weight: 700; color: var(--accent); margin-bottom: 8px;">Месяц 5–6</div>
+                    <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Масштабирование и дельта-обучение</div>
+                    <div style="color: var(--text-secondary);">Распространение успешных практик на все подразделения. Внедрение системы микрообучения при любых изменениях инструкций (видео, чек-листы, тесты).</div>
                 </div>
-                <div class="roadmap-item">
-                    <div class="roadmap-date">Результат</div>
-                    <div class="roadmap-title">Устойчивая операционная система</div>
-                    <div class="roadmap-desc">✅ Снижение операционных ошибок на 34%<br>✅ Сокращение времени ввода нового сотрудника с 3 недель до 10 дней<br>✅ Точность инвентаризации 99,5%<br>✅ Культура непрерывного улучшения (kaizen)</div>
+                <div style="position: relative; margin-bottom: 40px; padding-left: 30px;">
+                    <div style="position: absolute; left: -15px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); border: 3px solid var(--bg-primary);"></div>
+                    <div style="font-weight: 700; color: var(--accent); margin-bottom: 8px;">Результат</div>
+                    <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Устойчивая операционная система</div>
+                    <div style="color: var(--text-secondary);">✅ Снижение операционных ошибок на 34%<br>✅ Сокращение времени ввода нового сотрудника с 3 недель до 10 дней<br>✅ Точность инвентаризации 99,5%<br>✅ Культура непрерывного улучшения (kaizen)</div>
                 </div>
             </div>
         </div>
@@ -785,7 +703,7 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-column"><h3>Дмитрий Панибратский</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
-                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="career.html">Карьера</a></li><li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li></ul></div>
+                <div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="index.html">Стратегия</a></li><li><a href="trends.html">Новости SCM</a></li><li><a href="contact.html">Контакты</a></li><li><a href="career.html">Карьера</a></li><li><a href="blog.html">Блог</a></li><li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li></ul></div>
                 <div class="footer-column"><h3>Контакты</h3><ul><li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li></ul></div>
                 <div class="footer-column"><h3>Приложение</h3><button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button><p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер.</p></div>
                 <div class="footer-column">
@@ -833,6 +751,37 @@
             });
         });
 
+        const calcBtn = document.getElementById('calcLossBtn');
+        if (calcBtn) {
+            calcBtn.addEventListener('click', () => {
+                let employees = parseFloat(document.getElementById('employees').value) || 0;
+                let salary = parseFloat(document.getElementById('salary').value) || 0;
+                let errorRate = parseFloat(document.getElementById('errorRate').value) || 0;
+                if (employees <= 0 || salary <= 0 || errorRate <= 0) {
+                    document.getElementById('lossResult').innerHTML = '<p class="error">Пожалуйста, заполните все поля корректными положительными числами.</p>';
+                    document.getElementById('lossResult').style.display = 'block';
+                    return;
+                }
+                const annualSalaryCost = employees * salary * 12;
+                const currentLoss = annualSalaryCost * (errorRate / 100);
+                const reduction = 0.34;
+                const newLoss = currentLoss * (1 - reduction);
+                const savings = currentLoss - newLoss;
+                const roi = (savings / (employees * 5000)) * 100;
+                const resultDiv = document.getElementById('lossResult');
+                resultDiv.innerHTML = `
+                    <p><strong>📉 Текущие потери от ошибок в год:</strong> <span style="font-size: 32px; font-weight: 800; color: var(--accent);">${currentLoss.toLocaleString('ru-RU')} ₽</span></p>
+                    <p><strong>✅ Потери после внедрения моей методологии:</strong> ${newLoss.toLocaleString('ru-RU')} ₽</p>
+                    <p><strong>💰 Экономия в год:</strong> <span style="color: #10b981; font-size: 24px; font-weight: 800;">${savings.toLocaleString('ru-RU')} ₽</span></p>
+                    <p><strong>📈 Оценочный ROI за первый год:</strong> ~${roi.toFixed(0)}%</p>
+                    <p><small>* Расчёт основан на реальных данных снижения ошибок на 34% (кейс «Леруа Мерлен»). Затраты на обучение взяты усреднённо.</small></p>
+                `;
+                resultDiv.style.display = 'block';
+                ym(108401876, 'reachGoal', 'calculator_click');
+                gtag('event', 'calculator_click', { event_category: 'career', event_label: 'loss_calculator' });
+            });
+        }
+
         document.querySelectorAll('#nav-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -844,6 +793,7 @@
                 else if (href.includes('trends.html')) page = 'trends';
                 else if (href.includes('contact.html')) page = 'contact';
                 else if (href.includes('career.html')) page = 'career';
+                else if (href.includes('blog.html')) page = 'blog';
                 if (page) {
                     ym(108401876, 'reachGoal', 'nav_click_' + page);
                     gtag('event', 'nav_click', { event_category: 'navigation', event_label: page });
@@ -877,37 +827,6 @@
             mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
             document.querySelectorAll('#nav-menu a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('active')));
         }
-
-        // Калькулятор потерь
-        const calcBtn = document.getElementById('calcLossBtn');
-        calcBtn.addEventListener('click', () => {
-            let employees = parseFloat(document.getElementById('employees').value) || 0;
-            let salary = parseFloat(document.getElementById('salary').value) || 0;
-            let errorRate = parseFloat(document.getElementById('errorRate').value) || 0;
-            if (employees <= 0 || salary <= 0 || errorRate <= 0) {
-                document.getElementById('lossResult').innerHTML = '<p class="error">Пожалуйста, заполните все поля корректными положительными числами.</p>';
-                document.getElementById('lossResult').style.display = 'block';
-                return;
-            }
-            const annualSalaryCost = employees * salary * 12;
-            const currentLoss = annualSalaryCost * (errorRate / 100);
-            const reduction = 0.34; // 34% снижение ошибок из вашего кейса
-            const newLoss = currentLoss * (1 - reduction);
-            const savings = currentLoss - newLoss;
-            const roi = (savings / (employees * 5000)) * 100; // предположим затраты на обучение 5000 на человека
-
-            const resultDiv = document.getElementById('lossResult');
-            resultDiv.innerHTML = `
-                <p><strong>📉 Текущие потери от ошибок в год:</strong> <span class="big-number">${currentLoss.toLocaleString('ru-RU')} ₽</span></p>
-                <p><strong>✅ Потери после внедрения моей методологии:</strong> ${newLoss.toLocaleString('ru-RU')} ₽</p>
-                <p><strong>💰 Экономия в год:</strong> <span style="color: #10b981; font-size: 24px; font-weight: 800;">${savings.toLocaleString('ru-RU')} ₽</span></p>
-                <p><strong>📈 Оценочный ROI за первый год:</strong> ~${roi.toFixed(0)}%</p>
-                <p><small>* Расчёт основан на реальных данных снижения ошибок на 34% (кейс «Леруа Мерлен»). Затраты на обучение взяты усреднённо.</small></p>
-            `;
-            resultDiv.style.display = 'block';
-            ym(108401876, 'reachGoal', 'calculator_click');
-            gtag('event', 'calculator_click', { event_category: 'career', event_label: 'loss_calculator' });
-        });
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
