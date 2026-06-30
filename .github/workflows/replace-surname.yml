@@ -1,68 +1,22 @@
-#!/usr/bin/env python3
-import os
+name: Replace Surname
 
-EXTENSIONS = ('.html', '.htm', '.js', '.css', '.json', '.xml', '.txt', '.md', '.rss', '.csv', '.yml', '.yaml')
+on:
+  workflow_dispatch:
 
-REPLACEMENTS = {
-    # ---- Заглавная первая буква ----
-    'Панибратский': 'Герасимов',
-    'Панибратского': 'Герасимова',
-    'Панибратскому': 'Герасимову',
-    'Панибратским': 'Герасимовым',
-    'Панибратском': 'Герасимове',
-    'Дмитрий Панибратский': 'Дмитрий Герасимов',
-    'Панибратский Дмитрий': 'Герасимов Дмитрий',
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # ---- ВСЕ ЗАГЛАВНЫЕ (важно!) ----
-    'ПАНИБРАТСКИЙ': 'ГЕРАСИМОВ',
-    'ПАНИБРАТСКОГО': 'ГЕРАСИМОВА',
-    'ПАНИБРАТСКОМУ': 'ГЕРАСИМОВУ',
-    'ПАНИБРАТСКИМ': 'ГЕРАСИМОВЫМ',
-    'ПАНИБРАТСКОМ': 'ГЕРАСИМОВЕ',
-    'ДМИТРИЙ ПАНИБРАТСКИЙ': 'ДМИТРИЙ ГЕРАСИМОВ',
-    'ПАНИБРАТСКИЙ ДМИТРИЙ': 'ГЕРАСИМОВ ДМИТРИЙ',
+      - name: Run replacement script
+        run: python3 rename_surname.py
 
-    # ---- Все строчные ----
-    'панибратский': 'герасимов',
-    'панибратского': 'герасимова',
-    'панибратскому': 'герасимову',
-    'панибратским': 'герасимовым',
-    'панибратском': 'герасимове',
-    'дмитрий панибратский': 'дмитрий герасимов',
-    'панибратский дмитрий': 'герасимов дмитрий',
-}
-
-def replace_in_file(filepath):
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            content = f.read()
-    except UnicodeDecodeError:
-        try:
-            with open(filepath, 'r', encoding='latin-1') as f:
-                content = f.read()
-        except Exception:
-            print(f'⚠️ Пропускаем: {filepath}')
-            return False
-    new_content = content
-    for old, new in REPLACEMENTS.items():
-        new_content = new_content.replace(old, new)
-    if new_content == content:
-        return False
-    with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(new_content)
-    return True
-
-def main():
-    count = 0
-    for root, dirs, files in os.walk('.'):
-        dirs[:] = [d for d in dirs if d not in {'.git', '__pycache__', 'node_modules', 'venv', 'env', '.venv', 'icons', 'images', 'videos', 'fonts', 'audio'}]
-        for file in files:
-            if file.lower().endswith(EXTENSIONS):
-                filepath = os.path.join(root, file)
-                if replace_in_file(filepath):
-                    print(f'✅ Обновлён: {filepath}')
-                    count += 1
-    print(f'\n✨ Готово! Обработано файлов: {count}')
-
-if __name__ == '__main__':
-    main()
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --staged --quiet || git commit -m "Replace surname (all cases)"
+          git push
