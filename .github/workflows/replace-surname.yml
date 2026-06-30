@@ -1,21 +1,85 @@
-name: Replace Surname
+#!/usr/bin/env python3
+import os
 
-on:
-  workflow_dispatch:
+# Расширения файлов, в которых будем менять текст
+EXTENSIONS = (
+    '.html', '.htm', '.js', '.css', '.json', '.xml', '.txt', '.md',
+    '.rss', '.csv', '.yml', '.yaml', '.svg', '.php', '.asp'
+)
 
-jobs:
-  replace:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run replacement script
-        run: |
-          curl -O https://raw.githubusercontent.com/965910-bit/Panibratsky-Dmitry/main/rename_surname.py
-          python3 rename_surname.py
-      - name: Commit and push changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git diff --staged --quiet || git commit -m "Replace surname"
-          git push
+# Все варианты замены (с учётом регистра и падежей)
+REPLACEMENTS = {
+    # ---- Заглавная первая буква (стандартный вариант) ----
+    'Панибратский': 'Герасимов',
+    'Панибратского': 'Герасимова',
+    'Панибратскому': 'Герасимову',
+    'Панибратским': 'Герасимовым',
+    'Панибратском': 'Герасимове',
+    'Дмитрий Панибратский': 'Дмитрий Герасимов',
+    'Панибратский Дмитрий': 'Герасимов Дмитрий',
+
+    # ---- ВСЕ ЗАГЛАВНЫЕ (важно для логотипа) ----
+    'ПАНИБРАТСКИЙ': 'ГЕРАСИМОВ',
+    'ПАНИБРАТСКОГО': 'ГЕРАСИМОВА',
+    'ПАНИБРАТСКОМУ': 'ГЕРАСИМОВУ',
+    'ПАНИБРАТСКИМ': 'ГЕРАСИМОВЫМ',
+    'ПАНИБРАТСКОМ': 'ГЕРАСИМОВЕ',
+    'ДМИТРИЙ ПАНИБРАТСКИЙ': 'ДМИТРИЙ ГЕРАСИМОВ',
+    'ПАНИБРАТСКИЙ ДМИТРИЙ': 'ГЕРАСИМОВ ДМИТРИЙ',
+
+    # ---- Все строчные (редко, но на всякий случай) ----
+    'панибратский': 'герасимов',
+    'панибратского': 'герасимова',
+    'панибратскому': 'герасимову',
+    'панибратским': 'герасимовым',
+    'панибратском': 'герасимове',
+    'дмитрий панибратский': 'дмитрий герасимов',
+    'панибратский дмитрий': 'герасимов дмитрий',
+
+    # ---- Смешанный регистр (если вдруг) ----
+    'ПаНИБРАТСКИЙ': 'ГЕРАСИМОВ',
+    'пАНИБРАТСКИЙ': 'гЕРАСИМОВ',
+    # ... можно добавить ещё, но обычно хватает трёх основных вариантов.
+}
+
+def replace_in_file(filepath):
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except UnicodeDecodeError:
+        try:
+            with open(filepath, 'r', encoding='latin-1') as f:
+                content = f.read()
+        except Exception:
+            print(f'⚠️ Пропускаем (не удалось прочитать): {filepath}')
+            return False
+
+    new_content = content
+    for old, new in REPLACEMENTS.items():
+        new_content = new_content.replace(old, new)
+
+    if new_content == content:
+        return False
+
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(new_content)
+    return True
+
+def main():
+    count = 0
+    for root, dirs, files in os.walk('.'):
+        # Исключаем системные и медиа-папки
+        dirs[:] = [d for d in dirs if d not in {
+            '.git', '__pycache__', 'node_modules', 'venv', 'env', '.venv',
+            'icons', 'images', 'videos', 'fonts', 'audio'
+        }]
+        for file in files:
+            if file.lower().endswith(EXTENSIONS):
+                filepath = os.path.join(root, file)
+                if replace_in_file(filepath):
+                    print(f'✅ Обновлён: {filepath}')
+                    count += 1
+    print(f'\n✨ Готово! Обработано файлов: {count}')
+
+if __name__ == '__main__':
+    main()
