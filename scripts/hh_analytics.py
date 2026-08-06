@@ -1,275 +1,164 @@
-#!/usr/bin/env python3
-"""
-Улучшенный сборщик аналитики с hh.ru.
-Теперь получает навыки через дополнительный запрос к каждой вакансии.
-Группирует регионы по городам, нормализует названия.
-"""
-
 import requests
 import json
-import time
-from collections import defaultdict, Counter
-from datetime import datetime, timedelta
 import os
-import re
+import time
+from datetime import datetime, timedelta
 
-# ==================== КОНФИГУРАЦИЯ ====================
-ROLES = [
-    {"name": "Логист", "keywords": ["логист", "менеджер по логистике", "специалист по логистике"]},
-    {"name": "SCM / Цепи поставок", "keywords": ["менеджер по цепям поставок", "специалист по цепям поставок", "supply chain manager", "SCM"]},
-    {"name": "Закупки / Снабжение", "keywords": ["менеджер по закупкам", "специалист по закупкам", "снабжение", "закупки"]},
-    {"name": "Склад", "keywords": ["кладовщик", "начальник склада", "менеджер склада", "склад"]},
-    {"name": "Транспорт", "keywords": ["транспортная логистика", "диспетчер", "менеджер по транспорту", "водитель"]},
+# -------------------------------------------------------------------
+# 1. ВАШИ КЛЮЧИ И НАСТРОЙКИ
+# -------------------------------------------------------------------
+CLIENT_ID = "JRUEH60T2VRLA1BE0GTC5F3IL31MTS08R4HNQBDNLQCBG35IBA25ABR5DK2IHTQO" 
+DATE_FROM = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+
+# По 5 запросов на каждую тему, чтобы выкачать МАКСИМУМ (до 2000 на каждый запрос)
+WAREHOUSE_QUERIES = [
+    "склад", "складская логистика", "кладовщик", "заведующий складом", "комплектация заказов"
 ]
 
-VACANCIES_PER_PAGE = 100
-MAX_PAGES_PER_ROLE = 10      # до 1000 вакансий на роль
-DELAY = 0.5
-MIN_SALARY = 20000
-MAX_SALARY = 500000
-OUTPUT_FILE = "data/hh_analytics.json"
+TRANSPORT_QUERIES = [
+    "транспортная логистика", "доставка", "перевозка грузов", "диспетчер", "логист"
+]
 
-# ==================== ФУНКЦИИ ====================
-def safe_get(data, *keys, default=None):
-    for key in keys:
-        if isinstance(data, dict):
-            data = data.get(key, default)
-        else:
-            return default
-    return data
-
-def parse_salary(salary_data):
-    if not salary_data:
-        return None
-    currency = salary_data.get("currency")
-    if currency not in ["RUR", "rub"]:
-        return None
-    salary_from = salary_data.get("from")
-    salary_to = salary_data.get("to")
-    if salary_from and salary_to:
-        salary = (salary_from + salary_to) / 2
-    elif salary_from:
-        salary = salary_from
-    elif salary_to:
-        salary = salary_to
-    else:
-        return None
-    salary = int(salary)
-    if salary < MIN_SALARY or salary > MAX_SALARY:
-        return None
-    return salary
-
-def get_experience(vacancy):
-    exp = vacancy.get("experience")
-    if not exp:
-        return "unknown"
-    exp_id = exp.get("id")
-    mapping = {
-        "noExperience": "no_experience",
-        "between1And3": "between_1_and_3",
-        "between3And6": "between_3_and_6",
-        "moreThan6": "more_than_6"
-    }
-    return mapping.get(exp_id, "unknown")
-
-def normalize_region(area):
-    """Приводит название региона к нормализованному виду (город/область)."""
-    if not area:
-        return "unknown"
-    name = area.get("name", "")
-    # Обработка Москвы и области
-    if "Москва" in name:
-        if "Московская область" in name or "область" in name:
-            return "Московская область"
-        return "Москва"
-    if "Санкт-Петербург" in name:
-        return "Санкт-Петербург"
-    if "Ленинградская область" in name:
-        return "Ленинградская область"
-    # Убираем уточнения в скобках
-    name = re.sub(r"\s*\(.*?\)", "", name).strip()
-    # Если название длинное, обрезаем
-    if len(name) > 25:
-        name = name[:25]
-    return name
-
-def fetch_skills(vacancy_id):
-    """Получает список навыков для конкретной вакансии."""
-    url = f"https://api.hh.ru/vacancies/{vacancy_id}"
-    try:
-        resp = requests.get(url, timeout=5)
-        if resp.status_code == 200:
-            data = resp.json()
-            key_skills = data.get("key_skills", [])
-            return [skill.get("name", "").strip() for skill in key_skills]
-    except Exception:
-        pass
-    return []
-
-def fetch_vacancies_for_role(role_name, keywords, area=1):
-    """
-    Собирает вакансии для роли, а затем для каждой запрашивает навыки.
-    Возвращает список вакансий с обогащёнными данными.
-    """
-    query = " OR ".join([f'"{kw}"' for kw in keywords])
-    base_url = "https://api.hh.ru/vacancies"
-    params = {
-        "text": query,
-        "area": area,
-        "per_page": VACANCIES_PER_PAGE,
-        "only_with_salary": False
-    }
-    all_vacancies = []
-    for page in range(MAX_PAGES_PER_ROLE):
-        params["page"] = page
+# -------------------------------------------------------------------
+# 2. ФУНКЦИЯ БЕСКОНЕЧНОГО СБОРА (ЛИСТАЕТ СТРАНИЦЫ ПОКА НЕ КОНЧАТСЯ)
+# -------------------------------------------------------------------
+def fetch_all_pages(keyword):
+    all_items = []
+    page = 0
+    per_page = 100  # Максимум, что отдает HH за раз
+    
+    print(f"  📥 Начинаю сбор по слову: '{keyword}'...")
+    
+    while True:
+        url = f"https://api.hh.ru/vacancies?text={keyword}&date_from={DATE_FROM}&page={page}&per_page={per_page}&client_id={CLIENT_ID}"
+        
         try:
-            resp = requests.get(base_url, params=params, timeout=10)
-            if resp.status_code != 200:
+            response = requests.get(url)
+            if response.status_code != 200:
+                print(f"     ❌ Ошибка на странице {page+1}: {response.status_code}")
                 break
-            data = resp.json()
-            items = data.get("items", [])
+                
+            data = response.json()
+            items = data.get('items', [])
+            
+            # Если вакансий на странице нет — значит, всё скачали
             if not items:
+                print(f"     ✅ По слову '{keyword}' собрано {len(all_items)} вакансий.")
                 break
-            # Добавляем в список пока без навыков
-            for item in items:
-                item["skills"] = []
-            all_vacancies.extend(items)
-            if len(items) < VACANCIES_PER_PAGE:
-                break
-            time.sleep(DELAY)
+                
+            all_items.extend(items)
+            page += 1
+            print(f"     ✔ Страница {page} загружена. Всего сейчас: {len(all_items)} вакансий.")
+            
+            # Пауза, чтобы HH не заблокировал нас
+            time.sleep(0.5) 
+            
         except Exception as e:
-            print(f"Ошибка при сборе {role_name}, страница {page}: {e}")
+            print(f"     ❌ Критическая ошибка: {e}")
             break
+            
+    return all_items
 
-    print(f"Роль '{role_name}': собрано {len(all_vacancies)} вакансий, загружаем навыки...")
-    # Загружаем навыки для каждой вакансии (можно распараллелить, но для простоты последовательно)
-    for idx, vac in enumerate(all_vacancies):
-        vac_id = vac.get("id")
-        if vac_id:
-            skills = fetch_skills(vac_id)
-            vac["skills"] = skills
-        if idx % 50 == 0:
-            print(f"  Обработано {idx}/{len(all_vacancies)}")
-        time.sleep(0.2)  # щадящий режим
-    return all_vacancies
+# -------------------------------------------------------------------
+# 3. ФУНКЦИЯ ОБЪЕДИНЕНИЯ И АНАЛИЗА
+# -------------------------------------------------------------------
+def process_and_save(queries, output_filename):
+    print(f"\n🔄 Запуск сбора для файла: {output_filename}")
+    mega_list = []
+    
+    # 1. Проходим по каждому запросу и качаем ВСЁ
+    for query in queries:
+        items = fetch_all_pages(query)
+        mega_list.extend(items)
+        
+    # 2. Удаляем дубликаты по ID
+    unique_vacs = {v['id']: v for v in mega_list}.values()
+    print(f"✅ Уникальных вакансий после удаления дубликатов: {len(unique_vacs)}")
+    
+    if not unique_vacs:
+        print("❌ Вакансий не найдено.")
+        return
 
-def aggregate_role_data(vacancies):
-    """Агрегирует данные для одного набора вакансий."""
+    # 3. Создаем структуру для анализа
+    analytics = {
+        "total_vacancies": len(unique_vacs),
+        "salary_stats": {"avg": 0, "min": 0, "max": 0},
+        "top_skills": [],
+        "experience_distribution": {"no_experience": 0, "between_1_and_3": 0, "between_3_and_6": 0, "more_than_6": 0},
+        "avg_salary_by_region": {},
+        "timeline": {},
+        "updated_at": datetime.now().isoformat()
+    }
+
     salaries = []
-    salaries_by_region = defaultdict(list)
-    skills_counter = Counter()
-    regions_counter = Counter()
-    experience_counter = Counter()
-    timeline = defaultdict(int)
-
-    for v in vacancies:
-        # Дата
-        pub_date = v.get("published_at")
-        if pub_date:
-            date_key = pub_date[:10]
-            timeline[date_key] += 1
-
-        # Зарплата
-        salary = parse_salary(v.get("salary"))
-        if salary:
-            salaries.append(salary)
-            region = normalize_region(v.get("area"))
-            salaries_by_region[region].append(salary)
-
+    for vac in unique_vacs:
         # Навыки
-        for skill in v.get("skills", []):
-            if skill:
-                skills_counter[skill] += 1
-
-        # Регион
-        region = normalize_region(v.get("area"))
-        regions_counter[region] += 1
-
+        if vac.get('key_skills'):
+            for skill in vac['key_skills']:
+                name = skill['name'].lower()
+                if name not in analytics:
+                    analytics[name] = 0
+                analytics[name] += 1
+        
+        # Зарплаты (только рубли)
+        sal = vac.get('salary')
+        if sal and sal.get('from') and sal.get('currency') == 'RUR':
+            salaries.append(sal['from'])
+            
+        # Регионы
+        region = vac.get('area', {}).get('name', 'Не указан')
+        if sal and sal.get('from'):
+            if region not in analytics['avg_salary_by_region']:
+                analytics['avg_salary_by_region'][region] = []
+            analytics['avg_salary_by_region'][region].append(sal['from'])
+        
         # Опыт
-        exp = get_experience(v)
-        experience_counter[exp] += 1
+        exp = vac.get('experience', {}).get('id', 'no_experience')
+        if exp in analytics['experience_distribution']:
+            analytics['experience_distribution'][exp] += 1
 
-    # Статистика зарплат
-    salary_stats = {}
+        # Дата публикации
+        pub_date = vac.get('published_at', '')[:10]
+        analytics['timeline'][pub_date] = analytics['timeline'].get(pub_date, 0) + 1
+
+    # Обработка топ-20 навыков
+    sorted_skills = sorted(
+        [(k, v) for k, v in analytics.items() if k not in ['total_vacancies', 'salary_stats', 'top_skills', 'experience_distribution', 'avg_salary_by_region', 'timeline', 'updated_at']], 
+        key=lambda x: x[1], reverse=True
+    )[:20]
+    analytics['top_skills'] = [{"skill": k, "count": v} for k, v in sorted_skills]
+    for k, v in sorted_skills:
+        del analytics[k]
+
+    # Средняя зарплата по регионам
+    for reg in analytics['avg_salary_by_region']:
+        vals = analytics['avg_salary_by_region'][reg]
+        analytics['avg_salary_by_region'][reg] = int(sum(vals) / len(vals))
+
+    # График по дням
+    analytics['timeline'] = [{"date": k, "count": v} for k, v in sorted(analytics['timeline'].items())]
+
+    # Общая статистика по зарплатам
     if salaries:
-        salary_stats = {
+        analytics['salary_stats'] = {
             "avg": int(sum(salaries) / len(salaries)),
             "min": min(salaries),
-            "max": max(salaries),
-            "count": len(salaries)
+            "max": max(salaries)
         }
-    else:
-        salary_stats = {"avg": 0, "min": 0, "max": 0, "count": 0}
 
-    # Средняя зарплата по регионам (топ-10)
-    avg_salary_by_region = {}
-    for reg, sal_list in salaries_by_region.items():
-        if sal_list:
-            avg_salary_by_region[reg] = int(sum(sal_list) / len(sal_list))
-    avg_salary_by_region = dict(sorted(avg_salary_by_region.items(), key=lambda x: x[1], reverse=True)[:10])
+    # 4. Сохранение
+    os.makedirs("data", exist_ok=True)
+    with open(f"data/{output_filename}", "w", encoding="utf-8") as f:
+        json.dump(analytics, f, ensure_ascii=False, indent=2)
+    
+    print(f"✅ ГОТОВО! Файл {output_filename} сохранен.")
+    print(f"   Итоговое количество вакансий: {analytics['total_vacancies']}")
+    print(f"   Средняя зарплата: {analytics['salary_stats']['avg']} руб.")
 
-    # Топ навыков
-    top_skills = skills_counter.most_common(10)
-
-    # Топ регионов по количеству вакансий
-    top_regions = regions_counter.most_common(10)
-
-    # Динамика (последние 30 дней)
-    dates = sorted(timeline.keys())
-    cutoff = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
-    timeline_filtered = [{"date": d, "count": timeline[d]} for d in dates if d >= cutoff]
-
-    # Распределение опыта
-    exp_dist = [
-        {"experience": exp, "count": count}
-        for exp, count in experience_counter.items()
-    ]
-
-    return {
-        "total_vacancies": len(vacancies),
-        "salary_stats": salary_stats,
-        "avg_salary_by_region": avg_salary_by_region,
-        "top_skills": [{"skill": s, "count": c} for s, c in top_skills],
-        "top_regions": [{"region": r, "count": c} for r, c in top_regions],
-        "experience_distribution": exp_dist,
-        "timeline": timeline_filtered
-    }
-
-def main():
-    print("Сбор аналитики hh.ru по ролям (с получением навыков)...")
-    all_roles_data = {}
-    total_vacancies = 0
-
-    for role in ROLES:
-        role_name = role["name"]
-        keywords = role["keywords"]
-        print(f"\n--- Сбор для роли: {role_name} ---")
-        vacancies = fetch_vacancies_for_role(role_name, keywords, area=1)
-        if vacancies:
-            role_data = aggregate_role_data(vacancies)
-            all_roles_data[role_name] = role_data
-            total_vacancies += len(vacancies)
-
-    # Общая агрегация (собираем все вакансии из всех ролей, без дублирования)
-    # Для простоты соберём их заново, объединив списки (но они уже есть в ролях, можно просто объединить)
-    # Я сделаю новую агрегацию, объединив все собранные вакансии из ролей (чтобы не дублировать запросы)
-    all_vacancies = []
-    for role in ROLES:
-        role_vac = fetch_vacancies_for_role(role["name"], role["keywords"], area=1)
-        all_vacancies.extend(role_vac)
-    overall_data = aggregate_role_data(all_vacancies)
-
-    result = {
-        "updated_at": datetime.now().isoformat(),
-        "total_vacancies": total_vacancies,
-        "roles": all_roles_data,
-        "overall": overall_data
-    }
-
-    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(result, f, ensure_ascii=False, indent=2)
-    print(f"\nСохранено в {OUTPUT_FILE}")
-
+# -------------------------------------------------------------------
+# 4. ЗАПУСК
+# -------------------------------------------------------------------
 if __name__ == "__main__":
-    main()
+    process_and_save(WAREHOUSE_QUERIES, "hh_warehouse.json")
+    process_and_save(TRANSPORT_QUERIES, "hh_transport.json")
+    print("\n✅ ВСЕ ДАННЫЕ СОБРАНЫ. Скрипт завершил работу.")
