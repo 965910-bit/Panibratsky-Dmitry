@@ -5,21 +5,21 @@ import time
 from datetime import datetime, timedelta
 
 # -------------------------------------------------------------------
-# 1. БЕЗОПАСНЫЙ ЗАПУСК (План Б)
+# 1. НАСТРОЙКИ (Без CLIENT_ID — он нам больше не нужен)
 # -------------------------------------------------------------------
 DATE_FROM = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
 
-# Слова для поиска (оставили самые основные, чтобы не перегружать HH)
-WAREHOUSE_QUERIES = ["склад", "кладовщик", "складская логистика"]
-TRANSPORT_QUERIES = ["доставка", "перевозка грузов", "транспортная логистика"]
+# Слова для поиска
+WAREHOUSE_QUERIES = ["склад", "кладовщик"]
+TRANSPORT_QUERIES = ["доставка", "перевозка грузов"]
 
-# Заголовки браузера, чтобы HH думал, что это человек, а не робот
+# Заголовки, чтобы HH думал, что мы обычный пользователь
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 }
 
 # -------------------------------------------------------------------
-# 2. ФУНКЦИЯ СБОРА С ПАУЗАМИ
+# 2. ФУНКЦИЯ СБОРА (МЕДЛЕННАЯ И БЕЗОПАСНАЯ)
 # -------------------------------------------------------------------
 def fetch_all_pages(keyword):
     all_items = []
@@ -29,10 +29,11 @@ def fetch_all_pages(keyword):
     print(f"  📥 Начинаю сбор по слову: '{keyword}'...")
     
     while True:
-        # Убрали CLIENT_ID из ссылки — так безопаснее
+        # Убрали client_id из URL
         url = f"https://api.hh.ru/vacancies?text={keyword}&date_from={DATE_FROM}&page={page}&per_page={per_page}"
         
         try:
+            # Отправляем запрос с заголовками браузера
             response = requests.get(url, headers=HEADERS)
             if response.status_code != 200:
                 print(f"     ❌ Ошибка на странице {page+1}: {response.status_code}")
@@ -49,8 +50,8 @@ def fetch_all_pages(keyword):
             page += 1
             print(f"     ✔ Страница {page} загружена. Всего сейчас: {len(all_items)}.")
             
-            # ДЕЛАЕМ БОЛЬШУЮ ПАУЗУ: 3 секунды, чтобы нас не забанили
-            time.sleep(3) 
+            # ДЕЛАЕМ БОЛЬШУЮ ПАУЗУ: 4 секунды между запросами
+            time.sleep(4) 
             
         except Exception as e:
             print(f"     ❌ Критическая ошибка: {e}")
@@ -59,7 +60,7 @@ def fetch_all_pages(keyword):
     return all_items
 
 # -------------------------------------------------------------------
-# 3. ФУНКЦИЯ ОБЪЕДИНЕНИЯ
+# 3. ФУНКЦИЯ ОБЪЕДИНЕНИЯ И АНАЛИЗА
 # -------------------------------------------------------------------
 def process_and_save(queries, output_filename):
     print(f"\n🔄 Запуск сбора для файла: {output_filename}")
@@ -73,10 +74,9 @@ def process_and_save(queries, output_filename):
     print(f"✅ Уникальных вакансий после удаления дубликатов: {len(unique_vacs)}")
     
     if not unique_vacs:
-        print("❌ Вакансий не найдено. Проверьте подключение или подождите.")
+        print("❌ Вакансий не найдено. Возможно, HH заблокировал запросы. Подождите 12-24 часа или попробуйте запустить позже.")
         return
 
-    # Структура аналитики
     analytics = {
         "total_vacancies": len(unique_vacs),
         "salary_stats": {"avg": 0, "min": 0, "max": 0},
@@ -113,21 +113,17 @@ def process_and_save(queries, output_filename):
         pub_date = vac.get('published_at', '')[:10]
         analytics['timeline'][pub_date] = analytics['timeline'].get(pub_date, 0) + 1
 
-    # Топ навыков
     sorted_skills = sorted([(k, v) for k, v in analytics.items() if k not in ['total_vacancies', 'salary_stats', 'top_skills', 'experience_distribution', 'avg_salary_by_region', 'timeline', 'updated_at']], key=lambda x: x[1], reverse=True)[:20]
     analytics['top_skills'] = [{"skill": k, "count": v} for k, v in sorted_skills]
     for k, v in sorted_skills:
         del analytics[k]
 
-    # Регионы
     for reg in analytics['avg_salary_by_region']:
         vals = analytics['avg_salary_by_region'][reg]
         analytics['avg_salary_by_region'][reg] = int(sum(vals) / len(vals))
 
-    # Таймлайн
     analytics['timeline'] = [{"date": k, "count": v} for k, v in sorted(analytics['timeline'].items())]
 
-    # Зарплаты
     if salaries:
         analytics['salary_stats'] = {
             "avg": int(sum(salaries) / len(salaries)),
@@ -135,7 +131,6 @@ def process_and_save(queries, output_filename):
             "max": max(salaries)
         }
 
-    # СОХРАНЕНИЕ
     os.makedirs("data", exist_ok=True)
     with open(f"data/{output_filename}", "w", encoding="utf-8") as f:
         json.dump(analytics, f, ensure_ascii=False, indent=2)
