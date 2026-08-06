@@ -1342,6 +1342,48 @@
         </div>
     </section>
 
+    <!-- БЛОК АНАЛИТИКИ РЫНКА SCM (ДВА ВИДЖЕТА) -->
+    <section id="hh-market" class="methodologies-section fade-up">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">📊 Аналитика рынка SCM</h2>
+                <p class="section-subtitle">Данные собраны с HH.ru за последние 30 дней. Обновляются ежедневно.</p>
+            </div>
+
+            <!-- ДВЕ КОЛОНКИ ДЛЯ ВИДЖЕТОВ -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                
+                <!-- ВИДЖЕТ 1: СКЛАДСКАЯ ЛОГИСТИКА -->
+                <div style="background: var(--bg-secondary); border-radius: 20px; padding: 24px; border: 1px solid var(--border);">
+                    <h3 style="color: var(--accent); margin-bottom: 20px;"><i class="fas fa-warehouse"></i> Складская логистика</h3>
+                    <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px;">
+                        <div><div class="stat-number" id="wh_total" style="font-size: 28px; color: var(--accent);">...</div><div style="font-size: 14px;">Вакансий</div></div>
+                        <div><div class="stat-number" id="wh_salary" style="font-size: 28px; color: var(--accent);">...</div><div style="font-size: 14px;">Средняя з/п</div></div>
+                    </div>
+                    <div style="background: var(--bg-primary); border-radius: 12px; padding: 12px; margin-bottom: 10px;">
+                        <div style="font-size: 14px; color: var(--text-muted);">🏆 Топ навыков</div>
+                        <div id="wh_skills" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;"></div>
+                    </div>
+                </div>
+
+                <!-- ВИДЖЕТ 2: ТРАНСПОРТНАЯ ЛОГИСТИКА -->
+                <div style="background: var(--bg-secondary); border-radius: 20px; padding: 24px; border: 1px solid var(--border);">
+                    <h3 style="color: var(--gold); margin-bottom: 20px;"><i class="fas fa-truck"></i> Транспортная логистика</h3>
+                    <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px;">
+                        <div><div class="stat-number" id="tr_total" style="font-size: 28px; color: var(--gold);">...</div><div style="font-size: 14px;">Вакансий</div></div>
+                        <div><div class="stat-number" id="tr_salary" style="font-size: 28px; color: var(--gold);">...</div><div style="font-size: 14px;">Средняя з/п</div></div>
+                    </div>
+                    <div style="background: var(--bg-primary); border-radius: 12px; padding: 12px; margin-bottom: 10px;">
+                        <div style="font-size: 14px; color: var(--text-muted);">🏆 Топ навыков</div>
+                        <div id="tr_skills" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;"></div>
+                    </div>
+                </div>
+                
+            </div>
+            <p style="margin-top: 20px; font-size: 14px; color: var(--text-muted); text-align: center;">Данные обновляются ежедневно. <a href="cabinet.html" style="color: var(--accent);">Подробная аналитика в кабинете.</a></p>
+        </div>
+    </section>
+
     <!-- НОВЫЙ БЛОК: Telegram-канал как экспертный центр -->
     <section id="telegram" class="container fade-up">
         <div class="telegram-expert">
@@ -1512,6 +1554,52 @@
             } catch(e) { container.innerHTML = '<div class="news-card">Не удалось загрузить новости.</div>'; }
         }
         loadHomeNews();
+
+        // Загрузка аналитики (Склад и Транспорт)
+        async function loadHHMarket() {
+            // --- ЗАГРУЗКА СКЛАДСКОГО ВИДЖЕТА ---
+            try {
+                const respWh = await fetch('data/hh_warehouse.json?_=' + Date.now());
+                if (respWh.ok) {
+                    const data = await respWh.json();
+                    document.getElementById('wh_total').innerText = data.total_vacancies || 0;
+                    document.getElementById('wh_salary').innerText = (data.salary_stats ? Math.round(data.salary_stats.avg / 1000) : 0) + ' тыс.';
+                    
+                    const skillContWh = document.getElementById('wh_skills');
+                    skillContWh.innerHTML = '';
+                    (data.top_skills || []).slice(0, 5).forEach(s => {
+                        const tag = document.createElement('span');
+                        tag.className = 'skill-tag';
+                        tag.style.fontSize = '12px';
+                        tag.innerText = s.skill;
+                        skillContWh.appendChild(tag);
+                    });
+                }
+            } catch (e) { console.warn('Складская аналитика не загружена'); }
+
+            // --- ЗАГРУЗКА ТРАНСПОРТНОГО ВИДЖЕТА ---
+            try {
+                const respTr = await fetch('data/hh_transport.json?_=' + Date.now());
+                if (respTr.ok) {
+                    const data = await respTr.json();
+                    document.getElementById('tr_total').innerText = data.total_vacancies || 0;
+                    document.getElementById('tr_salary').innerText = (data.salary_stats ? Math.round(data.salary_stats.avg / 1000) : 0) + ' тыс.';
+                    
+                    const skillContTr = document.getElementById('tr_skills');
+                    skillContTr.innerHTML = '';
+                    (data.top_skills || []).slice(0, 5).forEach(s => {
+                        const tag = document.createElement('span');
+                        tag.className = 'skill-tag';
+                        tag.style.fontSize = '12px';
+                        tag.style.background = 'rgba(212,175,55,0.2)';
+                        tag.style.color = '#d4af37';
+                        tag.innerText = s.skill;
+                        skillContTr.appendChild(tag);
+                    });
+                }
+            } catch (e) { console.warn('Транспортная аналитика не загружена'); }
+        }
+        loadHHMarket();
 
         const mainCtaBtn = document.getElementById('mainCtaBtn');
         if (mainCtaBtn) {
