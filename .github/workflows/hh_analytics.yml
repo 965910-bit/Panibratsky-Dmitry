@@ -1,0 +1,32 @@
+name: Collect HH Market Analytics
+
+on:
+  schedule:
+    # Запуск каждый день в 6:00 утра по МСК (03:00 UTC)
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  collect-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: pip install requests
+        
+      - name: Run HH Python Script
+        run: python scripts/hh_analytics.py
+        
+      - name: Commit & Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/*.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update HH analytics"
+          git push
