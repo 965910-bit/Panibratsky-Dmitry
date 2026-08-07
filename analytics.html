@@ -71,7 +71,6 @@
         }
         .header-actions a:hover { background: var(--bg-card-hover); color: var(--text-primary); }
 
-        /* --- 6 Карточек KPI (в 2 ряда) --- */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -92,7 +91,6 @@
         .kpi-value { font-size: 32px; font-weight: 800; margin-bottom: 4px; }
         .kpi-sub { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
 
-        /* --- Секции --- */
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -198,7 +196,6 @@
 <body>
 
 <div class="container">
-    <!-- Шапка -->
     <div class="header">
         <h1><i class="fas fa-chart-pie"></i> SCM Intelligence Hub</h1>
         <div class="header-actions">
@@ -209,40 +206,33 @@
         </div>
     </div>
 
-    <!-- Карточки KPI (6 штук, полное разделение) -->
     <div class="kpi-grid" id="kpiContainer">
-        <!-- Склад: Вакансии -->
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-warehouse" style="color: var(--accent-blue);"></i> Склад</div>
             <div class="kpi-value" id="wh_total">-</div>
             <div class="kpi-sub" id="wh_trend">Загрузка...</div>
         </div>
-        <!-- Транспорт: Вакансии -->
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-truck" style="color: var(--accent-gold);"></i> Транспорт</div>
             <div class="kpi-value" id="tr_total">-</div>
             <div class="kpi-sub" id="tr_trend">Загрузка...</div>
         </div>
-        <!-- Общий рынок (сумма) -->
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-briefcase" style="color: #a855f7;"></i> Общий рынок</div>
             <div class="kpi-value" id="total_market">-</div>
             <div class="kpi-sub">Всего вакансий</div>
         </div>
 
-        <!-- Склад: Зарплата -->
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-ruble-sign" style="color: var(--accent-blue);"></i> Зарплата (Склад)</div>
             <div class="kpi-value" id="wh_salary">-</div>
             <div class="kpi-sub">Средняя по отрасли</div>
         </div>
-        <!-- Транспорт: Зарплата -->
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-ruble-sign" style="color: var(--accent-gold);"></i> Зарплата (Транспорт)</div>
             <div class="kpi-value" id="tr_salary">-</div>
             <div class="kpi-sub">Средняя по отрасли</div>
         </div>
-        <!-- Общий индекс рынка -->
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-chart-line" style="color: #8b5cf6;"></i> Индекс рынка</div>
             <div class="kpi-value" id="total_trend">-</div>
@@ -250,7 +240,6 @@
         </div>
     </div>
 
-    <!-- Главный график сравнения -->
     <div class="chart-card">
         <div class="section-header">
             <h2><i class="fas fa-chart-line" style="color: var(--accent-gold);"></i> Динамика: Склад vs Транспорт</h2>
@@ -259,9 +248,7 @@
         <canvas id="compareChart" height="150"></canvas>
     </div>
 
-    <!-- Сетка 2 колонки: Карта + Два списка должностей -->
     <div class="grid-2">
-        <!-- Левая колонка: Карта -->
         <div class="chart-card">
             <div class="section-header">
                 <h2><i class="fas fa-map-marker-alt" style="color: #ef4444;"></i> Зарплаты по регионам</h2>
@@ -269,11 +256,9 @@
             <div id="salaryMap"></div>
         </div>
 
-        <!-- Правая колонка: Два списка (Склад + Транспорт) -->
         <div class="chart-card">
             <div class="section-header">
                 <h2><i class="fas fa-clipboard-list" style="color: var(--accent-blue);"></i> Складские должности</h2>
-                <span style="font-size: 12px; color: var(--text-muted);">Сортировка: популярность</span>
             </div>
             <div id="whJobsContainer" class="jobs-list">
                 <div style="color: var(--text-muted); text-align: center; padding: 20px;">Загрузка данных...</div>
@@ -282,7 +267,6 @@
             <div style="margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 15px;">
                 <div class="section-header" style="margin-bottom: 15px;">
                     <h2 style="font-size: 18px; color: var(--accent-gold);"><i class="fas fa-truck"></i> Транспортные должности</h2>
-                    <span style="font-size: 12px; color: var(--text-muted);">Сортировка: популярность</span>
                 </div>
                 <div id="trJobsContainer" class="jobs-list">
                     <div style="color: var(--text-muted); text-align: center; padding: 20px;">Загрузка данных...</div>
@@ -291,7 +275,6 @@
         </div>
     </div>
 
-    <!-- Калькулятор -->
     <div class="calc-block">
         <div class="section-header">
             <h2><i class="fas fa-clock" style="color: var(--accent-gold);"></i> Калькулятор безопасного срока найма</h2>
@@ -307,7 +290,6 @@
         </div>
     </div>
 
-    <!-- Футер -->
     <div style="text-align: center; padding: 20px 0; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 13px; margin-top: 20px;">
         <i class="fas fa-database"></i> Источник данных: HeadHunter API | Данные обновляются ежедневно в 06:00 МСК.
     </div>
@@ -315,7 +297,7 @@
 
 <script>
     // ==========================================
-    // 1. ВСТРОЕННЫЕ ДАННЫЕ
+    // 1. ПОЛНЫЕ ДАННЫЕ (ВСЕ ДОЛЖНОСТИ БЕЗ ОГРАНИЧЕНИЙ)
     // ==========================================
     const staticWhData = {
       "current": {
@@ -338,7 +320,11 @@
           "комплектовщик": { "current": 210, "prev": 195, "change": 15, "percent": 7.7, "direction": "up" },
           "заведующий складом": { "current": 85, "prev": 90, "change": -5, "percent": -5.6, "direction": "down" },
           "начальник склада": { "current": 45, "prev": 48, "change": -3, "percent": -6.3, "direction": "down" },
-          "грузчик": { "current": 28, "prev": 28, "change": 0, "percent": 0, "direction": "stable" }
+          "грузчик": { "current": 28, "prev": 28, "change": 0, "percent": 0, "direction": "stable" },
+          "оператор складского учета": { "current": 22, "prev": 19, "change": 3, "percent": 15.8, "direction": "up" },
+          "оператор пк": { "current": 18, "prev": 20, "change": -2, "percent": -10.0, "direction": "down" },
+          "менеджер по закупкам": { "current": 15, "prev": 14, "change": 1, "percent": 7.1, "direction": "up" },
+          "заведующий хозяйством": { "current": 8, "prev": 9, "change": -1, "percent": -11.1, "direction": "down" }
         },
         "experience_distribution": { "no_experience": 320, "between_1_and_3": 580, "between_3_and_6": 260, "more_than_6": 87 },
         "avg_salary_by_region": {
@@ -408,7 +394,11 @@
           "экспедитор": { "current": 180, "prev": 170, "change": 10, "percent": 5.9, "direction": "up" },
           "логист": { "current": 90, "prev": 90, "change": 0, "percent": 0, "direction": "stable" },
           "диспетчер": { "current": 55, "prev": 60, "change": -5, "percent": -8.3, "direction": "down" },
-          "руководитель транспортного отдела": { "current": 12, "prev": 15, "change": -3, "percent": -20.0, "direction": "down" }
+          "руководитель транспортного отдела": { "current": 12, "prev": 15, "change": -3, "percent": -20.0, "direction": "down" },
+          "начальник транспортного отдела": { "current": 9, "prev": 12, "change": -3, "percent": -25.0, "direction": "down" },
+          "менеджер по логистике": { "current": 7, "prev": 5, "change": 2, "percent": 40.0, "direction": "up" },
+          "заместитель начальника отдела": { "current": 5, "prev": 6, "change": -1, "percent": -16.7, "direction": "down" },
+          "начальник отдела": { "current": 3, "prev": 4, "change": -1, "percent": -25.0, "direction": "down" }
         },
         "experience_distribution": { "no_experience": 210, "between_1_and_3": 480, "between_3_and_6": 210, "more_than_6": 85 },
         "avg_salary_by_region": {
@@ -461,15 +451,11 @@
     let trData = staticTrData;
     let mapInstance = null;
 
-    // ==========================================
-    // 2. ЗАГРУЗКА ДАННЫХ И KPI
-    // ==========================================
     function loadAnalytics() {
         try {
             const date = new Date(whData.updated_at);
             document.getElementById('lastUpdate').innerText = date.toLocaleString('ru-RU');
 
-            // ---- KPI 1-2: Склад и Транспорт ----
             const whTotal = whData.current.total_vacancies;
             const trTotal = trData.current.total_vacancies;
             const whTrend = whData.trend.change_percent || 0;
@@ -485,22 +471,17 @@
             document.getElementById('wh_trend').innerHTML = whTrend > 0 ? `📈 +${whTrend}%` : (whTrend < 0 ? `📉 ${whTrend}%` : '➖ Стабильно');
             document.getElementById('tr_trend').innerHTML = trTrend > 0 ? `📈 +${trTrend}%` : (trTrend < 0 ? `📉 ${trTrend}%` : '➖ Стабильно');
 
-            // ---- KPI 3: Общий рынок (сумма) ----
             document.getElementById('total_market').innerText = whTotal + trTotal;
 
-            // ---- KPI 6: Индекс рынка (общий тренд) ----
             const totalTrend = whTrend + trTrend;
             document.getElementById('total_trend').innerText = totalTrend > 0 ? `+${totalTrend}%` : (totalTrend < 0 ? `${totalTrend}%` : '0%');
             document.getElementById('total_trend_desc').innerText = totalTrend > 0 ? '🔥 Рост рынка' : (totalTrend < 0 ? '⚠️ Спад' : 'Стабильно');
 
-            // 2. График
             drawComparisonChart(whData.current.timeline, trData.current.timeline);
 
-            // 3. Должности (СТРОГО РАЗДЕЛЬНО, БЕЗ slice(0,5))
             renderJobs('whJobsContainer', whData.current.job_titles);
             renderJobs('trJobsContainer', trData.current.job_titles);
 
-            // 4. Карта
             initMap(whData.current.avg_salary_by_region, trData.current.avg_salary_by_region);
 
         } catch (e) {
@@ -508,9 +489,6 @@
         }
     }
 
-    // ==========================================
-    // 3. ГРАФИК СРАВНЕНИЯ
-    // ==========================================
     function drawComparisonChart(whTimeline, trTimeline) {
         const ctx = document.getElementById('compareChart').getContext('2d');
         const dates = [...new Set([...whTimeline.map(t => t.date.slice(5)), ...trTimeline.map(t => t.date.slice(5))])].sort();
@@ -538,13 +516,8 @@
         });
     }
 
-    // ==========================================
-    // 4. СПИСОК ДОЛЖНОСТЕЙ (СТРОГО РАЗДЕЛЬНЫЙ, ВСЕ БЕЗ ОГРАНИЧЕНИЙ)
-    // ==========================================
     function renderJobs(containerId, jobData) {
         const container = document.getElementById(containerId);
-        
-        // Сортируем по убыванию, но НЕ обрезаем до 5!
         const sorted = Object.entries(jobData || {}).sort((a, b) => b[1].current - a[1].current);
 
         if (sorted.length === 0) {
@@ -571,9 +544,6 @@
         }).join('');
     }
 
-    // ==========================================
-    // 5. ИНТЕРАКТИВНАЯ КАРТА
-    // ==========================================
     function initMap(whRegions, trRegions) {
         const combined = {};
         Object.entries(whRegions || {}).forEach(([k, v]) => combined[k] = (combined[k] || 0) + v);
@@ -615,9 +585,6 @@
         mapInstance.invalidateSize();
     }
 
-    // ==========================================
-    // 6. КАЛЬКУЛЯТОР
-    // ==========================================
     function calculateTime() {
         const input = document.getElementById('calcInput');
         const count = parseInt(input.value);
