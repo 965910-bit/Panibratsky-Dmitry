@@ -242,11 +242,13 @@
 
     <div class="chart-card">
         <div class="section-header">
-            <h2><i class="fas fa-chart-line" style="color: var(--accent-gold);"></i> Динамика: Склад vs Транспорт (по неделям)</h2>
-            <span style="font-size: 12px; color: var(--text-muted);">Среднее за 7 дней</span>
+            <h2><i class="fas fa-chart-line" style="color: var(--accent-gold);"></i> Динамика: 30 дней</h2>
+            <span style="font-size: 12px; color: var(--text-muted);">Детально по дням (с трендами за последнюю неделю)</span>
         </div>
-        <canvas id="compareChart" height="150"></canvas>
-        <div id="weeklyTrends" style="display: flex; justify-content: center; gap: 30px; margin-top: 15px; color: var(--text-secondary); font-size: 14px;"></div>
+        <div style="position: relative; width: 100%; overflow-x: auto; padding-bottom: 5px;">
+            <canvas id="compareChart" height="150" style="min-width: 600px;"></canvas>
+        </div>
+        <div id="weeklyTrends" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; color: var(--text-secondary); font-size: 14px; flex-wrap: wrap; gap: 10px;"></div>
     </div>
 
     <div class="grid-2">
@@ -499,7 +501,7 @@
             document.getElementById('total_trend').innerText = totalTrend > 0 ? `+${totalTrend.toFixed(1)}%` : (totalTrend < 0 ? `${totalTrend.toFixed(1)}%` : '0%');
             document.getElementById('total_trend_desc').innerText = totalTrend > 0 ? '🔥 Рост рынка' : (totalTrend < 0 ? '⚠️ Спад' : 'Стабильно');
 
-            drawWeeklyComparisonChart(whData.current.timeline, trData.current.timeline);
+            drawDetailedComparisonChart(whData.current.timeline, trData.current.timeline);
 
             renderJobs('whJobsContainer', whData.current.job_titles);
             renderJobs('trJobsContainer', trData.current.job_titles);
@@ -512,59 +514,27 @@
     }
 
     // ==========================================
-    // 2. ГРАФИК ПО НЕДЕЛЯМ (С ГРУППИРОВКОЙ)
+    // 2. ДЕТАЛЬНЫЙ ГРАФИК ЗА 30 ДНЕЙ + НЕДЕЛЬНЫЙ ТРЕНД ВНИЗУ
     // ==========================================
-    function drawWeeklyComparisonChart(whTimeline, trTimeline) {
-        // Функция группировки по неделям (Пн-Вс)
-        function groupByWeek(data) {
-            const weeks = {};
-            data.forEach(item => {
-                const date = new Date(item.date);
-                // Получаем номер недели (ISO)
-                const weekNum = getISOWeek(date);
-                const year = date.getFullYear();
-                const key = `${year}-W${weekNum}`;
-                
-                if (!weeks[key]) weeks[key] = { count: 0, days: 0 };
-                weeks[key].count += item.count;
-                weeks[key].days += 1;
-            });
-            
-            const result = [];
-            Object.keys(weeks).sort().forEach(key => {
-                const avg = weeks[key].count / weeks[key].days;
-                result.push({ week: key, avg: Math.round(avg * 10) / 10 });
-            });
-            return result;
-        }
-
-        // Вспомогательная функция для получения номера недели
-        function getISOWeek(d) {
-            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-        }
-
-        const whWeekly = groupByWeek(whTimeline);
-        const trWeekly = groupByWeek(trTimeline);
-
-        const labels = whWeekly.map(w => w.week);
-        const whDataPoints = whWeekly.map(w => w.avg);
-        const trDataPoints = trWeekly.map(w => w.avg);
-
+    function drawDetailedComparisonChart(whTimeline, trTimeline) {
         const ctx = document.getElementById('compareChart').getContext('2d');
+        const dates = [...new Set([...whTimeline.map(t => t.date.slice(5)), ...trTimeline.map(t => t.date.slice(5))])].sort();
+
+        const whDataPoints = dates.map(d => whTimeline.find(t => t.date.slice(5) === d)?.count || 0);
+        const trDataPoints = dates.map(d => trTimeline.find(t => t.date.slice(5) === d)?.count || 0);
+
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: labels,
+                labels: dates,
                 datasets: [
-                    { label: 'Склад (ср. в день)', data: whDataPoints, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 },
-                    { label: 'Транспорт (ср. в день)', data: trDataPoints, borderColor: '#d4af37', tension: 0.3 }
+                    { label: 'Склад', data: whDataPoints, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 },
+                    { label: 'Транспорт', data: trDataPoints, borderColor: '#d4af37', tension: 0.3 }
                 ]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: { legend: { labels: { color: '#cbd5e1' } } },
                 scales: {
                     x: { ticks: { color: '#94a3b8' } },
@@ -573,24 +543,26 @@
             }
         });
 
-        // Отрисовка трендов неделя к неделе под графиком
-        const trendsDiv = document.getElementById('weeklyTrends');
-        if (whWeekly.length >= 2) {
-            const last = whWeekly[whWeekly.length - 1];
-            const prev = whWeekly[whWeekly.length - 2];
-            const whDiff = last.avg - prev.avg;
-            const trLast = trWeekly[trWeekly.length - 1];
-            const trPrev = trWeekly[trWeekly.length - 2];
-            const trDiff = trLast.avg - trPrev.avg;
-
-            let whArrow = whDiff > 0 ? '📈' : (whDiff < 0 ? '📉' : '➖');
-            let trArrow = trDiff > 0 ? '📈' : (trDiff < 0 ? '📉' : '➖');
-
-            trendsDiv.innerHTML = `
-                <span>Склад: ${whArrow} Текущая неделя (${whDiff > 0 ? '+' : ''}${whDiff.toFixed(1)} к предыдущей)</span>
-                <span>Транспорт: ${trArrow} Текущая неделя (${trDiff > 0 ? '+' : ''}${trDiff.toFixed(1)} к предыдущей)</span>
-            `;
+        // Рассчет недельных трендов для текста внизу
+        function getWeekTrend(timeline) {
+            const last7 = timeline.slice(-7);
+            const prev7 = timeline.slice(-14, -7);
+            if (last7.length === 0 || prev7.length === 0) return { diff: 0, dir: 'stable' };
+            const lastAvg = last7.reduce((s, i) => s + i.count, 0) / last7.length;
+            const prevAvg = prev7.reduce((s, i) => s + i.count, 0) / prev7.length;
+            const diff = lastAvg - prevAvg;
+            return { diff: diff, dir: diff > 0 ? 'up' : (diff < 0 ? 'down' : 'stable') };
         }
+
+        const whWeek = getWeekTrend(whTimeline);
+        const trWeek = getWeekTrend(trTimeline);
+
+        const trendsDiv = document.getElementById('weeklyTrends');
+        trendsDiv.innerHTML = `
+            <div><strong>📊 Недельный срез (последние 7 дней):</strong></div>
+            <div>Склад: ${whWeek.dir === 'up' ? '📈' : (whWeek.dir === 'down' ? '📉' : '➖')} ${whWeek.diff > 0 ? '+' : ''}${whWeek.diff.toFixed(1)} вакансий/день к предыдущей неделе</div>
+            <div>Транспорт: ${trWeek.dir === 'up' ? '📈' : (trWeek.dir === 'down' ? '📉' : '➖')} ${trWeek.diff > 0 ? '+' : ''}${trWeek.diff.toFixed(1)} вакансий/день к предыдущей неделе</div>
+        `;
     }
 
     function renderJobs(containerId, jobData) {
