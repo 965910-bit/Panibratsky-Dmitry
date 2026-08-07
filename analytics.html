@@ -118,7 +118,7 @@
             height: 350px;
             width: 100%;
             border-radius: 12px;
-            background: #f8f9fa; /* Светлый фон, чтобы границы были видны */
+            background: #f8f9fa;
         }
 
         .jobs-list {
@@ -594,14 +594,13 @@
     }
 
     // ==========================================
-    // 3. ИСПРАВЛЕННАЯ КАРТА (ТЕПЕРЬ ВИДНЫ ГОРОДА)
+    // 3. КАРТА (БЕЗ ФЛАГА, БЕЗ ПОДПИСИ)
     // ==========================================
     function initMap(whRegions, trRegions) {
         const combined = {};
         Object.entries(whRegions || {}).forEach(([k, v]) => combined[k] = (combined[k] || 0) + v);
         Object.entries(trRegions || {}).forEach(([k, v]) => combined[k] = (combined[k] || 0) + v);
 
-        // Точные координаты городов (больше не нужно гадать)
         const cityCoords = {
             'Москва': [55.7558, 37.6173],
             'Санкт-Петербург': [59.9343, 30.3351],
@@ -612,28 +611,25 @@
             'Казань': [55.8304, 49.0661]
         };
 
-        // Уничтожаем старую карту, если есть
         if (mapInstance) mapInstance.remove();
 
-        // Инициализируем новую карту с центром в центре России
+        // Создаем карту, но прячем слой атрибуции (тот самый логотип с флагом)
         mapInstance = L.map('salaryMap', { 
             center: [60.0, 90.0], 
             zoom: 4, 
-            zoomControl: false 
+            zoomControl: false,
+            attributionControl: false // <- ОТКЛЮЧАЕМ АТРИБУЦИЮ
         });
 
-        // ИСПОЛЬЗУЕМ СТАНДАРТНУЮ OSM КАРТУ (ОНА ТОЧНО ЗАГРУЗИТСЯ)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            maxZoom: 19
         }).addTo(mapInstance);
 
-        // Добавляем кружки с золотым цветом
         Object.entries(combined).forEach(([city, salary]) => {
             const coord = cityCoords[city];
             if (coord) {
                 const circle = L.circleMarker(coord, {
-                    radius: Math.max(8, (salary / 15000)), // Динамический размер
+                    radius: Math.max(8, (salary / 15000)),
                     color: '#d4af37',
                     fillColor: '#d4af37',
                     fillOpacity: 0.8,
@@ -649,7 +645,6 @@
             }
         });
 
-        // Принудительно обновляем размер карты
         setTimeout(() => {
             if (mapInstance) mapInstance.invalidateSize();
         }, 300);
