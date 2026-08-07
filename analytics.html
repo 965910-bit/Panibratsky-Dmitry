@@ -600,4 +600,39 @@
         const input = document.getElementById('calcInput');
         const count = parseInt(input.value);
         if (!count || count < 1) {
-            document.getElementById('calcResult').innerHTML = '<span style="color: #ef4444;">Пожалуйста, введите корректное
+            document.getElementById('calcResult').innerHTML = '<span style="color: #ef4444;">Пожалуйста, введите корректное число.</span>';
+            return;
+        }
+
+        // Объединяем вакансии в день из складского и транспортного таймлайнов
+        const whTimeline = whData.current.timeline;
+        const trTimeline = trData.current.timeline;
+        const allCounts = [...whTimeline, ...trTimeline];
+        
+        if (allCounts.length === 0) {
+            document.getElementById('calcResult').innerHTML = 'Недостаточно данных для расчета.';
+            return;
+        }
+
+        // Среднее количество новых вакансий в день (за последние 30 дней)
+        const avgPerDay = allCounts.reduce((sum, item) => sum + item.count, 0) / allCounts.length;
+        const days = Math.ceil(count / avgPerDay);
+
+        document.getElementById('calcResult').innerHTML = `
+            📊 При текущей скорости рынка (<strong>${avgPerDay.toFixed(1)}</strong> вакансий в день), 
+            чтобы закрыть <strong>${count}</strong> вакансий, потребуется <strong style="color: var(--accent-gold);">${days}</strong> дней.
+            ${days < 5 ? '🎯 Это очень быстрый рынок!' : (days < 15 ? '✅ Приемлемый срок.' : '🕒 Рынок медленный, закладывайте запас.' )}
+        `;
+    }
+
+    // Запускаем всё при загрузке
+    document.addEventListener('DOMContentLoaded', loadAnalytics);
+
+    // Исправляем баг Leaflet при скрытых вкладках
+    window.addEventListener('load', () => {
+        setTimeout(() => { if (mapInstance) mapInstance.invalidateSize(); }, 500);
+    });
+</script>
+
+</body>
+</html>
