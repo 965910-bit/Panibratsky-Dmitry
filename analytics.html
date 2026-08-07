@@ -118,7 +118,7 @@
             height: 350px;
             width: 100%;
             border-radius: 12px;
-            background: #1e293b;
+            background: #0f172a;
         }
 
         .jobs-list {
@@ -593,12 +593,16 @@
         }).join('');
     }
 
+    // ==========================================
+    // 3. ИСПРАВЛЕННАЯ КАРТА (ТЕПЕРЬ ВИДНЫ ГОРОДА)
+    // ==========================================
     function initMap(whRegions, trRegions) {
         const combined = {};
         Object.entries(whRegions || {}).forEach(([k, v]) => combined[k] = (combined[k] || 0) + v);
         Object.entries(trRegions || {}).forEach(([k, v]) => combined[k] = (combined[k] || 0) + v);
 
-        const coords = {
+        // Точные координаты городов (больше не нужно гадать)
+        const cityCoords = {
             'Москва': [55.7558, 37.6173],
             'Санкт-Петербург': [59.9343, 30.3351],
             'Екатеринбург': [56.8389, 60.6057],
@@ -608,30 +612,49 @@
             'Казань': [55.8304, 49.0661]
         };
 
+        // Уничтожаем старую карту, если есть
         if (mapInstance) mapInstance.remove();
-        mapInstance = L.map('salaryMap', { center: [64, 100], zoom: 4, zoomControl: false });
 
+        // Инициализируем новую карту с центром в центре России
+        mapInstance = L.map('salaryMap', { 
+            center: [60.0, 90.0], 
+            zoom: 4, 
+            zoomControl: false 
+        });
+
+        // Используем светлый тайл, чтобы было видно названия городов, но в тёмной теме
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OSM & CartoDB'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
         }).addTo(mapInstance);
 
-        const markers = L.markerClusterGroup ? L.markerClusterGroup() : null;
+        // Добавляем кружки
         Object.entries(combined).forEach(([city, salary]) => {
-            const coord = coords[city];
+            const coord = cityCoords[city];
             if (coord) {
+                // Создаём кружок
                 const circle = L.circleMarker(coord, {
-                    radius: 5 + (salary / 15000),
+                    radius: Math.max(8, (salary / 15000)), // Динамический размер
                     color: '#d4af37',
                     fillColor: '#d4af37',
-                    fillOpacity: 0.8
-                }).bindPopup(`<b>${city}</b><br>Средняя з/п: ${salary.toLocaleString()} ₽`);
+                    fillOpacity: 0.8,
+                    weight: 1
+                }).bindPopup(`
+                    <div style="text-align: center; color: #0f172a;">
+                        <strong style="font-size: 16px;">${city}</strong><br>
+                        <span style="font-size: 14px;">Средняя з/п: ${salary.toLocaleString('ru-RU')} ₽</span>
+                    </div>
+                `);
                 
-                if (markers) markers.addLayer(circle);
-                else circle.addTo(mapInstance);
+                circle.addTo(mapInstance);
             }
         });
-        if (markers) mapInstance.addLayer(markers);
-        mapInstance.invalidateSize();
+
+        // Принудительно обновляем размер карты, чтобы она не была серой
+        setTimeout(() => {
+            if (mapInstance) mapInstance.invalidateSize();
+        }, 300);
     }
 
     function calculateTime() {
