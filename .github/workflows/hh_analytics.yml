@@ -2,7 +2,6 @@ name: Collect HH Market Analytics
 
 on:
   schedule:
-    # Запуск каждый день в 6:00 утра по МСК (03:00 UTC)
     - cron: '0 3 * * *'
   workflow_dispatch:
 
@@ -18,7 +17,10 @@ jobs:
           python-version: '3.10'
           
       - name: Install dependencies
-        run: pip install requests
+        run: |
+          pip install requests
+          pip install playwright
+          playwright install chromium  <-- ВАЖНО: Устанавливаем браузер для работы скрипта
         
       - name: Run HH Python Script
         run: python scripts/hh_analytics.py
