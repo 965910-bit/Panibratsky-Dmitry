@@ -13,7 +13,6 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
-        /* --- Дизайн-система (Тёмная тема) --- */
         :root {
             --bg-body: #0f172a;
             --bg-card: #1e293b;
@@ -44,7 +43,6 @@
             margin: 0 auto;
         }
 
-        /* --- Шапка --- */
         .header {
             display: flex;
             justify-content: space-between;
@@ -73,10 +71,10 @@
         }
         .header-actions a:hover { background: var(--bg-card-hover); color: var(--text-primary); }
 
-        /* --- Карточки KPI --- */
+        /* --- 6 Карточек KPI (в 2 ряда) --- */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             margin-bottom: 40px;
         }
@@ -84,15 +82,15 @@
         .kpi-card {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 24px;
+            padding: 20px;
             border: 1px solid var(--border-color);
             transition: transform 0.2s;
         }
         .kpi-card:hover { transform: translateY(-4px); border-color: var(--accent-gold); }
 
-        .kpi-label { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
+        .kpi-label { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         .kpi-value { font-size: 32px; font-weight: 800; margin-bottom: 4px; }
-        .kpi-sub { font-size: 13px; color: var(--text-secondary); }
+        .kpi-sub { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
 
         /* --- Секции --- */
         .section-header {
@@ -118,7 +116,6 @@
             margin-bottom: 30px;
         }
 
-        /* --- Карта --- */
         #salaryMap {
             height: 350px;
             width: 100%;
@@ -126,7 +123,6 @@
             background: #1e293b;
         }
 
-        /* --- Список должностей --- */
         .jobs-list {
             max-height: 350px;
             overflow-y: auto;
@@ -148,7 +144,6 @@
         .job-trend { font-size: 13px; font-weight: 600; margin-left: 12px; }
         .job-count { color: var(--accent-gold); font-weight: 600; }
 
-        /* --- Калькулятор --- */
         .calc-block {
             background: var(--bg-card);
             border-radius: 16px;
@@ -190,10 +185,13 @@
         }
         .calc-result strong { color: var(--text-primary); }
 
-        /* --- Адаптивность --- */
         @media (max-width: 900px) {
             .grid-2 { grid-template-columns: 1fr; }
             .header { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 500px) {
+            .kpi-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -211,25 +209,42 @@
         </div>
     </div>
 
-    <!-- Карточки KPI -->
+    <!-- Карточки KPI (6 штук, полное разделение) -->
     <div class="kpi-grid" id="kpiContainer">
+        <!-- Склад: Вакансии -->
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-warehouse" style="color: var(--accent-blue);"></i> Склад</div>
             <div class="kpi-value" id="wh_total">-</div>
             <div class="kpi-sub" id="wh_trend">Загрузка...</div>
         </div>
+        <!-- Транспорт: Вакансии -->
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-truck" style="color: var(--accent-gold);"></i> Транспорт</div>
             <div class="kpi-value" id="tr_total">-</div>
             <div class="kpi-sub" id="tr_trend">Загрузка...</div>
         </div>
+        <!-- Общий рынок (сумма) -->
         <div class="kpi-card">
-            <div class="kpi-label"><i class="fas fa-ruble-sign" style="color: #10b981;"></i> Средняя з/п (общая)</div>
-            <div class="kpi-value" id="avg_salary">-</div>
-            <div class="kpi-sub">По всем вакансиям</div>
+            <div class="kpi-label"><i class="fas fa-briefcase" style="color: #a855f7;"></i> Общий рынок</div>
+            <div class="kpi-value" id="total_market">-</div>
+            <div class="kpi-sub">Всего вакансий</div>
         </div>
+
+        <!-- Склад: Зарплата -->
         <div class="kpi-card">
-            <div class="kpi-label"><i class="fas fa-chart-line" style="color: #8b5cf6;"></i> Общий тренд</div>
+            <div class="kpi-label"><i class="fas fa-ruble-sign" style="color: var(--accent-blue);"></i> Зарплата (Склад)</div>
+            <div class="kpi-value" id="wh_salary">-</div>
+            <div class="kpi-sub">Средняя по отрасли</div>
+        </div>
+        <!-- Транспорт: Зарплата -->
+        <div class="kpi-card">
+            <div class="kpi-label"><i class="fas fa-ruble-sign" style="color: var(--accent-gold);"></i> Зарплата (Транспорт)</div>
+            <div class="kpi-value" id="tr_salary">-</div>
+            <div class="kpi-sub">Средняя по отрасли</div>
+        </div>
+        <!-- Общий индекс рынка -->
+        <div class="kpi-card">
+            <div class="kpi-label"><i class="fas fa-chart-line" style="color: #8b5cf6;"></i> Индекс рынка</div>
             <div class="kpi-value" id="total_trend">-</div>
             <div class="kpi-sub" id="total_trend_desc">Загрузка...</div>
         </div>
@@ -288,7 +303,7 @@
 
 <script>
     // ==========================================
-    // 1. ВСТРОЕННЫЕ ДАННЫЕ (С ТРЕНДАМИ ПО ДОЛЖНОСТЯМ)
+    // 1. ВСТРОЕННЫЕ ДАННЫЕ
     // ==========================================
     const staticWhData = {
       "current": {
@@ -439,33 +454,37 @@
     // ==========================================
     function loadAnalytics() {
         try {
-            // Обновляем дату
             const date = new Date(whData.updated_at);
             document.getElementById('lastUpdate').innerText = date.toLocaleString('ru-RU');
 
-            // 1. KPI
+            // ---- KPI 1-2: Склад и Транспорт ----
             const whTotal = whData.current.total_vacancies;
             const trTotal = trData.current.total_vacancies;
             const whTrend = whData.trend.change_percent || 0;
             const trTrend = trData.trend.change_percent || 0;
-            const avgSalary = Math.round((whData.current.salary_stats.avg + trData.current.salary_stats.avg) / 2 / 1000);
+            const whSalary = Math.round(whData.current.salary_stats.avg / 1000);
+            const trSalary = Math.round(trData.current.salary_stats.avg / 1000);
 
             document.getElementById('wh_total').innerText = whTotal;
             document.getElementById('tr_total').innerText = trTotal;
-            document.getElementById('avg_salary').innerText = avgSalary + ' тыс. ₽';
+            document.getElementById('wh_salary').innerText = whSalary + ' тыс. ₽';
+            document.getElementById('tr_salary').innerText = trSalary + ' тыс. ₽';
 
-            // Тренды
             document.getElementById('wh_trend').innerHTML = whTrend > 0 ? `📈 +${whTrend}%` : (whTrend < 0 ? `📉 ${whTrend}%` : '➖ Стабильно');
             document.getElementById('tr_trend').innerHTML = trTrend > 0 ? `📈 +${trTrend}%` : (trTrend < 0 ? `📉 ${trTrend}%` : '➖ Стабильно');
 
+            // ---- KPI 3: Общий рынок (сумма) ----
+            document.getElementById('total_market').innerText = whTotal + trTotal;
+
+            // ---- KPI 6: Индекс рынка (общий тренд) ----
             const totalTrend = whTrend + trTrend;
             document.getElementById('total_trend').innerText = totalTrend > 0 ? `+${totalTrend}%` : (totalTrend < 0 ? `${totalTrend}%` : '0%');
             document.getElementById('total_trend_desc').innerText = totalTrend > 0 ? '🔥 Рост рынка' : (totalTrend < 0 ? '⚠️ Спад' : 'Стабильно');
 
-            // 2. Отрисовка графика сравнения
+            // 2. График
             drawComparisonChart(whData.current.timeline, trData.current.timeline);
 
-            // 3. Отрисовка списка должностей (С ТРЕНДАМИ)
+            // 3. Должности (без дублей в названиях)
             renderJobsWithTrend(whData.current.job_titles, trData.current.job_titles);
 
             // 4. Карта
@@ -473,7 +492,6 @@
 
         } catch (e) {
             console.error('Ошибка загрузки аналитики:', e);
-            document.getElementById('kpiContainer').innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 20px;">⚠️ Ошибка загрузки данных. Перезагрузите страницу.</div>`;
         }
     }
 
@@ -508,17 +526,16 @@
     }
 
     // ==========================================
-    // 4. СПИСОК ВСЕХ ДОЛЖНОСТЕЙ (С ТРЕНДАМИ)
+    // 4. СПИСОК ДОЛЖНОСТЕЙ (БЕЗ ПОВТОРОВ)
     // ==========================================
     function renderJobsWithTrend(whJobs, trJobs) {
         const container = document.getElementById('jobsContainer');
         const combined = {};
 
-        // Объединяем должности из двух источников
+        // Добавляем уникальные названия должностей
         Object.entries(whJobs || {}).forEach(([k, v]) => combined[k] = v);
         Object.entries(trJobs || {}).forEach(([k, v]) => combined[k] = v);
 
-        // Сортируем по количеству вакансий (по убыванию)
         const sorted = Object.entries(combined).sort((a, b) => b[1].current - a[1].current);
 
         if (sorted.length === 0) {
@@ -527,7 +544,6 @@
         }
 
         container.innerHTML = sorted.map(([job, data]) => {
-            // Формируем HTML для тренда
             let trendHtml = '';
             if (data.direction === 'up') {
                 trendHtml = `<span class="job-trend" style="color: #10b981;">📈 +${data.percent}%</span>`;
@@ -554,7 +570,6 @@
         Object.entries(whRegions || {}).forEach(([k, v]) => combined[k] = (combined[k] || 0) + v);
         Object.entries(trRegions || {}).forEach(([k, v]) => combined[k] = (combined[k] || 0) + v);
 
-        // Примерные координаты городов России для демонстрации
         const coords = {
             'Москва': [55.7558, 37.6173],
             'Санкт-Петербург': [59.9343, 30.3351],
@@ -565,7 +580,6 @@
             'Казань': [55.8304, 49.0661]
         };
 
-        // Инициализация карты
         if (mapInstance) mapInstance.remove();
         mapInstance = L.map('salaryMap', { center: [64, 100], zoom: 4, zoomControl: false });
 
@@ -573,7 +587,6 @@
             attribution: '&copy; OSM & CartoDB'
         }).addTo(mapInstance);
 
-        // Добавляем пузырьки
         const markers = L.markerClusterGroup ? L.markerClusterGroup() : null;
         Object.entries(combined).forEach(([city, salary]) => {
             const coord = coords[city];
@@ -599,36 +612,25 @@
     function calculateTime() {
         const input = document.getElementById('calcInput');
         const count = parseInt(input.value);
-        if (!count || count < 1) {
-            document.getElementById('calcResult').innerHTML = '<span style="color: #ef4444;">Пожалуйста, введите корректное число.</span>';
-            return;
-        }
+        if (!count || count < 1) return;
 
-        // Объединяем вакансии в день из складского и транспортного таймлайнов
         const whTimeline = whData.current.timeline;
         const trTimeline = trData.current.timeline;
         const allCounts = [...whTimeline, ...trTimeline];
         
-        if (allCounts.length === 0) {
-            document.getElementById('calcResult').innerHTML = 'Недостаточно данных для расчета.';
-            return;
-        }
+        if (allCounts.length === 0) return;
 
-        // Среднее количество новых вакансий в день (за последние 30 дней)
         const avgPerDay = allCounts.reduce((sum, item) => sum + item.count, 0) / allCounts.length;
         const days = Math.ceil(count / avgPerDay);
 
         document.getElementById('calcResult').innerHTML = `
             📊 При текущей скорости рынка (<strong>${avgPerDay.toFixed(1)}</strong> вакансий в день), 
             чтобы закрыть <strong>${count}</strong> вакансий, потребуется <strong style="color: var(--accent-gold);">${days}</strong> дней.
-            ${days < 5 ? '🎯 Это очень быстрый рынок!' : (days < 15 ? '✅ Приемлемый срок.' : '🕒 Рынок медленный, закладывайте запас.' )}
+            ${days < 5 ? '🎯 Очень быстрый рынок!' : (days < 15 ? '✅ Приемлемый срок.' : '🕒 Рынок медленный, закладывайте запас.' )}
         `;
     }
 
-    // Запускаем всё при загрузке
     document.addEventListener('DOMContentLoaded', loadAnalytics);
-
-    // Исправляем баг Leaflet при скрытых вкладках
     window.addEventListener('load', () => {
         setTimeout(() => { if (mapInstance) mapInstance.invalidateSize(); }, 500);
     });
