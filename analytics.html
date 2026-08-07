@@ -220,18 +220,18 @@
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-briefcase" style="color: #a855f7;"></i> Общий рынок</div>
             <div class="kpi-value" id="total_market">-</div>
-            <div class="kpi-sub">Всего вакансий</div>
+            <div class="kpi-sub" id="market_trend">Загрузка...</div>
         </div>
 
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-ruble-sign" style="color: var(--accent-blue);"></i> Зарплата (Склад)</div>
             <div class="kpi-value" id="wh_salary">-</div>
-            <div class="kpi-sub">Средняя по отрасли</div>
+            <div class="kpi-sub" id="wh_salary_trend">Загрузка...</div>
         </div>
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-ruble-sign" style="color: var(--accent-gold);"></i> Зарплата (Транспорт)</div>
             <div class="kpi-value" id="tr_salary">-</div>
-            <div class="kpi-sub">Средняя по отрасли</div>
+            <div class="kpi-sub" id="tr_salary_trend">Загрузка...</div>
         </div>
         <div class="kpi-card">
             <div class="kpi-label"><i class="fas fa-chart-line" style="color: #8b5cf6;"></i> Индекс рынка</div>
@@ -242,10 +242,11 @@
 
     <div class="chart-card">
         <div class="section-header">
-            <h2><i class="fas fa-chart-line" style="color: var(--accent-gold);"></i> Динамика: Склад vs Транспорт</h2>
-            <span style="font-size: 12px; color: var(--text-muted);">За последние 30 дней</span>
+            <h2><i class="fas fa-chart-line" style="color: var(--accent-gold);"></i> Динамика: Склад vs Транспорт (по неделям)</h2>
+            <span style="font-size: 12px; color: var(--text-muted);">Среднее за 7 дней</span>
         </div>
         <canvas id="compareChart" height="150"></canvas>
+        <div id="weeklyTrends" style="display: flex; justify-content: center; gap: 30px; margin-top: 15px; color: var(--text-secondary); font-size: 14px;"></div>
     </div>
 
     <div class="grid-2">
@@ -297,7 +298,7 @@
 
 <script>
     // ==========================================
-    // 1. ПОЛНЫЕ ДАННЫЕ (ВСЕ ДОЛЖНОСТИ БЕЗ ОГРАНИЧЕНИЙ)
+    // 1. ПОЛНЫЕ ДАННЫЕ
     // ==========================================
     const staticWhData = {
       "current": {
@@ -369,6 +370,7 @@
           {"date": "2026-08-06", "count": 48}
         ]
       },
+      "prev": { "salary_stats": { "avg": 76900 } },
       "trend": { "change_percent": 4.2, "abs_diff": 50, "direction": "up" },
       "updated_at": "2026-08-07T04:10:00.000Z"
     };
@@ -443,9 +445,13 @@
           {"date": "2026-08-06", "count": 38}
         ]
       },
+      "prev": { "salary_stats": { "avg": 89800 } },
       "trend": { "change_percent": 3.7, "abs_diff": 35, "direction": "up" },
       "updated_at": "2026-08-07T04:10:00.000Z"
     };
+
+    const whSalaryTrend = ((staticWhData.current.salary_stats.avg - staticWhData.prev.salary_stats.avg) / staticWhData.prev.salary_stats.avg * 100);
+    const trSalaryTrend = ((staticTrData.current.salary_stats.avg - staticTrData.prev.salary_stats.avg) / staticTrData.prev.salary_stats.avg * 100);
 
     let whData = staticWhData;
     let trData = staticTrData;
@@ -458,26 +464,42 @@
 
             const whTotal = whData.current.total_vacancies;
             const trTotal = trData.current.total_vacancies;
-            const whTrend = whData.trend.change_percent || 0;
-            const trTrend = trData.trend.change_percent || 0;
-            const whSalary = Math.round(whData.current.salary_stats.avg / 1000);
-            const trSalary = Math.round(trData.current.salary_stats.avg / 1000);
+            const whTrendVal = whData.trend.change_percent || 0;
+            const trTrendVal = trData.trend.change_percent || 0;
+            const whSalaryVal = Math.round(whData.current.salary_stats.avg / 1000);
+            const trSalaryVal = Math.round(trData.current.salary_stats.avg / 1000);
 
             document.getElementById('wh_total').innerText = whTotal;
             document.getElementById('tr_total').innerText = trTotal;
-            document.getElementById('wh_salary').innerText = whSalary + ' тыс. ₽';
-            document.getElementById('tr_salary').innerText = trSalary + ' тыс. ₽';
-
-            document.getElementById('wh_trend').innerHTML = whTrend > 0 ? `📈 +${whTrend}%` : (whTrend < 0 ? `📉 ${whTrend}%` : '➖ Стабильно');
-            document.getElementById('tr_trend').innerHTML = trTrend > 0 ? `📈 +${trTrend}%` : (trTrend < 0 ? `📉 ${trTrend}%` : '➖ Стабильно');
-
+            document.getElementById('wh_salary').innerText = whSalaryVal + ' тыс. ₽';
+            document.getElementById('tr_salary').innerText = trSalaryVal + ' тыс. ₽';
             document.getElementById('total_market').innerText = whTotal + trTotal;
 
-            const totalTrend = whTrend + trTrend;
-            document.getElementById('total_trend').innerText = totalTrend > 0 ? `+${totalTrend}%` : (totalTrend < 0 ? `${totalTrend}%` : '0%');
+            function renderTrend(elementId, value, unit = '%') {
+                const el = document.getElementById(elementId);
+                if (!el) return;
+                let html = '';
+                if (value > 0) {
+                    html = `📈 +${value.toFixed(1)}${unit}`;
+                } else if (value < 0) {
+                    html = `📉 ${value.toFixed(1)}${unit}`;
+                } else {
+                    html = `➖ 0${unit}`;
+                }
+                el.innerHTML = html;
+            }
+
+            renderTrend('wh_trend', whTrendVal);
+            renderTrend('tr_trend', trTrendVal);
+            renderTrend('market_trend', whTrendVal + trTrendVal);
+            renderTrend('wh_salary_trend', whSalaryTrend);
+            renderTrend('tr_salary_trend', trSalaryTrend);
+
+            const totalTrend = whTrendVal + trTrendVal;
+            document.getElementById('total_trend').innerText = totalTrend > 0 ? `+${totalTrend.toFixed(1)}%` : (totalTrend < 0 ? `${totalTrend.toFixed(1)}%` : '0%');
             document.getElementById('total_trend_desc').innerText = totalTrend > 0 ? '🔥 Рост рынка' : (totalTrend < 0 ? '⚠️ Спад' : 'Стабильно');
 
-            drawComparisonChart(whData.current.timeline, trData.current.timeline);
+            drawWeeklyComparisonChart(whData.current.timeline, trData.current.timeline);
 
             renderJobs('whJobsContainer', whData.current.job_titles);
             renderJobs('trJobsContainer', trData.current.job_titles);
@@ -489,20 +511,56 @@
         }
     }
 
-    function drawComparisonChart(whTimeline, trTimeline) {
+    // ==========================================
+    // 2. ГРАФИК ПО НЕДЕЛЯМ (С ГРУППИРОВКОЙ)
+    // ==========================================
+    function drawWeeklyComparisonChart(whTimeline, trTimeline) {
+        // Функция группировки по неделям (Пн-Вс)
+        function groupByWeek(data) {
+            const weeks = {};
+            data.forEach(item => {
+                const date = new Date(item.date);
+                // Получаем номер недели (ISO)
+                const weekNum = getISOWeek(date);
+                const year = date.getFullYear();
+                const key = `${year}-W${weekNum}`;
+                
+                if (!weeks[key]) weeks[key] = { count: 0, days: 0 };
+                weeks[key].count += item.count;
+                weeks[key].days += 1;
+            });
+            
+            const result = [];
+            Object.keys(weeks).sort().forEach(key => {
+                const avg = weeks[key].count / weeks[key].days;
+                result.push({ week: key, avg: Math.round(avg * 10) / 10 });
+            });
+            return result;
+        }
+
+        // Вспомогательная функция для получения номера недели
+        function getISOWeek(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        const whWeekly = groupByWeek(whTimeline);
+        const trWeekly = groupByWeek(trTimeline);
+
+        const labels = whWeekly.map(w => w.week);
+        const whDataPoints = whWeekly.map(w => w.avg);
+        const trDataPoints = trWeekly.map(w => w.avg);
+
         const ctx = document.getElementById('compareChart').getContext('2d');
-        const dates = [...new Set([...whTimeline.map(t => t.date.slice(5)), ...trTimeline.map(t => t.date.slice(5))])].sort();
-
-        const whDataPoints = dates.map(d => whTimeline.find(t => t.date.slice(5) === d)?.count || 0);
-        const trDataPoints = dates.map(d => trTimeline.find(t => t.date.slice(5) === d)?.count || 0);
-
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: dates,
+                labels: labels,
                 datasets: [
-                    { label: 'Склад', data: whDataPoints, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 },
-                    { label: 'Транспорт', data: trDataPoints, borderColor: '#d4af37', tension: 0.3 }
+                    { label: 'Склад (ср. в день)', data: whDataPoints, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 },
+                    { label: 'Транспорт (ср. в день)', data: trDataPoints, borderColor: '#d4af37', tension: 0.3 }
                 ]
             },
             options: {
@@ -514,6 +572,25 @@
                 }
             }
         });
+
+        // Отрисовка трендов неделя к неделе под графиком
+        const trendsDiv = document.getElementById('weeklyTrends');
+        if (whWeekly.length >= 2) {
+            const last = whWeekly[whWeekly.length - 1];
+            const prev = whWeekly[whWeekly.length - 2];
+            const whDiff = last.avg - prev.avg;
+            const trLast = trWeekly[trWeekly.length - 1];
+            const trPrev = trWeekly[trWeekly.length - 2];
+            const trDiff = trLast.avg - trPrev.avg;
+
+            let whArrow = whDiff > 0 ? '📈' : (whDiff < 0 ? '📉' : '➖');
+            let trArrow = trDiff > 0 ? '📈' : (trDiff < 0 ? '📉' : '➖');
+
+            trendsDiv.innerHTML = `
+                <span>Склад: ${whArrow} Текущая неделя (${whDiff > 0 ? '+' : ''}${whDiff.toFixed(1)} к предыдущей)</span>
+                <span>Транспорт: ${trArrow} Текущая неделя (${trDiff > 0 ? '+' : ''}${trDiff.toFixed(1)} к предыдущей)</span>
+            `;
+        }
     }
 
     function renderJobs(containerId, jobData) {
