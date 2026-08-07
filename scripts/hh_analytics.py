@@ -1,80 +1,89 @@
-import requests
 import json
 import os
 import time
 from datetime import datetime, timedelta
+from playwright.sync_api import sync_playwright
 
 # -------------------------------------------------------------------
-# 1. НАСТРОЙКИ (Без CLIENT_ID — он нам больше не нужен)
+# 1. НАСТРОЙКИ
 # -------------------------------------------------------------------
 DATE_FROM = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
 
-# Слова для поиска
+# Слова для поиска (сократили до 2 самых важных, чтобы не грузить браузер)
 WAREHOUSE_QUERIES = ["склад", "кладовщик"]
 TRANSPORT_QUERIES = ["доставка", "перевозка грузов"]
 
-# Заголовки, чтобы HH думал, что мы обычный пользователь
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-}
-
 # -------------------------------------------------------------------
-# 2. ФУНКЦИЯ СБОРА (МЕДЛЕННАЯ И БЕЗОПАСНАЯ)
+# 2. ФУНКЦИЯ СБОРА ЧЕРЕЗ БРАУЗЕР (САМАЯ ВАЖНАЯ)
 # -------------------------------------------------------------------
-def fetch_all_pages(keyword):
+def fetch_hh_data(keyword):
     all_items = []
     page = 0
-    per_page = 100
     
-    print(f"  📥 Начинаю сбор по слову: '{keyword}'...")
+    print(f"  🌐 Открываю браузер для поиска: '{keyword}'...")
     
-    while True:
-        # Убрали client_id из URL
-        url = f"https://api.hh.ru/vacancies?text={keyword}&date_from={DATE_FROM}&page={page}&per_page={per_page}"
+    with sync_playwright() as p:
+        # Запускаем браузер (в GitHub он работает в фоне)
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        )
+        page_browser = context.new_page()
         
-        try:
-            # Отправляем запрос с заголовками браузера
-            response = requests.get(url, headers=HEADERS)
-            if response.status_code != 200:
-                print(f"     ❌ Ошибка на странице {page+1}: {response.status_code}")
+        while True:
+            # Формируем ссылку для перехода
+            url = f"https://api.hh.ru/vacancies?text={keyword}&date_from={DATE_FROM}&page={page}&per_page=100"
+            
+            try:
+                print(f"     🕵️ Загружаю страницу {page+1}...")
+                
+                # Переходим по ссылке и ждем загрузки
+                response = page_browser.goto(url, wait_until="domcontentloaded", timeout=30000)
+                
+                # Проверяем, что сервер ответил нормально
+                if response.status != 200:
+                    print(f"     ❌ Ошибка: {response.status}")
+                    break
+                
+                # Получаем JSON-данные со страницы
+                data = page_browser.evaluate("() => JSON.parse(document.body.innerText)")
+                items = data.get('items', [])
+                
+                if not items:
+                    print(f"     ✅ Все вакансии по слову '{keyword}' собраны. Итого: {len(all_items)}")
+                    break
+                
+                all_items.extend(items)
+                page += 1
+                print(f"     ✔ Страница {page} загружена. Всего сейчас: {len(all_items)}.")
+                
+                # Пауза, чтобы не спамить (безопасная)
+                time.sleep(2) 
+                
+            except Exception as e:
+                print(f"     ❌ Критическая ошибка браузера: {e}")
                 break
                 
-            data = response.json()
-            items = data.get('items', [])
-            
-            if not items:
-                print(f"     ✅ По слову '{keyword}' собрано {len(all_items)} вакансий.")
-                break
-                
-            all_items.extend(items)
-            page += 1
-            print(f"     ✔ Страница {page} загружена. Всего сейчас: {len(all_items)}.")
-            
-            # ДЕЛАЕМ БОЛЬШУЮ ПАУЗУ: 4 секунды между запросами
-            time.sleep(4) 
-            
-        except Exception as e:
-            print(f"     ❌ Критическая ошибка: {e}")
-            break
+        browser.close()
             
     return all_items
 
 # -------------------------------------------------------------------
-# 3. ФУНКЦИЯ ОБЪЕДИНЕНИЯ И АНАЛИЗА
+# 3. ФУНКЦИЯ ОБЪЕДИНЕНИЯ (ОСТАЛАСЬ БЕЗ ИЗМЕНЕНИЙ)
 # -------------------------------------------------------------------
 def process_and_save(queries, output_filename):
     print(f"\n🔄 Запуск сбора для файла: {output_filename}")
     mega_list = []
     
     for query in queries:
-        items = fetch_all_pages(query)
+        items = fetch_hh_data(query)
         mega_list.extend(items)
         
     unique_vacs = {v['id']: v for v in mega_list}.values()
-    print(f"✅ Уникальных вакансий после удаления дубликатов: {len(unique_vacs)}")
+    print(f"✅ Уникальных вакансий: {len(unique_vacs)}")
     
     if not unique_vacs:
-        print("❌ Вакансий не найдено. Возможно, HH заблокировал запросы. Подождите 12-24 часа или попробуйте запустить позже.")
+        print("❌ Вакансий не найдено.")
         return
 
     analytics = {
