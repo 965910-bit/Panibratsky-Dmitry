@@ -496,7 +496,7 @@
             // 2. График
             drawComparisonChart(whData.current.timeline, trData.current.timeline);
 
-            // 3. Должности (СТРОГО РАЗДЕЛЬНО)
+            // 3. Должности (СТРОГО РАЗДЕЛЬНО, БЕЗ slice(0,5))
             renderJobs('whJobsContainer', whData.current.job_titles);
             renderJobs('trJobsContainer', trData.current.job_titles);
 
@@ -539,11 +539,12 @@
     }
 
     // ==========================================
-    // 4. СПИСОК ДОЛЖНОСТЕЙ (СТРОГО РАЗДЕЛЬНЫЙ)
+    // 4. СПИСОК ДОЛЖНОСТЕЙ (СТРОГО РАЗДЕЛЬНЫЙ, ВСЕ БЕЗ ОГРАНИЧЕНИЙ)
     // ==========================================
     function renderJobs(containerId, jobData) {
         const container = document.getElementById(containerId);
         
+        // Сортируем по убыванию, но НЕ обрезаем до 5!
         const sorted = Object.entries(jobData || {}).sort((a, b) => b[1].current - a[1].current);
 
         if (sorted.length === 0) {
