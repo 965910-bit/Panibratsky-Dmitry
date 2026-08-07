@@ -124,7 +124,7 @@
         }
 
         .jobs-list {
-            max-height: 350px;
+            max-height: 300px;
             overflow-y: auto;
             padding-right: 10px;
         }
@@ -135,7 +135,7 @@
         .job-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid var(--border-color);
             font-size: 15px;
         }
@@ -259,8 +259,9 @@
         <canvas id="compareChart" height="150"></canvas>
     </div>
 
-    <!-- Сетка 2 колонки: Карта + Список должностей -->
+    <!-- Сетка 2 колонки: Карта + Два списка должностей -->
     <div class="grid-2">
+        <!-- Левая колонка: Карта -->
         <div class="chart-card">
             <div class="section-header">
                 <h2><i class="fas fa-map-marker-alt" style="color: #ef4444;"></i> Зарплаты по регионам</h2>
@@ -268,13 +269,24 @@
             <div id="salaryMap"></div>
         </div>
 
+        <!-- Правая колонка: Два списка (Склад + Транспорт) -->
         <div class="chart-card">
             <div class="section-header">
-                <h2><i class="fas fa-clipboard-list" style="color: var(--accent-gold);"></i> Все должности на рынке</h2>
+                <h2><i class="fas fa-clipboard-list" style="color: var(--accent-blue);"></i> Складские должности</h2>
                 <span style="font-size: 12px; color: var(--text-muted);">Сортировка: популярность</span>
             </div>
-            <div id="jobsContainer" class="jobs-list">
+            <div id="whJobsContainer" class="jobs-list">
                 <div style="color: var(--text-muted); text-align: center; padding: 20px;">Загрузка данных...</div>
+            </div>
+            
+            <div style="margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                <div class="section-header" style="margin-bottom: 15px;">
+                    <h2 style="font-size: 18px; color: var(--accent-gold);"><i class="fas fa-truck"></i> Транспортные должности</h2>
+                    <span style="font-size: 12px; color: var(--text-muted);">Сортировка: популярность</span>
+                </div>
+                <div id="trJobsContainer" class="jobs-list">
+                    <div style="color: var(--text-muted); text-align: center; padding: 20px;">Загрузка данных...</div>
+                </div>
             </div>
         </div>
     </div>
@@ -484,8 +496,9 @@
             // 2. График
             drawComparisonChart(whData.current.timeline, trData.current.timeline);
 
-            // 3. Должности (без дублей в названиях)
-            renderJobsWithTrend(whData.current.job_titles, trData.current.job_titles);
+            // 3. Должности (СТРОГО РАЗДЕЛЬНО)
+            renderJobs('whJobsContainer', whData.current.job_titles);
+            renderJobs('trJobsContainer', trData.current.job_titles);
 
             // 4. Карта
             initMap(whData.current.avg_salary_by_region, trData.current.avg_salary_by_region);
@@ -526,17 +539,12 @@
     }
 
     // ==========================================
-    // 4. СПИСОК ДОЛЖНОСТЕЙ (БЕЗ ПОВТОРОВ)
+    // 4. СПИСОК ДОЛЖНОСТЕЙ (СТРОГО РАЗДЕЛЬНЫЙ)
     // ==========================================
-    function renderJobsWithTrend(whJobs, trJobs) {
-        const container = document.getElementById('jobsContainer');
-        const combined = {};
-
-        // Добавляем уникальные названия должностей
-        Object.entries(whJobs || {}).forEach(([k, v]) => combined[k] = v);
-        Object.entries(trJobs || {}).forEach(([k, v]) => combined[k] = v);
-
-        const sorted = Object.entries(combined).sort((a, b) => b[1].current - a[1].current);
+    function renderJobs(containerId, jobData) {
+        const container = document.getElementById(containerId);
+        
+        const sorted = Object.entries(jobData || {}).sort((a, b) => b[1].current - a[1].current);
 
         if (sorted.length === 0) {
             container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Данные по должностям собираются...</div>';
