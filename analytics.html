@@ -118,7 +118,7 @@
             height: 350px;
             width: 100%;
             border-radius: 12px;
-            background: #0f172a;
+            background: #f8f9fa; /* Светлый фон, чтобы границы были видны */
         }
 
         .jobs-list {
@@ -622,18 +622,16 @@
             zoomControl: false 
         });
 
-        // Используем светлый тайл, чтобы было видно названия городов, но в тёмной теме
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd',
-            maxZoom: 19
+        // ИСПОЛЬЗУЕМ СТАНДАРТНУЮ OSM КАРТУ (ОНА ТОЧНО ЗАГРУЗИТСЯ)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(mapInstance);
 
-        // Добавляем кружки
+        // Добавляем кружки с золотым цветом
         Object.entries(combined).forEach(([city, salary]) => {
             const coord = cityCoords[city];
             if (coord) {
-                // Создаём кружок
                 const circle = L.circleMarker(coord, {
                     radius: Math.max(8, (salary / 15000)), // Динамический размер
                     color: '#d4af37',
@@ -641,7 +639,7 @@
                     fillOpacity: 0.8,
                     weight: 1
                 }).bindPopup(`
-                    <div style="text-align: center; color: #0f172a;">
+                    <div style="text-align: center;">
                         <strong style="font-size: 16px;">${city}</strong><br>
                         <span style="font-size: 14px;">Средняя з/п: ${salary.toLocaleString('ru-RU')} ₽</span>
                     </div>
@@ -651,7 +649,7 @@
             }
         });
 
-        // Принудительно обновляем размер карты, чтобы она не была серой
+        // Принудительно обновляем размер карты
         setTimeout(() => {
             if (mapInstance) mapInstance.invalidateSize();
         }, 300);
