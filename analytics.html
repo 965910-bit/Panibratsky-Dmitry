@@ -145,6 +145,7 @@
         }
         .job-item:last-child { border-bottom: none; }
         .job-name { color: var(--text-primary); }
+        .job-trend { font-size: 13px; font-weight: 600; margin-left: 12px; }
         .job-count { color: var(--accent-gold); font-weight: 600; }
 
         /* --- Калькулятор --- */
@@ -287,7 +288,7 @@
 
 <script>
     // ==========================================
-    // 1. ВСТРОЕННЫЕ ДАННЫЕ (100% НАДЕЖНОСТЬ)
+    // 1. ВСТРОЕННЫЕ ДАННЫЕ (С ТРЕНДАМИ ПО ДОЛЖНОСТЯМ)
     // ==========================================
     const staticWhData = {
       "current": {
@@ -306,12 +307,11 @@
           {"skill": "складские операции", "count": 24}
         ],
         "job_titles": {
-          "кладовщик": 480,
-          "комплектовщик": 210,
-          "заведующий складом": 85,
-          "начальник склада": 45,
-          "грузчик": 28,
-          "оператор пк": 22
+          "кладовщик": { "current": 480, "prev": 445, "change": 35, "percent": 7.9, "direction": "up" },
+          "комплектовщик": { "current": 210, "prev": 195, "change": 15, "percent": 7.7, "direction": "up" },
+          "заведующий складом": { "current": 85, "prev": 90, "change": -5, "percent": -5.6, "direction": "down" },
+          "начальник склада": { "current": 45, "prev": 48, "change": -3, "percent": -6.3, "direction": "down" },
+          "грузчик": { "current": 28, "prev": 28, "change": 0, "percent": 0, "direction": "stable" }
         },
         "experience_distribution": { "no_experience": 320, "between_1_and_3": 580, "between_3_and_6": 260, "more_than_6": 87 },
         "avg_salary_by_region": {
@@ -377,11 +377,11 @@
           {"skill": "сопровождение груза", "count": 22}
         ],
         "job_titles": {
-          "водитель": 450,
-          "экспедитор": 180,
-          "логист": 90,
-          "диспетчер": 55,
-          "руководитель транспортного отдела": 12
+          "водитель": { "current": 450, "prev": 460, "change": -10, "percent": -2.2, "direction": "down" },
+          "экспедитор": { "current": 180, "prev": 170, "change": 10, "percent": 5.9, "direction": "up" },
+          "логист": { "current": 90, "prev": 90, "change": 0, "percent": 0, "direction": "stable" },
+          "диспетчер": { "current": 55, "prev": 60, "change": -5, "percent": -8.3, "direction": "down" },
+          "руководитель транспортного отдела": { "current": 12, "prev": 15, "change": -3, "percent": -20.0, "direction": "down" }
         },
         "experience_distribution": { "no_experience": 210, "between_1_and_3": 480, "between_3_and_6": 210, "more_than_6": 85 },
         "avg_salary_by_region": {
@@ -465,8 +465,8 @@
             // 2. Отрисовка графика сравнения
             drawComparisonChart(whData.current.timeline, trData.current.timeline);
 
-            // 3. Отрисовка списка должностей (ВСЕ)
-            renderJobs(whData.current.job_titles, trData.current.job_titles);
+            // 3. Отрисовка списка должностей (С ТРЕНДАМИ)
+            renderJobsWithTrend(whData.current.job_titles, trData.current.job_titles);
 
             // 4. Карта
             initMap(whData.current.avg_salary_by_region, trData.current.avg_salary_by_region);
@@ -508,29 +508,42 @@
     }
 
     // ==========================================
-    // 4. СПИСОК ВСЕХ ДОЛЖНОСТЕЙ
+    // 4. СПИСОК ВСЕХ ДОЛЖНОСТЕЙ (С ТРЕНДАМИ)
     // ==========================================
-    function renderJobs(whJobs, trJobs) {
+    function renderJobsWithTrend(whJobs, trJobs) {
         const container = document.getElementById('jobsContainer');
         const combined = {};
 
-        // Объединяем должности
-        Object.entries(whJobs || {}).forEach(([k, v]) => combined[k] = (combined[k] || 0) + v);
-        Object.entries(trJobs || {}).forEach(([k, v]) => combined[k] = (combined[k] || 0) + v);
+        // Объединяем должности из двух источников
+        Object.entries(whJobs || {}).forEach(([k, v]) => combined[k] = v);
+        Object.entries(trJobs || {}).forEach(([k, v]) => combined[k] = v);
 
-        const sorted = Object.entries(combined).sort((a, b) => b[1] - a[1]);
+        // Сортируем по количеству вакансий (по убыванию)
+        const sorted = Object.entries(combined).sort((a, b) => b[1].current - a[1].current);
 
         if (sorted.length === 0) {
             container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Данные по должностям собираются...</div>';
             return;
         }
 
-        container.innerHTML = sorted.map(([job, count]) => `
-            <div class="job-item">
-                <span class="job-name">${job}</span>
-                <span class="job-count">${count}</span>
-            </div>
-        `).join('');
+        container.innerHTML = sorted.map(([job, data]) => {
+            // Формируем HTML для тренда
+            let trendHtml = '';
+            if (data.direction === 'up') {
+                trendHtml = `<span class="job-trend" style="color: #10b981;">📈 +${data.percent}%</span>`;
+            } else if (data.direction === 'down') {
+                trendHtml = `<span class="job-trend" style="color: #ef4444;">📉 ${data.percent}%</span>`;
+            } else {
+                trendHtml = `<span class="job-trend" style="color: #f59e0b;">➖ ${data.percent}%</span>`;
+            }
+
+            return `
+                <div class="job-item">
+                    <span class="job-name">${job} ${trendHtml}</span>
+                    <span class="job-count">${data.current}</span>
+                </div>
+            `;
+        }).join('');
     }
 
     // ==========================================
@@ -587,39 +600,4 @@
         const input = document.getElementById('calcInput');
         const count = parseInt(input.value);
         if (!count || count < 1) {
-            document.getElementById('calcResult').innerHTML = '<span style="color: #ef4444;">Пожалуйста, введите корректное число.</span>';
-            return;
-        }
-
-        // Объединяем вакансии в день из складского и транспортного таймлайнов
-        const whTimeline = whData.current.timeline;
-        const trTimeline = trData.current.timeline;
-        const allCounts = [...whTimeline, ...trTimeline];
-        
-        if (allCounts.length === 0) {
-            document.getElementById('calcResult').innerHTML = 'Недостаточно данных для расчета.';
-            return;
-        }
-
-        // Среднее количество новых вакансий в день (за последние 30 дней)
-        const avgPerDay = allCounts.reduce((sum, item) => sum + item.count, 0) / allCounts.length;
-        const days = Math.ceil(count / avgPerDay);
-
-        document.getElementById('calcResult').innerHTML = `
-            📊 При текущей скорости рынка (<strong>${avgPerDay.toFixed(1)}</strong> вакансий в день), 
-            чтобы закрыть <strong>${count}</strong> вакансий, потребуется <strong style="color: var(--accent-gold);">${days}</strong> дней.
-            ${days < 5 ? '🎯 Это очень быстрый рынок!' : (days < 15 ? '✅ Приемлемый срок.' : '🕒 Рынок медленный, закладывайте запас.' )}
-        `;
-    }
-
-    // Запускаем всё при загрузке
-    document.addEventListener('DOMContentLoaded', loadAnalytics);
-
-    // Исправляем баг Leaflet при скрытых вкладках
-    window.addEventListener('load', () => {
-        setTimeout(() => { if (mapInstance) mapInstance.invalidateSize(); }, 500);
-    });
-</script>
-
-</body>
-</html>
+            document.getElementById('calcResult').innerHTML = '<span style="color: #ef4444;">Пожалуйста, введите корректное
