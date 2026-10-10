@@ -1,945 +1,252 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Контакты – связаться с экспертом по SCM и логистике | Дмитрий Герасимов</title>
-    <meta name="description" content="Свяжитесь с экспертом по управлению цепями поставок (SCM), логистике и цифровой трансформации. Заявка на сотрудничество, партнёрство, вакансии, аудит системы инструкций.">
-    <meta name="yandex-verification" content="108fc8ce05da4c6d" />
-    <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI" />
-    <link rel="canonical" href="https://scm-news.ru/contact.html" />
-    <link rel="icon" href="1favicon.ico" type="image/x-icon">
-    <link rel="manifest" href="manifest.json">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SCM News">
-    <link rel="apple-touch-icon" href="icons/ios/icon-180.png" sizes="180x180">
-    <link rel="apple-touch-icon" href="icons/ios/icon-152.png" sizes="152x152">
-    <link rel="apple-touch-icon" href="icons/ios/icon-120.png" sizes="120x120">
-    <meta name="msapplication-TileImage" content="icons/windows/LargeTile.scale-100.png">
-    <meta name="msapplication-TileColor" content="#1e40af">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Google tag (gtag.js) - GA4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-DM41FJYWX0');
-    </script>
-
-    <!-- Яндекс.Метрика -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108401876', 'ym');
-        ym(108401876, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-
-    <style>
-        /* все стили без изменений (такие же, как в исходном contact.html) */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --text-primary: #0f172a;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --accent: #1e40af;
-            --accent-light: #3b82f6;
-            --gold: #d4af37;
-            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            --transition: all 0.3s ease;
-        }
-        body.dark {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --card-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.5;
-            transition: background 0.3s, color 0.3s;
-            font-size: 16px;
-        }
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-        @media (max-width: 768px) {
-            .container { padding: 0 20px; }
-            body { font-size: 15px; }
-        }
-        .progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: transparent;
-            z-index: 1001;
-        }
-        .progress-bar {
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--accent-light));
-            width: 0%;
-            transition: width 0.1s;
-        }
-        .scroll-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--accent);
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            z-index: 100;
-            border: none;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .scroll-top.show { opacity: 1; visibility: visible; }
-        .scroll-top:hover { background: var(--gold); transform: translateY(-3px); }
-        .theme-switch {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 8px 16px;
-            display: flex;
-            gap: 12px;
-            z-index: 100;
-            cursor: pointer;
-        }
-        .theme-switch i { font-size: 18px; color: var(--text-primary); }
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
-        .breadcrumb {
-            padding: 100px 0 20px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-        .breadcrumb a { color: var(--accent); text-decoration: none; }
-        header {
-            background-color: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        body.dark header { background-color: rgba(15,23,42,0.95); }
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-        }
-        .logo {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            text-decoration: none;
-        }
-        .logo-dot { color: var(--gold); }
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 32px;
-        }
-        nav ul li a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 500;
-            font-size: 14px;
-            transition: color 0.2s;
-        }
-        nav ul li a:hover, nav ul li a.active { color: var(--accent); }
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            color: var(--text-primary);
-        }
-        @media (max-width: 768px) {
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--bg-primary);
-                padding: 16px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                flex-direction: column;
-                gap: 12px;
-            }
-            nav ul.active { display: flex; }
-            .mobile-menu-btn { display: block; }
-            .scroll-top, .theme-switch { bottom: 20px; }
-            .scroll-top { right: 20px; }
-            .theme-switch { left: 20px; }
-        }
-        .chat-widget {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            z-index: 1000;
-        }
-        .chat-button {
-            width: 55px;
-            height: 55px;
-            background: var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-        .chat-button:hover { transform: scale(1.05); background: var(--gold); }
-        .chat-button i { font-size: 26px; color: white; }
-        .chat-box {
-            position: absolute;
-            bottom: 70px;
-            right: 0;
-            width: 280px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            overflow: hidden;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-        }
-        .chat-box.open { opacity: 1; visibility: visible; }
-        .chat-header { background: var(--accent); color: white; padding: 12px; font-weight: 600; }
-        .chat-body { padding: 12px; font-size: 14px; color: var(--text-secondary); }
-        .chat-quick button {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 6px 12px;
-            font-size: 12px;
-            cursor: pointer;
-            margin: 4px;
-        }
-        @media (max-width: 768px) {
-            .chat-widget { bottom: 80px; right: 20px; }
-            .chat-box { width: 260px; }
-        }
-        .page-hero {
-            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
-            padding: 120px 0 40px;
-            text-align: center;
-        }
-        .page-hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 20px; }
-        .page-hero p { color: var(--text-muted); max-width: 700px; margin: 0 auto; }
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin: 60px 0;
-        }
-        .contact-info {
-            background: var(--bg-secondary);
-            border-radius: 24px;
-            padding: 32px;
-        }
-        .contact-info h2 { font-size: 24px; margin-bottom: 24px; }
-        .contact-detail {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .contact-detail i {
-            width: 40px;
-            height: 40px;
-            background: var(--accent);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        .contact-detail a { color: var(--text-primary); text-decoration: none; }
-        .contact-form {
-            background: var(--bg-primary);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
-        }
-        .contact-form h2 { font-size: 24px; margin-bottom: 8px; }
-        .contact-form p { color: var(--text-muted); margin-bottom: 24px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: 600; margin-bottom: 8px; }
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 14px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-        }
-        button[type="submit"] {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        button[type="submit"]:hover { background: var(--gold); transform: translateY(-2px); }
-        .status {
-            margin-top: 16px;
-            font-size: 14px;
-            text-align: center;
-        }
-        .success { color: #10b981; }
-        .error { color: #dc2626; }
-        .sending { color: #f59e0b; }
-        .map-container {
-            margin: 40px 0;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
-        }
-        .map-container iframe {
-            width: 100%;
-            height: 400px;
-            border: none;
-            display: block;
-        }
-        .resume-links-section {
-            margin: 60px 0 40px;
-            padding: 0 20px;
-        }
-        .resume-links-section h3 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-align: center;
-            color: var(--text-primary);
-        }
-        .resume-cards {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-            justify-content: center;
-        }
-        .resume-card {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 18px 24px;
-            width: 100%;
-            max-width: 330px;
-            text-decoration: none;
-            transition: all 0.25s;
-            box-shadow: var(--card-shadow);
-        }
-        .resume-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 20px -10px rgba(0,0,0,0.15);
-        }
-        .resume-icon {
-            font-size: 2.2rem;
-            width: 55px;
-            text-align: center;
-        }
-        .resume-info {
-            flex: 1;
-        }
-        .resume-platform {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--text-primary);
-        }
-        .resume-desc {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-        .resume-arrow {
-            font-size: 1.3rem;
-            color: var(--accent);
-            transition: transform 0.2s;
-        }
-        .resume-card:hover .resume-arrow {
-            transform: translateX(4px);
-        }
-        .resume-card.hh:hover { border-left: 4px solid #ff6b00; }
-        .resume-card.habr:hover { border-left: 4px solid #77aa33; }
-        .resume-card.zarplata:hover { border-left: 4px solid #0f7b3e; }
-        @media (max-width: 768px) {
-            .resume-cards { flex-direction: column; align-items: center; }
-            .resume-card { max-width: 100%; }
-        }
-        footer {
-            background: #0f172a;
-            color: white;
-            padding: 60px 0 30px;
-            margin-top: 60px;
-        }
-        .footer-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        .footer-column h3 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 35px;
-            height: 3px;
-            background: var(--gold);
-        }
-        .footer-column ul { list-style: none; }
-        .footer-column ul li { margin-bottom: 12px; }
-        .footer-column ul li a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-        .footer-column ul li a:hover { color: white; padding-left: 5px; }
-        .footer-install-btn {
-            background: #1e40af;
-            color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.6);
-            font-size: 13px;
-        }
-        @media (max-width: 768px) {
-            .contact-grid { grid-template-columns: 1fr; }
-            .page-hero h1 { font-size: 32px; }
-            .map-container iframe { height: 300px; }
-        }
-        .faq-block {
-            margin: 60px 0 40px;
-            padding: 20px;
-            background: var(--bg-secondary);
-            border-radius: 24px;
-            border: 1px solid var(--border);
-        }
-        .faq-item {
-            margin-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-        .faq-question {
-            font-weight: 700;
-            cursor: pointer;
-            padding: 16px 0;
-            position: relative;
-            padding-right: 30px;
-            font-size: 18px;
-        }
-        .faq-question::after {
-            content: '+';
-            position: absolute;
-            right: 0;
-            top: 16px;
-            font-size: 22px;
-            font-weight: 400;
-        }
-        .faq-question.active::after {
-            content: '−';
-        }
-        .faq-answer {
-            display: none;
-            padding-bottom: 16px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-        .faq-answer.show {
-            display: block;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакты | Герасимов Дмитрий Сергеевич</title>
+<meta name="description" content="Открыт к диалогу: вакансии в ритейле и маркетплейсах, консалтинг, обучение, партнёрство.">
+<meta name="yandex-verification" content="108fc8ce05da4c6d">
+<meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI">
+<link rel="canonical" href="https://scm-news.ru/">
+<link rel="icon" href="1favicon.ico">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Контакты | Герасимов Дмитрий Сергеевич">
+<meta property="og:description" content="Открыт к диалогу: вакансии в ритейле и маркетплейсах, консалтинг, обучение, партнёрство.">
+<meta property="og:image" content="https://scm-news.ru/images/og-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-DM41FJYWX0");</script>
+<script>(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for (var j = 0; j < document.scripts.length; j++){if(document.scripts[j].src===r){return}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,"script","https://mc.yandex.ru/metrika/tag.js?id=108401876","ym");ym(108401876,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true});</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg-primary:#ffffff;--bg-secondary:#f8fafc;--text-primary:#0f172a;--text-secondary:#334155;--text-muted:#64748b;--border:#e2e8f0;--accent:#1e40af;--accent-light:#3b82f6;--gold:#d4af37;--success:#10b981;--card-shadow:0 4px 6px -1px rgba(0,0,0,0.05)}
+body.dark{--bg-primary:#0f172a;--bg-secondary:#1e293b;--text-primary:#f1f5f9;--text-secondary:#cbd5e1;--text-muted:#94a3b8;--border:#334155}
+body{font-family:'Inter',sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.6;font-size:16px}
+.container{max-width:1180px;margin:0 auto;padding:0 20px}
+header{background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);position:fixed;top:0;width:100%;z-index:1000}
+body.dark header{background:rgba(15,23,42,.96)}
+.nav-container{display:flex;justify-content:space-between;align-items:center;padding:14px 0;gap:16px;flex-wrap:wrap}
+.logo{font-size:18px;font-weight:800;color:var(--text-primary);text-decoration:none;white-space:nowrap}
+.logo span{color:var(--gold)}
+nav ul{display:flex;list-style:none;gap:20px;flex-wrap:wrap}
+nav ul li a{text-decoration:none;color:var(--text-muted);font-weight:500;font-size:14px;white-space:nowrap}
+nav ul li a:hover,nav ul li a.active{color:var(--accent)}
+.social-header-btns{display:flex;gap:8px}
+.social-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:30px;text-decoration:none;font-size:13px;font-weight:600;color:#fff}
+.social-btn.telegram{background:#229ED9}
+.social-btn.facebook{background:#1877F2}
+@media(max-width:900px){nav ul{display:none}}
+body{padding-top:80px}
+.breadcrumb{padding:20px 0 10px;font-size:14px;color:var(--text-muted)}
+.breadcrumb a{color:var(--accent);text-decoration:none}
+.hero-section{padding:60px 0 40px;background:linear-gradient(135deg,var(--bg-primary),var(--bg-secondary))}
+.hero-container{display:flex;align-items:center;gap:50px;flex-wrap:wrap}
+.profile-photo{width:280px;height:280px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)}
+.executive-tag{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;margin-bottom:16px;text-transform:uppercase}
+h1{font-size:clamp(28px,4vw,42px);line-height:1.15;margin-bottom:18px;font-weight:800}
+.hero-title{font-size:17px;color:var(--text-muted);margin-bottom:20px;max-width:600px}
+.hero-subtitle{font-size:15px;font-style:italic;border-left:3px solid var(--gold);padding-left:12px;max-width:800px;margin-top:14px}
+.tag{display:inline-block;background:rgba(30,64,175,.1);color:var(--accent);padding:6px 12px;border-radius:16px;margin:4px;font-size:12px;font-weight:500;border:1px solid rgba(30,64,175,.2)}
+.executive-summary{background:var(--bg-secondary);border-left:4px solid var(--gold);padding:22px;margin:24px 0;border-radius:14px}
+.executive-summary p{font-size:17px;line-height:1.55}
+.section{padding:50px 0}
+.section-header{text-align:center;margin-bottom:40px}
+.section-title{font-size:clamp(22px,3vw,30px);font-weight:700;margin-bottom:10px}
+.section-subtitle{font-size:15px;color:var(--text-muted);max-width:700px;margin:0 auto}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
+.result-card{background:var(--bg-primary);border:1px solid var(--border);border-radius:12px;padding:24px 18px;text-align:center;box-shadow:var(--card-shadow)}
+.result-number{font-size:30px;font-weight:800;color:var(--accent);margin-bottom:8px}
+.competence-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px}
+.competence-card{text-align:center;padding:20px;background:var(--bg-secondary);border-radius:14px}
+.competence-card i{font-size:36px;color:var(--gold);margin-bottom:10px;display:block}
+.competence-card strong{font-size:15px;display:block;margin-bottom:4px}
+.methodologies-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.methodology-card{display:flex;gap:16px;background:var(--bg-primary);border:1px solid var(--border);border-radius:14px;padding:20px}
+.methodology-icon{width:46px;height:46px;background:rgba(212,175,55,.12);color:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.trends-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.trend-card{background:var(--bg-primary);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--card-shadow)}
+.trend-icon{font-size:30px;color:var(--accent);margin-bottom:12px}
+.trend-title{font-size:19px;font-weight:700;color:var(--accent);margin-bottom:10px}
+.trend-list{padding-left:20px;margin:10px 0}
+.strategic-academy{background:rgba(30,64,175,.05);padding:14px;border-radius:8px;margin-top:14px;border-left:3px solid var(--gold);font-size:13px}
+.retail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.retail-card{background:var(--bg-primary);border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--card-shadow)}
+.retail-icon{font-size:32px;margin-bottom:12px}
+.retail-card h3{font-size:20px;font-weight:700;margin-bottom:4px}
+.retail-segment{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.retail-task{font-size:13px;color:var(--text-muted);margin-bottom:10px;line-height:1.55}
+.retail-solution{font-size:14px;margin-bottom:14px;line-height:1.55}
+.retail-experience{font-size:12px;color:var(--success);font-weight:600;padding-top:12px;border-top:1px solid var(--border)}
+.bridge-section{padding:40px 20px;max-width:1180px;margin:0 auto}
+.bridge-inner{border-radius:24px;padding:36px;display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center;background:linear-gradient(135deg,#1e40af,#1e3a8a);box-shadow:0 12px 32px rgba(30,64,175,.18)}
+.bridge-icon{font-size:56px}
+.bridge-text h3{color:#fff;font-size:22px;margin-bottom:6px}
+.bridge-text p{color:rgba(255,255,255,.85);font-size:15px;margin-bottom:10px}
+.bridge-features{display:flex;gap:14px;flex-wrap:wrap}
+.bridge-features span{color:var(--gold);font-size:13px;font-weight:600}
+.bridge-btn{background:var(--gold);color:#0f172a;padding:14px 28px;border-radius:40px;font-weight:700;text-decoration:none;white-space:nowrap;display:inline-block}
+.tg-feed,.fb-feed{padding:36px 20px;max-width:900px;margin:0 auto}
+.tg-feed-inner,.fb-feed-inner{background:var(--bg-primary);border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:var(--card-shadow)}
+.tg-header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.tg-icon{width:52px;height:52px;background:#229ED9;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tg-header h3{font-size:17px;margin-bottom:2px}
+.tg-header p{color:var(--text-muted);font-size:13px}
+.tg-subscribe-btn{margin-left:auto;background:#229ED9;color:#fff;padding:10px 20px;border-radius:30px;text-decoration:none;font-weight:600;font-size:13px}
+.fb-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.fb-header i{width:52px;height:52px;background:#1877F2;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px}
+.telegram-expert{background:linear-gradient(135deg,#1e3a8a,#0f172a);border-radius:22px;padding:36px;color:#fff;text-align:center;margin:36px auto;max-width:1180px}
+.telegram-expert h3{font-size:24px;margin-bottom:14px}
+.telegram-expert p{max-width:650px;margin:0 auto 20px;font-size:16px;opacity:.9}
+.cta-btn{display:inline-block;background:var(--gold);color:#0f172a;padding:14px 30px;border-radius:40px;font-weight:700;text-decoration:none}
+.cta-section{padding:50px 0;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;text-align:center;border-radius:24px;margin:36px auto;max-width:1180px}
+.cta-title{font-size:clamp(24px,4vw,32px);font-weight:700;margin-bottom:14px}
+.cta-description{font-size:16px;opacity:.9;max-width:650px;margin:0 auto 24px}
+.faq-block{margin:40px auto;padding:22px;background:var(--bg-secondary);border-radius:20px;max-width:1180px}
+.faq-item{border-bottom:1px solid var(--border);padding:14px 0}
+.faq-question{font-weight:700;cursor:pointer;font-size:17px;position:relative;padding-right:30px}
+.faq-question::after{content:'+';position:absolute;right:0;font-size:22px;color:var(--accent)}
+.faq-question.active::after{content:'−'}
+.faq-answer{display:none;padding-top:10px;color:var(--text-secondary);line-height:1.6}
+.faq-answer.show{display:block}
+.exp-card{background:var(--bg-primary);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:14px;padding:24px;margin-bottom:20px;box-shadow:var(--card-shadow)}
+.exp-period{color:var(--text-muted);font-size:13px;font-weight:600;margin-bottom:6px}
+.exp-company{font-size:20px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.exp-position{font-size:14px;color:var(--text-secondary);font-weight:500;margin-bottom:12px}
+.exp-description{font-size:15px;color:var(--text-secondary);margin-bottom:14px;line-height:1.6}
+.exp-achievements{padding-left:20px}
+.exp-achievements li{margin-bottom:8px;line-height:1.55}
+.about-section{background:var(--bg-primary);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px;box-shadow:var(--card-shadow)}
+.about-section h2{font-size:22px;font-weight:700;color:var(--accent);margin-bottom:12px}
+.about-section p{font-size:16px;line-height:1.65}
+.career-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.career-card{background:var(--bg-primary);border:1px solid var(--border);border-radius:14px;padding:22px}
+.career-card h3{font-size:18px;color:var(--accent);margin-bottom:12px}
+.career-card ul{padding-left:20px}
+.career-card li{margin-bottom:6px}
+.contact-detail{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;background:var(--bg-primary);border:1px solid var(--border);border-radius:12px;padding:16px}
+.contact-detail i{width:40px;height:40px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.contact-detail a{color:var(--text-primary);text-decoration:none;font-weight:600}
+.contact-detail a:hover{color:var(--accent)}
+footer{background:#0f172a;color:#fff;padding:50px 0 24px;margin-top:50px}
+.footer-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;margin-bottom:32px}
+.footer-column h3{font-size:16px;font-weight:700;margin-bottom:16px;position:relative;padding-bottom:8px}
+.footer-column h3::after{content:'';position:absolute;bottom:0;left:0;width:32px;height:3px;background:var(--gold)}
+.footer-column ul{list-style:none}
+.footer-column li{margin-bottom:10px}
+.footer-column a{color:rgba(255,255,255,.75);text-decoration:none;font-size:14px}
+.footer-column a:hover{color:#fff}
+.copyright{text-align:center;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:13px}
+.scroll-top{position:fixed;bottom:24px;right:24px;width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:18px;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.scroll-top.show{display:flex}
+.theme-switch{position:fixed;bottom:24px;left:24px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:30px;padding:8px 14px;cursor:pointer;font-size:16px;color:var(--text-primary)}
+.prompt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin:28px 0}
+.prompt-stat{background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.prompt-stat-num{font-size:32px;font-weight:800;color:var(--accent)}
+.prompt-stat-label{font-size:13px;color:var(--text-muted);margin-top:4px}
+.prompt-filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+@media(max-width:800px){.prompt-filters{grid-template-columns:1fr}}
+.prompt-filters input,.prompt-filters select{padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg-primary);color:var(--text-primary);font-family:inherit;font-size:14px}
+.prompt-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.prompt-tabs .tab{background:var(--bg-secondary);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--text-muted);font-weight:500}
+.prompt-tabs .tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.prompt-count{font-size:13px;color:var(--text-muted);margin-bottom:12px}
+.prompt-table-wrap{background:var(--bg-primary);border:1px solid var(--border);border-radius:14px;overflow:auto;max-height:75vh}
+.prompt-table{width:100%;border-collapse:collapse;font-size:13px}
+.prompt-table thead th{position:sticky;top:0;background:var(--bg-secondary);padding:12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:2px solid var(--border);white-space:nowrap;z-index:2}
+.prompt-table tbody tr{border-bottom:1px solid var(--border);cursor:pointer}
+.prompt-table tbody tr:hover{background:var(--bg-secondary)}
+.prompt-table td{padding:10px 12px;vertical-align:top}
+.badge{display:inline-block;padding:3px 9px;border-radius:12px;font-size:11px;font-weight:600}
+.badge-tier{background:rgba(30,64,175,.12);color:var(--accent)}
+.badge-role{background:rgba(167,139,250,.15);color:#7c3aed}
+.badge-diff-Low{background:rgba(16,185,129,.15);color:#059669}
+.badge-diff-Medium{background:rgba(245,158,11,.15);color:#b45309}
+.badge-diff-High{background:rgba(239,68,68,.15);color:#dc2626}
+.prompt-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}
+.prompt-modal.open{display:flex}
+.prompt-modal-inner{background:var(--bg-primary);border-radius:18px;padding:30px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;position:relative}
+.prompt-modal-close{position:absolute;top:14px;right:18px;background:transparent;border:none;font-size:22px;color:var(--text-muted);cursor:pointer}
+.prompt-modal-inner h2{margin-bottom:14px;color:var(--accent)}
+.prompt-modal-badges{margin-bottom:16px}
+.prompt-modal-kv{display:grid;gap:8px;margin-bottom:18px;font-size:14px}
+.prompt-modal-pre{background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:16px;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.55;white-space:pre-wrap;margin-bottom:16px}
+.prompt-modal-copy{background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:30px;font-weight:700;cursor:pointer;font-size:14px}
+.prompt-modal-copy:hover{background:var(--gold);color:#0f172a}
+</style>
 </head>
 <body>
-    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-    <header>
-        <div class="container nav-container">
-            <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ГЕРАСИМОВ</a>
-            <button class="mobile-menu-btn" aria-label="Меню"><i class="fas fa-bars"></i></button>
-            <nav>
-                <ul id="nav-menu">
-                    <li><a href="about.html">Обо мне</a></li>
-                    <li><a href="expertise.html">Экспертиза</a></li>
-                    <li><a href="experience.html">Опыт</a></li>
-                    <li><a href="index.html">Стратегия</a></li>
-                    <li><a href="trends.html">Новости SCM</a></li>
-                    <li><a href="contact.html" class="active">Контакты</a></li>
-                    <li><a href="career.html">Карьера</a></li>
-                    <li><a href="blog.html">Блог</a></li>
-                    <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<header><div class="container nav-container">
+<a href="index.html" class="logo">ГЕРАСИМОВ<span>.</span>ДМИТРИЙ</a>
+<nav><ul><li><a href="about.html">Обо мне</a></li>
+<li><a href="expertise.html">Экспертиза</a></li>
+<li><a href="experience.html">Опыт</a></li>
+<li><a href="index.html">Главная</a></li>
+<li><a href="prompts.html">Prompt Hub</a></li>
+<li><a href="career.html">Карьера</a></li>
+<li><a href="blog.html">Блог</a></li>
+<li><a href="contact.html" class="active">Контакты</a></li>
+<li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener">MAX канал</a></li>
+</ul></nav>
+<div class="social-header-btns">
+<a href="https://t.me/LogisticaandSupplyChain" target="_blank" class="social-btn telegram"><i class="fab fa-telegram"></i></a>
+<a href="https://www.facebook.com/ТВОЯ_СТРАНИЦА" target="_blank" class="social-btn facebook"><i class="fab fa-facebook-f"></i></a>
+</div>
+</div></header>
+<div class="container"><div class="breadcrumb"><a href="index.html">Главная</a> / Контакты</div></div>
+<section class="section container">
+<h1>Контакты</h1>
+<p class="hero-title" style="margin-top:16px;">Открыт к диалогу: вакансии в ритейле и маркетплейсах, консалтинг, обучение, партнёрство.</p>
+<div style="margin-top:36px;max-width:640px;"><div class="contact-detail"><i class="fas fa-phone"></i><div><strong>Телефон</strong><br><a href="tel:+79227774815">+7 (922) 777-48-15</a></div></div>
+<div class="contact-detail"><i class="fas fa-envelope"></i><div><strong>Email</strong><br><a href="mailto:dmitry.gerasimov.2026@yandex.ru">dmitry.gerasimov.2026@yandex.ru</a></div></div>
+<div class="contact-detail"><i class="fas fa-comment-dots"></i><div><strong>MAX</strong><br><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0">Через мессенджер MAX</a></div></div>
+<div class="contact-detail"><i class="fas fa-telegram"></i><div><strong>Telegram</strong><br><a href="https://t.me/LogisticaandSupplyChain">@LogisticaandSupplyChain</a></div></div>
+<div class="contact-detail"><i class="fas fa-globe"></i><div><strong>Портфолио</strong><br><a href="https://scm-news.ru">scm-news.ru</a></div></div>
+<div class="contact-detail"><i class="fas fa-map-marker-alt"></i><div><strong>Город</strong><br><a href="#">Сургут</a></div></div></div>
+</section>
+<footer><div class="container">
+<div class="footer-container">
+<div class="footer-column"><h3>Герасимов Дмитрий</h3><p style="color:rgba(255,255,255,.75);font-size:14px;">Операционный директор. Эксперт по SCM и логистике. Сургут.</p></div>
+<div class="footer-column"><h3>Навигация</h3><ul><li><a href="about.html">Обо мне</a></li><li><a href="expertise.html">Экспертиза</a></li><li><a href="experience.html">Опыт</a></li><li><a href="prompts.html">Prompt Hub</a></li><li><a href="career.html">Карьера</a></li><li><a href="blog.html">Блог</a></li><li><a href="contact.html">Контакты</a></li></ul></div>
+<div class="footer-column"><h3>Контакты</h3><ul><li><a href="tel:+79227774815">📞 +7 (922) 777-48-15</a></li><li><a href="mailto:dmitry.gerasimov.2026@yandex.ru">📧 dmitry.gerasimov.2026@yandex.ru</a></li><li><a href="https://t.me/LogisticaandSupplyChain" target="_blank">✈️ Telegram</a></li><li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank">💬 MAX</a></li></ul></div>
+<div class="footer-column"><h3>Портфолио</h3><ul><li><a href="https://scm-news.ru">https://scm-news.ru</a></li><li><a href="https://scm-news.online/" target="_blank">🎓 Академия SCM</a></li></ul></div>
+</div>
+<div class="copyright">© 2026 Герасимов Дмитрий Сергеевич. Сургут.</div>
+</div></footer>
+<button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
+<div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i> / <i class="fas fa-moon"></i></div>
+<script>
+(function(){
+  var fadeEls = document.querySelectorAll('.fade-up');
+  fadeEls.forEach(function(el){ el.classList.add('visible'); });
 
-    <div class="container">
-        <div class="breadcrumb">
-            <a href="index.html">Главная</a> / <span>Контакты</span>
-        </div>
-    </div>
+  window.addEventListener('scroll', function(){
+    var st = document.getElementById('scrollTopBtn');
+    if (st) { if (window.scrollY > 300) st.classList.add('show'); else st.classList.remove('show'); }
+  });
+  var st = document.getElementById('scrollTopBtn');
+  if (st) st.addEventListener('click', function(){ window.scrollTo({top:0,behavior:'smooth'}); });
 
-    <div class="page-hero fade-up">
-        <div class="container">
-            <h1>📬 Свяжитесь со мной – эксперт по SCM и логистике</h1>
-            <p>Буду рад обсудить стратегическое сотрудничество, партнёрство или ответить на ваши вопросы по управлению цепями поставок.</p>
-        </div>
-    </div>
+  var ts = document.getElementById('themeSwitch');
+  if (ts) {
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    ts.addEventListener('click', function(){
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+  }
 
-    <div class="container fade-up">
-        <div class="contact-grid">
-            <div class="contact-info">
-                <h2>Контакты</h2>
-                <div class="contact-detail">
-                    <i class="fas fa-envelope"></i>
-                    <div>
-                        <strong>Email</strong><br>
-                        <a href="mailto:dmitry@scm-news.ru" id="emailLink">dmitry@scm-news.ru</a>
-                    </div>
-                </div>
-                <div class="contact-detail">
-                    <i class="fab fa-telegram"></i>
-                    <div>
-                        <strong>Telegram</strong><br>
-                        <a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="telegramChannelLink">@LogisticaandSupplyChain</a>
-                    </div>
-                </div>
-                <div class="contact-detail">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <div>
-                        <strong>Регион</strong><br>
-                        Россия (работаем по всей стране)
-                    </div>
-                </div>
-            </div>
-
-            <div class="contact-form">
-                <h2>🤝 Заявка на сотрудничество</h2>
-                <p>Оставьте заявку, и я свяжусь с вами в ближайшее время.</p>
-                <form id="leadForm">
-                    <div class="form-group">
-                        <label for="name">Имя *</label>
-                        <input type="text" id="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Телефон</label>
-                        <input type="tel" id="phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Тип заявки *</label>
-                        <select id="type" required>
-                            <option value="Сотрудничество (коммерческое)">Сотрудничество (коммерческое)</option>
-                            <option value="Партнёрство (интеграция)">Партнёрство (интеграция)</option>
-                            <option value="Вакансия / HR">Вакансия / HR</option>
-                            <option value="Аудит и внедрение системы инструкций / обучения (SOP + TWI)">Аудит и внедрение системы инструкций / обучения (SOP + TWI)</option>
-                            <option value="Другое">Другое</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Сообщение *</label>
-                        <textarea id="message" rows="4" required></textarea>
-                    </div>
-                    <button type="submit" id="submitBtn">Отправить заявку</button>
-                    <div id="status" class="status"></div>
-                </form>
-            </div>
-        </div>
-
-        <div class="map-container">
-            <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3Ae0b9b5d2c8f4a1b7c6d5e9f8a7b6c5d4e3f2a1b2c3d4e5f6a7b8c9d0e1f2a3b4&amp;source=constructor" frameborder="0"></iframe>
-        </div>
-
-        <div class="resume-links-section">
-            <h3>📄 Мои профессиональные резюме</h3>
-            <div class="resume-cards">
-                <a href="https://surgut.hh.ru/resume/6b7a3ee4ff0c2a8cb00039ed1f6d6a326d5a45" target="_blank" rel="noopener noreferrer" class="resume-card hh" data-resume="hh">
-                    <div class="resume-icon">👔</div>
-                    <div class="resume-info">
-                        <span class="resume-platform">HeadHunter</span>
-                        <span class="resume-desc">Актуальное резюме с полным опытом</span>
-                    </div>
-                    <div class="resume-arrow">→</div>
-                </a>
-                <a href="https://career.habr.com/djdeman" target="_blank" rel="noopener noreferrer" class="resume-card habr" data-resume="habr">
-                    <div class="resume-icon">🧑‍💻</div>
-                    <div class="resume-info">
-                        <span class="resume-platform">Хабр Карьера</span>
-                        <span class="resume-desc">Техническое сообщество и портфолио</span>
-                    </div>
-                    <div class="resume-arrow">→</div>
-                </a>
-                <a href="https://surgut.zarplata.ru/resume/8fdf7b6dff10564de80039ed1f614a6773334f" target="_blank" rel="noopener noreferrer" class="resume-card zarplata" data-resume="zarplata">
-                    <div class="resume-icon">💰</div>
-                    <div class="resume-info">
-                        <span class="resume-platform">Зарплата.ру</span>
-                        <span class="resume-desc">Детализация карьеры и навыков</span>
-                    </div>
-                    <div class="resume-arrow">→</div>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="faq-block">
-            <h2 class="section-title">Часто задаваемые вопросы</h2>
-            <div class="faq-item">
-                <div class="faq-question">Как быстро вы отвечаете на заявки?</div>
-                <div class="faq-answer">Обычно в течение 1 рабочего дня. Если вопрос срочный, лучше написать в Telegram.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Можно ли связаться с вами через Telegram?</div>
-                <div class="faq-answer">Да, ссылка на Telegram-канал и личный аккаунт есть в разделе «Контакты». Я отвечаю в рабочие часы, но вы можете оставить сообщение в любое время.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Какие форматы сотрудничества вы предлагаете?</div>
-                <div class="faq-answer">Стратегический консалтинг по SCM, аудит цепей поставок, внедрение цифровых инструментов, обучение команд, разработка индивидуальных курсов через Академию SCM, а также аудит и внедрение системы инструкций и обучения (SOP + TWI).</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Нужно ли регистрироваться, чтобы отправить заявку?</div>
-                <div class="faq-answer">Нет, форма доступна без регистрации. Просто заполните поля и отправьте.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Принимаете ли вы заявки на партнёрство и вакансии?</div>
-                <div class="faq-answer">Да, в форме выберите соответствующий тип заявки. Рассматриваю предложения о партнёрстве, интеграциях, а также вакансии для HR-специалистов в области SCM.</div>
-            </div>
-        </div>
-    </div>
-
-    <footer>
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-column"><h3>Дмитрий Герасимов</h3><p>Стратегический лидер в управлении цепями поставок и цифровой трансформации бизнеса.</p></div>
-                <div class="footer-column">
-                    <h3>Навигация</h3>
-                    <ul>
-                        <li><a href="about.html">Обо мне</a></li>
-                        <li><a href="expertise.html">Экспертиза</a></li>
-                        <li><a href="experience.html">Опыт</a></li>
-                        <li><a href="index.html">Стратегия</a></li>
-                        <li><a href="trends.html">Новости SCM</a></li>
-                        <li><a href="contact.html">Контакты</a></li>
-                        <li><a href="career.html">Карьера</a></li>
-                        <li><a href="blog.html">Блог</a></li>
-                        <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer">MAX канал</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Контакты</h3>
-                    <ul>
-                        <li><a href="mailto:dmitry@scm-news.ru" id="footerEmailLink"><i class="fas fa-envelope"></i> dmitry@scm-news.ru</a></li>
-                        <li><a href="https://t.me/LogisticaandSupplyChain" target="_blank" id="footerTelegramLink"><i class="fab fa-telegram"></i> Telegram-канал</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Приложение</h3>
-                    <button id="installAppBtnFooter" class="footer-install-btn">📲 Скачать приложение</button>
-                    <p style="font-size:12px; margin-top:8px;">Установите наше PWA на телефон или компьютер.</p>
-                </div>
-                <div class="footer-column">
-                    <h3>Присоединяйтесь</h3>
-                    <ul>
-                        <li><a href="https://max.ru/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0" target="_blank" rel="noopener noreferrer"><i class="fas fa-comment-dots"></i> Канал в MAX</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">&copy; 2026 Дмитрий Герасимов.</div>
-        </div>
-    </footer>
-
-    <button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
-    <div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
-
-    <div class="chat-widget">
-        <div class="chat-button" id="chatButton"><i class="fas fa-comment-dots"></i></div>
-        <div class="chat-box" id="chatBox">
-            <div class="chat-header">📬 Чат с экспертом</div>
-            <div class="chat-body">
-                <p>Здравствуйте! Чем могу помочь?</p>
-                <div class="chat-quick">
-                    <button onclick="window.location.href='contact.html'">📝 Оставить заявку</button>
-                    <button onclick="window.open('https://t.me/LogisticaandSupplyChain','_blank')">✈️ Telegram</button>
-                    <button onclick="window.location.href='mailto:dmitry@scm-news.ru'">📧 Написать email</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/subscribe.js"></script>
-    <script>
-        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzgYyJmzN_sf1cNiAX-11F_YgUUyYvPbjaRRfDGiAq6CWazZUGynpfOplzmvbs34KO4Mg/exec';
-
-        const form = document.getElementById('leadForm');
-        const statusDiv = document.getElementById('status');
-        const submitBtn = document.getElementById('submitBtn');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const type = document.getElementById('type').value;
-            const message = document.getElementById('message').value.trim();
-
-            if (!name || !email || !message) {
-                showStatus('Заполните обязательные поля', 'error', statusDiv);
-                return;
-            }
-
-            const data = {
-                type: 'lead',
-                name: name,
-                email: email,
-                phone: phone,
-                requestType: type,
-                message: message,
-                timestamp: new Date().toISOString(),
-                status: 'новый'
-            };
-
-            showStatus('⏳ Отправка...', 'sending', statusDiv);
-            submitBtn.disabled = true;
-
-            try {
-                await fetch(BACKEND_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                showStatus('✅ Заявка отправлена. Я свяжусь с вами!', 'success', statusDiv);
-                ym(108401876, 'reachGoal', 'lead_submit');
-                gtag('event', 'lead_submit', { event_category: 'forms', event_label: 'contact' });
-                form.reset();
-            } catch (err) {
-                console.error(err);
-                showStatus('❌ Ошибка отправки. Попробуйте позже.', 'error', statusDiv);
-            } finally {
-                submitBtn.disabled = false;
-                setTimeout(() => { if (statusDiv.innerHTML === '⏳ Отправка...') statusDiv.innerHTML = ''; }, 5000);
-            }
-        });
-
-        function showStatus(msg, type, el) {
-            el.innerHTML = msg;
-            el.className = `status ${type}`;
-            if (type !== 'sending') {
-                setTimeout(() => { if (el.innerHTML === msg) el.innerHTML = ''; }, 5000);
-            }
-        }
-
-        document.querySelectorAll('.resume-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const platform = card.getAttribute('data-resume');
-                if (platform === 'hh') {
-                    ym(108401876, 'reachGoal', 'resume_click_hh');
-                    gtag('event', 'resume_click_hh', { event_category: 'career' });
-                } else if (platform === 'habr') {
-                    ym(108401876, 'reachGoal', 'resume_click_habr');
-                    gtag('event', 'resume_click_habr', { event_category: 'career' });
-                } else if (platform === 'zarplata') {
-                    ym(108401876, 'reachGoal', 'resume_click_zarplata');
-                    gtag('event', 'resume_click_zarplata', { event_category: 'career' });
-                }
-            });
-        });
-
-        const emailLink = document.getElementById('emailLink');
-        if (emailLink) {
-            emailLink.addEventListener('click', () => {
-                ym(108401876, 'reachGoal', 'contact_email_click');
-                gtag('event', 'contact_email_click', { event_category: 'contact', event_label: 'email' });
-            });
-        }
-        const telegramChannelLink = document.getElementById('telegramChannelLink');
-        if (telegramChannelLink) {
-            telegramChannelLink.addEventListener('click', () => {
-                ym(108401876, 'reachGoal', 'contact_telegram_click');
-                gtag('event', 'contact_telegram_click', { event_category: 'contact', event_label: 'telegram' });
-            });
-        }
-
-        const rssFooterLink = document.getElementById('rssFooterLink');
-        if (rssFooterLink) {
-            rssFooterLink.addEventListener('click', () => {
-                ym(108401876, 'reachGoal', 'footer_rss_click');
-                gtag('event', 'footer_rss_click', { event_category: 'footer', event_label: 'rss' });
-            });
-        }
-        const footerEmailLink = document.getElementById('footerEmailLink');
-        if (footerEmailLink) {
-            footerEmailLink.addEventListener('click', () => {
-                ym(108401876, 'reachGoal', 'footer_email_click');
-                gtag('event', 'footer_email_click', { event_category: 'footer', event_label: 'email' });
-            });
-        }
-        const footerTelegramLink = document.getElementById('footerTelegramLink');
-        if (footerTelegramLink) {
-            footerTelegramLink.addEventListener('click', () => {
-                ym(108401876, 'reachGoal', 'footer_telegram_click');
-                gtag('event', 'footer_telegram_click', { event_category: 'footer', event_label: 'telegram' });
-            });
-        }
-
-        document.querySelectorAll('#nav-menu a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                const href = link.getAttribute('href');
-                let page = '';
-                if (href.includes('about.html')) page = 'about';
-                else if (href.includes('expertise.html')) page = 'expertise';
-                else if (href.includes('experience.html')) page = 'experience';
-                else if (href.includes('index.html')) page = 'home';
-                else if (href.includes('trends.html')) page = 'trends';
-                else if (href.includes('contact.html')) page = 'contact';
-                else if (href.includes('career.html')) page = 'career';
-                else if (href.includes('blog.html')) page = 'blog';
-                if (page) {
-                    ym(108401876, 'reachGoal', 'nav_click_' + page);
-                    gtag('event', 'nav_click', { event_category: 'navigation', event_label: page });
-                }
-            });
-        });
-
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('progressBar').style.width = scrolled + '%';
-        });
-
-        const scrollBtn = document.getElementById('scrollTopBtn');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) scrollBtn.classList.add('show');
-            else scrollBtn.classList.remove('show');
-        });
-        scrollBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        const themeSwitch = document.getElementById('themeSwitch');
-        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
-        themeSwitch.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-        });
-
-        const fadeElements = document.querySelectorAll('.fade-up');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        fadeElements.forEach(el => observer.observe(el));
-
-        const chatButton = document.getElementById('chatButton');
-        const chatBox = document.getElementById('chatBox');
-        chatButton.addEventListener('click', () => chatBox.classList.toggle('open'));
-
-        const mobileBtn = document.querySelector('.mobile-menu-btn');
-        const navMenu = document.getElementById('nav-menu');
-        if (mobileBtn && navMenu) {
-            mobileBtn.addEventListener('click', () => navMenu.classList.toggle('active'));
-            document.querySelectorAll('#nav-menu a').forEach(link => {
-                link.addEventListener('click', () => navMenu.classList.remove('active'));
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const questions = document.querySelectorAll('.faq-question');
-            questions.forEach(q => {
-                q.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    const answer = this.nextElementSibling;
-                    answer.classList.toggle('show');
-                });
-            });
-        });
-    </script>
-    <script src="js/register-sw.js"></script>
-    <script src="js/install-prompt.js"></script>
+  document.querySelectorAll('.faq-question').forEach(function(q){
+    q.addEventListener('click', function(){
+      this.classList.toggle('active');
+      var a = this.nextElementSibling;
+      if (a) a.classList.toggle('show');
+    });
+  });
+})();
+</script>
 </body>
 </html>
