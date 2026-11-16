@@ -265,7 +265,7 @@ class SCMChatBot {
 
     formatMessage(text) {
         // Простой markdown-like форматирование
-        return text
+        return String(text).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c])
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\n/g, '<br>');
     }

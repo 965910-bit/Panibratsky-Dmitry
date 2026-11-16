@@ -216,16 +216,17 @@ class ChatBot {
             minute: '2-digit' 
         });
 
-        const messageHTML = `
-            <div class="message ${message.type}">
-                <div class="message-content">
-                    ${message.content}
-                    <div class="message-time">${timeString}</div>
-                </div>
-            </div>
-        `;
-
-        this.elements.messages.insertAdjacentHTML('beforeend', messageHTML);
+        const wrapper = document.createElement('div');
+        wrapper.className = `message ${message.type === 'user' ? 'user' : 'bot'}`;
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        content.appendChild(document.createTextNode(String(message.content)));
+        const time = document.createElement('div');
+        time.className = 'message-time';
+        time.textContent = timeString;
+        content.appendChild(time);
+        wrapper.appendChild(content);
+        this.elements.messages.appendChild(wrapper);
         this.scrollToBottom();
     }
 

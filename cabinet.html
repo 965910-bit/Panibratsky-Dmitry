@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<meta name="robots" content="noindex, nofollow">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Маркетинговый центр | Управление</title>
@@ -275,19 +276,20 @@
         <div class="login-card">
             <i class="fas fa-chart-line" style="font-size: 40px; color: #1e40af;"></i>
             <h2 style="margin: 15px 0;">Маркетинговый центр</h2>
-            <input type="password" id="loginPass" placeholder="Пароль">
-            <button id="loginBtn">Войти</button>
+
+            <button id="loginBtn">Открыть локальный инструмент</button>
             <div id="loginError" class="error-msg"></div>
-            <p style="margin-top: 20px; font-size: 12px; color: #64748b;">Пароль: <strong>admin</strong></p>
+            <p>Это локальный инструмент в вашем браузере, не защищённый личный кабинет. Не храните здесь конфиденциальные данные.</p>
         </div>
     </div>
 
     <div id="dashboard" class="dashboard">
+        <p role="note">Локальный инструмент без защиты доступа. Не храните конфиденциальные данные.</p>
         <div class="header">
             <h1><i class="fas fa-rocket"></i> Маркетинговый центр</h1>
             <div>
                 <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Тёмная тема</button>
-                <button id="logoutBtn" class="secondary" style="margin-left: 10px;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+                <button id="logoutBtn" class="secondary" style="margin-left: 10px;"><i class="fas fa-sign-out-alt"></i> Закрыть</button>
             </div>
         </div>
 
@@ -297,11 +299,11 @@
             <button class="tab-btn" data-tab="leads">📋 Заявки</button>
             <button class="tab-btn" data-tab="max">📱 MAX (каналы)</button>
             <button class="tab-btn" data-tab="manual-news">📝 Ручные новости</button>
-            
+
             <!-- ДВЕ НОВЫЕ ВКЛАДКИ -->
             <button class="tab-btn" data-tab="warehouse-analytics">📦 Складская аналитика</button>
             <button class="tab-btn" data-tab="transport-analytics">🚛 Транспортная аналитика</button>
-            
+
             <button class="tab-btn" data-tab="import">Импорт/Экспорт</button>
         </div>
 
@@ -432,7 +434,7 @@
 </div>
 
 <script>
-    const PASSWORD = "admin";
+    // Local-only workspace. This is not an authentication boundary.
     const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzgYyJmzN_sf1cNiAX-11F_YgUUyYvPbjaRRfDGiAq6CWazZUGynpfOplzmvbs34KO4Mg/exec';
     const STORAGE = {
         seoPages: 'promo_seoPages',
@@ -445,7 +447,7 @@
     let loggedIn = false;
 
     // ==================== Общие вспомогательные ====================
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+    function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
     function downloadFile(filename, content) { const a = document.createElement('a'); const blob = new Blob([content], {type: 'text/plain'}); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); URL.revokeObjectURL(a.href); }
     function getData(key) { return JSON.parse(localStorage.getItem(key) || '[]'); }
 
@@ -458,7 +460,7 @@
         initManualNewsData();
         renderSeo();
         renderSubscribers();
-        loadLeadsFromBackend();
+        renderLeads(); // Не загружаем персональные данные автоматически.
         renderMaxChannels();
         renderMaxSubscribers();
         renderManualNews();
@@ -512,6 +514,11 @@
             localStorage.setItem(STORAGE.seoPages, JSON.stringify(pages));
             renderSeo();
         }));
+    }
+
+    function safeLink(value) {
+        try { const u = new URL(value, location.href); return ['http:', 'https:'].includes(u.protocol) ? u.href : ''; }
+        catch (_) { return ''; }
     }
 
     // ==================== Подписчики ====================
@@ -716,7 +723,7 @@
                     <div>
                         <strong>${escapeHtml(ch.name)}</strong><br>
                         <small>Ссылка: ${escapeHtml(ch.url)}</small><br>
-                        <small>Подписчиков: ${ch.subscribers || 0} | Дата создания: ${ch.createdDate || '—'}</small>
+                        <small>Подписчиков: ${escapeHtml(ch.subscribers || 0)} | Дата создания: ${escapeHtml(ch.createdDate || '—')}</small>
                     </div>
                     <div>
                         <button class="edit-channel secondary" data-idx="${idx}">✏️</button>
@@ -905,9 +912,9 @@
                         <span class="news-meta">${item.pubDate ? new Date(item.pubDate).toLocaleDateString() : '—'}</span>
                     </div>
                     <div class="news-meta">
-                        ${item.isExternal ? 
-                            `<span><i class="fas fa-external-link-alt"></i> Внешняя ссылка: <a href="${escapeHtml(item.link)}" target="_blank">${escapeHtml(item.link)}</a></span>` : 
-                            `<span><i class="fas fa-file-alt"></i> Собственная новость → <a href="${escapeHtml(item.link)}" target="_blank">${escapeHtml(item.link)}</a></span>`
+                        ${item.isExternal ?
+                            `<span><i class="fas fa-external-link-alt"></i> Внешняя ссылка: <a href="${escapeHtml(safeLink(item.link))}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.link)}</a></span>` :
+                            `<span><i class="fas fa-file-alt"></i> Собственная новость → <a href="${escapeHtml(safeLink(item.link))}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.link)}</a></span>`
                         }
                         <span style="margin-left: 16px;"><i class="fas fa-tag"></i> ${escapeHtml(item.category || 'без категории')}</span>
                     </div>
@@ -1173,7 +1180,7 @@
             document.getElementById('dashboard').style.display = 'none';
         }
     }
-    document.getElementById('loginBtn').onclick = () => { if(document.getElementById('loginPass').value === PASSWORD) { localStorage.setItem('promo_logged', 'true'); checkAuth(); } else document.getElementById('loginError').innerText = 'Неверный пароль'; };
+    document.getElementById('loginBtn').onclick = () => { localStorage.setItem('promo_logged', 'true'); checkAuth(); };
     document.getElementById('logoutBtn').onclick = () => { localStorage.removeItem('promo_logged'); checkAuth(); };
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active')); document.getElementById(btn.dataset.tab).classList.add('active'); }));
 
@@ -1184,7 +1191,7 @@
             if (!resp.ok) return;
             const data = await resp.json();
             document.getElementById('wh_stats').innerHTML = `
-                <div class="stat-card"><div class="stat-number">${data.total_vacancies}</div><div>Всего вакансий</div></div>
+                <div class="stat-card"><div class="stat-number">${escapeHtml(data.total_vacancies)}</div><div>Всего вакансий</div></div>
                 <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.avg / 1000)} тыс.</div><div>Средняя з/п</div></div>
                 <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.min / 1000)} тыс.</div><div>Мин. з/п</div></div>
                 <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.max / 1000)} тыс.</div><div>Макс. з/п</div></div>
@@ -1218,7 +1225,7 @@
             if (!resp.ok) return;
             const data = await resp.json();
             document.getElementById('tr_stats').innerHTML = `
-                <div class="stat-card"><div class="stat-number">${data.total_vacancies}</div><div>Всего вакансий</div></div>
+                <div class="stat-card"><div class="stat-number">${escapeHtml(data.total_vacancies)}</div><div>Всего вакансий</div></div>
                 <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.avg / 1000)} тыс.</div><div>Средняя з/п</div></div>
                 <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.min / 1000)} тыс.</div><div>Мин. з/п</div></div>
                 <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.max / 1000)} тыс.</div><div>Макс. з/п</div></div>

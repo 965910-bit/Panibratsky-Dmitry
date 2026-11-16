@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<meta name="robots" content="noindex, nofollow">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход в личный кабинет</title>
@@ -53,8 +54,8 @@
     <div class="login-card">
         <h1>Вход в личный кабинет</h1>
         <p>Только для владельца сайта</p>
-        <input type="email" id="email" placeholder="Email" value="965910@bk.ru">
-        <input type="password" id="password" placeholder="Пароль" value="Osen2023">
+        <label for="email">Email</label><input type="email" id="email" placeholder="Email" autocomplete="username">
+        <label for="password">Пароль</label><input type="password" id="password" placeholder="Пароль" autocomplete="current-password">
         <button onclick="login()">Войти</button>
         <div class="error" id="error"></div>
     </div>

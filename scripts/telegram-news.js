@@ -34,7 +34,7 @@ function saveSentNews(sentLinks) {
     try {
         fs.writeFileSync(SENT_FILE, JSON.stringify(sentLinks, null, 2), 'utf8');
     } catch (e) {
-        console.error('Ошибка сохранения sent_news.json', e);
+        throw new Error('Не удалось сохранить список отправленных новостей: ' + e.message);
     }
 }
 
@@ -52,10 +52,13 @@ function loadNews() {
     }
 }
 
-function addUTM(url, campaign, medium) {
-    if (!url) return url;
-    const separator = url.includes('?') ? '&' : '?';
-    return `${url}${separator}utm_source=telegram&utm_medium=${medium}&utm_campaign=${campaign}`;
+function addUTM(value, campaign, medium) {
+    const url = new URL(value);
+    if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Недопустимый адрес новости');
+    url.searchParams.set('utm_source', 'telegram');
+    url.searchParams.set('utm_medium', medium);
+    url.searchParams.set('utm_campaign', campaign);
+    return url.href;
 }
 
 function formatPost(item) {
@@ -63,10 +66,10 @@ function formatPost(item) {
     const description = (item.description || '').slice(0, 200);
     const link = item.link || '';
     const source = item.source || '';
-    const campaign = `news_${Date.now()}_${encodeURIComponent(source)}`;
+    const campaign = `news_${Date.now()}_${source}`;
     const siteUrl = 'https://scm-news.ru/trends.html';
 
-    const text = `📰 *${title}*\n\n${description}\n\n🏷️ *${source}*`;
+    const text = `📰 ${title}\n\n${description}\n\n🏷️ ${source}`;
     const keyboard = {
         inline_keyboard: [
             [
@@ -86,7 +89,6 @@ async function sendToTelegram(formatted) {
         await axios.post(TELEGRAM_API, {
             chat_id: TELEGRAM_CHAT_ID,
             text: formatted.text,
-            parse_mode: 'Markdown',
             reply_markup: JSON.stringify(formatted.reply_markup),
             disable_web_page_preview: false
         });
@@ -115,7 +117,16 @@ async function main() {
     allNews.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
     let sentLinks = loadSentNews();
-    const newNews = allNews.filter(item => !sentLinks.includes(item.link)).slice(0, MAX_NEWS_PER_RUN);
+    const seen = new Set(sentLinks);
+    const newNews = allNews.filter(item => {
+        if (!item || item.dead || typeof item.link !== 'string' || seen.has(item.link)) return false;
+        try {
+            const url = new URL(item.link);
+            if (!['http:', 'https:'].includes(url.protocol)) return false;
+        } catch (_) { return false; }
+        seen.add(item.link);
+        return true;
+    }).slice(0, MAX_NEWS_PER_RUN);
 
     if (newNews.length === 0) {
         console.log('Новых новостей нет.');
@@ -129,6 +140,7 @@ async function main() {
         const ok = await sendToTelegram(formatted);
         if (ok) {
             sentLinks.push(news.link);
+            saveSentNews(sentLinks);
             successCount++;
         }
         await new Promise(resolve => setTimeout(resolve, 1000));

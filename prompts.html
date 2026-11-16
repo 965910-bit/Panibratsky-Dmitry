@@ -7,12 +7,12 @@
 <meta name="description" content="Библиотека промптов для SCM, бизнеса, аналитики и разработки.">
 <meta name="yandex-verification" content="108fc8ce05da4c6d">
 <meta name="google-site-verification" content="tW6Uf1tlUY4yhc8WBO3rzq3mpKtyTYixR48nzy0RnuI">
-<link rel="canonical" href="https://scm-news.ru/">
-<link rel="icon" href="1favicon.ico">
+<link rel="canonical" href="https://scm-news.ru/prompts.html">
+<link rel="icon" href="icons/android/launchericon-192x192.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Prompt Hub — 3035 промптов | Герасимов Дмитрий Сергеевич">
 <meta property="og:description" content="Библиотека промптов для SCM, бизнеса, аналитики и разработки.">
-<meta property="og:image" content="https://scm-news.ru/images/og-cover.jpg">
+<meta property="og:image" content="https://scm-news.ru/icons/android/launchericon-512x512.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,7 +39,7 @@ nav ul li a:hover,nav ul li a.active{color:var(--accent)}
 .social-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:30px;text-decoration:none;font-size:13px;font-weight:600;color:#fff}
 .social-btn.telegram{background:#229ED9}
 .social-btn.facebook{background:#1877F2}
-@media(max-width:900px){nav ul{display:none}}
+
 body{padding-top:80px}
 .breadcrumb{padding:20px 0 10px;font-size:14px;color:var(--text-muted)}
 .breadcrumb a{color:var(--accent);text-decoration:none}
@@ -177,6 +177,8 @@ footer{background:#0f172a;color:#fff;padding:50px 0 24px;margin-top:50px}
 .prompt-modal-copy{background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:30px;font-weight:700;cursor:pointer;font-size:14px}
 .prompt-modal-copy:hover{background:var(--gold);color:#0f172a}
 </style>
+<link rel="stylesheet" href="css/portfolio-menu.css">
+<script defer src="js/portfolio-menu.js"></script>
 </head>
 <body>
 <header><div class="container nav-container">
@@ -3266,27 +3268,30 @@ var PROMPTS = [{"id": 1, "name": "Аудит цепочки поставок р�
 </script>
 <script>
 
+function escapePrompt(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+}
 function openPrompt(id){
   var p = PROMPTS.find(function(x){ return x.id === id; });
   if (!p) return;
-  var html = '<h2>' + p.name + '</h2>'
+  var html = '<h2>' + escapePrompt(p.name) + '</h2>'
     + '<div class="prompt-modal-badges">'
-    + '<span class="badge badge-tier">' + p.tier + '</span> '
-    + '<span class="badge badge-role">' + p.role + '</span> '
-    + '<span class="badge badge-diff-' + p.difficulty + '">' + p.difficulty + '</span> '
-    + '<span class="badge">' + p.output_format + '</span>'
+    + '<span class="badge badge-tier">' + escapePrompt(p.tier) + '</span> '
+    + '<span class="badge badge-role">' + escapePrompt(p.role) + '</span> '
+    + '<span class="badge badge-diff-' + escapePrompt(p.difficulty) + '">' + escapePrompt(p.difficulty) + '</span> '
+    + '<span class="badge">' + escapePrompt(p.output_format) + '</span>'
     + '</div>'
     + '<div class="prompt-modal-kv">'
     + '<div><strong>ID:</strong> ' + p.id + '</div>'
-    + '<div><strong>Категория:</strong> ' + p.category + ' / ' + p.subcategory + '</div>'
-    + '<div><strong>Назначение:</strong> ' + p.intent + '</div>'
-    + '<div><strong>Что делает:</strong> ' + p.what + '</div>'
-    + '<div><strong>Пример:</strong> ' + p.example + '</div>'
-    + '<div><strong>Оценка времени:</strong> ' + p.time + '</div>'
-    + '<div><strong>Необходимые данные:</strong> ' + p.data + '</div>'
+    + '<div><strong>Категория:</strong> ' + escapePrompt(p.category) + ' / ' + escapePrompt(p.subcategory) + '</div>'
+    + '<div><strong>Назначение:</strong> ' + escapePrompt(p.intent) + '</div>'
+    + '<div><strong>Что делает:</strong> ' + escapePrompt(p.what) + '</div>'
+    + '<div><strong>Пример:</strong> ' + escapePrompt(p.example) + '</div>'
+    + '<div><strong>Оценка времени:</strong> ' + escapePrompt(p.time) + '</div>'
+    + '<div><strong>Необходимые данные:</strong> ' + escapePrompt(p.data) + '</div>'
     + '</div>'
     + '<h3>Шаблон промпта</h3>'
-    + '<pre class="prompt-modal-pre">' + p.template + '</pre>'
+    + '<pre class="prompt-modal-pre">' + escapePrompt(p.template) + '</pre>'
     + '<button class="prompt-modal-copy" onclick="copyPromptTemplate(' + p.id + ', this)">📋 Скопировать шаблон</button>';
   document.getElementById('promptModalContent').innerHTML = html;
   document.getElementById('promptModal').classList.add('open');

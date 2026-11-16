@@ -1,0 +1,95 @@
+import importlib.util
+from html.parser import HTMLParser
+import json
+from pathlib import Path
+import re
+import tempfile
+import unittest
+from urllib.parse import urlsplit, unquote
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def load_script(name):
+    spec = importlib.util.spec_from_file_location(name, ROOT / 'scripts' / (name + '.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+class SiteTests(unittest.TestCase):
+    def test_sitemap_is_valid_local_and_canonical(self):
+        ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+        urls = [e.text for e in ET.parse(ROOT / 'sitemap.xml').findall('.//s:loc', ns)]
+        self.assertEqual(len(urls), len(set(urls)))
+        self.assertIn('https://scm-news.ru/', urls)
+        for url in urls:
+            parsed = urlsplit(url)
+            self.assertEqual((parsed.scheme, parsed.netloc), ('https', 'scm-news.ru'))
+            path = ROOT / (parsed.path.lstrip('/') or 'index.html')
+            self.assertTrue(path.is_file(), url)
+            html = path.read_text(encoding='utf-8')
+            self.assertNotRegex(html.lower(), r'content=["\'][^"\']*noindex')
+            self.assertIn('href="' + url + '"', html)
+
+    def test_rss_is_xml_and_urls_are_valid(self):
+        items = ET.parse(ROOT / 'rss.xml').findall('./channel/item')
+        self.assertTrue(items)
+        links = [item.findtext('link') for item in items]
+        self.assertEqual(len(links), len(set(links)))
+        for link in links:
+            self.assertIn(urlsplit(link).scheme, ('http', 'https'))
+
+    def test_generator_escapes_untrusted_xml_and_deduplicates(self):
+        generator = load_script('generate_rss')
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / 'data').mkdir()
+            item = {'title': 'a & <b> ]]> "', 'link': 'https://example.com/?a=1&b=2',
+                    'description': 'Text & more', 'pubDate': 'Mon, 16 Nov 2026 00:00:00 +0000', 'tags': ['A & B']}
+            (root / 'data/news.json').write_text(json.dumps([item, item]), encoding='utf-8')
+            generator.ROOT = root
+            generator.generate_rss()
+            items = ET.parse(root / 'rss.xml').findall('./channel/item')
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0].findtext('title'), item['title'])
+            self.assertEqual(items[0].findtext('link'), item['link'])
+            self.assertEqual(items[0].findtext('category'), 'A & B')
+
+    def test_required_assets_exist(self):
+        for path in ('css/portfolio-menu.css', 'js/portfolio-menu.js',
+                     'icons/android/launchericon-192x192.png', 'icons/android/launchericon-512x512.png'):
+            self.assertTrue((ROOT / path).is_file(), path)
+        manifest = json.loads((ROOT / 'manifest.json').read_text())
+        self.assertEqual(manifest['start_url'], '/')
+        for icon in manifest['icons']:
+            self.assertTrue((ROOT / icon['src']).is_file(), icon['src'])
+
+    def test_static_internal_links_resolve(self):
+        class Links(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.urls = []
+            def handle_starttag(self, tag, attrs):
+                self.urls.extend(value for key, value in attrs if key in ('href', 'src') and value)
+        files = list(ROOT.glob('*.html')) + list((ROOT / 'scm-platform').glob('*.html'))
+        for file in files:
+            parser = Links()
+            parser.feed(file.read_text(encoding='utf-8'))
+            for url in parser.urls:
+                parts = urlsplit(url)
+                if parts.scheme or parts.netloc or not parts.path or '${' in parts.path:
+                    continue
+                target = ((ROOT if parts.path.startswith('/') else file.parent) /
+                          unquote(parts.path.lstrip('/')))
+                self.assertTrue(target.exists(), f'{file.name}: {url}')
+
+    def test_no_prefilled_password(self):
+        html = (ROOT / 'login.html').read_text()
+        password = re.search(r'<input\b[^>]*type="password"[^>]*>', html).group()
+        self.assertNotRegex(password, r'\bvalue\s*=')
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -219,8 +219,7 @@ class GoogleAlertsCollector:
                     if links:
                         print(f"   Из письма '{subject[:50]}...' извлечено ссылок: {len(links)} (тема: {keyword})")
                     else:
-                        body_preview = body[:300].replace('\n', ' ')
-                        print(f"   ⚠️  В письме '{subject[:50]}...' не найдено ссылок. Фрагмент: {body_preview}")
+                        print('   В письме не найдено ссылок')
                     for link in links:
                         result["alerts"].append({
                             "link": link,

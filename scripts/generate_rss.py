@@ -1,50 +1,46 @@
 #!/usr/bin/env python3
+"""Generate a well-formed RSS feed from the collected news."""
 import json
-import os
-from datetime import datetime
+from datetime import datetime, timezone
 from email.utils import format_datetime
+from pathlib import Path
+from urllib.parse import urlsplit
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parent.parent
 
 def generate_rss():
-    news_file = os.path.join(os.path.dirname(__file__), "..", "data", "news.json")
-    rss_file = os.path.join(os.path.dirname(__file__), "..", "rss.xml")
+    news = json.loads((ROOT / 'data/news.json').read_text(encoding='utf-8'))
+    atom = 'http://www.w3.org/2005/Atom'
+    ET.register_namespace('atom', atom)
+    rss = ET.Element('rss', version='2.0')
+    channel = ET.SubElement(rss, 'channel')
+    for key, value in [('title', 'Логистические новости'), ('link', 'https://scm-news.ru/'),
+                       ('description', 'Новости логистики и управления цепями поставок'), ('language', 'ru'),
+                       ('lastBuildDate', format_datetime(datetime.now(timezone.utc)))]:
+        ET.SubElement(channel, key).text = value
+    ET.SubElement(channel, f'{{{atom}}}link', href='https://scm-news.ru/rss.xml', rel='self', type='application/rss+xml')
+    seen = set()
+    for item in news:
+        link = item.get('link', '')
+        try:
+            url = urlsplit(link)
+            if url.scheme not in ('http', 'https') or not url.hostname or link in seen or item.get('dead'):
+                continue
+        except ValueError:
+            continue
+        seen.add(link)
+        entry = ET.SubElement(channel, 'item')
+        for key in ('title', 'link', 'description', 'pubDate'):
+            # XML 1.0 disallows most C0 control characters.
+            value = str(item.get(key) or '')
+            ET.SubElement(entry, key).text = ''.join(c for c in value if ord(c) >= 32 or c in '\t\n\r')
+        for tag in item.get('tags') or []:
+            ET.SubElement(entry, 'category').text = ''.join(c for c in str(tag) if ord(c) >= 32 or c in '\t\n\r')
+        if len(seen) == 50:
+            break
+    ET.indent(rss, space='  ')
+    ET.ElementTree(rss).write(ROOT / 'rss.xml', encoding='utf-8', xml_declaration=True)
 
-    if not os.path.exists(news_file):
-        print("news.json not found, skipping RSS generation")
-        return
-
-    with open(news_file, "r", encoding="utf-8") as f:
-        news = json.load(f)
-
-    items = news[:50]
-
-    rss = []
-    rss.append('<?xml version="1.0" encoding="UTF-8"?>')
-    rss.append('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">')
-    rss.append('<channel>')
-    rss.append('  <title>Логистические новости</title>')
-    rss.append('  <link>https://scm-news.ru/</link>')
-    rss.append('  <description>Автоматический сбор новостей по логистике, цифровизации и управлению цепями поставок</description>')
-    rss.append('  <language>ru</language>')
-    rss.append(f'  <lastBuildDate>{format_datetime(datetime.now())}</lastBuildDate>')
-    rss.append('  <atom:link href="https://scm-news.ru/rss.xml" rel="self" type="application/rss+xml"/>')
-
-    for item in items:
-        rss.append('  <item>')
-        rss.append(f'    <title><![CDATA[{item["title"]}]]></title>')
-        rss.append(f'    <link>{item["link"]}</link>')
-        rss.append(f'    <description><![CDATA[{item["description"]}]]></description>')
-        rss.append(f'    <pubDate>{item["pubDate"]}</pubDate>')
-        if "tags" in item and item["tags"]:
-            rss.append(f'    <category>{", ".join(item["tags"])}</category>')
-        rss.append('  </item>')
-
-    rss.append('</channel>')
-    rss.append('</rss>')
-
-    with open(rss_file, "w", encoding="utf-8") as f:
-        f.write("\n".join(rss))
-
-    print("RSS feed generated at rss.xml")
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     generate_rss()
