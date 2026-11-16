@@ -85,6 +85,19 @@ class SiteTests(unittest.TestCase):
                           unquote(parts.path.lstrip('/')))
                 self.assertTrue(target.exists(), f'{file.name}: {url}')
 
+    def test_portfolio_navigation_and_resume_privacy(self):
+        home = (ROOT / 'index.html').read_text(encoding='utf-8')
+        for link in ('about.html', 'career.html', 'blog.html', 'experience.html'):
+            self.assertIn('href="' + link + '"', home)
+        self.assertRegex(home, r'<h1>Герасимов<br>Дмитрий')
+        about = (ROOT / 'about.html').read_text(encoding='utf-8')
+        self.assertNotRegex(about, r'\b41\s+год\b')
+        self.assertNotIn('ТВОЯ_СТРАНИЦА', about)
+        experience = (ROOT / 'experience.html').read_text(encoding='utf-8')
+        self.assertIn('Март 2024 — Июль 2025</div><h3 class="exp-company">Лемана ПРО', experience)
+        self.assertIn('Март 2020 — Март 2024</div><h3 class="exp-company">Леруа Мерлен', experience)
+        self.assertIn('/resume/', (ROOT / '.gitignore').read_text(encoding='utf-8'))
+
     def test_no_prefilled_password(self):
         html = (ROOT / 'login.html').read_text()
         password = re.search(r'<input\b[^>]*type="password"[^>]*>', html).group()
