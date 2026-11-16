@@ -2,7 +2,7 @@ const fs = require('fs');
 const vm = require('vm');
 const assert = require('assert');
 const html = fs.readFileSync('calculators.html', 'utf8');
-const scripts = [...html.matchAll(/<script(?![^>]*src)[^>]*>([\s\S]*?)<\/script>/gi)];
+const scripts = [...html.matchAll(/<script(?![^>]*(?:src|application\/ld\+json))[^>]*>([\s\S]*?)<\/script>/gi)];
 const elements = new Map();
 function element(id) {
   if (!elements.has(id)) elements.set(id, { value: '', textContent: '', style: {} });
