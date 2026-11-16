@@ -33,6 +33,17 @@ class SiteTests(unittest.TestCase):
             self.assertNotRegex(html.lower(), r'content=["\'][^"\']*noindex')
             self.assertIn('href="' + url + '"', html)
 
+    def test_sitemap_heading_and_structured_data(self):
+        import re
+        import json
+        ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+        for element in ET.parse(ROOT / 'sitemap.xml').findall('.//s:loc', ns):
+            path = ROOT / (urlsplit(element.text).path.lstrip('/') or 'index.html')
+            html = path.read_text(encoding='utf-8')
+            self.assertEqual(len(re.findall(r'<h1\b', html, re.I)), 1, path.name)
+            for match in re.findall(r'<script\s+type="application/ld\+json"[^>]*>(.*?)</script>', html, re.I | re.S):
+                json.loads(match)
+
     def test_public_business_plan_discovery(self):
         page = (ROOT / 'business-plan.html').read_text(encoding='utf-8')
         self.assertIn('href="https://scm-news.ru/business-plan.html"', page)
