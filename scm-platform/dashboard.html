@@ -522,7 +522,7 @@
             container.innerHTML += `
                 <div style="margin-bottom:20px;">
                     <div><strong>${id.toUpperCase()}</strong> <span class="badge">цель ${b.target} ${b.unit}</span></div>
-                    <div class="kpi-value ${statusClass}">${value} ${value !== '—' ? b.unit : ''}</div>
+                    <div class="kpi-value ${statusClass}">${escapeHtml(value)} ${value !== '—' ? b.unit : ''}</div>
                     <div class="benchmark-bar"><div class="benchmark-fill" style="width:${Math.min(100, Math.max(0, percentOfTarget))}%;"></div><div class="benchmark-marker" style="left:${Math.min(100, Math.max(0, (b.good/b.target)*100))}%;"></div></div>
                     <div class="badge">Бенчмарк: ${b.good} ${b.unit}</div>
                 </div>
@@ -561,13 +561,13 @@
             }
         }
         getLatestNonConformances().forEach(nc => alerts.push(`📋 Аудит: ${nc.text}`));
-        container.innerHTML = alerts.length ? alerts.map(a => `<div class="notification">${a}</div>`).join('') : '<div class="badge">Нет активных тревог</div>';
+        container.innerHTML = alerts.length ? alerts.map(a => `<div class="notification">${escapeHtml(a)}</div>`).join('') : '<div class="badge">Нет активных тревог</div>';
     }
     function renderUrgentTasks() {
         const tasks = getUrgentTasks();
         const container = document.getElementById('urgentTasksWidget');
         if (!tasks.length) { container.innerHTML = '<div class="badge">Нет срочных задач</div>'; return; }
-        container.innerHTML = tasks.map(t => `<div class="task-item task-priority-${t.priority||'medium'}" onclick="location.href='planner.html'"><strong>${escapeHtml(t.text)}</strong><br><small>${t.date||'бэклог'} | ${t.status==='red'?'🔴 Срочно':(t.status==='yellow'?'🟡 Важно':'')}</small></div>`).join('');
+        container.innerHTML = tasks.map(t => `<div class="task-item task-priority-${escapeHtml(t.priority||'medium')}" onclick="location.href='planner.html'"><strong>${escapeHtml(t.text)}</strong><br><small>${escapeHtml(t.date||'бэклог')} | ${t.status==='red'?'🔴 Срочно':(t.status==='yellow'?'🟡 Важно':'')}</small></div>`).join('');
     }
     function renderRoadmapProgress() {
         const p = getRoadmapProgress();
@@ -578,13 +578,13 @@
         const audits = getLastAudits(3);
         const container = document.getElementById('lastAudits');
         if (!audits.length) { container.innerHTML = '<div class="badge">Нет аудитов</div>'; return; }
-        container.innerHTML = audits.map(a => `<div><strong>${new Date(a.date).toLocaleDateString()}</strong> — ${a.type}<br>Зрелость: ${a.totalPercent}%</div>`).join('');
+        container.innerHTML = audits.map(a => `<div><strong>${new Date(a.date).toLocaleDateString()}</strong> — ${escapeHtml(a.type)}<br>Зрелость: ${escapeHtml(a.totalPercent)}%</div>`).join('');
     }
     function renderChecklistSummary() {
         const summary = getChecklistSummary();
         const container = document.getElementById('checklistSummary');
         if (!summary.length) { container.innerHTML = '<div class="badge">Нет чек-листов</div>'; return; }
-        container.innerHTML = summary.slice(0,3).map(c => `<div>${c.name}<div class="progress-bar"><div class="progress-fill" style="width:${c.percent}%"></div></div><div class="badge">${c.completed}/${c.total} выполнено</div></div>`).join('');
+        container.innerHTML = summary.slice(0,3).map(c => `<div>${escapeHtml(c.name)}<div class="progress-bar"><div class="progress-fill" style="width:${escapeHtml(c.percent)}%"></div></div><div class="badge">${escapeHtml(c.completed)}/${escapeHtml(c.total)} выполнено</div></div>`).join('');
         if (summary.length>3) container.innerHTML += `<div class="badge">и ещё ${summary.length-3} категорий</div>`;
     }
     function renderWarehouseStats() {
@@ -593,10 +593,10 @@
         const otd = getLastKPI('otd') || '—';
         const space = getLastKPI('spaceUtil') || '—';
         document.getElementById('warehouseStats').innerHTML = `
-            <div>Производительность: <strong>${prod} ${prod!=='—'?'строк/час':''}</strong></div>
-            <div>Ошибки сборки: <strong>${err} ${err!=='—'?'%':''}</strong></div>
-            <div>OTD доставки: <strong>${otd} ${otd!=='—'?'%':''}</strong></div>
-            <div>Загрузка склада: <strong>${space} ${space!=='—'?'%':''}</strong></div>
+            <div>Производительность: <strong>${escapeHtml(prod)} ${prod!=='—'?'строк/час':''}</strong></div>
+            <div>Ошибки сборки: <strong>${escapeHtml(err)} ${err!=='—'?'%':''}</strong></div>
+            <div>OTD доставки: <strong>${escapeHtml(otd)} ${otd!=='—'?'%':''}</strong></div>
+            <div>Загрузка склада: <strong>${escapeHtml(space)} ${space!=='—'?'%':''}</strong></div>
             <div class="badge">По данным KPI-центра</div>
         `;
     }
@@ -695,7 +695,7 @@
     }
     init();
 })();
-function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
 </script>
 </body>
 </html>

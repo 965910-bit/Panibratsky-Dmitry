@@ -399,6 +399,7 @@
         <div id="warehouse-analytics" class="tab-pane">
             <div class="card">
                 <div class="card-title"><i class="fas fa-warehouse"></i> Складская логистика</div>
+                <p><a href="analytics.html">Методология и дата обновления данных</a></p>
                 <div id="warehouse-data">
                     <div class="stats-grid" id="wh_stats"></div>
                     <div class="chart-card"><h3>🏆 Топ-10 навыков (Склад)</h3><canvas id="wh_skills_chart"></canvas></div>
@@ -412,6 +413,7 @@
         <div id="transport-analytics" class="tab-pane">
             <div class="card">
                 <div class="card-title"><i class="fas fa-truck"></i> Транспортная логистика</div>
+                <p><a href="analytics.html">Методология и дата обновления данных</a></p>
                 <div id="transport-data">
                     <div class="stats-grid" id="tr_stats"></div>
                     <div class="chart-card"><h3>🏆 Топ-10 навыков (Транспорт)</h3><canvas id="tr_skills_chart"></canvas></div>
@@ -1188,13 +1190,19 @@
     async function loadWarehouseAnalytics() {
         try {
             const resp = await fetch('data/hh_warehouse.json?_=' + Date.now());
-            if (!resp.ok) return;
-            const data = await resp.json();
+            if (!resp.ok) throw new Error('Данные недоступны');
+            const payload = await resp.json();
+            const data = payload;
+            if (data.schema_version !== 1 || data.source !== 'hh.ru API') throw new Error('Не подтверждён источник данных');
+            const salary = value => typeof value === 'number' && value > 0 ? `${Math.round(value / 1000)} тыс. ₽` : 'Нет данных';
+            const updated = Date.parse(data.updated_at);
+            if (!Number.isFinite(updated) || updated > Date.now() + 300000) throw new Error('Некорректная дата данных');
             document.getElementById('wh_stats').innerHTML = `
+                <p>Обновлено: ${escapeHtml(new Date(updated).toLocaleString('ru-RU'))}. ${Date.now() - updated > 72 * 3600000 ? 'Данные старше 72 часов.' : ''} Показатели относятся только к выборке.</p>
                 <div class="stat-card"><div class="stat-number">${escapeHtml(data.total_vacancies)}</div><div>Всего вакансий</div></div>
-                <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.avg / 1000)} тыс.</div><div>Средняя з/п</div></div>
-                <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.min / 1000)} тыс.</div><div>Мин. з/п</div></div>
-                <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.max / 1000)} тыс.</div><div>Макс. з/п</div></div>
+                <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.avg)}</div><div>Средняя нижняя граница зарплаты</div></div>
+                <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.min)}</div><div>Мин. нижняя граница зарплаты</div></div>
+                <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.max)}</div><div>Макс. нижняя граница зарплаты</div></div>
             `;
             new Chart(document.getElementById('wh_skills_chart'), {
                 type: 'bar',
@@ -1215,20 +1223,26 @@
                     datasets: [{ label: 'Вакансий в день', data: data.timeline.map(t => t.count), borderColor: '#1e40af', fill: false }]
                 }
             });
-        } catch (e) { console.error('Ошибка загрузки склада', e); }
+        } catch (e) { document.getElementById('wh_stats').textContent = 'Проверенные данные недоступны. Смотрите методологию на странице аналитики.'; console.error('Ошибка загрузки склада', e); }
     }
 
     // --- ЗАГРУЗКА ДАННЫХ ДЛЯ ТРАНСПОРТНОЙ АНАЛИТИКИ ---
     async function loadTransportAnalytics() {
         try {
             const resp = await fetch('data/hh_transport.json?_=' + Date.now());
-            if (!resp.ok) return;
-            const data = await resp.json();
+            if (!resp.ok) throw new Error('Данные недоступны');
+            const payload = await resp.json();
+            const data = payload;
+            if (data.schema_version !== 1 || data.source !== 'hh.ru API') throw new Error('Не подтверждён источник данных');
+            const salary = value => typeof value === 'number' && value > 0 ? `${Math.round(value / 1000)} тыс. ₽` : 'Нет данных';
+            const updated = Date.parse(data.updated_at);
+            if (!Number.isFinite(updated) || updated > Date.now() + 300000) throw new Error('Некорректная дата данных');
             document.getElementById('tr_stats').innerHTML = `
+                <p>Обновлено: ${escapeHtml(new Date(updated).toLocaleString('ru-RU'))}. ${Date.now() - updated > 72 * 3600000 ? 'Данные старше 72 часов.' : ''} Показатели относятся только к выборке.</p>
                 <div class="stat-card"><div class="stat-number">${escapeHtml(data.total_vacancies)}</div><div>Всего вакансий</div></div>
-                <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.avg / 1000)} тыс.</div><div>Средняя з/п</div></div>
-                <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.min / 1000)} тыс.</div><div>Мин. з/п</div></div>
-                <div class="stat-card"><div class="stat-number">${Math.round(data.salary_stats.max / 1000)} тыс.</div><div>Макс. з/п</div></div>
+                <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.avg)}</div><div>Средняя нижняя граница зарплаты</div></div>
+                <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.min)}</div><div>Мин. нижняя граница зарплаты</div></div>
+                <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.max)}</div><div>Макс. нижняя граница зарплаты</div></div>
             `;
             new Chart(document.getElementById('tr_skills_chart'), {
                 type: 'bar',
@@ -1249,7 +1263,7 @@
                     datasets: [{ label: 'Вакансий в день', data: data.timeline.map(t => t.count), borderColor: '#d4af37', fill: false }]
                 }
             });
-        } catch (e) { console.error('Ошибка загрузки транспорта', e); }
+        } catch (e) { document.getElementById('tr_stats').textContent = 'Проверенные данные недоступны. Смотрите методологию на странице аналитики.'; console.error('Ошибка загрузки транспорта', e); }
     }
 
     checkAuth();

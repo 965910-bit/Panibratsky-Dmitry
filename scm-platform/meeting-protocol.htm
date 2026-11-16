@@ -261,7 +261,7 @@
         }
         container.innerHTML = openTasks.map(t => `
             <div class="open-task-item" style="background:#eef2ff; padding:8px; border-radius:12px; margin-bottom:8px;">
-                <div><strong>${escapeHtml(t.text)}</strong><br>Ответственный: ${escapeHtml(t.assignee)} | Срок: ${t.dueDate || '—'}</div>
+                <div><strong>${escapeHtml(t.text)}</strong><br>Ответственный: ${escapeHtml(t.assignee)} | Срок: ${escapeHtml(t.dueDate || '—')}</div>
                 <div><span class="badge">${t.status === 'new' ? 'Новое' : 'В работе'}</span></div>
             </div>
         `).join('');
@@ -325,7 +325,7 @@
                 <div><strong>ВЫСТУПИЛИ:</strong> <input type="text" value="${escapeHtml(dec.spoke)}" data-idx="${idx}" data-field="spoke" style="width:100%; margin-bottom:8px;"></div>
                 <div><strong>ПОСТАНОВИЛИ:</strong> <input type="text" value="${escapeHtml(dec.decided)}" data-idx="${idx}" data-field="decided" style="width:100%; margin-bottom:8px;"></div>
                 <div><strong>Ответственный:</strong> <input type="text" value="${escapeHtml(dec.assignee || '')}" data-idx="${idx}" data-field="assignee" style="width:45%; display:inline-block; margin-right:8px;">
-                <strong>Срок:</strong> <input type="date" value="${dec.dueDate || ''}" data-idx="${idx}" data-field="dueDate" style="width:45%; display:inline-block;"></div>
+                <strong>Срок:</strong> <input type="date" value="${escapeHtml(dec.dueDate || '')}" data-idx="${idx}" data-field="dueDate" style="width:45%; display:inline-block;"></div>
                 <button class="delete-decision btn-icon" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
             </div>
         `).join('');
@@ -532,7 +532,7 @@
     }
     init();
 })();
-function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
 </script>
 </body>
 </html>

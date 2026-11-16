@@ -316,15 +316,15 @@
         if (!nodes || nodes.length === 0) return '<div>Нет бизнес-единиц. Добавьте первую.</div>';
         let html = '<ul class="tree">';
         for (let node of nodes) {
-            html += `<li data-id="${node.id}">
+            html += `<li data-id="${escapeHtml(node.id)}">
                         <div class="branch-info">
                             <span class="branch-name">${escapeHtml(node.name)}</span>
-                            <span class="branch-type">${node.type}</span>
+                            <span class="branch-type">${escapeHtml(node.type)}</span>
                         </div>
                         <div class="branch-actions">
-                            <button class="edit-branch" data-id="${node.id}"><i class="fas fa-edit"></i></button>
-                            <button class="delete-branch" data-id="${node.id}"><i class="fas fa-trash-alt"></i></button>
-                            <button class="select-branch" data-id="${node.id}"><i class="fas fa-chart-line"></i> Детали</button>
+                            <button class="edit-branch" data-id="${escapeHtml(node.id)}"><i class="fas fa-edit"></i></button>
+                            <button class="delete-branch" data-id="${escapeHtml(node.id)}"><i class="fas fa-trash-alt"></i></button>
+                            <button class="select-branch" data-id="${escapeHtml(node.id)}"><i class="fas fa-chart-line"></i> Детали</button>
                         </div>
                         ${node.children ? renderTreeNodes(node.children) : ''}
                     </li>`;
@@ -445,12 +445,12 @@
         tbody.innerHTML = '';
         staff.forEach(pos => {
             const row = tbody.insertRow();
-            row.insertCell(0).innerHTML = `<input type="text" value="${escapeHtml(pos.title)}" data-field="title" data-id="${pos.id}">`;
-            row.insertCell(1).innerHTML = `<input type="number" value="${pos.count}" data-field="count" data-id="${pos.id}">`;
-            row.insertCell(2).innerHTML = `<input type="number" value="${pos.salary_base}" data-field="salary_base" data-id="${pos.id}">`;
-            row.insertCell(3).innerHTML = `<input type="number" step="0.01" value="${pos.region_coef || 1}" data-field="region_coef" data-id="${pos.id}">`;
-            row.insertCell(4).innerHTML = `<input type="number" value="${pos.north_bonus || 0}" data-field="north_bonus" data-id="${pos.id}">`;
-            row.insertCell(5).innerHTML = `<input type="number" value="${pos.effective_hours || 168}" data-field="effective_hours" data-id="${pos.id}">`;
+            row.insertCell(0).innerHTML = `<input type="text" value="${escapeHtml(pos.title)}" data-field="title" data-id="${escapeHtml(pos.id)}">`;
+            row.insertCell(1).innerHTML = `<input type="number" value="${escapeHtml(pos.count)}" data-field="count" data-id="${escapeHtml(pos.id)}">`;
+            row.insertCell(2).innerHTML = `<input type="number" value="${escapeHtml(pos.salary_base)}" data-field="salary_base" data-id="${escapeHtml(pos.id)}">`;
+            row.insertCell(3).innerHTML = `<input type="number" step="0.01" value="${escapeHtml(pos.region_coef || 1)}" data-field="region_coef" data-id="${escapeHtml(pos.id)}">`;
+            row.insertCell(4).innerHTML = `<input type="number" value="${escapeHtml(pos.north_bonus || 0)}" data-field="north_bonus" data-id="${escapeHtml(pos.id)}">`;
+            row.insertCell(5).innerHTML = `<input type="number" value="${escapeHtml(pos.effective_hours || 168)}" data-field="effective_hours" data-id="${escapeHtml(pos.id)}">`;
             const total = (pos.salary_base || 0) * (pos.region_coef || 1) * (1 + (pos.north_bonus || 0)/100) * (pos.count || 0);
             row.insertCell(6).textContent = Math.round(total);
             const delBtn = document.createElement('button'); delBtn.textContent = '🗑️'; delBtn.onclick = () => { deleteStaffPosition(currentDetailBranchId, pos.id); loadStaffUI(); };
@@ -618,7 +618,7 @@
     }
     init();
 })();
-function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
 </script>
 </body>
 </html>

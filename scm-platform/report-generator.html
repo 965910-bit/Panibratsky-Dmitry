@@ -333,7 +333,7 @@
             <div class="info-grid">
                 <div class="info-item"><span class="info-label">Тип аудита</span><span class="info-value">${escapeHtml(audit.type)}</span></div>
                 <div class="info-item"><span class="info-label">Дата проведения</span><span class="info-value">${dateStr}</span></div>
-                <div class="info-item"><span class="info-label">Общий уровень зрелости</span><span class="info-value">${audit.totalPercent}%</span></div>
+                <div class="info-item"><span class="info-label">Общий уровень зрелости</span><span class="info-value">${escapeHtml(audit.totalPercent)}%</span></div>
             </div>
             <div class="section-title">Оценки по секциям</div>
             <table>
@@ -374,8 +374,8 @@
         const date = new Date(kpiData.timestamp).toLocaleString();
         return `
             <div class="info-grid">
-                <div class="info-item"><span class="info-label">KPI</span><span class="info-value">${kpiId.toUpperCase()}</span></div>
-                <div class="info-item"><span class="info-label">Значение</span><span class="info-value">${value}</span></div>
+                <div class="info-item"><span class="info-label">KPI</span><span class="info-value">${escapeHtml(kpiId.toUpperCase())}</span></div>
+                <div class="info-item"><span class="info-label">Значение</span><span class="info-value">${escapeHtml(value)}</span></div>
                 <div class="info-item"><span class="info-label">Дата расчёта</span><span class="info-value">${date}</span></div>
             </div>
             <div class="section-title">Исходные данные</div>
@@ -388,9 +388,8 @@
         `;
     }
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'})[m]);
     }
 
     window.printReportWithLogo = function() {

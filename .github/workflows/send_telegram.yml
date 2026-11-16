@@ -25,7 +25,7 @@ jobs:
           node-version: '20'
 
       - name: Install Node.js dependencies
-        run: npm install
+        run: npm ci --ignore-scripts
 
       # The runner is ephemeral. Restore the newest successfully saved digest state.
       # Cache eviction can still cause duplicates; durable storage is preferable.

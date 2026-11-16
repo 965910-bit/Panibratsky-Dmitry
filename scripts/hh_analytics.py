@@ -1,13 +1,16 @@
 import json
 import os
 import time
-from datetime import datetime, timedelta
-from playwright.sync_api import sync_playwright
+from datetime import datetime, timedelta, timezone
+from collections import Counter
+from urllib.parse import urlencode
+
+# Playwright is imported only when collecting, so the aggregation can be tested offline.
 
 # -------------------------------------------------------------------
 # 1. НАСТРОЙКИ
 # -------------------------------------------------------------------
-DATE_FROM = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+DATE_FROM = (datetime.now(timezone.utc) - timedelta(days=30)).strftime("%Y-%m-%d")
 
 # Слова для поиска (сократили до 2 самых важных, чтобы не грузить браузер)
 WAREHOUSE_QUERIES = ["склад", "кладовщик"]
@@ -22,6 +25,7 @@ def fetch_hh_data(keyword):
     
     print(f"  🌐 Открываю браузер для поиска: '{keyword}'...")
     
+    from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         # Запускаем браузер (в GitHub он работает в фоне)
         browser = p.chromium.launch(headless=True)
@@ -32,7 +36,7 @@ def fetch_hh_data(keyword):
         
         while True:
             # Формируем ссылку для перехода
-            url = f"https://api.hh.ru/vacancies?text={keyword}&date_from={DATE_FROM}&page={page}&per_page=100"
+            url = "https://api.hh.ru/vacancies?" + urlencode({"text": keyword, "date_from": DATE_FROM, "page": page, "per_page": 100})
             
             try:
                 print(f"     🕵️ Загружаю страницу {page+1}...")
@@ -42,27 +46,27 @@ def fetch_hh_data(keyword):
                 
                 # Проверяем, что сервер ответил нормально
                 if response.status != 200:
-                    print(f"     ❌ Ошибка: {response.status}")
-                    break
+                    raise RuntimeError(f"HH ответил с ошибкой: {response.status}")
                 
                 # Получаем JSON-данные со страницы
                 data = page_browser.evaluate("() => JSON.parse(document.body.innerText)")
-                items = data.get('items', [])
-                
-                if not items:
-                    print(f"     ✅ Все вакансии по слову '{keyword}' собраны. Итого: {len(all_items)}")
-                    break
-                
+                items = data.get('items')
+                pages = data.get('pages')
+                if not isinstance(items, list) or type(pages) is not int or pages < 0:
+                    raise ValueError('Некорректный ответ HH: отсутствуют items или pages')
+                if page < pages and not items:
+                    raise ValueError('HH вернул пустую страницу до конца выборки')
+
                 all_items.extend(items)
                 page += 1
                 print(f"     ✔ Страница {page} загружена. Всего сейчас: {len(all_items)}.")
-                
-                # Пауза, чтобы не спамить (безопасная)
+                if page >= pages:
+                    break
+                # Пауза между запросами.
                 time.sleep(2) 
                 
             except Exception as e:
-                print(f"     ❌ Критическая ошибка браузера: {e}")
-                break
+                raise RuntimeError(f"Ошибка сбора HH для {keyword}, страница {page + 1}") from e
                 
         browser.close()
             
@@ -71,7 +75,7 @@ def fetch_hh_data(keyword):
 # -------------------------------------------------------------------
 # 3. ФУНКЦИЯ ОБЪЕДИНЕНИЯ (ОСТАЛАСЬ БЕЗ ИЗМЕНЕНИЙ)
 # -------------------------------------------------------------------
-def process_and_save(queries, output_filename):
+def collect_analytics(queries, output_filename):
     print(f"\n🔄 Запуск сбора для файла: {output_filename}")
     mega_list = []
     
@@ -83,49 +87,51 @@ def process_and_save(queries, output_filename):
     print(f"✅ Уникальных вакансий: {len(unique_vacs)}")
     
     if not unique_vacs:
-        print("❌ Вакансий не найдено.")
-        return
+        raise RuntimeError(f"Вакансий не найдено для {output_filename}; сохранены предыдущие данные")
 
     analytics = {
+        "schema_version": 1,
+        "source": "hh.ru API",
+        "queries": list(queries),
+        "date_from": DATE_FROM,
         "total_vacancies": len(unique_vacs),
-        "salary_stats": {"avg": 0, "min": 0, "max": 0},
+        "salary_sample_size": 0,
+        "salary_stats": {"avg": None, "min": None, "max": None},
         "top_skills": [],
         "experience_distribution": {"no_experience": 0, "between_1_and_3": 0, "between_3_and_6": 0, "more_than_6": 0},
         "avg_salary_by_region": {},
         "timeline": {},
-        "updated_at": datetime.now().isoformat()
+        "updated_at": datetime.now(timezone.utc).isoformat()
     }
 
     salaries = []
+    skills = Counter()
     for vac in unique_vacs:
         if vac.get('key_skills'):
             for skill in vac['key_skills']:
-                name = skill['name'].lower()
-                if name not in analytics:
-                    analytics[name] = 0
-                analytics[name] += 1
+                name = skill.get('name')
+                if isinstance(name, str) and name.strip():
+                    skills[name.strip().lower()] += 1
         
         sal = vac.get('salary')
-        if sal and sal.get('from') and sal.get('currency') == 'RUR':
+        if sal and isinstance(sal.get('from'), (int, float)) and not isinstance(sal['from'], bool) and 0 < sal['from'] < 1e10 and sal.get('currency') == 'RUR':
             salaries.append(sal['from'])
             
         region = vac.get('area', {}).get('name', 'Не указан')
-        if sal and sal.get('from'):
+        if sal and isinstance(sal.get('from'), (int, float)) and not isinstance(sal['from'], bool) and 0 < sal['from'] < 1e10 and sal.get('currency') == 'RUR':
             if region not in analytics['avg_salary_by_region']:
                 analytics['avg_salary_by_region'][region] = []
             analytics['avg_salary_by_region'][region].append(sal['from'])
         
-        exp = vac.get('experience', {}).get('id', 'no_experience')
+        exp = (vac.get('experience') or {}).get('id')
         if exp in analytics['experience_distribution']:
             analytics['experience_distribution'][exp] += 1
 
         pub_date = vac.get('published_at', '')[:10]
         analytics['timeline'][pub_date] = analytics['timeline'].get(pub_date, 0) + 1
 
-    sorted_skills = sorted([(k, v) for k, v in analytics.items() if k not in ['total_vacancies', 'salary_stats', 'top_skills', 'experience_distribution', 'avg_salary_by_region', 'timeline', 'updated_at']], key=lambda x: x[1], reverse=True)[:20]
-    analytics['top_skills'] = [{"skill": k, "count": v} for k, v in sorted_skills]
-    for k, v in sorted_skills:
-        del analytics[k]
+    analytics['top_skills'] = [{"skill": k, "count": v} for k, v in skills.most_common(20)]
+    analytics['salary_sample_size'] = len(salaries)
 
     for reg in analytics['avg_salary_by_region']:
         vals = analytics['avg_salary_by_region'][reg]
@@ -140,17 +146,28 @@ def process_and_save(queries, output_filename):
             "max": max(salaries)
         }
 
-    os.makedirs("data", exist_ok=True)
-    with open(f"data/{output_filename}", "w", encoding="utf-8") as f:
-        json.dump(analytics, f, ensure_ascii=False, indent=2)
-    
-    print(f"✅ ГОТОВО! Файл {output_filename} сохранен.")
-    print(f"   Вакансий: {analytics['total_vacancies']}")
+    return analytics
 
-# -------------------------------------------------------------------
-# 4. ЗАПУСК
-# -------------------------------------------------------------------
+
+def main():
+    # Both collections must succeed before either previously published file is replaced.
+    outputs = {
+        "hh_warehouse.json": collect_analytics(WAREHOUSE_QUERIES, "hh_warehouse.json"),
+        "hh_transport.json": collect_analytics(TRANSPORT_QUERIES, "hh_transport.json"),
+    }
+    os.makedirs("data", exist_ok=True)
+    for filename, analytics in outputs.items():
+        target = os.path.join("data", filename)
+        temp = target + ".tmp"
+        try:
+            with open(temp, "w", encoding="utf-8") as f:
+                json.dump(analytics, f, ensure_ascii=False, indent=2)
+            os.replace(temp, target)
+        finally:
+            if os.path.exists(temp):
+                os.unlink(temp)
+        print(f"✅ {filename}: {analytics['total_vacancies']} вакансий")
+
+
 if __name__ == "__main__":
-    process_and_save(WAREHOUSE_QUERIES, "hh_warehouse.json")
-    process_and_save(TRANSPORT_QUERIES, "hh_transport.json")
-    print("\n✅ ВСЕ ДАННЫЕ СОБРАНЫ. Скрипт завершил работу.")
+    main()

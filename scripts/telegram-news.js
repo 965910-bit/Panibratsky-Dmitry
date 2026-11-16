@@ -22,9 +22,11 @@ function loadSentNews() {
     ensureDataDir();
     if (fs.existsSync(SENT_FILE)) {
         try {
-            return JSON.parse(fs.readFileSync(SENT_FILE, 'utf8'));
+            const sent = JSON.parse(fs.readFileSync(SENT_FILE, 'utf8'));
+            if (!Array.isArray(sent) || !sent.every(link => typeof link === 'string')) throw new Error('invalid state');
+            return sent;
         } catch (e) {
-            return [];
+            throw new Error('Не удалось прочитать состояние отправок; остановка для предотвращения дубликатов');
         }
     }
     return [];
@@ -40,15 +42,15 @@ function saveSentNews(sentLinks) {
 
 function loadNews() {
     if (!fs.existsSync(NEWS_FILE)) {
-        console.log('Файл news.json не найден');
-        return [];
+        throw new Error('Файл news.json не найден');
     }
     try {
         const data = fs.readFileSync(NEWS_FILE, 'utf8');
-        return JSON.parse(data);
+        const news = JSON.parse(data);
+        if (!Array.isArray(news)) throw new Error('ожидался список новостей');
+        return news;
     } catch (e) {
-        console.error('Ошибка чтения news.json:', e);
-        return [];
+        throw new Error('Ошибка чтения news.json: ' + e.message);
     }
 }
 
@@ -95,7 +97,7 @@ async function sendToTelegram(formatted) {
         console.log(`Отправлено: ${formatted.title}`);
         return true;
     } catch (err) {
-        console.error(`Ошибка отправки: ${formatted.title}`, err.response?.data || err.message);
+        console.error(`Ошибка отправки: ${formatted.title}; статус: ${err.response?.status || 'сетевой сбой'}`);
         return false;
     }
 }
@@ -147,6 +149,7 @@ async function main() {
     }
     saveSentNews(sentLinks);
     console.log(`Отправлено ${successCount} из ${newNews.length}`);
+    if (successCount !== newNews.length) throw new Error('Не все новости доставлены; успешные отправки сохранены');
 }
 
 main().catch(err => {
