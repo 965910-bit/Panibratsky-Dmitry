@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Автоматический сбор RSS и публикация в Telegram",
   "scripts": {
-    "telegram": "node scripts/telegram-news.js"
+    "telegram": "node scripts/telegram-news.js",
+    "start": "node server/assistant.js",
+    "test": "node --test tests/assistant.test.js && node tests/calculators.test.js && python3 -m unittest discover -s tests"
   },
   "dependencies": {
     "axios": "^1.6.0",
