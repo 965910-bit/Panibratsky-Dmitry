@@ -523,7 +523,7 @@
                 <div style="margin-bottom:20px;">
                     <div><strong>${id.toUpperCase()}</strong> <span class="badge">цель ${b.target} ${b.unit}</span></div>
                     <div class="kpi-value ${statusClass}">${value} ${value !== '—' ? b.unit : ''}</div>
-                    <div class="benchmark-bar"><div class="benchmark-fill" style="width:${percentOfTarget}%;"></div><div class="benchmark-marker" style="left:${(b.good/b.target)*100}%;"></div></div>
+                    <div class="benchmark-bar"><div class="benchmark-fill" style="width:${Math.min(100, Math.max(0, percentOfTarget))}%;"></div><div class="benchmark-marker" style="left:${Math.min(100, Math.max(0, (b.good/b.target)*100))}%;"></div></div>
                     <div class="badge">Бенчмарк: ${b.good} ${b.unit}</div>
                 </div>
             `;

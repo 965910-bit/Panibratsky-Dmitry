@@ -57,6 +57,18 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(items[0].findtext('link'), item['link'])
             self.assertEqual(items[0].findtext('category'), 'A & B')
 
+    def test_mobile_navigation_and_news_content(self):
+        news = (ROOT / 'trends.html').read_text(encoding='utf-8')
+        self.assertIn('.fade-up { opacity: 1; transform: none; }', news)
+        self.assertIn('aria-controls="nav-menu"', news)
+        for name in ('auditor', 'inventory-methodology', 'kpi-center', 'library'):
+            html = (ROOT / (name + '.html')).read_text(encoding='utf-8')
+            self.assertIn('class="mobile-app-menu"', html, name)
+            self.assertIn('css/mobile-app.css', html, name)
+        common = (ROOT / 'scm-platform/scm-common.js').read_text(encoding='utf-8')
+        self.assertIn("toggleBtn.setAttribute('aria-expanded'", common)
+        self.assertIn("toggleBtn.textContent = '☰ Разделы'", common)
+
     def test_required_assets_exist(self):
         for path in ('css/portfolio-menu.css', 'js/portfolio-menu.js',
                      'icons/android/launchericon-192x192.png', 'icons/android/launchericon-512x512.png'):

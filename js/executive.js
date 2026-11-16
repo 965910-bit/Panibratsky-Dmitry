@@ -25,7 +25,7 @@
   });
   nav.addEventListener('click', event => { if (event.target.closest('a')) closeMenu(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); menuButton.focus(); } });
-  window.addEventListener('resize', () => { if (window.innerWidth > 760) closeMenu(); });
+  window.addEventListener('resize', () => { if (window.innerWidth > 820) closeMenu(); });
 
   const form = document.getElementById('chat-form');
   const field = document.getElementById('chat-question');
