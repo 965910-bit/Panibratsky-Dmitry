@@ -98,6 +98,35 @@ class SiteTests(unittest.TestCase):
         self.assertIn('Март 2020 — Март 2024</div><h3 class="exp-company">Леруа Мерлен', experience)
         self.assertIn('/resume/', (ROOT / '.gitignore').read_text(encoding='utf-8'))
 
+    def test_research_page_navigation_sources_and_sitemap(self):
+        class Document(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.ids = set()
+                self.links = []
+                self.h1_count = 0
+            def handle_starttag(self, tag, attrs):
+                attrs = dict(attrs)
+                if attrs.get('id'):
+                    self.ids.add(attrs['id'])
+                if tag == 'a' and attrs.get('href'):
+                    self.links.append(attrs['href'])
+                if tag == 'h1':
+                    self.h1_count += 1
+        page = ROOT / 'scm-problems.html'
+        document = Document()
+        document.feed(page.read_text(encoding='utf-8'))
+        self.assertEqual(document.h1_count, 1)
+        for href in document.links:
+            if href.startswith('#'):
+                self.assertIn(href[1:], document.ids, href)
+        self.assertGreaterEqual(sum(url.startswith('https://') for url in document.links), 8)
+        for name in ('index.html', 'blog.html'):
+            self.assertIn('href="scm-problems.html"', (ROOT / name).read_text(encoding='utf-8'))
+        generator = load_script('generate_sitemap')
+        self.assertIn('scm-problems.html', generator.PAGES)
+        self.assertIn('https://scm-news.ru/scm-problems.html', (ROOT / 'sitemap.xml').read_text())
+
     def test_no_previous_surname_in_public_text_or_paths(self):
         # Exclude the local, ignored private archive and Git history; neither is a site asset.
         names = ('\u043f\u0430\u043d\u0438\u0431\u0440\u0430\u0442', 'pani' + 'brat')
