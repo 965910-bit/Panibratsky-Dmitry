@@ -820,7 +820,7 @@
         let customDiv = document.createElement('div'); customDiv.style.marginTop = '20px'; customDiv.innerHTML = '<strong>Свои пункты:</strong>';
         for (let [id, item] of Object.entries(customItems)) {
             let row = document.createElement('div'); row.style.display = 'flex'; row.style.gap = '8px'; row.style.alignItems = 'center'; row.style.marginTop = '4px';
-            row.innerHTML = `<span>${item.text} (${item.unit})</span> <button class="remove-custom" data-id="${id}">❌</button>`;
+            row.innerHTML = `<span>${escapeHtml(item.text)} (${escapeHtml(item.unit)})</span> <button class="remove-custom" data-id="${escapeHtml(id)}">❌</button>`;
             customDiv.appendChild(row);
         }
         container.appendChild(customDiv);
@@ -834,9 +834,9 @@
         container.innerHTML = '';
         templates.forEach(tmpl => {
             let div = document.createElement('div'); div.className = 'template-item';
-            div.innerHTML = `<span><strong>${tmpl.name}</strong> (${tmpl.itemIds.length} пунктов)</span>
-                             <div><button class="use-template" data-id="${tmpl.id}">Использовать в аудите</button>
-                             <button class="delete-template" data-id="${tmpl.id}">🗑️</button></div>`;
+            div.innerHTML = `<span><strong>${escapeHtml(tmpl.name)}</strong> (${tmpl.itemIds.length} пунктов)</span>
+                             <div><button class="use-template" data-id="${escapeHtml(tmpl.id)}">Использовать в аудите</button>
+                             <button class="delete-template" data-id="${escapeHtml(tmpl.id)}">🗑️</button></div>`;
             container.appendChild(div);
         });
         document.querySelectorAll('.use-template').forEach(btn => {
@@ -999,7 +999,7 @@
     }
     init();
 })();
-function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
 </script>
 </body>
 </html>

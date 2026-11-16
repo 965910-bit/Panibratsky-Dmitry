@@ -5,10 +5,9 @@
   "scripts": {
     "telegram": "node scripts/telegram-news.js",
     "start": "node server/assistant.js",
-    "test": "node --test tests/assistant.test.js && node tests/calculators.test.js && python3 -m unittest discover -s tests"
+    "test": "node --test tests/assistant.test.js tests/p0.test.js tests/prompts.test.js tests/executive-pages.test.js tests/planner-security.test.js tests/telegram.test.js tests/scm-security.test.js tests/market.test.js && node tests/calculators.test.js && python3 -m unittest discover -s tests -v"
   },
   "dependencies": {
-    "axios": "^1.6.0",
-    "feedparser": "^2.2.10"
+    "axios": "^1.6.0"
   }
 }

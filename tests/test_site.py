@@ -19,6 +19,13 @@ def load_script(name):
 
 
 class SiteTests(unittest.TestCase):
+    def test_internal_reports_excluded_from_pages(self):
+        config = (ROOT / '_config.yml').read_text(encoding='utf-8')
+        self.assertIn('  - audit\n', config)
+        for report in ROOT.glob('*.md'):
+            if report.name != 'README.md':
+                self.assertIn('  - "' + report.name + '"', config, report.name)
+
     def test_sitemap_is_valid_local_and_canonical(self):
         ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
         urls = [e.text for e in ET.parse(ROOT / 'sitemap.xml').findall('.//s:loc', ns)]

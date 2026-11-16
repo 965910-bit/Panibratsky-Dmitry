@@ -333,7 +333,7 @@
             row.insertCell(1).textContent = t.text;
             row.insertCell(2).textContent = t.assignee;
             row.insertCell(3).textContent = t.dueDate || '—';
-            row.insertCell(4).innerHTML = `<span class="priority-${t.priority}">${t.priority === 'high' ? 'Высокий' : (t.priority === 'medium' ? 'Средний' : 'Низкий')}</span>`;
+            row.insertCell(4).innerHTML = `<span class="priority-${['high', 'medium', 'low'].includes(t.priority) ? t.priority : 'low'}">${t.priority === 'high' ? 'Высокий' : (t.priority === 'medium' ? 'Средний' : 'Низкий')}</span>`;
             row.insertCell(5).textContent = t.status === 'new' ? 'Новое' : (t.status === 'progress' ? 'В работе' : (t.status === 'review' ? 'На согласовании' : 'Готово'));
             row.insertCell(6).textContent = t.controller || '—';
             row.insertCell(7).textContent = t.completedDate || '—';

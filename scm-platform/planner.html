@@ -230,6 +230,7 @@
         </div>
 
         <div class="btn-group" style="margin-top: 16px;">
+            <p role="note">Данные хранятся только в этом браузере и могут исчезнуть при очистке. Не вводите конфиденциальную информацию.</p>
             <button id="saveAllBtn">💾 Сохранить весь день</button>
             <button id="syncWithRegistryBtn">🔄 Синхронизировать с реестром поручений</button>
         </div>
@@ -293,7 +294,7 @@
                 if (k.lowerBetter) color = value <= k.target ? 'kpi-good' : 'kpi-bad';
                 else color = value >= k.target ? 'kpi-good' : 'kpi-bad';
             }
-            html += `<div class="kpi-item"><div class="value ${color}">${value}</div><div class="label">${k.label}</div></div>`;
+            html += `<div class="kpi-item"><div class="value ${color}">${escapeHtml(value)}</div><div class="label">${k.label}</div></div>`;
         }
         container.innerHTML = html;
     }
@@ -391,8 +392,8 @@
         } else {
             container.innerHTML = dayData.events.map(ev => `
                 <div class="event-item">
-                    <div><span class="event-time">${ev.time}</span> ${escapeHtml(ev.title)}</div>
-                    <button class="delete-event btn-icon" data-id="${ev.id}"><i class="fas fa-trash-alt"></i></button>
+                    <div><span class="event-time">${escapeHtml(ev.time)}</span> ${escapeHtml(ev.title)}</div>
+                    <button class="delete-event btn-icon" data-id="${escapeHtml(ev.id)}"><i class="fas fa-trash-alt"></i></button>
                 </div>
             `).join('');
             document.querySelectorAll('.delete-event').forEach(btn => {
@@ -436,13 +437,13 @@
         container.innerHTML = filtered.map(task => `
             <div class="task-category-item">
                 <div style="display:flex; align-items:center; gap:8px;">
-                    <input type="checkbox" class="task-complete" data-id="${task.id}" ${task.completed ? 'checked' : ''}>
+                    <input type="checkbox" class="task-complete" data-id="${escapeHtml(task.id)}" ${task.completed ? 'checked' : ''}>
                     <span style="${task.completed ? 'text-decoration:line-through; color:#94a3b8;' : ''}">${escapeHtml(task.text)}</span>
                     ${task.source === 'registry' ? '<span class="badge" style="font-size:10px;">реестр</span>' : ''}
                 </div>
                 <div>
-                    <button class="edit-task btn-icon" data-id="${task.id}"><i class="fas fa-edit"></i></button>
-                    <button class="delete-task btn-icon" data-id="${task.id}"><i class="fas fa-trash-alt"></i></button>
+                    <button class="edit-task btn-icon" data-id="${escapeHtml(task.id)}"><i class="fas fa-edit"></i></button>
+                    <button class="delete-task btn-icon" data-id="${escapeHtml(task.id)}"><i class="fas fa-trash-alt"></i></button>
                 </div>
             </div>
         `).join('');
@@ -540,7 +541,7 @@
         const frogTask = dayData.tasks.find(t => t.id === dayData.frogTaskId);
         const frogContainer = document.getElementById('frogContainer');
         if (frogTask) {
-            frogContainer.innerHTML = `<div class="task-category-item"><span>${escapeHtml(frogTask.text)}</span><button class="remove-frog btn-icon" data-id="${frogTask.id}"><i class="fas fa-times"></i></button></div>`;
+            frogContainer.innerHTML = `<div class="task-category-item"><span>${escapeHtml(frogTask.text)}</span><button class="remove-frog btn-icon" data-id="${escapeHtml(frogTask.id)}"><i class="fas fa-times"></i></button></div>`;
             document.querySelector('.remove-frog')?.addEventListener('click', () => { dayData.frogTaskId = null; saveDayData(); renderFrogElephant(); });
         } else {
             frogContainer.innerHTML = '<div class="badge">Лягушка не назначена</div>';
@@ -552,7 +553,7 @@
             if (elephantTask.subtasks && elephantTask.subtasks.length) {
                 subtasksHtml = `<div class="subtasks-list">Подзадачи:<ul>${elephantTask.subtasks.map(st => `<li>${escapeHtml(st)}</li>`).join('')}</ul></div>`;
             }
-            elephantContainer.innerHTML = `<div><strong>${escapeHtml(elephantTask.text)}</strong>${subtasksHtml}<button class="remove-elephant btn-icon" data-id="${elephantTask.id}"><i class="fas fa-times"></i></button></div>`;
+            elephantContainer.innerHTML = `<div><strong>${escapeHtml(elephantTask.text)}</strong>${subtasksHtml}<button class="remove-elephant btn-icon" data-id="${escapeHtml(elephantTask.id)}"><i class="fas fa-times"></i></button></div>`;
             document.querySelector('.remove-elephant')?.addEventListener('click', () => { dayData.elephantTaskId = null; saveDayData(); renderFrogElephant(); });
         } else {
             elephantContainer.innerHTML = '<div class="badge">Слон не назначен</div>';
@@ -740,7 +741,7 @@
     }
     init();
 })();
-function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
 </script>
 </body>
 </html>
