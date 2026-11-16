@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parent.parent
 BASE = 'https://scm-news.ru/'
 # Deliberately excludes local-only dashboards, verification files and noindex pages.
-PAGES = ['','about.html','blog.html','career.html','contact.html','experience.html',
+PAGES = ['','about.html','blog.html','scm-problems.html','career.html','contact.html','experience.html',
          'expertise.html','prompts.html','trends.html','calculators.html',
          'certificates.html','projects.html','tools.html','wiki.html','trends-logistics.html']
 
