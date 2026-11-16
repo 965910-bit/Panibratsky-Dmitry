@@ -33,6 +33,16 @@ class SiteTests(unittest.TestCase):
             self.assertNotRegex(html.lower(), r'content=["\'][^"\']*noindex')
             self.assertIn('href="' + url + '"', html)
 
+    def test_public_business_plan_discovery(self):
+        page = (ROOT / 'business-plan.html').read_text(encoding='utf-8')
+        self.assertIn('href="https://scm-news.ru/business-plan.html"', page)
+        for field in ('name="description"', 'property="og:title"', 'property="og:description"', 'property="og:url"'):
+            self.assertIn(field, page)
+        for source in ('projects.html', 'tools.html'):
+            self.assertIn('href="business-plan.html"', (ROOT / source).read_text(encoding='utf-8'))
+        self.assertIn('business-plan.html', load_script('generate_sitemap').PAGES)
+        self.assertIn('https://scm-news.ru/business-plan.html', (ROOT / 'sitemap.xml').read_text(encoding='utf-8'))
+
     def test_rss_is_xml_and_urls_are_valid(self):
         items = ET.parse(ROOT / 'rss.xml').findall('./channel/item')
         self.assertTrue(items)
