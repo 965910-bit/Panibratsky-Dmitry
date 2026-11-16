@@ -199,12 +199,8 @@
             box-shadow: var(--card-shadow);
         }
         .theme-switch i { font-size: 18px; color: var(--text-primary); }
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        /* News content must remain visible even when the article is taller than the viewport. */
+        .fade-up { opacity: 1; transform: none; }
         .breadcrumb {
             padding: 0 0 20px;
             font-size: 14px;
@@ -745,13 +741,23 @@
             margin-bottom: 20px;
         }
     </style>
+<style>
+@media (max-width: 768px) {
+  .mobile-menu-btn { min-width: 44px; min-height: 44px; }
+  .chart-container { min-width: 0; }
+  .trends-grid { grid-template-columns: minmax(0, 1fr); }
+  .search-bar input { min-width: 0; }
+  h1 { overflow-wrap: anywhere; }
+  #newsChart { display: block; max-width: 100%; height: auto; }
+}
+</style>
 </head>
 <body>
     <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo">ДМИТРИЙ<span class="logo-dot">.</span>ГЕРАСИМОВ</a>
-            <button type="button" class="mobile-menu-btn" aria-label="Меню" aria-controls="nav-menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+            <button type="button" class="mobile-menu-btn" aria-label="Меню" aria-controls="nav-menu" aria-expanded="false"><span aria-hidden="true">☰</span></button>
             <nav>
                 <ul id="nav-menu">
                     <li><a href="about.html">Обо мне</a></li>

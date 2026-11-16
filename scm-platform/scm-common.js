@@ -351,9 +351,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (href === currentPage) link.classList.add('active');
         else if (currentPage === '' && href === 'dashboard.html') link.classList.add('active');
     });
-    const toggleBtn = document.querySelector('.menu-toggle');
-    if (toggleBtn) {
-        const sidebar = document.querySelector('.sidebar');
-        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
+    const sidebar = document.querySelector('.sidebar');
+    const main = document.querySelector('.main-content');
+    let toggleBtn = document.querySelector('.menu-toggle');
+    if (sidebar && main && !toggleBtn) {
+        toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.className = 'menu-toggle';
+        toggleBtn.textContent = '☰ Разделы';
+        main.prepend(toggleBtn);
+    }
+    if (toggleBtn && sidebar) {
+        sidebar.id = sidebar.id || 'scm-navigation';
+        toggleBtn.setAttribute('aria-controls', sidebar.id);
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        const close = () => { sidebar.classList.remove('open'); toggleBtn.setAttribute('aria-expanded', 'false'); };
+        toggleBtn.addEventListener('click', () => {
+            const open = sidebar.classList.toggle('open');
+            toggleBtn.setAttribute('aria-expanded', String(open));
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && sidebar.classList.contains('open')) { close(); toggleBtn.focus(); }
+        });
+        sidebar.addEventListener('click', event => { if (event.target.closest('a')) close(); });
+        window.addEventListener('resize', () => { if (window.innerWidth > 768) close(); });
     }
 });

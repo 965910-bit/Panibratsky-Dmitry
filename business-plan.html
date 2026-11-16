@@ -331,7 +331,14 @@
             background: #1e3d72;
         }
     </style>
-</head>
+<style>@media screen and (max-width: 600px) {
+body { padding: 12px; }
+.pdf-container { padding: 16px; }
+.metadata, .financial-grid, .risk-matrix { grid-template-columns: minmax(0, 1fr); }
+.meta-item { flex-wrap: wrap; gap: 4px 12px; }
+.contact-info { overflow-wrap: anywhere; }
+table { display: block; max-width: 100%; overflow-x: auto; }
+}</style></head>
 <body>
     <button class="print-btn no-print" onclick="window.print()">🖨️ Печать PDF</button>
 
