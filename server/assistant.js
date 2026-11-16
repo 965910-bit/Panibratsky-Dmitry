@@ -35,7 +35,8 @@ function createHandler(options = {}) {
   return async function handler(req, res) {
     const pathname = new URL(req.url, 'http://local').pathname;
     if (pathname !== '/api/chat') return false;
-    if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); json(res, 405, { error: 'Метод не поддерживается' }); return true; }
+    if (req.method === 'GET') { json(res, 200, { configured: Boolean(apiKey) }); return true; }
+    if (req.method !== 'POST') { res.setHeader('Allow', 'GET, POST'); json(res, 405, { error: 'Метод не поддерживается' }); return true; }
     const origin = req.headers.origin;
     if (origin) {
       try { if (new URL(origin).host !== req.headers.host) { json(res, 403, { error: 'Запрос отклонён' }); return true; } }

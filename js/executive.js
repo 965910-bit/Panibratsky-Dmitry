@@ -31,6 +31,36 @@
   const field = document.getElementById('chat-question');
   const messages = document.getElementById('chat-messages');
   const submit = form.querySelector('button');
+  const status = document.getElementById('chat-status');
+  const retry = document.getElementById('chat-retry');
+  const suggestions = Array.from(document.querySelectorAll('[data-question]'));
+  let available = false;
+  function setAvailable(enabled) {
+    available = enabled;
+    field.disabled = !enabled;
+    submit.disabled = !enabled;
+    suggestions.forEach(button => { button.disabled = !enabled; });
+  }
+  async function checkAvailability() {
+    setAvailable(false);
+    retry.hidden = true;
+    status.textContent = 'ПРОВЕРЯЕМ ПОДКЛЮЧЕНИЕ';
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    try {
+      const response = await fetch('/api/chat', { cache: 'no-store', signal: controller.signal });
+      if (!response.ok || !(response.headers.get('content-type') || '').includes('application/json')) throw new Error('unavailable');
+      const data = await response.json();
+      if (data.configured !== true) throw new Error('unavailable');
+      setAvailable(true);
+      status.textContent = 'СЕРВИС ПОДКЛЮЧЁН · ОТВЕТ МОЖЕТ БЫТЬ НЕДОСТУПЕН';
+    } catch (_) {
+      status.textContent = 'ВРЕМЕННО НЕДОСТУПЕН · СВЯЖИТЕСЬ НАПРЯМУЮ';
+      retry.hidden = false;
+    } finally { clearTimeout(timer); }
+  }
+  retry.addEventListener('click', checkAvailability);
+  checkAvailability();
   function addMessage(text, type, links = []) {
     const message = document.createElement('div');
     message.className = 'message ' + (type === 'user' ? 'user-message' : 'assistant-message');
@@ -49,7 +79,7 @@
   }
   async function sendQuestion(question) {
     question = question.trim();
-    if (!question || submit.disabled) return;
+    if (!question || !available || submit.disabled) return;
     if (question.length > 600) { addMessage('Вопрос слишком длинный. Пожалуйста, сократите его до 600 символов.', 'assistant'); return; }
     addMessage(question, 'user');
     field.value = '';
@@ -72,5 +102,5 @@
     }
   }
   form.addEventListener('submit', event => { event.preventDefault(); sendQuestion(field.value); });
-  document.querySelectorAll('[data-question]').forEach(button => button.addEventListener('click', () => sendQuestion(button.dataset.question)));
+  suggestions.forEach(button => button.addEventListener('click', () => sendQuestion(button.dataset.question)));
 })();

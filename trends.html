@@ -90,7 +90,7 @@
           "name": "Как подписаться на уведомления о новых новостях?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Используйте форму подписки в футере сайта. Вы будете получать дайджест самых важных новостей SCM на указанный email."
+            "text": "Email-подписка пока недоступна. Для связи используйте страницу контактов или открытые каналы сайта."
           }
         }
       ]
@@ -877,6 +877,7 @@
         </div>
 
         <p id="news-status" role="status"></p>
+        <p class="news-date-note">Даты в старых записях могут отражать время получения материала, а не публикации. Проверяйте дату у первоисточника.</p>
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Поиск по заголовку или описанию...">
             <button id="searchBtn"><i class="fas fa-search"></i> Найти</button>
@@ -940,7 +941,7 @@
             </div>
             <div class="faq-item">
                 <div class="faq-question">Как подписаться на уведомления о новых новостях?</div>
-                <div class="faq-answer">Используйте форму подписки в футере сайта. Вы будете получать дайджест самых важных новостей SCM на указанный email.</div>
+                <div class="faq-answer">Email-подписка пока недоступна. Для связи используйте страницу контактов или открытые каналы сайта.</div>
             </div>
         </div>
     </div>
@@ -1069,12 +1070,14 @@
                     : '';
                 const likes = Math.max(0, parseInt(localStorage.getItem(`like_${item.link}`), 10) || 0);
                 const isLiked = localStorage.getItem(`liked_${item.link}`) === 'true';
+                const published = new Date(item.pubDate);
+                const dateLabel = item.pubDate && Number.isFinite(published.getTime()) ? published.toLocaleString('ru-RU') : 'Дата не указана';
                 return `
                     <div class="news-item" data-link="${escapeHtml(item.link)}" data-title="${escapeHtml(item.title)}">
                         <div class="news-title"><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener" class="news-title-link">${escapeHtml(item.title)}</a></div>
                         <div class="news-meta">
                             <span class="news-source">${escapeHtml(item.source)}</span>
-                            <span>📅 ${new Date(item.pubDate).toLocaleString('ru-RU')}</span>
+                            <span>📅 ${escapeHtml(dateLabel)}</span>
                         </div>
                         <div class="news-description">${escapeHtml(item.description)}</div>
                         ${tagsHtml}
@@ -1288,7 +1291,7 @@
             const timerSpan = document.getElementById('update-timer');
             if (timerSpan && updated) {
                 const now = new Date();
-                timerSpan.innerHTML = `✅ обновлено в ${now.toLocaleTimeString()}`;
+                timerSpan.textContent = `✅ проверено в ${now.toLocaleTimeString()}`;
                 setTimeout(() => { if (timerSpan.innerHTML.includes('✅')) timerSpan.innerHTML = '⏳ ожидание обновления...'; }, 3000);
             } else if (timerSpan) {
                 timerSpan.textContent = '⚠️ обновление недоступно';

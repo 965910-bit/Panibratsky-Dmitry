@@ -39,3 +39,17 @@ test('checklist defaults to an honest unavailable state', () => {
   assert.match(page, /id="saveBtn" disabled/);
   assert.match(page, /await import\('\.\/firebase-config\.js'\)/);
 });
+test('news displays an honest placeholder for missing or invalid publication dates', () => {
+  const render = html.match(/        function renderNews\(\) \{[\s\S]*?\n        \}\n\n        function shareHandler/)[0].replace(/\n\n        function shareHandler$/, '');
+  const escape = html.match(/        function escapeHtml\(str\) \{[\s\S]*?\n        \}/)[0];
+  const list = { innerHTML: '' }, pagination = { innerHTML: '' };
+  const context = { Date, Number, Math, parseInt, filteredNews: [
+    { link: 'https://example.com/a', title: 'A', pubDate: '', tags: [] },
+    { link: 'https://example.com/b', title: 'B', pubDate: 'bad date', tags: [] }
+  ], currentPage: 1, perPage: 10, localStorage: { getItem: () => null },
+    document: { getElementById: id => id === 'news-list' ? list : pagination, querySelectorAll: () => [] },
+    renderPagination() {}, shareHandler() {}, likeHandler() {} };
+  vm.createContext(context); vm.runInContext(escape + '\n' + render + '\nrenderNews();', context);
+  assert.equal((list.innerHTML.match(/Дата не указана/g) || []).length, 2);
+  assert.doesNotMatch(list.innerHTML, /Invalid Date/);
+});
