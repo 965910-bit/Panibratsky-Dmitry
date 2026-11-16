@@ -38,19 +38,22 @@
 </header>
 <div class="container" id="app">
     <a href="scm-platform/checklists.html" class="back-link">← Назад к чек-листам</a>
-    <h1 id="checklistTitle">Загрузка...</h1>
+    <h1 id="checklistTitle">Чек-лист временно недоступен</h1>
+    <p id="checklistStatus" role="status">Сервис загрузки и сохранения прогресса не настроен или недоступен.</p>
     <div class="stats">
         <span>Прогресс: <span id="progressPercent">0</span>%</span>
         <span>Дата последнего обновления: <span id="lastUpdated">—</span></span>
     </div>
     <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
     <div id="questionsContainer"></div>
-    <button class="btn-save" id="saveBtn">Сохранить прогресс</button>
+    <button class="btn-save" id="saveBtn" disabled>Сохранить прогресс</button>
 </div>
 
 <script type="module">
-    import { auth, db, onAuthStateChanged, signOut } from './firebase-config.js';
-    import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    // Без конфигурации сервис остаётся недоступным, а сохранение выключено.
+    try {
+    const { auth, db, onAuthStateChanged, signOut } = await import('./firebase-config.js');
+    const { doc, getDoc, setDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js');
 
     // Полный объект questionsDB для всех 12 чек-листов
     const questionsDB = {
@@ -361,6 +364,8 @@
         }
         renderQuestions();
         updateProgress();
+        document.getElementById('checklistStatus').textContent = '';
+        document.getElementById('saveBtn').disabled = false;
     });
 
     function renderQuestions() {
@@ -410,6 +415,9 @@
         await signOut(auth);
         window.location.href = '/login.html';
     });
+    } catch (error) {
+        console.error('Чек-лист недоступен:', error);
+    }
 </script>
 </body>
 </html>

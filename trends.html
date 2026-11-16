@@ -785,7 +785,9 @@
         <div class="subtitle">Автоматический сбор новостей по логистике, управлению цепями поставок и цифровизации. Сбор новых материалов запускается примерно каждые 30 минут.</div>
 
         <!-- НОВЫЙ БЛОК: Глобальные тренды SCM 2026–2030 -->
+        <p class="disclaimer"><small>Материалы содержат утверждения, оценки и прогнозы, которые требуют проверки по первоисточникам. Прогнозы не являются гарантией результата.</small></p>
         <div class="trends-section">
+            <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
             <h2 class="section-title">🌍 Глобальные тренды SCM 2026–2030</h2>
             <p class="subtitle" style="border-bottom: none; margin-bottom: 0;">Ключевые технологические и стратегические сдвиги, которые меняют логистику и управление цепями поставок. И главное — как подготовить команду через обучение и внутреннюю Академию.</p>
             <div class="trends-grid">
@@ -794,9 +796,11 @@
                     <div class="trend-icon"><i class="fas fa-robot"></i></div>
                     <h3 class="trend-title">Агентный ИИ (Agentic AI)</h3>
                     <div class="trend-description">
+                        <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
                         К 2030 году 60% компаний внедрят автономные SCM-системы. Искусственный интеллект переходит от аналитики к самостоятельному принятию решений: перепланирование поставок, перенастройка складов, автоматическое перераспределение ресурсов.
                     </div>
                     <div class="trend-stats">
+                        <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
                         📈 <strong>Прогноз Gartner:</strong> рынок AI-решений для SCM вырастет со $100 млрд (2026) до $620 млрд (2030).
                     </div>
                     <div class="trend-learning">
@@ -809,9 +813,11 @@
                     <div class="trend-icon"><i class="fas fa-map-marked-alt"></i></div>
                     <h3 class="trend-title">Регионализация цепей поставок</h3>
                     <div class="trend-description">
+                        <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
                         Почти 60% руководителей прогнозируют переход к локализованным цепочкам к 2030 году. Геополитика, тарифы и волатильность заставляют пересматривать глобальную оптимизацию в пользу устойчивости.
                     </div>
                     <div class="trend-stats">
+                        <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
                         🔄 <strong>Ключевые драйверы:</strong> геополитическая нестабильность (38%), тарифы и торговые барьеры (48%), экономическая волатильность (55%).
                     </div>
                     <div class="trend-learning">
@@ -822,11 +828,14 @@
                 <!-- Тренд 3: Цифровые двойники и SCM 4.0 -->
                 <div class="trend-card">
                     <div class="trend-icon"><i class="fas fa-cubes"></i></div>
+                    <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
                     <h3 class="trend-title">Цифровые двойники и SCM 4.0</h3>
                     <div class="trend-description">
+                        <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
                         Рынок Logistics 4.0 вырастет до $74 млрд к 2030 году. Цифровые двойники позволяют моделировать всю цепочку поставок, прогнозировать сбои и тестировать сценарии без риска.
                     </div>
                     <div class="trend-stats">
+                        <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
                         💡 <strong>Эффект:</strong> снижение простоев до 30%, повышение точности прогнозов на 40%, сокращение страховых запасов.
                     </div>
                     <div class="trend-learning">
@@ -839,9 +848,11 @@
                     <div class="trend-icon"><i class="fas fa-chalkboard-teacher"></i></div>
                     <h3 class="trend-title">Навыки будущего и обучение</h3>
                     <div class="trend-description">
+                        <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
                         Период полураспада IT-навыков сократится до 5 лет. Без системного обучения команды не смогут внедрять новые технологии. Обучение — не затраты, а инвестиция в адаптивность.
                     </div>
                     <div class="trend-stats">
+                        <!-- FACTCHECK(seo-2026-11-16): проверить утверждение, источник, период и контекст. -->
                         🧠 <strong>Прогноз Gartner:</strong> к 2030 году 70% навыков, используемых сегодня, станут неактуальны без постоянного обновления.
                     </div>
                     <div class="trend-learning">
@@ -855,6 +866,7 @@
             </div>
         </div>
 
+        <p id="news-status" role="status"></p>
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Поиск по заголовку или описанию...">
             <button id="searchBtn"><i class="fas fa-search"></i> Найти</button>
@@ -971,6 +983,11 @@
         let updateInterval = null;
 
         async function loadNews() {
+            const list = document.getElementById('news-list');
+            const pagination = document.getElementById('pagination');
+            const previousNodes = [...list.childNodes];
+            const previousPagination = [...pagination.childNodes];
+            const previousNews = allNews, previousFiltered = filteredNews, previousPage = currentPage;
             try {
                 const response = await fetch('data/news.json?_=' + Date.now());
                 if (!response.ok) throw new Error('Network error');
@@ -991,12 +1008,17 @@
                     source: String(item.source || ''), category: String(item.category || ''),
                     tags: Array.isArray(item.tags) ? item.tags.filter(tag => typeof tag === 'string') : []
                 }));
+                if (!allNews.length) throw new Error('Empty news data');
                 applyFilters();
+                document.getElementById('news-status').textContent = '';
+                return true;
             } catch (error) {
+                allNews = previousNews; filteredNews = previousFiltered; currentPage = previousPage;
+                list.replaceChildren(...previousNodes);
+                pagination.replaceChildren(...previousPagination);
                 console.error('Ошибка загрузки новостей:', error);
-                const notice = document.createElement('p');
-                notice.textContent = 'Не удалось обновить ленту. Показаны последние сохранённые новости.';
-                document.getElementById('news-list').prepend(notice);
+                document.getElementById('news-status').textContent = 'Не удалось обновить ленту. Показаны последние сохранённые новости.';
+                return false;
             }
         }
 
@@ -1252,12 +1274,14 @@
         }
 
         async function updateNews() {
-            await loadNews();
+            const updated = await loadNews();
             const timerSpan = document.getElementById('update-timer');
-            if (timerSpan) {
+            if (timerSpan && updated) {
                 const now = new Date();
                 timerSpan.innerHTML = `✅ обновлено в ${now.toLocaleTimeString()}`;
                 setTimeout(() => { if (timerSpan.innerHTML.includes('✅')) timerSpan.innerHTML = '⏳ ожидание обновления...'; }, 3000);
+            } else if (timerSpan) {
+                timerSpan.textContent = '⚠️ обновление недоступно';
             }
         }
 
@@ -1369,7 +1393,6 @@
             document.addEventListener('keydown', event => { if (event.key === 'Escape' && navMenu.classList.contains('active')) { closeMenu(); mobileBtn.focus(); } });
         }
 
-        loadNews();
         startAutoUpdate(5);
 
         document.addEventListener('DOMContentLoaded', function() {
