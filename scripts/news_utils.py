@@ -11,13 +11,20 @@ def news_date(item):
             date = date.replace(tzinfo=timezone.utc)
         return date.astimezone(timezone.utc)
     except (TypeError, ValueError, OverflowError):
-        return None
+        try:
+            date = datetime.fromisoformat(item.get('pubDate', '').replace('Z', '+00:00'))
+            if date.tzinfo is None:
+                date = date.replace(tzinfo=timezone.utc)
+            return date.astimezone(timezone.utc)
+        except (TypeError, ValueError, OverflowError, AttributeError):
+            return None
 
 
 def merge_news(existing, incoming, days=30, now=None):
     """Keep existing news, deduplicate URLs, prune dated old entries and sort by date.
 
-    Undated entries are retained but placed last. An incoming item does not erase
+    Undated entries are placed last; if collection time is known it controls retention.
+    Legacy entries with neither date are retained. An incoming item does not erase
     metadata such as the link checker's dead flag on an existing item.
     """
     now = now or datetime.now(timezone.utc)
@@ -37,7 +44,9 @@ def merge_news(existing, incoming, days=30, now=None):
         except ValueError:
             continue
         date = news_date(item)
-        if date and date < cutoff:
+        # Collection time is only a retention fallback; it is never presented as publication time.
+        retention_date = date or news_date({'pubDate': item.get('collected_at', '')})
+        if retention_date and retention_date < cutoff:
             continue
         if link in seen:
             continue

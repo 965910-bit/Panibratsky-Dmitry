@@ -2,12 +2,27 @@
 """Generate a well-formed RSS feed from the collected news."""
 import json
 from datetime import datetime, timezone
-from email.utils import format_datetime
+from email.utils import format_datetime, parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
+
+def rss_date(value):
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        date = parsedate_to_datetime(value)
+    except (TypeError, ValueError, OverflowError):
+        try:
+            date = datetime.fromisoformat(value.replace('Z', '+00:00'))
+        except (TypeError, ValueError, OverflowError):
+            return None
+    if date.tzinfo is None:
+        date = date.replace(tzinfo=timezone.utc)
+    return format_datetime(date.astimezone(timezone.utc))
+
 
 def generate_rss():
     news = json.loads((ROOT / 'data/news.json').read_text(encoding='utf-8'))
@@ -31,10 +46,13 @@ def generate_rss():
             continue
         seen.add(link)
         entry = ET.SubElement(channel, 'item')
-        for key in ('title', 'link', 'description', 'pubDate'):
+        for key in ('title', 'link', 'description'):
             # XML 1.0 disallows most C0 control characters.
             value = str(item.get(key) or '')
             ET.SubElement(entry, key).text = ''.join(c for c in value if ord(c) >= 32 or c in '\t\n\r')
+        date = rss_date(item.get('pubDate'))
+        if date:
+            ET.SubElement(entry, 'pubDate').text = date
         for tag in item.get('tags') or []:
             ET.SubElement(entry, 'category').text = ''.join(c for c in str(tag) if ord(c) >= 32 or c in '\t\n\r')
         if len(seen) == 50:

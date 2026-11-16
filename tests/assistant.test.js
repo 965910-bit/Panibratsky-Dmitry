@@ -21,6 +21,20 @@ test('missing server key returns safe unavailable error', async () => {
     assert.match((await res.json()).error, /не настроен/);
   });
 });
+test('availability endpoint reports configuration without contacting the provider or exposing the key', async () => {
+  for (const key of ['', 'server-secret']) {
+    let calls = 0;
+    await withServer({ apiKey: key, fetchImpl: async () => { calls++; throw Error('unexpected'); } }, async base => {
+      const res = await fetch(base + '/api/chat');
+      assert.equal(res.status, 200);
+      assert.equal(res.headers.get('cache-control'), 'no-store');
+      const text = await res.text();
+      assert.equal(JSON.parse(text).configured, Boolean(key));
+      assert(!text.includes('server-secret'));
+      assert.equal(calls, 0);
+    });
+  }
+});
 test('valid request sends curated facts only and returns safe source links', async () => {
   let called;
   const fetchImpl = async (url, options) => {
@@ -45,7 +59,7 @@ test('rejects cross-origin, invalid and oversized inputs', async () => {
     assert.equal((await post(base, {question:''})).status, 400);
     assert.equal((await post(base, {question:'x'.repeat(601)})).status, 400);
     assert.equal((await post(base, {question:'a', extra:'x'.repeat(5000)})).status, 413);
-    assert.equal((await fetch(base + '/api/chat')).status, 405);
+    assert.equal((await fetch(base + '/api/chat', { method: 'PUT' })).status, 405);
   });
 });
 test('handles provider failures without leaking details', async () => {

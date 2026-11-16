@@ -99,6 +99,20 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(items[0].findtext('link'), item['link'])
             self.assertEqual(items[0].findtext('category'), 'A & B')
 
+    def test_rss_omits_missing_dates_and_normalizes_iso(self):
+        generator = load_script('generate_rss')
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / 'data').mkdir()
+            news = [{'title': 'No date', 'link': 'https://example.com/undated', 'pubDate': ''},
+                    {'title': 'ISO', 'link': 'https://example.com/iso', 'pubDate': '2026-11-15T12:00:00+03:00'}]
+            (root / 'data/news.json').write_text(json.dumps(news), encoding='utf-8')
+            generator.ROOT = root
+            generator.generate_rss()
+            items = ET.parse(root / 'rss.xml').findall('./channel/item')
+            self.assertIsNone(items[0].find('pubDate'))
+            self.assertEqual(items[1].findtext('pubDate'), 'Sun, 15 Nov 2026 09:00:00 +0000')
+
     def test_mobile_navigation_and_news_content(self):
         news = (ROOT / 'trends.html').read_text(encoding='utf-8')
         self.assertIn('.fade-up { opacity: 1; transform: none; }', news)

@@ -4,7 +4,7 @@ import json
 import re
 import os
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from news_utils import merge_news
@@ -120,7 +120,7 @@ def fetch_rss(source):
         root = ET.fromstring(resp.content)
         channel = root.find("channel")
         if channel is None:
-            return []
+            raise ValueError('RSS не содержит channel')
         items = channel.findall("item")
         result = []
         for item in items:
@@ -135,6 +135,7 @@ def fetch_rss(source):
                 "title": title,
                 "link": link,
                 "pubDate": pubDate,
+                "collected_at": datetime.now(timezone.utc).isoformat() if not pubDate else None,
                 "description": description,
                 "source": source["name"],
                 "lang": source["lang"],
@@ -144,7 +145,7 @@ def fetch_rss(source):
         return result
     except Exception as e:
         print(f"Ошибка RSS {source['name']}: {e}")
-        return []
+        return None
 
 # ---------------------- SITEMAP + ПАРСИНГ ----------------------
 def fetch_from_sitemap(source):
@@ -166,13 +167,17 @@ def fetch_from_sitemap(source):
 
         sitemap_urls.sort(reverse=True)
         sitemap_urls = sitemap_urls[:3]
+        if not sitemap_urls:
+            raise ValueError('Не найдены подходящие карты сайта')
 
         all_urls = []
+        loaded_sitemaps = 0
         for sitemap_url in sitemap_urls:
             try:
                 resp2 = requests.get(sitemap_url, timeout=15, headers=HEADERS)
                 resp2.raise_for_status()
                 root2 = ET.fromstring(resp2.content)
+                loaded_sitemaps += 1
                 for url_elem in root2.findall('.//s:url', ns):
                     loc = url_elem.find('s:loc', ns).text
                     if any(pattern in loc for pattern in ['/news/', '/blog/', '/post/']):
@@ -180,8 +185,11 @@ def fetch_from_sitemap(source):
             except Exception as e:
                 print(f"Ошибка загрузки {sitemap_url}: {e}")
 
+        if not loaded_sitemaps:
+            raise RuntimeError('Не удалось загрузить ни одну карту сайта')
         news_items = []
-        for url in all_urls[:10]:
+        attempted_urls = all_urls[:10]
+        for url in attempted_urls:
             try:
                 page = requests.get(url, timeout=10, headers=HEADERS)
                 page.raise_for_status()
@@ -202,8 +210,9 @@ def fetch_from_sitemap(source):
                         pubDate = date_elem.text.strip() if date_elem else ''
                 else:
                     pubDate = date_elem.get('datetime') or date_elem.text.strip()
+                # An unknown publication date must not be replaced with the collection time.
                 if not pubDate:
-                    pubDate = datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0000")
+                    pubDate = ''
 
                 desc_meta = soup.find('meta', {'name': 'description'})
                 if desc_meta and desc_meta.get('content'):
@@ -219,6 +228,7 @@ def fetch_from_sitemap(source):
                     "title": title,
                     "link": url,
                     "pubDate": pubDate,
+                    "collected_at": datetime.now(timezone.utc).isoformat() if not pubDate else None,
                     "description": description,
                     "source": source["name"],
                     "lang": source["lang"],
@@ -228,10 +238,12 @@ def fetch_from_sitemap(source):
             except Exception as e:
                 print(f"Ошибка парсинга {url}: {e}")
 
+        if attempted_urls and not news_items:
+            raise RuntimeError('Не удалось получить ни одной страницы новостей')
         return news_items
     except Exception as e:
         print(f"Ошибка обработки sitemap {source['name']}: {e}")
-        return []
+        return None
 
 # ---------------------- GOOGLE ALERTS ----------------------
 def fetch_page_description(url):
@@ -276,16 +288,14 @@ def load_google_alerts(existing_links):
             description = summarize_description(description)
             tags = extract_tags(description + " " + alert["subject"])
 
-            try:
-                dt = datetime.fromisoformat(alert["date"])
-                pubDate = dt.strftime("%a, %d %b %Y %H:%M:%S +0000")
-            except:
-                pubDate = datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0000")
+            # The email date is an alert timestamp, not a verified publication date.
+            pubDate = ''
 
             news_items.append({
                 "title": alert["subject"],
                 "link": link,
                 "pubDate": pubDate,
+                "collected_at": datetime.now(timezone.utc).isoformat(),
                 "description": description,
                 "source": "Google Alert",
                 "lang": "ru",
@@ -313,8 +323,8 @@ def load_existing_links(news_file):
         return set()
 
 # ---------------------- ГЛАВНАЯ ----------------------
-def main():
-    news_file = os.path.join(os.path.dirname(__file__), "..", "data", "news.json")
+def main(news_file=None):
+    news_file = news_file or os.path.join(os.path.dirname(__file__), "..", "data", "news.json")
     if os.path.exists(news_file):
         with open(news_file, "r", encoding="utf-8") as f:
             previous = json.load(f)
@@ -324,13 +334,21 @@ def main():
         previous = []
     existing_links = {item.get('link') for item in previous if isinstance(item, dict)}
     incoming = []
+    successful_sources = 0
     for src in SOURCES:
         news = fetch_rss(src) if src["type"] == "rss" else fetch_from_sitemap(src)
+        if news is None:
+            print(f"::warning::Не удалось получить данные источника {src['name']}")
+            continue
+        successful_sources += 1
         for item in news:
             if item.get('link') not in existing_links:
                 incoming.append(item)
                 existing_links.add(item.get('link'))
         print(f"Из {src['name']} получено {len(news)} новостей")
+
+    if not successful_sources:
+        raise RuntimeError('Все основные источники недоступны; существующая лента сохранена')
 
     for item in load_google_alerts(existing_links):
         if item.get('link') not in existing_links:
