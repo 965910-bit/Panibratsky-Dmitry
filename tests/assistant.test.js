@@ -1,6 +1,8 @@
 'use strict';
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { createServer } = require('../server/assistant');
 
 async function withServer(options, run) {
@@ -63,6 +65,12 @@ test('local preview serves home and blocks sensitive paths', async () => {
     assert.equal((await fetch(base + '/')).status, 200);
     assert.equal((await fetch(base + '/css/executive.css')).status, 200);
     assert.equal((await fetch(base + '/server/assistant.js')).status, 404);
+    const resumeDir = path.join(__dirname, '..', 'resume');
+    fs.mkdirSync(resumeDir, { recursive: true });
+    const privateFile = path.join(resumeDir, `privacy-test-${process.pid}.pdf`);
+    fs.writeFileSync(privateFile, 'private');
+    try { assert.equal((await fetch(base + '/resume/' + path.basename(privateFile))).status, 404); }
+    finally { fs.unlinkSync(privateFile); }
     assert.equal((await fetch(base + '/.git/config')).status, 404);
   });
 });
