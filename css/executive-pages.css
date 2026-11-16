@@ -1,0 +1,109 @@
+/* Unified portfolio shell and shared colours for the existing page layouts. */
+html:not([data-executive-theme="light"]) body.executive-page {
+  color-scheme: dark;
+  --bg-primary:#0b0b0e; --bg-secondary:#141418; --text-primary:#f6f4f3; --text-secondary:#c8c5c7; --text-muted:#a7a5a8;
+  --border:#29292e; --accent:#fa4747; --accent-light:#ff7171; --gold:#fa4747; --card-shadow:none;
+  --bg-light:#0b0b0e; --card-bg:#141418; --border-light:#29292e; --text-light:#a7a5a8;
+  --primary-dark:#101014; --primary-color:#f6f4f3; --primary-light:#19191e; --primary-lighter:#29292e;
+  --gradient-primary:linear-gradient(135deg,#141418,#0b0b0e);
+  --accent-innovation:#fa6262; --accent-strategy:#d4ade7; --accent-leadership:#fa6262; --accent-expert:#f6f4f3;
+  --shell-bg:#0b0b0e; --shell-panel:#141418; --shell-text:#f6f4f3; --shell-muted:#a7a5a8; --shell-line:#29292e; --shell-accent:#fa4747;
+}
+html[data-executive-theme="light"] body.executive-page {
+  color-scheme: light;
+  --bg-primary:#f5f4f1; --bg-secondary:#fff; --text-primary:#19191b; --text-secondary:#404044; --text-muted:#55545a;
+  --border:#d9d7d3; --accent:#b92630; --accent-light:#b92630; --gold:#b92630; --card-shadow:none;
+  --bg-light:#f5f4f1; --card-bg:#fff; --border-light:#d9d7d3; --text-light:#55545a;
+  --primary-dark:#19191b; --primary-color:#19191b; --primary-light:#343438; --primary-lighter:#444448;
+  --gradient-primary:linear-gradient(135deg,#19191b,#343438);
+  --accent-innovation:#a6232d; --accent-strategy:#704985; --accent-leadership:#a6232d; --accent-expert:#19191b;
+  --shell-bg:#f5f4f1; --shell-panel:#fff; --shell-text:#19191b; --shell-muted:#55545a; --shell-line:#d9d7d3; --shell-accent:#b92630;
+}
+body.executive-page { margin:0; padding:0; background:var(--shell-bg); color:var(--shell-text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.executive-page .old-portfolio-header, .executive-page .old-theme-control { display:none !important; }
+.executive-bar { position:sticky; top:0; z-index:1100; background:var(--shell-bg); border-bottom:1px solid var(--shell-line); color:var(--shell-text); }
+.executive-bar * { box-sizing:border-box; }
+.executive-bar-inner { width:min(100% - 96px,1320px); min-height:82px; margin:auto; display:flex; align-items:center; gap:34px; }
+.executive-bar .executive-brand { display:inline-flex; align-items:center; gap:11px; flex:none; text-decoration:none; color:var(--shell-text); }
+.executive-brand-mark { font-size:34px; font-weight:850; line-height:1; letter-spacing:-3px; }
+.executive-brand-mark span { color:var(--shell-accent); }
+.executive-brand-name { font-size:10px; line-height:1.3; font-weight:800; letter-spacing:1.35px; }
+.executive-brand-name small { display:block; font-size:9px; color:var(--shell-muted); letter-spacing:2px; }
+.executive-bar .executive-nav { display:flex; align-items:center; gap:32px; margin-left:auto; font-size:12px; font-weight:600; }
+.executive-bar .executive-nav a { color:var(--shell-muted); text-decoration:none; white-space:nowrap; }
+.executive-bar .executive-nav a:hover, .executive-bar .executive-nav a[aria-current="page"] { color:var(--shell-text); }
+.executive-bar .executive-nav .executive-contact { border:1px solid var(--shell-line); padding:11px 17px; border-radius:4px; color:var(--shell-text); }
+.executive-contact span { color:var(--shell-accent); margin-left:8px; }
+.executive-theme, .executive-menu { color:var(--shell-muted); background:transparent; border:1px solid var(--shell-line); cursor:pointer; }
+.executive-theme { width:38px; height:38px; border-radius:50%; font:21px/1 sans-serif; flex:none; }
+.executive-menu { display:none; }
+.executive-bar a:focus-visible, .executive-bar button:focus-visible { outline:3px solid #e88484; outline-offset:3px; }
+.executive-skip { position:absolute; top:-100px; left:1rem; z-index:1200; background:var(--shell-text); color:var(--shell-bg); padding:12px; }
+.executive-skip:focus { top:10px; }
+.executive-page .breadcrumb { color:var(--shell-muted); }
+.executive-page .breadcrumb a { color:var(--shell-accent); }
+/* Seven legacy profile pages share the same cards and grid classes. */
+.executive-portfolio .container { max-width:1320px; width:min(100% - 96px,1320px); padding-inline:0; }
+.executive-portfolio > .container .breadcrumb { padding:30px 0 0; }
+.executive-portfolio > .section.container { padding-top:55px; padding-bottom:100px; min-height:55vh; }
+.executive-portfolio h1 { font-size:clamp(38px,5vw,68px); line-height:1.06; letter-spacing:-.045em; max-width:1050px; }
+.executive-portfolio .hero-title { max-width:700px; line-height:1.75; }
+.executive-portfolio .about-section, .executive-portfolio .career-card, .executive-portfolio .methodology-card, .executive-portfolio .exp-card,
+.executive-portfolio .contact-detail, .executive-portfolio .competence-card, .executive-portfolio .executive-summary { background:var(--shell-panel); border:1px solid var(--shell-line); border-radius:5px; box-shadow:none; }
+.executive-portfolio .about-section h2, .executive-portfolio .career-card h3 { color:var(--shell-text); }
+.executive-portfolio .about-section h2::before, .executive-portfolio .career-card h3::before { content:''; display:inline-block; width:16px; height:2px; background:var(--shell-accent); vertical-align:middle; margin-right:10px; }
+.executive-portfolio .tag { background:transparent; color:var(--shell-muted); border-color:var(--shell-line); border-radius:4px; }
+.executive-portfolio .cta-section { background:var(--shell-panel); border:1px solid var(--shell-line); }
+.executive-portfolio .cta-btn { background:var(--shell-accent); color:#fff; }
+.executive-portfolio footer { background:var(--shell-panel); border-top:1px solid var(--shell-line); }
+.executive-portfolio footer .container { padding-block:35px; }
+/* Legacy topic pages retain their tools and navigation, but use the portfolio palette. */
+.executive-classic .navigation { background:var(--shell-panel); border-bottom:1px solid var(--shell-line); }
+.executive-classic .nav-links a { color:var(--shell-text); }
+.executive-classic .nav-links a:hover, .executive-classic .nav-links a.active { color:var(--shell-accent); }
+.executive-classic .calculator-card, .executive-classic .certificate-card, .executive-classic .project-card,
+.executive-classic .tool-card, .executive-classic .wiki-category, .executive-classic .stat-card-large,
+.executive-classic .knowledge-stat { background:var(--shell-panel); border-color:var(--shell-line); box-shadow:none; }
+.executive-classic .calculators-hero, .executive-classic .certificates-hero, .executive-classic .projects-hero,
+.executive-classic .tools-hero, .executive-classic .wiki-hero { background:var(--shell-panel); color:var(--shell-text); }
+.executive-classic .calculator-title, .executive-classic .certificate-title, .executive-classic .project-title { color:var(--shell-text); }
+.executive-classic .form-input { background:var(--shell-bg); color:var(--shell-text); border-color:var(--shell-line); }
+.executive-news .container { box-shadow:none; }
+.executive-news .trend-card, .executive-news .news-item { border-color:var(--shell-line); }
+.executive-research .research-header { display:none; }
+.executive-document { max-width:none; }
+.executive-document .pdf-container { color:#333; background:#fff; max-width:210mm; margin:32px auto; }
+@media(max-width:1050px) { .executive-bar-inner { width:calc(100% - 60px); gap:18px; } .executive-bar .executive-nav { gap:16px; } }
+@media(max-width:820px) {
+  .executive-bar-inner { width:calc(100% - 36px); min-height:68px; flex-wrap:wrap; gap:12px; }
+  .executive-bar .executive-nav { display:flex; position:static; flex-basis:100%; flex-direction:column; align-items:stretch; gap:0; padding:0 0 16px; margin:0; }
+  .js-executive-shell .executive-menu { display:block; margin-left:auto; padding:9px 12px; border-radius:4px; font-size:14px; }
+  .js-executive-shell .executive-bar .executive-nav { display:none; position:absolute; top:67px; left:0; right:0; background:var(--shell-bg); border-bottom:1px solid var(--shell-line); padding:12px 18px 18px; }
+  .js-executive-shell .executive-bar .executive-nav.is-open { display:flex; }
+  .executive-bar .executive-nav a { padding:11px 8px; font-size:14px; }
+  .executive-bar .executive-nav .executive-contact { margin-top:8px; }
+  .executive-portfolio .container { width:calc(100% - 36px); }
+  .executive-portfolio > .section.container { padding-top:35px; padding-bottom:70px; }
+  .executive-document .pdf-container { margin:16px auto; }
+}
+@media print { .executive-bar, .executive-skip { display:none!important; } .executive-document .pdf-container { margin:0; box-shadow:none; } }
+/* Adapt legacy base styles and keep secondary resource navigation compact. */
+html:not([data-executive-theme="light"]) body.executive-page { --text-color:#f6f4f3; --bg-color:#0b0b0e; --border-color:#29292e; }
+html[data-executive-theme="light"] body.executive-page { --text-color:#19191b; --bg-color:#f5f4f1; --border-color:#d9d7d3; }
+.executive-classic .navigation .nav-links { display:flex; flex-wrap:nowrap; justify-content:flex-start; gap:4px; overflow-x:auto; padding:8px 0; scrollbar-width:thin; list-style:none; }
+.executive-classic .navigation .nav-links li { flex:none; }
+.executive-classic .navigation .nav-links a { display:block; padding:10px 12px; font-size:13px; }
+.executive-classic .navigation .nav-links a::after { display:none; }
+.executive-portfolio .cta-section { color:var(--shell-text); }
+.executive-portfolio footer { color:var(--shell-text); }
+.executive-portfolio footer .footer-column a, .executive-portfolio footer .footer-column p { color:var(--shell-muted) !important; }
+.executive-portfolio footer .footer-column a:hover { color:var(--shell-text) !important; }
+.executive-trends .trends-header h1 { color:#fff; }
+.executive-document .print-btn { z-index:1200; }
+.executive-document .print-btn { top:96px; z-index:100; background:var(--shell-accent); }
+@media(max-width:820px) { .executive-document .print-btn { top:80px; } }
+.executive-classic .calculators-hero h1, .executive-classic .certificates-hero h1,
+.executive-classic .projects-hero h1, .executive-classic .tools-hero h1, .executive-classic .wiki-hero h1 {
+  background:none; -webkit-text-fill-color:currentColor; color:var(--shell-text);
+}
+.executive-news .tagcloud span { max-width:100%; overflow-wrap:anywhere; }

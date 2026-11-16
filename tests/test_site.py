@@ -33,6 +33,20 @@ class SiteTests(unittest.TestCase):
             self.assertNotRegex(html.lower(), r'content=["\'][^"\']*noindex')
             self.assertIn('href="' + url + '"', html)
 
+    def test_sitemap_pages_use_executive_navigation(self):
+        ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+        for item in ET.parse(ROOT / 'sitemap.xml').findall('.//s:loc', ns):
+            filename = urlsplit(item.text).path.lstrip('/') or 'index.html'
+            html = (ROOT / filename).read_text(encoding='utf-8')
+            if filename == 'index.html':
+                self.assertIn('css/executive.css', html)
+                continue
+            for required in ('css/executive-pages.css', 'js/executive-theme.js', 'js/executive-pages.js',
+                             'class="executive-brand"', 'class="executive-menu"', 'class="executive-theme"',
+                             'href="about.html"', 'href="career.html"'):
+                self.assertIn(required, html, f'{filename}: {required}')
+            self.assertIn('id="main"' if filename == 'scm-problems.html' else 'id="page-content"', html)
+
     def test_sitemap_heading_and_structured_data(self):
         import re
         import json

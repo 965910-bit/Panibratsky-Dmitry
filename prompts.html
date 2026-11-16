@@ -180,9 +180,19 @@ footer{background:#0f172a;color:#fff;padding:50px 0 24px;margin-top:50px}
 <link rel="stylesheet" href="css/portfolio-menu.css">
 <script defer src="js/portfolio-menu.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://scm-news.ru/"},{"@type":"ListItem","position":2,"name":"Prompt Hub","item":"https://scm-news.ru/prompts.html"}]}</script>
+<script src="js/executive-theme.js"></script>
+<link rel="stylesheet" href="css/executive-pages.css">
+<script src="js/executive-pages.js" defer></script>
 </head>
-<body>
-<header><div class="container nav-container">
+<body class="executive-page executive-portfolio">
+<a class="executive-skip" href="#page-content">Перейти к содержанию</a>
+<div class="executive-bar" role="banner"><div class="executive-bar-inner">
+  <a class="executive-brand" href="/" aria-label="Дмитрий Герасимов — на главную"><span class="executive-brand-mark">G<span>.</span></span><span class="executive-brand-name">ГЕРАСИМОВ<small>ДМИТРИЙ</small></span></a>
+  <button class="executive-menu" type="button" aria-expanded="false" aria-controls="executive-nav">Меню</button>
+  <nav class="executive-nav" id="executive-nav" aria-label="Основная навигация"><a href="about.html">Обо мне</a><a href="/#cases">Результаты</a><a href="/#expertise">Экспертиза</a><a href="/#experience">Опыт</a><a href="career.html">Карьера</a><a href="/#resources">Материалы</a><a class="executive-contact" href="/#contact">Связаться <span>↗</span></a></nav>
+  <button class="executive-theme" type="button" aria-label="Переключить светлую тему" title="Переключить тему">☼</button>
+</div></div>
+<header class="old-portfolio-header"><div class="container nav-container">
 <a href="/" class="logo">ГЕРАСИМОВ<span>.</span>ДМИТРИЙ</a>
 <nav><ul><li><a href="about.html">Обо мне</a></li>
 <li><a href="expertise.html">Экспертиза</a></li>
@@ -200,7 +210,7 @@ footer{background:#0f172a;color:#fff;padding:50px 0 24px;margin-top:50px}
 </div>
 </div></header>
 <div class="container"><div class="breadcrumb"><a href="/">Главная</a> / Prompt Hub</div></div>
-<section class="section container">
+<section class="section container" id="page-content">
 <h1>Prompt Hub — библиотека промптов</h1>
 <p class="hero-title" style="margin-top:16px;">3035 промптов для SCM, бизнеса, разработки, аналитики и творчества. Фильтруй, ищи, копируй.</p>
 <div class="prompt-stats">
@@ -398,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <div class="copyright">© 2026 Герасимов Дмитрий Сергеевич. Сургут.</div>
 </div></footer>
 <button class="scroll-top" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
-<div class="theme-switch" id="themeSwitch"><i class="fas fa-sun"></i> / <i class="fas fa-moon"></i></div>
+<div class="theme-switch old-theme-control" id="themeSwitch"><i class="fas fa-sun"></i> / <i class="fas fa-moon"></i></div>
 <script>
 (function(){
   var fadeEls = document.querySelectorAll('.fade-up');
