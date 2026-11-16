@@ -98,6 +98,19 @@ class SiteTests(unittest.TestCase):
         self.assertIn('Март 2020 — Март 2024</div><h3 class="exp-company">Леруа Мерлен', experience)
         self.assertIn('/resume/', (ROOT / '.gitignore').read_text(encoding='utf-8'))
 
+    def test_no_previous_surname_in_public_text_or_paths(self):
+        # Exclude the local, ignored private archive and Git history; neither is a site asset.
+        names = ('\u043f\u0430\u043d\u0438\u0431\u0440\u0430\u0442', 'pani' + 'brat')
+        extensions = {'.html', '.htm', '.js', '.css', '.json', '.xml', '.txt', '.md', '.py', '.yml', '.yaml'}
+        for file in ROOT.rglob('*'):
+            rel = file.relative_to(ROOT)
+            if any(part in {'.git', 'resume', 'node_modules', '__pycache__'} for part in rel.parts):
+                continue
+            self.assertFalse(any(name in str(rel).lower() for name in names), str(rel))
+            if file.is_file() and file.suffix.lower() in extensions:
+                text = file.read_text(encoding='utf-8').lower()
+                self.assertFalse(any(name in text for name in names), str(rel))
+
     def test_no_prefilled_password(self):
         html = (ROOT / 'login.html').read_text()
         password = re.search(r'<input\b[^>]*type="password"[^>]*>', html).group()

@@ -40,7 +40,6 @@ def replace_links_in_file(filepath):
     
     # Если есть ссылки вида "https://scm-news.ru" без слеша в конце, то уже заменились.
     # Дополнительно можно заменить и просто старый путь (на случай, если где-то не хватает https)
-    # Например, "965910-bit.github.io/Panibratsky-Dmitry" -> "scm-news.ru"
     # Но лучше оставить только первое.
 
     if new_content == content:
