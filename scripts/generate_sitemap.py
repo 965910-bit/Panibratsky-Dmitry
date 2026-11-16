@@ -8,7 +8,7 @@ BASE = 'https://scm-news.ru/'
 # Deliberately excludes local-only dashboards, verification files and noindex pages.
 PAGES = ['','about.html','blog.html','scm-problems.html','career.html','contact.html','experience.html',
          'expertise.html','prompts.html','trends.html','calculators.html',
-         'certificates.html','projects.html','tools.html','wiki.html','trends-logistics.html']
+         'certificates.html','projects.html','business-plan.html','tools.html','wiki.html','trends-logistics.html']
 
 def generate_sitemap():
     namespace = 'http://www.sitemaps.org/schemas/sitemap/0.9'
