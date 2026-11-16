@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Профессиональные калькуляторы для управления цепями поставок - EOQ, страховой запас, оборачиваемость запасов">
     <title>Калькуляторы - Дмитрий Герасимов</title>
+<link rel="canonical" href="https://scm-news.ru/calculators.html">
     
     <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
@@ -771,7 +772,7 @@
                 </div>
                 <div class="calculator-content">
                     <p class="calculator-description">
-                        Расчет страхового запаса для защиты от неопределенности спроса и времени выполнения заказа.
+                        Оценка запаса на случай максимального дневного спроса при фиксированном сроке поставки. Модель не учитывает задержки и не гарантирует уровень обслуживания.
                     </p>
                     <div class="calculator-form">
                         <div class="form-group">
@@ -786,10 +787,6 @@
                             <label class="form-label" for="ss-lead-time">Время выполнения заказа (дни)</label>
                             <input type="number" id="ss-lead-time" class="form-input" placeholder="Например: 7" value="7">
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="ss-service-level">Уровень обслуживания (%)</label>
-                            <input type="number" id="ss-service-level" class="form-input" placeholder="Например: 95" min="0" max="100" value="95">
-                        </div>
                         <button class="calculate-btn" onclick="calculateSafetyStock()">
                             <i class="fas fa-calculator"></i> Рассчитать страховой запас
                         </button>
@@ -798,7 +795,7 @@
                         <div class="result-title">Результат расчета:</div>
                         <div class="result-value" id="safety-stock-value">140 единиц</div>
                         <div class="result-explanation" id="safety-stock-explanation">
-                            Страховой запас защищает от колебаний спроса и задержек поставок. Расчет основан на разнице между максимальным и средним спросом с учетом времени выполнения заказа и желаемого уровня обслуживания.
+                            Оценка: разница максимального и среднего спроса, умноженная на фиксированный срок поставки. Уровень обслуживания эта оценка не гарантирует.
                         </div>
                     </div>
                 </div>
@@ -915,16 +912,12 @@
                 </div>
                 <div class="calculator-content">
                     <p class="calculator-description">
-                        Расчет общей стоимости перевозки с учетом различных факторов: расстояние, вес, тип транспорта.
+                        Оценка по тарифу за километр и дополнительным расходам. Подберите тариф с учетом веса и типа транспорта.
                     </p>
                     <div class="calculator-form">
                         <div class="form-group">
                             <label class="form-label" for="transp-distance">Расстояние (км)</label>
                             <input type="number" id="transp-distance" class="form-input" placeholder="Например: 500" value="500">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="transp-weight">Вес груза (кг)</label>
-                            <input type="number" id="transp-weight" class="form-input" placeholder="Например: 1000" value="1000">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="transp-rate">Тариф (руб./км)</label>
@@ -942,7 +935,7 @@
                         <div class="result-title">Результат расчета:</div>
                         <div class="result-value" id="transport-cost-value">9,500 руб.</div>
                         <div class="result-explanation" id="transport-cost-explanation">
-                            Общая стоимость перевозки включает базовый тариф и дополнительные расходы. Расчет: (Расстояние × Тариф × Коэффициент веса) + Дополнительные расходы.
+                            Оценка стоимости: расстояние × тариф за километр + дополнительные расходы.
                         </div>
                     </div>
                 </div>
@@ -972,7 +965,7 @@
             const orderCost = parseFloat(document.getElementById('eoq-order-cost').value);
             const holdingCost = parseFloat(document.getElementById('eoq-holding-cost').value);
 
-            if (!demand || !orderCost || !holdingCost) {
+            if (![demand, orderCost, holdingCost].every(n => Number.isFinite(n) && n > 0)) {
                 alert('Пожалуйста, заполните все поля');
                 return;
             }
@@ -992,21 +985,19 @@
             const maxDemand = parseFloat(document.getElementById('ss-max-demand').value);
             const avgDemand = parseFloat(document.getElementById('ss-avg-demand').value);
             const leadTime = parseFloat(document.getElementById('ss-lead-time').value);
-            const serviceLevel = parseFloat(document.getElementById('ss-service-level').value);
 
-            if (!maxDemand || !avgDemand || !leadTime || !serviceLevel) {
-                alert('Пожалуйста, заполните все поля');
+            if (![maxDemand, avgDemand, leadTime].every(n => Number.isFinite(n) && n >= 0) || leadTime === 0 || maxDemand < avgDemand) {
+                alert('Укажите неотрицательный спрос, максимальный не ниже среднего, и положительный срок поставки.');
                 return;
             }
 
             // Упрощенный расчет страхового запаса
             const demandVariability = maxDemand - avgDemand;
-            const zScore = serviceLevel / 100; // Упрощенный Z-коэффициент
-            const safetyStock = Math.round(demandVariability * leadTime * zScore);
+            const safetyStock = Math.ceil(demandVariability * leadTime);
 
             document.getElementById('safety-stock-value').textContent = `${safetyStock} единиц`;
             document.getElementById('safety-stock-explanation').textContent = 
-                `Рекомендуемый страховой запас составляет ${safetyStock} единиц. Это обеспечит уровень обслуживания ${serviceLevel}% при максимальном спросе ${maxDemand} единиц в день и среднем спросе ${avgDemand} единиц.`;
+                `Оценка: (${maxDemand} − ${avgDemand}) × ${leadTime} = ${safetyStock} единиц. Модель предполагает фиксированный срок поставки и не гарантирует определённый уровень обслуживания.`;
             
             showResult('safety-stock-result');
         }
@@ -1016,7 +1007,7 @@
             const cogs = parseFloat(document.getElementById('turnover-cogs').value);
             const avgInventory = parseFloat(document.getElementById('turnover-avg-inventory').value);
 
-            if (!cogs || !avgInventory) {
+            if (![cogs, avgInventory].every(n => Number.isFinite(n) && n > 0)) {
                 alert('Пожалуйста, заполните все поля');
                 return;
             }
@@ -1040,7 +1031,7 @@
             const leadTime = parseFloat(document.getElementById('rop-lead-time').value);
             const safetyStock = parseFloat(document.getElementById('rop-safety-stock').value);
 
-            if (!demand || !leadTime || !safetyStock) {
+            if (![demand, leadTime, safetyStock].every(n => Number.isFinite(n) && n >= 0) || leadTime === 0) {
                 alert('Пожалуйста, заполните все поля');
                 return;
             }
@@ -1059,7 +1050,7 @@
             const totalDemand = parseFloat(document.getElementById('fill-total-demand').value);
             const stockouts = parseFloat(document.getElementById('fill-stockouts').value);
 
-            if (!totalDemand || !stockouts) {
+            if (!Number.isFinite(totalDemand) || totalDemand <= 0 || !Number.isFinite(stockouts) || stockouts < 0) {
                 alert('Пожалуйста, заполните все поля');
                 return;
             }
@@ -1082,22 +1073,20 @@
         // 6. Расчет стоимости перевозки
         function calculateTransportCost() {
             const distance = parseFloat(document.getElementById('transp-distance').value);
-            const weight = parseFloat(document.getElementById('transp-weight').value);
             const rate = parseFloat(document.getElementById('transp-rate').value);
-            const additional = parseFloat(document.getElementById('transp-additional').value) || 0;
+            const additionalInput = document.getElementById('transp-additional').value.trim();
+            const additional = additionalInput === '' ? 0 : Number(additionalInput);
 
-            if (!distance || !weight || !rate) {
+            if (![distance, rate, additional].every(n => Number.isFinite(n) && n >= 0) || distance === 0) {
                 alert('Пожалуйста, заполните обязательные поля');
                 return;
             }
 
-            const baseCost = distance * rate;
-            const weightFactor = weight > 1000 ? (weight / 1000) * 0.1 : 1; // Упрощенный коэффициент веса
-            const totalCost = Math.round((baseCost * weightFactor) + additional);
+            const totalCost = Math.round(distance * rate + additional);
 
             document.getElementById('transport-cost-value').textContent = `${totalCost.toLocaleString()} руб.`;
             document.getElementById('transport-cost-explanation').textContent = 
-                `Общая стоимость перевозки составляет ${totalCost.toLocaleString()} руб. Расчет: (${distance} × ${rate} × ${weightFactor.toFixed(2)}) + ${additional} = ${totalCost.toLocaleString()} руб.`;
+                `Оценка стоимости перевозки: (${distance} × ${rate}) + ${additional} = ${totalCost.toLocaleString()} руб. Тариф должен учитывать вес и тип транспорта.`;
             
             showResult('transport-cost-result');
         }
@@ -1129,7 +1118,7 @@
             
             anchorLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    if (this.getAttribute('href').startsWith('#')) {
+                    if (this.getAttribute('href').startsWith('#') && this.getAttribute('href') !== '#') {
                         e.preventDefault();
                         
                         const targetId = this.getAttribute('href');

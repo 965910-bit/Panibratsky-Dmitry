@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: site-data-updates
+  cancel-in-progress: false
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
@@ -25,7 +29,7 @@ jobs:
 
       - name: Google Alerts (if email configured)
         run: |
-          python -c "from collectors.google_alerts import GoogleAlertsCollector; c = GoogleAlertsCollector('$GMAIL_USER', '$GMAIL_PASSWORD'); alerts = c.fetch(); import json; open('data/google_alerts.json','w').write(json.dumps(alerts, ensure_ascii=False))"
+          python scripts/collect_google_alerts.py
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
@@ -48,6 +52,9 @@ jobs:
       - name: Generate RSS feed
         run: python scripts/generate_rss.py
 
+      - name: Generate static news snapshot
+        run: python scripts/generate_news_pages.py
+
       - name: Save daily snapshot
         run: |
           mkdir -p data/news-history
@@ -55,6 +62,9 @@ jobs:
 
       - name: Update metadata in trends.html
         run: python scripts/update_metadata.py
+
+      - name: Validate generated files
+        run: python -m unittest discover -s tests -v
 
       - name: Commit and push if changed
         run: |

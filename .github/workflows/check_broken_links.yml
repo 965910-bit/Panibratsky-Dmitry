@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: site-data-updates
+  cancel-in-progress: false
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -25,9 +29,19 @@ jobs:
       - name: Check links
         run: python scripts/check_broken_links.py
 
+      - name: Regenerate feed and snapshot when links changed
+        run: |
+          if ! git diff --quiet -- data/news.json; then
+            python scripts/generate_rss.py
+            python scripts/generate_news_pages.py
+          fi
+
+      - name: Validate site
+        run: python -m unittest discover -s tests -v
+
       - name: Commit and push if changed
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/news.json
+          git add data/news.json rss.xml trends.html
           git diff --quiet && git diff --staged --quiet || (git commit -m "Mark broken links" && git push)

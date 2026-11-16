@@ -242,8 +242,8 @@
             const decisionsCount = (m.decisions || []).filter(d => d.decided && d.decided.trim()).length;
             row.insertCell(4).textContent = decisionsCount;
             const actions = row.insertCell(5);
-            const viewBtn = document.createElement('button'); viewBtn.innerHTML = '<i class="fas fa-eye"></i>'; viewBtn.className = 'btn-icon'; viewBtn.title = 'Просмотр'; viewBtn.onclick = () => window.open(`meeting-protocol.html?view=${m.id}`, '_blank');
-            const editBtn = document.createElement('button'); editBtn.innerHTML = '<i class="fas fa-edit"></i>'; editBtn.className = 'btn-icon'; editBtn.title = 'Редактировать'; editBtn.onclick = () => window.location.href = `meeting-protocol.html?edit=${m.id}`;
+            const viewBtn = document.createElement('button'); viewBtn.innerHTML = '<i class="fas fa-eye"></i>'; viewBtn.className = 'btn-icon'; viewBtn.title = 'Просмотр'; viewBtn.onclick = () => window.open(`meeting-protocol.htm?view=${m.id}`, '_blank');
+            const editBtn = document.createElement('button'); editBtn.innerHTML = '<i class="fas fa-edit"></i>'; editBtn.className = 'btn-icon'; editBtn.title = 'Редактировать'; editBtn.onclick = () => window.location.href = `meeting-protocol.htm?edit=${m.id}`;
             const deleteBtn = document.createElement('button'); deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>'; deleteBtn.className = 'btn-icon'; deleteBtn.style.color = '#dc2626'; deleteBtn.title = 'Удалить'; deleteBtn.onclick = () => { if(confirm('Удалить протокол? Связанные поручения в реестре останутся.')) { let ms = getMeetings(); ms = ms.filter(p => p.id !== m.id); localStorage.setItem(`meeting_protocols_${currentBranchId}`, JSON.stringify(ms)); loadMeetings(); } };
             actions.appendChild(viewBtn);
             actions.appendChild(editBtn);
@@ -266,7 +266,7 @@
         loadMeetings();
     });
     document.getElementById('newProtocolBtn').addEventListener('click', () => {
-        window.location.href = 'meeting-protocol.html';
+        window.location.href = 'meeting-protocol.htm';
     });
 
     window.printListWithLogo = function() {

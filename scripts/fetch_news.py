@@ -7,7 +7,7 @@ import time
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
-from email.utils import parsedate_to_datetime
+from news_utils import merge_news
 
 SOURCES = [
     {
@@ -271,9 +271,8 @@ def load_google_alerts(existing_links):
                 skipped_duplicate += 1
                 continue
 
-            description = fetch_page_description(link)
-            if not description:
-                description = f"Google Alert по теме: {alert['keyword']}"
+            # Alert links come from email; never fetch arbitrary URLs from the runner.
+            description = f"Google Alert по теме: {alert.get('keyword', '')}"
             description = summarize_description(description)
             tags = extract_tags(description + " " + alert["subject"])
 
@@ -313,59 +312,46 @@ def load_existing_links(news_file):
     except:
         return set()
 
-# ---------------------- ЧИСТКА СТАРЫХ НОВОСТЕЙ ----------------------
-def clean_old_news(news_items, days=30):
-    now = datetime.now()
-    cutoff = now - timedelta(days=days)
-    cleaned = []
-    removed = 0
-    for item in news_items:
-        try:
-            pub_date = parsedate_to_datetime(item['pubDate'])
-            if pub_date.tzinfo is None:
-                pub_date = pub_date.replace(tzinfo=None)
-            if pub_date >= cutoff:
-                cleaned.append(item)
-            else:
-                removed += 1
-        except Exception:
-            cleaned.append(item)
-    if removed:
-        print(f"Удалено старых новостей (старше {days} дней): {removed}")
-    return cleaned
-
 # ---------------------- ГЛАВНАЯ ----------------------
 def main():
     news_file = os.path.join(os.path.dirname(__file__), "..", "data", "news.json")
-    existing_links = load_existing_links(news_file)
-
-    all_news = []
+    if os.path.exists(news_file):
+        with open(news_file, "r", encoding="utf-8") as f:
+            previous = json.load(f)
+        if not isinstance(previous, list):
+            raise ValueError("news.json must contain a list")
+    else:
+        previous = []
+    existing_links = {item.get('link') for item in previous if isinstance(item, dict)}
+    incoming = []
     for src in SOURCES:
-        if src["type"] == "rss":
-            news = fetch_rss(src)
-        else:
-            news = fetch_from_sitemap(src)
+        news = fetch_rss(src) if src["type"] == "rss" else fetch_from_sitemap(src)
         for item in news:
-            if item['link'] not in existing_links:
-                all_news.append(item)
-                existing_links.add(item['link'])
+            if item.get('link') not in existing_links:
+                incoming.append(item)
+                existing_links.add(item.get('link'))
         print(f"Из {src['name']} получено {len(news)} новостей")
 
-    google_news = load_google_alerts(existing_links)
-    if google_news:
-        all_news.extend(google_news)
-        print(f"Из Google Alerts получено {len(google_news)} новостей")
-    else:
-        print("Google Alerts не найдены или пусты")
-
-    all_news = clean_old_news(all_news, days=30)
-
-    all_news.sort(key=lambda x: x['pubDate'], reverse=True)
-
+    for item in load_google_alerts(existing_links):
+        if item.get('link') not in existing_links:
+            incoming.append(item)
+            existing_links.add(item.get('link'))
+    # A temporary outage should never replace the existing feed with an empty file.
+    if not incoming and previous:
+        print("Нет новых новостей; существующая лента сохранена без изменений")
+        return
+    all_news = merge_news(previous, incoming)
+    if not all_news and previous:
+        raise RuntimeError("Refusing to replace existing feed with an empty result")
     os.makedirs(os.path.dirname(news_file), exist_ok=True)
-    with open(news_file, "w", encoding="utf-8") as f:
-        json.dump(all_news, f, ensure_ascii=False, indent=2)
-
+    temp = news_file + '.tmp'
+    try:
+        with open(temp, "w", encoding="utf-8") as f:
+            json.dump(all_news, f, ensure_ascii=False, indent=2)
+        os.replace(temp, news_file)
+    finally:
+        if os.path.exists(temp):
+            os.unlink(temp)
     print(f"Всего сохранено {len(all_news)} новостей")
 
 if __name__ == "__main__":

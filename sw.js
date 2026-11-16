@@ -1,58 +1,18 @@
-const CACHE_NAME = 'scm-news-v1';
-const urlsToCache = [
-  '/Panibratsky-Dmitry/',
-  '/Panibratsky-Dmitry/index.html',
-  '/Panibratsky-Dmitry/about.html',
-  '/Panibratsky-Dmitry/expertise.html',
-  '/Panibratsky-Dmitry/experience.html',
-  '/Panibratsky-Dmitry/trends.html',
-  '/Panibratsky-Dmitry/contact.html',
-  '/Panibratsky-Dmitry/data/news.json',
-  '/Panibratsky-Dmitry/rss.xml',
-  '/Panibratsky-Dmitry/sitemap.xml',
-  '/Panibratsky-Dmitry/robots.txt',
-  '/Panibratsky-Dmitry/1favicon.ico',
-  '/Panibratsky-Dmitry/js/subscribe.js',
-  '/Panibratsky-Dmitry/js/analytics.js',
-  '/Panibratsky-Dmitry/js/register-sw.js',
-  '/Panibratsky-Dmitry/js/install-prompt.js',
-  '/Panibratsky-Dmitry/icons/android/launchericon-192x192.png',
-  '/Panibratsky-Dmitry/icons/android/launchericon-512x512.png'
-];
-
+const CACHE_NAME = 'scm-news-v2';
+// Only cache public, static assets. Never cache forms or private dashboard data.
+const OFFLINE_URLS = ['./', './trends.html', './icons/android/launchericon-192x192.png'];
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(OFFLINE_URLS)));
 });
-
-self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-  if (url.pathname.includes('/data/news.json')) {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
-          });
-          return response;
-        })
-        .catch(() => caches.match(event.request))
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then(response => response || fetch(event.request))
-    );
-  }
-});
-
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.map(key => {
-        if (key !== CACHE_NAME) return caches.delete(key);
-      })
-    ))
-  );
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('scm-news-') && key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+});
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  const url = new URL(request.url);
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+  // Network first: changes are visible immediately; only the offline shell is cached.
+  if (request.mode === 'navigate' && (url.pathname === '/' || url.pathname === '/trends.html')) {
+    event.respondWith(fetch(request).catch(() => caches.match(url.pathname === '/' ? './' : './trends.html')));
+  }
 });

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<meta name="robots" content="noindex, nofollow">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кабинет продвижения | Маркетинговый центр</title>
@@ -248,19 +249,20 @@
         <div class="login-card">
             <i class="fas fa-chart-line" style="font-size: 40px; color: #1e40af;"></i>
             <h2 style="margin: 15px 0;">Кабинет продвижения</h2>
-            <input type="password" id="loginPass" placeholder="Пароль">
-            <button id="loginBtn">Войти</button>
+
+            <button id="loginBtn">Открыть локальный инструмент</button>
             <div id="loginError" class="error-msg"></div>
-            <p style="margin-top: 20px; font-size: 12px; color: #64748b;">Пароль: <strong>admin</strong></p>
+            <p>Это локальный инструмент в вашем браузере, не защищённый личный кабинет. Не храните здесь конфиденциальные данные.</p>
         </div>
     </div>
 
     <div id="dashboard" class="dashboard">
+        <p role="note">Локальный инструмент без защиты доступа. Не храните конфиденциальные данные.</p>
         <div class="header">
             <h1><i class="fas fa-rocket"></i> Маркетинговый центр</h1>
             <div>
                 <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Тёмная тема</button>
-                <button id="logoutBtn" class="secondary" style="margin-left: 10px;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+                <button id="logoutBtn" class="secondary" style="margin-left: 10px;"><i class="fas fa-sign-out-alt"></i> Закрыть</button>
             </div>
         </div>
 
@@ -354,7 +356,7 @@
 
 <script>
     // Пароль
-    const PASSWORD = "admin";
+    // Local-only workspace. This is not an authentication boundary.
     let loggedIn = false;
     let trafficChart = null;
     let keywordChart = null;
@@ -427,9 +429,9 @@
         const tbody = document.querySelector('#trafficDataTable tbody');
         tbody.innerHTML = data.map((row, idx) => `
             <tr>
-                <td data-label="Дата"><input type="date" class="traffic-date" data-idx="${idx}" value="${row.date}"></td>
-                <td data-label="Посещения"><input type="number" class="traffic-visits" data-idx="${idx}" value="${row.visits}"></td>
-                <td data-label="Просмотры"><input type="number" class="traffic-views" data-idx="${idx}" value="${row.views}"></td>
+                <td data-label="Дата"><input type="date" class="traffic-date" data-idx="${idx}" value="${escapeHtml(row.date)}"></td>
+                <td data-label="Посещения"><input type="number" class="traffic-visits" data-idx="${idx}" value="${escapeHtml(row.visits)}"></td>
+                <td data-label="Просмотры"><input type="number" class="traffic-views" data-idx="${idx}" value="${escapeHtml(row.views)}"></td>
                 <td data-label="Действия"><button class="del-traffic secondary" data-idx="${idx}">Удалить</button></td>
             </tr>
         `).join('');
@@ -521,7 +523,7 @@
     function updateKeywordChart() {
         const keywords = JSON.parse(localStorage.getItem(STORAGE.keywords));
         const select = document.getElementById('keywordSelect');
-        select.innerHTML = keywords.map((kw,i) => `<option value="${i}">${kw.word}</option>`).join('');
+        select.innerHTML = keywords.map((kw,i) => `<option value="${i}">${escapeHtml(kw.word)}</option>`).join('');
         if (keywords.length) {
             const idx = select.value;
             const kw = keywords[idx];
@@ -545,7 +547,7 @@
                 <td data-label="Имя"><input type="text" class="lead-name" data-idx="${idx}" value="${escapeHtml(lead.name)}"></td>
                 <td data-label="Email"><input type="email" class="lead-email" data-idx="${idx}" value="${escapeHtml(lead.email)}"></td>
                 <td data-label="Источник"><input type="text" class="lead-source" data-idx="${idx}" value="${escapeHtml(lead.source)}"></td>
-                <td data-label="Дата"><input type="date" class="lead-date" data-idx="${idx}" value="${lead.date || ''}"></td>
+                <td data-label="Дата"><input type="date" class="lead-date" data-idx="${idx}" value="${escapeHtml(lead.date || '')}"></td>
                 <td data-label="Статус"><select class="lead-status" data-idx="${idx}"><option>новый</option><option>в работе</option><option>закрыт</option></select></td>
                 <td data-label="Действия"><button class="del-lead secondary" data-idx="${idx}">Удалить</button></td>
             </tr>
@@ -580,7 +582,7 @@
                 <td data-label="Gitpage"><input type="text" class="auth-git" data-idx="${idx}" value="${escapeHtml(item.gitUrl)}"></td>
                 <td data-label="Skool"><input type="text" class="auth-skool" data-idx="${idx}" value="${escapeHtml(item.skoolUrl)}"></td>
                 <td data-label="Статус"><select class="auth-status" data-idx="${idx}"><option>идея</option><option>создано</option><option>опубликовано</option><option>активно</option></select></td>
-                <td data-label="Трафик"><input type="number" class="auth-traffic" data-idx="${idx}" value="${item.traffic || 0}"></td>
+                <td data-label="Трафик"><input type="number" class="auth-traffic" data-idx="${idx}" value="${escapeHtml(item.traffic || 0)}"></td>
                 <td data-label="Действия"><button class="del-auth secondary" data-idx="${idx}">Удалить</button></td>
             </tr>
         `).join('');
@@ -746,7 +748,7 @@
             if (p.description.length < 120 || p.description.length > 160) issues.push(`${p.url}: длина description (${p.description.length}) не в норме 120–160.`);
         });
         const checklistDiv = document.getElementById('seoChecklist');
-        checklistDiv.innerHTML = issues.length ? `<div class="card"><strong>Рекомендации:</strong><ul>${issues.map(i => `<li>${i}</li>`).join('')}</ul></div>` : '<div class="card">✅ Все мета-теги в норме!</div>';
+        checklistDiv.innerHTML = issues.length ? `<div class="card"><strong>Рекомендации:</strong><ul>${issues.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul></div>` : '<div class="card">✅ Все мета-теги в норме!</div>';
         checklistDiv.style.display = 'block';
     }
 
@@ -774,10 +776,10 @@
         }
     }
     function toggleTheme() { document.body.classList.toggle('dark'); localStorage.setItem('promo_theme', document.body.classList.contains('dark') ? 'dark' : 'light'); }
-    document.getElementById('loginBtn').onclick = () => { if(document.getElementById('loginPass').value === PASSWORD) { localStorage.setItem('promo_logged', 'true'); checkAuth(); } else document.getElementById('loginError').innerText = 'Неверный пароль'; };
+    document.getElementById('loginBtn').onclick = () => { localStorage.setItem('promo_logged', 'true'); checkAuth(); };
     document.getElementById('logoutBtn').onclick = () => { localStorage.removeItem('promo_logged'); checkAuth(); };
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active')); document.getElementById(btn.dataset.tab).classList.add('active'); }));
-    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;}); }
+    function escapeHtml(s) { return String(s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
     checkAuth();
 </script>
 </body>
