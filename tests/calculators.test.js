@@ -9,7 +9,7 @@ function element(id) {
   return elements.get(id);
 }
 let alerts = [];
-const context = { document: { getElementById: element, addEventListener() {} }, alert: text => alerts.push(text), console, Number, Math, SCMInventory: require('../js/inventory-models.js') };
+const context = { document: { getElementById: element, addEventListener() {} }, alert: text => alerts.push(text), console, Number, Math, SCMInventory: require('../js/inventory-models.js'), SCMInventoryMetrics: require('../js/inventory-metrics.js') };
 vm.createContext(context);
 for (const match of scripts) vm.runInContext(match[1], context);
 function set(id, value) { element(id).value = String(value); }
@@ -21,7 +21,7 @@ set('ss-max-demand', 90); alerts = []; context.calculateSafetyStock(); assert.st
 set('rop-demand', 100); set('rop-lead-time', 5); set('rop-safety-stock', 0); alerts = [];
 context.calculateReorderPoint(); assert.strictEqual(alerts.length, 0); assert.strictEqual(element('rop-value').textContent, '500 единиц');
 set('fill-total-demand', 100); set('fill-stockouts', 0); context.calculateFillRate();
-assert.strictEqual(element('fill-rate-value').textContent, '100.0%');
+assert.strictEqual(element('fill-rate-value').textContent, '100.00%');
 set('transp-distance', 500); set('transp-rate', 15); set('transp-additional', 2000); context.calculateTransportCost();
 assert.match(element('transport-cost-explanation').textContent, /9500|9,500|9 500/);
 set('eoq-demand', -1); set('eoq-order-cost', 500); set('eoq-holding-cost', 20); alerts = [];

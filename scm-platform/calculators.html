@@ -13,6 +13,7 @@
     <script src="../js/forecast-error.js"></script>
     <script src="../js/dimensional-weight.js"></script>
     <script src="../js/inventory-models.js"></script>
+    <script src="../js/inventory-metrics.js"></script>
     <style>
         .calc-grid {
             display: grid;
@@ -154,7 +155,7 @@
                 <select id="branchSelector"></select>
             </div>
         </div>
-        <p>Результаты моделей запасов показаны с округлением до двух знаков (очень малые и большие — экспоненциально), хранятся без округления; применимость и упаковку проверяйте отдельно. Прежние результаты этих моделей сохранены отдельно. Расчёты зависят от введённых данных и условий; остальные калькуляторы проверены частично. Расчёт ФОТ с северными надбавками временно приостановлен: прежняя формула начисляла коэффициент и надбавку друг на друга. Сохранённые расчёты не изменены; проверьте их отдельно с бухгалтером. <a href="https://xn--80akibcicpdbetz7e2g.xn--p1ai/questions/viewFaq/1159">Разъяснение Роструда</a>.</p>
+        <p>Результаты моделей запасов показаны с округлением до двух знаков (очень малые и большие — экспоненциально), хранятся без округления; применимость и упаковку проверяйте отдельно. Прежние результаты этих моделей сохранены отдельно. Оборачиваемость и Unit Fill Rate сохраняются отдельно от прежних расчётов и не отправляются в KPI. Расчёты зависят от введённых данных и условий; остальные калькуляторы проверены частично. Расчёт ФОТ с северными надбавками временно приостановлен: прежняя формула начисляла коэффициент и надбавку друг на друга. Сохранённые расчёты не изменены; проверьте их отдельно с бухгалтером. <a href="https://xn--80akibcicpdbetz7e2g.xn--p1ai/questions/viewFaq/1159">Разъяснение Роструда</a>.</p>
 
         <div class="btn-group">
             <button id="printCalculatorsBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать калькуляторов</button>
@@ -204,9 +205,9 @@
     }
 
     function saveCalculation(calcId, values, result) {
-        const key = ['safety_stock', 'eoq', 'rop'].includes(calcId) ? `calc_${calcId}_model_v1_${currentBranchId}` : calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : calcId === 'mape' ? `calc_ape_v1_${currentBranchId}` : calcId === 'dim_weight' ? `calc_dim_weight_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
+        const key = ['turnover', 'fill_rate'].includes(calcId) ? `calc_${calcId}_metric_v1_${currentBranchId}` : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? `calc_${calcId}_model_v1_${currentBranchId}` : calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : calcId === 'mape' ? `calc_ape_v1_${currentBranchId}` : calcId === 'dim_weight' ? `calc_dim_weight_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
         const saved = JSON.parse(localStorage.getItem(key) || '[]');
-        saved.push({ values, result, timestamp: new Date().toISOString(), ...(['safety_stock', 'eoq', 'rop'].includes(calcId) ? { method: {safety_stock: 'fixed-lead-normal-v1', eoq: 'classical-eoq-v1', rop: 'continuous-review-rop-v1'}[calcId] } : calcId === 'otif' ? { method: 'joint-orders-v1' } : calcId === 'mape' ? { method: 'single-ape-v1' } : calcId === 'dim_weight' ? { method: 'unrounded-package-comparison-v1' } : {}) });
+        saved.push({ values, result, timestamp: new Date().toISOString(), ...(['turnover', 'fill_rate'].includes(calcId) ? { method: {turnover: 'period-cogs-average-inventory-v1', fill_rate: 'unit-fill-immediate-v1'}[calcId] } : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? { method: {safety_stock: 'fixed-lead-normal-v1', eoq: 'classical-eoq-v1', rop: 'continuous-review-rop-v1'}[calcId] } : calcId === 'otif' ? { method: 'joint-orders-v1' } : calcId === 'mape' ? { method: 'single-ape-v1' } : calcId === 'dim_weight' ? { method: 'unrounded-package-comparison-v1' } : {}) });
         if (saved.length > 20) saved.shift();
         localStorage.setItem(key, JSON.stringify(saved));
         alert(`Расчёт сохранён (всего сохранено: ${saved.length})`);
@@ -257,10 +258,11 @@
             let base = labor / (vals[2] * vals[3]);
             return Math.ceil(base * vals[4]);
         }, kpiId: null },
-        { id: "turnover", name: "Оборачиваемость запасов", fields: [
-            { label: "Себестоимость продаж (COGS) за период, руб.:", id: "turn_cogs", type: "number", default: 10000000, step: 100000 },
-            { label: "Средняя стоимость запасов, руб.:", id: "turn_avg", type: "number", default: 2000000, step: 100000 }
-        ], formula: "Оборачиваемость = COGS / Средний запас", unit: "раз", calc: (vals) => vals[0] / vals[1], kpiId: "turnover" },
+        { id: "turnover", name: "Оборачиваемость запасов за период", fields: [
+            { label: "Себестоимость проданных товаров за период (руб.):", id: "turn_cogs", type: "number", default: "", step: "any", help: "Себестоимость и средний запас должны относиться к одному периоду, составу товаров и методу оценки. Учитывайте сезонность. Значение за период не обязательно является годовым; высокая оборачиваемость не всегда означает эффективность." },
+            { label: "Средняя стоимость запаса за тот же период (руб.):", id: "turn_avg", type: "number", default: "", step: "any" },
+            { label: "Длительность периода (целых календарных дней):", id: "turn_days", type: "number", default: "", step: 1, help: "Период фиксируется с расчётом. Передача в KPI отключена: там указан годовой показатель. При нулевой себестоимости коэффициент равен нулю." }
+        ], formula: "Оборачиваемость за период = COGS / Средний запас", unit: "раз за период", calc: (vals) => SCMInventoryMetrics.turnover(vals), kpiId: null },
         { id: "gmroi", name: "GMROI", fields: [
             { label: "Валовая прибыль за период, руб.:", id: "gmroi_profit", type: "number", default: 2500000, step: 50000 },
             { label: "Средняя стоимость запасов, руб.:", id: "gmroi_avg", type: "number", default: 2000000, step: 50000 }
@@ -322,10 +324,10 @@
             { label: "Переменные затраты на единицу (руб.):", id: "bep_var", type: "number", default: 50, step: 5 },
             { label: "Доход на единицу (руб.):", id: "bep_rev", type: "number", default: 120, step: 10 }
         ], formula: "BEP = Постоянные затраты / (Доход - Переменные)", unit: "ед./мес", calc: (vals) => Math.ceil(vals[0] / (vals[2] - vals[1])), kpiId: null },
-        { id: "fill_rate", name: "Fill Rate (уровень сервиса)", fields: [
-            { label: "Отгружено полностью (единиц):", id: "fill_shipped", type: "number", default: 9500, step: 100 },
-            { label: "Заказано всего (единиц):", id: "fill_ordered", type: "number", default: 10000, step: 100 }
-        ], formula: "Fill Rate = Отгружено / Заказано × 100%", unit: "%", calc: (vals) => (vals[0] / vals[1]) * 100, kpiId: "fillrate" }
+        { id: "fill_rate", name: "Unit Fill Rate: доля спроса из наличного запаса", fields: [
+            { label: "Общий спрос за период (ед.):", id: "fill_ordered", type: "number", default: "", step: "any", help: "Используйте одинаковые единицы и совокупность за согласованный период; учтите потерянный спрос. Результат не равен доле полных заказов, OTIF или вероятности отсутствия дефицита." },
+            { label: "Из него сразу удовлетворено из наличного запаса (ед.):", id: "fill_shipped", type: "number", default: "", step: "any", help: "Не включайте поздние отгрузки и повторный учёт одного спроса. Оговорите правила замен и частичных поставок. Передача в KPI отключена: его определение не подтверждено." }
+        ], formula: "Unit Fill Rate = Сразу из запаса / Общий спрос × 100%", unit: "%", calc: (vals) => SCMInventoryMetrics.fillRate(vals, 'fulfilled'), kpiId: null }
     ];
 
     function renderCalculators() {
@@ -348,7 +350,7 @@
             card.innerHTML = `
                 <h2><i class="fas fa-calculator"></i> ${calc.name}</h2>
                 ${fieldsHtml}
-                ${calc.id === 'safety_stock' ? '<p><a href="https://fulfillbot.com/blog/safety-stock-formula/">Предпосылки модели страхового запаса</a></p>' : calc.id === 'eoq' ? '<p><a href="https://www.lokad.com/economic-order-quantity-eoq-definition-and-formula/">Предпосылки и критика EOQ</a></p>' : calc.id === 'rop' ? '<p><a href="https://www.linenow.co/blog/glossary/reorder-point">Точка заказа и позиция запаса</a></p>' : calc.id === 'mape' ? '<p><a href="https://otexts.com/fpp3/toolbox.html#sec-accuracy">Методика и ограничения</a></p>' : calc.id === 'dim_weight' ? '<p><a href="https://www.fedex.com/en-gb/how-to/calculate-costs/dimensional-weight.html">Пример методики FedEx UK</a></p>' : ''}
+                ${calc.id === 'turnover' ? '<p><a href="https://www.wallstreetprep.com/knowledge/average-inventory-period/">Методика и период</a></p>' : calc.id === 'fill_rate' ? '<p><a href="https://simfoni.com/glossary/fill-rate/">Варианты Fill Rate</a></p>' : calc.id === 'safety_stock' ? '<p><a href="https://fulfillbot.com/blog/safety-stock-formula/">Предпосылки модели страхового запаса</a></p>' : calc.id === 'eoq' ? '<p><a href="https://www.lokad.com/economic-order-quantity-eoq-definition-and-formula/">Предпосылки и критика EOQ</a></p>' : calc.id === 'rop' ? '<p><a href="https://www.linenow.co/blog/glossary/reorder-point">Точка заказа и позиция запаса</a></p>' : calc.id === 'mape' ? '<p><a href="https://otexts.com/fpp3/toolbox.html#sec-accuracy">Методика и ограничения</a></p>' : calc.id === 'dim_weight' ? '<p><a href="https://www.fedex.com/en-gb/how-to/calculate-costs/dimensional-weight.html">Пример методики FedEx UK</a></p>' : ''}
                 <div class="result" id="result_${calc.id}">Результат: <strong>—</strong> ${calc.unit}</div>
                 <div class="calc-actions">
                     <button class="save-btn" data-id="${calc.id}"><i class="fas fa-save"></i> Сохранить расчёт</button>
@@ -380,17 +382,17 @@
         const calcId = e.currentTarget.getAttribute('data-id');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc) return;
-        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop'].includes(calc.id)) && result === null) {
-            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
+        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
             return;
         }
         if (calc.additional) {
             const dimWeight = calc.calc(values);
             result = calc.additional(values, dimWeight);
         }
-        result = typeof result === 'number' ? (calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop'].includes(calc.id) ? result : Math.round(result * 100) / 100) : result;
+        result = typeof result === 'number' ? (calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id) ? result : Math.round(result * 100) / 100) : result;
         saveCalculation(calcId, values, result);
     }
 
@@ -399,10 +401,10 @@
         const kpiId = e.currentTarget.getAttribute('data-kpi');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc || !kpiId || calc.kpiId !== kpiId) return;
-        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop'].includes(calc.id)) && result === null) {
-            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
+        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
             return;
         }
         if (calc.additional) {
@@ -415,14 +417,14 @@
 
     function updateAllCalculators() {
         for (let calc of calculators) {
-            const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+            const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
             let result = calc.calc(values);
             if (calc.additional) {
                 const dimWeight = calc.calc(values);
                 result = calc.additional(values, dimWeight);
             }
             const resultUnit = result === null ? '' : calc.unit;
-            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа; объём и результат должны быть конечными' : calc.id === 'otif' ? 'Введите корректные целые числа заказов' : 'Проверьте ввод и ограничения модели; результат должен быть конечным') : typeof result === 'number' ? (['safety_stock', 'eoq', 'rop'].includes(calc.id) ? SCMInventory.format(result) : result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '')) : result;
+            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа; объём и результат должны быть конечными' : calc.id === 'otif' ? 'Введите корректные целые числа заказов' : 'Проверьте ввод и ограничения модели; результат должен быть конечным') : typeof result === 'number' ? (['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id) ? SCMInventory.format(result) : result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '')) : result;
             const resultDiv = document.getElementById(`result_${calc.id}`);
             if (resultDiv) {
                 resultDiv.innerHTML = `Результат: <strong>${result}</strong> ${resultUnit}`;

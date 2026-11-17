@@ -638,6 +638,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://scm-news.ru/"},{"@type":"ListItem","position":2,"name":"Калькуляторы","item":"https://scm-news.ru/calculators.html"}]}</script>
 <script src="js/executive-theme.js"></script>
 <script src="js/inventory-models.js"></script>
+<script src="js/inventory-metrics.js"></script>
 <link rel="stylesheet" href="css/executive-pages.css">
 <script src="js/executive-pages.js" defer></script>
 </head>
@@ -822,16 +823,20 @@
                 </div>
                 <div class="calculator-content">
                     <p class="calculator-description">
-                        Расчет коэффициента оборачиваемости запасов и периода оборота в днях.
+                        COGS и средний запас должны охватывать один период, состав товаров и метод оценки по себестоимости. Коэффициент относится к введённому периоду; дни — расчётная оценка, не срок хранения каждой единицы. Высокая оборачиваемость сама по себе не доказывает эффективность. <a href="https://www.wallstreetprep.com/knowledge/average-inventory-period/">Методика</a>.
                     </p>
                     <div class="calculator-form">
                         <div class="form-group">
-                            <label class="form-label" for="turnover-cogs">Себестоимость проданных товаров (руб.)</label>
+                            <label class="form-label" for="turnover-cogs">Себестоимость проданных товаров за период (руб.)</label>
                             <input type="number" id="turnover-cogs" class="form-input" placeholder="Например: 5000000" value="5000000">
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="turnover-avg-inventory">Средний объем запасов (руб.)</label>
+                            <label class="form-label" for="turnover-avg-inventory">Средняя стоимость запасов за тот же период (руб.)</label>
                             <input type="number" id="turnover-avg-inventory" class="form-input" placeholder="Например: 500000" value="500000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="turnover-period-days">Длительность периода (целых календарных дней)</label>
+                            <input type="number" id="turnover-period-days" class="form-input" min="1" step="1" value="365">
                         </div>
                         <button class="calculate-btn" onclick="calculateInventoryTurnover()">
                             <i class="fas fa-calculator"></i> Рассчитать оборачиваемость
@@ -841,7 +846,7 @@
                         <div class="result-title">Результат расчета:</div>
                         <div class="result-value" id="turnover-value">10 раз (37 дней)</div>
                         <div class="result-explanation" id="turnover-explanation">
-                            Оборачиваемость показывает, сколько раз запасы обновляются за период. Высокая оборачиваемость указывает на эффективное управление запасами. Формула: COGS / Средние запасы.
+                            Коэффициент = COGS / средняя стоимость запаса; дни = длительность периода / коэффициент. Оценка относится к выбранному периоду, а не к отдельной единице.
                         </div>
                     </div>
                 </div>
@@ -888,19 +893,19 @@
             <div class="calculator-card">
                 <div class="calculator-header">
                     <div class="calculator-icon">📊</div>
-                    <h2 class="calculator-title">Уровень выполнения заказов</h2>
+                    <h2 class="calculator-title">Unit Fill Rate: спрос из наличного запаса</h2>
                 </div>
                 <div class="calculator-content">
                     <p class="calculator-description">
-                        Расчет уровня обслуживания (Fill Rate) - процента спроса, удовлетворенного из имеющихся запасов.
+                        Доля единиц спроса за выбранный период, удовлетворённых сразу из наличного запаса. Не равна доле полностью выполненных заказов, OTIF или вероятности отсутствия дефицита. Согласуйте правила частичных поставок, замен и учёта потерянного спроса. <a href="https://simfoni.com/glossary/fill-rate/">Варианты Fill Rate</a>.
                     </p>
                     <div class="calculator-form">
                         <div class="form-group">
-                            <label class="form-label" for="fill-total-demand">Общий спрос (единиц)</label>
+                            <label class="form-label" for="fill-total-demand">Общий спрос за период (единиц)</label>
                             <input type="number" id="fill-total-demand" class="form-input" placeholder="Например: 1000" value="1000">
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="fill-stockouts">Количество неудовлетворенных заказов (единиц)</label>
+                            <label class="form-label" for="fill-stockouts">Из него не удовлетворено сразу из запаса (единиц)</label>
                             <input type="number" id="fill-stockouts" class="form-input" placeholder="Например: 25" value="25">
                         </div>
                         <button class="calculate-btn" onclick="calculateFillRate()">
@@ -911,7 +916,7 @@
                         <div class="result-title">Результат расчета:</div>
                         <div class="result-value" id="fill-rate-value">97.5%</div>
                         <div class="result-explanation" id="fill-rate-explanation">
-                            Уровень выполнения заказов показывает эффективность управления запасами в удовлетворении спроса. Формула: (Общий спрос - Неудовлетворенные заказы) / Общий спрос × 100%.
+                            Формула: (общий спрос − спрос, не удовлетворённый сразу из запаса) / общий спрос × 100%. Позднее исполнение не превращает первоначальную нехватку в немедленно удовлетворённый спрос.
                         </div>
                     </div>
                 </div>
@@ -1006,26 +1011,18 @@
             showResult('safety-stock-result');
         }
 
-        // 3. Расчет оборачиваемости запасов
+        // 3. Коэффициент относится к заданному периоду; дни — оценка по усреднённым данным.
         function calculateInventoryTurnover() {
-            const cogs = parseFloat(document.getElementById('turnover-cogs').value);
-            const avgInventory = parseFloat(document.getElementById('turnover-avg-inventory').value);
-
-            if (![cogs, avgInventory].every(n => Number.isFinite(n) && n > 0)) {
-                alert('Пожалуйста, заполните все поля');
+            const values = ['turnover-cogs', 'turnover-avg-inventory', 'turnover-period-days'].map(id => document.getElementById(id).value);
+            const result = SCMInventoryMetrics.turnoverDays(values);
+            if (result === null) {
+                hideInventoryResult('turnover-result');
+                alert('Укажите неотрицательную конечную себестоимость, положительный средний запас и положительное целое число дней; расчёт должен быть конечным.');
                 return;
             }
-
-            const turnover = cogs / avgInventory;
-            const days = 365 / turnover;
-
-            const roundedTurnover = turnover.toFixed(1);
-            const roundedDays = Math.round(days);
-
-            document.getElementById('turnover-value').textContent = `${roundedTurnover} раз (${roundedDays} дней)`;
-            document.getElementById('turnover-explanation').textContent = 
-                `Оборачиваемость запасов составляет ${roundedTurnover} раз в год, что эквивалентно ${roundedDays} дням на один полный оборот. Формула: ${cogs} / ${avgInventory} = ${roundedTurnover}.`;
-            
+            const days = result.days === null ? 'дни не определены при нулевой себестоимости' : `оценка ${formatInventoryValue(result.days)} дней`;
+            document.getElementById('turnover-value').textContent = `${formatInventoryValue(result.ratio)} раз за период (${days})`;
+            document.getElementById('turnover-explanation').textContent = 'Коэффициент относится к введённому периоду. Оценка дней не означает фактический срок каждой единицы; показатели округлены для отображения до двух знаков (крайние значения — экспоненциально).';
             showResult('turnover-result');
         }
 
@@ -1043,28 +1040,17 @@
             showResult('rop-result');
         }
 
-        // 5. Расчет уровня выполнения заказов
+        // 5. Наблюдаемая доля единиц, сразу выданных из наличного запаса.
         function calculateFillRate() {
-            const totalDemand = parseFloat(document.getElementById('fill-total-demand').value);
-            const stockouts = parseFloat(document.getElementById('fill-stockouts').value);
-
-            if (!Number.isFinite(totalDemand) || totalDemand <= 0 || !Number.isFinite(stockouts) || stockouts < 0) {
-                alert('Пожалуйста, заполните все поля');
+            const values = ['fill-total-demand', 'fill-stockouts'].map(id => document.getElementById(id).value);
+            const result = SCMInventoryMetrics.fillRate(values, 'shortage');
+            if (result === null) {
+                hideInventoryResult('fill-rate-result');
+                alert('Укажите положительный конечный спрос и конечную неотрицательную нехватку не больше спроса.');
                 return;
             }
-
-            if (stockouts > totalDemand) {
-                alert('Количество неудовлетворенных заказов не может превышать общий спрос');
-                return;
-            }
-
-            const fillRate = ((totalDemand - stockouts) / totalDemand) * 100;
-            const roundedFillRate = fillRate.toFixed(1);
-
-            document.getElementById('fill-rate-value').textContent = `${roundedFillRate}%`;
-            document.getElementById('fill-rate-explanation').textContent = 
-                `Уровень выполнения заказов составляет ${roundedFillRate}%. Формула: (${totalDemand} - ${stockouts}) / ${totalDemand} × 100% = ${roundedFillRate}%.`;
-            
+            document.getElementById('fill-rate-value').textContent = `${result > 0 && result < 0.005 ? result.toExponential(2) : result.toFixed(2)}%`;
+            document.getElementById('fill-rate-explanation').textContent = 'Доля единиц спроса, немедленно удовлетворённых из запаса, округлена до двух знаков (очень малые значения — экспоненциально). Это не доля полных заказов и не OTIF; поздние отгрузки не учитываются как немедленные.';
             showResult('fill-rate-result');
         }
 
@@ -1094,7 +1080,9 @@
             for (const [ids, resultId] of [
                 [['eoq-demand', 'eoq-order-cost', 'eoq-holding-cost'], 'eoq-result'],
                 [['ss-max-demand', 'ss-avg-demand', 'ss-lead-time'], 'safety-stock-result'],
-                [['rop-demand', 'rop-lead-time', 'rop-safety-stock'], 'rop-result']
+                [['rop-demand', 'rop-lead-time', 'rop-safety-stock'], 'rop-result'],
+                [['turnover-cogs', 'turnover-avg-inventory', 'turnover-period-days'], 'turnover-result'],
+                [['fill-total-demand', 'fill-stockouts'], 'fill-rate-result']
             ]) ids.forEach(id => document.getElementById(id).addEventListener('input', () => hideInventoryResult(resultId)));
             const calculatorCards = document.querySelectorAll('.calculator-card');
             
