@@ -877,6 +877,8 @@
         </div>
 
         <p id="news-status" role="status"></p>
+        <p id="news-target-status" role="status"></p>
+        <noscript><p>Для перехода к конкретной новости из Telegram нужен JavaScript. Ниже показана сохранённая подборка; полную статью можно открыть по ссылке в сообщении Telegram.</p></noscript>
         <p class="news-date-note">Даты в старых записях могут отражать время получения материала, а не публикации. Проверяйте дату у первоисточника.</p>
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Поиск по заголовку или описанию...">
@@ -992,6 +994,18 @@
         let currentSearch = '';
         let chartInstance = null;
         let updateInterval = null;
+        let targetHandled = false;
+
+        function prioritizeLinkedNews(items, hash) {
+            const params = new URLSearchParams((hash || '').replace(/^#/, ''));
+            if (!params.has('news')) return { items, message: '', found: false };
+            const link = params.get('news');
+            const matches = items.filter(item => item.link === link);
+            if (matches.length !== 1) return { items, found: false,
+                message: 'Этой новости нет в текущей ленте. Она могла устареть или быть удалена; откройте источник из сообщения Telegram.' };
+            return { items: [matches[0], ...items.filter(item => item !== matches[0])], found: true,
+                message: 'Новость из Telegram найдена. Без фильтров она показана первой; полная статья — у источника.' };
+        }
 
         async function loadNews() {
             const list = document.getElementById('news-list');
@@ -1020,7 +1034,18 @@
                     tags: Array.isArray(item.tags) ? item.tags.filter(tag => typeof tag === 'string') : []
                 }));
                 if (!allNews.length) throw new Error('Empty news data');
+                const target = prioritizeLinkedNews(allNews, window.location.hash);
+                allNews = target.items;
+                if (!targetHandled && target.found) {
+                    currentTagFilter = null;
+                    currentSearch = '';
+                    localStorage.removeItem('tagFilter');
+                    document.getElementById('filter-bar').style.display = 'none';
+                    document.getElementById('searchInput').value = '';
+                }
                 applyFilters();
+                document.getElementById('news-target-status').textContent = target.message;
+                targetHandled = true;
                 document.getElementById('news-status').textContent = '';
                 return true;
             } catch (error) {

@@ -166,6 +166,17 @@ class SiteTests(unittest.TestCase):
         self.assertIn('Март 2020 — Март 2024</div><h3 class="exp-company">Леруа Мерлен', experience)
         self.assertIn('/resume/', (ROOT / '.gitignore').read_text(encoding='utf-8'))
 
+    def test_employer_page_clarifies_scope_results_and_direct_contact(self):
+        home = (ROOT / 'index.html').read_text(encoding='utf-8')
+        page = (ROOT / 'career.html').read_text(encoding='utf-8')
+        self.assertIn('href="career.html">Для работодателя', home)
+        for text in ('Масштаб и зоны ответственности', 'Примеры результатов',
+                     'Это сумма дефекта, а не оценка экономии', 'Показатели приведены по данным резюме',
+                     'Постоянная руководящая работа', 'href="tel:+79825810787"',
+                     'mailto:dmitry.gerasimov.2026@yandex.ru?subject='):
+            self.assertIn(text, page)
+        self.assertNotIn('scm-news.ru/resume/', page)
+
     def test_research_page_navigation_sources_and_sitemap(self):
         class Document(HTMLParser):
             def __init__(self):

@@ -10,9 +10,9 @@ function setup(fetch, applyFilters) {
   const list = { childNodes: [{ text: 'static snapshot' }], replaceChildren(...nodes) { this.childNodes = nodes; } };
   const pagination = { childNodes: [], replaceChildren(...nodes) { this.childNodes = nodes; } };
   const status = { textContent: '' };
-  const context = { fetch, URL, Date, console: { error() {} }, document: { getElementById(id) { return { 'news-list': list, pagination, 'news-status': status }[id]; } }, applyFilters: () => applyFilters(list) };
+  const context = { fetch, URL, Date, window: { location: { hash: '' } }, prioritizeLinkedNews: items => ({ items, found: false, message: '' }), console: { error() {} }, document: { getElementById(id) { return { 'news-list': list, pagination, 'news-status': status, 'news-target-status': { textContent: '' } }[id]; } }, applyFilters: () => applyFilters(list) };
   vm.createContext(context);
-  vm.runInContext('let allNews = [], filteredNews = [], currentPage = 1;\n' + load, context);
+  vm.runInContext('let allNews = [], filteredNews = [], currentPage = 1, targetHandled = false;\n' + load, context);
   return { context, list, status };
 }
 test('news retains static snapshot on fetch error, empty data, or render failure', async () => {
@@ -52,4 +52,38 @@ test('news displays an honest placeholder for missing or invalid publication dat
   vm.createContext(context); vm.runInContext(escape + '\n' + render + '\nrenderNews();', context);
   assert.equal((list.innerHTML.match(/Дата не указана/g) || []).length, 2);
   assert.doesNotMatch(list.innerHTML, /Invalid Date/);
+});
+
+test('Telegram news links prioritize only an exact current feed match', () => {
+  const fn = html.match(/        function prioritizeLinkedNews\(items, hash\) \{[\s\S]*?\n        \}/)[0];
+  const ctx = { URLSearchParams }; vm.createContext(ctx); vm.runInContext(fn, ctx);
+  const items = [{link:'https://example.com/one'}, {link:'https://example.com/two?a=1&b=2'}];
+  const hash = '#' + new URLSearchParams({news: items[1].link});
+  const match = ctx.prioritizeLinkedNews(items, hash);
+  assert.equal(match.found, true); assert.equal(match.items[0], items[1]);
+  assert.equal(ctx.prioritizeLinkedNews(items, '#news=missing').found, false);
+  assert.match(ctx.prioritizeLinkedNews(items, '#news=missing').message, /нет в текущей ленте/);
+  assert.equal(ctx.prioritizeLinkedNews([items[0], items[0]], '#news=' + encodeURIComponent(items[0].link)).found, false);
+  assert.equal(ctx.prioritizeLinkedNews(items, '').message, '');
+});
+test('opening a Telegram link clears an old filter and places its matching item first', async () => {
+  const targetFunction = html.match(/        function prioritizeLinkedNews\(items, hash\) \{[\s\S]*?\n        \}/)[0];
+  const link = 'https://example.com/second?x=1&y=2';
+  const nodes = {
+    'news-list': { childNodes: [], replaceChildren() {} },
+    pagination: { childNodes: [], replaceChildren() {} },
+    'news-status': { textContent: '' }, 'news-target-status': { textContent: '' },
+    'filter-bar': { style: {display:'block'} }, searchInput: {value:'old search'}
+  };
+  const ctx = { URL, URLSearchParams, Date, Set, window: {location: { hash: '#' + new URLSearchParams({news: link}) }},
+    fetch: async () => ({ok:true, json:async () => [{link:'https://example.com/first'}, {link}]}),
+    document: { getElementById: id => nodes[id] }, localStorage: { removeItem() {} }, console,
+    applyFilters: () => {} };
+  vm.createContext(ctx);
+  vm.runInContext('let allNews = [], filteredNews = [], currentPage = 1, currentTagFilter = "old", currentSearch = "old", targetHandled = false;\n' + targetFunction + '\n' + load, ctx);
+  assert.equal(await ctx.loadNews(), true);
+  assert.equal(vm.runInContext('allNews[0].link', ctx), link);
+  assert.equal(vm.runInContext('currentTagFilter', ctx), null);
+  assert.equal(nodes['filter-bar'].style.display, 'none');
+  assert.match(nodes['news-target-status'].textContent, /найдена/);
 });
