@@ -1,6 +1,5 @@
 (() => {
   const body = document.body;
-  body.classList.add('js-ready');
   const theme = document.querySelector('.theme-toggle');
   try { if (localStorage.getItem('executive-theme') === 'light') body.classList.add('light'); } catch (_) {}
   function updateTheme() {
@@ -16,15 +15,12 @@
     updateTheme();
   });
 
-  const menuButton = document.querySelector('.menu-toggle');
+  const menuControl = document.getElementById('menu-check');
   const nav = document.querySelector('.site-nav');
-  const closeMenu = () => { nav.classList.remove('open'); menuButton.setAttribute('aria-expanded', 'false'); };
-  menuButton.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('open');
-    menuButton.setAttribute('aria-expanded', String(isOpen));
-  });
+  // The checkbox controls the menu without JavaScript; enhance close behavior only.
+  const closeMenu = () => { menuControl.checked = false; };
   nav.addEventListener('click', event => { if (event.target.closest('a')) closeMenu(); });
-  document.addEventListener('keydown', event => { if (event.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); menuButton.focus(); } });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && menuControl.checked) { closeMenu(); menuControl.focus(); } });
   window.addEventListener('resize', () => { if (window.innerWidth > 820) closeMenu(); });
 
   const form = document.getElementById('chat-form');
