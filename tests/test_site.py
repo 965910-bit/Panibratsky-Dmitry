@@ -161,6 +161,44 @@ class SiteTests(unittest.TestCase):
             self.assertEqual(items[0].findtext('link'), item['link'])
             self.assertEqual(items[0].findtext('category'), 'A & B')
 
+    def test_rss_unchanged_content_preserves_timestamp_and_bytes(self):
+        generator = load_script('generate_rss')
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / 'data').mkdir()
+            news_file = root / 'data/news.json'
+            news = [{'title': 'Old', 'link': 'https://example.com/old', 'pubDate': ''}]
+            news_file.write_text(json.dumps(news), encoding='utf-8')
+            generator.ROOT = root
+            generator.generate_rss()
+            feed = root / 'rss.xml'
+            tree = ET.parse(feed)
+            tree.find('./channel/lastBuildDate').text = 'Mon, 01 Jan 2024 00:00:00 +0000'
+            tree.write(feed, encoding='utf-8', xml_declaration=True)
+            previous = feed.read_bytes()
+            generator.generate_rss()
+            self.assertEqual(feed.read_bytes(), previous)
+            news[0]['title'] = 'Updated'
+            news_file.write_text(json.dumps(news), encoding='utf-8')
+            generator.generate_rss()
+            updated = ET.parse(feed)
+            self.assertEqual(updated.findtext('./channel/item/title'), 'Updated')
+            self.assertNotEqual(updated.findtext('./channel/lastBuildDate'), 'Mon, 01 Jan 2024 00:00:00 +0000')
+
+    def test_rss_missing_or_malformed_previous_file_is_regenerated(self):
+        generator = load_script('generate_rss')
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / 'data').mkdir()
+            (root / 'data/news.json').write_text('[]', encoding='utf-8')
+            generator.ROOT = root
+            for previous in (None, '<not-xml'):
+                feed = root / 'rss.xml'
+                if previous is not None:
+                    feed.write_text(previous, encoding='utf-8')
+                generator.generate_rss()
+                self.assertIsNotNone(ET.parse(feed).find('./channel/lastBuildDate'))
+
     def test_rss_omits_missing_dates_and_normalizes_iso(self):
         generator = load_script('generate_rss')
         with tempfile.TemporaryDirectory() as folder:
