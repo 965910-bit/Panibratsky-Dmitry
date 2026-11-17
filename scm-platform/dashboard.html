@@ -563,7 +563,7 @@
                 if (isAlert) alerts.push(`⚠️ ${id.toUpperCase()} = ${val} ${b.unit} (отклонение от условного порога ${b.good})`);
             }
         }
-        getLatestNonConformances().forEach(nc => alerts.push(`📋 Аудит: ${nc.text}`));
+        // Legacy audit findings may rely on unverified thresholds; do not emit alerts.
         container.innerHTML = alerts.length ? alerts.map(a => `<div class="notification">${escapeHtml(a)}</div>`).join('') : '<div class="badge">Нет активных тревог</div>';
     }
     function renderUrgentTasks() {
@@ -581,7 +581,7 @@
         const audits = getLastAudits(3);
         const container = document.getElementById('lastAudits');
         if (!audits.length) { container.innerHTML = '<div class="badge">Нет аудитов</div>'; return; }
-        container.innerHTML = audits.map(a => `<div><strong>${new Date(a.date).toLocaleDateString()}</strong> — ${escapeHtml(a.type)}<br>Зрелость: ${escapeHtml(a.totalPercent)}%</div>`).join('');
+        container.innerHTML = audits.map(a => `<div><strong>${new Date(a.date).toLocaleDateString()}</strong> — ${escapeHtml(a.type)}<br>${a.method === 'manual-responses-v1' ? 'Без автоматической оценки' : `Старая непроверенная оценка: ${escapeHtml(a.totalPercent)}%`}</div>`).join('');
     }
     function renderChecklistSummary() {
         const summary = getChecklistSummary();

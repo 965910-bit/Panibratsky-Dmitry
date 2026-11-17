@@ -319,6 +319,14 @@
 
     function renderAuditReport(audit) {
         const dateStr = new Date(audit.date).toLocaleString();
+        if (audit.method === 'manual-responses-v1') {
+            const labels = {yes: 'Да', no: 'Нет', na: 'Не требуется', unknown: 'Не оценено'};
+            return `<p>Ручные ответы, не проверка соответствия. Автоматические оценки и поручения приостановлены.</p>
+                <p>Тип: ${escapeHtml(audit.type)}; дата: ${dateStr}</p>
+                <table><thead><tr><th>Пункт</th><th>Отметка пользователя</th><th>Факт</th></tr></thead><tbody>
+                ${Object.entries(audit.statuses || {}).map(([id, status]) => `<tr><td>${escapeHtml(audit.itemTexts?.[id] || id)}</td><td>${escapeHtml(labels[status] || status)}</td><td>${escapeHtml(audit.facts?.[id] ?? '—')}</td></tr>`).join('')}
+                </tbody></table>`;
+        }
         let nonconformHtml = '';
         if (audit.nonConformances && audit.nonConformances.length) {
             nonconformHtml = audit.nonConformances.map(nc => `
@@ -330,10 +338,11 @@
             `).join('');
         } else nonconformHtml = '<p>Нет несоответствий</p>';
         return `
+            <p>Историческая оценка и несоответствия могли опираться на неподтверждённые пороги; требуется отдельная проверка.</p>
             <div class="info-grid">
                 <div class="info-item"><span class="info-label">Тип аудита</span><span class="info-value">${escapeHtml(audit.type)}</span></div>
                 <div class="info-item"><span class="info-label">Дата проведения</span><span class="info-value">${dateStr}</span></div>
-                <div class="info-item"><span class="info-label">Общий уровень зрелости</span><span class="info-value">${escapeHtml(audit.totalPercent)}%</span></div>
+                <div class="info-item"><span class="info-label">Старая непроверенная оценка</span><span class="info-value">${escapeHtml(audit.totalPercent)}%</span></div>
             </div>
             <div class="section-title">Оценки по секциям</div>
             <table>
