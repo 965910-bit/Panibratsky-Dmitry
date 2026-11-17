@@ -144,7 +144,7 @@ test('workflows cannot mistake the tracked checkout journal for restored state',
   for (const path of ['.github/workflows/send_telegram.yml', '.github/workflows/preview_telegram.yml']) {
     const workflow = fs.readFileSync(path, 'utf8');
     const remove = workflow.indexOf('run: rm -f data/sent_news.json');
-    const restore = workflow.indexOf('uses: actions/cache/restore@v4');
+    const restore = workflow.search(/uses: actions\/cache\/restore@[0-9a-f]{40}/);
     assert.ok(remove > -1 && remove < restore, path);
   }
 });
