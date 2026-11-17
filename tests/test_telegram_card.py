@@ -40,6 +40,23 @@ class TelegramCardTests(unittest.TestCase):
             self.assertNotEqual(second.returncode, 0)
             self.assertEqual(out.read_bytes(), original)
 
+    def test_png_metadata_matches_js_client_and_rejects_changed_draft(self):
+        with tempfile.TemporaryDirectory() as d:
+            draft_path, png_path = Path(d) / 'draft.json', Path(d) / 'card.png'
+            draft = {'version': 1, 'title': 'Склад 📦 и WMS', 'source_name': 'Источник', 'source_url': 'https://example.org/a', 'description': '', 'comment': 'Проверено', 'ready_for_review': True}
+            draft_path.write_text(json.dumps(draft, ensure_ascii=False), encoding='utf-8')
+            proc = subprocess.run([sys.executable, str(CARD), str(draft_path), str(png_path)], capture_output=True, text=True)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            with PIL.Image.open(png_path) as image:
+                self.assertEqual(image.info['SCM-Draft-SHA256'], self.card.draft_fingerprint(draft))
+            js = """import {readFileSync} from 'node:fs'; import {buildPayload,attachCard} from './telegram-review/drafts.mjs';
+                const d=JSON.parse(readFileSync(process.argv[1],'utf8')); const p=readFileSync(process.argv[2]);
+                attachCard(buildPayload(d),p,d); let rejected=false;
+                try { attachCard(buildPayload(d),p,{...d,title:'Изменённый заголовок'}); } catch { rejected=true; }
+                if (!rejected) process.exit(2);"""
+            check = subprocess.run(['node', '--input-type=module', '-e', js, str(draft_path), str(png_path)], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(check.returncode, 0, check.stderr)
+
     def test_wrapping_handles_long_unbroken_strings_and_marks_truncation(self):
         from PIL import Image, ImageDraw, ImageFont
         draw = ImageDraw.Draw(Image.new('RGB', (1080, 1080)))

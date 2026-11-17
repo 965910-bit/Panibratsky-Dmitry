@@ -91,9 +91,77 @@ async function intake(request, env, fetcher) {
     return result(503, 'Notification or state uncertain; operator review required');
   }
 }
+async function statusReply(message, env, fetcher) {
+  if (message?.text !== '/status' || message?.chat?.type !== 'private' || String(message?.from?.id) !== env.REVIEWER_ID || String(message?.chat?.id) !== env.REVIEWER_ID) return false;
+  let text;
+  try {
+    const counts = await env.DB.prepare('SELECT state, COUNT(*) AS count FROM drafts GROUP BY state').all();
+    const pending = await env.DB.prepare("SELECT id, state, created_at FROM drafts WHERE state IN ('notifying', 'sending') ORDER BY created_at ASC LIMIT 5").all();
+    if (!counts.success || !pending.success || !Array.isArray(counts.results) || !Array.isArray(pending.results)) throw Error('invalid status');
+    const totals = {ready:0, notifying:0, sending:0, sent:0, rejected:0};
+    for (const row of counts.results) {
+      if (!Object.hasOwn(totals, row.state) || !Number.isSafeInteger(row.count) || row.count < 0) throw Error('invalid count');
+      totals[row.state] = row.count;
+    }
+    const items = pending.results.map(row => {
+      if (!/^[0-9a-f-]{36}$/i.test(row.id) || !['notifying','sending'].includes(row.state) || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(row.created_at)) throw Error('invalid row');
+      return `• ${row.id} · ${row.state} · ${row.created_at}`;
+    });
+    text = [`Очередь публикаций`, `Ожидают вашего решения: ${totals.ready}`, `Доставляются на проверку или требуют сверки: ${totals.notifying}`, `Публикуются или требуют сверки: ${totals.sending}`, `Отправлено по журналу: ${totals.sent}`, `Отклонено: ${totals.rejected}`, '', 'Notifying / sending могут быть ещё в работе. Если состояние не меняется, проверьте личный чат, канал и журнал; не повторяйте отправку вслепую.', ...(items.length ? ['', 'До 5 старейших записей:', ...items] : []), '', 'Показан только журнал: это не подтверждение доставки в Telegram.'].join('\n');
+  } catch {
+    text = 'Не удалось прочитать журнал очереди. Не повторяйте отправку вслепую; проверьте состояние сервиса и канал.';
+  }
+  try { await api(env, 'sendMessage', {chat_id:env.REVIEWER_ID, text}, fetcher); } catch { /* A manual status request is safe to repeat. */ }
+  return true;
+}
+async function inspectReply(message, env, fetcher) {
+  if (message?.chat?.type !== 'private' || String(message?.from?.id) !== env.REVIEWER_ID || String(message?.chat?.id) !== env.REVIEWER_ID || typeof message?.text !== 'string') return false;
+  const match = /^\/inspect ([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i.exec(message.text);
+  if (!match) return false;
+  let text;
+  try {
+    const row = await env.DB.prepare('SELECT state, created_at, text, source_url, review_message_id, channel_message_id FROM drafts WHERE id = ?').bind(match[1]).first();
+    if (!row) text = 'Запись не найдена. Не повторяйте отправку без проверки журнала и канала.';
+    else {
+      if (!validDraft(row) || !['notifying','ready','sending','sent','rejected'].includes(row.state) || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(row.created_at) || ![row.review_message_id, row.channel_message_id].every(v => v == null || (Number.isSafeInteger(v) && v > 0))) throw Error('invalid row');
+      // Bound response size and strip controls; no parse_mode or preview of links.
+      const safe = value => value.replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/g, ' ');
+      const excerpt = safe(row.text).slice(0, 1000);
+      const source = safe(row.source_url).slice(0, 1800);
+      text = [`Запись: ${match[1]}`, `Состояние в журнале: ${row.state}`, `Создана: ${row.created_at}`, `ID сообщения редактору: ${row.review_message_id ?? 'нет в журнале'}`, `ID сообщения канала: ${row.channel_message_id ?? 'нет в журнале'}`, '', `Текст (фрагмент): ${excerpt}${row.text.length > 1000 ? '…' : ''}`, `Источник: ${source}${row.source_url.length > 1800 ? '…' : ''}`, '', 'Это сведения журнала, не подтверждение доставки. Проверьте чат и канал. Запись не изменена.'].join('\n');
+    }
+  } catch { text = 'Не удалось прочитать запись. Проверьте состояние сервиса; не повторяйте публикацию вслепую.'; }
+  try { await api(env, 'sendMessage', {chat_id:env.REVIEWER_ID, text, disable_web_page_preview:true}, fetcher); } catch { /* Read-only command can be requested again. */ }
+  return true;
+}
+async function draftReply(message, env, fetcher) {
+  if (message?.chat?.type !== 'private' || String(message?.from?.id) !== env.REVIEWER_ID || String(message?.chat?.id) !== env.REVIEWER_ID || typeof message?.text !== 'string') return false;
+  if (!/^\/draft(?:\s|$)/.test(message.text)) return false;
+  const match = /^\/draft[ \t]+([^\s]+)\r?\n([\s\S]+)$/.exec(message.text);
+  let resultCode = 400;
+  if (match) {
+    // Internal call reuses the same validator, journal and duplicate protection as the CLI.
+    // Never expose the intake secret or post to the channel here.
+    const request = new Request('https://internal.invalid/intake', {
+      method:'POST', headers:{'content-type':'application/json', authorization:`Bearer ${env.INTAKE_SECRET}`},
+      body:JSON.stringify({source_url:match[1], text:match[2]})
+    });
+    resultCode = (await intake(request, env, fetcher)).status;
+  }
+  if (resultCode !== 201) {
+    const text = resultCode === 400
+      ? 'Формат: /draft ССЫЛКА на первой строке, затем с новой строки — подготовленный текст. Проверьте ссылку и длину текста.'
+      : 'Не удалось подтвердить создание черновика. Проверьте личный чат и /status; не отправляйте повторно вслепую: запись могла сохраниться.';
+    try { await api(env, 'sendMessage', {chat_id:env.REVIEWER_ID, text, disable_web_page_preview:true}, fetcher); } catch {}
+  }
+  return true;
+}
 async function webhook(request, env, fetcher) {
   if (!equal(request.headers.get('x-telegram-bot-api-secret-token'), env.WEBHOOK_SECRET)) return result(403, 'Forbidden');
   let update; try { update = await body(request); } catch { return result(400, 'Invalid request'); }
+  if (await statusReply(update?.message, env, fetcher)) return result(200, 'Status processed');
+  if (await inspectReply(update?.message, env, fetcher)) return result(200, 'Inspection processed');
+  if (await draftReply(update?.message, env, fetcher)) return result(200, 'Draft processed');
   const cb = update?.callback_query;
   if (!cb || typeof cb.id !== 'string' || cb.id.length > 256 || String(cb.from?.id) !== env.REVIEWER_ID || cb.message?.chat?.type !== 'private' || String(cb.message?.chat?.id) !== env.REVIEWER_ID || !Number.isSafeInteger(cb.message?.message_id) || typeof cb.data !== 'string') return result(200, 'Ignored');
   const match = /^(approve|reject):([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i.exec(cb.data);

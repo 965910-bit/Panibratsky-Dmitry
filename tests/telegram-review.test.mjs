@@ -4,18 +4,27 @@ import {handle} from '../telegram-review/worker.mjs';
 
 class DB {
   rows = new Map();
-  prepare(sql) { const db = this; return {bind(...v) { return {
+  prepare(sql) { const db = this; return {async all() {
+    if (sql.startsWith('SELECT state, COUNT')) {
+      const counts = {}; for (const row of db.rows.values()) counts[row.state] = (counts[row.state] || 0) + 1;
+      return {success:true,results:Object.entries(counts).map(([state,count])=>({state,count}))};
+    }
+    if (sql.startsWith('SELECT id, state, created_at')) {
+      return {success:true,results:[...db.rows.values()].filter(r=>['sending','notifying'].includes(r.state)).slice(0,5).map(r=>({id:r.id,state:r.state,created_at:r.created_at}))};
+    }
+    throw Error('unknown query');
+  },bind(...v) { return {
     async run() {
       if (sql.startsWith('INSERT')) {
         if ([...db.rows.values()].some(r => r.source_url === v[1])) throw Error('duplicate');
-        db.rows.set(v[0], {id:v[0], source_url:v[1], text:v[2], state:'notifying'}); return {success:true,meta:{changes:1}};
+        db.rows.set(v[0], {id:v[0], source_url:v[1], text:v[2], state:'notifying',created_at:v[3]}); return {success:true,meta:{changes:1}};
       }
       if (sql.includes("SET state = 'ready'")) { const r=db.rows.get(v[2]); if (!r || r.state !== 'notifying') return {meta:{changes:0}}; r.state='ready'; r.review_message_id=v[0]; r.photo_file_id=v[1]; return {meta:{changes:1}}; }
       if (sql.includes('SET state = ?')) { const r=db.rows.get(v[1]); if (!r || r.state !== 'ready' || r.review_message_id !== v[2]) return {meta:{changes:0}}; r.state=v[0]; return {meta:{changes:1}}; }
       if (sql.includes("SET state = 'sent'")) { const r=db.rows.get(v[1]); if (!r || r.state !== 'sending') return {meta:{changes:0}}; r.state='sent'; r.channel_message_id=v[0]; return {meta:{changes:1}}; }
       throw Error('unknown query');
     },
-    async first() { const r=db.rows.get(v[0]); return r?.state === 'sending' ? r : null; }
+    async first() { const r=db.rows.get(v[0]); return sql.startsWith('SELECT state, created_at') ? r || null : r?.state === 'sending' ? r : null; }
   }; }}; }
 }
 function setup(failChannel=false) {
@@ -70,4 +79,60 @@ test('uncertain photo delivery does not retry',async()=>{
  const x=setup(true); await x.add({text:'Новость',source_url:'https://example.org/news',card_base64:fakePng()});
  const id=[...x.db.rows.keys()][0]; await x.click(id); await x.click(id);
  assert.equal(x.db.rows.get(id).state,'sending'); assert.equal(x.calls.filter(c=>c.method==='sendPhoto' && c.data.chat_id===x.env.CHANNEL_ID).length,1);
+});
+
+test('status reveals only counts and unresolved IDs to the authorized private chat',async()=>{
+ const x=setup(true); await x.add(); const id=[...x.db.rows.keys()][0]; await x.click(id);
+ const status=async message=>handle(x.request('/telegram',{message},{'x-telegram-bot-api-secret-token':x.env.WEBHOOK_SECRET}),x.env,x.api);
+ const base={text:'/status',from:{id:123},chat:{id:123,type:'private'}};
+ const before=x.calls.length; await status({...base,from:{id:124}}); await status({...base,chat:{id:123,type:'group'}});
+ assert.equal(x.calls.length,before);
+ await status(base); const last=x.calls.at(-1); assert.equal(last.data.chat_id,'123');
+ assert.match(last.data.text,/Публикуются или требуют сверки: 1/); assert(last.data.text.includes(id));
+ assert(!last.data.text.includes('https://example.org/news')); assert(!last.data.text.includes('Склад: проверенный текст'));
+ assert.equal(x.db.rows.get(id).state,'sending');
+});
+test('status reports unavailable storage without altering state or sending to channel',async()=>{
+ const x=setup(); x.env.DB={prepare(){throw new Error('unavailable');}};
+ const response=await handle(x.request('/telegram',{message:{text:'/status',from:{id:123},chat:{id:123,type:'private'}}},{'x-telegram-bot-api-secret-token':x.env.WEBHOOK_SECRET}),x.env,x.api);
+ assert.equal(response.status,200); assert.match(x.calls.at(-1).data.text,/Не удалось прочитать журнал/);
+ assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
+});
+
+test('inspect is read-only, private and displays bounded identifying information',async()=>{
+ const x=setup(true); await x.add(); const id=[...x.db.rows.keys()][0]; await x.click(id);
+ const inspect=async (msg,secret=x.env.WEBHOOK_SECRET)=>handle(x.request('/telegram',{message:msg},{'x-telegram-bot-api-secret-token':secret}),x.env,x.api);
+ const base={text:`/inspect ${id}`,from:{id:123},chat:{id:123,type:'private'}};
+ const before=x.calls.length; assert.equal((await inspect(base,'wrong')).status,403);
+ await inspect({...base,from:{id:456}}); await inspect({...base,chat:{id:123,type:'group'}}); await inspect({...base,text:'/inspect invalid'});
+ assert.equal(x.calls.length,before);
+ await inspect(base); const reply=x.calls.at(-1); assert.equal(reply.data.chat_id,'123'); assert.equal(reply.data.disable_web_page_preview,true);
+ assert.match(reply.data.text,/Состояние в журнале: sending/); assert.match(reply.data.text,/https:\/\/example.org\/news/);
+ assert.equal(x.db.rows.get(id).state,'sending'); assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,1);
+});
+test('inspect handles unknown ID and storage failure without channel sends',async()=>{
+ const x=setup(); const msg={text:'/inspect 11111111-1111-4111-8111-111111111111',from:{id:123},chat:{id:123,type:'private'}};
+ const req=()=>x.request('/telegram',{message:msg},{'x-telegram-bot-api-secret-token':x.env.WEBHOOK_SECRET});
+ await handle(req(),x.env,x.api); assert.match(x.calls.at(-1).data.text,/Запись не найдена/);
+ x.env.DB={prepare(){throw Error('outage')}}; await handle(req(),x.env,x.api); assert.match(x.calls.at(-1).data.text,/Не удалось прочитать запись/);
+ assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
+});
+
+test('owner can propose a draft privately without publishing; approval remains separate',async()=>{
+ const x=setup(); const msg={text:'/draft https://example.org/new\nМой проверенный текст и вывод',from:{id:123},chat:{id:123,type:'private'}};
+ const req=(m,secret=x.env.WEBHOOK_SECRET)=>x.request('/telegram',{message:m},{'x-telegram-bot-api-secret-token':secret});
+ const before=x.calls.length; await handle(req({...msg,from:{id:124}}),x.env,x.api); await handle(req({...msg,chat:{id:123,type:'group'}}),x.env,x.api);
+ assert.equal((await handle(req(msg,'wrong'),x.env,x.api)).status,403); assert.equal(x.calls.length,before); assert.equal(x.db.rows.size,0);
+ assert.equal((await handle(req(msg),x.env,x.api)).status,200); assert.equal(x.db.rows.size,1);
+ const id=[...x.db.rows.keys()][0]; assert.equal(x.db.rows.get(id).state,'ready');
+ assert.match(x.calls.at(-1).data.text,/Мой проверенный текст/); assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
+ await x.click(id); assert.equal(x.db.rows.get(id).state,'sent'); assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,1);
+});
+test('draft command rejects bad content and duplicate requests without accidental sends',async()=>{
+ const x=setup(); const send=text=>handle(x.request('/telegram',{message:{text,from:{id:123},chat:{id:123,type:'private'}}},{'x-telegram-bot-api-secret-token':x.env.WEBHOOK_SECRET}),x.env,x.api);
+ await send('/draft'); assert.match(x.calls.at(-1).data.text,/Формат/); assert.equal(x.db.rows.size,0);
+ await send('/draft javascript:alert(1)\nтекст'); assert.equal(x.db.rows.size,0);
+ const command='/draft https://example.org/news\nпроверенный текст'; await send(command); await send(command);
+ assert.equal(x.db.rows.size,1); assert.match(x.calls.at(-1).data.text,/не отправляйте повторно/);
+ assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
 });
