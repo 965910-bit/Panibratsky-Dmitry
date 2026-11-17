@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Fetch two fixed official indicators; never mix statistics into the news feed."""
 import json
+import hashlib
+import shutil
 import math
 import os
 from pathlib import Path
@@ -15,6 +17,9 @@ WORLD_BANK = 'https://api.worldbank.org/v2/country/RUS/indicator/LP.LPI.OVRL.XQ?
 EUROSTAT = ('https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/'
             'road_go_ta_tott?lang=en&geo=DE&unit=THS_T&tra_type=TOTAL&tra_oper=TOTAL&freq=A&lastTimePeriod=1')
 MAX_BYTES = 1024 * 1024
+SOURCES = {'world_bank': WORLD_BANK, 'eurostat': EUROSTAT}
+TERMS = {'world_bank': 'https://www.worldbank.org/ext/en/legal/terms-conditions/datasets',
+         'eurostat': 'https://ec.europa.eu/eurostat/help/copyright-notice'}
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -22,13 +27,16 @@ class NoRedirect(HTTPRedirectHandler):
         return None
 
 
-def fetch_json(url):
+def fetch_json(url, capture=None):
     req = Request(url, headers={'Accept': 'application/json', 'User-Agent': 'SCM-News-DataHub/1.0'})
     with build_opener(NoRedirect).open(req, timeout=20) as response:
         payload = response.read(MAX_BYTES + 1)
     if len(payload) > MAX_BYTES:
         raise ValueError('Response exceeds size limit')
-    return json.loads(payload)
+    parsed = json.loads(payload)
+    if capture is not None:
+        capture[url] = payload
+    return parsed
 
 
 def parse_world_bank(data):
@@ -110,16 +118,87 @@ def save(results, path=OUTPUT, now=None):
     return True
 
 
+def verify_archive(path):
+    """Rebuild observations from stored raw bytes and verify content hashes; no network/writes."""
+    path = Path(path)
+    manifest_path = path / 'manifest.json'
+    if manifest_path.stat().st_size > MAX_BYTES:
+        raise ValueError('Manifest exceeds size limit')
+    manifest = json.loads(manifest_path.read_bytes())
+    if (not isinstance(manifest, dict) or type(manifest.get('schema_version')) is not int
+            or manifest['schema_version'] != 1 or manifest.get('transform_version') != 1
+            or manifest.get('sources') != SOURCES or manifest.get('terms') != TERMS):
+        raise ValueError('Unexpected archive manifest')
+    timestamp = datetime.fromisoformat(manifest['captured_at_utc'])
+    if timestamp.utcoffset() is None or timestamp.utcoffset().total_seconds() != 0:
+        raise ValueError('Archive timestamp must be UTC')
+    raw = {}
+    for key, url in SOURCES.items():
+        source_path = path / (key + '.json')
+        if source_path.stat().st_size > MAX_BYTES:
+            raise ValueError('Archived response exceeds size limit')
+        raw[url] = source_path.read_bytes()
+    hashes = {key: hashlib.sha256(raw[url]).hexdigest() for key, url in SOURCES.items()}
+    bundle = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    if path.name != bundle or manifest.get('hashes') != hashes:
+        raise ValueError('Archive hash mismatch')
+    observations = collect(lambda url: json.loads(raw[url]))
+    if manifest.get('observations') != observations:
+        raise ValueError('Archive observations do not match raw responses')
+    return observations
+
+
+def archive_capture(captured, results, directory, now=None):
+    """Archive exact public API bodies once per distinct pair, without overwriting prior vintages."""
+    sources = SOURCES
+    terms = TERMS
+    if set(captured) != set(sources.values()):
+        raise ValueError('Incomplete raw capture')
+    # Re-parse the exact archived bytes: do not rely on unrelated caller-supplied observations.
+    checked = collect(lambda url: json.loads(captured[url]))
+    if checked != results:
+        raise ValueError('Raw capture does not match collected observations')
+    hashes = {key: hashlib.sha256(captured[url]).hexdigest() for key, url in sources.items()}
+    bundle = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=True)
+    target = directory / bundle
+    if target.exists():
+        if verify_archive(target) != results or any((target / (key + '.json')).read_bytes() != captured[url] for key, url in sources.items()):
+            raise ValueError('Existing archive differs from capture')
+        return False
+    temporary = Path(tempfile.mkdtemp(prefix='.capture-', dir=directory))
+    try:
+        for key, url in sources.items():
+            (temporary / (key + '.json')).write_bytes(captured[url])
+        timestamp = (now or datetime.now(timezone.utc)).astimezone(timezone.utc).isoformat()
+        manifest = {'schema_version': 1, 'transform_version': 1, 'captured_at_utc': timestamp, 'sources': sources,
+                    'terms': terms, 'hashes': hashes, 'observations': results}
+        (temporary / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        # Atomic directory rename; fail rather than alter a competing/existing archive.
+        os.rename(temporary, target)
+    finally:
+        if temporary.exists():
+            shutil.rmtree(temporary)
+    return True
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='validate data without writing files')
+    parser.add_argument('--archive-dir', type=Path, help='archive exact API responses when updating')
     args = parser.parse_args()
+    if args.check and args.archive_dir:
+        parser.error('--check cannot write an archive')
     try:
-        results = collect()
+        captured = {}
+        results = collect(lambda url: fetch_json(url, captured)) if args.archive_dir else collect()
         if args.check:
             print('Both sources validated; no files written.')
         else:
+            if args.archive_dir:
+                print('Raw capture archived.' if archive_capture(captured, results, args.archive_dir) else 'Raw capture already archived.')
             print('Snapshot updated.' if save(results) else 'Snapshot unchanged.')
         return 0
     except (OSError, HTTPError, URLError, ValueError, TypeError, KeyError, AttributeError, OverflowError):

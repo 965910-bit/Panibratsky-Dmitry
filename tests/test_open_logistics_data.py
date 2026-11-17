@@ -5,6 +5,9 @@ import tempfile
 import unittest
 from datetime import datetime, timezone
 from unittest.mock import patch
+import hashlib
+import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('open_logistics_data', ROOT / 'scripts/open_logistics_data.py')
@@ -68,6 +71,53 @@ class OpenLogisticsTests(unittest.TestCase):
             self.assertFalse(module.save(result, target, datetime(2026, 12, 1, tzinfo=timezone.utc)))
             self.assertEqual(target.read_bytes(), before)
             self.assertEqual(json.loads(before)['saved_on'], '2026-11-17')
+
+    def test_raw_capture_archived_once_and_verified(self):
+        captured = {module.WORLD_BANK: json.dumps(bank()).encode(), module.EUROSTAT: json.dumps(euro()).encode()}
+        results = module.collect(lambda url: json.loads(captured[url]))
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp) / 'archive'
+            self.assertTrue(module.archive_capture(captured, results, directory, datetime(2026, 11, 17, tzinfo=timezone.utc)))
+            folders = list(directory.iterdir()); self.assertEqual(len(folders), 1)
+            manifest = json.loads((folders[0] / 'manifest.json').read_text())
+            self.assertEqual(manifest['observations'], results)
+            self.assertEqual(module.verify_archive(folders[0]), results)
+            verify = subprocess.run([sys.executable, str(ROOT / 'scripts/verify_open_archive.py'), str(folders[0])], capture_output=True, text=True)
+            self.assertEqual(verify.returncode, 0, verify.stderr)
+            self.assertEqual(json.loads(verify.stdout), results)
+            self.assertEqual(manifest['hashes']['world_bank'], hashlib.sha256(captured[module.WORLD_BANK]).hexdigest())
+            self.assertEqual((folders[0] / 'eurostat.json').read_bytes(), captured[module.EUROSTAT])
+            self.assertFalse(module.archive_capture(captured, results, directory, datetime(2026, 11, 18, tzinfo=timezone.utc)))
+            self.assertEqual(manifest, json.loads((folders[0] / 'manifest.json').read_text()))
+            (folders[0] / 'eurostat.json').write_text('damaged')
+            with self.assertRaises(ValueError): module.verify_archive(folders[0])
+            with self.assertRaises(ValueError): module.archive_capture(captured, results, directory)
+            self.assertEqual((folders[0] / 'eurostat.json').read_text(), 'damaged')
+
+    def test_raw_capture_fails_closed_on_missing_or_mismatch(self):
+        captured = {module.WORLD_BANK: json.dumps(bank()).encode(), module.EUROSTAT: json.dumps(euro()).encode()}
+        results = module.collect(lambda url: json.loads(captured[url]))
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp) / 'archive'
+            with self.assertRaises(ValueError): module.archive_capture({module.WORLD_BANK: captured[module.WORLD_BANK]}, results, directory)
+            wrong = dict(results); wrong['world_bank'] = dict(results['world_bank'], value=3)
+            with self.assertRaises(ValueError): module.archive_capture(captured, wrong, directory)
+            self.assertFalse(directory.exists())
+
+    def test_update_archives_the_same_collected_responses_before_saving(self):
+        captured = {module.WORLD_BANK: json.dumps(bank()).encode(), module.EUROSTAT: json.dumps(euro()).encode()}
+        def fetch(url, capture):
+            capture[url] = captured[url]
+            return json.loads(captured[url])
+        original_save = module.save
+        with tempfile.TemporaryDirectory() as tmp:
+            archive, snapshot = Path(tmp) / 'archive', Path(tmp) / 'snapshot.json'
+            with patch.object(module, 'fetch_json', side_effect=fetch), \
+                 patch.object(module, 'save', side_effect=lambda result: original_save(result, snapshot)), \
+                 patch('sys.argv', ['script', '--archive-dir', str(archive)]):
+                self.assertEqual(module.main(), 0)
+            folder = next(archive.iterdir())
+            self.assertEqual(module.verify_archive(folder), json.loads(snapshot.read_text())['indicators'])
 
     def test_fetch_is_bounded_and_never_follows_redirects(self):
         redirect = module.NoRedirect()

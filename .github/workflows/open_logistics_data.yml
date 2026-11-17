@@ -31,7 +31,7 @@ jobs:
         run: cp data/open-logistics.json "$RUNNER_TEMP/open-logistics-before.json"
       - name: Update indicators on main
         if: github.ref == 'refs/heads/main'
-        run: python scripts/open_logistics_data.py
+        run: python scripts/open_logistics_data.py --archive-dir data/open-logistics-archives
       - name: Review saved observations before committing
         if: github.ref == 'refs/heads/main'
         run: python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression
@@ -40,7 +40,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/open-logistics.json
+          git add data/open-logistics.json data/open-logistics-archives
           if ! git diff --cached --quiet; then
             git commit -m "Update open logistics indicators"
             git push
