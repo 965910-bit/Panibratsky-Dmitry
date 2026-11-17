@@ -93,17 +93,12 @@ test('audit reports distinguish new unscored responses from legacy estimates', (
   assert.doesNotMatch(page('dashboard'), /getLatestNonConformances\(\)\.forEach/);
 });
 
-test('checklist import preserves hidden answers and restores imported custom items', () => {
+test('paused checklist import preserves hidden answers and custom items', () => {
   const source=page('checklists'), key='checklist_current_form_default';
   const saved=JSON.stringify({b:{status:'yes',fact:''}});
-  const {ctx,localStorage}=harness(source,['getAllItems','importData'],{[key]:saved});
-  ctx.FileReader=class {readAsText(file) { this.onload({target:{result:file}}); }};
-  ctx.renderAuditSections=()=>{}; ctx.saveCustomItems=()=>{}; ctx.saveTemplates=()=>{}; vm.runInContext("let templates = []; let currentFilterIds = null; let sectionsOrder = [\"one\",\"two\"];",ctx);
-  const data={customItems:{custom_1:{text:'Свое',section:'one',inputType:'number'}}, currentFormState:{custom_1:{status:'yes',fact:0}, a:{status:'no',fact:'2'}, invalid:{status:'no'}}};
-  ctx.importData(JSON.stringify(data));
-  const result=JSON.parse(localStorage.getItem(key));
-  assert.equal(result.b.status,'yes'); assert.equal(result.custom_1.fact,'0');
-  assert.equal(result.a.status,'no'); assert.equal(result.invalid,undefined);
+  const {ctx,localStorage}=harness(source,['importData'],{[key]:saved});
+  ctx.importData(JSON.stringify({customItems:{custom_1:{text:'Свое'}},currentFormState:{b:{status:'no'}}}));
+  assert.equal(localStorage.getItem(key),saved);assert.deepEqual(localStorage.writes,[]);
 });
 
 test('inline application scripts parse', () => {

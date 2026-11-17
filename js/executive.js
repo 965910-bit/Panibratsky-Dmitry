@@ -35,6 +35,7 @@
   const retry = document.getElementById('chat-retry');
   const suggestions = Array.from(document.querySelectorAll('[data-question]'));
   let available = false;
+  let checking = false;
   function setAvailable(enabled) {
     available = enabled;
     field.disabled = !enabled;
@@ -42,6 +43,8 @@
     suggestions.forEach(button => { button.disabled = !enabled; });
   }
   async function checkAvailability() {
+    if (checking) return;
+    checking = true;
     setAvailable(false);
     retry.hidden = true;
     status.textContent = 'ПРОВЕРЯЕМ ПОДКЛЮЧЕНИЕ';
@@ -57,10 +60,22 @@
     } catch (_) {
       status.textContent = 'ВРЕМЕННО НЕДОСТУПЕН · СВЯЖИТЕСЬ НАПРЯМУЮ';
       retry.hidden = false;
-    } finally { clearTimeout(timer); }
+    } finally { clearTimeout(timer); checking = false; }
   }
-  retry.addEventListener('click', checkAvailability);
-  checkAvailability();
+  let observer;
+  retry.addEventListener('click', () => { if (observer) observer.disconnect(); checkAvailability(); });
+  // Do not probe an optional service until its section is near the viewport.
+  // The visible button remains usable if IntersectionObserver is unsupported.
+  const assistant = document.getElementById('assistant');
+  if (assistant && typeof window.IntersectionObserver === 'function') {
+    observer = new window.IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        observer.disconnect();
+        checkAvailability();
+      }
+    }, { rootMargin: '200px' });
+    observer.observe(assistant);
+  }
   function addMessage(text, type, links = []) {
     const message = document.createElement('div');
     message.className = 'message ' + (type === 'user' ? 'user-message' : 'assistant-message');

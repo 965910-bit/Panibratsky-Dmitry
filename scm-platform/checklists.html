@@ -276,8 +276,9 @@
                 <button id="resetAllChecklistsBtn" class="reset-btn">🔄 Сбросить видимые ответы</button>
                 <button id="printPendingChecklistsBtn" class="print-btn">🖨️ Печать отметок «Нет»</button>
                 <button id="exportChecklistsBtn">📎 Экспорт чек-листов (JSON)</button>
-                <button id="importChecklistsBtn">📂 Импорт чек-листов (JSON)</button>
+                <button id="importChecklistsBtn" disabled>📂 Импорт чек-листов приостановлен</button>
                 <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                <p>Импорт приостановлен до безопасного восстановления нескольких разделов. Экспорт и сохранённые данные доступны.</p>
                 <button id="createTasksFromPendingBtn" disabled>Создание поручений приостановлено</button>
             </div>
             <div id="checklistsContainer"></div>
@@ -672,40 +673,7 @@
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `checklists_${currentBranchId}_${Date.now()}.json`; a.click();
     }
     function importData(file) {
-        const importBranchId = currentBranchId;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                if (currentBranchId !== importBranchId) { alert('Бизнес-единица изменилась: импорт отменён.'); return; }
-                const data = JSON.parse(e.target.result);
-                if (!data || typeof data !== 'object' || Array.isArray(data) ||
-                    (data.customItems != null && (typeof data.customItems !== 'object' || Array.isArray(data.customItems))) ||
-                    (data.templates != null && (!Array.isArray(data.templates) || data.templates.some(t =>
-                        !t || typeof t.id !== 'string' || typeof t.name !== 'string' || !Array.isArray(t.itemIds) || t.itemIds.some(id => typeof id !== 'string')))) ||
-                    (data.customItems != null && Object.entries(data.customItems).some(([id, item]) =>
-                        !/^custom_[a-zA-Z0-9_.-]+$/.test(id) || !item || typeof item !== 'object' ||
-                        !sectionsOrder.includes(item.section) || typeof item.text !== 'string' || !['none', 'number'].includes(item.inputType))) ||
-                    (data.currentFormState != null && (typeof data.currentFormState !== 'object' || Array.isArray(data.currentFormState)))) {
-                    throw new Error('Неверный формат файла');
-                }
-                if (!confirm('Импорт заменит пользовательские пункты и шаблоны из файла и совпадающие ответы в выбранной бизнес-единице. Сначала сохраните резервную копию: запись нескольких разделов не атомарна и при ошибке может измениться частично. Продолжить?')) return;
-                if (data.customItems) { customItems = data.customItems; saveCustomItems(); }
-                if (data.templates) { templates = data.templates; saveTemplates(); }
-                if (data.currentFormState && typeof data.currentFormState === 'object') {
-                    const key = `checklist_current_form_${currentBranchId}`;
-                    const state = JSON.parse(localStorage.getItem(key) || '{}');
-                    const all = getAllItems();
-                    for (const [id, response] of Object.entries(data.currentFormState)) {
-                        if (!Object.hasOwn(all, id) || !response || !['yes', 'no', 'na', 'unknown'].includes(response.status)) continue;
-                        state[id] = { status: response.status, fact: String(response.fact ?? '') };
-                    }
-                    localStorage.setItem(key, JSON.stringify(state));
-                }
-                renderAuditSections(currentFilterIds);
-                alert('Импорт выполнен');
-            } catch(err) { alert('Ошибка импорта: некоторые данные могли быть записаны частично. Проверьте состояние и резервную копию.'); }
-        };
-        reader.readAsText(file);
+        alert('Импорт чек-листов приостановлен до безопасного восстановления. Существующие данные не изменены.');
     }
     function renderConstructor() {
         const container = document.getElementById('allItemsPicker');
