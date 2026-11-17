@@ -955,6 +955,19 @@
                 message: 'Новость из Telegram найдена. Без фильтров она показана первой; полная статья — у источника.' };
         }
 
+        function isSafeNewsUrl(value) {
+            if (typeof value !== 'string' || !/^https?:\/\//i.test(value) || /[\s\x00-\x1f\x7f-\x9f\\]/.test(value)) return false;
+            // Reject even empty userinfo such as https://@example.org/.
+            const authority = value.match(/^https?:\/\/([^/?#]*)/i)?.[1];
+            if (!authority || authority.includes('@')) return false;
+            try {
+                const url = new URL(value);
+                const host = url.hostname;
+                const validHost = /^\[[0-9a-f:.]+\]$/i.test(host) || /^[a-z0-9_-]+(?:\.[a-z0-9_-]+)*\.?$/i.test(host);
+                return ['http:', 'https:'].includes(url.protocol) && validHost && !url.username && !url.password;
+            } catch (_) { return false; }
+        }
+
         async function loadNews() {
             const list = document.getElementById('news-list');
             const pagination = document.getElementById('pagination');
@@ -968,13 +981,11 @@
                 const seen = new Set();
                 if (!Array.isArray(data)) throw new Error('Invalid news data');
                 allNews = data.filter(item => {
-                    if (!item || item.dead || typeof item.link !== 'string') return false;
-                    try {
-                        const url = new URL(item.link);
-                        if (!['http:', 'https:'].includes(url.protocol) || !url.hostname || seen.has(url.href)) return false;
-                        seen.add(url.href);
-                        return true;
-                    } catch (_) { return false; }
+                    if (!item || item.dead || !isSafeNewsUrl(item.link)) return false;
+                    const url = new URL(item.link);
+                    if (seen.has(url.href)) return false;
+                    seen.add(url.href);
+                    return true;
                 });
                 allNews = allNews.map(item => ({ ...item,
                     title: String(item.title || ''), description: String(item.description || ''),

@@ -4,8 +4,12 @@ import json
 from datetime import datetime, timezone
 from email.utils import format_datetime, parsedate_to_datetime
 from pathlib import Path
-from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
+
+try:
+    from news_link_validation import valid_news_link
+except ModuleNotFoundError:
+    from scripts.news_link_validation import valid_news_link
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -44,12 +48,10 @@ def generate_rss():
     ET.SubElement(channel, f'{{{atom}}}link', href='https://scm-news.ru/rss.xml', rel='self', type='application/rss+xml')
     seen = set()
     for item in news:
+        if not isinstance(item, dict) or item.get('dead'):
+            continue
         link = item.get('link', '')
-        try:
-            url = urlsplit(link)
-            if url.scheme not in ('http', 'https') or not url.hostname or link in seen or item.get('dead'):
-                continue
-        except ValueError:
+        if not valid_news_link(link) or link in seen:
             continue
         seen.add(link)
         entry = ET.SubElement(channel, 'item')
