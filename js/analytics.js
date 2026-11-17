@@ -369,7 +369,7 @@
 
         function escapeHtml(str) {
             if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
+            return String(str).replace(/[&<>]/g, function(m) {
                 if (m === '&') return '&amp;';
                 if (m === '<') return '&lt;';
                 if (m === '>') return '&gt;';
@@ -425,8 +425,8 @@
                         <td>${date}</td>
                         <td>${escapeHtml(s.referrer)}</td>
                         <td>${escapeHtml((s.userAgent || '').split(' ')[0])}</td>
-                        <td>${s.country || '—'}</td>
-                        <td>${s.city || '—'}</td>
+                        <td>${escapeHtml(s.country || '—')}</td>
+                        <td>${escapeHtml(s.city || '—')}</td>
                     </tr>
                 `;
             }).join('');
@@ -454,7 +454,7 @@
                 <tr>
                     <td>${new Date(d.timestamp).toLocaleString()}</td>
                     <td><span class="badge">${escapeHtml(d.fileName || '')}</span></td>
-                    <td><small>${d.sessionId?.slice(-8) || '—'}</small></td>
+                    <td><small>${escapeHtml(String(d.sessionId || '').slice(-8) || '—')}</small></td>
                 </tr>
             `).join('');
         }
@@ -479,7 +479,7 @@
                 <tr>
                     <td>${new Date(pv.timestamp).toLocaleString()}</td>
                     <td>${escapeHtml(pv.page)}</td>
-                    <td><small>${pv.sessionId?.slice(-8) || '—'}</small></td>
+                    <td><small>${escapeHtml(String(pv.sessionId || '').slice(-8) || '—')}</small></td>
                 </tr>
             `).join('');
         }
@@ -529,7 +529,7 @@
             cities.forEach(city => {
                 if (city.lat && city.lon) {
                     const marker = L.marker([city.lat, city.lon]);
-                    marker.bindPopup(`<b>${city.name}</b><br>Посещений: ${city.count}<br>Регион: ${city.region || '—'}`);
+                    marker.bindPopup(`<b>${escapeHtml(city.name)}</b><br>Посещений: ${city.count}<br>Регион: ${escapeHtml(city.region || '—')}`);
                     markerCluster.addLayer(marker);
                 }
             });

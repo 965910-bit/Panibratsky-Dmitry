@@ -794,7 +794,7 @@
         const resultsCountSpan = document.getElementById('searchResultsCount');
 
         function removeHighlights(container) {
-            const marks = container.querySelectorAll('mark');
+            const marks = container.querySelectorAll('mark[data-search-highlight]');
             marks.forEach(mark => {
                 const parent = mark.parentNode;
                 parent.replaceChild(document.createTextNode(mark.textContent), mark);
@@ -806,11 +806,21 @@
             if (!term.trim()) return;
             const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
             if (node.nodeType === Node.TEXT_NODE) {
-                if (regex.test(node.textContent)) {
-                    const span = document.createElement('span');
-                    span.innerHTML = node.textContent.replace(regex, `<mark>$1</mark>`);
-                    node.parentNode.replaceChild(span, node);
-                }
+                const text = node.textContent;
+                let match = regex.exec(text);
+                if (!match) return;
+                const fragment = document.createDocumentFragment();
+                let offset = 0;
+                do {
+                    fragment.appendChild(document.createTextNode(text.slice(offset, match.index)));
+                    const mark = document.createElement('mark');
+                    mark.setAttribute('data-search-highlight', '');
+                    mark.textContent = match[0];
+                    fragment.appendChild(mark);
+                    offset = match.index + match[0].length;
+                } while ((match = regex.exec(text)) !== null);
+                fragment.appendChild(document.createTextNode(text.slice(offset)));
+                node.parentNode.replaceChild(fragment, node);
             } else if (node.nodeType === Node.ELEMENT_NODE && !['SCRIPT', 'STYLE', 'MARK'].includes(node.tagName)) {
                 Array.from(node.childNodes).forEach(child => highlightText(child, term));
             }
@@ -828,7 +838,7 @@
             removeHighlights(document.body);
 
             if (term === '') {
-                resultsCountSpan.innerHTML = '';
+                resultsCountSpan.textContent = '';
                 return;
             }
 
@@ -866,7 +876,7 @@
                 }
             });
 
-            resultsCountSpan.innerHTML = `Найдено совпадений в ${visibleCount} элементах.`;
+            resultsCountSpan.textContent = `Найдено совпадений в ${visibleCount} элементах.`;
         }
 
         function resetSearch() {
@@ -878,7 +888,7 @@
             allSearchable.forEach(el => el.style.display = '');
             allGlossaryTerms.forEach(term => term.style.display = '');
             removeHighlights(document.body);
-            resultsCountSpan.innerHTML = '';
+            resultsCountSpan.textContent = '';
         }
 
         searchBtn.addEventListener('click', performSearch);
