@@ -9,7 +9,7 @@ import {spawnSync} from 'node:child_process';
 import {handle} from '../telegram-review/worker.mjs';
 import {prepareDraft, submit, draftFingerprint} from '../telegram-review/drafts.mjs';
 import {sendGalleryItem} from '../telegram-review/gallery-submit.mjs';
-import {queueOne} from '../telegram-review/queue-producer.mjs';
+import {queueOne, checkQueue} from '../telegram-review/queue-producer.mjs';
 import {smoke} from '../telegram-review/staging-smoke.mjs';
 import {prepareReviewed} from '../telegram-review/prepare-reviewed.mjs';
 
@@ -182,4 +182,17 @@ test('manual intake, guarded intake and private draft share one atomic queue gat
   await f.env.DB.prepare('UPDATE drafts SET state = ? WHERE id = ?').bind('rejected',row.id).run();
   assert.equal((await send('intake','https://example.org/after-rejection')).status,201);
  }
+});
+
+test('producer check reads real SQLite journal without changing records or sending Telegram',async(t)=>{
+ const f=fixture(t);const dir=mkdtempSync(join(tmpdir(),'review-check-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));
+ const first={...draft(),source_url:'https://example.org/known'},second={...draft(),source_url:'https://example.org/new'};
+ for(const [i,d] of [[1,first],[2,second]]){writeFileSync(join(dir,`draft-0${i}.json`),JSON.stringify(d));writeFileSync(join(dir,`card-0${i}.png`),png(d));}
+ const opts={url:'https://test.example.workers.dev/intake',secret:f.env.INTAKE_SECRET,fetcher:f.localIntake};
+ await submit(first,{...opts,card:png(first)});const before=(await f.getRow()).results, count=f.calls.length;
+ const pending=await checkQueue(dir,opts);assert.deepEqual(pending,{status:'pending',items:[{number:1,known:true},{number:2,known:false}],pending:1,uncertain:0,next:null});
+ assert.deepEqual((await f.getRow()).results,before);assert.equal(f.calls.length,count);
+ await f.approve(before[0].id);const saved=(await f.getRow()).results, after=f.calls.length;
+ const next=await checkQueue(dir,opts);assert.equal(next.status,'candidate');assert.equal(next.next,2);
+ assert.deepEqual((await f.getRow()).results,saved);assert.equal(f.calls.length,after);
 });
