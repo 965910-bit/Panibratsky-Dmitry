@@ -1,4 +1,7 @@
 import importlib.util
+import contextlib
+import io
+import os
 import json
 from pathlib import Path
 import tempfile
@@ -72,6 +75,51 @@ class HHAnalyticsTests(unittest.TestCase):
         self.assertEqual(len(result), 2)
         with self.assertRaises(RuntimeError):
             collect([{'pages': 2, 'items': [{'id': '1'}]}, {'pages': 2, 'items': []}])
+
+    def test_failure_annotation_is_bounded_and_never_includes_raw_exceptions(self):
+        failure = hh.HHCollectionError('http_error', page=2, status=403)
+        self.assertEqual(hh.failure_annotation(failure), '::error title=HH analytics::reason=http_error page=2 http=403')
+        self.assertEqual(hh.failure_annotation(RuntimeError('secret\n::error::unsafe')), '::error title=HH analytics::reason=other_error')
+        with patch.object(hh, 'main', side_effect=failure), contextlib.redirect_stdout(io.StringIO()) as out:
+            self.assertEqual(hh.cli(), 1)
+        self.assertIn('reason=http_error page=2 http=403', out.getvalue())
+        self.assertNotIn('secret', out.getvalue())
+
+    def test_diagnostic_mode_does_not_write_data_even_if_collection_succeeds(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory); (root/'data').mkdir()
+            for name in ('hh_warehouse.json','hh_transport.json'):
+                (root/'data'/name).write_text('old',encoding='utf8')
+            old=os.getcwd()
+            try:
+                os.chdir(root)
+                with patch.dict(os.environ, {'HH_DIAGNOSTIC_ONLY':'1'}), patch.object(hh,'collect_analytics',return_value={'total_vacancies':1}):
+                    hh.main()
+                self.assertEqual((root/'data'/'hh_warehouse.json').read_text(),'old')
+                self.assertEqual((root/'data'/'hh_transport.json').read_text(),'old')
+                self.assertEqual(sorted(p.name for p in (root/'data').iterdir()), ['hh_transport.json','hh_warehouse.json'])
+            finally:
+                os.chdir(old)
+
+    def test_http_failure_is_reported_without_response_body_or_partial_success(self):
+        class BrowserPage:
+            def goto(self, *args, **kwargs): return types.SimpleNamespace(status=403)
+        browser=types.SimpleNamespace(new_context=lambda **kwargs: types.SimpleNamespace(new_page=lambda: BrowserPage()),close=lambda:None)
+        class Playwright:
+            def __enter__(self): return types.SimpleNamespace(chromium=types.SimpleNamespace(launch=lambda **kwargs: browser))
+            def __exit__(self,*args): pass
+        module=types.ModuleType('playwright.sync_api'); module.sync_playwright=Playwright
+        with patch.dict(sys.modules, {'playwright':types.ModuleType('playwright'),'playwright.sync_api':module}):
+            with self.assertRaises(hh.HHCollectionError) as caught:
+                hh.fetch_hh_data('do not include this text')
+        self.assertEqual(hh.failure_annotation(caught.exception),'::error title=HH analytics::reason=http_error page=1 http=403')
+
+    def test_workflow_restricts_writes_to_main_and_non_main_is_diagnostic(self):
+        workflow=(ROOT/'.github/workflows/hh_analytics.yml').read_text(encoding='utf-8')
+        self.assertIn("HH_DIAGNOSTIC_ONLY: ${{ github.ref != 'refs/heads/main' && '1' || '0' }}",workflow)
+        self.assertIn("if: github.ref == 'refs/heads/main'",workflow)
+        self.assertIn("persist-credentials: ${{ github.ref == 'refs/heads/main' }}",workflow)
+        self.assertIn("format('hh-diagnostic-{0}', github.ref)",workflow)
 
     def test_second_collection_failure_preserves_existing_files(self):
         with tempfile.TemporaryDirectory() as directory:
