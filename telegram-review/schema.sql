@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS drafts (
   state TEXT NOT NULL CHECK (state IN ('notifying', 'ready', 'rejected', 'sending', 'sent')),
   created_at TEXT NOT NULL,
   review_message_id INTEGER,
+  photo_file_id TEXT,
   channel_message_id INTEGER
 );

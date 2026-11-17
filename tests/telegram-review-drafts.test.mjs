@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {prepareDraft,buildPayload,endpoint,submit} from '../telegram-review/drafts.mjs';
+import {prepareDraft,buildPayload,endpoint,submit,attachCard} from '../telegram-review/drafts.mjs';
 const item={title:'Склад <script>опасно</script> & логистика',description:'Текст новости',source:'Источник',link:'https://example.com/news'};
 const prepared=()=>({...prepareDraft(item),comment:'Проверил материал: мой вывод.',ready_for_review:true});
 test('preparation requires a valid story and never marks it ready',()=>{
@@ -22,4 +22,13 @@ test('submission uses explicit destination and makes exactly one request',async(
 test('rejects unsafe targets and never retries failed or uncertain submission',async()=>{
  for(const url of ['http://x.workers.dev/intake','https://evil.example/intake','https://x.workers.dev/intake?x=1','https://user:pass@x.workers.dev/intake','https://x.workers.dev/other']) assert.throws(()=>endpoint(url));
  let count=0; await assert.rejects(()=>submit(prepared(),{url:'https://x.workers.dev/intake',secret:'a'.repeat(32),fetcher:async()=>{count++; return new Response('',{status:503});}}),/не повторяйте/); assert.equal(count,1);
+});
+
+test('card submission validates size, signature, caption and includes data', async()=>{
+ const bytes=Buffer.alloc(33); Buffer.from([137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82]).copy(bytes); bytes.writeUInt32BE(1080,16); bytes.writeUInt32BE(1080,20);
+ const payload=buildPayload(prepared()); assert.equal(attachCard(payload,bytes).card_base64,bytes.toString('base64'));
+ assert.throws(()=>attachCard(payload,Buffer.from('bad')));
+ assert.throws(()=>attachCard({...payload,text:'x'.repeat(1024)},bytes));
+ const calls=[]; await submit(prepared(),{url:'https://x.workers.dev/intake',secret:'a'.repeat(32),card:bytes,fetcher:async (...args)=>{calls.push(args);return new Response('',{status:201});}});
+ assert.equal(JSON.parse(calls[0][1].body).card_base64,bytes.toString('base64'));
 });
