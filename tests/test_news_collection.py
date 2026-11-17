@@ -56,10 +56,11 @@ class NewsCollectionTests(unittest.TestCase):
                 self.assertTrue(any('лента не обновлялась' in str(call) for call in output.call_args_list))
             self.assertEqual(news.read_text(), original)
 
-    def test_scheduled_workflow_does_not_invoke_ati_collector(self):
+    def test_scheduled_workflow_does_not_invoke_paused_optional_collectors(self):
         workflow = (ROOT / '.github/workflows/update_news.yml').read_text(encoding='utf-8')
-        self.assertNotIn('ATIStatsCollector', workflow)
-        self.assertNotIn('collectors.ati_stats', workflow)
+        for entry in ('ATIStatsCollector', 'collectors.ati_stats',
+                      'GovRuCollector', 'collectors.gov_ru', 'data/gov_news.json'):
+            self.assertNotIn(entry, workflow)
 
     def test_partial_failure_keeps_successful_items_and_warns(self):
         module = load_collector()

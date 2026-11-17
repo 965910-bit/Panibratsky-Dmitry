@@ -38,12 +38,8 @@ jobs:
       - name: Fetch news (RSS + sitemap + Google Alerts)
         run: python scripts/fetch_news.py
 
-      - name: Collect government news (optional)
-        run: python -c "from collectors.gov_ru import GovRuCollector; c = GovRuCollector(); data = c.fetch(); import json; open('data/gov_news.json','w').write(json.dumps(data, ensure_ascii=False))" || true
-        continue-on-error: true
-
-      # ATI statistics collection is paused pending clarification of access rights.
-      # Previously collected data are preserved; no ATI network call is made here.
+      # Government RSS and ATI statistics collectors are paused pending review.
+      # Historical data are retained; neither collector is invoked here.
 
       - name: Generate sitemap
         run: python scripts/generate_sitemap.py
