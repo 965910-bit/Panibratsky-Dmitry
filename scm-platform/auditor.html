@@ -456,7 +456,8 @@
         const registryKey = `audit_registry_${currentBranchId}`;
         const audits = JSON.parse(localStorage.getItem(registryKey) || '[]');
         const audit = audits.find(a => a.id === auditId);
-        if (!audit) return;
+        if (!audit) { alert('Аудит не найден в выбранной бизнес-единице.'); return; }
+        if (!confirm('Загрузить аудит? Видимые ответы текущей формы будут заменены; скрытые ответы останутся без изменений.')) return;
         const typeInput = [...document.querySelectorAll('input[name="auditType"]')].find(el => el.value === audit.type);
         if (typeInput) typeInput.checked = true;
         // A saved audit can contain only a filtered template; clear visible fields before loading.
@@ -678,6 +679,8 @@
         renderAuditSections();
         populateTemplateSelect();
         populateAuditLoadSelect();
+        const requestedAuditId = new URLSearchParams(window.location.search).get('load');
+        if (requestedAuditId) loadAuditById(requestedAuditId);
         if (!document.getElementById('chairpersonTemp')) {
             const inp = document.createElement('input');
             inp.type = 'hidden';

@@ -98,7 +98,7 @@ test('checklist import preserves hidden answers and restores imported custom ite
   const saved=JSON.stringify({b:{status:'yes',fact:''}});
   const {ctx,localStorage}=harness(source,['getAllItems','importData'],{[key]:saved});
   ctx.FileReader=class {readAsText(file) { this.onload({target:{result:file}}); }};
-  ctx.renderAuditSections=()=>{}; ctx.saveCustomItems=()=>{}; ctx.saveTemplates=()=>{}; vm.runInContext('let templates = []; let currentFilterIds = null;',ctx);
+  ctx.renderAuditSections=()=>{}; ctx.saveCustomItems=()=>{}; ctx.saveTemplates=()=>{}; vm.runInContext("let templates = []; let currentFilterIds = null; let sectionsOrder = [\"one\",\"two\"];",ctx);
   const data={customItems:{custom_1:{text:'Свое',section:'one',inputType:'number'}}, currentFormState:{custom_1:{status:'yes',fact:0}, a:{status:'no',fact:'2'}, invalid:{status:'no'}}};
   ctx.importData(JSON.stringify(data));
   const result=JSON.parse(localStorage.getItem(key));

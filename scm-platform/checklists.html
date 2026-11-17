@@ -660,7 +660,8 @@
         alert('Автоматическое создание поручений приостановлено.');
     }
     function exportData() {
-        const allStates = {};
+        // Preserve answers hidden by the current template in the export.
+        const allStates = JSON.parse(localStorage.getItem(`checklist_current_form_${currentBranchId}`) || '{}');
         for (let id of Object.keys(getAllItems())) {
             const sel = document.getElementById(`status_${id}`);
             const inp = document.getElementById(`fact_${id}`);
@@ -671,10 +672,23 @@
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `checklists_${currentBranchId}_${Date.now()}.json`; a.click();
     }
     function importData(file) {
+        const importBranchId = currentBranchId;
         const reader = new FileReader();
         reader.onload = (e) => {
             try {
+                if (currentBranchId !== importBranchId) { alert('Бизнес-единица изменилась: импорт отменён.'); return; }
                 const data = JSON.parse(e.target.result);
+                if (!data || typeof data !== 'object' || Array.isArray(data) ||
+                    (data.customItems != null && (typeof data.customItems !== 'object' || Array.isArray(data.customItems))) ||
+                    (data.templates != null && (!Array.isArray(data.templates) || data.templates.some(t =>
+                        !t || typeof t.id !== 'string' || typeof t.name !== 'string' || !Array.isArray(t.itemIds) || t.itemIds.some(id => typeof id !== 'string')))) ||
+                    (data.customItems != null && Object.entries(data.customItems).some(([id, item]) =>
+                        !/^custom_[a-zA-Z0-9_.-]+$/.test(id) || !item || typeof item !== 'object' ||
+                        !sectionsOrder.includes(item.section) || typeof item.text !== 'string' || !['none', 'number'].includes(item.inputType))) ||
+                    (data.currentFormState != null && (typeof data.currentFormState !== 'object' || Array.isArray(data.currentFormState)))) {
+                    throw new Error('Неверный формат файла');
+                }
+                if (!confirm('Импорт заменит пользовательские пункты и шаблоны из файла и совпадающие ответы в выбранной бизнес-единице. Продолжить?')) return;
                 if (data.customItems) { customItems = data.customItems; saveCustomItems(); }
                 if (data.templates) { templates = data.templates; saveTemplates(); }
                 if (data.currentFormState && typeof data.currentFormState === 'object') {
