@@ -10,6 +10,8 @@ test('build configuration targets existing D1 without including secrets', () => 
   assert.equal(config.keep_vars,true);
   assert.deepEqual(config.secrets.required,['BOT_TOKEN','CHANNEL_ID','INTAKE_SECRET','REVIEWER_ID','WEBHOOK_SECRET']);
   assert.equal('vars' in config,false);
+  assert.equal('preview_urls' in config,false);
+  assert.equal('observability' in config,false);
 });
 test('missing, malformed or injectable database identifiers fail closed', () => {
   for (const value of [undefined, '', 'REPLACE_LOCALLY', '12345678-1234-1234-1234-123456789abc\n"vars":{}', 'not-a-uuid']) {
@@ -22,5 +24,7 @@ test('target must be explicit and selects matching staging Worker and database',
   for (const target of [undefined, '', 'Production', '__proto__', 'other']) assert.throws(() => configuration(id, target));
   const config = configuration(id, 'staging');
   assert.equal(config.name, 'scm-telegram-review-staging');
+  assert.equal(config.preview_urls, false);
+  assert.deepEqual(config.observability, {enabled:true, logs:{enabled:true}});
   assert.deepEqual(config.d1_databases, [{binding:'DB', database_name:'scm-review-staging', database_id:id}]);
 });
