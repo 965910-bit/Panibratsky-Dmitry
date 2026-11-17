@@ -2,22 +2,25 @@
 import {writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 
-export function configuration(databaseId) {
+export function configuration(databaseId, target) {
+  const targets = {production: ['scm-telegram-review', 'scm-review'], staging: ['scm-telegram-review-staging', 'scm-review-staging']};
+  if (!Object.hasOwn(targets, target)) throw new Error('SCM_BUILD_TARGET must be staging or production');
+  const [workerName, databaseName] = targets[target];
   if (typeof databaseId !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(databaseId)) {
     throw new Error('SCM_D1_DATABASE_ID must be a D1 database UUID');
   }
   return {
-    name: 'scm-telegram-review',
+    name: workerName,
     main: 'worker.mjs',
     compatibility_date: '2026-11-01',
     keep_vars: true,
     secrets: {required:['BOT_TOKEN', 'CHANNEL_ID', 'INTAKE_SECRET', 'REVIEWER_ID', 'WEBHOOK_SECRET']},
-    d1_databases: [{binding:'DB', database_name:'scm-review', database_id:databaseId}],
+    d1_databases: [{binding:'DB', database_name:databaseName, database_id:databaseId}],
   };
 }
 
 async function main() {
-  const config = configuration(process.env.SCM_D1_DATABASE_ID);
+  const config = configuration(process.env.SCM_D1_DATABASE_ID, process.env.SCM_BUILD_TARGET);
   const target = fileURLToPath(new URL('./.wrangler-build.json', import.meta.url));
   await writeFile(target, JSON.stringify(config, null, 2) + '\n', {flag:'wx', mode:0o600});
   console.log('Temporary Wrangler configuration created; no deployment performed.');
