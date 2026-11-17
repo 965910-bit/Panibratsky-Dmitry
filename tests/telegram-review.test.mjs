@@ -136,3 +136,20 @@ test('draft command rejects bad content and duplicate requests without accidenta
  assert.equal(x.db.rows.size,1); assert.match(x.calls.at(-1).data.text,/не отправляйте повторно/);
  assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
 });
+test('owner can propose one photo with caption, and the reviewed photo is used on approval',async()=>{
+ const x=setup(); const msg={caption:'/draft https://example.org/picture\nПроверенный текст',photo:[{file_id:'small'},{file_id:'original-photo'}],from:{id:123},chat:{id:123,type:'private'}};
+ const send=(m,secret=x.env.WEBHOOK_SECRET)=>handle(x.request('/telegram',{message:m},{'x-telegram-bot-api-secret-token':secret}),x.env,x.api);
+ await send({...msg,from:{id:999}}); assert.equal(x.db.rows.size,0);
+ assert.equal((await send(msg,'bad')).status,403); assert.equal(x.db.rows.size,0);
+ await send(msg); const id=[...x.db.rows.keys()][0]; assert.equal(x.db.rows.get(id).state,'ready');
+ const review=x.calls.find(c=>c.method==='sendPhoto'); assert.equal(review.data.photo,'original-photo'); assert.match(review.data.caption,/Проверенный текст/);
+ assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
+ await x.click(id); const delivered=x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID);
+ assert.equal(delivered.length,1); assert.equal(delivered[0].method,'sendPhoto'); assert.equal(delivered[0].data.photo,'photo-token'); assert.equal(x.db.rows.get(id).state,'sent');
+});
+test('photo albums, invalid photo ID and overly long captions cannot enter the queue',async()=>{
+ const x=setup(); const base={caption:'/draft https://example.org/picture\nТекст',photo:[{file_id:'photo'}],from:{id:123},chat:{id:123,type:'private'}};
+ const send=msg=>handle(x.request('/telegram',{message:msg},{'x-telegram-bot-api-secret-token':x.env.WEBHOOK_SECRET}),x.env,x.api);
+ await send({...base,media_group_id:'album'}); await send({...base,photo:[{file_id:''}]}); await send({...base,caption:'/draft https://example.org/picture\n'+'x'.repeat(1000)});
+ assert.equal(x.db.rows.size,0); assert.equal(x.calls.filter(c=>c.method==='sendPhoto').length,0); assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
+});
