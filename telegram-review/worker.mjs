@@ -165,6 +165,39 @@ async function inspectReply(message, env, fetcher) {
   try { await api(env, 'sendMessage', {chat_id:env.REVIEWER_ID, text, disable_web_page_preview:true}, fetcher); } catch { /* Read-only command can be requested again. */ }
   return true;
 }
+// Manual, explicit reconciliation is deliberately one-way. It cannot send to
+// a channel, delete records, make a draft ready or retry an ambiguous send.
+// The reviewer must verify Telegram independently before attesting delivery.
+async function reconcileReply(message, env, fetcher) {
+  if (message?.chat?.type !== 'private' || String(message?.from?.id) !== env.REVIEWER_ID || String(message?.chat?.id) !== env.REVIEWER_ID || typeof message?.text !== 'string') return false;
+  if (!/^\/reconcile(?:\s|$)/.test(message.text)) return false;
+  const pattern = /^\/reconcile ([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}) (?:published ([1-9]\d{0,15})|discard-review) CONFIRM$/i;
+  const match = pattern.exec(message.text);
+  let text = 'Формат: /reconcile ID published НОМЕР_СООБЩЕНИЯ CONFIRM или /reconcile ID discard-review CONFIRM. Сначала дождитесь завершения операции и проверьте /inspect, личный чат и канал. Ничего не переотправляется.';
+  if (match) {
+    const id = match[1], confirmedMessage = match[2] === undefined ? null : Number(match[2]);
+    if (confirmedMessage !== null && (!Number.isSafeInteger(confirmedMessage) || confirmedMessage < 1)) {
+      text = 'Некорректный номер сообщения. Запись не изменена.';
+    } else {
+      try {
+        const at = new Date().toISOString();
+        const changed = confirmedMessage !== null
+          ? await env.DB.prepare("UPDATE drafts SET state = 'sent', channel_message_id = ?, resolution_kind = 'confirmed_channel_message', resolved_at = ? WHERE id = ? AND state = 'sending' AND channel_message_id IS NULL AND resolution_kind IS NULL AND resolved_at IS NULL").bind(confirmedMessage, at, id).run()
+          : await env.DB.prepare("UPDATE drafts SET state = 'rejected', resolution_kind = 'abandoned_review', resolved_at = ? WHERE id = ? AND state = 'notifying' AND resolution_kind IS NULL AND resolved_at IS NULL").bind(at, id).run();
+        if (!changed.success) throw Error('storage');
+        text = changes(changed) === 1
+          ? confirmedMessage !== null
+            ? 'Журнал помечен как отправленный по вашему подтверждению. Бот не проверял канал и не отправлял сообщение. Повторная отправка не выполнялась.'
+            : 'Неопределённый черновик отклонён в журнале. Повторной отправки не было; тот же URL останется заблокированным.'
+          : 'Запись не изменена: состояние уже изменилось, ID не найден или операция недоступна. Проверьте /status и /inspect; не повторяйте отправку.';
+      } catch {
+        text = 'Не удалось подтвердить изменение журнала. Проверьте /status, /inspect и наличие миграции; не повторяйте отправку.';
+      }
+    }
+  }
+  try { await api(env, 'sendMessage', {chat_id:env.REVIEWER_ID, text, disable_web_page_preview:true}, fetcher); } catch { /* The state change may have succeeded; check /status and /inspect. */ }
+  return true;
+}
 async function draftReply(message, env, fetcher) {
   if (message?.chat?.type !== 'private' || String(message?.from?.id) !== env.REVIEWER_ID || String(message?.chat?.id) !== env.REVIEWER_ID) return false;
   const isPhoto = Array.isArray(message?.photo);
@@ -197,6 +230,7 @@ async function webhook(request, env, fetcher) {
   let update; try { update = await body(request); } catch { return result(400, 'Invalid request'); }
   if (await statusReply(update?.message, env, fetcher)) return result(200, 'Status processed');
   if (await inspectReply(update?.message, env, fetcher)) return result(200, 'Inspection processed');
+  if (await reconcileReply(update?.message, env, fetcher)) return result(200, 'Reconciliation processed');
   if (await draftReply(update?.message, env, fetcher)) return result(200, 'Draft processed');
   const cb = update?.callback_query;
   if (!cb || typeof cb.id !== 'string' || cb.id.length > 256 || String(cb.from?.id) !== env.REVIEWER_ID || cb.message?.chat?.type !== 'private' || String(cb.message?.chat?.id) !== env.REVIEWER_ID || !Number.isSafeInteger(cb.message?.message_id) || typeof cb.data !== 'string') return result(200, 'Ignored');

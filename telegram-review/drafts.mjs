@@ -31,6 +31,16 @@ export function buildPayload(draft) {
   if (text.length > 3000 || text.length + source.length > 3800) throw Error('Черновик превышает допустимую длину');
   return {text, source_url: source};
 }
+// Unverified headline/description, with no fabricated editorial comment. This
+// payload is only proposed to the reviewer; the approval button publishes it.
+export function buildCandidatePayload(draft) {
+  if (!draft || draft.version !== 1 || draft.ready_for_review !== false || draft.comment !== '') throw Error('Ожидается неподтверждённый кандидат');
+  const source = link(draft.source_url), title = scrub(draft.title,240), description = scrub(draft.description,450), name = scrub(draft.source_name,100);
+  if (!source || !title || !name || /^оповещение google\s*[–—-]/iu.test(title)) throw Error('Нужен реальный заголовок и источник');
+  const text = [`📦 ${title}`, description && `📰 ${description}`, `Источник: ${name}`].filter(Boolean).join('\n\n');
+  if (text.length > 3000 || text.length + source.length > 3800) throw Error('Черновик превышает допустимую длину');
+  return {text,source_url:source};
+}
 export function endpoint(value) {
   let url; try { url = new URL(value); } catch { throw Error('Некорректный адрес Worker'); }
   if (url.protocol !== 'https:' || !url.hostname.endsWith('.workers.dev') || url.hostname === '.workers.dev' || url.username || url.password || url.port || url.search || url.hash || url.pathname !== '/intake') throw Error('Ожидается HTTPS-адрес workers.dev с путём /intake без параметров');
@@ -85,6 +95,20 @@ export async function submit(draft, options = {}) {
     body:JSON.stringify(payload), redirect:'error', signal:AbortSignal.timeout(15000),
   });
   if (response.status !== 201) throw Error(`Сервис ответил ${response.status}; не повторяйте без проверки очереди и личного чата`);
+  return true;
+}
+// Deliberately separate from submit(): never marks an unreviewed candidate as
+// human-checked, always uses the guarded route and never retries a write.
+export async function submitCandidate(draft, options = {}) {
+  const url = new URL(endpoint(options.url)), secret = options.secret;
+  if (options.send !== true || typeof secret !== 'string' || !/^[A-Za-z0-9_-]{32,256}$/.test(secret)) throw Error('Отправка не разрешена или секрет неверен');
+  url.pathname = '/intake-one';
+  const payload = attachCard(buildCandidatePayload(draft), options.card, draft);
+  const response = await (options.fetcher || fetch)(url.href, {
+    method:'POST', headers:{'content-type':'application/json', 'authorization':`Bearer ${secret}`},
+    body:JSON.stringify(payload), redirect:'error', signal:AbortSignal.timeout(15000),
+  });
+  if (response.status !== 201) throw Error('Отправка не подтверждена; проверьте очередь и чат, не повторяйте вслепую');
   return true;
 }
 async function main(args) {

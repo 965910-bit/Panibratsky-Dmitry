@@ -28,6 +28,15 @@ class CardsBatchTests(unittest.TestCase):
             self.assertEqual(json.loads((output/'draft-01.json').read_text(encoding='utf-8')),draft)
             page=(output/'index.html').read_text(encoding='utf-8'); self.assertNotIn('<script>',page); self.assertIn('&lt;script&gt;',page)
             self.assertNotEqual(run().returncode,0)
+    def test_empty_gallery_explains_no_candidates_without_creating_drafts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            batch=Path(tmp)/'batch.json'; batch.write_text(json.dumps({'version':1,'drafts':[]}),encoding='utf-8')
+            output=Path(tmp)/'gallery'; result=subprocess.run([sys.executable,str(SCRIPT),str(batch),str(output)],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stderr)
+            self.assertIn('Подходящих кандидатов не найдено', (output/'index.html').read_text(encoding='utf-8'))
+            self.assertEqual([p.name for p in output.iterdir()], ['index.html'])
+            self.assertIn('Создано карточек: 0',result.stdout)
+
     def test_duplicate_hints_are_advisory_symmetric_and_preserve_all_drafts(self):
         base = {'version':1, 'source_name':'Источник', 'description':'Текст', 'comment':'', 'ready_for_review':False}
         drafts = [

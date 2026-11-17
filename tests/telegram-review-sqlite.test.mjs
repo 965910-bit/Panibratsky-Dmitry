@@ -9,7 +9,7 @@ import {spawnSync} from 'node:child_process';
 import {handle} from '../telegram-review/worker.mjs';
 import {prepareDraft, submit, draftFingerprint} from '../telegram-review/drafts.mjs';
 import {sendGalleryItem} from '../telegram-review/gallery-submit.mjs';
-import {queueOne, checkQueue} from '../telegram-review/queue-producer.mjs';
+import {queueOne, checkQueue, queueAutomaticCandidate} from '../telegram-review/queue-producer.mjs';
 import {smoke} from '../telegram-review/staging-smoke.mjs';
 import {prepareReviewed} from '../telegram-review/prepare-reviewed.mjs';
 
@@ -195,4 +195,57 @@ test('producer check reads real SQLite journal without changing records or sendi
  await f.approve(before[0].id);const saved=(await f.getRow()).results, after=f.calls.length;
  const next=await checkQueue(dir,opts);assert.equal(next.status,'candidate');assert.equal(next.next,2);
  assert.deepEqual((await f.getRow()).results,saved);assert.equal(f.calls.length,after);
+});
+
+test('manual reconciliation updates real SQLite once without another channel delivery',async(t)=>{
+ const f=fixture(t,{failChannel:true}); await submit(draft(),options(f));
+ let row=(await f.getRow()).results[0]; await f.approve(row.id);
+ assert.equal((await f.getRow()).results[0].state,'sending');
+ await f.command(`/reconcile ${row.id} published 48 CONFIRM`);
+ row=(await f.getRow()).results[0]; assert.equal(row.state,'sent'); assert.equal(row.channel_message_id,48);
+ assert.equal(row.resolution_kind,'confirmed_channel_message'); assert.match(row.resolved_at,/^\d{4}-/);
+ await f.command(`/reconcile ${row.id} published 49 CONFIRM`); await f.approve(row.id);
+ row=(await f.getRow()).results[0]; assert.equal(row.channel_message_id,48);
+ assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,1);
+});
+
+test('migration preserves an existing SQLite journal and rejects a repeated application',t=>{
+ const dir=mkdtempSync(join(tmpdir(),'telegram-migration-')); t.after(()=>rmSync(dir,{recursive:true,force:true}));
+ const script=`import sqlite3, sys
+con=sqlite3.connect(sys.argv[1])
+con.executescript("CREATE TABLE drafts (id TEXT PRIMARY KEY, source_url TEXT UNIQUE, text TEXT, state TEXT, created_at TEXT, review_message_id INTEGER, photo_file_id TEXT, channel_message_id INTEGER); INSERT INTO drafts VALUES ('old', 'https://example.org', 'text', 'sending', 'date', 7, NULL, NULL);")
+migration=open('telegram-review/migrations/002-add-reconciliation.sql',encoding='utf-8').read()
+con.executescript(migration)
+row=con.execute('SELECT id, state, review_message_id, resolution_kind, resolved_at FROM drafts').fetchone()
+assert row == ('old','sending',7,None,None), row
+try: con.executescript(migration)
+except sqlite3.OperationalError: pass
+else: raise AssertionError('migration applied twice')
+`;
+ const result=spawnSync('python3',['-c',script,join(dir,'old.db')],{encoding:'utf8'});
+ assert.equal(result.status,0,result.stderr);
+});
+
+test('discarding an uncertain review on SQLite is conditional and retains its source',async(t)=>{
+ const f=fixture(t); await submit(draft(),options(f)); let row=(await f.getRow()).results[0];
+ await f.command(`/reconcile ${row.id} discard-review CONFIRM`); assert.equal((await f.getRow()).results[0].state,'ready');
+ await f.env.DB.prepare("UPDATE drafts SET state = ? WHERE id = ?").bind('notifying',row.id).run();
+ await f.command(`/reconcile ${row.id} discard-review CONFIRM`);
+ row=(await f.getRow()).results[0]; assert.equal(row.state,'rejected'); assert.equal(row.resolution_kind,'abandoned_review'); assert(row.resolved_at);
+ await f.approve(row.id); assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
+ await assert.rejects(()=>submit(draft(),options(f)),/409/);
+});
+
+
+test('unverified candidate reaches private review with photo; channel requires explicit approval',async(t)=>{
+ const f=fixture(t); const dir=mkdtempSync(join(tmpdir(),'auto-flow-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));
+ const d={...draft(),ready_for_review:false,comment:''};writeFileSync(join(dir,'draft-01.json'),JSON.stringify(d));writeFileSync(join(dir,'card-01.png'),png(d));
+ const opts={send:true,url:'https://test.example.workers.dev/intake',secret:f.env.INTAKE_SECRET,fetcher:f.localIntake};
+ assert.equal((await queueAutomaticCandidate(dir,opts)).status,'queued');
+ let row=(await f.getRow()).results[0]; assert.equal(row.state,'ready');assert.doesNotMatch(row.text,/Вывод/);
+ assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
+ assert.equal((await queueAutomaticCandidate(dir,opts)).status,'pending');
+ await f.approve(row.id); row=(await f.getRow()).results[0]; assert.equal(row.state,'sent');
+ assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,1);
+ assert.equal((await queueAutomaticCandidate(dir,opts)).status,'all-known');
 });

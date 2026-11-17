@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
-import {queueOne,checkQueue} from '../telegram-review/queue-producer.mjs';
+import {queueOne,checkQueue,queueAutomaticCandidate} from '../telegram-review/queue-producer.mjs';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {draftFingerprint} from '../telegram-review/drafts.mjs';
@@ -47,4 +47,21 @@ test('check CLI without ready material is offline and prints only the report',as
  const dir=await gallery(t);for(let i=1;i<=2;i++)await writeFile(join(dir,`draft-0${i}.json`),JSON.stringify({...draft(i),ready_for_review:false}));
  const {stdout}=await promisify(execFile)(process.execPath,['telegram-review/queue-producer.mjs',dir,'--check']);
  assert.equal(JSON.parse(stdout).status,'none-ready');assert(!stdout.includes('https://'));
+});
+
+
+test('unverified automatic candidate goes only to guarded intake with no invented comment',async(t)=>{
+ const dir=await gallery(t);for(let i=1;i<=2;i++)await writeFile(join(dir,`draft-0${i}.json`),JSON.stringify({...draft(i),comment:'',ready_for_review:false}));
+ const calls=[];const fetcher=async(url,init)=>{calls.push({url,init});return calls.length===1?Response.json({known:[true,false],pending:0,uncertain:0}):new Response('',{status:201});};
+ assert.equal((await queueAutomaticCandidate(dir,options(fetcher))).status,'queued');
+ assert.equal(calls.length,2);assert.match(calls[1].url,/\/intake-one$/);
+ const payload=JSON.parse(calls[1].init.body);assert.equal(payload.source_url,'https://example.org/2');assert.doesNotMatch(payload.text,/Вывод|Проверенный вывод/);
+});
+test('automatic candidate pauses for unresolved or pending work and never retries failures',async(t)=>{
+ const dir=await gallery(t);for(let i=1;i<=2;i++)await writeFile(join(dir,`draft-0${i}.json`),JSON.stringify({...draft(i),comment:'',ready_for_review:false}));
+ for(const state of [{known:[false,false],pending:1,uncertain:0},{known:[false,false],pending:0,uncertain:1},{known:[true,true],pending:0,uncertain:0}]){
+  let n=0;await queueAutomaticCandidate(dir,options(async()=>{n++;return Response.json(state);}));assert.equal(n,1);
+ }
+ let n=0;await assert.rejects(()=>queueAutomaticCandidate(dir,options(async()=>{n++;return n===1?Response.json({known:[false,false],pending:0,uncertain:0}):new Response('',{status:503});})));assert.equal(n,2);
+ await assert.rejects(()=>queueAutomaticCandidate(dir,{}));
 });

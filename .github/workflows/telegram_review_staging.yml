@@ -1,0 +1,49 @@
+name: Telegram review staging (manual only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Type STAGING to send at most one test draft to the isolated test reviewer'
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: telegram-review-staging-send
+  cancel-in-progress: false
+
+jobs:
+  staging:
+    if: ${{ inputs.confirmation == 'STAGING' }}
+    environment: telegram-review-staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - name: Install local image renderer
+        run: python -m pip install --require-hashes -r telegram-review/requirements-visuals.lock
+      - name: Select fresh candidates from explicitly allowed sources
+        env:
+          SCM_REVIEW_ALLOWED_HOSTS: ${{ vars.SCM_STAGING_ALLOWED_HOSTS }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir "$RUNNER_TEMP/scm-staging-review"
+          node telegram-review/auto-candidates.mjs "$RUNNER_TEMP/scm-staging-review/candidates.json"
+          python telegram-review/cards_batch.py "$RUNNER_TEMP/scm-staging-review/candidates.json" "$RUNNER_TEMP/scm-staging-review/gallery"
+      - name: Send at most one candidate to isolated staging review
+        env:
+          REVIEW_INTAKE_URL: https://scm-telegram-review-staging.965910.workers.dev/intake
+          REVIEW_INTAKE_SECRET: ${{ secrets.SCM_STAGING_INTAKE_SECRET }}
+        run: node telegram-review/queue-producer.mjs "$RUNNER_TEMP/scm-staging-review/gallery" --send-candidate
