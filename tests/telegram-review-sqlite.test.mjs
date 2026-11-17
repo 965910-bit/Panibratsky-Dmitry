@@ -10,6 +10,7 @@ import {handle} from '../telegram-review/worker.mjs';
 import {prepareDraft, submit, draftFingerprint} from '../telegram-review/drafts.mjs';
 import {sendGalleryItem} from '../telegram-review/gallery-submit.mjs';
 import {queueOne} from '../telegram-review/queue-producer.mjs';
+import {smoke} from '../telegram-review/staging-smoke.mjs';
 
 const bridge = `
 import json, sqlite3, sys
@@ -135,4 +136,13 @@ test('guarded intake atomically blocks overlapping different sources before Tele
  await f.env.DB.prepare('UPDATE drafts SET state = ? WHERE source_url = ?').bind('rejected','https://example.org/a').run();
  assert.equal((await send('https://example.org/new')).status,201);
  assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
+});
+
+test('staging read-only smoke uses Worker and real local SQLite without writes or Telegram',async(t)=>{
+ const f=fixture(t);
+ const result=await smoke({confirm:true,secret:f.env.INTAKE_SECRET,fetcher:f.localIntake});
+ assert.deepEqual(result,{pending:0,uncertain:0});assert.equal((await f.getRow()).results.length,0);assert.equal(f.calls.length,0);
+ await submit(draft(),options(f));const before=(await f.getRow()).results, calls=f.calls.length;
+ assert.deepEqual(await smoke({confirm:true,secret:f.env.INTAKE_SECRET,fetcher:f.localIntake}),{pending:1,uncertain:0});
+ assert.deepEqual((await f.getRow()).results,before);assert.equal(f.calls.length,calls);
 });
