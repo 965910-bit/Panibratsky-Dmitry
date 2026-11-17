@@ -16,6 +16,28 @@ DATE_FROM = (datetime.now(timezone.utc) - timedelta(days=30)).strftime("%Y-%m-%d
 WAREHOUSE_QUERIES = ["склад", "кладовщик"]
 TRANSPORT_QUERIES = ["доставка", "перевозка грузов"]
 
+class HHCollectionError(RuntimeError):
+    """A short, non-sensitive category suitable for a CI annotation."""
+    def __init__(self, reason, page=None, status=None):
+        super().__init__('HH collection failed')
+        self.reason = reason
+        self.page = page
+        self.status = status
+
+
+def failure_annotation(exc):
+    # Never include exception messages, response bodies, URLs, query text or credentials.
+    allowed = {'http_error', 'no_response', 'invalid_response', 'incomplete_page',
+               'timeout', 'browser_error', 'no_results'}
+    reason = exc.reason if isinstance(exc, HHCollectionError) and exc.reason in allowed else 'other_error'
+    parts = [f'reason={reason}']
+    if isinstance(exc, HHCollectionError) and type(exc.page) is int and 1 <= exc.page <= 10000:
+        parts.append(f'page={exc.page}')
+    if isinstance(exc, HHCollectionError) and type(exc.status) is int and 100 <= exc.status <= 599:
+        parts.append(f'http={exc.status}')
+    return '::error title=HH analytics::' + ' '.join(parts)
+
+
 # -------------------------------------------------------------------
 # 2. ФУНКЦИЯ СБОРА ЧЕРЕЗ БРАУЗЕР (САМАЯ ВАЖНАЯ)
 # -------------------------------------------------------------------
@@ -45,17 +67,21 @@ def fetch_hh_data(keyword):
                 response = page_browser.goto(url, wait_until="domcontentloaded", timeout=30000)
                 
                 # Проверяем, что сервер ответил нормально
+                if response is None:
+                    raise HHCollectionError('no_response', page=page + 1)
                 if response.status != 200:
-                    raise RuntimeError(f"HH ответил с ошибкой: {response.status}")
+                    raise HHCollectionError('http_error', page=page + 1, status=response.status)
                 
                 # Получаем JSON-данные со страницы
                 data = page_browser.evaluate("() => JSON.parse(document.body.innerText)")
+                if not isinstance(data, dict):
+                    raise HHCollectionError('invalid_response', page=page + 1)
                 items = data.get('items')
                 pages = data.get('pages')
                 if not isinstance(items, list) or type(pages) is not int or pages < 0:
-                    raise ValueError('Некорректный ответ HH: отсутствуют items или pages')
+                    raise HHCollectionError('invalid_response', page=page + 1)
                 if page < pages and not items:
-                    raise ValueError('HH вернул пустую страницу до конца выборки')
+                    raise HHCollectionError('incomplete_page', page=page + 1)
 
                 all_items.extend(items)
                 page += 1
@@ -65,8 +91,11 @@ def fetch_hh_data(keyword):
                 # Пауза между запросами.
                 time.sleep(2) 
                 
-            except Exception as e:
-                raise RuntimeError(f"Ошибка сбора HH для {keyword}, страница {page + 1}") from e
+            except HHCollectionError:
+                raise
+            except Exception as exc:
+                reason = 'timeout' if type(exc).__name__ == 'TimeoutError' else 'browser_error'
+                raise HHCollectionError(reason, page=page + 1) from exc
                 
         browser.close()
             
@@ -87,7 +116,7 @@ def collect_analytics(queries, output_filename):
     print(f"✅ Уникальных вакансий: {len(unique_vacs)}")
     
     if not unique_vacs:
-        raise RuntimeError(f"Вакансий не найдено для {output_filename}; сохранены предыдущие данные")
+        raise HHCollectionError('no_results')
 
     analytics = {
         "schema_version": 1,
@@ -155,6 +184,9 @@ def main():
         "hh_warehouse.json": collect_analytics(WAREHOUSE_QUERIES, "hh_warehouse.json"),
         "hh_transport.json": collect_analytics(TRANSPORT_QUERIES, "hh_transport.json"),
     }
+    if os.environ.get('HH_DIAGNOSTIC_ONLY') == '1':
+        print('Диагностика завершена: файлы не изменялись и публикация не выполнялась.')
+        return
     os.makedirs("data", exist_ok=True)
     for filename, analytics in outputs.items():
         target = os.path.join("data", filename)
@@ -169,5 +201,14 @@ def main():
         print(f"✅ {filename}: {analytics['total_vacancies']} вакансий")
 
 
+def cli():
+    try:
+        main()
+    except Exception as exc:
+        print(failure_annotation(exc), flush=True)
+        return 1
+    return 0
+
+
 if __name__ == "__main__":
-    main()
+    raise SystemExit(cli())

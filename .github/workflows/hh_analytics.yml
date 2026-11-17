@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: site-data-updates
+  group: ${{ github.ref == 'refs/heads/main' && 'site-data-updates' || format('hh-diagnostic-{0}', github.ref) }}
   cancel-in-progress: false
 
 jobs:
@@ -17,7 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          persist-credentials: ${{ github.ref == 'refs/heads/main' }}
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -30,9 +32,13 @@ jobs:
           playwright install chromium
         
       - name: Run HH Python Script
+        # Non-main runs are diagnostic only and do not change or publish data.
+        env:
+          HH_DIAGNOSTIC_ONLY: ${{ github.ref != 'refs/heads/main' && '1' || '0' }}
         run: python scripts/hh_analytics.py
         
       - name: Commit & Push changes
+        if: github.ref == 'refs/heads/main'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
