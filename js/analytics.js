@@ -270,6 +270,7 @@
         <!-- Карта России -->
         <div class="table-card">
             <h3><i class="fas fa-map-marker-alt"></i> Карта России (города посетителей)</h3>
+            <p id="mapStatus" role="status"></p>
             <div id="russiaMap"></div>
         </div>
 
@@ -490,13 +491,18 @@
             const citiesMap = new Map(); // key: city, value: { count, region, lat, lon }
 
             sessions.forEach(s => {
-                if (s.city && s.lat && s.lon) {
+                if (!s || typeof s.city !== 'string' || !s.city) return;
+                const validCoords = typeof s.lat === 'number' && Number.isFinite(s.lat) && s.lat >= -90 && s.lat <= 90 &&
+                    typeof s.lon === 'number' && Number.isFinite(s.lon) && s.lon >= -180 && s.lon <= 180;
+                if (validCoords) {
                     const key = s.city;
                     if (!citiesMap.has(key)) {
                         citiesMap.set(key, { count: 0, region: s.region, lat: s.lat, lon: s.lon });
                     }
-                    citiesMap.get(key).count++;
-                } else if (s.city && !s.lat && !s.lon && s.region) {
+                    const city = citiesMap.get(key);
+                    if (city.lat === null) { city.lat = s.lat; city.lon = s.lon; }
+                    city.count++;
+                } else if (s.region) {
                     const key = s.city;
                     if (!citiesMap.has(key)) {
                         citiesMap.set(key, { count: 0, region: s.region, lat: null, lon: null });
@@ -514,20 +520,26 @@
                     <td>${escapeHtml(c.name)}</td>
                     <td>${escapeHtml(c.region || '—')}</td>
                     <td>${c.count}</td>
-                    <td>${c.lat && c.lon ? `${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}` : '—'}</td>
+                    <td>${c.lat !== null && c.lon !== null ? `${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}` : '—'}</td>
                 </tr>
             `).join('');
 
             // Карта
+            const mapStatus = document.getElementById?.('mapStatus');
+            if (typeof L === 'undefined') {
+                if (mapStatus) mapStatus.textContent = 'Карта недоступна; таблица городов показана ниже.';
+                return;
+            }
+            if (mapStatus) mapStatus.textContent = '';
             if (russiaMap) russiaMap.remove();
             russiaMap = L.map('russiaMap').setView([64, 100], 4);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB'
             }).addTo(russiaMap);
             if (markerCluster) markerCluster.clearLayers();
-            markerCluster = L.markerClusterGroup();
+            markerCluster = typeof L.markerClusterGroup === 'function' ? L.markerClusterGroup() : L.layerGroup();
             cities.forEach(city => {
-                if (city.lat && city.lon) {
+                if (city.lat !== null && city.lon !== null) {
                     const marker = L.marker([city.lat, city.lon]);
                     marker.bindPopup(`<b>${escapeHtml(city.name)}</b><br>Посещений: ${city.count}<br>Регион: ${escapeHtml(city.region || '—')}`);
                     markerCluster.addLayer(marker);

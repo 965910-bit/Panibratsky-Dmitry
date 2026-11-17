@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 import tempfile
 import unittest
-from urllib.parse import urlsplit, unquote
+from urllib.parse import urljoin, urlsplit, unquote
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -66,6 +66,71 @@ class SiteTests(unittest.TestCase):
             for match in re.findall(r'<script\s+type="application/ld\+json"[^>]*>(.*?)</script>', html, re.I | re.S):
                 json.loads(match)
 
+    def test_sitemap_static_internal_links_and_anchor_ids(self):
+        # Source-only check: no dynamic DOM, runtime URLs, HTTP status, or visibility checks.
+        class Targets(HTMLParser):
+            def __init__(self):
+                super().__init__(convert_charrefs=True)
+                self.ids, self.names, self.hrefs = [], [], []
+            def handle_starttag(self, tag, attrs):
+                attrs = dict(attrs)
+                if attrs.get('id'): self.ids.append(attrs['id'])
+                if tag == 'a':
+                    if attrs.get('name'): self.names.append(attrs['name'])
+                    if attrs.get('href'): self.hrefs.append(attrs['href'])
+
+        generator = load_script('generate_sitemap')
+        parsed = {}
+        def read_page(path):
+            if path not in parsed:
+                parser = Targets()
+                parser.feed(path.read_text(encoding='utf-8'))
+                parsed[path] = parser
+            return parsed[path]
+
+        for page in generator.PAGES:
+            name = page or 'index.html'
+            source = ROOT / name
+            content = read_page(source)
+            self.assertEqual(len(content.ids), len(set(content.ids)), f'{name}: duplicate id')
+            for href in content.hrefs:
+                link = urlsplit(urljoin(generator.BASE + page, href))
+                if link.scheme not in ('http', 'https') or link.hostname != 'scm-news.ru':
+                    continue
+                path = (ROOT / (unquote(link.path).lstrip('/') or 'index.html')).resolve()
+                self.assertTrue(path.is_relative_to(ROOT.resolve()), f'{name}: {href}')
+                self.assertTrue(path.is_file(), f'{name}: missing target {href}')
+                if link.fragment and path.suffix == '.html':
+                    target = read_page(path)
+                    self.assertIn(unquote(link.fragment), target.ids + target.names, f'{name}: missing anchor {href}')
+
+    def test_wiki_planned_material_is_not_claimed_as_published(self):
+        text = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        self.assertGreater(text.count('class="wiki-article-card"'), 0)
+        self.assertIn('не опубликованные статьи', text)
+        self.assertEqual(text.count('class="wiki-article-card"'), text.count('Материал готовится к публикации.'))
+        self.assertNotIn('Статей и материалов</div>', text)
+        self.assertNotIn('Практическая применимость</div>', text)
+        self.assertNotIn('<span class="read-time">', text)
+        self.assertNotIn('<span class="article-level ', text)
+        for page in ('wiki.html', 'tools.html', 'projects.html', 'certificates.html', 'calculators.html'):
+            html = (ROOT / page).read_text(encoding='utf-8')
+            self.assertNotIn('успешная реализация</div>', html)
+            self.assertNotIn('реализованных проектов</div>', html)
+        self.assertNotIn('管理系统', (ROOT / 'tools.html').read_text(encoding='utf-8'))
+
+    def test_answer_first_boundaries_are_visible_in_html(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        calculators = (ROOT / 'calculators.html').read_text(encoding='utf-8')
+        career = (ROOT / 'career.html').read_text(encoding='utf-8')
+        research = (ROOT / 'scm-problems.html').read_text(encoding='utf-8')
+        news = (ROOT / 'trends.html').read_text(encoding='utf-8')
+        self.assertIn('Что доступно в базе знаний?</h2>\n            <p>Ниже — перечень тем, а не опубликованные статьи', wiki)
+        self.assertIn('Для чего нужны эти калькуляторы?</h2>\n            <p>Расчётные модели', calculators)
+        self.assertIn('Какие возможности рассматриваю</h2>\n<p>Рассматриваю постоянную руководящую работу', career)
+        self.assertIn('Что стоит за операционными сбоями?</h2><p>', research)
+        self.assertIn('<summary class="faq-question">Откуда берутся новости на сайте?</summary>', news)
+
     def test_person_profile_entity_is_consistent_and_visible(self):
         def structured(filename):
             text = (ROOT / filename).read_text(encoding='utf-8')
@@ -117,6 +182,9 @@ class SiteTests(unittest.TestCase):
 
     def test_news_paused_status_is_visible_and_matches_faq_markup(self):
         text = (ROOT / 'trends.html').read_text(encoding='utf-8')
+        self.assertEqual(text.count('<details class="faq-item">'), 5)
+        self.assertEqual(text.count('<summary class="faq-question">'), 5)
+        self.assertNotIn("querySelectorAll('.faq-question')", text)
         self.assertIn('Добавление новых материалов приостановлено до проверки условий источников', text)
         self.assertIn('Новые материалы пока не собираются.', text)
         self.assertIn('Сохранённая лента загружена в', text)
