@@ -26,13 +26,20 @@ def rss_date(value):
 
 def generate_rss():
     news = json.loads((ROOT / 'data/news.json').read_text(encoding='utf-8'))
+    destination = ROOT / 'rss.xml'
+    previous = None
+    try:
+        previous = ET.parse(destination).getroot()
+    except (OSError, ET.ParseError):
+        pass
+    previous_date = previous.findtext('./channel/lastBuildDate') if previous is not None else None
     atom = 'http://www.w3.org/2005/Atom'
     ET.register_namespace('atom', atom)
     rss = ET.Element('rss', version='2.0')
     channel = ET.SubElement(rss, 'channel')
     for key, value in [('title', 'Логистические новости'), ('link', 'https://scm-news.ru/'),
                        ('description', 'Новости логистики и управления цепями поставок'), ('language', 'ru'),
-                       ('lastBuildDate', format_datetime(datetime.now(timezone.utc)))]:
+                       ('lastBuildDate', previous_date or '')]:
         ET.SubElement(channel, key).text = value
     ET.SubElement(channel, f'{{{atom}}}link', href='https://scm-news.ru/rss.xml', rel='self', type='application/rss+xml')
     seen = set()
@@ -58,7 +65,14 @@ def generate_rss():
         if len(seen) == 50:
             break
     ET.indent(rss, space='  ')
-    ET.ElementTree(rss).write(ROOT / 'rss.xml', encoding='utf-8', xml_declaration=True)
+    # A scheduled rebuild with identical entries is not a new publication.
+    # Preserve the old bytes and timestamp, avoiding misleading freshness and noisy commits.
+    if previous is not None:
+        ET.indent(previous, space='  ')
+        if previous_date and ET.tostring(previous, encoding='utf-8') == ET.tostring(rss, encoding='utf-8'):
+            return
+    channel.find('lastBuildDate').text = format_datetime(datetime.now(timezone.utc))
+    ET.ElementTree(rss).write(destination, encoding='utf-8', xml_declaration=True)
 
 if __name__ == '__main__':
     generate_rss()
