@@ -16,7 +16,7 @@ function setup(fetch, IntersectionObserver) {
   const theme = element(), menu = element(), nav = element(), form = element(), field = element();
   const submit = element(), messages = element(), status = element(), retry = element(), suggestion = element();
   suggestion.dataset = { question: 'Опыт?' }; form.querySelector = () => submit;
-  const elements = { 'chat-form': form, 'chat-question': field, 'chat-messages': messages, 'chat-status': status, 'chat-retry': retry, 'assistant': element() };
+  const elements = { 'chat-form': form, 'chat-question': field, 'chat-messages': messages, 'chat-status': status, 'chat-retry': retry, 'assistant': element(), 'menu-check': menu };
   const document = { body: element(), querySelector: s => ({'.theme-toggle': theme, '.menu-toggle': menu, '.site-nav': nav})[s],
     querySelectorAll: () => [suggestion], getElementById: id => elements[id], addEventListener() {}, createElement: () => element() };
   const context = { document, window: { addEventListener() {}, innerWidth: 1000, IntersectionObserver }, localStorage: { getItem() { return null; }, setItem() {} },
