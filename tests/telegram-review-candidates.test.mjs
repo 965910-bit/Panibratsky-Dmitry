@@ -24,3 +24,14 @@ test('restricted source is excluded without confusing unrelated domains', () => 
   ]);
   assert.deepEqual(drafts.map(d=>d.source_url), ['https://notlogistics360.ru/a']);
 });
+
+test('paused ATI source is excluded from galleries including alerts', () => {
+  const drafts = shortlist([
+    item('WMS', 'https://news.ati.su/news/a'),
+    item('WMS', 'https://ati.su./news/a'),
+    {...item('WMS', 'https://example.org/a'), source:'АТИ (новости)'},
+    {...item('WMS', 'https://example.org/b'), source:'ATI.SU'},
+    item('WMS', 'https://notati.su/a'),
+  ]);
+  assert.deepEqual(drafts.map(d=>d.source_url), ['https://notati.su/a']);
+});
