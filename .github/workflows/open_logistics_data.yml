@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: '23 7 * * 1'
   workflow_dispatch:
+    inputs:
+      persist_diagnostic:
+        description: 'Commit verified public capture to the dispatched non-main branch'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -19,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: ${{ github.ref == 'refs/heads/main' }}
+          persist-credentials: ${{ github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.persist_diagnostic == true) }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -42,6 +48,21 @@ jobs:
             data/open-logistics.json
           if-no-files-found: error
           retention-days: 7
+      - name: Commit verified diagnostic capture to dispatched branch
+        if: github.ref != 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.persist_diagnostic == true
+        run: |
+          mkdir -p data/open-logistics-archives
+          cp -an "$RUNNER_TEMP/open-data-archive/." data/open-logistics-archives/
+          for archive in "$RUNNER_TEMP"/open-data-archive/*; do
+            python scripts/verify_open_archive.py "data/open-logistics-archives/$(basename "$archive")"
+          done
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/open-logistics.json data/open-logistics-archives
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive verified open data diagnostic"
+            git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+          fi
       - name: Preserve previous snapshot for comparison
         if: github.ref == 'refs/heads/main'
         run: cp data/open-logistics.json "$RUNNER_TEMP/open-logistics-before.json"
