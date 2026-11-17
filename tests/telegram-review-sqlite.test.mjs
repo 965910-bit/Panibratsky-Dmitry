@@ -47,7 +47,7 @@ function sqliteAdapter(database) {
     run:async()=>execute('run',sql,args), first:async()=>execute('first',sql,args), all:async()=>execute('all',sql,args)
   }; }}; }};
 }
-function fixture(t, {failChannel=false} = {}) {
+function fixture(t, {failChannel=false, waitReview=null} = {}) {
   const dir=mkdtempSync(join(tmpdir(),'telegram-review-sqlite-')); t.after(()=>rmSync(dir,{recursive:true,force:true}));
   const DB=sqliteAdapter(join(dir,'queue.db'));
   const env={DB,REVIEWER_ID:'123',CHANNEL_ID:'-100123',BOT_TOKEN:'123456:'+ 'a'.repeat(32),WEBHOOK_SECRET:'w'.repeat(40),INTAKE_SECRET:'i'.repeat(40)};
@@ -55,6 +55,7 @@ function fixture(t, {failChannel=false} = {}) {
   const telegram=async (url,init)=>{
     const method=url.split('/').at(-1), body=init.body instanceof FormData ? Object.fromEntries(init.body.entries()) : JSON.parse(init.body);
     calls.push({method,body});
+    if (waitReview && body.chat_id===env.REVIEWER_ID) await waitReview();
     if (failChannel && body.chat_id===env.CHANNEL_ID && ['sendPhoto','sendMessage'].includes(method)) throw Error('simulated network timeout');
     return new Response(JSON.stringify({ok:true,result:{message_id:body.chat_id===env.REVIEWER_ID ? 37:48,photo:[{file_id:'telegram-photo-id'}]}}),{status:200});
   };
@@ -118,4 +119,20 @@ test('producer uses real SQLite journal to queue at most one reviewed draft and 
  assert.equal((await queueOne(dir,opts)).status,'queued'); assert.equal((await queueOne(dir,opts)).status,'pending');
  let rows=(await f.getRow()).results;assert.equal(rows.length,1);assert.equal(rows[0].source_url,'https://example.org/news-1');assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
  await f.approve(rows[0].id);assert.equal((await queueOne(dir,opts)).status,'queued');rows=(await f.getRow()).results;assert.equal(rows.length,2);assert.equal(rows[1].source_url,'https://example.org/news-2');
+});
+
+test('guarded intake atomically blocks overlapping different sources before Telegram finishes',async(t)=>{
+ let release, started; const gate=new Promise(r=>release=r), seen=new Promise(r=>started=r);
+ const f=fixture(t,{waitReview:async()=>{started();await gate;}});
+ const send=source_url=>f.localIntake('https://test.example.workers.dev/intake-one',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+f.env.INTAKE_SECRET},body:JSON.stringify({text:'Проверенный текст',source_url})});
+ const first=send('https://example.org/a'); await seen;
+ try { assert.equal((await send('https://example.org/b')).status,409);assert.equal((await f.getRow()).results.length,1);assert.equal(f.calls.length,1); } finally { release(); }
+ assert.equal((await first).status,201);
+ for(const state of ['ready','sending','notifying']) {
+  await f.env.DB.prepare('UPDATE drafts SET state = ? WHERE source_url = ?').bind(state,'https://example.org/a').run();
+  assert.equal((await send('https://example.org/'+state)).status,409);
+ }
+ await f.env.DB.prepare('UPDATE drafts SET state = ? WHERE source_url = ?').bind('rejected','https://example.org/a').run();
+ assert.equal((await send('https://example.org/new')).status,201);
+ assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
 });
