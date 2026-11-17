@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="scm-style.css">
     <script src="scm-common.js"></script>
+    <script src="../js/otif.js"></script>
     <style>
         .calc-grid {
             display: grid;
@@ -200,9 +201,9 @@
     }
 
     function saveCalculation(calcId, values, result) {
-        const key = `calc_${calcId}_${currentBranchId}`;
+        const key = calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
         const saved = JSON.parse(localStorage.getItem(key) || '[]');
-        saved.push({ values, result, timestamp: new Date().toISOString() });
+        saved.push({ values, result, timestamp: new Date().toISOString(), ...(calcId === 'otif' ? { method: 'joint-orders-v1' } : {}) });
         if (saved.length > 20) saved.shift();
         localStorage.setItem(key, JSON.stringify(saved));
         alert(`Расчёт сохранён (всего сохранено: ${saved.length})`);
@@ -283,9 +284,9 @@
             { label: "Прогнозируемый спрос (ед.):", id: "mape_forecast", type: "number", default: 850, step: 10 }
         ], formula: "MAPE = |Факт - Прогноз| / Факт × 100%", unit: "%", calc: (vals) => Math.abs(vals[0] - vals[1]) / vals[0] * 100, kpiId: null },
         { id: "otif", name: "OTIF (On-Time In-Full)", fields: [
-            { label: "Своевременные доставки (On-Time, %):", id: "otif_ot", type: "number", default: 95, step: 1 },
-            { label: "Полные доставки (In-Full, %):", id: "otif_if", type: "number", default: 96, step: 1 }
-        ], formula: "OTIF = OT% × IF% / 100", unit: "%", calc: (vals) => (vals[0] * vals[1]) / 100, kpiId: "otif" },
+            { label: "Заказов одновременно вовремя и полностью:", id: "otif_completed", type: "number", default: "", step: 1, help: "Согласуйте период, сроки и критерии полноты с партнёром." },
+            { label: "Всего заказов в выбранной совокупности:", id: "otif_total", type: "number", default: "", step: 1, help: "Произведение отдельных процентов не даёт фактический OTIF. Старые расчёты сохранены без пересчёта. Передача в KPI недоступна: соответствующей метрики в KPI-центре нет." }
+        ], formula: "OTIF = Заказы вовремя и полностью / Все заказы × 100%", unit: "%", calc: (vals) => SCMOTIF.calculate(vals[0], vals[1]), kpiId: null },
         { id: "ccc", name: "Cash-to-Cash цикл (CCC)", fields: [
             { label: "Дни запаса (DIO):", id: "ccc_dio", type: "number", default: 45, step: 1 },
             { label: "Дни дебиторской задолженности (DSO):", id: "ccc_dso", type: "number", default: 30, step: 1 },
@@ -380,8 +381,12 @@
         const calcId = e.currentTarget.getAttribute('data-id');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc) return;
-        const values = calc.fields.map(f => parseFloat(document.getElementById(f.id).value) || 0);
+        const values = calc.fields.map(f => calc.id === 'otif' ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
+        if (calc.id === 'otif' && result === null) {
+            alert('Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.');
+            return;
+        }
         if (calc.additional) {
             const dimWeight = calc.calc(values);
             result = calc.additional(values, dimWeight);
@@ -395,8 +400,12 @@
         const kpiId = e.currentTarget.getAttribute('data-kpi');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc || !kpiId) return;
-        const values = calc.fields.map(f => parseFloat(document.getElementById(f.id).value) || 0);
+        const values = calc.fields.map(f => calc.id === 'otif' ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
+        if (calc.id === 'otif' && result === null) {
+            alert('Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.');
+            return;
+        }
         if (calc.additional) {
             const dimWeight = calc.calc(values);
             result = calc.additional(values, dimWeight);
@@ -407,13 +416,13 @@
 
     function updateAllCalculators() {
         for (let calc of calculators) {
-            const values = calc.fields.map(f => parseFloat(document.getElementById(f.id).value) || 0);
+            const values = calc.fields.map(f => calc.id === 'otif' ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
             let result = calc.calc(values);
             if (calc.additional) {
                 const dimWeight = calc.calc(values);
                 result = calc.additional(values, dimWeight);
             }
-            result = typeof result === 'number' ? result.toFixed(2).replace(/\.?0+$/, '') : result;
+            result = result === null ? 'Введите корректные целые числа заказов' : typeof result === 'number' ? result.toFixed(2).replace(/\.?0+$/, '') : result;
             const resultDiv = document.getElementById(`result_${calc.id}`);
             if (resultDiv) {
                 resultDiv.innerHTML = `Результат: <strong>${result}</strong> ${calc.unit}`;
