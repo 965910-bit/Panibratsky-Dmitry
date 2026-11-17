@@ -7,5 +7,7 @@ CREATE TABLE IF NOT EXISTS drafts (
   created_at TEXT NOT NULL,
   review_message_id INTEGER,
   photo_file_id TEXT,
-  channel_message_id INTEGER
+  channel_message_id INTEGER,
+  resolution_kind TEXT CHECK (resolution_kind IS NULL OR resolution_kind IN ('confirmed_channel_message', 'abandoned_review')),
+  resolved_at TEXT
 );

@@ -20,6 +20,8 @@ class DB {
         if ([...db.rows.values()].some(r => r.source_url === v[1])) throw Error('duplicate');
         db.rows.set(v[0], {id:v[0], source_url:v[1], text:v[2], state:'notifying',created_at:v[3]}); return {success:true,meta:{changes:1}};
       }
+      if (sql.includes("resolution_kind = 'confirmed_channel_message'")) { const r=db.rows.get(v[2]); if (!r || r.state !== 'sending' || r.channel_message_id != null || r.resolution_kind != null || r.resolved_at != null) return {success:true,meta:{changes:0}}; r.state='sent'; r.channel_message_id=v[0]; r.resolved_at=v[1]; r.resolution_kind='confirmed_channel_message'; return {success:true,meta:{changes:1}}; }
+      if (sql.includes("resolution_kind = 'abandoned_review'")) { const r=db.rows.get(v[1]); if (!r || r.state !== 'notifying' || r.resolution_kind != null || r.resolved_at != null) return {success:true,meta:{changes:0}}; r.state='rejected'; r.resolved_at=v[0]; r.resolution_kind='abandoned_review'; return {success:true,meta:{changes:1}}; }
       if (sql.includes("SET state = 'ready'")) { const r=db.rows.get(v[2]); if (!r || r.state !== 'notifying') return {meta:{changes:0}}; r.state='ready'; r.review_message_id=v[0]; r.photo_file_id=v[1]; return {meta:{changes:1}}; }
       if (sql.includes('SET state = ?')) { const r=db.rows.get(v[1]); if (!r || r.state !== 'ready' || r.review_message_id !== v[2]) return {meta:{changes:0}}; r.state=v[0]; return {meta:{changes:1}}; }
       if (sql.includes("SET state = 'sent'")) { const r=db.rows.get(v[1]); if (!r || r.state !== 'sending') return {meta:{changes:0}}; r.state='sent'; r.channel_message_id=v[0]; return {meta:{changes:1}}; }
@@ -112,6 +114,41 @@ test('inspect is read-only, private and displays bounded identifying information
  assert.match(reply.data.text,/Состояние в журнале: sending/); assert.match(reply.data.text,/https:\/\/example.org\/news/);
  assert.equal(x.db.rows.get(id).state,'sending'); assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,1);
 });
+test('manual reconciliation is restricted, explicit, one-way and never sends to channel',async()=>{
+ const x=setup(true); await x.add(); const id=[...x.db.rows.keys()][0]; await x.click(id);
+ assert.equal(x.db.rows.get(id).state,'sending');
+ const command=async (message, secret=x.env.WEBHOOK_SECRET)=>handle(x.request('/telegram',{message},{'x-telegram-bot-api-secret-token':secret}),x.env,x.api);
+ const base={text:`/reconcile ${id} published 54321 CONFIRM`,from:{id:123},chat:{id:123,type:'private'}};
+ const channelCalls=()=>x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length;
+ assert.equal(channelCalls(),1);
+ assert.equal((await command(base,'bad')).status,403);
+ await command({...base,from:{id:124}}); await command({...base,chat:{id:123,type:'group'}});
+ await command({...base,text:`/reconcile ${id} published 54321`});
+ await command({...base,text:`/reconcile ${id} published 9999999999999999 CONFIRM`});
+ assert.equal(x.db.rows.get(id).state,'sending');
+ await command(base); let row=x.db.rows.get(id);
+ assert.equal(row.state,'sent'); assert.equal(row.channel_message_id,54321); assert.equal(row.resolution_kind,'confirmed_channel_message'); assert.match(row.resolved_at,/^\d{4}-/);
+ await command({...base,text:`/reconcile ${id} published 12345 CONFIRM`});
+ await x.click(id); assert.equal(row.channel_message_id,54321); assert.equal(channelCalls(),1);
+});
+test('only uncertain review can be discarded and URL remains blocked',async()=>{
+ const x=setup(); await x.add(); const id=[...x.db.rows.keys()][0];
+ const command=text=>handle(x.request('/telegram',{message:{text,from:{id:123},chat:{id:123,type:'private'}}},{'x-telegram-bot-api-secret-token':x.env.WEBHOOK_SECRET}),x.env,x.api);
+ await command(`/reconcile ${id} discard-review CONFIRM`); assert.equal(x.db.rows.get(id).state,'ready');
+ x.db.rows.get(id).state='notifying';
+ await command(`/reconcile ${id} discard-review CONFIRM`);
+ const row=x.db.rows.get(id); assert.equal(row.state,'rejected'); assert.equal(row.resolution_kind,'abandoned_review'); assert(row.resolved_at);
+ await x.click(id); assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
+ assert.equal((await x.add()).status,409);
+});
+test('reconciliation reports storage failure without claiming success',async()=>{
+ const x=setup(); x.env.DB={prepare(){throw Error('missing migration')}};
+ const msg={text:'/reconcile 11111111-1111-4111-8111-111111111111 discard-review CONFIRM',from:{id:123},chat:{id:123,type:'private'}};
+ await handle(x.request('/telegram',{message:msg},{'x-telegram-bot-api-secret-token':x.env.WEBHOOK_SECRET}),x.env,x.api);
+ assert.match(x.calls.at(-1).data.text,/Не удалось подтвердить/);
+ assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
+});
+
 test('inspect handles unknown ID and storage failure without channel sends',async()=>{
  const x=setup(); const msg={text:'/inspect 11111111-1111-4111-8111-111111111111',from:{id:123},chat:{id:123,type:'private'}};
  const req=()=>x.request('/telegram',{message:msg},{'x-telegram-bot-api-secret-token':x.env.WEBHOOK_SECRET});

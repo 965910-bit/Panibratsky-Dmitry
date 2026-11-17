@@ -2,7 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {buildPayload, attachCard, endpoint, submit} from './drafts.mjs';
+import {buildPayload, buildCandidatePayload, attachCard, endpoint, submit, submitCandidate} from './drafts.mjs';
 
 async function responseJson(response) {
   const reader = response.body?.getReader();
@@ -19,7 +19,7 @@ async function responseJson(response) {
   catch { throw Error('Некорректный ответ очереди'); }
 }
 
-async function inspect(directory, options) {
+async function inspect(directory, options, candidateMode = false) {
   if (typeof directory !== 'string' || !directory) throw Error('Нужен каталог галереи');
   const names = await fs.readdir(directory);
   const drafts = names.filter(name=>/^draft-(?:0[1-9]|1[0-9]|20)\.json$/.test(name)).sort();
@@ -29,8 +29,8 @@ async function inspect(directory, options) {
     const file = path.join(directory,name), stat = await fs.stat(file);
     if (!stat.isFile() || stat.size > 16000) throw Error('Неверный файл');
     const draft = JSON.parse(await fs.readFile(file,'utf8'));
-    if (draft?.ready_for_review !== true) continue;
-    const payload = buildPayload(draft);
+    if (candidateMode ? draft?.ready_for_review !== false : draft?.ready_for_review !== true) continue;
+    const payload = candidateMode ? buildCandidatePayload(draft) : buildPayload(draft);
     const image = path.join(directory, name.replace(/^draft-/, 'card-').replace(/\.json$/, '.png'));
     const cardStat = await fs.stat(image);
     if (!cardStat.isFile() || cardStat.size > 180000) throw Error('Неверная карточка');
@@ -66,11 +66,21 @@ export async function queueOne(directory, options = {}) {
   await submit(check.ready[check.index].draft, {url:check.url,secret:check.secret,card:check.ready[check.index].card,fetcher:check.fetcher,guarded:true});
   return {status:'queued'};
 }
+// A separate entry point for unverified daily candidates; never changes the
+// semantics of the existing manually checked producer.
+export async function queueAutomaticCandidate(directory, options = {}) {
+  if (options.send !== true) throw Error('Явное разрешение на отправку в очередь обязательно');
+  const check = await inspect(directory,options,true);
+  if (check.report.status !== 'candidate') return {status:check.report.status};
+  await submitCandidate(check.ready[check.index].draft, {url:check.url,secret:check.secret,card:check.ready[check.index].card,fetcher:check.fetcher,send:true});
+  return {status:'queued'};
+}
 async function main(args) {
-  if (args.length !== 2 || !['--check','--send-one'].includes(args[1])) throw Error('Нужен каталог и режим --check или --send-one');
+  if (args.length !== 2 || !['--check','--send-one','--send-candidate'].includes(args[1])) throw Error('Нужен каталог и режим --check, --send-one или --send-candidate');
   const options = {url:process.env.REVIEW_INTAKE_URL,secret:process.env.REVIEW_INTAKE_SECRET};
   if (args[1] === '--check') console.log(JSON.stringify(await checkQueue(args[0],options),null,2));
-  else console.log('Состояние очереди: '+(await queueOne(args[0],{...options,send:true})).status);
+  else if (args[1] === '--send-one') console.log('Состояние очереди: '+(await queueOne(args[0],{...options,send:true})).status);
+  else console.log('Состояние очереди: '+(await queueAutomaticCandidate(args[0],{...options,send:true})).status);
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main(process.argv.slice(2)).catch(()=>{console.error('Операция не подтверждена: проверьте настройки и /status; после попытки отправки не повторяйте вслепую.');process.exitCode=1;});
