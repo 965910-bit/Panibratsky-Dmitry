@@ -61,7 +61,7 @@ function fixture(t, {failChannel=false} = {}) {
   const command=(text)=>webhook({message:{text,from:{id:123},chat:{id:123,type:'private'}}});
   const approve=id=>webhook({callback_query:{id:'callback',from:{id:123},message:{message_id:37,chat:{id:123,type:'private'}},data:`approve:${id}`}});
   const getRow=()=>DB.prepare('SELECT * FROM drafts').all();
-  return {env,calls,localIntake,command,approve,getRow};
+  return {env,calls,localIntake,command,approve,getRow,webhook};
 }
 const png = d => { const x=Buffer.alloc(33); Buffer.from([137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82]).copy(x); x.writeUInt32BE(1080,16); x.writeUInt32BE(1080,20); const info=Buffer.from('SCM-Draft-SHA256\0'+draftFingerprint(d)); const chunk=Buffer.alloc(info.length+12); chunk.writeUInt32BE(info.length); chunk.write('tEXt',4); info.copy(chunk,8); const end=Buffer.alloc(12); end.write('IEND',4); return Buffer.concat([x,chunk,end]); };
 const draft = () => ({...prepareDraft({title:'Склад и логистика',description:'Описание',source:'Пример',link:'https://example.org/news'}),ready_for_review:true,comment:'Проверенный вывод.'});
@@ -91,4 +91,12 @@ test('private draft command uses the real journal and still requires explicit ap
   await f.command('/draft https://example.org/mobile\nПовтор'); assert.equal((await f.getRow()).results.length,1);
   await f.approve(row.id); assert.equal((await f.getRow()).results[0].state,'sent');
   const channel=f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID); assert.equal(channel.length,1); assert.equal(channel[0].method,'sendMessage');
+});
+
+test('photo from mobile Telegram is reviewed and explicitly approved with a real SQLite journal',async(t)=>{
+ const f=fixture(t);
+ await f.webhook({message:{caption:'/draft https://example.org/mobile-photo\nПроверенный текст',photo:[{file_id:'mobile-photo'}],from:{id:123},chat:{id:123,type:'private'}}});
+ const row=(await f.getRow()).results[0]; assert.equal(row.state,'ready'); assert.equal(row.photo_file_id,'telegram-photo-id');
+ assert.equal(f.calls.find(c=>c.method==='sendPhoto').body.photo,'mobile-photo'); assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
+ await f.approve(row.id); const channel=f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID); assert.equal(channel.length,1); assert.equal(channel[0].body.photo,'telegram-photo-id');
 });

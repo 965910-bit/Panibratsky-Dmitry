@@ -59,16 +59,18 @@ async function api(env, method, data, fetcher) {
   if (!json.ok) throw Error('telegram request rejected');
   return json.result;
 }
-async function intake(request, env, fetcher) {
+async function intake(request, env, fetcher, telegramPhoto = null) {
   if (!equal(request.headers.get('authorization'), `Bearer ${env.INTAKE_SECRET}`)) return result(403, 'Forbidden');
   let draft; try { draft = await body(request); } catch { return result(400, 'Invalid request'); }
   if (!validDraft(draft)) return result(400, 'Invalid draft');
   let card = null;
+  if (telegramPhoto !== null && (typeof telegramPhoto !== 'string' || !telegramPhoto || telegramPhoto.length > 512)) return result(400, 'Invalid card');
+  if (draft.card_base64 !== undefined && telegramPhoto !== null) return result(400, 'Invalid card');
   if (draft.card_base64 !== undefined) {
     try { card = decodeCard(draft.card_base64); } catch { return result(400, 'Invalid card'); }
-    // Both the review and channel captions must fit Telegram's 1024-character limit.
-    if ((reviewPrefix + postText(draft)).length > 1024) return result(400, 'Caption too long');
   }
+  // Both the review and channel captions must fit Telegram's 1024-character limit.
+  if ((card || telegramPhoto) && (reviewPrefix + postText(draft)).length > 1024) return result(400, 'Caption too long');
   const id = crypto.randomUUID();
   // Unique source URL deliberately blocks duplicate intake, including failed/uncertain attempts.
   try {
@@ -79,10 +81,12 @@ async function intake(request, env, fetcher) {
     const markup = {inline_keyboard:[[{text:'✅ Одобрить', callback_data:`approve:${id}`},{text:'✖️ Отклонить', callback_data:`reject:${id}`}]]};
     const sent = card
       ? await sendPhoto(env, {chat_id:env.REVIEWER_ID, caption:reviewPrefix + postText(draft), reply_markup:markup}, card, fetcher)
-      : await api(env, 'sendMessage', {chat_id:env.REVIEWER_ID, text:reviewPrefix + postText(draft), reply_markup:markup}, fetcher);
+      : telegramPhoto
+        ? await api(env, 'sendPhoto', {chat_id:env.REVIEWER_ID, photo:telegramPhoto, caption:reviewPrefix + postText(draft), reply_markup:markup}, fetcher)
+        : await api(env, 'sendMessage', {chat_id:env.REVIEWER_ID, text:reviewPrefix + postText(draft), reply_markup:markup}, fetcher);
     if (!Number.isSafeInteger(sent?.message_id)) throw Error('invalid message id');
-    const photoId = card ? sent?.photo?.at(-1)?.file_id : null;
-    if (card && (typeof photoId !== 'string' || !photoId || photoId.length > 512)) throw Error('invalid photo id');
+    const photoId = (card || telegramPhoto) ? sent?.photo?.at(-1)?.file_id : null;
+    if ((card || telegramPhoto) && (typeof photoId !== 'string' || !photoId || photoId.length > 512)) throw Error('invalid photo id');
     const update = await env.DB.prepare("UPDATE drafts SET state = 'ready', review_message_id = ?, photo_file_id = ? WHERE id = ? AND state = 'notifying'").bind(sent.message_id,photoId,id).run();
     if (!changes(update)) throw Error('state update');
     return result(201, 'Draft queued');
@@ -135,22 +139,27 @@ async function inspectReply(message, env, fetcher) {
   return true;
 }
 async function draftReply(message, env, fetcher) {
-  if (message?.chat?.type !== 'private' || String(message?.from?.id) !== env.REVIEWER_ID || String(message?.chat?.id) !== env.REVIEWER_ID || typeof message?.text !== 'string') return false;
-  if (!/^\/draft(?:\s|$)/.test(message.text)) return false;
-  const match = /^\/draft[ \t]+([^\s]+)\r?\n([\s\S]+)$/.exec(message.text);
+  if (message?.chat?.type !== 'private' || String(message?.from?.id) !== env.REVIEWER_ID || String(message?.chat?.id) !== env.REVIEWER_ID) return false;
+  const isPhoto = Array.isArray(message?.photo);
+  const content = isPhoto ? message.caption : message.text;
+  if (typeof content !== 'string' || !/^\/draft(?:\s|$)/.test(content)) return false;
+  const match = /^\/draft[ \t]+([^\s]+)\r?\n([\s\S]+)$/.exec(content);
+  // Reject albums and invalid image identifiers rather than silently creating a partial post.
+  const photoId = isPhoto ? message.photo.at(-1)?.file_id : null;
+  const photoValid = !isPhoto || (!message.media_group_id && typeof photoId === 'string' && photoId.length > 0 && photoId.length <= 512);
   let resultCode = 400;
-  if (match) {
+  if (match && photoValid) {
     // Internal call reuses the same validator, journal and duplicate protection as the CLI.
     // Never expose the intake secret or post to the channel here.
     const request = new Request('https://internal.invalid/intake', {
       method:'POST', headers:{'content-type':'application/json', authorization:`Bearer ${env.INTAKE_SECRET}`},
       body:JSON.stringify({source_url:match[1], text:match[2]})
     });
-    resultCode = (await intake(request, env, fetcher)).status;
+    resultCode = (await intake(request, env, fetcher, photoId)).status;
   }
   if (resultCode !== 201) {
     const text = resultCode === 400
-      ? 'Формат: /draft ССЫЛКА на первой строке, затем с новой строки — подготовленный текст. Проверьте ссылку и длину текста.'
+      ? 'Формат: /draft ССЫЛКА на первой строке, затем с новой строки — подготовленный текст. Для изображения отправьте одно фото с этой подписью; проверьте ссылку и длину текста.'
       : 'Не удалось подтвердить создание черновика. Проверьте личный чат и /status; не отправляйте повторно вслепую: запись могла сохраниться.';
     try { await api(env, 'sendMessage', {chat_id:env.REVIEWER_ID, text, disable_web_page_preview:true}, fetcher); } catch {}
   }
