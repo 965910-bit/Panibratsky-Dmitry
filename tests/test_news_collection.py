@@ -68,8 +68,9 @@ class NewsCollectionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             news = Path(folder) / 'news.json'
             news.write_text('[]')
-            with patch.object(module, 'SOURCES', [{'name':'fixture RSS', 'url':'https://example.org/feed', 'type':'rss'}, {'name':'fixture sitemap', 'url':'https://example.org/map', 'type':'sitemap'}]), patch.object(module, 'fetch_rss', return_value=[item]), patch.object(module, 'fetch_from_sitemap', return_value=None), patch.object(module, 'load_google_alerts', return_value=[]), patch('builtins.print') as output:
+            with patch.object(module, 'SOURCES', [{'name':'fixture RSS', 'url':'https://example.org/feed', 'type':'rss'}, {'name':'fixture sitemap', 'url':'https://example.org/map', 'type':'sitemap'}]), patch.object(module, 'fetch_rss', return_value=[item]), patch.object(module, 'fetch_from_sitemap', return_value=None), patch.object(module, 'load_google_alerts') as alerts, patch('builtins.print') as output:
                 module.main(str(news))
+                alerts.assert_not_called()
             self.assertEqual(json.loads(news.read_text())[0]['link'], item['link'])
             self.assertTrue(any('::warning::' in str(call) for call in output.call_args_list))
 

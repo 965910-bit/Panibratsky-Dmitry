@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -14,11 +15,20 @@ def main():
     if not user or not password:
         print('Google Alerts: credentials not configured; retaining existing data')
         return
-    alerts = GoogleAlertsCollector(user, password).fetch()
-    path = ROOT / 'data/google_alerts.json'
-    temp = path.with_suffix('.json.tmp')
     try:
-        temp.write_text(json.dumps(alerts, ensure_ascii=False), encoding='utf-8')
+        alerts = GoogleAlertsCollector(user, password).fetch()
+    except Exception:
+        # Mail/server errors can contain addresses, query text or credentials.
+        print('Google Alerts: collection failed; details withheld')
+        raise SystemExit(1) from None
+    # Email-derived candidates are private scratch data, not a public feed.
+    path = ROOT / '.local-news' / 'google_alerts.json'
+    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(prefix='.alerts-', suffix='.tmp', dir=path.parent)
+    temp = Path(temp_name)
+    try:
+        with os.fdopen(fd, 'w', encoding='utf-8') as file:
+            json.dump(alerts, file, ensure_ascii=False)
         temp.replace(path)
     finally:
         temp.unlink(missing_ok=True)

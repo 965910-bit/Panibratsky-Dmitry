@@ -252,7 +252,8 @@ def fetch_page_description(url):
         return ""
 
 def load_google_alerts(existing_links):
-    alerts_path = os.path.join(os.path.dirname(__file__), "..", "data", "google_alerts.json")
+    # Explicit/manual candidate processing only; never import automatically.
+    alerts_path = os.path.join(os.path.dirname(__file__), "..", ".local-news", "google_alerts.json")
     if not os.path.exists(alerts_path):
         return []
     try:
@@ -295,8 +296,8 @@ def load_google_alerts(existing_links):
         if skipped_duplicate:
             print(f"Из Google Alerts отфильтровано дубликатов: {skipped_duplicate}")
         return news_items
-    except Exception as e:
-        print(f"Ошибка загрузки Google Alerts: {e}")
+    except Exception:
+        print("Ошибка загрузки Google Alerts; подробности скрыты")
         return []
 
 # ---------------------- ОБЩАЯ ФУНКЦИЯ ДЛЯ ЗАГРУЗКИ СУЩЕСТВУЮЩИХ ССЫЛОК ----------------------
@@ -341,10 +342,8 @@ def main(news_file=None):
     if not successful_sources:
         raise RuntimeError('Все основные источники недоступны; существующая лента сохранена')
 
-    for item in load_google_alerts(existing_links):
-        if item.get('link') not in existing_links:
-            incoming.append(item)
-            existing_links.add(item.get('link'))
+    # Google Alerts candidates require separate rights review and editorial approval;
+    # adding an approved RSS source must not implicitly publish mailbox-derived data.
     # A temporary outage should never replace the existing feed with an empty file.
     if not incoming and previous:
         print("Нет новых новостей; существующая лента сохранена без изменений")

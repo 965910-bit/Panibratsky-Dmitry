@@ -56,11 +56,13 @@ class GoogleAlertsCollector:
         try:
             mail = imaplib.IMAP4_SSL(self.imap_server)
             mail.login(self.email_user, self.email_password)
-            mail.select("INBOX")
+            status, _ = mail.select("INBOX", readonly=True)
+            if status != "OK":
+                raise RuntimeError("Unable to select mailbox")
             print(f"✅ Подключено к IMAP {self.imap_server}")
             return mail
-        except Exception as e:
-            print(f"❌ Ошибка IMAP: {e}")
+        except Exception:
+            print("❌ Ошибка IMAP; подробности скрыты")
             return None
 
     def _decode_mime(self, value):
@@ -117,8 +119,8 @@ class GoogleAlertsCollector:
                         links.append(obj)
 
                 extract_urls(data)
-            except Exception as e:
-                print(f"Ошибка парсинга JSON: {e}")
+            except Exception:
+                print("Ошибка парсинга JSON письма; подробности скрыты")
 
         # 2. Если JSON не нашёлся, пробуем обычный HTML (старый формат)
         if not links:
@@ -171,7 +173,7 @@ class GoogleAlertsCollector:
         result = {"alerts": []}
         mail = self._connect()
         if not mail:
-            return result
+            raise RuntimeError("Unable to connect to mailbox")
 
         date_since = (datetime.now() - timedelta(days=since_days)).strftime("%d-%b-%Y")
         search_criteria = f'(SINCE "{date_since}")'
@@ -181,14 +183,14 @@ class GoogleAlertsCollector:
         if typ != "OK":
             print("❌ Ошибка поиска писем")
             mail.logout()
-            return result
+            raise RuntimeError("Mailbox search failed")
 
         email_ids = data[0].split()
         print(f"📧 Найдено писем: {len(email_ids)}")
 
         processed = 0
         for num in email_ids:
-            typ, msg_data = mail.fetch(num, "(RFC822)")
+            typ, msg_data = mail.fetch(num, "(BODY.PEEK[])")
             if typ != "OK":
                 continue
             for response_part in msg_data:
@@ -217,7 +219,7 @@ class GoogleAlertsCollector:
 
                     links = self._extract_links(body)
                     if links:
-                        print(f"   Из письма '{subject[:50]}...' извлечено ссылок: {len(links)} (тема: {keyword})")
+                        print(f"   Из письма извлечено ссылок: {len(links)}")
                     else:
                         print('   В письме не найдено ссылок')
                     for link in links:
