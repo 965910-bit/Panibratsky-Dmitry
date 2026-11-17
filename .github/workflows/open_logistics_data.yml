@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: '23 7 * * 1'
   workflow_dispatch:
+    inputs:
+      persist_diagnostic:
+        description: 'Commit verified public capture to the dispatched non-main branch'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -19,19 +25,50 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: ${{ github.ref == 'refs/heads/main' }}
+          persist-credentials: ${{ github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.persist_diagnostic == true) }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate indicators without publication on non-main branches
+      - name: Test real capture without publication on non-main branches
         if: github.ref != 'refs/heads/main'
-        run: python scripts/open_logistics_data.py --check
+        run: |
+          cp data/open-logistics.json "$RUNNER_TEMP/open-logistics-before.json"
+          python scripts/open_logistics_data.py --archive-dir "$RUNNER_TEMP/open-data-archive" --review-history-dir data/open-logistics-archives
+          python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression
+          for archive in "$RUNNER_TEMP"/open-data-archive/*; do
+            python scripts/verify_open_archive.py "$archive"
+          done
+      - name: Keep diagnostic capture for inspection
+        if: github.ref != 'refs/heads/main' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-data-diagnostic
+          path: |
+            ${{ runner.temp }}/open-data-archive/
+            data/open-logistics.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Commit verified diagnostic capture to dispatched branch
+        if: github.ref != 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.persist_diagnostic == true
+        run: |
+          mkdir -p data/open-logistics-archives
+          cp -an "$RUNNER_TEMP/open-data-archive/." data/open-logistics-archives/
+          for archive in "$RUNNER_TEMP"/open-data-archive/*; do
+            python scripts/verify_open_archive.py "data/open-logistics-archives/$(basename "$archive")"
+          done
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/open-logistics.json data/open-logistics-archives
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive verified open data diagnostic"
+            git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+          fi
       - name: Preserve previous snapshot for comparison
         if: github.ref == 'refs/heads/main'
         run: cp data/open-logistics.json "$RUNNER_TEMP/open-logistics-before.json"
       - name: Update indicators on main
         if: github.ref == 'refs/heads/main'
-        run: python scripts/open_logistics_data.py --archive-dir data/open-logistics-archives
+        run: python scripts/open_logistics_data.py --archive-dir data/open-logistics-archives --review-history-dir data/open-logistics-archives
       - name: Review saved observations before committing
         if: github.ref == 'refs/heads/main'
         run: python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression

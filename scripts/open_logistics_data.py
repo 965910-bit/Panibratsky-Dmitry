@@ -148,6 +148,11 @@ def verify_archive(path):
     return observations
 
 
+def archive_bundle_id(captured):
+    hashes = {key: hashlib.sha256(captured[url]).hexdigest() for key, url in SOURCES.items()}
+    return hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
 def archive_capture(captured, results, directory, now=None):
     """Archive exact public API bodies once per distinct pair, without overwriting prior vintages."""
     sources = SOURCES
@@ -159,7 +164,7 @@ def archive_capture(captured, results, directory, now=None):
     if checked != results:
         raise ValueError('Raw capture does not match collected observations')
     hashes = {key: hashlib.sha256(captured[url]).hexdigest() for key, url in sources.items()}
-    bundle = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    bundle = archive_bundle_id(captured)
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
     target = directory / bundle
@@ -188,9 +193,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='validate data without writing files')
     parser.add_argument('--archive-dir', type=Path, help='archive exact API responses when updating')
+    parser.add_argument('--review-history-dir', type=Path, help='compare archived World Bank vintages before saving')
     args = parser.parse_args()
-    if args.check and args.archive_dir:
-        parser.error('--check cannot write an archive')
+    if args.check and (args.archive_dir or args.review_history_dir):
+        parser.error('--check cannot write or review an archive')
+    if args.review_history_dir and not args.archive_dir:
+        parser.error('--review-history-dir requires --archive-dir')
     try:
         captured = {}
         results = collect(lambda url: fetch_json(url, captured)) if args.archive_dir else collect()
@@ -199,6 +207,10 @@ def main():
         else:
             if args.archive_dir:
                 print('Raw capture archived.' if archive_capture(captured, results, args.archive_dir) else 'Raw capture already archived.')
+                if args.review_history_dir:
+                    from open_history_review import report
+                    comparison = report(args.archive_dir / archive_bundle_id(captured), args.review_history_dir)
+                    print(json.dumps(comparison, ensure_ascii=False))
             print('Snapshot updated.' if save(results) else 'Snapshot unchanged.')
         return 0
     except (OSError, HTTPError, URLError, ValueError, TypeError, KeyError, AttributeError, OverflowError):
