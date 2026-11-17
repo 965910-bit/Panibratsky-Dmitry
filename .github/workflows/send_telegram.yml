@@ -5,6 +5,15 @@ on:
     - cron: '0 9 * * *'
     - cron: '0 21 * * *'
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'send — отправка; initialize — исключить всю текущую ленту из отправки и создать журнал'
+        type: choice
+        options:
+          - send
+          - initialize
+        default: send
+        required: true
 
 permissions:
   contents: read
@@ -28,7 +37,10 @@ jobs:
         run: npm ci --ignore-scripts
 
       # The runner is ephemeral. Restore the newest successfully saved digest state.
-      # Cache eviction can still cause duplicates; durable storage is preferable.
+      # Missing state stops normal sending; cache is not durable storage.
+      # A tracked historical copy may be stale. Never treat checkout as restored cache.
+      - name: Remove checkout copy of sent state from runner
+        run: rm -f data/sent_news.json
       - name: Restore sent news state
         uses: actions/cache/restore@v4
         with:
@@ -36,7 +48,12 @@ jobs:
           key: telegram-sent-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: telegram-sent-
 
+      - name: Initialize journal without sending
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'initialize'
+        run: node scripts/telegram-news.js --initialize-journal
+
       - name: Send new news to Telegram
+        if: github.event_name != 'workflow_dispatch' || inputs.mode == 'send'
         run: node scripts/telegram-news.js
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

@@ -1,0 +1,30 @@
+name: Preview Telegram Digest
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      # Read only: use the latest accessible state; do not save or update it.
+      # A tracked historical copy may be stale. Never treat checkout as restored cache.
+      - name: Remove checkout copy of sent state from runner
+        run: rm -f data/sent_news.json
+      - name: Restore sent news state if available
+        uses: actions/cache/restore@v4
+        with:
+          path: data/sent_news.json
+          key: telegram-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: telegram-sent-
+      - name: Preview without sending
+        run: node scripts/telegram-news.js --preview
