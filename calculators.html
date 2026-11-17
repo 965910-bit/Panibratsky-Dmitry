@@ -639,6 +639,7 @@
 <script src="js/executive-theme.js"></script>
 <script src="js/inventory-models.js"></script>
 <script src="js/inventory-metrics.js"></script>
+<script src="js/transport-estimate.js"></script>
 <link rel="stylesheet" href="css/executive-pages.css">
 <script src="js/executive-pages.js" defer></script>
 </head>
@@ -930,7 +931,7 @@
                 </div>
                 <div class="calculator-content">
                     <p class="calculator-description">
-                        Оценка по тарифу за километр и дополнительным расходам. Подберите тариф с учетом веса и типа транспорта.
+                        Оценка полной стоимости рейса: расстояние × ставка за километр + введённые дополнительные расходы. Не является ставкой за тонно-километр. Проверьте маршрут, НДС, сборы, погрузку, ожидание и условия договора; отсутствующие расходы не добавляются автоматически.
                     </p>
                     <div class="calculator-form">
                         <div class="form-group">
@@ -1054,24 +1055,17 @@
             showResult('fill-rate-result');
         }
 
-        // 6. Расчет стоимости перевозки
+        // 6. Только оценка стоимости рейса, не тариф за тонно-километр.
         function calculateTransportCost() {
-            const distance = parseFloat(document.getElementById('transp-distance').value);
-            const rate = parseFloat(document.getElementById('transp-rate').value);
-            const additionalInput = document.getElementById('transp-additional').value.trim();
-            const additional = additionalInput === '' ? 0 : Number(additionalInput);
-
-            if (![distance, rate, additional].every(n => Number.isFinite(n) && n >= 0) || distance === 0) {
-                alert('Пожалуйста, заполните обязательные поля');
+            const values = ['transp-distance', 'transp-rate', 'transp-additional'].map(id => document.getElementById(id).value);
+            const totalCost = SCMTransportEstimate.publicEstimate(values);
+            if (totalCost === null) {
+                hideInventoryResult('transport-cost-result');
+                alert('Укажите положительное расстояние, неотрицательные ставку и дополнительные расходы; расчёт должен быть конечным.');
                 return;
             }
-
-            const totalCost = Math.round(distance * rate + additional);
-
-            document.getElementById('transport-cost-value').textContent = `${totalCost.toLocaleString()} руб.`;
-            document.getElementById('transport-cost-explanation').textContent = 
-                `Оценка стоимости перевозки: (${distance} × ${rate}) + ${additional} = ${totalCost.toLocaleString()} руб. Тариф должен учитывать вес и тип транспорта.`;
-            
+            document.getElementById('transport-cost-value').textContent = `${formatInventoryValue(totalCost)} руб.`;
+            document.getElementById('transport-cost-explanation').textContent = `Оценка стоимости рейса: ${formatInventoryValue(totalCost)} руб. Округлено до двух знаков (крайние значения — экспоненциально); проверьте все условия и дополнительные расходы.`;
             showResult('transport-cost-result');
         }
 
@@ -1082,7 +1076,8 @@
                 [['ss-max-demand', 'ss-avg-demand', 'ss-lead-time'], 'safety-stock-result'],
                 [['rop-demand', 'rop-lead-time', 'rop-safety-stock'], 'rop-result'],
                 [['turnover-cogs', 'turnover-avg-inventory', 'turnover-period-days'], 'turnover-result'],
-                [['fill-total-demand', 'fill-stockouts'], 'fill-rate-result']
+                [['fill-total-demand', 'fill-stockouts'], 'fill-rate-result'],
+                [['transp-distance', 'transp-rate', 'transp-additional'], 'transport-cost-result']
             ]) ids.forEach(id => document.getElementById(id).addEventListener('input', () => hideInventoryResult(resultId)));
             const calculatorCards = document.querySelectorAll('.calculator-card');
             

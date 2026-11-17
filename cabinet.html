@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/vendor/chart.umd-4.5.1.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -1186,6 +1186,14 @@
     document.getElementById('logoutBtn').onclick = () => { localStorage.removeItem('promo_logged'); checkAuth(); };
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active')); document.getElementById(btn.dataset.tab).classList.add('active'); }));
 
+    // Re-entry into the workspace must replace, not stack, charts on the same canvas.
+    function drawMarketChart(id, config) {
+        const canvas = document.getElementById(id);
+        const existing = Chart.getChart(canvas);
+        if (existing) existing.destroy();
+        return new Chart(canvas, config);
+    }
+
     // --- ЗАГРУЗКА ДАННЫХ ДЛЯ СКЛАДСКОЙ АНАЛИТИКИ ---
     async function loadWarehouseAnalytics() {
         try {
@@ -1204,7 +1212,7 @@
                 <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.min)}</div><div>Мин. нижняя граница зарплаты</div></div>
                 <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.max)}</div><div>Макс. нижняя граница зарплаты</div></div>
             `;
-            new Chart(document.getElementById('wh_skills_chart'), {
+            drawMarketChart('wh_skills_chart', {
                 type: 'bar',
                 data: {
                     labels: data.top_skills.slice(0, 10).map(s => s.skill),
@@ -1212,11 +1220,11 @@
                 }
             });
             const regs = Object.keys(data.avg_salary_by_region);
-            new Chart(document.getElementById('wh_salary_region_chart'), {
+            drawMarketChart('wh_salary_region_chart', {
                 type: 'bar',
                 data: { labels: regs, datasets: [{ label: 'Средняя з/п', data: regs.map(r => data.avg_salary_by_region[r]), backgroundColor: '#d4af37' }] }
             });
-            new Chart(document.getElementById('wh_timeline_chart'), {
+            drawMarketChart('wh_timeline_chart', {
                 type: 'line',
                 data: {
                     labels: data.timeline.map(t => t.date.slice(5)),
@@ -1244,7 +1252,7 @@
                 <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.min)}</div><div>Мин. нижняя граница зарплаты</div></div>
                 <div class="stat-card"><div class="stat-number">${salary(data.salary_stats.max)}</div><div>Макс. нижняя граница зарплаты</div></div>
             `;
-            new Chart(document.getElementById('tr_skills_chart'), {
+            drawMarketChart('tr_skills_chart', {
                 type: 'bar',
                 data: {
                     labels: data.top_skills.slice(0, 10).map(s => s.skill),
@@ -1252,11 +1260,11 @@
                 }
             });
             const regs = Object.keys(data.avg_salary_by_region);
-            new Chart(document.getElementById('tr_salary_region_chart'), {
+            drawMarketChart('tr_salary_region_chart', {
                 type: 'bar',
                 data: { labels: regs, datasets: [{ label: 'Средняя з/п', data: regs.map(r => data.avg_salary_by_region[r]), backgroundColor: '#1e40af' }] }
             });
-            new Chart(document.getElementById('tr_timeline_chart'), {
+            drawMarketChart('tr_timeline_chart', {
                 type: 'line',
                 data: {
                     labels: data.timeline.map(t => t.date.slice(5)),
