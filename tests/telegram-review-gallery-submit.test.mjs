@@ -20,3 +20,9 @@ test('unready, changed card, invalid index, and failed delivery all fail closed'
  await writeFile(join(dir,'draft-01.json'),JSON.stringify({...sample(),ready_for_review:false})); await assert.rejects(()=>sendGalleryItem(dir,1,opts(fail)));
  await writeFile(join(dir,'draft-01.json'),JSON.stringify({...sample(),title:'Изменено'})); await assert.rejects(()=>sendGalleryItem(dir,1,opts(fail)),/не соответствует/); assert.equal(count,1);
 });
+test('synthetic PNG smoke fixture is previewable offline and clearly not a publication',async()=>{
+ const out=await sendGalleryItem('tests/fixtures/telegram-png-smoke',1);
+ assert.equal(out.sent,false);
+ assert.match(out.text,/техническая проверка/i);
+ assert.match(out.source_url,/^https:\/\/example\.org\/scm-test-/);
+});
