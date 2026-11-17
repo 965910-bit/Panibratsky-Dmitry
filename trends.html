@@ -1325,6 +1325,12 @@
             document.getElementById('active-tag').textContent = `Фильтр: ${currentTagFilter}`;
         }
 
+        // Existing event names are retained; failure of one counter must not block the other.
+        function trackLegacyNavigation(goal, eventName, category, label) {
+            try { if (typeof window.ym === 'function') window.ym(108401876, 'reachGoal', goal); } catch (_) {}
+            try { if (typeof window.gtag === 'function') window.gtag('event', eventName, { event_category: category, event_label: label }); } catch (_) {}
+        }
+
         document.querySelectorAll('#nav-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -1338,8 +1344,7 @@
                 else if (href.includes('career.html')) page = 'career';
                 else if (href.includes('blog.html')) page = 'blog';
                 if (page) {
-                    ym(108401876, 'reachGoal', 'nav_click_' + page);
-                    gtag('event', 'nav_click', { event_category: 'navigation', event_label: page });
+                    trackLegacyNavigation('nav_click_' + page, 'nav_click', 'navigation', page);
                 }
             });
         });
@@ -1347,8 +1352,7 @@
         const rssFooterLink = document.querySelector('footer a[href="rss.xml"]');
         if (rssFooterLink) {
             rssFooterLink.addEventListener('click', () => {
-                ym(108401876, 'reachGoal', 'footer_rss_click');
-                gtag('event', 'footer_rss_click', { event_category: 'footer', event_label: 'rss' });
+                trackLegacyNavigation('footer_rss_click', 'footer_rss_click', 'footer', 'rss');
             });
         }
         document.querySelectorAll('.footer-column a').forEach(link => {
@@ -1367,8 +1371,7 @@
                     else if (link.href.includes('career.html')) label = 'career';
                     else if (link.href.includes('blog.html')) label = 'blog';
                     if (label) {
-                        ym(108401876, 'reachGoal', 'footer_link_click_' + label);
-                        gtag('event', 'footer_link_click', { event_category: 'footer', event_label: label });
+                        trackLegacyNavigation('footer_link_click_' + label, 'footer_link_click', 'footer', label);
                     }
                 });
             }
