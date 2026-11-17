@@ -28,8 +28,7 @@ def load_collector():
 class NewsCollectionTests(unittest.TestCase):
     def test_restricted_source_is_not_scheduled_for_collection(self):
         module = load_collector()
-        self.assertTrue(module.SOURCES)
-        self.assertFalse(any('logistics360.ru' in source['url'].lower() for source in module.SOURCES))
+        self.assertEqual(module.SOURCES, [])
 
     def test_all_sources_unavailable_fails_without_touching_feed(self):
         module = load_collector()
@@ -37,11 +36,30 @@ class NewsCollectionTests(unittest.TestCase):
             news = Path(folder) / 'news.json'
             original = '[{"link":"https://example.com/a","title":"old"}]'
             news.write_text(original)
-            with patch.object(module, 'fetch_rss', return_value=None), patch.object(module, 'fetch_from_sitemap', return_value=None), patch.object(module, 'load_google_alerts') as alerts:
+            with patch.object(module, 'SOURCES', [{'name':'fixture', 'url':'https://example.org/map', 'type':'sitemap'}]), patch.object(module, 'fetch_rss', return_value=None), patch.object(module, 'fetch_from_sitemap', return_value=None), patch.object(module, 'load_google_alerts') as alerts:
                 with self.assertRaisesRegex(RuntimeError, 'источники недоступны'):
                     module.main(str(news))
                 alerts.assert_not_called()
             self.assertEqual(news.read_text(), original)
+
+    def test_paused_sources_preserve_existing_feed_without_network_or_alerts(self):
+        module = load_collector()
+        with tempfile.TemporaryDirectory() as folder:
+            news = Path(folder) / 'news.json'
+            original = '[{"link":"https://example.com/old","title":"old"}]'
+            news.write_text(original)
+            with patch.object(module, 'fetch_rss') as rss, patch.object(module, 'fetch_from_sitemap') as sitemap, patch.object(module, 'load_google_alerts') as alerts, patch('builtins.print') as output:
+                module.main(str(news))
+                rss.assert_not_called()
+                sitemap.assert_not_called()
+                alerts.assert_not_called()
+                self.assertTrue(any('лента не обновлялась' in str(call) for call in output.call_args_list))
+            self.assertEqual(news.read_text(), original)
+
+    def test_scheduled_workflow_does_not_invoke_ati_collector(self):
+        workflow = (ROOT / '.github/workflows/update_news.yml').read_text(encoding='utf-8')
+        self.assertNotIn('ATIStatsCollector', workflow)
+        self.assertNotIn('collectors.ati_stats', workflow)
 
     def test_partial_failure_keeps_successful_items_and_warns(self):
         module = load_collector()

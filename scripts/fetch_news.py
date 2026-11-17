@@ -9,17 +9,10 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from news_utils import merge_news
 
-SOURCES = [
-    # Paused pending written permission: https://logistics360.ru/copyright-rules/
-    # A public RSS feed alone does not establish permission for automated extraction.
-    {
-        "name": "АТИ (новости)",
-        "url": "https://news.ati.su/sitemap.xml",
-        "cat": "logistics",
-        "lang": "ru",
-        "type": "sitemap"
-    }
-]
+# Direct primary sources are paused pending clarification of access rights.
+# Keep the existing feed unchanged rather than treating a paused feed as fresh data.
+SOURCES = []
+
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -319,6 +312,9 @@ def load_existing_links(news_file):
 
 # ---------------------- ГЛАВНАЯ ----------------------
 def main(news_file=None):
+    if not SOURCES:
+        print('::warning::Основные источники приостановлены; лента не обновлялась')
+        return
     news_file = news_file or os.path.join(os.path.dirname(__file__), "..", "data", "news.json")
     if os.path.exists(news_file):
         with open(news_file, "r", encoding="utf-8") as f:

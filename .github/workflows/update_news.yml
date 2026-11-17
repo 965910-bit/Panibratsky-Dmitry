@@ -42,9 +42,8 @@ jobs:
         run: python -c "from collectors.gov_ru import GovRuCollector; c = GovRuCollector(); data = c.fetch(); import json; open('data/gov_news.json','w').write(json.dumps(data, ensure_ascii=False))" || true
         continue-on-error: true
 
-      - name: Collect ATI stats (optional)
-        run: python -c "from collectors.ati_stats import ATIStatsCollector; c = ATIStatsCollector(); data = c.fetch_indexes(); import json; open('data/ati_stats.json','w').write(json.dumps(data, ensure_ascii=False))" || true
-        continue-on-error: true
+      # ATI statistics collection is paused pending clarification of access rights.
+      # Previously collected data are preserved; no ATI network call is made here.
 
       - name: Generate sitemap
         run: python scripts/generate_sitemap.py
