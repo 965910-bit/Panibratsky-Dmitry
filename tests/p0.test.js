@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 
 const html = fs.readFileSync('trends.html', 'utf8');
+const validNewsUrl = html.match(/        function isSafeNewsUrl\(value\) \{[\s\S]*?\n        \}/)[0];
 const load = html.match(/        async function loadNews\(\) \{[\s\S]*?\n        \}\n\n        function applyFilters/)[0].replace(/\n\n        function applyFilters$/, '');
 function setup(fetch, applyFilters) {
   const list = { childNodes: [{ text: 'static snapshot' }], replaceChildren(...nodes) { this.childNodes = nodes; } };
@@ -12,7 +13,7 @@ function setup(fetch, applyFilters) {
   const status = { textContent: '' };
   const context = { fetch, URL, Date, window: { location: { hash: '' } }, prioritizeLinkedNews: items => ({ items, found: false, message: '' }), console: { error() {} }, document: { getElementById(id) { return { 'news-list': list, pagination, 'news-status': status, 'news-target-status': { textContent: '' } }[id]; } }, applyFilters: () => applyFilters(list) };
   vm.createContext(context);
-  vm.runInContext('let allNews = [], filteredNews = [], currentPage = 1, targetHandled = false;\n' + load, context);
+  vm.runInContext('let allNews = [], filteredNews = [], currentPage = 1, targetHandled = false;\n' + validNewsUrl + '\n' + load, context);
   return { context, list, status };
 }
 test('news retains static snapshot on fetch error, empty data, or render failure', async () => {
@@ -80,10 +81,27 @@ test('opening a Telegram link clears an old filter and places its matching item 
     document: { getElementById: id => nodes[id] }, localStorage: { removeItem() {} }, console,
     applyFilters: () => {} };
   vm.createContext(ctx);
-  vm.runInContext('let allNews = [], filteredNews = [], currentPage = 1, currentTagFilter = "old", currentSearch = "old", targetHandled = false;\n' + targetFunction + '\n' + load, ctx);
+  vm.runInContext('let allNews = [], filteredNews = [], currentPage = 1, currentTagFilter = "old", currentSearch = "old", targetHandled = false;\n' + targetFunction + '\n' + validNewsUrl + '\n' + load, ctx);
   assert.equal(await ctx.loadNews(), true);
   assert.equal(vm.runInContext('allNews[0].link', ctx), link);
   assert.equal(vm.runInContext('currentTagFilter', ctx), null);
   assert.equal(nodes['filter-bar'].style.display, 'none');
   assert.match(nodes['news-target-status'].textContent, /найдена/);
+});
+
+
+test('news URLs reject deceptive credentials, control characters and ambiguous destinations', () => {
+  const ctx = {URL}; vm.createContext(ctx); vm.runInContext(validNewsUrl, ctx);
+  const cases = JSON.parse(fs.readFileSync('tests/fixtures/news-link-cases.json', 'utf8'));
+  for (const item of cases) assert.equal(ctx.isSafeNewsUrl(item.url), item.valid, JSON.stringify(item.url));
+});
+
+test('news loading discards unsafe links while preserving valid articles', async () => {
+  const data = [{link: 'https://trusted.example@bad.example/', title: 'unsafe'},
+    {link: 'https://example.com/legitimate', title: 'safe'},
+    {link: 'https://example.com/invalid\\@bad.example/', title: 'unsafe'}];
+  const {context} = setup(async () => ({ok:true, json:async () => data}), () => {});
+  assert.equal(await context.loadNews(), true);
+  assert.equal(vm.runInContext('allNews.length', context), 1);
+  assert.equal(vm.runInContext('allNews[0].title', context), 'safe');
 });

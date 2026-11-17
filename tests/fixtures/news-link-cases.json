@@ -1,0 +1,20 @@
+[
+  {"url":"https://example.com/article?a=1&b=2","valid":true},
+  {"url":"http://example.com:8080/новости","valid":true},
+  {"url":"https://пример.рф/страница","valid":true},
+  {"url":"https://[2001:db8::1]/article","valid":true},
+  {"url":"javascript:alert(1)","valid":false},
+  {"url":"//example.com/article","valid":false},
+  {"url":"https:///example.com/article","valid":false},
+  {"url":"https://trusted.example@attacker.example/","valid":false},
+  {"url":"https://@example.com/","valid":false},
+  {"url":"https://example.com\\@attacker.example/","valid":false},
+  {"url":"https://example.com/article text","valid":false},
+  {"url":"https://example.com/\narticle","valid":false},
+  {"url":"https://example.com/\u007farticle","valid":false},
+  {"url":"https://example.com:99999/","valid":false},
+  {"url":"https://example..com/","valid":false},
+  {"url":"https://exa%mple.com/","valid":false},
+  {"url":"https://example.com|evil.example/","valid":false},
+  {"url":null,"valid":false}
+]

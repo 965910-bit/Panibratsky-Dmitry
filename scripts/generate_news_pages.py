@@ -3,7 +3,10 @@
 import html
 import json
 from pathlib import Path
-from urllib.parse import urlsplit
+try:
+    from news_link_validation import valid_news_link
+except ModuleNotFoundError:
+    from scripts.news_link_validation import valid_news_link
 
 ROOT = Path(__file__).resolve().parent.parent
 START = '<!-- NEWS_SNAPSHOT_START -->'
@@ -22,13 +25,7 @@ def generate():
         if not isinstance(item, dict) or item.get('dead'):
             continue
         url = item.get('link')
-        if not isinstance(url, str):
-            continue
-        try:
-            parsed = urlsplit(url)
-            if parsed.scheme not in ('http', 'https') or not parsed.hostname or url in seen:
-                continue
-        except ValueError:
+        if not valid_news_link(url) or url in seen:
             continue
         seen.add(url)
         title = html.escape(str(item.get('title') or 'Новость'))
