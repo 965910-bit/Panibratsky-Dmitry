@@ -18,7 +18,7 @@ class LiveHTTPDiagnosticTests(unittest.TestCase):
         self.assertEqual(seen, list(http.URLS.values()))
         self.assertEqual(result['http_apex']['location'], 'https://scm-news.ru/')
         self.assertEqual(result['https_apex']['hsts'], 'max-age=300')
-        self.assertEqual(result['https_www'], {'error': 'request failed'})
+        self.assertEqual(result['https_www'], {'error': 'network'})
         self.assertEqual(result['missing']['status'], 301)
 
     def test_does_not_expose_redirect_parameters(self):

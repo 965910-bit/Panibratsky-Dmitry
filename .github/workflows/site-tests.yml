@@ -55,3 +55,9 @@ jobs:
       - name: Inspect fixed production HTTP responses without changes
         if: always()
         run: python scripts/live_http_diagnostic.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci --ignore-scripts
+      - name: Check published homepage in Chromium without analytics
+        run: CHROME_PATH="$(command -v google-chrome)" node scripts/live_home_browser.cjs

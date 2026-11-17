@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Read-only fixed-origin HTTP probe. Does not follow redirects or enumerate hosts."""
 import json
+import socket
+import ssl
 import urllib.error
 import urllib.request
 from urllib.parse import urlsplit
@@ -51,8 +53,13 @@ def probe(fetcher=fetch):
             hsts = headers.get('Strict-Transport-Security', '')
             output[label] = {'status': status, 'location': safe_location(headers.get('Location', '')),
                              'hsts': hsts[:160] if hsts else None}
-        except (urllib.error.URLError, OSError, ValueError):
-            output[label] = {'error': 'request failed'}
+        except (urllib.error.URLError, OSError, ValueError) as exc:
+            reason = getattr(exc, 'reason', exc)
+            kind = ('tls' if isinstance(reason, ssl.SSLError) else
+                    'dns' if isinstance(reason, socket.gaierror) else
+                    'timeout' if isinstance(reason, (TimeoutError, socket.timeout)) else 'network')
+            output[label] = {'error': kind}
+
     return output
 
 
