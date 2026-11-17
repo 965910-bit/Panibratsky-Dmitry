@@ -708,6 +708,8 @@
             border-bottom: 1px solid var(--border);
         }
         .faq-question {
+            display: block;
+            list-style: none;
             font-weight: 700;
             cursor: pointer;
             padding: 16px 0;
@@ -715,6 +717,8 @@
             padding-right: 30px;
             font-size: 18px;
         }
+        .faq-question::-webkit-details-marker { display: none; }
+        .faq-question:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
         .faq-question::after {
             content: '+';
             position: absolute;
@@ -723,7 +727,7 @@
             font-size: 22px;
             font-weight: 400;
         }
-        .faq-question.active::after {
+        .faq-item[open] .faq-question::after {
             content: '−';
         }
         .faq-answer {
@@ -732,7 +736,7 @@
             color: var(--text-secondary);
             line-height: 1.6;
         }
-        .faq-answer.show {
+        .faq-item[open] .faq-answer {
             display: block;
         }
         .section-title {
@@ -873,26 +877,26 @@
     <div class="container">
         <div class="faq-block">
             <h2 class="section-title">Часто задаваемые вопросы</h2>
-            <div class="faq-item">
-                <div class="faq-question">Откуда берутся новости на сайте?</div>
+            <details class="faq-item">
+                <summary class="faq-question">Откуда берутся новости на сайте?</summary>
                 <div class="faq-answer">В ленте сохранены ранее собранные материалы из разных источников. Добавление новых материалов приостановлено до проверки условий доступа и использования.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Как искать новости по тегам?</div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">Как искать новости по тегам?</summary>
                 <div class="faq-answer">Нажмите на любой тег в «Облаке тегов» — лента отфильтруется. Также можно использовать поиск по заголовку и описанию. Фильтр сохраняется при перезагрузке страницы.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Можно ли поделиться новостью в соцсетях?</div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">Можно ли поделиться новостью в соцсетях?</summary>
                 <div class="faq-answer">Да, под каждой новостью есть кнопки «Поделиться» в Telegram, VK и Twitter. При клике открывается готовое окно для отправки.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Как часто обновляется лента?</div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">Как часто обновляется лента?</summary>
                 <div class="faq-answer">Добавление новых материалов приостановлено. Страница периодически перечитывает сохранённую ленту, но это не означает, что в ней появились свежие новости.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Как подписаться на уведомления о новых новостях?</div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-question">Как подписаться на уведомления о новых новостях?</summary>
                 <div class="faq-answer">Email-подписка пока недоступна. Для связи используйте страницу контактов или открытые каналы сайта.</div>
-            </div>
+            </details>
         </div>
     </div>
 
@@ -1408,16 +1412,6 @@
 
         startAutoUpdate(5);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const questions = document.querySelectorAll('.faq-question');
-            questions.forEach(q => {
-                q.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    const answer = this.nextElementSibling;
-                    answer.classList.toggle('show');
-                });
-            });
-        });
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>

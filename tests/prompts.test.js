@@ -8,8 +8,8 @@ const script = html.match(/<script>\s*(function escapePrompt[\s\S]*?)<\/script>/
 const prompts = JSON.parse(fs.readFileSync('data/prompts.json', 'utf8'));
 function environment(fetch) {
   const els = {};
-  for (const id of ['promptSearch', 'filterTier', 'filterRole', 'filterDiff', 'promptStatus', 'promptCount', 'promptMore', 'promptTbody', 'promptModalContent', 'promptModal']) {
-    els[id] = { value: '', textContent: '', innerHTML: '', hidden: true, classList: { add() {}, remove() {} }, addEventListener() {} };
+  for (const id of ['promptSearch', 'filterTier', 'filterRole', 'filterDiff', 'promptStatus', 'promptCount', 'promptMore', 'promptTbody', 'promptModalContent', 'promptModal', 'promptModalClose']) {
+    els[id] = { value: '', textContent: '', innerHTML: '', hidden: true, classList: { add() {}, remove() {}, contains() { return false; } }, addEventListener() {}, setAttribute() {}, contains() { return false; }, focus() {} };
   }
   const ctx = { fetch, document: { getElementById: id => els[id], addEventListener() {} }, navigator: {}, console, Number };
   vm.createContext(ctx); vm.runInContext(script, ctx);
@@ -36,4 +36,31 @@ test('failed fetch retains preview, reports error, and can retry', async () => {
   els.promptTbody.innerHTML = 'static preview';
   await ctx.filterPrompts(); assert.equal(els.promptTbody.innerHTML, 'static preview'); assert.match(els.promptStatus.textContent, /Не удалось/);
   await ctx.filterPrompts(); assert.match(els.promptCount.textContent, /3035/);
+});
+
+test('prompt dialog supports keyboard focus, escape, return focus and unavailable clipboard', async () => {
+  const handlers = {}, attrs = {}, classes = new Set();
+  let ctx, closeButton, copyButton;
+  const opener = {isConnected:true, focus() {ctx.document.activeElement=this;}};
+  const search = {focus() {ctx.document.activeElement=this;}};
+  closeButton = {focus() {ctx.document.activeElement=this;}};
+  copyButton = {focus() {ctx.document.activeElement=this;}};
+  const modal = {classList:{add:x=>classes.add(x),remove:x=>classes.delete(x),contains:x=>classes.has(x)},
+    setAttribute:(k,v)=>{attrs[k]=v;}, contains:x=>x===closeButton||x===copyButton,
+    querySelectorAll:()=>[closeButton,copyButton]};
+  const nodes = {promptModal:modal,promptModalClose:closeButton,promptSearch:search,
+    promptStatus:{textContent:''},promptModalContent:{innerHTML:''}};
+  const document = {activeElement:opener,body:{},getElementById:id=>nodes[id],addEventListener:(name,fn)=>{handlers[name]=fn;}};
+  ctx={document,navigator:{},fetch:async()=>({ok:true,json:async()=>prompts}),console,Number};
+  vm.createContext(ctx); vm.runInContext(script,ctx);
+  await ctx.openPrompt(1);
+  assert.equal(attrs['aria-hidden'],'false'); assert.equal(document.activeElement,closeButton);
+  let prevented=false;
+  handlers.keydown({key:'Tab',shiftKey:true,preventDefault(){prevented=true;}});
+  assert.equal(prevented,true);assert.equal(document.activeElement,copyButton);
+  prevented=false;handlers.keydown({key:'Tab',shiftKey:false,preventDefault(){prevented=true;}});
+  assert.equal(prevented,true);assert.equal(document.activeElement,closeButton);
+  const copy={innerText:''};assert.doesNotThrow(()=>ctx.copyPromptTemplate(1,copy));assert.match(copy.innerText,/Не удалось/);
+  handlers.keydown({key:'Escape',preventDefault(){}});
+  assert.equal(attrs['aria-hidden'],'true');assert.equal(document.activeElement,opener);
 });
