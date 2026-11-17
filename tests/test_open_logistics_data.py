@@ -138,9 +138,19 @@ class OpenLogisticsTests(unittest.TestCase):
             self.assertEqual(args[0].full_url, module.WORLD_BANK)
             self.assertEqual(kwargs['timeout'], 20)
 
+    def test_committed_real_archives_verify_without_network(self):
+        archives = sorted((ROOT / 'data/open-logistics-archives').iterdir())
+        self.assertTrue(archives, 'Expected at least one archived API response')
+        for archive in archives:
+            with self.subTest(archive=archive.name):
+                self.assertTrue(archive.is_dir())
+                self.assertEqual(set(module.verify_archive(archive)), {'world_bank', 'eurostat'})
+
     def test_workflow_scopes_writes_and_paused_news_remains_paused(self):
         workflow = (ROOT / '.github/workflows/open_logistics_data.yml').read_text()
-        self.assertIn('python scripts/open_logistics_data.py --check', workflow)
+        self.assertIn('python scripts/open_logistics_data.py --archive-dir', workflow)
+        self.assertIn("github.event_name == 'workflow_dispatch' && inputs.persist_diagnostic == true", workflow)
+        self.assertIn("if: github.ref != 'refs/heads/main'", workflow)
         self.assertIn('git add data/open-logistics.json', workflow)
         self.assertIn("if: github.ref == 'refs/heads/main'", workflow)
         self.assertNotIn('telegram', workflow.lower())

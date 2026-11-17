@@ -33,7 +33,7 @@ jobs:
         if: github.ref != 'refs/heads/main'
         run: |
           cp data/open-logistics.json "$RUNNER_TEMP/open-logistics-before.json"
-          python scripts/open_logistics_data.py --archive-dir "$RUNNER_TEMP/open-data-archive"
+          python scripts/open_logistics_data.py --archive-dir "$RUNNER_TEMP/open-data-archive" --review-history-dir data/open-logistics-archives
           python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression
           for archive in "$RUNNER_TEMP"/open-data-archive/*; do
             python scripts/verify_open_archive.py "$archive"
@@ -68,7 +68,7 @@ jobs:
         run: cp data/open-logistics.json "$RUNNER_TEMP/open-logistics-before.json"
       - name: Update indicators on main
         if: github.ref == 'refs/heads/main'
-        run: python scripts/open_logistics_data.py --archive-dir data/open-logistics-archives
+        run: python scripts/open_logistics_data.py --archive-dir data/open-logistics-archives --review-history-dir data/open-logistics-archives
       - name: Review saved observations before committing
         if: github.ref == 'refs/heads/main'
         run: python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression
