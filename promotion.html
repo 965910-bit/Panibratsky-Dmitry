@@ -312,7 +312,7 @@
         <div id="leads" class="tab-pane">
             <div class="card">
                 <div class="card-title"><i class="fas fa-users"></i> База лидов</div>
-                <div class="flex-between"><button id="addLeadBtn">+ Добавить лида</button><button id="importLeadsBtn" class="secondary">Импорт резервной копии JSON</button><button id="exportLeadsBtn" class="secondary">Экспорт CSV</button></div>
+                <div class="flex-between"><button id="addLeadBtn">+ Добавить лида</button><button id="importLeadsBtn" class="secondary" disabled>Импорт JSON приостановлен</button><button id="exportLeadsBtn" class="secondary">Экспорт CSV</button></div>
                 <p role="note">CSV предназначен для просмотра, содержит защитный префикс в ячейках и не гарантирует безопасность во всех табличных программах, особенно после повторного сохранения. Для резервного копирования используйте JSON.</p>
                 <table id="leadsTable"><thead><tr><th>Имя</th><th>Email</th><th>Источник</th><th>Дата</th><th>Статус</th><th></th></tr></thead><tbody></tbody></table>
             </div>
@@ -349,8 +349,8 @@
         <div id="import" class="tab-pane">
             <div class="card">
                 <div class="card-title"><i class="fas fa-database"></i> Резервное копирование</div>
-                <p>Экспортируйте все данные в JSON или импортируйте ранее сохранённый бэкап.</p>
-                <div class="flex-between"><button id="exportAllBtn">Экспорт всех данных</button><label for="importFile" class="secondary" style="background:#e2e8f0; padding:8px 16px; border-radius:30px; cursor:pointer;">Выбрать файл</label><input type="file" id="importFile" style="display:none;"><button id="importAllBtn" class="secondary">Импортировать</button></div>
+                <p>Экспортируйте данные в JSON. Импорт приостановлен: схема вложенных данных не проверена полностью, а запись нескольких разделов не атомарна. Существующие данные и резервные копии сохранены.</p>
+                <div class="flex-between"><button id="exportAllBtn">Экспорт всех данных</button><input type="file" id="importFile" style="display:none;"><button id="importAllBtn" class="secondary" disabled>Импорт приостановлен</button></div>
                 <div id="importStatus" style="margin-top: 20px;"></div>
             </div>
         </div>
@@ -741,21 +741,7 @@
     }
     function downloadFile(filename, content) { const a = document.createElement('a'); const blob = new Blob([content], {type: 'text/plain'}); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); URL.revokeObjectURL(a.href); }
     function importData(file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Неверный формат');
-                const keys = Object.keys(data).filter(key => Object.values(STORAGE).includes(key));
-                if (!keys.length || keys.some(key => !Array.isArray(data[key]))) throw new Error('Неверный формат');
-                if (!confirm('Импорт заменит выбранные локальные данные. Сначала сохраните JSON-резервную копию. Импорт нескольких разделов не атомарен. Продолжить?')) return;
-                for (const key of keys) localStorage.setItem(key, JSON.stringify(data[key]));
-                location.reload();
-            } catch (err) {
-                document.getElementById('importStatus').textContent = 'Ошибка импорта: данные могли быть частично записаны. Проверьте состояние и резервную копию.';
-            }
-        };
-        reader.readAsText(file);
+        document.getElementById('importStatus').textContent = 'Импорт приостановлен до проверки формата и безопасного восстановления; существующие данные не изменены.';
     }
 
     // ======================= SEO проверка =======================

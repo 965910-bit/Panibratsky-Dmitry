@@ -89,14 +89,12 @@ test('noindex pages remain outside sitemap and accessible to robots for noindex 
   for(const bot of ['GPTBot','OAI-SearchBot','ClaudeBot','PerplexityBot'])assert.match(robots,new RegExp(`User-agent: ${bot}\\nAllow: /`));
 });
 
-test('promotion backup import requires valid arrays and confirmation; previous values are retained on decline',()=>{
-  const page=fs.readFileSync('promotion.html','utf8'),map=new Map([['keywords','old']]),status={textContent:''};let approved=false,reloads=0;
-  class FileReader {readAsText(file){this.onload({target:{result:file}});}}
-  const ctx={FileReader,STORAGE:{keywords:'keywords',traffic:'traffic'},localStorage:{setItem:(k,v)=>map.set(k,v)},document:{getElementById:()=>status},confirm:()=>approved,location:{reload:()=>reloads++}};vm.createContext(ctx);
+test('promotion import is paused without reading files or touching existing data',()=>{
+  const page=fs.readFileSync('promotion.html','utf8'),map=new Map([['keywords','old']]),status={textContent:''};
+  const ctx={document:{getElementById:()=>status},localStorage:{setItem:(k,v)=>map.set(k,v)}};vm.createContext(ctx);
   vm.runInContext(extract(page,'importData'),ctx);
-  ctx.importData('{"keywords":{}}');assert.equal(map.get('keywords'),'old');assert.equal(reloads,0);assert.match(status.textContent,/Ошибка/);
-  ctx.importData('{"keywords":[1]}');assert.equal(map.get('keywords'),'old');assert.equal(reloads,0);
-  approved=true;ctx.importData('{"keywords":[1],"unrecognised":[2]}');assert.equal(map.get('keywords'),'[1]');assert.equal(map.has('unrecognised'),false);assert.equal(reloads,1);
+  ctx.importData('{"keywords":[1]}');assert.equal(map.get('keywords'),'old');assert.match(status.textContent,/приостановлен/);
+  assert.match(page,/id="importAllBtn"[^>]*disabled/);assert.match(page,/id="importLeadsBtn"[^>]*disabled/);
 });
 test('promotion CSV quotes cells and prefixes spreadsheet text without claiming universal protection',()=>{
   const page=fs.readFileSync('promotion.html','utf8'),ctx={};vm.createContext(ctx);vm.runInContext(extract(page,'csvTextCell'),ctx);

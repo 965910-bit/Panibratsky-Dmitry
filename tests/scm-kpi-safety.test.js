@@ -95,16 +95,16 @@ test('explicit save validates input, keeps fractional values and does not create
   h.context.renderKPICards(); assert.equal(h.node('co2_val_co2').value, '0');
 });
 
-test('import displays exact saved result without generating history or tasks', () => {
+test('KPI import is paused and preserves existing values, history and tasks', () => {
   const tasks = JSON.stringify({backlog:[{id:'old'}]});
-  const h = harness({scm_planner_tasks_v5_default:tasks});
-  const payload = {otd:{result:77.2, values:{otd_val:'77.2'},timestamp:'2020-01-01'}, otd_history:[{value:75,date:'2020-01-01'}]};
-  h.context.importKPI(JSON.stringify(payload));
-  assert.deepEqual(JSON.parse(h.store.get('kpi_otd_default_history')),payload.otd_history);
-  assert.equal(JSON.parse(h.store.get('kpi_otd_default')).result,77.2);
-  assert.equal(h.node('result_otd').textContent,'77.2 %');
+  const old = JSON.stringify({result:22,values:{}});
+  const h = harness({scm_planner_tasks_v5_default:tasks,kpi_otd_default:old});
+  h.context.importKPI(JSON.stringify({otd:{result:77.2},otd_history:[{value:75}]}));
+  assert.equal(h.store.get('kpi_otd_default'),old);
+  assert.equal(h.store.get('kpi_otd_default_history'),undefined);
   assert.equal(h.store.get('scm_planner_tasks_v5_default'),tasks);
-  assert.equal(h.writes(),2);
+  assert.equal(h.writes(),0);
+  assert.match(fs.readFileSync('scm-platform/kpi-center.html','utf8'),/id="importKpiBtn" disabled/);
 });
 
 test('existing values are rendered as text and not interpreted as markup', () => {

@@ -15,6 +15,7 @@
     <script src="../js/inventory-models.js"></script>
     <script src="../js/inventory-metrics.js"></script>
     <script src="../js/transport-estimate.js"></script>
+    <script src="../js/operations-estimates.js"></script>
     <style>
         .calc-grid {
             display: grid;
@@ -156,7 +157,7 @@
                 <select id="branchSelector"></select>
             </div>
         </div>
-        <p>Результаты моделей запасов показаны с округлением до двух знаков (очень малые и большие — экспоненциально), хранятся без округления; применимость и упаковку проверяйте отдельно. Прежние результаты этих моделей сохранены отдельно. Оборачиваемость, Unit Fill Rate и оценка стоимости рейса сохраняются отдельно от прежних расчётов и не отправляются в KPI. Расчёты зависят от введённых данных и условий; остальные калькуляторы проверены частично. Расчёт ФОТ с северными надбавками временно приостановлен: прежняя формула начисляла коэффициент и надбавку друг на друга. Сохранённые расчёты не изменены; проверьте их отдельно с бухгалтером. <a href="https://xn--80akibcicpdbetz7e2g.xn--p1ai/questions/viewFaq/1159">Разъяснение Роструда</a>.</p>
+        <p>Результаты моделей запасов показаны с округлением до двух знаков (очень малые и большие — экспоненциально), хранятся без округления; применимость и упаковку проверяйте отдельно. Прежние результаты этих моделей сохранены отдельно. Оборачиваемость, Unit Fill Rate и оценка стоимости рейса сохраняются отдельно от прежних расчётов и не отправляются в KPI. Остальные оценки проверяют ввод и сохраняются отдельно от старых расчётов; передача в KPI отключена до согласования методик. Проверьте предпосылки, данные и старую историю перед применением. Расчёт ФОТ с северными надбавками временно приостановлен: прежняя формула начисляла коэффициент и надбавку друг на друга. Сохранённые расчёты не изменены; проверьте их отдельно с бухгалтером. <a href="https://xn--80akibcicpdbetz7e2g.xn--p1ai/questions/viewFaq/1159">Разъяснение Роструда</a>.</p>
 
         <div class="btn-group">
             <button id="printCalculatorsBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать калькуляторов</button>
@@ -206,9 +207,9 @@
     }
 
     function saveCalculation(calcId, values, result) {
-        const key = calcId === 'ftl_cost' ? `calc_ftl_cost_trip_v1_${currentBranchId}` : ['turnover', 'fill_rate'].includes(calcId) ? `calc_${calcId}_metric_v1_${currentBranchId}` : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? `calc_${calcId}_model_v1_${currentBranchId}` : calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : calcId === 'mape' ? `calc_ape_v1_${currentBranchId}` : calcId === 'dim_weight' ? `calc_dim_weight_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
+        const key = ['staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calcId) ? `calc_${calcId}_estimate_v1_${currentBranchId}` : calcId === 'ftl_cost' ? `calc_ftl_cost_trip_v1_${currentBranchId}` : ['turnover', 'fill_rate'].includes(calcId) ? `calc_${calcId}_metric_v1_${currentBranchId}` : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? `calc_${calcId}_model_v1_${currentBranchId}` : calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : calcId === 'mape' ? `calc_ape_v1_${currentBranchId}` : calcId === 'dim_weight' ? `calc_dim_weight_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
         const saved = JSON.parse(localStorage.getItem(key) || '[]');
-        saved.push({ values, result, timestamp: new Date().toISOString(), ...(calcId === 'ftl_cost' ? { method: 'trip-estimate-v1' } : ['turnover', 'fill_rate'].includes(calcId) ? { method: {turnover: 'period-cogs-average-inventory-v1', fill_rate: 'unit-fill-immediate-v1'}[calcId] } : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? { method: {safety_stock: 'fixed-lead-normal-v1', eoq: 'classical-eoq-v1', rop: 'continuous-review-rop-v1'}[calcId] } : calcId === 'otif' ? { method: 'joint-orders-v1' } : calcId === 'mape' ? { method: 'single-ape-v1' } : calcId === 'dim_weight' ? { method: 'unrounded-package-comparison-v1' } : {}) });
+        saved.push({ values, result, timestamp: new Date().toISOString(), ...(['staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calcId) ? { method: `scenario-${calcId}-v1` } : calcId === 'ftl_cost' ? { method: 'trip-estimate-v1' } : ['turnover', 'fill_rate'].includes(calcId) ? { method: {turnover: 'period-cogs-average-inventory-v1', fill_rate: 'unit-fill-immediate-v1'}[calcId] } : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? { method: {safety_stock: 'fixed-lead-normal-v1', eoq: 'classical-eoq-v1', rop: 'continuous-review-rop-v1'}[calcId] } : calcId === 'otif' ? { method: 'joint-orders-v1' } : calcId === 'mape' ? { method: 'single-ape-v1' } : calcId === 'dim_weight' ? { method: 'unrounded-package-comparison-v1' } : {}) });
         if (saved.length > 20) saved.shift();
         localStorage.setItem(key, JSON.stringify(saved));
         alert(`Расчёт сохранён (всего сохранено: ${saved.length})`);
@@ -247,27 +248,22 @@
             { label: "Срок до доступности запаса (дни):", id: "rop_lt", type: "number", default: "", step: "any" },
             { label: "Страховой запас (ед.):", id: "rop_ss", type: "number", default: "", step: "any" }
         ], formula: "ROP = d × LT + SS", unit: "ед.", calc: (vals) => SCMInventory.reorderPoint(vals), kpiId: null },
-        { id: "staff_driver", name: "Driver-based численность", fields: [
-            { label: "Объём строк в месяц (строк):", id: "staff_volume", type: "number", default: 200000, step: 10000 },
-            { label: "Норма времени на строку (сек):", id: "staff_norm", type: "number", default: 45, step: 5 },
-            { label: "Эффективный фонд времени (часов/мес):", id: "staff_fond", type: "number", default: 130, step: 5 },
-            { label: "Коэффициент выполнения норм (Kвып):", id: "staff_kv", type: "number", default: 1.15, step: 0.01 },
-            { label: "Коэффициент невыходов (Kнев):", id: "staff_kn", type: "number", default: 1.1, step: 0.01 }
-        ], formula: "Численность = (Объём * Норма_час) / (Фонд * Kвып) * Kнев", unit: "чел.", calc: (vals) => {
-            let normHour = vals[1] / 3600;
-            let labor = vals[0] * normHour;
-            let base = labor / (vals[2] * vals[3]);
-            return Math.ceil(base * vals[4]);
-        }, kpiId: null },
+        { id: "staff_driver", name: "Сценарная потребность в персонале", fields: [
+            { label: "Объём строк в месяц (целых строк):", id: "staff_volume", default: "", step: 1, help: "Приближённая модель одной операции с заданными нормой и объёмом, а не штатное расписание или гарантия соблюдения трудового права. Другие операции и ограничения смен учитываются отдельно." },
+            { label: "Время на строку (сек.):", id: "staff_norm", default: "", step: "any" },
+            { label: "Фонд времени до учёта невыходов (часов/мес на человека):", id: "staff_fond", default: "", step: "any" },
+            { label: "Множитель выполнения норм (положительный):", id: "staff_kv", default: "", step: "any" },
+            { label: "Множитель покрытия невыходов (не меньше 1):", id: "staff_kn", default: "", step: "any", help: "Если невыходы уже включены в фонд, не учитывайте их повторно. Коэффициенты задаёт пользователь; округление вверх до целых человек." }
+        ], formula: "Численность = ceil(Объём × Норма / 3600 / (Фонд × Kвып) × Kнев)", unit: "чел.", calc: (v) => SCMOperationsEstimates.calculate('staff_driver', v), kpiId: null },
         { id: "turnover", name: "Оборачиваемость запасов за период", fields: [
             { label: "Себестоимость проданных товаров за период (руб.):", id: "turn_cogs", type: "number", default: "", step: "any", help: "Себестоимость и средний запас должны относиться к одному периоду, составу товаров и методу оценки. Учитывайте сезонность. Значение за период не обязательно является годовым; высокая оборачиваемость не всегда означает эффективность." },
             { label: "Средняя стоимость запаса за тот же период (руб.):", id: "turn_avg", type: "number", default: "", step: "any" },
             { label: "Длительность периода (целых календарных дней):", id: "turn_days", type: "number", default: "", step: 1, help: "Период фиксируется с расчётом. Передача в KPI отключена: там указан годовой показатель. При нулевой себестоимости коэффициент равен нулю." }
         ], formula: "Оборачиваемость за период = COGS / Средний запас", unit: "раз за период", calc: (vals) => SCMInventoryMetrics.turnover(vals), kpiId: null },
-        { id: "gmroi", name: "GMROI", fields: [
-            { label: "Валовая прибыль за период, руб.:", id: "gmroi_profit", type: "number", default: 2500000, step: 50000 },
-            { label: "Средняя стоимость запасов, руб.:", id: "gmroi_avg", type: "number", default: 2000000, step: 50000 }
-        ], formula: "GMROI = Валовая прибыль / Средний запас", unit: "", calc: (vals) => vals[0] / vals[1], kpiId: "gmroi" },
+        { id: "gmroi", name: "GMROI за период", fields: [
+            { label: "Валовая прибыль за период (руб.):", id: "gmroi_profit", default: "", step: "any", help: "Показатель = валовая прибыль за период / средняя себестоимость запасов за тот же период и номенклатуру. Не ROI на все инвестиции; результат за период не обязательно годовой. Отрицательная прибыль допускается." },
+            { label: "Средняя стоимость запасов за период (руб.):", id: "gmroi_avg", default: "", step: "any" }
+        ], formula: "GMROI = Валовая прибыль / Средняя стоимость запасов", unit: "руб./руб. за период", calc: (v) => SCMOperationsEstimates.calculate('gmroi', v), kpiId: null },
         { id: "ftl_cost", name: "Оценка стоимости рейса FTL", fields: [
             { label: "Расстояние рейса (км):", id: "ftl_km", type: "number", default: "", step: "any", help: "Модель показывает стоимость рейса в рублях, а не стоимость тонно-километра. Условия маршрута, налоги, ожидание и иные расходы нужно проверить отдельно; не включённые расходы не добавляются." },
             { label: "Ставка за километр (руб./км):", id: "ftl_rate", type: "number", default: "", step: "any" },
@@ -288,43 +284,43 @@
             { label: "Заказов одновременно вовремя и полностью:", id: "otif_completed", type: "number", default: "", step: 1, help: "Согласуйте период, сроки и критерии полноты с партнёром." },
             { label: "Всего заказов в выбранной совокупности:", id: "otif_total", type: "number", default: "", step: 1, help: "Произведение отдельных процентов не даёт фактический OTIF. Старые расчёты сохранены без пересчёта. Передача в KPI недоступна: соответствующей метрики в KPI-центре нет." }
         ], formula: "OTIF = Заказы вовремя и полностью / Все заказы × 100%", unit: "%", calc: (vals) => SCMOTIF.calculate(vals[0], vals[1]), kpiId: null },
-        { id: "ccc", name: "Cash-to-Cash цикл (CCC)", fields: [
-            { label: "Дни запаса (DIO):", id: "ccc_dio", type: "number", default: 45, step: 1 },
-            { label: "Дни дебиторской задолженности (DSO):", id: "ccc_dso", type: "number", default: 30, step: 1 },
-            { label: "Дни кредиторской задолженности (DPO):", id: "ccc_dpo", type: "number", default: 20, step: 1 }
-        ], formula: "CCC = DIO + DSO – DPO", unit: "дней", calc: (vals) => vals[0] + vals[1] - vals[2], kpiId: "ccc" },
-        { id: "roi_automation", name: "ROI автоматизации", fields: [
-            { label: "Экономия от автоматизации (руб./год):", id: "roi_saving", type: "number", default: 5000000, step: 100000 },
-            { label: "Затраты на внедрение (руб.):", id: "roi_cost", type: "number", default: 1500000, step: 100000 }
-        ], formula: "ROI = (Экономия - Затраты) / Затраты × 100%", unit: "%", calc: (vals) => ((vals[0] - vals[1]) / vals[1]) * 100, kpiId: null },
-        { id: "space_util", name: "Загрузка склада", fields: [
-            { label: "Занятые паллето-места:", id: "space_used", type: "number", default: 800, step: 10 },
-            { label: "Общая ёмкость (паллето-мест):", id: "space_total", type: "number", default: 1000, step: 10 }
-        ], formula: "Загрузка = Занято / Общая ёмкость × 100%", unit: "%", calc: (vals) => (vals[0] / vals[1]) * 100, kpiId: "spaceUtil" },
-        { id: "pallet_needs", name: "Потребность в паллето-местах", fields: [
-            { label: "Средний остаток товара (ед.):", id: "pallet_stock", type: "number", default: 5000, step: 100 },
-            { label: "Количество единиц на паллете:", id: "pallet_per", type: "number", default: 50, step: 1 },
-            { label: "Коэффициент страхового запаса (1.1–1.3):", id: "pallet_coef", type: "number", default: 1.2, step: 0.05 }
-        ], formula: "Потребность = (Остаток / Ед_на_паллете) × Коэф", unit: "паллето-мест", calc: (vals) => Math.ceil((vals[0] / vals[1]) * vals[2]), kpiId: null },
-        { id: "productivity", name: "Производительность склада", fields: [
-            { label: "Собрано строк за смену:", id: "prod_lines", type: "number", default: 12000, step: 100 },
-            { label: "Затрачено человеко-часов:", id: "prod_hours", type: "number", default: 150, step: 1 }
-        ], formula: "Производительность = Строки / Человеко-часы", unit: "строк/чел.-час", calc: (vals) => vals[0] / vals[1], kpiId: "productivity" },
-        { id: "courier_cost", name: "Курьерская доставка (по весу)", fields: [
-            { label: "Вес отправления (кг):", id: "courier_weight", type: "number", default: 2, step: 0.5 },
-            { label: "Базовая ставка за кг (руб.):", id: "courier_rate", type: "number", default: 150, step: 10 },
-            { label: "Минимальная стоимость (руб.):", id: "courier_min", type: "number", default: 500, step: 50 }
-        ], formula: "Стоимость = max(Вес × Ставка, Мин)", unit: "руб.", calc: (vals) => Math.max(vals[0] * vals[1], vals[2]), kpiId: null },
-        { id: "order_cycle", name: "Время цикла заказа", fields: [
-            { label: "Время от получения заказа до отгрузки (часы):", id: "cycle_order", type: "number", default: 4, step: 0.5 },
-            { label: "Время транспортировки (часы):", id: "cycle_transit", type: "number", default: 24, step: 1 },
-            { label: "Время доставки last mile (часы):", id: "cycle_last", type: "number", default: 2, step: 0.5 }
-        ], formula: "Общий цикл = Заказ + Транзит + Last mile", unit: "часов", calc: (vals) => vals[0] + vals[1] + vals[2], kpiId: null },
-        { id: "bep_warehouse", name: "Точка безубыточности склада", fields: [
-            { label: "Постоянные затраты (руб./мес):", id: "bep_fixed", type: "number", default: 2000000, step: 100000 },
-            { label: "Переменные затраты на единицу (руб.):", id: "bep_var", type: "number", default: 50, step: 5 },
-            { label: "Доход на единицу (руб.):", id: "bep_rev", type: "number", default: 120, step: 10 }
-        ], formula: "BEP = Постоянные затраты / (Доход - Переменные)", unit: "ед./мес", calc: (vals) => Math.ceil(vals[0] / (vals[2] - vals[1])), kpiId: null },
+        { id: "ccc", name: "Cash-to-Cash цикл: сценарий", fields: [
+            { label: "Дни запаса DIO:", id: "ccc_dio", default: "", step: "any", help: "DIO, DSO и DPO должны относиться к одной компании, периоду и сопоставимой методике. Отрицательный результат математически возможен; это не гарантия денежного потока." },
+            { label: "Дни дебиторской задолженности DSO:", id: "ccc_dso", default: "", step: "any" },
+            { label: "Дни кредиторской задолженности DPO:", id: "ccc_dpo", default: "", step: "any" }
+        ], formula: "CCC = DIO + DSO − DPO", unit: "дней", calc: (v) => SCMOperationsEstimates.calculate('ccc', v), kpiId: null },
+        { id: "roi_automation", name: "ROI: упрощённый сценарий первого года", fields: [
+            { label: "Чистая денежная выгода за год до первоначальных вложений (руб.):", id: "roi_saving", default: "", step: "any", help: "Учитывайте денежные расходы на эксплуатацию, внедрение и сравнимую базу; часы и FTE сами по себе не денежная экономия. Отрицательная выгода допускается. Без дисконтирования, налогов и последующих периодов." },
+            { label: "Первоначальные вложения (руб.):", id: "roi_cost", default: "", step: "any" }
+        ], formula: "ROI за первый год = (Выгода − Вложения) / Вложения × 100%", unit: "%", calc: (v) => SCMOperationsEstimates.calculate('roi_automation', v), kpiId: null },
+        { id: "space_util", name: "Доля занятых паллето-мест", fields: [
+            { label: "Занятые места (целых):", id: "space_used", default: "", step: 1, help: "Одна дата и единый состав мест; не более доступной ёмкости. Значение не характеризует площадь, безопасность или эффективность без контекста." },
+            { label: "Доступная ёмкость (целых мест):", id: "space_total", default: "", step: 1 }
+        ], formula: "Занятые / Доступные × 100%", unit: "%", calc: (v) => SCMOperationsEstimates.calculate('space_util', v), kpiId: null },
+        { id: "pallet_needs", name: "Паллето-места: упрощённая оценка", fields: [
+            { label: "Остаток товара (целых ед.):", id: "pallet_stock", default: "", step: 1, help: "Однородный товар и фиксированная вместимость паллеты; не учитываются несовместимые SKU, высота, зонирование и ограничения складирования." },
+            { label: "Единиц на паллете (целых):", id: "pallet_per", default: "", step: 1 },
+            { label: "Сценарный множитель запаса (не меньше 1):", id: "pallet_coef", default: "", step: "any", help: "Множитель вводится пользователем и не является нормативом. Результат округляется вверх до целого места; убедитесь, что запас не учтён дважды." }
+        ], formula: "Места = ceil(Остаток / Ед. на паллете × Множитель)", unit: "паллето-мест", calc: (v) => SCMOperationsEstimates.calculate('pallet_needs', v), kpiId: null },
+        { id: "productivity", name: "Производительность сборки", fields: [
+            { label: "Собрано строк за период (целых):", id: "prod_lines", default: "", step: 1, help: "Строки и человеко-часы относятся к одной операции, составу работников и периоду. Определите учёт простоев и частично обработанных строк; универсальной нормы нет." },
+            { label: "Затрачено человеко-часов:", id: "prod_hours", default: "", step: "any" }
+        ], formula: "Строки / Человеко-часы", unit: "строк/чел.-час", calc: (v) => SCMOperationsEstimates.calculate('productivity', v), kpiId: null },
+        { id: "courier_cost", name: "Курьерская доставка: сценарий", fields: [
+            { label: "Расчётный вес по договору (кг):", id: "courier_weight", default: "", step: "any", help: "Модель max(вес × ставка, минимум) — не тариф перевозчика. Объёмный вес, округление, зоны, НДС и надбавки проверьте по договору." },
+            { label: "Ставка за кг (руб.):", id: "courier_rate", default: "", step: "any" },
+            { label: "Минимальная стоимость (руб.):", id: "courier_min", default: "", step: "any" }
+        ], formula: "Стоимость = max(Вес × Ставка, Минимум)", unit: "руб.", calc: (v) => SCMOperationsEstimates.calculate('courier_cost', v), kpiId: null },
+        { id: "order_cycle", name: "Время цикла: последовательные этапы", fields: [
+            { label: "От заказа до отгрузки (часы):", id: "cycle_order", default: "", step: "any", help: "Суммируйте только последовательные непересекающиеся этапы одного заказа. Результат не средний срок по выборке и не SLA." },
+            { label: "Транзит без последней мили (часы):", id: "cycle_transit", default: "", step: "any" },
+            { label: "Последняя миля (часы):", id: "cycle_last", default: "", step: "any" }
+        ], formula: "Цикл = Подготовка + Транзит + Последняя миля", unit: "часов", calc: (v) => SCMOperationsEstimates.calculate('order_cycle', v), kpiId: null },
+        { id: "bep_warehouse", name: "Безубыточность: модель одного вида услуг", fields: [
+            { label: "Постоянные затраты за месяц (руб.):", id: "bep_fixed", default: "", step: "any", help: "Упрощённая модель постоянных затрат и неизменной цены/переменных затрат на единицу. Не учитывает ограничения мощности, сезонность, налоги и изменение структуры услуг. Округление вверх до целой единицы." },
+            { label: "Переменные затраты на единицу (руб.):", id: "bep_var", default: "", step: "any" },
+            { label: "Выручка на единицу (руб.):", id: "bep_rev", default: "", step: "any", help: "Цена должна быть больше переменных затрат. При нулевой или отрицательной марже этот расчёт недоступен; итог не гарантирует достижимость объёма." }
+        ], formula: "BEP = ceil(Постоянные затраты / (Выручка − Переменные))", unit: "ед./мес", calc: (v) => SCMOperationsEstimates.calculate('bep_warehouse', v), kpiId: null },
         { id: "fill_rate", name: "Unit Fill Rate: доля спроса из наличного запаса", fields: [
             { label: "Общий спрос за период (ед.):", id: "fill_ordered", type: "number", default: "", step: "any", help: "Используйте одинаковые единицы и совокупность за согласованный период; учтите потерянный спрос. Результат не равен доле полных заказов, OTIF или вероятности отсутствия дефицита." },
             { label: "Из него сразу удовлетворено из наличного запаса (ед.):", id: "fill_shipped", type: "number", default: "", step: "any", help: "Не включайте поздние отгрузки и повторный учёт одного спроса. Оговорите правила замен и частичных поставок. Передача в KPI отключена: его определение не подтверждено." }
@@ -351,7 +347,7 @@
             card.innerHTML = `
                 <h2><i class="fas fa-calculator"></i> ${calc.name}</h2>
                 ${fieldsHtml}
-                ${calc.id === 'turnover' ? '<p><a href="https://www.wallstreetprep.com/knowledge/average-inventory-period/">Методика и период</a></p>' : calc.id === 'fill_rate' ? '<p><a href="https://simfoni.com/glossary/fill-rate/">Варианты Fill Rate</a></p>' : calc.id === 'safety_stock' ? '<p><a href="https://fulfillbot.com/blog/safety-stock-formula/">Предпосылки модели страхового запаса</a></p>' : calc.id === 'eoq' ? '<p><a href="https://www.lokad.com/economic-order-quantity-eoq-definition-and-formula/">Предпосылки и критика EOQ</a></p>' : calc.id === 'rop' ? '<p><a href="https://www.linenow.co/blog/glossary/reorder-point">Точка заказа и позиция запаса</a></p>' : calc.id === 'mape' ? '<p><a href="https://otexts.com/fpp3/toolbox.html#sec-accuracy">Методика и ограничения</a></p>' : calc.id === 'dim_weight' ? '<p><a href="https://www.fedex.com/en-gb/how-to/calculate-costs/dimensional-weight.html">Пример методики FedEx UK</a></p>' : ''}
+                ${calc.id === 'gmroi' ? '<p><a href="https://retailowner.com/Inventory/How-to-Calculate-and-Use-GMROI">Пример методики GMROI</a></p>' : calc.id === 'ccc' ? '<p><a href="https://corporatefinanceinstitute.com/resources/accounting/cash-conversion-cycle/">Методика CCC</a></p>' : calc.id === 'bep_warehouse' ? '<p><a href="https://www.sage.com/en-us/blog/the-break-even-point-analysis-and-formula/">Методика безубыточности</a></p>' : calc.id === 'turnover' ? '<p><a href="https://www.wallstreetprep.com/knowledge/average-inventory-period/">Методика и период</a></p>' : calc.id === 'fill_rate' ? '<p><a href="https://simfoni.com/glossary/fill-rate/">Варианты Fill Rate</a></p>' : calc.id === 'safety_stock' ? '<p><a href="https://fulfillbot.com/blog/safety-stock-formula/">Предпосылки модели страхового запаса</a></p>' : calc.id === 'eoq' ? '<p><a href="https://www.lokad.com/economic-order-quantity-eoq-definition-and-formula/">Предпосылки и критика EOQ</a></p>' : calc.id === 'rop' ? '<p><a href="https://www.linenow.co/blog/glossary/reorder-point">Точка заказа и позиция запаса</a></p>' : calc.id === 'mape' ? '<p><a href="https://otexts.com/fpp3/toolbox.html#sec-accuracy">Методика и ограничения</a></p>' : calc.id === 'dim_weight' ? '<p><a href="https://www.fedex.com/en-gb/how-to/calculate-costs/dimensional-weight.html">Пример методики FedEx UK</a></p>' : ''}
                 <div class="result" id="result_${calc.id}">Результат: <strong>—</strong> ${calc.unit}</div>
                 <div class="calc-actions">
                     <button class="save-btn" data-id="${calc.id}"><i class="fas fa-save"></i> Сохранить расчёт</button>
@@ -383,17 +379,17 @@
         const calcId = e.currentTarget.getAttribute('data-id');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc) return;
-        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) && result === null) {
-            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : calc.id === 'ftl_cost' ? 'Укажите положительные конечные расстояние и множитель, неотрицательную ставку; результат должен быть конечным.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
+        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id)) && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : ['staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id) ? 'Проверьте конечность и допустимые значения каждого поля, условия модели и безопасный диапазон результата. При безубыточности цена должна превышать переменные затраты.' : calc.id === 'ftl_cost' ? 'Укажите положительные конечные расстояние и множитель, неотрицательную ставку; результат должен быть конечным.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
             return;
         }
         if (calc.additional) {
             const dimWeight = calc.calc(values);
             result = calc.additional(values, dimWeight);
         }
-        result = typeof result === 'number' ? (calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id) ? result : Math.round(result * 100) / 100) : result;
+        result = typeof result === 'number' ? (calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id) ? result : Math.round(result * 100) / 100) : result;
         saveCalculation(calcId, values, result);
     }
 
@@ -402,10 +398,10 @@
         const kpiId = e.currentTarget.getAttribute('data-kpi');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc || !kpiId || calc.kpiId !== kpiId) return;
-        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) && result === null) {
-            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : calc.id === 'ftl_cost' ? 'Укажите положительные конечные расстояние и множитель, неотрицательную ставку; результат должен быть конечным.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
+        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id)) && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : ['staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id) ? 'Проверьте конечность и допустимые значения каждого поля, условия модели и безопасный диапазон результата. При безубыточности цена должна превышать переменные затраты.' : calc.id === 'ftl_cost' ? 'Укажите положительные конечные расстояние и множитель, неотрицательную ставку; результат должен быть конечным.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
             return;
         }
         if (calc.additional) {
@@ -418,21 +414,23 @@
 
     function updateAllCalculators() {
         for (let calc of calculators) {
-            const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+            const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
             let result = calc.calc(values);
             if (calc.additional) {
                 const dimWeight = calc.calc(values);
                 result = calc.additional(values, dimWeight);
             }
             const resultUnit = result === null ? '' : calc.unit;
-            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа; объём и результат должны быть конечными' : calc.id === 'otif' ? 'Введите корректные целые числа заказов' : 'Проверьте ввод и ограничения модели; результат должен быть конечным') : typeof result === 'number' ? (['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id) ? SCMInventory.format(result) : result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '')) : result;
+            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа; объём и результат должны быть конечными' : calc.id === 'otif' ? 'Введите корректные целые числа заказов' : 'Проверьте ввод и ограничения модели; результат должен быть конечным') : typeof result === 'number' ? (['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id) ? SCMInventory.format(result) : result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '')) : result;
             const resultDiv = document.getElementById(`result_${calc.id}`);
             if (resultDiv) {
                 resultDiv.innerHTML = `Результат: <strong>${result}</strong> ${resultUnit}`;
                 if (calc.kpiId) {
                     const currentKPI = SCMData.loadKPI(calc.kpiId, currentBranchId);
                     if (currentKPI) {
-                        resultDiv.innerHTML += `<span>Текущее значение KPI: ${currentKPI.result} ${calc.unit}</span>`;
+                        const current = document.createElement('span');
+                        current.textContent = `Текущее значение KPI: ${currentKPI.result} ${calc.unit}`;
+                        resultDiv.appendChild(current);
                     }
                 }
             }

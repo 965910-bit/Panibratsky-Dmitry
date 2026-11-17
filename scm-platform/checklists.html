@@ -688,7 +688,7 @@
                     (data.currentFormState != null && (typeof data.currentFormState !== 'object' || Array.isArray(data.currentFormState)))) {
                     throw new Error('Неверный формат файла');
                 }
-                if (!confirm('Импорт заменит пользовательские пункты и шаблоны из файла и совпадающие ответы в выбранной бизнес-единице. Продолжить?')) return;
+                if (!confirm('Импорт заменит пользовательские пункты и шаблоны из файла и совпадающие ответы в выбранной бизнес-единице. Сначала сохраните резервную копию: запись нескольких разделов не атомарна и при ошибке может измениться частично. Продолжить?')) return;
                 if (data.customItems) { customItems = data.customItems; saveCustomItems(); }
                 if (data.templates) { templates = data.templates; saveTemplates(); }
                 if (data.currentFormState && typeof data.currentFormState === 'object') {
@@ -703,7 +703,7 @@
                 }
                 renderAuditSections(currentFilterIds);
                 alert('Импорт выполнен');
-            } catch(err) { alert('Ошибка импорта: ' + err.message); }
+            } catch(err) { alert('Ошибка импорта: некоторые данные могли быть записаны частично. Проверьте состояние и резервную копию.'); }
         };
         reader.readAsText(file);
     }
