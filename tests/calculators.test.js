@@ -9,7 +9,7 @@ function element(id) {
   return elements.get(id);
 }
 let alerts = [];
-const context = { document: { getElementById: element, addEventListener() {} }, alert: text => alerts.push(text), console, Number, Math };
+const context = { document: { getElementById: element, addEventListener() {} }, alert: text => alerts.push(text), console, Number, Math, SCMInventory: require('../js/inventory-models.js') };
 vm.createContext(context);
 for (const match of scripts) vm.runInContext(match[1], context);
 function set(id, value) { element(id).value = String(value); }
