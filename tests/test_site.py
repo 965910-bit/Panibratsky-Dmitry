@@ -65,6 +65,38 @@ class SiteTests(unittest.TestCase):
             for match in re.findall(r'<script\s+type="application/ld\+json"[^>]*>(.*?)</script>', html, re.I | re.S):
                 json.loads(match)
 
+    def test_person_profile_entity_is_consistent_and_visible(self):
+        def structured(filename):
+            text = (ROOT / filename).read_text(encoding='utf-8')
+            return text, [json.loads(match) for match in re.findall(r'<script\s+type="application/ld\+json"[^>]*>(.*?)</script>', text, re.I | re.S)]
+        homepage, home_data = structured('index.html')
+        about, about_data = structured('about.html')
+        person = next(item for item in home_data if item.get('@type') == 'Person')
+        profile = next(item for item in about_data if item.get('@type') == 'ProfilePage')
+        self.assertEqual(person['@id'], 'https://scm-news.ru/#person')
+        self.assertEqual(profile['mainEntity']['@id'], person['@id'])
+        self.assertEqual(profile['mainEntity']['name'], person['name'])
+        self.assertIn(person['name'], about)
+        self.assertEqual(person['sameAs'], ['https://set.ki/EYUBwz5'])
+        self.assertIn(person['sameAs'][0], homepage)
+        self.assertEqual(profile['url'], 'https://scm-news.ru/about.html')
+
+    def test_trends_chart_is_versioned_local_with_license_and_audit(self):
+        page = (ROOT / 'trends.html').read_text(encoding='utf-8')
+        package = json.loads((ROOT / 'package.json').read_text(encoding='utf-8'))
+        self.assertEqual(package['dependencies']['chart.js'], '4.5.1')
+        self.assertIn('src="js/vendor/chart.umd-4.5.1.js"', page)
+        self.assertNotIn('cdn.jsdelivr.net/npm/chart.js', page)
+        self.assertIn('Chart.js v4.5.1', (ROOT / 'js/vendor/chart.umd-4.5.1.js').read_text(encoding='utf-8')[:200])
+        self.assertIn('MIT License', (ROOT / 'js/vendor/chartjs-LICENSE.md').read_text(encoding='utf-8'))
+        workflow = (ROOT / '.github/workflows/site-tests.yml').read_text(encoding='utf-8')
+        self.assertIn('npm ci --ignore-scripts', workflow)
+        self.assertIn('npm audit --audit-level=high', workflow)
+        self.assertIn('cmp node_modules/chart.js/dist/chart.umd.js js/vendor/chart.umd-4.5.1.js', workflow)
+        dependabot = (ROOT / '.github/dependabot.yml').read_text(encoding='utf-8')
+        self.assertIn('package-ecosystem: npm', dependabot)
+        self.assertIn('package-ecosystem: github-actions', dependabot)
+
     def test_unverified_forecasts_and_course_links_are_not_presented_as_facts(self):
         news = (ROOT / 'trends.html').read_text(encoding='utf-8')
         overview = (ROOT / 'trends-logistics.html').read_text(encoding='utf-8')

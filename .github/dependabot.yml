@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # Chart.js is vendored for GitHub Pages; update the checked-in UMD and license
+    # alongside any version bump. CI rejects mismatched vendor files.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
