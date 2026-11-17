@@ -52,7 +52,11 @@ def probe(fetcher=fetch):
             status, headers = fetcher(url)
             hsts = headers.get('Strict-Transport-Security', '')
             output[label] = {'status': status, 'location': safe_location(headers.get('Location', '')),
-                             'hsts': hsts[:160] if hsts else None}
+                             'hsts': hsts[:160] if hsts else None,
+                             'csp': bool(headers.get('Content-Security-Policy')),
+                             'csp_report_only': bool(headers.get('Content-Security-Policy-Report-Only')),
+                             'x_frame_options': (headers.get('X-Frame-Options') or '')[:80] or None,
+                             'x_content_type_options': (headers.get('X-Content-Type-Options') or '')[:80] or None}
         except (urllib.error.URLError, OSError, ValueError) as exc:
             reason = getattr(exc, 'reason', exc)
             kind = ('tls' if isinstance(reason, ssl.SSLError) else
