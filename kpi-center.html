@@ -7,6 +7,7 @@
     <meta name="robots" content="noindex, nofollow">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/otif.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
@@ -144,7 +145,7 @@
             </ul>
         </nav></details>
         <h1>📈 KPI-центр</h1>
-        <p>Рассчитайте ключевые показатели эффективности, сравните с бенчмарками и отслеживайте динамику.</p>
+        <p>Рассчитайте ключевые показатели эффективности. Пороговые значения для остальных KPI являются условными примерами и не подтверждены как отраслевые бенчмарки; устанавливайте цели по своим данным.</p>
 
         <!-- Калькулятор KPI -->
         <div class="card">
@@ -153,8 +154,12 @@
                 <!-- OTIF -->
                 <div class="kpi-item" data-kpi="otif">
                     <label>On-Time In-Full (OTIF), %</label>
-                    <input type="number" id="otif_on_time" placeholder="Своевременные доставки, %" step="0.1">
-                    <input type="number" id="otif_in_full" placeholder="Полные доставки, %" step="0.1">
+                    <p>Доля заказов, выполненных одновременно вовремя и полностью. Сначала согласуйте период, единицу учёта и критерии с партнёром. Произведение отдельных процентов не является фактическим OTIF. <a href="https://www.mckinsey.com/capabilities/operations/our-insights/defining-on-time-in-full-in-the-consumer-sector">Методология и варианты определения OTIF (McKinsey)</a>.</p>
+                    <label for="otif_completed">Заказов вовремя и полностью</label>
+                    <input type="number" id="otif_completed" min="0" step="1" placeholder="Например, 88">
+                    <label for="otif_total">Всего заказов в выбранной совокупности</label>
+                    <input type="number" id="otif_total" min="1" step="1" placeholder="Например, 100">
+                    <p>Старые расчёты по отдельным процентам сохранены в браузере, но не переводятся автоматически в фактический OTIF.</p>
                     <div class="kpi-result" id="otif_result">—</div>
                     <div class="benchmark" id="otif_benchmark"></div>
                     <button class="save-kpi" data-kpi="otif">Сохранить</button>
@@ -201,11 +206,11 @@
 
         <!-- Декомпозиция (пример для OTIF) -->
         <div class="card">
-            <h2><i class="fas fa-code-branch"></i> Декомпозиция корневых причин (OTIF)</h2>
+            <h2><i class="fas fa-code-branch"></i> Критерии идеального заказа</h2>
             <div id="decomposition">
                 <p>Выберите KPI для анализа:</p>
                 <select id="decomp_select">
-                    <option value="otif">Perfect Order Fulfillment (OTIF)</option>
+                    <option value="otif">Идеальный заказ — пример критериев</option>
                 </select>
                 <div id="decomp_tree" style="margin-top: 16px;"></div>
             </div>
@@ -214,28 +219,26 @@
 </div>
 
 <script>
-    // Бенчмарки (средние значения по отрасли – можно расширить)
+    // Условные демонстрационные пороги, не подтверждённые отраслевые данные.
     const benchmarks = {
-        otif: { target: 95, good: 90, warning: 80 },
         turnover: { target: 6, good: 5, warning: 3 },
         forecast: { target: 85, good: 75, warning: 60 },
         scm_cost: { target: 8, good: 10, warning: 15 },
         c2c: { target: 45, good: 60, warning: 90 }  // чем ниже, тем лучше
     };
 
-    // Функция расчёта OTIF
+    // Реальный OTIF по заказам, удовлетворяющим обоим условиям одновременно.
     function calcOTIF() {
-        const onTime = parseFloat(document.getElementById('otif_on_time').value) || 0;
-        const inFull = parseFloat(document.getElementById('otif_in_full').value) || 0;
-        const result = (onTime * inFull) / 100;
-        const percent = result.toFixed(1);
-        document.getElementById('otif_result').innerHTML = percent + '%';
-        const bench = benchmarks.otif;
-        let status = '';
-        if (result >= bench.target) status = '✅ Отлично (выше целевого)';
-        else if (result >= bench.good) status = '⚠️ Норма, но есть резерв';
-        else status = '🔴 Требует внимания';
-        document.getElementById('otif_benchmark').innerHTML = `Бенчмарк: целевой ${bench.target}% | Ваш результат: ${percent}% — ${status}`;
+        const result = SCMOTIF.calculate(document.getElementById('otif_completed').value, document.getElementById('otif_total').value);
+        const output = document.getElementById('otif_result');
+        const info = document.getElementById('otif_benchmark');
+        if (result === null) {
+            output.textContent = '—';
+            info.textContent = 'Введите целое число выполненных заказов от 0 до общего числа; общее число должно быть больше нуля.';
+            return null;
+        }
+        output.textContent = result.toFixed(1) + '%';
+        info.textContent = 'Цель и правила учёта определяются по вашим данным и договорённостям.';
         return result;
     }
 
@@ -251,7 +254,7 @@
         if (value >= bench.target) status = '✅ Высокая оборачиваемость';
         else if (value >= bench.good) status = '⚠️ Средняя';
         else status = '🔴 Низкая, запасы замораживают капитал';
-        document.getElementById('turnover_benchmark').innerHTML = `Бенчмарк: целевой ${bench.target} | Ваш: ${value} — ${status}`;
+        document.getElementById('turnover_benchmark').innerHTML = `Условный пример цели: ${bench.target} | Ваш: ${value} — ${status}`;
         return value;
     }
 
@@ -270,7 +273,7 @@
         if (value >= bench.target) status = '✅ Отличная точность';
         else if (value >= bench.good) status = '⚠️ Приемлемая, но можно улучшить';
         else status = '🔴 Низкая точность, пересмотрите модель';
-        document.getElementById('forecast_benchmark').innerHTML = `Бенчмарк: целевой ${bench.target}% | Ваш: ${value}% — ${status}`;
+        document.getElementById('forecast_benchmark').innerHTML = `Условный пример цели: ${bench.target}% | Ваш: ${value}% — ${status}`;
         return value;
     }
 
@@ -286,7 +289,7 @@
         if (value <= bench.target) status = '✅ Низкие затраты (эффективно)';
         else if (value <= bench.good) status = '⚠️ Средние затраты';
         else status = '🔴 Высокие затраты, нужна оптимизация';
-        document.getElementById('scm_cost_benchmark').innerHTML = `Бенчмарк: целевой ≤ ${bench.target}% | Ваш: ${value}% — ${status}`;
+        document.getElementById('scm_cost_benchmark').innerHTML = `Условный пример цели: ≤ ${bench.target}% | Ваш: ${value}% — ${status}`;
         return value;
     }
 
@@ -303,7 +306,7 @@
         if (value <= bench.target) status = '✅ Отличный цикл (быстрая конвертация)';
         else if (value <= bench.good) status = '⚠️ Приемлемый цикл';
         else status = '🔴 Длинный цикл, капитал заморожен';
-        document.getElementById('c2c_benchmark').innerHTML = `Бенчмарк: целевой ≤ ${bench.target} дней | Ваш: ${value} — ${status}`;
+        document.getElementById('c2c_benchmark').innerHTML = `Условный пример цели: ≤ ${bench.target} дней | Ваш: ${value} — ${status}`;
         return value;
     }
 
@@ -312,9 +315,11 @@
         const data = {};
         switch(kpiId) {
             case 'otif':
-                data.on_time = document.getElementById('otif_on_time').value;
-                data.in_full = document.getElementById('otif_in_full').value;
+                data.completed = document.getElementById('otif_completed').value;
+                data.total = document.getElementById('otif_total').value;
                 data.result = calcOTIF();
+                if (data.result === null) return;
+                data.method = 'joint-orders-v1';
                 break;
             case 'turnover':
                 data.cogs = document.getElementById('turnover_cogs').value;
@@ -339,7 +344,7 @@
                 break;
         }
         data.timestamp = new Date().toISOString();
-        localStorage.setItem(`kpi_${kpiId}`, JSON.stringify(data));
+        localStorage.setItem(kpiId === 'otif' ? 'kpi_otif_joint_v1' : `kpi_${kpiId}`, JSON.stringify(data));
         alert(`KPI "${kpiId}" сохранён`);
     }
 
@@ -347,13 +352,14 @@
     function loadSavedKPIs() {
         const kpis = ['otif', 'turnover', 'forecast', 'scm_cost', 'c2c'];
         kpis.forEach(kpi => {
-            const saved = localStorage.getItem(`kpi_${kpi}`);
+            const saved = localStorage.getItem(kpi === 'otif' ? 'kpi_otif_joint_v1' : `kpi_${kpi}`);
             if (saved) {
                 const data = JSON.parse(saved);
                 switch(kpi) {
                     case 'otif':
-                        if (data.on_time) document.getElementById('otif_on_time').value = data.on_time;
-                        if (data.in_full) document.getElementById('otif_in_full').value = data.in_full;
+                        if (data.method !== 'joint-orders-v1') break;
+                        document.getElementById('otif_completed').value = data.completed ?? '';
+                        document.getElementById('otif_total').value = data.total ?? '';
                         calcOTIF();
                         break;
                     case 'turnover':
@@ -387,14 +393,8 @@
         const container = document.getElementById('decomp_tree');
         container.innerHTML = `
             <div style="background:#f8fafc; padding:16px; border-radius:16px;">
-                <p><strong>Perfect Order Fulfillment (OTIF) = 82%</strong> (пример)</p>
-                <ul style="margin-top:12px; list-style: none;">
-                    <li>📦 On-time delivery: 88% <span class="bad">🔴 ниже порога 95%</span></li>
-                    <li>📦 In-full delivery: 94% <span class="warning">🟡 близко к норме</span></li>
-                    <li>📦 Damage-free: 96% <span class="good">✅ хорошо</span></li>
-                    <li>📦 Documentation accuracy: 90% <span class="bad">🔴 критично</span></li>
-                </ul>
-                <p style="margin-top:12px;"><strong>Рекомендации:</strong> улучшить точность документов и своевременность доставки.</p>
+                <p><strong>Иллюстрация:</strong> идеальный заказ может включать доставку в срок, полную комплектацию, отсутствие повреждений и корректные документы.</p>
+                <p>Это более широкий набор критериев, чем OTIF по двум условиям. Критерии и совокупность необходимо согласовать; доля идеальных заказов рассчитывается по заказам, выполнившим все выбранные критерии одновременно.</p>
             </div>
         `;
     }
@@ -408,8 +408,8 @@
     });
 
     // Привязка событий ввода для автоматического пересчёта
-    document.getElementById('otif_on_time').addEventListener('input', calcOTIF);
-    document.getElementById('otif_in_full').addEventListener('input', calcOTIF);
+    document.getElementById('otif_completed').addEventListener('input', calcOTIF);
+    document.getElementById('otif_total').addEventListener('input', calcOTIF);
     document.getElementById('turnover_cogs').addEventListener('input', calcTurnover);
     document.getElementById('turnover_avg_inv').addEventListener('input', calcTurnover);
     document.getElementById('forecast_actual').addEventListener('input', calcForecast);
