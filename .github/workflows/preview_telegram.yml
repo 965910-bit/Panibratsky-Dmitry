@@ -21,7 +21,7 @@ jobs:
       - name: Remove checkout copy of sent state from runner
         run: rm -f data/sent_news.json
       - name: Restore sent news state if available
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: data/sent_news.json
           key: telegram-preview-${{ github.run_id }}-${{ github.run_attempt }}

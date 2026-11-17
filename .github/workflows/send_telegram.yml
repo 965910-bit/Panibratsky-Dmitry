@@ -42,7 +42,7 @@ jobs:
       - name: Remove checkout copy of sent state from runner
         run: rm -f data/sent_news.json
       - name: Restore sent news state
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: data/sent_news.json
           key: telegram-sent-${{ github.run_id }}-${{ github.run_attempt }}
@@ -61,7 +61,7 @@ jobs:
 
       - name: Save sent news state
         if: always()
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: data/sent_news.json
           key: telegram-sent-${{ github.run_id }}-${{ github.run_attempt }}
