@@ -14,6 +14,7 @@
     <script src="../js/dimensional-weight.js"></script>
     <script src="../js/inventory-models.js"></script>
     <script src="../js/inventory-metrics.js"></script>
+    <script src="../js/transport-estimate.js"></script>
     <style>
         .calc-grid {
             display: grid;
@@ -155,7 +156,7 @@
                 <select id="branchSelector"></select>
             </div>
         </div>
-        <p>Результаты моделей запасов показаны с округлением до двух знаков (очень малые и большие — экспоненциально), хранятся без округления; применимость и упаковку проверяйте отдельно. Прежние результаты этих моделей сохранены отдельно. Оборачиваемость и Unit Fill Rate сохраняются отдельно от прежних расчётов и не отправляются в KPI. Расчёты зависят от введённых данных и условий; остальные калькуляторы проверены частично. Расчёт ФОТ с северными надбавками временно приостановлен: прежняя формула начисляла коэффициент и надбавку друг на друга. Сохранённые расчёты не изменены; проверьте их отдельно с бухгалтером. <a href="https://xn--80akibcicpdbetz7e2g.xn--p1ai/questions/viewFaq/1159">Разъяснение Роструда</a>.</p>
+        <p>Результаты моделей запасов показаны с округлением до двух знаков (очень малые и большие — экспоненциально), хранятся без округления; применимость и упаковку проверяйте отдельно. Прежние результаты этих моделей сохранены отдельно. Оборачиваемость, Unit Fill Rate и оценка стоимости рейса сохраняются отдельно от прежних расчётов и не отправляются в KPI. Расчёты зависят от введённых данных и условий; остальные калькуляторы проверены частично. Расчёт ФОТ с северными надбавками временно приостановлен: прежняя формула начисляла коэффициент и надбавку друг на друга. Сохранённые расчёты не изменены; проверьте их отдельно с бухгалтером. <a href="https://xn--80akibcicpdbetz7e2g.xn--p1ai/questions/viewFaq/1159">Разъяснение Роструда</a>.</p>
 
         <div class="btn-group">
             <button id="printCalculatorsBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать калькуляторов</button>
@@ -205,9 +206,9 @@
     }
 
     function saveCalculation(calcId, values, result) {
-        const key = ['turnover', 'fill_rate'].includes(calcId) ? `calc_${calcId}_metric_v1_${currentBranchId}` : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? `calc_${calcId}_model_v1_${currentBranchId}` : calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : calcId === 'mape' ? `calc_ape_v1_${currentBranchId}` : calcId === 'dim_weight' ? `calc_dim_weight_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
+        const key = calcId === 'ftl_cost' ? `calc_ftl_cost_trip_v1_${currentBranchId}` : ['turnover', 'fill_rate'].includes(calcId) ? `calc_${calcId}_metric_v1_${currentBranchId}` : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? `calc_${calcId}_model_v1_${currentBranchId}` : calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : calcId === 'mape' ? `calc_ape_v1_${currentBranchId}` : calcId === 'dim_weight' ? `calc_dim_weight_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
         const saved = JSON.parse(localStorage.getItem(key) || '[]');
-        saved.push({ values, result, timestamp: new Date().toISOString(), ...(['turnover', 'fill_rate'].includes(calcId) ? { method: {turnover: 'period-cogs-average-inventory-v1', fill_rate: 'unit-fill-immediate-v1'}[calcId] } : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? { method: {safety_stock: 'fixed-lead-normal-v1', eoq: 'classical-eoq-v1', rop: 'continuous-review-rop-v1'}[calcId] } : calcId === 'otif' ? { method: 'joint-orders-v1' } : calcId === 'mape' ? { method: 'single-ape-v1' } : calcId === 'dim_weight' ? { method: 'unrounded-package-comparison-v1' } : {}) });
+        saved.push({ values, result, timestamp: new Date().toISOString(), ...(calcId === 'ftl_cost' ? { method: 'trip-estimate-v1' } : ['turnover', 'fill_rate'].includes(calcId) ? { method: {turnover: 'period-cogs-average-inventory-v1', fill_rate: 'unit-fill-immediate-v1'}[calcId] } : ['safety_stock', 'eoq', 'rop'].includes(calcId) ? { method: {safety_stock: 'fixed-lead-normal-v1', eoq: 'classical-eoq-v1', rop: 'continuous-review-rop-v1'}[calcId] } : calcId === 'otif' ? { method: 'joint-orders-v1' } : calcId === 'mape' ? { method: 'single-ape-v1' } : calcId === 'dim_weight' ? { method: 'unrounded-package-comparison-v1' } : {}) });
         if (saved.length > 20) saved.shift();
         localStorage.setItem(key, JSON.stringify(saved));
         alert(`Расчёт сохранён (всего сохранено: ${saved.length})`);
@@ -267,11 +268,11 @@
             { label: "Валовая прибыль за период, руб.:", id: "gmroi_profit", type: "number", default: 2500000, step: 50000 },
             { label: "Средняя стоимость запасов, руб.:", id: "gmroi_avg", type: "number", default: 2000000, step: 50000 }
         ], formula: "GMROI = Валовая прибыль / Средний запас", unit: "", calc: (vals) => vals[0] / vals[1], kpiId: "gmroi" },
-        { id: "ftl_cost", name: "Стоимость FTL перевозки", fields: [
-            { label: "Расстояние (км):", id: "ftl_km", type: "number", default: 2100, step: 100 },
-            { label: "Ставка за км (руб./км):", id: "ftl_rate", type: "number", default: 85, step: 5 },
-            { label: "Повышающий коэффициент (сезонность, север):", id: "ftl_coef", type: "number", default: 1.0, step: 0.05 }
-        ], formula: "Стоимость = Км × Ставка × Коэф", unit: "руб.", calc: (vals) => vals[0] * vals[1] * vals[2], kpiId: "transportCost" },
+        { id: "ftl_cost", name: "Оценка стоимости рейса FTL", fields: [
+            { label: "Расстояние рейса (км):", id: "ftl_km", type: "number", default: "", step: "any", help: "Модель показывает стоимость рейса в рублях, а не стоимость тонно-километра. Условия маршрута, налоги, ожидание и иные расходы нужно проверить отдельно; не включённые расходы не добавляются." },
+            { label: "Ставка за километр (руб./км):", id: "ftl_rate", type: "number", default: "", step: "any" },
+            { label: "Множитель ставки (положительный):", id: "ftl_coef", type: "number", default: "", step: "any", help: "Вводится по договору. Передача в KPI отключена: KPI измеряется в рублях за тонно-километр. Предыдущие расчёты и значения KPI не изменены и требуют проверки." }
+        ], formula: "Стоимость рейса = Км × Ставка × Множитель", unit: "руб.", calc: (vals) => SCMTransportEstimate.ftlEstimate(vals), kpiId: null },
         { id: "dim_weight", name: "Сравнение фактического и объёмного веса", fields: [
             { label: "Длина упаковки (см):", id: "dim_l", type: "number", default: "", step: "any" },
             { label: "Ширина упаковки (см):", id: "dim_w", type: "number", default: "", step: "any" },
@@ -382,17 +383,17 @@
         const calcId = e.currentTarget.getAttribute('data-id');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc) return;
-        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) && result === null) {
-            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
+        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : calc.id === 'ftl_cost' ? 'Укажите положительные конечные расстояние и множитель, неотрицательную ставку; результат должен быть конечным.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
             return;
         }
         if (calc.additional) {
             const dimWeight = calc.calc(values);
             result = calc.additional(values, dimWeight);
         }
-        result = typeof result === 'number' ? (calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id) ? result : Math.round(result * 100) / 100) : result;
+        result = typeof result === 'number' ? (calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id) ? result : Math.round(result * 100) / 100) : result;
         saveCalculation(calcId, values, result);
     }
 
@@ -401,10 +402,10 @@
         const kpiId = e.currentTarget.getAttribute('data-kpi');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc || !kpiId || calc.kpiId !== kpiId) return;
-        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) && result === null) {
-            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
+        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.' : calc.id === 'ftl_cost' ? 'Укажите положительные конечные расстояние и множитель, неотрицательную ставку; результат должен быть конечным.' : ['turnover', 'fill_rate'].includes(calc.id) ? 'Проверьте значения: они должны быть конечными, спрос и средний запас положительны, отгруженное не больше спроса, себестоимость неотрицательна, период — положительное целое число дней.' : 'Проверьте входы: все значения конечны, срок положителен, для страхового запаса — целое число дней; затраты и спрос EOQ положительны, остальные показатели неотрицательны. Результат должен быть конечным.');
             return;
         }
         if (calc.additional) {
@@ -417,14 +418,14 @@
 
     function updateAllCalculators() {
         for (let calc of calculators) {
-            const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+            const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id)) ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
             let result = calc.calc(values);
             if (calc.additional) {
                 const dimWeight = calc.calc(values);
                 result = calc.additional(values, dimWeight);
             }
             const resultUnit = result === null ? '' : calc.unit;
-            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа; объём и результат должны быть конечными' : calc.id === 'otif' ? 'Введите корректные целые числа заказов' : 'Проверьте ввод и ограничения модели; результат должен быть конечным') : typeof result === 'number' ? (['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate'].includes(calc.id) ? SCMInventory.format(result) : result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '')) : result;
+            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа; объём и результат должны быть конечными' : calc.id === 'otif' ? 'Введите корректные целые числа заказов' : 'Проверьте ввод и ограничения модели; результат должен быть конечным') : typeof result === 'number' ? (['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost'].includes(calc.id) ? SCMInventory.format(result) : result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '')) : result;
             const resultDiv = document.getElementById(`result_${calc.id}`);
             if (resultDiv) {
                 resultDiv.innerHTML = `Результат: <strong>${result}</strong> ${resultUnit}`;

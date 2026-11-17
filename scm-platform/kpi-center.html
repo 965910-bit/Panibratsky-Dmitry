@@ -263,6 +263,7 @@
         card.className = 'kpi-card';
         card.setAttribute('data-category', def.category);
         let html = `<h3>${def.name}</h3>`;
+        if (kpiId === 'transportCost') html += '<p>Проверьте старые значения и историю: раньше калькулятор рейса мог передавать рубли вместо руб./т-км. Сохранённые данные не изменены.</p>';
         def.inputs.forEach(inp => {
             html += `<div class="input-group"><label>${inp.label}</label><input type="${inp.type}" id="${inp.id}_${kpiId}" step="${inp.step || 'any'}"></div>`;
         });

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/vendor/chart.umd-4.5.1.js"></script>
     <style>
         * {
             margin: 0;
@@ -289,6 +289,7 @@
 
         <!-- Трафик -->
         <div id="traffic" class="tab-pane">
+            <p role="note">Данные вводятся вручную и не связаны с аналитикой сайта. Старые записи могли быть демонстрационными; проверьте источник до использования.</p>
             <div class="stats-grid" id="trafficStats"></div>
             <div class="card"><div class="card-title"><i class="fas fa-chart-line"></i> Динамика посещений</div><canvas id="trafficChart" width="400" height="200"></canvas></div>
             <div class="card"><div class="card-title"><i class="fas fa-table"></i> Ввод данных</div><table id="trafficDataTable"><thead><tr><th>Дата</th><th>Посещения</th><th>Просмотры</th><th></th></tr></thead><tbody></tbody></table><button id="addTrafficBtn">+ Добавить запись</button></div>
@@ -296,6 +297,7 @@
 
         <!-- Ключевые слова -->
         <div id="keywords" class="tab-pane">
+            <p role="note">Позиции вводятся вручную и не получены из поисковых систем. Старые записи могли быть демонстрационными; проверьте источник.</p>
             <div class="card">
                 <div class="card-title"><i class="fas fa-chart-simple"></i> Отслеживание позиций</div>
                 <div class="flex-between" style="margin-bottom: 15px;"><input type="text" id="newKeyword" placeholder="Ключевое слово"><button id="addKeywordBtn">+ Добавить</button></div>
@@ -310,7 +312,8 @@
         <div id="leads" class="tab-pane">
             <div class="card">
                 <div class="card-title"><i class="fas fa-users"></i> База лидов</div>
-                <div class="flex-between"><button id="addLeadBtn">+ Добавить лида</button><button id="importLeadsBtn" class="secondary">Импорт CSV</button><button id="exportLeadsBtn" class="secondary">Экспорт CSV</button></div>
+                <div class="flex-between"><button id="addLeadBtn">+ Добавить лида</button><button id="importLeadsBtn" class="secondary">Импорт резервной копии JSON</button><button id="exportLeadsBtn" class="secondary">Экспорт CSV</button></div>
+                <p role="note">CSV предназначен для просмотра, содержит защитный префикс в ячейках и не гарантирует безопасность во всех табличных программах, особенно после повторного сохранения. Для резервного копирования используйте JSON.</p>
                 <table id="leadsTable"><thead><tr><th>Имя</th><th>Email</th><th>Источник</th><th>Дата</th><th>Статус</th><th></th></tr></thead><tbody></tbody></table>
             </div>
         </div>
@@ -380,15 +383,8 @@
             { url: 'experience.html', title: 'Дмитрий Герасимов | Опыт работы', description: '15+ лет практического опыта в управлении цепями поставок.' },
             { url: 'contact.html', title: 'Дмитрий Герасимов | Контакты', description: 'Свяжитесь для стратегического сотрудничества.' }
         ]));
-        if (!localStorage.getItem(STORAGE.trafficData)) localStorage.setItem(STORAGE.trafficData, JSON.stringify([
-            { date: '2025-03-01', visits: 120, views: 340 },
-            { date: '2025-03-08', visits: 145, views: 410 },
-            { date: '2025-03-15', visits: 170, views: 520 }
-        ]));
-        if (!localStorage.getItem(STORAGE.keywords)) localStorage.setItem(STORAGE.keywords, JSON.stringify([
-            { word: 'управление цепями поставок', positions: [12,10,8], dates: ['2025-03-01','2025-03-08','2025-03-15'] },
-            { word: 'SCM консалтинг', positions: [5,4,3], dates: ['2025-03-01','2025-03-08','2025-03-15'] }
-        ]));
+        if (!localStorage.getItem(STORAGE.trafficData)) localStorage.setItem(STORAGE.trafficData, JSON.stringify([]));
+        if (!localStorage.getItem(STORAGE.keywords)) localStorage.setItem(STORAGE.keywords, JSON.stringify([]));
         if (!localStorage.getItem(STORAGE.leads)) localStorage.setItem(STORAGE.leads, JSON.stringify([]));
         if (!localStorage.getItem(STORAGE.authority)) localStorage.setItem(STORAGE.authority, JSON.stringify([]));
         if (!localStorage.getItem(STORAGE.quizzes)) localStorage.setItem(STORAGE.quizzes, JSON.stringify([]));
@@ -461,7 +457,7 @@
         const totalVisits = data.reduce((s, r) => s + r.visits, 0);
         const avgViews = Math.round(data.reduce((s, r) => s + r.views, 0) / (data.length || 1));
         document.getElementById('trafficStats').innerHTML = `
-            <div class="stat-card"><div class="stat-number">${totalVisits}</div><div>Всего посещений</div></div>
+            <div class="stat-card"><div class="stat-number">${escapeHtml(totalVisits)}</div><div>Всего посещений</div></div>
             <div class="stat-card"><div class="stat-number">${avgViews}</div><div>Средние просмотры</div></div>
         `;
     }
@@ -489,9 +485,9 @@
             return `
                 <tr>
                     <td data-label="Ключевое слово"><input type="text" class="kw-word" data-idx="${idx}" value="${escapeHtml(kw.word)}"></td>
-                    <td data-label="Текущая позиция"><input type="number" class="kw-pos" data-idx="${idx}" value="${lastPos}"></td>
-                    <td data-label="Предыдущая">${prevPos}</td>
-                    <td data-label="История">${history}</td>
+                    <td data-label="Текущая позиция"><input type="number" class="kw-pos" data-idx="${idx}" value="${escapeHtml(lastPos)}"></td>
+                    <td data-label="Предыдущая">${escapeHtml(prevPos)}</td>
+                    <td data-label="История">${escapeHtml(history)}</td>
                     <td data-label="Действия"><button class="del-kw secondary" data-idx="${idx}">Удалить</button></td>
                 </tr>
             `;
@@ -523,8 +519,10 @@
     function updateKeywordChart() {
         const keywords = JSON.parse(localStorage.getItem(STORAGE.keywords));
         const select = document.getElementById('keywordSelect');
+        const previous = select.value;
         select.innerHTML = keywords.map((kw,i) => `<option value="${i}">${escapeHtml(kw.word)}</option>`).join('');
         if (keywords.length) {
+            if (/^\d+$/.test(previous) && Number(previous) < keywords.length) select.value = previous;
             const idx = select.value;
             const kw = keywords[idx];
             const ctx = document.getElementById('keywordChart').getContext('2d');
@@ -534,8 +532,11 @@
                 data: { labels: kw.dates, datasets: [{ label: kw.word, data: kw.positions, borderColor: '#d4af37' }] },
                 options: { responsive: true, scales: { y: { reverse: true, title: { display: true, text: 'Позиция (чем ниже, тем лучше)' } } } }
             });
+        } else if (keywordChart) {
+            keywordChart.destroy();
+            keywordChart = null;
         }
-        select.addEventListener('change', () => updateKeywordChart());
+        select.onchange = updateKeywordChart;
     }
 
     // ======================= Лиды =======================
@@ -692,7 +693,7 @@
                 document.getElementById('${formId}').addEventListener('submit', function(e) {
                     e.preventDefault();
                     const resultDiv = document.getElementById('result-${formId}');
-                    resultDiv.innerHTML = 'Спасибо! Ваши ответы сохранены.';
+                    resultDiv.textContent = 'Демонстрация: ответы не сохраняются и не отправляются.';
                     // Здесь можно добавить логику сохранения ответов
                 });
             <\/script>
@@ -706,8 +707,7 @@
             { name: 'SerpBear', desc: 'Трекер позиций ключевых слов в Google, self‑hosted.', url: 'https://github.com/towfiqi/serpbear', tags: 'позиции' },
             { name: 'PhantomBuster', desc: 'Автоматизация сбора лидов из соцсетей (LinkedIn, Instagram).', url: 'https://phantombuster.com', tags: 'лиды, автоматизация' },
             { name: 'Hotjar', desc: 'Тепловые карты и записи сессий пользователей.', url: 'https://hotjar.com', tags: 'UX, аналитика' },
-            { name: 'Zapier', desc: 'Связка приложений без кода, автоматизация маркетинга.', url: 'https://zapier.com', tags: 'интеграция' },
-            { name: 'Gitpage + Skool', desc: 'Authority Capture: статический сайт + сообщество для быстрого ранжирования.', url: 'https://gitpage.io + https://skool.com', tags: 'SEO, сообщество' }
+            { name: 'Zapier', desc: 'Связка приложений без кода, автоматизация маркетинга.', url: 'https://zapier.com', tags: 'интеграция' }
         ];
         document.getElementById('toolsGrid').innerHTML = tools.map(t => `
             <div class="tool-card">
@@ -729,26 +729,45 @@
         document.getElementById('addAuthorityBtn').onclick = () => { let items = JSON.parse(localStorage.getItem(STORAGE.authority)); items.push({ name: 'Новый проект', gitUrl: '', skoolUrl: '', status: 'идея', traffic: 0 }); localStorage.setItem(STORAGE.authority, JSON.stringify(items)); renderAuthority(); };
         document.getElementById('newQuizBtn').onclick = () => { let title = prompt('Название викторины'); if(!title) return; let quizzes = JSON.parse(localStorage.getItem(STORAGE.quizzes)); quizzes.push({ title, questions: [] }); localStorage.setItem(STORAGE.quizzes, JSON.stringify(quizzes)); renderQuizzes(); };
         document.getElementById('viewTemplateBtn').onclick = () => { document.getElementById('templateCode').textContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gitpage + Skool шаблон</title></head><body><h1>Ваш авторитетный контент</h1><p>Создайте сообщество на Skool и разместите ссылку здесь.</p></body></html>`; document.getElementById('templateModal').style.display='block'; };
-        document.getElementById('exportLeadsBtn').onclick = () => { let leads = JSON.parse(localStorage.getItem(STORAGE.leads)); const csv = ['Имя,Email,Источник,Дата,Статус', ...leads.map(l => `${l.name},${l.email},${l.source},${l.date},${l.status}`)].join('\n'); downloadFile('leads.csv', csv); };
+        document.getElementById('exportLeadsBtn').onclick = () => { let leads = JSON.parse(localStorage.getItem(STORAGE.leads)); const csv = [['Имя','Email','Источник','Дата','Статус'], ...leads.map(l => [l.name,l.email,l.source,l.date,l.status])].map(row => row.map(csvTextCell).join(',')).join('\r\n'); downloadFile('leads.csv', csv); };
         document.getElementById('importLeadsBtn').onclick = () => { document.getElementById('importFile').click(); };
         document.getElementById('exportAllBtn').onclick = () => { const data = {}; for(let k in STORAGE) data[STORAGE[k]] = JSON.parse(localStorage.getItem(STORAGE[k])); downloadFile(`backup_${Date.now()}.json`, JSON.stringify(data, null, 2)); };
         document.getElementById('importAllBtn').onclick = () => { document.getElementById('importFile').click(); };
         document.getElementById('importFile').onchange = e => { if(e.target.files.length) importData(e.target.files[0]); };
     }
 
+    function csvTextCell(value) {
+        return '"' + ("'" + String(value ?? '')).replace(/"/g, '""') + '"';
+    }
     function downloadFile(filename, content) { const a = document.createElement('a'); const blob = new Blob([content], {type: 'text/plain'}); a.href = URL.createObjectURL(blob); a.download = filename; a.click(); URL.revokeObjectURL(a.href); }
-    function importData(file) { const reader = new FileReader(); reader.onload = e => { try { const data = JSON.parse(e.target.result); for(let key in data) if(Object.values(STORAGE).includes(key)) localStorage.setItem(key, JSON.stringify(data[key])); location.reload(); } catch(err) { document.getElementById('importStatus').innerHTML = '<span style="color:red;">Ошибка импорта</span>'; } }; reader.readAsText(file); }
+    function importData(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Неверный формат');
+                const keys = Object.keys(data).filter(key => Object.values(STORAGE).includes(key));
+                if (!keys.length || keys.some(key => !Array.isArray(data[key]))) throw new Error('Неверный формат');
+                if (!confirm('Импорт заменит выбранные локальные данные. Сначала сохраните JSON-резервную копию. Импорт нескольких разделов не атомарен. Продолжить?')) return;
+                for (const key of keys) localStorage.setItem(key, JSON.stringify(data[key]));
+                location.reload();
+            } catch (err) {
+                document.getElementById('importStatus').textContent = 'Ошибка импорта: данные могли быть частично записаны. Проверьте состояние и резервную копию.';
+            }
+        };
+        reader.readAsText(file);
+    }
 
     // ======================= SEO проверка =======================
     function checkSeo() {
         const pages = JSON.parse(localStorage.getItem(STORAGE.seoPages));
         let issues = [];
         pages.forEach(p => {
-            if (p.title.length < 30 || p.title.length > 70) issues.push(`${p.url}: длина title (${p.title.length}) не в норме 30–70.`);
-            if (p.description.length < 120 || p.description.length > 160) issues.push(`${p.url}: длина description (${p.description.length}) не в норме 120–160.`);
+            if (p.title.length < 30 || p.title.length > 70) issues.push(`${p.url}: длина title (${p.title.length}) вне условного диапазона 30–70 символов.`);
+            if (p.description.length < 120 || p.description.length > 160) issues.push(`${p.url}: длина description (${p.description.length}) вне условного диапазона 120–160 символов.`);
         });
         const checklistDiv = document.getElementById('seoChecklist');
-        checklistDiv.innerHTML = issues.length ? `<div class="card"><strong>Рекомендации:</strong><ul>${issues.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul></div>` : '<div class="card">✅ Все мета-теги в норме!</div>';
+        checklistDiv.innerHTML = issues.length ? `<div class="card"><strong>Условная проверка длины введённых данных (не проверка сайта или позиций):</strong><ul>${issues.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul></div>` : '<div class="card">Условный диапазон длины соблюдён. Это не проверка страниц или поисковой выдачи.</div>';
         checklistDiv.style.display = 'block';
     }
 
@@ -779,7 +798,7 @@
     document.getElementById('loginBtn').onclick = () => { localStorage.setItem('promo_logged', 'true'); checkAuth(); };
     document.getElementById('logoutBtn').onclick = () => { localStorage.removeItem('promo_logged'); checkAuth(); };
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active')); document.getElementById(btn.dataset.tab).classList.add('active'); }));
-    function escapeHtml(s) { return String(s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
+    function escapeHtml(s) { return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
     checkAuth();
 </script>
 </body>

@@ -5,6 +5,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const SCMInventoryMetrics=require('../js/inventory-metrics.js');
 const SCMInventory=require('../js/inventory-models.js');
+const SCMTransportEstimate=require('../js/transport-estimate.js');
 function extract(page,name) {
   const m=page.match(new RegExp(`^    function ${name}\\([^\\n]*\\) \\{[\\s\\S]*?\\n    \\}`,'m'));
   assert.ok(m,name);return m[0];
@@ -52,7 +53,7 @@ test('public page uses period and hides prior results on changes and invalid inp
   const page=fs.readFileSync('calculators.html','utf8');const nodes=new Map(),alerts=[];let ready;
   function node(id){if(!nodes.has(id))nodes.set(id,{value:'',style:{},textContent:'',listeners:{},addEventListener(k,f){this.listeners[k]=f;}});return nodes.get(id)}
   const document={getElementById:node,addEventListener:(event,fn)=>{if(event==='DOMContentLoaded')ready=fn;},querySelectorAll:()=>[]};
-  const ctx={document,alert:a=>alerts.push(a),SCMInventory,SCMInventoryMetrics,window:{},IntersectionObserver:class{observe(){}}};vm.createContext(ctx);
+  const ctx={document,alert:a=>alerts.push(a),SCMInventory,SCMInventoryMetrics,SCMTransportEstimate,window:{},IntersectionObserver:class{observe(){}}};vm.createContext(ctx);
   for(const script of page.matchAll(/<script(?![^>]*(?:src|application\/ld\+json))[^>]*>([\s\S]*?)<\/script>/gi))vm.runInContext(script[1],ctx);
   for(const [id,value] of Object.entries({'eoq-demand':'10000','eoq-order-cost':'500','eoq-holding-cost':'20','ss-max-demand':'120','ss-avg-demand':'100','ss-lead-time':'7','rop-demand':'100','rop-lead-time':'5','rop-safety-stock':'50','turnover-cogs':'500','turnover-avg-inventory':'100','turnover-period-days':'90','fill-total-demand':'100','fill-stockouts':'25','transp-distance':'500','transp-rate':'15','transp-additional':'0'}))node(id).value=value;
   ready();assert.match(node('turnover-value').textContent,/5 раз за период \(оценка 18 дней\)/);assert.equal(node('fill-rate-value').textContent,'75.00%');
