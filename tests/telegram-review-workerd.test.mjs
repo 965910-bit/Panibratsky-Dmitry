@@ -49,4 +49,31 @@ export default {fetch(request, env) { envForTest=env; return handle(request, env
   const approved=await mf.dispatchFetch('http://worker.test/telegram',{method:'POST',headers:{'content-type':'application/json','x-telegram-bot-api-secret-token':'w'.repeat(40)},body:JSON.stringify(cardPayload)});
   assert.equal(approved.status,200); assert.equal((await db.prepare('SELECT state FROM drafts WHERE id = ?').bind(card.id).first()).state,'sent');
   assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM calls WHERE chat_id = '-100123' AND method = 'sendPhoto'").first()).n,1);
+
+  // No real Telegram access: exercise the guarded producer protocol in workerd + local D1.
+  const sources=['https://example.org/guard-a','https://example.org/guard-b'];
+  const preflight=(auth=headers)=>mf.dispatchFetch('http://worker.test/availability',{method:'POST',headers:auth,body:JSON.stringify({source_urls:sources})});
+  assert.equal((await preflight({...headers,authorization:'Bearer wrong'})).status,403);
+  let state=await (await preflight()).json();
+  assert.deepEqual(state,{known:[false,false],pending:0,uncertain:0});
+  const guarded=url=>mf.dispatchFetch('http://worker.test/intake-one',{method:'POST',headers,body:JSON.stringify({text:'Проверенный вывод',source_url:url,card_base64:png.toString('base64')})});
+  assert.equal((await guarded(sources[0].replace('guard-a','original-check'))).status,201);
+  // Once the record is ready, a different source must not enter or notify.
+  assert.equal((await guarded(sources[0])).status,409);
+  state=await (await preflight()).json(); assert.equal(state.pending,1);
+  const originalRow=await db.prepare('SELECT * FROM drafts WHERE source_url = ?').bind('https://example.org/original-check').first();
+  const rejectPayload={callback_query:{id:'reject',from:{id:123},message:{message_id:37,chat:{id:123,type:'private'}},data:`reject:${originalRow.id}`}};
+  assert.equal((await mf.dispatchFetch('http://worker.test/telegram',{method:'POST',headers:{'content-type':'application/json','x-telegram-bot-api-secret-token':'w'.repeat(40)},body:JSON.stringify(rejectPayload)})).status,200);
+  const results=await Promise.all(sources.map(guarded));
+  assert.deepEqual(results.map(r=>r.status).sort((a,b)=>a-b),[201,409]);
+  const rows=(await db.prepare("SELECT source_url, state FROM drafts WHERE source_url IN (?, ?)").bind(...sources).all()).results;
+  assert.equal(rows.length,1);assert.equal(rows[0].state,'ready');
+  for (const status of ['notifying','sending']) {
+    await db.prepare('UPDATE drafts SET state = ? WHERE source_url = ?').bind(status,rows[0].source_url).run();
+    assert.equal((await guarded('https://example.org/blocked-'+status)).status,409);
+    const snapshot=await (await preflight()).json();assert.equal(snapshot.uncertain,1);
+  }
+  await db.prepare("UPDATE drafts SET state = 'ready' WHERE source_url = ?").bind(rows[0].source_url).run();
+  state=await (await preflight()).json();assert.deepEqual(state.known,sources.map(url=>url===rows[0].source_url));assert.equal(state.pending,1);assert.equal(state.uncertain,0);
+  assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM calls WHERE chat_id = '-100123'").first()).n,2);
 });
