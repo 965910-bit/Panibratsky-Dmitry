@@ -1,0 +1,41 @@
+name: Update open logistics indicators
+
+on:
+  schedule:
+    - cron: '23 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.ref == 'refs/heads/main' && 'site-data-updates' || format('open-data-diagnostic-{0}', github.ref) }}
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: ${{ github.ref == 'refs/heads/main' }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate indicators without publication on non-main branches
+        if: github.ref != 'refs/heads/main'
+        run: python scripts/open_logistics_data.py --check
+      - name: Update indicators on main
+        if: github.ref == 'refs/heads/main'
+        run: python scripts/open_logistics_data.py
+      - name: Commit and push only the snapshot
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/open-logistics.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update open logistics indicators"
+            git push
+          fi
