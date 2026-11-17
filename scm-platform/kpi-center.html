@@ -167,9 +167,11 @@
 
         <div class="btn-group">
             <button id="exportKpiBtn">📎 Экспорт всех KPI (JSON)</button>
-            <button id="importKpiBtn">📂 Импорт KPI (JSON)</button>
+            <button id="importKpiBtn" disabled>📂 Импорт KPI приостановлен</button>
             <input type="file" id="importFileInput" accept=".json" style="display: none;">
         </div>
+
+        <p>Импорт KPI приостановлен до проверки схемы, бизнес-единицы и безопасного восстановления. Экспорт и существующие данные сохранены.</p>
 
         <div class="filter-bar">
             <label>Показать категорию:</label>
@@ -369,24 +371,7 @@
     }
 
     function importKPI(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const data = JSON.parse(e.target.result);
-                for (const kpiId of Object.keys(kpiDefinitions)) {
-                    if (data[kpiId]) {
-                        SCMData.saveKPI(kpiId, data[kpiId], currentBranchId);
-                        if (data[`${kpiId}_history`]) {
-                            localStorage.setItem(`kpi_${kpiId}_${currentBranchId}_history`, JSON.stringify(data[`${kpiId}_history`]));
-                        }
-                    }
-                }
-                renderKPICards();
-                updateChartOptions();
-                alert('Импорт выполнен');
-            } catch(err) { alert('Ошибка импорта: ' + err.message); }
-        };
-        reader.readAsText(file);
+        alert('Импорт KPI приостановлен до проверки формата и безопасного восстановления; существующие данные не изменены.');
     }
 
     document.getElementById('exportKpiBtn').addEventListener('click', exportKPI);

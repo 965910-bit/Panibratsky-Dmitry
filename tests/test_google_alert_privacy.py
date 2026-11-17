@@ -95,6 +95,7 @@ class GoogleAlertPrivacyTests(unittest.TestCase):
     def test_git_pages_and_workflow_exclude_scratch_from_publication(self):
         self.assertIn('/.local-news/', (ROOT/'.gitignore').read_text())
         self.assertIn('  - .local-news', (ROOT/'_config.yml').read_text())
+        self.assertIn('  - data/google_alerts.json', (ROOT/'_config.yml').read_text())
         workflow = (ROOT/'.github/workflows/update_news.yml').read_text()
         self.assertIn('git add data/news.json trends.html sitemap.xml rss.xml', workflow)
         self.assertNotIn('git add data/', workflow.replace('git add data/news.json', ''))

@@ -478,7 +478,7 @@
                 if ((data.checklists || []).some(cl => Object.hasOwn(existingCategories, `last_modified_${cl.name}`))) {
                     throw new Error('Импорт пересекается с ключом другой старой категории');
                 }
-                if (!confirm('Импорт заменит реестр аудитов из файла и совпадающие результаты старых чек-листов в выбранной бизнес-единице. Продолжить?')) return;
+                if (!confirm('Импорт заменит реестр аудитов из файла и совпадающие результаты старых чек-листов в выбранной бизнес-единице. Сначала сохраните резервную копию: запись нескольких разделов не атомарна и при ошибке может измениться частично. Продолжить?')) return;
                 if (data.audits) { saveAuditRegistry(data.audits); }
                 if (data.checklists) {
                     for (let cl of data.checklists) {
@@ -491,7 +491,7 @@
                 }
                 renderAudits(); renderChecklists();
                 alert('Импорт выполнен');
-            } catch(err) { alert('Ошибка импорта: ' + err.message); }
+            } catch(err) { alert('Ошибка импорта: некоторые данные могли быть записаны частично. Проверьте состояние и резервную копию.'); }
         };
         reader.readAsText(file);
     }
