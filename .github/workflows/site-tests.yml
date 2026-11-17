@@ -21,7 +21,7 @@ jobs:
       - run: npm audit --audit-level=high
       - run: cmp node_modules/chart.js/dist/chart.umd.js js/vendor/chart.umd-4.5.1.js && cmp node_modules/chart.js/LICENSE.md js/vendor/chartjs-LICENSE.md
       - run: cmp node_modules/leaflet/dist/leaflet.js js/vendor/leaflet-1.9.4/leaflet.js && cmp node_modules/leaflet/dist/leaflet.js.map js/vendor/leaflet-1.9.4/leaflet.js.map && cmp node_modules/leaflet/dist/leaflet.css js/vendor/leaflet-1.9.4/leaflet.css && cmp node_modules/leaflet/LICENSE js/vendor/leaflet-1.9.4/LICENSE && diff -rq node_modules/leaflet/dist/images js/vendor/leaflet-1.9.4/images
-      - run: python -m pip install -r telegram-review/requirements-visuals.txt
+      - run: python -m pip install --require-hashes -r telegram-review/requirements-visuals.lock
       - run: python scripts/generate_sitemap.py --check
       - run: python scripts/seo_guard.py
       - run: python scripts/open_data_review.py data/open-logistics.json --require-complete > /dev/null

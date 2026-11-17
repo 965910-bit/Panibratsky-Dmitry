@@ -25,7 +25,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install requests beautifulsoup4 feedparser python-dateutil
+          python -m pip install --require-hashes -r requirements/news.lock
 
       - name: Google Alerts (if email configured)
         run: |

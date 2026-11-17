@@ -27,9 +27,8 @@ jobs:
           
       - name: Install dependencies
         run: |
-          pip install requests
-          pip install playwright
-          playwright install chromium
+          python -m pip install --require-hashes -r requirements/hh.lock
+          python -m playwright install chromium
         
       - name: Run HH Python Script
         # Non-main runs are diagnostic only and do not change or publish data.
