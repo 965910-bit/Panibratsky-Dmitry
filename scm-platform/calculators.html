@@ -11,6 +11,7 @@
     <script src="scm-common.js"></script>
     <script src="../js/otif.js"></script>
     <script src="../js/forecast-error.js"></script>
+    <script src="../js/dimensional-weight.js"></script>
     <style>
         .calc-grid {
             display: grid;
@@ -152,7 +153,7 @@
                 <select id="branchSelector"></select>
             </div>
         </div>
-        <p>Профессиональные расчёты для управления цепями поставок, запасами, логистикой, персоналом и финансами.</p>
+        <p>Расчёты зависят от введённых данных и условий; остальные калькуляторы проверены частично. Расчёт ФОТ с северными надбавками временно приостановлен: прежняя формула начисляла коэффициент и надбавку друг на друга. Сохранённые расчёты не изменены; проверьте их отдельно с бухгалтером. <a href="https://xn--80akibcicpdbetz7e2g.xn--p1ai/questions/viewFaq/1159">Разъяснение Роструда</a>.</p>
 
         <div class="btn-group">
             <button id="printCalculatorsBtn" style="background:#f59e0b;"><i class="fas fa-print"></i> Печать калькуляторов</button>
@@ -202,9 +203,9 @@
     }
 
     function saveCalculation(calcId, values, result) {
-        const key = calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : calcId === 'mape' ? `calc_ape_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
+        const key = calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : calcId === 'mape' ? `calc_ape_v1_${currentBranchId}` : calcId === 'dim_weight' ? `calc_dim_weight_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
         const saved = JSON.parse(localStorage.getItem(key) || '[]');
-        saved.push({ values, result, timestamp: new Date().toISOString(), ...(calcId === 'otif' ? { method: 'joint-orders-v1' } : calcId === 'mape' ? { method: 'single-ape-v1' } : {}) });
+        saved.push({ values, result, timestamp: new Date().toISOString(), ...(calcId === 'otif' ? { method: 'joint-orders-v1' } : calcId === 'mape' ? { method: 'single-ape-v1' } : calcId === 'dim_weight' ? { method: 'unrounded-package-comparison-v1' } : {}) });
         if (saved.length > 20) saved.shift();
         localStorage.setItem(key, JSON.stringify(saved));
         alert(`Расчёт сохранён (всего сохранено: ${saved.length})`);
@@ -255,11 +256,6 @@
             let base = labor / (vals[2] * vals[3]);
             return Math.ceil(base * vals[4]);
         }, kpiId: null },
-        { id: "salary_north", name: "ФОТ с северными надбавками", fields: [
-            { label: "Базовая зарплата (оклад), руб.:", id: "fot_base", type: "number", default: 50000, step: 5000 },
-            { label: "Районный коэффициент (1.5 для ХМАО/ЯНАО):", id: "fot_rk", type: "number", default: 1.5, step: 0.1 },
-            { label: "Северная надбавка (%):", id: "fot_nad", type: "number", default: 80, step: 5 }
-        ], formula: "Итого = Оклад * (1 + Надбавка/100) * РК", unit: "руб.", calc: (vals) => vals[0] * (1 + vals[2]/100) * vals[1], kpiId: null },
         { id: "turnover", name: "Оборачиваемость запасов", fields: [
             { label: "Себестоимость продаж (COGS) за период, руб.:", id: "turn_cogs", type: "number", default: 10000000, step: 100000 },
             { label: "Средняя стоимость запасов, руб.:", id: "turn_avg", type: "number", default: 2000000, step: 100000 }
@@ -273,13 +269,13 @@
             { label: "Ставка за км (руб./км):", id: "ftl_rate", type: "number", default: 85, step: 5 },
             { label: "Повышающий коэффициент (сезонность, север):", id: "ftl_coef", type: "number", default: 1.0, step: 0.05 }
         ], formula: "Стоимость = Км × Ставка × Коэф", unit: "руб.", calc: (vals) => vals[0] * vals[1] * vals[2], kpiId: "transportCost" },
-        { id: "dim_weight", name: "Объёмный вес (Dim weight)", fields: [
-            { label: "Длина (см):", id: "dim_l", type: "number", default: 60, step: 1 },
-            { label: "Ширина (см):", id: "dim_w", type: "number", default: 40, step: 1 },
-            { label: "Высота (см):", id: "dim_h", type: "number", default: 30, step: 1 },
-            { label: "Фактический вес (кг):", id: "dim_actual", type: "number", default: 10, step: 1 },
-            { label: "Коэффициент (5000 для авиа, 6000 для авто):", id: "dim_coef", type: "number", default: 5000, step: 100 }
-        ], formula: "Объёмный вес = (Д×Ш×В) / Коэф", unit: "кг", calc: (vals) => (vals[0]*vals[1]*vals[2]) / vals[4], additional: (vals, calcVal) => Math.max(vals[3], calcVal), kpiId: null },
+        { id: "dim_weight", name: "Сравнение фактического и объёмного веса", fields: [
+            { label: "Длина упаковки (см):", id: "dim_l", type: "number", default: "", step: "any" },
+            { label: "Ширина упаковки (см):", id: "dim_w", type: "number", default: "", step: "any" },
+            { label: "Высота упаковки (см):", id: "dim_h", type: "number", default: "", step: "any" },
+            { label: "Фактический вес (кг):", id: "dim_actual", type: "number", default: "", step: "any" },
+            { label: "Делитель (см³/кг) по условиям перевозчика:", id: "dim_coef", type: "number", default: "", step: "any", help: "Для одной упаковки. Показывается большее из фактического и расчётного объёмного веса; на экране округление до двух знаков. Не учитываются правила округления, минимумы и надбавки перевозчика. Проверьте договор и правила выбранного сервиса; прежние расчёты сохранены отдельно." }
+        ], formula: "Максимум фактического веса и (Д×Ш×В)/делитель", unit: "кг", calc: (vals) => SCMDimensionalWeight.compare(vals), kpiId: null },
         { id: "mape", name: "Ошибка прогноза для одной пары (APE)", fields: [
             { label: "Фактический спрос (больше нуля):", id: "mape_actual", type: "number", default: "", step: "any", help: "Результат относится к одной паре, а не средней MAPE за период. На экране округление до двух знаков; при факте близком к нулю ошибка нестабильна." },
             { label: "Прогнозируемый спрос (не меньше нуля):", id: "mape_forecast", type: "number", default: "", step: "any", help: "Цель зависит от задачи. Прежние расчёты сохранены отдельно без пересчёта." }
@@ -351,7 +347,7 @@
             card.innerHTML = `
                 <h2><i class="fas fa-calculator"></i> ${calc.name}</h2>
                 ${fieldsHtml}
-                ${calc.id === 'mape' ? '<p><a href="https://otexts.com/fpp3/toolbox.html#sec-accuracy">Методика и ограничения</a></p>' : ''}
+                ${calc.id === 'mape' ? '<p><a href="https://otexts.com/fpp3/toolbox.html#sec-accuracy">Методика и ограничения</a></p>' : calc.id === 'dim_weight' ? '<p><a href="https://www.fedex.com/en-gb/how-to/calculate-costs/dimensional-weight.html">Пример методики FedEx UK</a></p>' : ''}
                 <div class="result" id="result_${calc.id}">Результат: <strong>—</strong> ${calc.unit}</div>
                 <div class="calc-actions">
                     <button class="save-btn" data-id="${calc.id}"><i class="fas fa-save"></i> Сохранить расчёт</button>
@@ -383,17 +379,17 @@
         const calcId = e.currentTarget.getAttribute('data-id');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc) return;
-        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape') ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight') ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if ((calc.id === 'otif' || calc.id === 'mape') && result === null) {
-            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.');
+        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight') && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.');
             return;
         }
         if (calc.additional) {
             const dimWeight = calc.calc(values);
             result = calc.additional(values, dimWeight);
         }
-        result = typeof result === 'number' ? (calc.id === 'mape' ? result : Math.round(result * 100) / 100) : result;
+        result = typeof result === 'number' ? (calc.id === 'mape' || calc.id === 'dim_weight' ? result : Math.round(result * 100) / 100) : result;
         saveCalculation(calcId, values, result);
     }
 
@@ -402,10 +398,10 @@
         const kpiId = e.currentTarget.getAttribute('data-kpi');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc || !kpiId || calc.kpiId !== kpiId) return;
-        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape') ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight') ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if ((calc.id === 'otif' || calc.id === 'mape') && result === null) {
-            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.');
+        if ((calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight') && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.' : 'Введите положительные конечные числа во все поля; промежуточный объём и результат также должны быть конечными.');
             return;
         }
         if (calc.additional) {
@@ -418,14 +414,14 @@
 
     function updateAllCalculators() {
         for (let calc of calculators) {
-            const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape') ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+            const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape' || calc.id === 'dim_weight') ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
             let result = calc.calc(values);
             if (calc.additional) {
                 const dimWeight = calc.calc(values);
                 result = calc.additional(values, dimWeight);
             }
             const resultUnit = result === null ? '' : calc.unit;
-            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : 'Введите корректные целые числа заказов') : typeof result === 'number' ? result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') : result;
+            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа; объём и результат должны быть конечными' : 'Введите корректные целые числа заказов') : typeof result === 'number' ? result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') : result;
             const resultDiv = document.getElementById(`result_${calc.id}`);
             if (resultDiv) {
                 resultDiv.innerHTML = `Результат: <strong>${result}</strong> ${resultUnit}`;
