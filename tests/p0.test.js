@@ -105,3 +105,96 @@ test('news loading discards unsafe links while preserving valid articles', async
   assert.equal(vm.runInContext('allNews.length', context), 1);
   assert.equal(vm.runInContext('allNews[0].title', context), 'safe');
 });
+
+const tracking = html.match(/        function trackNewsEvent\(key\) \{[\s\S]*?\n        \}/)[0];
+test('news tracking accepts only fixed event keys and payloads', () => {
+  const sent = [];
+  const ctx = {window: {ym: (...args) => sent.push(['ym', ...args]), gtag: (...args) => sent.push(['ga', ...args])}};
+  vm.createContext(ctx); vm.runInContext(tracking, ctx);
+  const expected = [
+    ['read', 'news_click_read_more', 'news_click_read_more', 'news', null],
+    ['like', 'news_like', 'news_like', 'engagement', null],
+    ['tag', 'tag_click', 'tag_click', 'news', null],
+    ['source', 'source_click', 'source_click', 'news', null],
+    ['search', 'news_search', 'news_search', 'news', null],
+    ['share_tg', 'share_tg', 'share', 'engagement', 'telegram'],
+    ['share_vk', 'share_vk', 'share', 'engagement', 'vk'],
+    ['share_tw', 'share_tw', 'share', 'engagement', 'twitter']
+  ];
+  for (const [key, goal, name, category, label] of expected) {
+    sent.length = 0;
+    ctx.trackNewsEvent(key, 'private@example.test?token=secret');
+    assert.equal(sent.length, 2);
+    assert.deepEqual(sent[0], ['ym', 108401876, 'reachGoal', goal]);
+    assert.deepEqual(JSON.parse(JSON.stringify(sent[1])), ['ga', 'event', name,
+      label ? {event_category: category, event_label: label} : {event_category: category}]);
+    assert.doesNotMatch(JSON.stringify(sent), /private@example|token|secret/);
+  }
+  sent.length = 0;
+  for (const key of ['__proto__', 'constructor', 'private@example.test', '', null]) ctx.trackNewsEvent(key);
+  assert.deepEqual(sent, []);
+});
+
+test('news actions do not pass feed data to custom analytics', () => {
+  const func = name => html.match(new RegExp(`        function ${name}\\([^\\n]*\\) \\{[\\s\\S]*?\\n        \\}`))[0];
+  const sent = [], opened = [], elements = [];
+  const privateValue = 'private@example.test?token=secret';
+  const btn = {getAttribute: name => ({'data-url': 'https://example.com/?token=secret', 'data-title': privateValue, 'data-share': 'tg', 'data-link': 'https://example.com/?token=secret'})[name],
+    querySelector: () => ({textContent: ''}), classList: {add() {}, remove() {}}};
+  const sourceNode = {addEventListener: (name, fn) => elements.push(fn), getAttribute: () => privateValue};
+  const list = {innerHTML: ''};
+  const storage = new Map();
+  const ctx = {window: {ym: (...args) => sent.push(args), gtag: (...args) => sent.push(args), open: (...args) => opened.push(args)},
+    document: {getElementById: id => id === 'sources-list' ? list : id === 'tagcloud' ? {innerHTML:'', appendChild: node => elements.push(node.onclick)} : {style:{}, textContent:''},
+      querySelectorAll: () => [sourceNode], createElement: () => ({style:{}, textContent:'', title:'', onclick:null})},
+    localStorage: {getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value)},
+    applyFilters() {}, currentTagFilter: null, Math, parseInt};
+  vm.createContext(ctx);
+  vm.runInContext([tracking, func('escapeHtml'), func('shareHandler'), func('likeHandler'), func('buildTagCloud'), func('buildSourcesRank')].join('\n'), ctx);
+  ctx.shareHandler({preventDefault(){}, currentTarget: btn});
+  ctx.likeHandler({stopPropagation(){}, currentTarget: btn});
+  ctx.buildTagCloud([{tags:[privateValue]}]);
+  elements.pop()();
+  ctx.buildSourcesRank([{source:privateValue}]);
+  elements.pop()();
+  assert.equal(sent.length, 8);
+  assert.doesNotMatch(JSON.stringify(sent), /private@example|token|secret/);
+  // Sharing intentionally passes the selected URL and title to the chosen platform, not to custom event parameters.
+  assert.match(opened[0][0], /^https:\/\/t\.me\/share\/url\?/);
+  assert.match(opened[0][0], /token%3Dsecret/);
+});
+
+test('sharing still opens when analytics is missing or throws', () => {
+  const share = html.match(/        function shareHandler\(e\) \{[\s\S]*?\n        \}/)[0];
+  for (const analytics of [{}, {ym() {throw Error('blocked');}, gtag() {throw Error('blocked');}}]) {
+    const opened = [];
+    const ctx = {window: {...analytics, open: (...args) => opened.push(args)}};
+    vm.createContext(ctx); vm.runInContext(tracking + '\n' + share, ctx);
+    ctx.shareHandler({preventDefault(){}, currentTarget: {getAttribute: name => ({'data-url': 'https://example.com/a', 'data-title': 'News', 'data-share':'vk'})[name]}});
+    assert.equal(opened.length, 1);
+    assert.match(opened[0][0], /^https:\/\/vk\.com\/share\.php\?/);
+  }
+});
+
+test('reading and searching record only fixed events, without URL or search text', () => {
+  const render = html.match(/        function renderNews\(\) \{[\s\S]*?\n        \}\n\n        function shareHandler/)[0].replace(/\n\n        function shareHandler$/, '');
+  const escape = html.match(/        function escapeHtml\(str\) \{[\s\S]*?\n        \}/)[0];
+  const search = html.match(/        document\.getElementById\('searchBtn'\)\.addEventListener\('click', \(\) => \{[\s\S]*?\n        \}\);/)[0];
+  const sent = [], listeners = {};
+  const newsLink = {addEventListener: (event, callback) => {listeners.read = callback;}, getAttribute: () => 'https://example.test/?email=private@example.test'};
+  const nodes = {'news-list': {innerHTML: ''}, pagination: {innerHTML: ''},
+    searchBtn: {addEventListener: (event, callback) => {listeners.search = callback;}},
+    searchInput: {value: 'private@example.test'}, 'filter-bar': {style: {}}};
+  const ctx = {window: {ym: (...args) => sent.push(args), gtag: (...args) => sent.push(args)},
+    document: {getElementById: id => nodes[id], querySelectorAll: selector => selector === '.news-title-link' ? [newsLink] : []},
+    filteredNews: [{link:'https://example.test/?email=private@example.test', title:'title', tags:[]}],
+    currentPage: 1, perPage: 10, currentSearch: '', currentTagFilter: null,
+    localStorage: {getItem: () => null, removeItem() {}}, applyFilters() {}, renderPagination() {}, shareHandler() {}, likeHandler() {},
+    Date, Number, Math, parseInt};
+  vm.createContext(ctx); vm.runInContext(tracking + '\n' + escape + '\n' + render + '\n' + search, ctx);
+  ctx.renderNews(); listeners.read(); listeners.search();
+  assert.equal(sent.length, 4);
+  assert.doesNotMatch(JSON.stringify(sent), /private@example|email=/);
+  assert.match(JSON.stringify(sent), /news_click_read_more/);
+  assert.match(JSON.stringify(sent), /news_search/);
+});

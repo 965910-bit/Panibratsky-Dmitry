@@ -1037,6 +1037,30 @@
             buildSourcesRank(filteredNews);
         }
 
+        // Custom events contain only fixed identifiers, never feed data or user input.
+        function trackNewsEvent(key) {
+            const events = {
+                read: ['news_click_read_more', 'news_click_read_more', 'news'],
+                like: ['news_like', 'news_like', 'engagement'],
+                tag: ['tag_click', 'tag_click', 'news'],
+                source: ['source_click', 'source_click', 'news'],
+                search: ['news_search', 'news_search', 'news'],
+                share_tg: ['share_tg', 'share', 'engagement', 'telegram'],
+                share_vk: ['share_vk', 'share', 'engagement', 'vk'],
+                share_tw: ['share_tw', 'share', 'engagement', 'twitter']
+            };
+            if (!Object.prototype.hasOwnProperty.call(events, key)) return;
+            const [goal, name, category, label] = events[key];
+            try { if (typeof window.ym === 'function') window.ym(108401876, 'reachGoal', goal); } catch (_) {}
+            try {
+                if (typeof window.gtag === 'function') {
+                    const params = { event_category: category };
+                    if (label) params.event_label = label;
+                    window.gtag('event', name, params);
+                }
+            } catch (_) {}
+        }
+
         function renderNews() {
             const container = document.getElementById('news-list');
             const start = (currentPage - 1) * perPage;
@@ -1082,9 +1106,7 @@
 
             document.querySelectorAll('.news-title-link').forEach(link => {
                 link.addEventListener('click', (e) => {
-                    const href = link.getAttribute('href');
-                    ym(108401876, 'reachGoal', 'news_click_read_more');
-                    gtag('event', 'news_click_read_more', { event_category: 'news', event_label: href });
+                    trackNewsEvent('read');
                 });
             });
             document.querySelectorAll('.share-btn').forEach(btn => {
@@ -1107,16 +1129,13 @@
             let shareUrl = '';
             if (shareType === 'tg') {
                 shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
-                ym(108401876, 'reachGoal', 'share_tg');
-                gtag('event', 'share', { event_category: 'engagement', event_label: 'telegram' });
+                trackNewsEvent('share_tg');
             } else if (shareType === 'vk') {
                 shareUrl = `https://vk.com/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
-                ym(108401876, 'reachGoal', 'share_vk');
-                gtag('event', 'share', { event_category: 'engagement', event_label: 'vk' });
+                trackNewsEvent('share_vk');
             } else if (shareType === 'tw') {
                 shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
-                ym(108401876, 'reachGoal', 'share_tw');
-                gtag('event', 'share', { event_category: 'engagement', event_label: 'twitter' });
+                trackNewsEvent('share_tw');
             }
             if (shareUrl) {
                 window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=500');
@@ -1140,8 +1159,7 @@
             btn.querySelector('.like-count').textContent = count;
             if (count > 0) btn.classList.add('liked');
             else btn.classList.remove('liked');
-            ym(108401876, 'reachGoal', 'news_like');
-            gtag('event', 'news_like', { event_category: 'engagement', event_label: link });
+            trackNewsEvent('like');
         }
 
         function renderPagination() {
@@ -1233,8 +1251,7 @@
                     applyFilters(); 
                     document.getElementById('filter-bar').style.display = 'block'; 
                     document.getElementById('active-tag').textContent = `Фильтр: ${tag}`;
-                    ym(108401876, 'reachGoal', 'tag_click', { tag: tag });
-                    gtag('event', 'tag_click', { event_category: 'news', event_label: tag });
+                    trackNewsEvent('tag');
                 };
                 container.appendChild(span);
             });
@@ -1257,9 +1274,7 @@
             `).join('');
             document.querySelectorAll('.source-item').forEach(el => {
                 el.addEventListener('click', () => {
-                    const source = el.getAttribute('data-source');
-                    ym(108401876, 'reachGoal', 'source_click', { source: source });
-                    gtag('event', 'source_click', { event_category: 'news', event_label: source });
+                    trackNewsEvent('source');
                 });
             });
             if (sorted.length === 0) container.innerHTML = '<p>Нет данных об источниках.</p>';
@@ -1301,8 +1316,7 @@
             document.getElementById('filter-bar').style.display = 'none';
             applyFilters();
             if (currentSearch) {
-                ym(108401876, 'reachGoal', 'news_search');
-                gtag('event', 'news_search', { event_category: 'news' });
+                trackNewsEvent('search');
             }
         });
 
