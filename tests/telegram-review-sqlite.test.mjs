@@ -2,12 +2,13 @@
 // This does not test Cloudflare D1 or Telegram delivery.
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync, rmSync} from 'node:fs';
+import {mkdtempSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {handle} from '../telegram-review/worker.mjs';
 import {prepareDraft, submit, draftFingerprint} from '../telegram-review/drafts.mjs';
+import {sendGalleryItem} from '../telegram-review/gallery-submit.mjs';
 
 const bridge = `
 import json, sqlite3, sys
@@ -99,4 +100,12 @@ test('photo from mobile Telegram is reviewed and explicitly approved with a real
  const row=(await f.getRow()).results[0]; assert.equal(row.state,'ready'); assert.equal(row.photo_file_id,'telegram-photo-id');
  assert.equal(f.calls.find(c=>c.method==='sendPhoto').body.photo,'mobile-photo'); assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
  await f.approve(row.id); const channel=f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID); assert.equal(channel.length,1); assert.equal(channel[0].body.photo,'telegram-photo-id');
+});
+
+test('gallery item reaches SQLite-backed private review before approval',async(t)=>{
+ const f=fixture(t); const dir=mkdtempSync(join(tmpdir(),'gallery-flow-')); t.after(()=>rmSync(dir,{recursive:true,force:true}));
+ const d=draft(); writeFileSync(join(dir,'draft-01.json'),JSON.stringify(d)); writeFileSync(join(dir,'card-01.png'),png(d));
+ await sendGalleryItem(dir,1,{send:true,url:'https://test.example.workers.dev/intake',secret:f.env.INTAKE_SECRET,fetcher:f.localIntake});
+ const row=(await f.getRow()).results[0]; assert.equal(row.state,'ready'); assert.equal(row.photo_file_id,'telegram-photo-id'); assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
+ await f.approve(row.id); assert.equal((await f.getRow()).results[0].state,'sent'); assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,1);
 });
