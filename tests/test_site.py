@@ -65,6 +65,21 @@ class SiteTests(unittest.TestCase):
             for match in re.findall(r'<script\s+type="application/ld\+json"[^>]*>(.*?)</script>', html, re.I | re.S):
                 json.loads(match)
 
+    def test_unverified_forecasts_and_course_links_are_not_presented_as_facts(self):
+        news = (ROOT / 'trends.html').read_text(encoding='utf-8')
+        overview = (ROOT / 'trends-logistics.html').read_text(encoding='utf-8')
+        plan = (ROOT / 'business-plan.html').read_text(encoding='utf-8')
+        for text in ('Прогноз Gartner:', '$620 млрд', 'Записаться на курс →'):
+            self.assertNotIn(text, news)
+        self.assertIn('временно сняты до проверки источников', overview)
+        self.assertNotIn('42% крупных компаний внедрили AI', overview)
+        for section in ('logistics', 'personnel', 'academy', 'strategy'):
+            self.assertIn('id="' + section + '"', overview)
+            self.assertIn('id="' + section + '-2024"', overview)
+        self.assertIn('Архивный проект, версия 2024 года', plan)
+        self.assertIn('не являются гарантией результата', plan)
+        self.assertNotIn('Текущий прогресс: 3,000 пользователей', plan)
+
     def test_public_business_plan_discovery(self):
         page = (ROOT / 'business-plan.html').read_text(encoding='utf-8')
         self.assertIn('href="https://scm-news.ru/business-plan.html"', page)
