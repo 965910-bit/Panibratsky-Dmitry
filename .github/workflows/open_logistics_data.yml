@@ -23,9 +23,25 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate indicators without publication on non-main branches
+      - name: Test real capture without publication on non-main branches
         if: github.ref != 'refs/heads/main'
-        run: python scripts/open_logistics_data.py --check
+        run: |
+          cp data/open-logistics.json "$RUNNER_TEMP/open-logistics-before.json"
+          python scripts/open_logistics_data.py --archive-dir "$RUNNER_TEMP/open-data-archive"
+          python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression
+          for archive in "$RUNNER_TEMP"/open-data-archive/*; do
+            python scripts/verify_open_archive.py "$archive"
+          done
+      - name: Keep diagnostic capture for inspection
+        if: github.ref != 'refs/heads/main' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-data-diagnostic
+          path: |
+            ${{ runner.temp }}/open-data-archive/
+            data/open-logistics.json
+          if-no-files-found: error
+          retention-days: 7
       - name: Preserve previous snapshot for comparison
         if: github.ref == 'refs/heads/main'
         run: cp data/open-logistics.json "$RUNNER_TEMP/open-logistics-before.json"
