@@ -47,6 +47,12 @@ class SitemapValidationTests(unittest.TestCase):
             with self.subTest(head=head, body=body), self.assertRaisesRegex(ValueError, 'canonical'):
                 sitemap.build_sitemap(self.root, self.pages)
 
+    def test_canonical_with_variant_attributes_is_rejected(self):
+        for attribute in ('hreflang="en"', 'lang="ru"', 'media="all"', 'type="text/html"'):
+            self.page('about.html', f'<link rel="canonical" href="https://scm-news.ru/about.html" {attribute}>')
+            with self.subTest(attribute=attribute), self.assertRaisesRegex(ValueError, 'canonical'):
+                sitemap.build_sitemap(self.root, self.pages)
+
     def test_meta_noindex_for_relevant_agents_and_none_are_rejected(self):
         canonical = '<link rel="canonical" href="https://scm-news.ru/about.html">'
         for directive in ('<meta name="robots" content="follow, NOINDEX">',

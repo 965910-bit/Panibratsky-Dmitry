@@ -24,6 +24,7 @@ class PageMetadata(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.in_head = False
         self.canonicals = []
+        self.canonical_has_variant_attributes = False
         self.robots = []
 
     def handle_starttag(self, tag, attributes):
@@ -32,6 +33,8 @@ class PageMetadata(HTMLParser):
         attrs = dict(attributes)
         if self.in_head and tag == 'link' and 'canonical' in (attrs.get('rel') or '').lower().split():
             self.canonicals.append(attrs.get('href'))
+            if any(attribute in attrs for attribute in ('hreflang', 'lang', 'media', 'type')):
+                self.canonical_has_variant_attributes = True
         # Fail closed even if a robots directive has accidentally been placed in the body.
         if tag == 'meta' and (attrs.get('name') or '').strip().lower() in ROBOTS_NAMES:
             self.robots.append(attrs.get('content') or '')
@@ -59,7 +62,7 @@ def build_sitemap(root=ROOT, pages=None):
         metadata = PageMetadata()
         metadata.feed(path.read_text(encoding='utf-8'))
         url = BASE + page
-        if metadata.canonicals != [url]:
+        if metadata.canonicals != [url] or metadata.canonical_has_variant_attributes:
             raise ValueError(f'{page or "index.html"}: expected exactly one matching canonical')
         for directive in metadata.robots:
             tokens = {token.lower() for token in re.split(r'[\s,]+', directive) if token}

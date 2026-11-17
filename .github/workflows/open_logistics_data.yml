@@ -26,9 +26,15 @@ jobs:
       - name: Validate indicators without publication on non-main branches
         if: github.ref != 'refs/heads/main'
         run: python scripts/open_logistics_data.py --check
+      - name: Preserve previous snapshot for comparison
+        if: github.ref == 'refs/heads/main'
+        run: cp data/open-logistics.json "$RUNNER_TEMP/open-logistics-before.json"
       - name: Update indicators on main
         if: github.ref == 'refs/heads/main'
         run: python scripts/open_logistics_data.py
+      - name: Review saved observations before committing
+        if: github.ref == 'refs/heads/main'
+        run: python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression
       - name: Commit and push only the snapshot
         if: github.ref == 'refs/heads/main'
         run: |
