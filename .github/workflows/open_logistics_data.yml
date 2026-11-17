@@ -39,3 +39,15 @@ jobs:
             git commit -m "Update open logistics indicators"
             git push
           fi
+  temporary-government-diagnostic:
+    if: github.ref == 'refs/heads/arena/1bac4203-panibratsky-dmitry' && github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check government HTTPS RSS without publishing
+        run: python3 scripts/probe_government_rss.py --confirm-read-only
