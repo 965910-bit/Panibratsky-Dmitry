@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1] / 'telegram-review'
 class TelegramSchemaTests(unittest.TestCase):
     def test_guarded_insert_competing_sqlite_connections(self):
         worker = (ROOT / 'worker.mjs').read_text(encoding='utf-8')
-        sql = re.search(r'\? "(INSERT INTO drafts .*? WHERE NOT EXISTS .*?)"', worker).group(1)
+        sql = re.search(r'const sql = "(INSERT INTO drafts .*? WHERE NOT EXISTS .*?)"', worker).group(1)
         with tempfile.TemporaryDirectory() as temp:
             database = str(Path(temp) / 'journal.db')
             with sqlite3.connect(database) as db:

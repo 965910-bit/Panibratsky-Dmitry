@@ -16,6 +16,7 @@ class DB {
   },bind(...v) { return {
     async run() {
       if (sql.startsWith('INSERT')) {
+        if ([...db.rows.values()].some(r => ['notifying','ready','sending'].includes(r.state))) return {success:true,meta:{changes:0}};
         if ([...db.rows.values()].some(r => r.source_url === v[1])) throw Error('duplicate');
         db.rows.set(v[0], {id:v[0], source_url:v[1], text:v[2], state:'notifying',created_at:v[3]}); return {success:true,meta:{changes:1}};
       }
