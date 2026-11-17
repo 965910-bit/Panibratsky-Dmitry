@@ -97,6 +97,21 @@ class SiteTests(unittest.TestCase):
         self.assertIn('package-ecosystem: npm', dependabot)
         self.assertIn('package-ecosystem: github-actions', dependabot)
 
+    def test_news_paused_status_is_visible_and_matches_faq_markup(self):
+        text = (ROOT / 'trends.html').read_text(encoding='utf-8')
+        self.assertIn('Добавление новых материалов приостановлено до проверки условий источников', text)
+        self.assertIn('Новые материалы пока не собираются.', text)
+        self.assertIn('Сохранённая лента загружена в', text)
+        self.assertIn('Публикации из сохранённой ленты за последние 30 дней', text)
+        self.assertNotIn('сбор новостей запускается примерно каждые 30 минут', text.lower())
+        self.assertNotIn('сбор новых материалов запускается примерно каждые 30 минут', text.lower())
+        blocks = [json.loads(x) for x in re.findall(r'<script\s+type="application/ld\+json"[^>]*>(.*?)</script>', text, re.I | re.S)]
+        faq = next(block for block in blocks if block.get('@type') == 'FAQPage')
+        for question in faq['mainEntity']:
+            self.assertIn(question['acceptedAnswer']['text'], text)
+        self.assertIn('приостановлено', faq['mainEntity'][0]['acceptedAnswer']['text'])
+        self.assertIn('приостановлено', faq['mainEntity'][3]['acceptedAnswer']['text'])
+
     def test_unverified_forecasts_and_course_links_are_not_presented_as_facts(self):
         news = (ROOT / 'trends.html').read_text(encoding='utf-8')
         overview = (ROOT / 'trends-logistics.html').read_text(encoding='utf-8')
