@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="scm-style.css">
     <script src="scm-common.js"></script>
     <script src="../js/otif.js"></script>
+    <script src="../js/forecast-error.js"></script>
     <style>
         .calc-grid {
             display: grid;
@@ -201,9 +202,9 @@
     }
 
     function saveCalculation(calcId, values, result) {
-        const key = calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
+        const key = calcId === 'otif' ? `calc_otif_joint_v1_${currentBranchId}` : calcId === 'mape' ? `calc_ape_v1_${currentBranchId}` : `calc_${calcId}_${currentBranchId}`;
         const saved = JSON.parse(localStorage.getItem(key) || '[]');
-        saved.push({ values, result, timestamp: new Date().toISOString(), ...(calcId === 'otif' ? { method: 'joint-orders-v1' } : {}) });
+        saved.push({ values, result, timestamp: new Date().toISOString(), ...(calcId === 'otif' ? { method: 'joint-orders-v1' } : calcId === 'mape' ? { method: 'single-ape-v1' } : {}) });
         if (saved.length > 20) saved.shift();
         localStorage.setItem(key, JSON.stringify(saved));
         alert(`Расчёт сохранён (всего сохранено: ${saved.length})`);
@@ -279,10 +280,10 @@
             { label: "Фактический вес (кг):", id: "dim_actual", type: "number", default: 10, step: 1 },
             { label: "Коэффициент (5000 для авиа, 6000 для авто):", id: "dim_coef", type: "number", default: 5000, step: 100 }
         ], formula: "Объёмный вес = (Д×Ш×В) / Коэф", unit: "кг", calc: (vals) => (vals[0]*vals[1]*vals[2]) / vals[4], additional: (vals, calcVal) => Math.max(vals[3], calcVal), kpiId: null },
-        { id: "mape", name: "Точность прогноза (MAPE)", fields: [
-            { label: "Фактический спрос (ед.):", id: "mape_actual", type: "number", default: 1000, step: 10 },
-            { label: "Прогнозируемый спрос (ед.):", id: "mape_forecast", type: "number", default: 850, step: 10 }
-        ], formula: "MAPE = |Факт - Прогноз| / Факт × 100%", unit: "%", calc: (vals) => Math.abs(vals[0] - vals[1]) / vals[0] * 100, kpiId: null },
+        { id: "mape", name: "Ошибка прогноза для одной пары (APE)", fields: [
+            { label: "Фактический спрос (больше нуля):", id: "mape_actual", type: "number", default: "", step: "any", help: "Результат относится к одной паре, а не средней MAPE за период. На экране округление до двух знаков; при факте близком к нулю ошибка нестабильна." },
+            { label: "Прогнозируемый спрос (не меньше нуля):", id: "mape_forecast", type: "number", default: "", step: "any", help: "Цель зависит от задачи. Прежние расчёты сохранены отдельно без пересчёта." }
+        ], formula: "APE = |Факт - Прогноз| / Факт × 100%", unit: "%", calc: (vals) => SCMForecast.ape(vals[0], vals[1]), kpiId: null },
         { id: "otif", name: "OTIF (On-Time In-Full)", fields: [
             { label: "Заказов одновременно вовремя и полностью:", id: "otif_completed", type: "number", default: "", step: 1, help: "Согласуйте период, сроки и критерии полноты с партнёром." },
             { label: "Всего заказов в выбранной совокупности:", id: "otif_total", type: "number", default: "", step: 1, help: "Произведение отдельных процентов не даёт фактический OTIF. Старые расчёты сохранены без пересчёта. Передача в KPI недоступна: соответствующей метрики в KPI-центре нет." }
@@ -350,6 +351,7 @@
             card.innerHTML = `
                 <h2><i class="fas fa-calculator"></i> ${calc.name}</h2>
                 ${fieldsHtml}
+                ${calc.id === 'mape' ? '<p><a href="https://otexts.com/fpp3/toolbox.html#sec-accuracy">Методика и ограничения</a></p>' : ''}
                 <div class="result" id="result_${calc.id}">Результат: <strong>—</strong> ${calc.unit}</div>
                 <div class="calc-actions">
                     <button class="save-btn" data-id="${calc.id}"><i class="fas fa-save"></i> Сохранить расчёт</button>
@@ -381,17 +383,17 @@
         const calcId = e.currentTarget.getAttribute('data-id');
         const calc = calculators.find(c => c.id === calcId);
         if (!calc) return;
-        const values = calc.fields.map(f => calc.id === 'otif' ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape') ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if (calc.id === 'otif' && result === null) {
-            alert('Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.');
+        if ((calc.id === 'otif' || calc.id === 'mape') && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.');
             return;
         }
         if (calc.additional) {
             const dimWeight = calc.calc(values);
             result = calc.additional(values, dimWeight);
         }
-        result = typeof result === 'number' ? Math.round(result * 100) / 100 : result;
+        result = typeof result === 'number' ? (calc.id === 'mape' ? result : Math.round(result * 100) / 100) : result;
         saveCalculation(calcId, values, result);
     }
 
@@ -399,11 +401,11 @@
         const calcId = e.currentTarget.getAttribute('data-id');
         const kpiId = e.currentTarget.getAttribute('data-kpi');
         const calc = calculators.find(c => c.id === calcId);
-        if (!calc || !kpiId) return;
-        const values = calc.fields.map(f => calc.id === 'otif' ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+        if (!calc || !kpiId || calc.kpiId !== kpiId) return;
+        const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape') ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
         let result = calc.calc(values);
-        if (calc.id === 'otif' && result === null) {
-            alert('Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.');
+        if ((calc.id === 'otif' || calc.id === 'mape') && result === null) {
+            alert(calc.id === 'otif' ? 'Введите целые числа: всего заказов больше нуля, выполненных от нуля до общего числа.' : 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.');
             return;
         }
         if (calc.additional) {
@@ -416,16 +418,17 @@
 
     function updateAllCalculators() {
         for (let calc of calculators) {
-            const values = calc.fields.map(f => calc.id === 'otif' ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
+            const values = calc.fields.map(f => (calc.id === 'otif' || calc.id === 'mape') ? document.getElementById(f.id).value : (parseFloat(document.getElementById(f.id).value) || 0));
             let result = calc.calc(values);
             if (calc.additional) {
                 const dimWeight = calc.calc(values);
                 result = calc.additional(values, dimWeight);
             }
-            result = result === null ? 'Введите корректные целые числа заказов' : typeof result === 'number' ? result.toFixed(2).replace(/\.?0+$/, '') : result;
+            const resultUnit = result === null ? '' : calc.unit;
+            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : 'Введите корректные целые числа заказов') : typeof result === 'number' ? result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') : result;
             const resultDiv = document.getElementById(`result_${calc.id}`);
             if (resultDiv) {
-                resultDiv.innerHTML = `Результат: <strong>${result}</strong> ${calc.unit}`;
+                resultDiv.innerHTML = `Результат: <strong>${result}</strong> ${resultUnit}`;
                 if (calc.kpiId) {
                     const currentKPI = SCMData.loadKPI(calc.kpiId, currentBranchId);
                     if (currentKPI) {

@@ -258,6 +258,7 @@
                 <select id="branchSelector"></select>
             </div>
         </div>
+        <p>Встроенные числовые пороги не подтверждены как отраслевые нормы. Они влияют на оценки, отчёты и формируемые задачи; проверяйте применимость и реальные требования отдельно.</p>
         <div class="mode-switch" id="modeSwitch">
             <button id="auditModeBtn" class="active">🔍 Провести проверку</button>
             <button id="constructorModeBtn">🛠️ Конструктор шаблонов</button>
@@ -408,7 +409,7 @@
         im01: { section: "inventory", text: "Оборачиваемость запасов (раз в год)", recommend: "≥6", inputType: "number", unit: "раз", target: 6, condition: "greater" },
         im02: { section: "inventory", text: "Доля неликвидов в общем объёме запасов", recommend: "<5%", inputType: "number", unit: "%", target: 5, condition: "less" },
         im03: { section: "inventory", text: "GMROI для категории А", recommend: ">2", inputType: "number", unit: "", target: 2, condition: "greater" },
-        im04: { section: "inventory", text: "Точность прогноза спроса (MAPE)", recommend: "≤15%", inputType: "number", unit: "%", target: 15, condition: "less" },
+        im04: { section: "inventory", text: "Средняя абсолютная процентная ошибка прогноза спроса (MAPE)", recommend: "≤15%", inputType: "number", unit: "%", target: 15, condition: "less" },
         im05: { section: "inventory", text: "Наличие страховых запасов для А-класса", recommend: "Да", inputType: "none", unit: "" },
         im06: { section: "inventory", text: "Проведён ABC/XYZ-анализ (последние 6 мес.)", recommend: "Да", inputType: "none", unit: "" },
         im07: { section: "inventory", text: "Используется EOQ (экономичный размер заказа)", recommend: "Да", inputType: "none", unit: "" },
