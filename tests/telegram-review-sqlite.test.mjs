@@ -156,3 +156,30 @@ test('offline human-reviewed gallery item reaches private review before explicit
  const row=(await f.getRow()).results[0];assert.equal(row.state,'ready');assert.match(row.text,/Проверенный авторский вывод/);assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
  await f.approve(row.id);assert.equal((await f.getRow()).results[0].state,'sent');assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,1);
 });
+
+test('manual intake, guarded intake and private draft share one atomic queue gate',async(t)=>{
+ for(const firstKind of ['manual','guarded','draft']) {
+  let release, started, firstReview=true;
+  const gate=new Promise(resolve=>release=resolve), seen=new Promise(resolve=>started=resolve);
+  const f=fixture(t,{waitReview:async()=>{if(firstReview){firstReview=false;started();await gate;}}});
+  const send=(route,url)=>f.localIntake('https://test.example.workers.dev/'+route,{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+f.env.INTAKE_SECRET},body:JSON.stringify({text:'Проверенный тест',source_url:url})});
+  const first=firstKind==='draft'?f.command('/draft https://example.org/first\nПервый черновик'):send(firstKind==='manual'?'intake':'intake-one','https://example.org/first');
+  await seen;
+  try {
+   assert.equal((await send('intake','https://example.org/manual')).status,409);
+   assert.equal((await send('intake-one','https://example.org/guarded')).status,409);
+   await f.command('/draft https://example.org/phone\nЕщё один черновик');
+   assert.match(f.calls.at(-1).body.text,/Не удалось подтвердить создание/);
+   assert.equal((await f.getRow()).results.length,1);
+   assert.equal(f.calls.filter(c=>c.body.reply_markup).length,1);
+   assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
+  } finally {release();}
+  assert.equal((await first).status,firstKind==='draft'?200:201);
+  const row=(await f.getRow()).results[0];assert.equal(row.state,'ready');
+  assert.equal((await send('intake','https://example.org/ready')).status,409);
+  await f.env.DB.prepare('UPDATE drafts SET state = ? WHERE id = ?').bind('sending',row.id).run();
+  assert.equal((await send('intake','https://example.org/sending')).status,409);
+  await f.env.DB.prepare('UPDATE drafts SET state = ? WHERE id = ?').bind('rejected',row.id).run();
+  assert.equal((await send('intake','https://example.org/after-rejection')).status,201);
+ }
+});

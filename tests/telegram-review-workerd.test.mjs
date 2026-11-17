@@ -68,6 +68,11 @@ export default {fetch(request, env) { envForTest=env; return handle(request, env
   assert.deepEqual(results.map(r=>r.status).sort((a,b)=>a-b),[201,409]);
   const rows=(await db.prepare("SELECT source_url, state FROM drafts WHERE source_url IN (?, ?)").bind(...sources).all()).results;
   assert.equal(rows.length,1);assert.equal(rows[0].state,'ready');
+  const manual=await mf.dispatchFetch('http://worker.test/intake',{method:'POST',headers,body:JSON.stringify({text:'Ручной черновик',source_url:'https://example.org/manual-blocked'})});
+  assert.equal(manual.status,409);
+  const phone={message:{text:'/draft https://example.org/phone-blocked\nПроверенный текст',from:{id:123},chat:{id:123,type:'private'}}};
+  assert.equal((await mf.dispatchFetch('http://worker.test/telegram',{method:'POST',headers:{'content-type':'application/json','x-telegram-bot-api-secret-token':'w'.repeat(40)},body:JSON.stringify(phone)})).status,200);
+  assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM drafts WHERE source_url IN ('https://example.org/manual-blocked','https://example.org/phone-blocked')").first()).n,0);
   for (const status of ['notifying','sending']) {
     await db.prepare('UPDATE drafts SET state = ? WHERE source_url = ?').bind(status,rows[0].source_url).run();
     assert.equal((await guarded('https://example.org/blocked-'+status)).status,409);
