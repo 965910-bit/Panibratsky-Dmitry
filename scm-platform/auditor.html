@@ -156,7 +156,7 @@
             <select id="branchSelector"></select>
         </div>
         <h1>📋 Аудитор SCM</h1>
-        <p>Встроенные числовые пороги не подтверждены как отраслевые нормы. Они влияют на оценки, отчёты и формируемые задачи; проверяйте применимость и реальные требования отдельно.</p>
+        <p>Встроенные числовые пороги не подтверждены как отраслевые нормы. Автоматические оценки и создание поручений приостановлены, включая пользовательские пороги. Ответы и факты записываются без проверки соответствия; юридические и другие требования проверяйте отдельно. Старые оценки и поручения не пересчитаны и не удалены; прежде значение «Нет» могло выставляться по умолчанию и не обязательно отражает ручную проверку.</p>
         <div class="mode-switch" id="modeSwitch">
             <button id="auditModeBtn" class="active">🔍 Провести аудит</button>
             <button id="constructorModeBtn">🛠️ Конструктор шаблонов</button>
@@ -171,15 +171,15 @@
                 <div><label>Загрузить сохранённый аудит: </label><select id="loadAuditSelect"></select></div>
             </div>
             <div class="total-score-card">
-                <div><div style="font-size:18px;">Общий уровень зрелости SCM</div><div class="total-score-number" id="totalScorePercent">0%</div></div>
+                <div><div style="font-size:18px;">Автоматическая оценка зрелости приостановлена</div><div class="total-score-number" id="totalScorePercent">—</div></div>
                 <div class="maturity-label" id="maturityLabel">—</div>
             </div>
             <div id="auditSectionsContainer"></div>
             <div class="btn-group">
                 <button id="saveAuditBtn">💾 Сохранить аудит</button>
-                <button id="finishAuditBtn" class="finish-btn">✅ Завершить аудит (создать поручения)</button>
-                <button id="calculateBtn">📊 Пересчитать оценку</button>
-                <button id="resetAuditBtn" class="reset-btn">🔄 Сбросить все ответы</button>
+                <button id="finishAuditBtn" class="finish-btn">💾 Сохранить ответы аудита</button>
+                <button id="calculateBtn" disabled>Оценка приостановлена</button>
+                <button id="resetAuditBtn" class="reset-btn">🔄 Сбросить видимые ответы</button>
                 <button id="printReportBtn" class="print-btn">🖨️ Печать отчёта</button>
             </div>
         </div>
@@ -238,8 +238,9 @@
         select.addEventListener('change', (e) => {
             setCurrentBranch(e.target.value);
             currentBranchId = e.target.value;
-            loadCurrentFormState();
-            updateAllScores();
+            loadCustomItems();
+            loadTemplates();
+            renderAuditSections();
             populateAuditLoadSelect();
             renderConstructor();
             populateTemplateSelect();
@@ -320,13 +321,13 @@
     let templates = [];
 
     function getAllItems() { return { ...masterItems, ...customItems }; }
-    function loadCustomItems() { const saved = localStorage.getItem(`audit_custom_items_${currentBranchId}`); if(saved) customItems = JSON.parse(saved); }
+    function loadCustomItems() { const saved = localStorage.getItem(`audit_custom_items_${currentBranchId}`); customItems = saved ? JSON.parse(saved) : {}; }
     function saveCustomItems() { localStorage.setItem(`audit_custom_items_${currentBranchId}`, JSON.stringify(customItems)); }
     function loadTemplates() { const saved = localStorage.getItem(`audit_templates_${currentBranchId}`); if(saved) templates = JSON.parse(saved); else templates = []; }
     function saveTemplates() { localStorage.setItem(`audit_templates_${currentBranchId}`, JSON.stringify(templates)); }
 
     function saveCurrentFormState() {
-        const state = {};
+        const state = JSON.parse(localStorage.getItem(`audit_current_form_${currentBranchId}`) || '{}');
         for (let id of Object.keys(getAllItems())) {
             const sel = document.getElementById(`status_${id}`);
             const inp = document.getElementById(`fact_${id}`);
@@ -342,59 +343,13 @@
                 const sel = document.getElementById(`status_${id}`);
                 const inp = document.getElementById(`fact_${id}`);
                 if (sel) sel.value = data.status;
-                if (inp) inp.value = data.fact || '';
+                if (inp) inp.value = data.fact ?? '';
             }
         }
     }
-    function isFactCompliant(itemId, factValue) {
-        const item = getAllItems()[itemId];
-        if (!item || item.inputType === 'none') return true;
-        if (item.target === undefined) return true;
-        const num = parseFloat(factValue);
-        if (isNaN(num)) return false;
-        if (item.condition === 'less') return num < item.target;
-        if (item.condition === 'greater') return num > item.target;
-        return false;
-    }
-    function computeSectionProgress(itemIds) {
-        let total = 0, compliant = 0;
-        for (let id of itemIds) {
-            const sel = document.getElementById(`status_${id}`);
-            if (!sel) continue;
-            const status = sel.value;
-            if (status === 'na') continue;
-            total++;
-            if (status === 'yes') {
-                const item = getAllItems()[id];
-                if (item && item.inputType !== 'none') {
-                    const inp = document.getElementById(`fact_${id}`);
-                    const fact = inp ? inp.value : '';
-                    if (isFactCompliant(id, fact)) compliant++;
-                } else compliant++;
-            }
-        }
-        return total === 0 ? 0 : (compliant / total) * 100;
-    }
+    // Thresholds and scoring are intentionally disabled pending methodology review.
     function updateAllScores() {
-        const all = getAllItems();
-        const groups = {};
-        for (let id of Object.keys(all)) { let s = all[id].section; if (!groups[s]) groups[s] = []; groups[s].push(id); }
-        for (let [sec, ids] of Object.entries(groups)) {
-            let percent = computeSectionProgress(ids);
-            let scoreSpan = document.getElementById(`score_${sec}`);
-            if (scoreSpan) scoreSpan.innerText = `${Math.round(percent)}%`;
-            let progFill = document.getElementById(`progress_${sec}`);
-            if (progFill) progFill.style.width = `${percent}%`;
-        }
-        let total = 0, count = 0;
-        for (let sec of sectionsOrder) {
-            if (groups[sec]) { total += computeSectionProgress(groups[sec]); count++; }
-        }
-        let avg = count === 0 ? 0 : total / count;
-        document.getElementById('totalScorePercent').innerText = `${Math.round(avg)}%`;
-        let maturity = avg<30?'🔴 Критический':avg<50?'🟠 Низкий':avg<70?'🟡 Средний':avg<85?'🟢 Высокий':'🏆 Отличный';
-        document.getElementById('maturityLabel').innerHTML = maturity;
-        saveCurrentFormState();
+        // Rendering is read-only; change handlers save explicitly.
     }
     function renderAuditSections(filterIds = null) {
         const all = getAllItems();
@@ -412,14 +367,14 @@
         for (let sec of sectionsOrder) {
             if (!groups[sec]) continue;
             const div = document.createElement('div'); div.className = 'audit-section';
-            div.innerHTML = `<div class="section-header"><h2>${sectionTitles[sec]}</h2><div class="section-score" id="score_${sec}">0%</div></div>
+            div.innerHTML = `<div class="section-header"><h2>${sectionTitles[sec]}</h2><div class="section-score" id="score_${sec}">Не оценивается</div></div>
                              <div class="checklist-items" id="items_${sec}"></div>
-                             <div class="progress-bar-container"><div class="progress-fill" id="progress_${sec}"></div></div>`;
+                             `;
             container.appendChild(div);
             const itemsContainer = div.querySelector(`.checklist-items`);
             for (let item of groups[sec]) {
                 const row = document.createElement('div'); row.className = 'checklist-item';
-                const select = document.createElement('select'); select.id = `status_${item.id}`; select.innerHTML = '<option value="yes">Да</option><option value="no" selected>Нет</option><option value="na">Не требуется</option>';
+                const select = document.createElement('select'); select.id = `status_${item.id}`; select.innerHTML = '<option value="unknown" selected>Не оценено</option><option value="yes">Да (отметка пользователя)</option><option value="no">Нет (отметка пользователя)</option><option value="na">Не требуется</option>';
                 const label = document.createElement('label'); label.textContent = item.text;
                 row.appendChild(select); row.appendChild(label);
                 if (item.inputType !== 'none') {
@@ -436,123 +391,54 @@
     }
     function attachAuditEvents() {
         document.querySelectorAll('.checklist-item select, .checklist-item input').forEach(el => {
-            el.removeEventListener('change', updateAllScores);
-            el.removeEventListener('input', updateAllScores);
-            el.addEventListener('change', updateAllScores);
-            el.addEventListener('input', updateAllScores);
+            el.removeEventListener('change', saveCurrentFormState);
+            el.removeEventListener('input', saveCurrentFormState);
+            el.addEventListener('change', saveCurrentFormState);
+            el.addEventListener('input', saveCurrentFormState);
         });
     }
     function resetAll() {
-        if (confirm('Сбросить все ответы во всех категориях?')) {
+        if (confirm('Сбросить видимые ответы? Скрытые шаблоном ответы останутся без изменений.')) {
             for (let id of Object.keys(getAllItems())) {
                 const sel = document.getElementById(`status_${id}`);
                 const inp = document.getElementById(`fact_${id}`);
-                if (sel) sel.value = 'no';
+                if (sel) sel.value = 'unknown';
                 if (inp) inp.value = '';
             }
             saveCurrentFormState();
             updateAllScores();
         }
     }
-    function addTaskToRegistry(task) {
-        const registryKey = `tasks_registry_${currentBranchId}`;
-        let registry = JSON.parse(localStorage.getItem(registryKey) || '[]');
-        const newId = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6);
-        const newTask = {
-            id: newId,
-            text: task.text,
-            assignee: task.assignee,
-            dueDate: task.dueDate || '',
-            priority: 'high',
-            status: 'new',
-            controller: task.controller || 'Аудитор',
-            theme: task.theme || 'Аудит SCM',
-            meetingLink: task.meetingLink,
-            createdAt: new Date().toISOString()
-        };
-        registry.push(newTask);
-        localStorage.setItem(registryKey, JSON.stringify(registry));
-        const plannerTasks = getPlannerTasks(currentBranchId);
-        const targetDate = new Date().toISOString().split('T')[0];
-        if (!plannerTasks[targetDate]) plannerTasks[targetDate] = [];
-        plannerTasks[targetDate].push({
-            id: `audit_${newId}`,
-            text: newTask.text,
-            completed: false,
-            priority: 'high',
-            category: 'Аудит',
-            source: 'audit',
-            originalId: newId,
-            dueDate: '',
-            assignee: newTask.assignee,
-            status: 'new',
-            branchId: currentBranchId
-        });
-        savePlannerTasks(plannerTasks, currentBranchId);
-    }
-    function saveAuditToRegistry(createTasks = true) {
+    function saveAuditToRegistry() {
         const auditType = document.querySelector('input[name="auditType"]:checked').value;
         const all = getAllItems();
         const statuses = {};
         const facts = {};
-        for (let id of Object.keys(all)) {
+        const itemTexts = {};
+        for (const [id, item] of Object.entries(all)) {
             const sel = document.getElementById(`status_${id}`);
             const inp = document.getElementById(`fact_${id}`);
-            if (sel) statuses[id] = sel.value;
-            if (inp) facts[id] = inp.value;
-        }
-        const nonConform = [];
-        for (let id of Object.keys(all)) {
-            const status = statuses[id];
-            if (status === 'no') {
-                nonConform.push({ id, text: all[id].text, reason: 'Статус "Нет"' });
-            } else if (status === 'yes' && all[id].inputType !== 'none') {
-                const fact = facts[id];
-                if (!isFactCompliant(id, fact)) {
-                    nonConform.push({ id, text: all[id].text, reason: `Факт ${fact} не соответствует цели ${all[id].recommend}` });
-                }
+            if (sel) {
+                statuses[id] = sel.value;
+                itemTexts[id] = item.text;
+                if (inp) facts[id] = inp.value;
             }
         }
-        const groups = {};
-        for (let id of Object.keys(all)) { let s = all[id].section; if (!groups[s]) groups[s] = []; groups[s].push(id); }
-        const sectionScores = {};
-        for (let [sec, ids] of Object.entries(groups)) sectionScores[sec] = computeSectionProgress(ids);
-        const totalPercent = parseFloat(document.getElementById('totalScorePercent').innerText);
         const auditData = {
-            id: Date.now().toString(),
-            type: auditType,
-            date: new Date().toISOString(),
-            branchId: currentBranchId,
-            totalPercent: totalPercent,
-            sectionScores: sectionScores,
-            nonConformances: nonConform,
-            statuses: statuses,
-            facts: facts
+            id: Date.now().toString(), type: auditType, date: new Date().toISOString(),
+            branchId: currentBranchId, method: 'manual-responses-v1',
+            totalPercent: null, sectionScores: {}, nonConformances: [], statuses, facts, itemTexts
         };
         const registryKey = `audit_registry_${currentBranchId}`;
-        let audits = JSON.parse(localStorage.getItem(registryKey) || '[]');
+        const audits = JSON.parse(localStorage.getItem(registryKey) || '[]');
         audits.push(auditData);
         localStorage.setItem(registryKey, JSON.stringify(audits));
-        if (createTasks && nonConform.length > 0) {
-            for (let nc of nonConform) {
-                addTaskToRegistry({
-                    text: `[Аудит] ${nc.text}: ${nc.reason}`,
-                    assignee: document.getElementById('chairpersonTemp')?.value || 'Руководитель',
-                    dueDate: '',
-                    controller: 'Аудитор',
-                    theme: 'Аудит SCM',
-                    meetingLink: auditData.id
-                });
-            }
-            alert(`Аудит сохранён. Создано поручений: ${nonConform.length}`);
-        } else {
-            alert('Аудит сохранён');
-        }
+        alert('Ответы сохранены без автоматической оценки и создания поручений.');
         return auditData.id;
     }
     function finishAudit() {
-        saveAuditToRegistry(true);
-        resetAll();
+        saveAuditToRegistry();
+        populateAuditLoadSelect();
     }
     function populateAuditLoadSelect() {
         const select = document.getElementById('loadAuditSelect');
@@ -562,7 +448,7 @@
         audits.forEach(a => {
             const opt = document.createElement('option');
             opt.value = a.id;
-            opt.textContent = `${new Date(a.date).toLocaleString()} (${a.type}) – ${a.totalPercent}%`;
+            opt.textContent = `${new Date(a.date).toLocaleString()} (${a.type}) – ${a.method === 'manual-responses-v1' ? 'без оценки' : 'старая непроверенная оценка'}`;
             select.appendChild(opt);
         });
     }
@@ -571,15 +457,24 @@
         const audits = JSON.parse(localStorage.getItem(registryKey) || '[]');
         const audit = audits.find(a => a.id === auditId);
         if (!audit) return;
-        document.querySelector(`input[name="auditType"][value="${audit.type}"]`).checked = true;
-        for (let [id, status] of Object.entries(audit.statuses)) {
+        const typeInput = [...document.querySelectorAll('input[name="auditType"]')].find(el => el.value === audit.type);
+        if (typeInput) typeInput.checked = true;
+        // A saved audit can contain only a filtered template; clear visible fields before loading.
+        for (const id of Object.keys(getAllItems())) {
+            const sel = document.getElementById(`status_${id}`);
+            const inp = document.getElementById(`fact_${id}`);
+            if (sel) sel.value = 'unknown';
+            if (inp) inp.value = '';
+        }
+        for (let [id, status] of Object.entries(audit.statuses || {})) {
             const sel = document.getElementById(`status_${id}`);
             if (sel) sel.value = status;
         }
-        for (let [id, fact] of Object.entries(audit.facts)) {
+        for (let [id, fact] of Object.entries(audit.facts || {})) {
             const inp = document.getElementById(`fact_${id}`);
             if (inp) inp.value = fact;
         }
+        saveCurrentFormState();
         updateAllScores();
         alert(`Загружен аудит от ${new Date(audit.date).toLocaleString()}`);
     }
@@ -705,7 +600,7 @@
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
         const clone = mainContent.cloneNode(true);
-        clone.querySelectorAll('.btn-group, .audit-type-selector, .template-selector, .branch-selector-container, .theme-switch, .mode-switch, .btn-icon, button, select, input[type="radio"], input[type="checkbox"], .checklist-item select, .checklist-item input').forEach(el => el.remove());
+        clone.querySelectorAll('.btn-group, .audit-type-selector, .template-selector, .branch-selector-container, .theme-switch, .mode-switch, .btn-icon, button, input[type="radio"], input[type="checkbox"]').forEach(el => el.remove());
         clone.querySelectorAll('.checklist-item').forEach(item => {
             const select = item.querySelector('select');
             if (select) {
@@ -767,7 +662,7 @@
     emailBtn.addEventListener('click', () => window.sendAuditByEmail());
     document.querySelector('#auditModePanel .btn-group').appendChild(emailBtn);
 
-    document.getElementById('saveAuditBtn').addEventListener('click', () => saveAuditToRegistry(false));
+    document.getElementById('saveAuditBtn').addEventListener('click', () => { saveAuditToRegistry(); populateAuditLoadSelect(); });
     document.getElementById('finishAuditBtn').addEventListener('click', finishAudit);
     document.getElementById('calculateBtn').addEventListener('click', updateAllScores);
     document.getElementById('resetAuditBtn').addEventListener('click', resetAll);

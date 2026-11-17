@@ -201,7 +201,7 @@
             <div class="filter-group"><label>Тип аудита</label><select id="filterAuditType"><option value="">Все</option><option value="Плановый">Плановый</option><option value="Внеплановый">Внеплановый</option><option value="Целевой">Целевой</option></select></div>
             <div class="filter-group"><label>Дата от</label><input type="date" id="filterDateFrom"></div>
             <div class="filter-group"><label>Дата до</label><input type="date" id="filterDateTo"></div>
-            <div class="filter-group"><label>Мин. зрелость (%)</label><input type="number" id="filterMinScore" placeholder="0-100" min="0" max="100"></div>
+            <div class="filter-group"><label>Мин. старая оценка (%)</label><input type="number" id="filterMinScore" placeholder="0-100" min="0" max="100"></div>
             <button id="resetFiltersBtn">Сбросить</button>
         </div>
 
@@ -299,7 +299,7 @@
         if (typeFilter) audits = audits.filter(a => a.type === typeFilter);
         if (dateFrom) audits = audits.filter(a => a.date >= dateFrom);
         if (dateTo) audits = audits.filter(a => a.date <= dateTo);
-        if (!isNaN(minScore)) audits = audits.filter(a => a.totalPercent >= minScore);
+        if (!isNaN(minScore)) audits = audits.filter(a => Number.isFinite(a.totalPercent) && a.totalPercent >= minScore);
         audits.sort((a,b) => new Date(b.date) - new Date(a.date));
         const container = document.getElementById('auditsList');
         if (!audits.length) {
@@ -307,13 +307,13 @@
             return;
         }
         const table = document.createElement('table'); table.className = 'registry-table';
-        table.innerHTML = `<thead><tr><th>Дата</th><th>Тип</th><th>Зрелость</th><th>Действия</th></tr></thead><tbody></tbody>`;
+        table.innerHTML = `<thead><tr><th>Дата</th><th>Тип</th><th>Историческая оценка</th><th>Действия</th></tr></thead><tbody></tbody>`;
         const tbody = table.querySelector('tbody');
         audits.forEach(audit => {
             const row = tbody.insertRow();
             row.insertCell(0).textContent = new Date(audit.date).toLocaleString();
             row.insertCell(1).textContent = audit.type;
-            row.insertCell(2).textContent = `${audit.totalPercent}%`;
+            row.insertCell(2).textContent = audit.method === 'manual-responses-v1' ? 'Не рассчитывается' : `${audit.totalPercent}% (не проверено)`;
             const actions = row.insertCell(3);
             const viewBtn = document.createElement('button'); viewBtn.textContent = 'Просмотр'; viewBtn.className = 'small';
             viewBtn.onclick = () => showAuditDetails(audit);
@@ -370,10 +370,12 @@
             <div class="modal-content">
                 <h3>Аудит от ${new Date(audit.date).toLocaleString()}</h3>
                 <p><strong>Тип:</strong> ${escapeHtml(audit.type)}</p>
-                <p><strong>Общий уровень зрелости:</strong> ${escapeHtml(audit.totalPercent)}%</p>
+                <p><strong>Оценка:</strong> ${audit.method === 'manual-responses-v1' ? 'Не рассчитывается' : `Старая непроверенная оценка: ${escapeHtml(audit.totalPercent)}%`}</p>
+                <p>Старые оценки и несоответствия могли опираться на неподтверждённые пороги; проверьте их отдельно.</p>
+                ${audit.method === 'manual-responses-v1' ? `<p><strong>Ручные ответы (не проверка соответствия):</strong></p><ul>${Object.entries(audit.statuses || {}).map(([id, status]) => `<li>${escapeHtml(audit.itemTexts?.[id] || id)}: ${escapeHtml(status)}; факт: ${escapeHtml(audit.facts?.[id] ?? '—')}</li>`).join('')}</ul>` : ''}
                 <p><strong>Оценки по секциям:</strong></p>
                 <ul>${Object.entries(audit.sectionScores || {}).map(([sec, score]) => `<li>${escapeHtml(sec)}: ${Math.round(score)}%</li>`).join('')}</ul>
-                <p><strong>Несоответствия (${audit.nonConformances?.length || 0}):</strong></p>
+                <p><strong>${audit.method === 'manual-responses-v1' ? 'Автоматическая проверка не выполнялась' : `Исторические несоответствия (${audit.nonConformances?.length || 0})`}</strong></p>
                 <div>${(audit.nonConformances || []).map(nc => `<div class="nonconform-item"><strong>${escapeHtml(nc.text)}</strong><br>Причина: ${escapeHtml(nc.reason)}<br>Рекомендация: ${escapeHtml(nc.recommendation || '—')}</div>`).join('')}</div>
                 <div style="margin-top: 16px;"><button class="print-report" data-id="${escapeHtml(audit.id)}">🖨️ Распечатать отчёт</button><button class="close-modal">Закрыть</button></div>
             </div>
@@ -427,8 +429,8 @@
             <p>Бизнес-единица: ${escapeHtml(currentBranchId)}</p>
             <p>Дата: ${new Date().toLocaleString()}</p>
             <h2>Аудиты</h2>
-            <table><thead><tr><th>Дата</th><th>Тип</th><th>Зрелость</th></tr></thead><tbody>
-            ${audits.map(a => `<tr><td>${new Date(a.date).toLocaleString()}</td><td>${escapeHtml(a.type)}</td><td>${escapeHtml(a.totalPercent)}%</td></tr>`).join('')}
+            <table><thead><tr><th>Дата</th><th>Тип</th><th>Историческая оценка</th></tr></thead><tbody>
+            ${audits.map(a => `<tr><td>${new Date(a.date).toLocaleString()}</td><td>${escapeHtml(a.type)}</td><td>${a.method === 'manual-responses-v1' ? 'Не рассчитывается' : `${escapeHtml(a.totalPercent)}% (не проверено)`}</td></tr>`).join('')}
             </tbody></table>
             <h2>Чек-листы</h2>
             <table><thead><tr><th>Название</th><th>Дата</th><th>Выполнение</th></tr></thead><tbody>
