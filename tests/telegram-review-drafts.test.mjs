@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {prepareDraft,buildPayload,endpoint,submit,attachCard} from '../telegram-review/drafts.mjs';
+import {prepareDraft,buildPayload,endpoint,submit,attachCard,draftFingerprint} from '../telegram-review/drafts.mjs';
 const item={title:'Склад <script>опасно</script> & логистика',description:'Текст новости',source:'Источник',link:'https://example.com/news'};
 const prepared=()=>({...prepareDraft(item),comment:'Проверил материал: мой вывод.',ready_for_review:true});
 test('preparation requires a valid story and never marks it ready',()=>{
@@ -25,10 +25,16 @@ test('rejects unsafe targets and never retries failed or uncertain submission',a
 });
 
 test('card submission validates size, signature, caption and includes data', async()=>{
- const bytes=Buffer.alloc(33); Buffer.from([137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82]).copy(bytes); bytes.writeUInt32BE(1080,16); bytes.writeUInt32BE(1080,20);
- const payload=buildPayload(prepared()); assert.equal(attachCard(payload,bytes).card_base64,bytes.toString('base64'));
- assert.throws(()=>attachCard(payload,Buffer.from('bad')));
- assert.throws(()=>attachCard({...payload,text:'x'.repeat(1024)},bytes));
+ const head=Buffer.alloc(33); Buffer.from([137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82]).copy(head); head.writeUInt32BE(1080,16); head.writeUInt32BE(1080,20);
+ const metadata=Buffer.from('SCM-Draft-SHA256\0'+draftFingerprint(prepared()));
+ const chunk=Buffer.alloc(metadata.length+12); chunk.writeUInt32BE(metadata.length); chunk.write('tEXt',4); metadata.copy(chunk,8);
+ const end=Buffer.alloc(12); end.write('IEND',4); const bytes=Buffer.concat([head,chunk,end]);
+ const payload=buildPayload(prepared()); assert.equal(attachCard(payload,bytes,prepared()).card_base64,bytes.toString('base64'));
+ assert.throws(()=>attachCard(payload,Buffer.from('bad'),prepared()));
+ assert.throws(()=>attachCard({...payload,text:'x'.repeat(1024)},bytes,prepared()));
+ assert.throws(()=>attachCard(payload,bytes,{...prepared(),title:'Другой заголовок'}),/не соответствует/);
+ assert.throws(()=>attachCard(payload,bytes,{...prepared(),source_url:'https://example.com/other'}),/не соответствует/);
+ assert.throws(()=>attachCard(payload,head,prepared()),/метки/);
  const calls=[]; await submit(prepared(),{url:'https://x.workers.dev/intake',secret:'a'.repeat(32),card:bytes,fetcher:async (...args)=>{calls.push(args);return new Response('',{status:201});}});
  assert.equal(JSON.parse(calls[0][1].body).card_base64,bytes.toString('base64'));
 });

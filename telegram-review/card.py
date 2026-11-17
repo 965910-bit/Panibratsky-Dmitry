@@ -1,5 +1,6 @@
 """Offline PNG card for a manually checked Telegram draft; never sends data."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -7,7 +8,7 @@ import re
 import unicodedata
 
 try:
-    from PIL import Image, ImageDraw, ImageFont
+    from PIL import Image, ImageDraw, ImageFont, PngImagePlugin
 except ImportError as exc:
     raise SystemExit('Нужна Pillow: pip install -r telegram-review/requirements-visuals.txt') from exc
 
@@ -22,6 +23,16 @@ def clean(value, limit=1000):
     # Avoid hidden control/bidirectional characters and multiline layout manipulation.
     value = ''.join(' ' if unicodedata.category(c).startswith('C') else c for c in value)
     return re.sub(r'\s+', ' ', value).strip()[:limit]
+
+
+def draft_fingerprint(draft):
+    digest = hashlib.sha256()
+    for field in ('title', 'source_name', 'source_url'):
+        value = draft.get(field)
+        data = (value if isinstance(value, str) else '').encode('utf-8')
+        digest.update(len(data).to_bytes(4, 'big'))
+        digest.update(data)
+    return digest.hexdigest()
 
 
 def wrap_title(draw, title, font, width, max_lines):
@@ -104,7 +115,9 @@ def main():
         # Exclusive creation prevents overwriting an existing image.
         fd = os.open(args.output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         with os.fdopen(fd, 'wb') as output:
-            image.save(output, format='PNG', optimize=True)
+            metadata = PngImagePlugin.PngInfo()
+            metadata.add_text('SCM-Draft-SHA256', draft_fingerprint(draft))
+            image.save(output, format='PNG', optimize=True, pnginfo=metadata)
     except (ValueError, OSError) as exc:
         parser.exit(1, f'Карточка не создана: {exc}\n')
     print('Карточка создана локально. Проверьте изображение и первоисточник перед использованием.')

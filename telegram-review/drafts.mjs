@@ -1,5 +1,6 @@
 // Local preparation and explicit submission. Never publishes to the channel directly.
 import fs from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 
 const scrub = (v, max) => (typeof v === 'string' ? v : '').replace(/<[^>]*>/g, ' ').replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
@@ -35,11 +36,40 @@ export function endpoint(value) {
   if (url.protocol !== 'https:' || !url.hostname.endsWith('.workers.dev') || url.hostname === '.workers.dev' || url.username || url.password || url.port || url.search || url.hash || url.pathname !== '/intake') throw Error('Ожидается HTTPS-адрес workers.dev с путём /intake без параметров');
   return url.href;
 }
-export function attachCard(payload, bytes) {
+export function draftFingerprint(draft) {
+  const hash = createHash('sha256');
+  for (const key of ['title', 'source_name', 'source_url']) {
+    const bytes = Buffer.from(typeof draft?.[key] === 'string' ? draft[key] : '', 'utf8');
+    const size = Buffer.alloc(4); size.writeUInt32BE(bytes.length);
+    hash.update(size).update(bytes);
+  }
+  return hash.digest('hex');
+}
+function cardFingerprint(png) {
+  let pos = 8, found = null, ended = false;
+  while (pos + 12 <= png.length) {
+    const length = png.readUInt32BE(pos), end = pos + 12 + length;
+    if (end > png.length) throw Error('Повреждённая PNG-карточка');
+    const type = png.toString('ascii', pos + 4, pos + 8);
+    if (type === 'tEXt') {
+      const data = png.subarray(pos + 8, pos + 8 + length), separator = data.indexOf(0);
+      if (separator > 0 && data.subarray(0, separator).toString('ascii') === 'SCM-Draft-SHA256') {
+        if (found !== null) throw Error('Неоднозначные метаданные карточки');
+        found = data.subarray(separator + 1).toString('ascii');
+      }
+    }
+    pos = end;
+    if (type === 'IEND') { ended = true; break; }
+  }
+  if (!ended || pos !== png.length || !/^[0-9a-f]{64}$/.test(found || '')) throw Error('Нет метки черновика: создайте карточку заново');
+  return found;
+}
+export function attachCard(payload, bytes, draft) {
   if (!(bytes instanceof Uint8Array) || bytes.length < 33 || bytes.length > 180000) throw Error('PNG должен быть не больше 180000 байт');
   const png = Buffer.from(bytes);
   const signature = Buffer.from([137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82]);
   if (!png.subarray(0, 16).equals(signature) || png.readUInt32BE(16) !== 1080 || png.readUInt32BE(20) !== 1080) throw Error('Ожидается карточка PNG 1080×1080');
+  if (cardFingerprint(png) !== draftFingerprint(draft)) throw Error('Карточка не соответствует заголовку или источнику: создайте её заново');
   if ((`ЧЕРНОВИК · проверьте источник и текст\n\n${payload.text}\n\nИсточник: ${payload.source_url}`).length > 1024) throw Error('Текст вместе со ссылкой слишком длинный для подписи к изображению; сократите его вручную');
   return {...payload, card_base64:png.toString('base64')};
 }
@@ -47,7 +77,7 @@ export async function submit(draft, options = {}) {
   const url = endpoint(options.url), secret = options.secret;
   if (typeof secret !== 'string' || !/^[A-Za-z0-9_-]{32,256}$/.test(secret)) throw Error('Не задан корректный секрет приёма');
   const plain = buildPayload(draft);
-  const payload = options.card ? attachCard(plain, options.card) : plain;
+  const payload = options.card ? attachCard(plain, options.card, draft) : plain;
   // No retries: a timeout or error may occur after the Worker received the draft.
   const response = await (options.fetcher || fetch)(url, {
     method:'POST', headers:{'content-type':'application/json', 'authorization':`Bearer ${secret}`},
