@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Notify IndexNow of changed, verified sitemap HTML after a successful Pages deploy.
 
-Run only by the workflow_run job with a Pages event. URLs are selected from the
+Run only after a Pages event or explicit main-branch recovery. URLs are selected from the
 repository allowlist, never from event-supplied text. A failure never submits a
 partial batch. The ownership key file is deliberately public, not a secret.
 """
@@ -52,6 +52,28 @@ def previous_deployment(event, runs):
                 if run.get('head_branch') == 'main' and run.get('conclusion') == 'success'
                 and (run['created_at'], int(run['id'])) < now]
     return max(eligible, key=lambda run: (run['created_at'], int(run['id']))) if eligible else None
+
+
+
+def find_previous_deployment(event, api, token, fetch=request):
+    """Search bounded small pages: a 100-run response can exceed MAX_BYTES.
+
+    Runs created after a delayed workflow event are skipped, including those in
+    intervening pages. Fail closed if the previous run isn't in this window.
+    """
+    workflow_id = event['workflow_run']['workflow_id']
+    for page in range(1, 11):
+        url = f'{api}/actions/workflows/{workflow_id}/runs?branch=main&status=success&per_page=20&page={page}'
+        _, _, body = fetch(url, token=token)
+        runs = json.loads(body)['workflow_runs']
+        if not isinstance(runs, list):
+            raise ValueError('Invalid workflow runs response')
+        previous = previous_deployment(event, runs)
+        if previous:
+            return previous
+        if len(runs) < 20:
+            break
+    return None
 
 
 def changed_urls(changed):
@@ -128,8 +150,7 @@ def run(event, repo, token, fetch=request):
     workflow = json.loads(body)
     if workflow.get('name') != 'pages-build-deployment' or workflow.get('path') != 'dynamic/pages/pages-build-deployment':
         raise ValueError('Upstream workflow is not GitHub Pages')
-    _, _, body = fetch(api + '/actions/workflows/' + str(workflow_id) + '/runs?branch=main&status=success&per_page=100', token=token)
-    previous = previous_deployment(event, json.loads(body)['workflow_runs'])
+    previous = find_previous_deployment(event, api, token, fetch=fetch)
     if not previous:
         print('No earlier successful Pages deployment found; no submission.')
         return None
@@ -152,13 +173,54 @@ def run(event, repo, token, fetch=request):
     return status
 
 
+
+def recover(repo, token, baseline, fetch=request):
+    """Explicit manual recovery, relative to an operator-selected ancestor.
+
+    This may repeat previously accepted URLs: it has no durable submission log.
+    Only current main, a successful Pages build, and verified live pages qualify.
+    """
+    if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repo):
+        raise ValueError('Invalid repository')
+    if not re.fullmatch(r'[a-f0-9]{40}', baseline):
+        raise ValueError('Baseline must be a full lowercase commit SHA')
+    sha = git('rev-parse', 'HEAD')
+    if not re.fullmatch(r'[a-f0-9]{40}', sha):
+        raise ValueError('Invalid checked-out commit')
+    api = 'https://api.github.com/repos/' + repo
+    _, _, body = fetch(api + '/git/ref/heads/main', token=token)
+    if json.loads(body)['object']['sha'] != sha:
+        raise ValueError('Checkout is not current main')
+    _, _, body = fetch(api + '/pages/builds/latest', token=token)
+    build = json.loads(body)
+    if build.get('status') != 'built' or build.get('commit') != sha:
+        raise ValueError('Current main is not the latest successful Pages build')
+    subprocess.run(['git', 'merge-base', '--is-ancestor', baseline, sha], cwd=ROOT, check=True, capture_output=True)
+    changed = git('diff', '--name-only', '--diff-filter=AM', baseline, sha, '--').splitlines()
+    urls = changed_urls(changed)
+    if not urls:
+        print('No changed canonical HTML pages since baseline; no submission.')
+        return None
+    validate_live(urls, fetch=fetch)
+    _, _, body = fetch(api + '/git/ref/heads/main', token=token)
+    if json.loads(body)['object']['sha'] != sha:
+        raise ValueError('Main advanced during validation; no submission')
+    status = submit(urls, send=fetch)
+    print(f'IndexNow recovery HTTP {status}: {len(urls)} verified canonical pages submitted; indexing is not guaranteed.')
+    return status
+
+
 def main():
     try:
-        if os.environ.get('GITHUB_EVENT_NAME') != 'workflow_run':
-            raise ValueError('Only successful Pages workflow_run events are accepted')
-        with open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8') as source:
-            event = json.load(source)
-        run(event, os.environ['GITHUB_REPOSITORY'], os.environ['GITHUB_TOKEN'])
+        event_name = os.environ.get('GITHUB_EVENT_NAME')
+        if event_name == 'workflow_run':
+            with open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8') as source:
+                event = json.load(source)
+            run(event, os.environ['GITHUB_REPOSITORY'], os.environ['GITHUB_TOKEN'])
+        elif event_name == 'workflow_dispatch' and os.environ.get('GITHUB_REF') == 'refs/heads/main':
+            recover(os.environ['GITHUB_REPOSITORY'], os.environ['GITHUB_TOKEN'], os.environ['INDEXNOW_BASE_SHA'])
+        else:
+            raise ValueError('Unsupported event or branch')
     except (OSError, ValueError, KeyError, TypeError, UnicodeError, ET.ParseError, urllib.error.URLError, subprocess.CalledProcessError):
         print('IndexNow verification or submission failed; inspect deployment, key, upstream status and API availability.', file=sys.stderr)
         return 1

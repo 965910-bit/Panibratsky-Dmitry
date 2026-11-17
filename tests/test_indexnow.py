@@ -27,6 +27,27 @@ class IndexNowTests(unittest.TestCase):
         runs.append(run(7, 'main', 'success', 'a'))
         self.assertEqual(indexnow.previous_deployment(event, runs)['id'], 7)
 
+    def test_previous_deploy_paginates_and_fails_closed_when_absent(self):
+        current = {'workflow_run': {'id': 100, 'created_at': '2026-11-17T12:00:00Z', 'head_sha': 'a' * 40, 'workflow_id': 9}}
+        later = [{'id': n, 'created_at': '2026-11-17T13:00:00Z', 'head_branch': 'main', 'conclusion': 'success', 'head_sha': 'c' * 40} for n in range(20)]
+        earlier = {'id': 3, 'created_at': '2026-11-17T11:00:00Z', 'head_branch': 'main', 'conclusion': 'success', 'head_sha': 'b' * 40}
+        calls = []
+        def fetch(url, **kw):
+            calls.append(url)
+            rows = later if 'page=1' in url else [earlier]
+            return 200, {}, json.dumps({'workflow_runs': rows}).encode()
+        self.assertEqual(indexnow.find_previous_deployment(current, 'https://api.github.com/repos/a/b', 'token', fetch=fetch), earlier)
+        self.assertEqual(len(calls), 2)
+        self.assertIn('per_page=20&page=1', calls[0])
+        self.assertIn('per_page=20&page=2', calls[1])
+        self.assertIsNone(indexnow.find_previous_deployment(current, 'x', 'token', fetch=lambda *a, **kw: (200, {}, b'{"workflow_runs":[]}')))
+        calls.clear()
+        def no_match(url, **kw):
+            calls.append(url)
+            return 200, {}, json.dumps({'workflow_runs': later}).encode()
+        self.assertIsNone(indexnow.find_previous_deployment(current, 'x', 'token', fetch=no_match))
+        self.assertEqual(len(calls), 10)
+
     def test_live_verification_requires_matching_key_sitemap_and_bytes(self):
         headers = Message()
         with tempfile.TemporaryDirectory() as tmp:
@@ -107,6 +128,38 @@ class IndexNowTests(unittest.TestCase):
             self.assertIsNone(indexnow.run(event, 'owner/repo', 'token', fetch=fetch))
             validate.assert_called_once()
         self.assertNotIn(indexnow.ENDPOINT, requests)
+
+    def test_explicit_recovery_validates_current_build_before_sending(self):
+        sha, baseline = 'a' * 40, 'b' * 40
+        requests = []
+        def fetch(url, **kwargs):
+            requests.append((url, kwargs))
+            if url.endswith('/git/ref/heads/main'): value = {'object': {'sha': sha}}
+            elif url.endswith('/pages/builds/latest'): value = {'status': 'built', 'commit': sha}
+            elif url == indexnow.ENDPOINT: return 202, {}, b''
+            else: raise AssertionError(url)
+            return 200, {}, json.dumps(value).encode()
+        def git(*args): return sha if args[0] == 'rev-parse' else 'index.html\nprivate.html'
+        with patch.object(indexnow, 'git', side_effect=git), patch.object(indexnow.subprocess, 'run'), patch.object(indexnow, 'validate_live') as validate:
+            self.assertEqual(indexnow.recover('owner/repo', 'token', baseline, fetch=fetch), 202)
+            validate.assert_called_once()
+        self.assertEqual(json.loads(requests[-1][1]['body'])['urlList'], [indexnow.BASE])
+        with self.assertRaisesRegex(ValueError, 'Baseline'):
+            indexnow.recover('owner/repo', 'token', 'not-a-sha', fetch=fetch)
+
+    def test_recovery_refuses_unbuilt_or_stale_deployment(self):
+        sha, baseline = 'a' * 40, 'b' * 40
+        posts = []
+        def fetch(url, **kwargs):
+            if url.endswith('/git/ref/heads/main'): return 200, {}, json.dumps({'object': {'sha': sha}}).encode()
+            if url.endswith('/pages/builds/latest'): return 200, {}, json.dumps({'status': 'built', 'commit': baseline}).encode()
+            posts.append(url)
+            raise AssertionError(url)
+        with patch.object(indexnow, 'git', return_value=sha), patch.object(indexnow, 'validate_live') as validate:
+            with self.assertRaisesRegex(ValueError, 'not the latest successful'):
+                indexnow.recover('owner/repo', 'token', baseline, fetch=fetch)
+            validate.assert_not_called()
+        self.assertEqual(posts, [])
 
     def test_failed_validation_never_posts(self):
         sha, previous = 'a' * 40, 'b' * 40
