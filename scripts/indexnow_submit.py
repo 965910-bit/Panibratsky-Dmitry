@@ -54,6 +54,28 @@ def previous_deployment(event, runs):
     return max(eligible, key=lambda run: (run['created_at'], int(run['id']))) if eligible else None
 
 
+
+def find_previous_deployment(event, api, token, fetch=request):
+    """Search bounded small pages: a 100-run response can exceed MAX_BYTES.
+
+    Runs created after a delayed workflow event are skipped, including those in
+    intervening pages. Fail closed if the previous run isn't in this window.
+    """
+    workflow_id = event['workflow_run']['workflow_id']
+    for page in range(1, 11):
+        url = f'{api}/actions/workflows/{workflow_id}/runs?branch=main&status=success&per_page=20&page={page}'
+        _, _, body = fetch(url, token=token)
+        runs = json.loads(body)['workflow_runs']
+        if not isinstance(runs, list):
+            raise ValueError('Invalid workflow runs response')
+        previous = previous_deployment(event, runs)
+        if previous:
+            return previous
+        if len(runs) < 20:
+            break
+    return None
+
+
 def changed_urls(changed):
     files = set(changed)
     # Do not submit assets, non-canonical aliases, unlisted pages or removals.
@@ -128,8 +150,7 @@ def run(event, repo, token, fetch=request):
     workflow = json.loads(body)
     if workflow.get('name') != 'pages-build-deployment' or workflow.get('path') != 'dynamic/pages/pages-build-deployment':
         raise ValueError('Upstream workflow is not GitHub Pages')
-    _, _, body = fetch(api + '/actions/workflows/' + str(workflow_id) + '/runs?branch=main&status=success&per_page=100', token=token)
-    previous = previous_deployment(event, json.loads(body)['workflow_runs'])
+    previous = find_previous_deployment(event, api, token, fetch=fetch)
     if not previous:
         print('No earlier successful Pages deployment found; no submission.')
         return None

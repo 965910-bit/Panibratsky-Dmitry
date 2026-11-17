@@ -27,6 +27,27 @@ class IndexNowTests(unittest.TestCase):
         runs.append(run(7, 'main', 'success', 'a'))
         self.assertEqual(indexnow.previous_deployment(event, runs)['id'], 7)
 
+    def test_previous_deploy_paginates_and_fails_closed_when_absent(self):
+        current = {'workflow_run': {'id': 100, 'created_at': '2026-11-17T12:00:00Z', 'head_sha': 'a' * 40, 'workflow_id': 9}}
+        later = [{'id': n, 'created_at': '2026-11-17T13:00:00Z', 'head_branch': 'main', 'conclusion': 'success', 'head_sha': 'c' * 40} for n in range(20)]
+        earlier = {'id': 3, 'created_at': '2026-11-17T11:00:00Z', 'head_branch': 'main', 'conclusion': 'success', 'head_sha': 'b' * 40}
+        calls = []
+        def fetch(url, **kw):
+            calls.append(url)
+            rows = later if 'page=1' in url else [earlier]
+            return 200, {}, json.dumps({'workflow_runs': rows}).encode()
+        self.assertEqual(indexnow.find_previous_deployment(current, 'https://api.github.com/repos/a/b', 'token', fetch=fetch), earlier)
+        self.assertEqual(len(calls), 2)
+        self.assertIn('per_page=20&page=1', calls[0])
+        self.assertIn('per_page=20&page=2', calls[1])
+        self.assertIsNone(indexnow.find_previous_deployment(current, 'x', 'token', fetch=lambda *a, **kw: (200, {}, b'{"workflow_runs":[]}')))
+        calls.clear()
+        def no_match(url, **kw):
+            calls.append(url)
+            return 200, {}, json.dumps({'workflow_runs': later}).encode()
+        self.assertIsNone(indexnow.find_previous_deployment(current, 'x', 'token', fetch=no_match))
+        self.assertEqual(len(calls), 10)
+
     def test_live_verification_requires_matching_key_sitemap_and_bytes(self):
         headers = Message()
         with tempfile.TemporaryDirectory() as tmp:
