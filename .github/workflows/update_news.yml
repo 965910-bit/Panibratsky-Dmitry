@@ -35,7 +35,7 @@ jobs:
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
         continue-on-error: true
 
-      - name: Fetch news (RSS + sitemap + Google Alerts)
+      - name: Fetch news (approved RSS and sitemap sources)
         run: python scripts/fetch_news.py
 
       # Government RSS and ATI statistics collectors are paused pending review.
@@ -65,5 +65,5 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/ trends.html sitemap.xml rss.xml
+          git add data/news.json trends.html sitemap.xml rss.xml
           git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей, sitemap, RSS, метатегов" && git push)
