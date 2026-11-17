@@ -85,6 +85,20 @@ class HHAnalyticsTests(unittest.TestCase):
         self.assertIn('reason=http_error page=2 http=403', out.getvalue())
         self.assertNotIn('secret', out.getvalue())
 
+    def test_api_error_classification_is_allowlisted_and_never_exposes_body(self):
+        def response(body): return types.SimpleNamespace(body=lambda: body)
+        for error in ('captcha_required', 'bad_authorization', 'token_expired', 'api_access_payment'):
+            payload = json.dumps({'errors': [{'type': error, 'value': 'secret', 'captcha_url': 'https://secret.invalid'}]}).encode()
+            category = hh.classify_api_error(response(payload))
+            self.assertEqual(category, error)
+            annotation = hh.failure_annotation(hh.HHCollectionError('http_error', 1, 403, category))
+            self.assertIn('api_error=' + error, annotation)
+            self.assertNotIn('secret', annotation)
+        for body in (b'not json', b'{"errors":[{"type":"secret"}]}', b'[]', b'x' * 16385):
+            self.assertIsNone(hh.classify_api_error(response(body)))
+        self.assertNotIn('secret', hh.failure_annotation(hh.HHCollectionError('http_error', 1, 403, 'secret')))
+        self.assertIsNone(hh.classify_api_error(types.SimpleNamespace(body=lambda: 1 / 0)))
+
     def test_diagnostic_mode_does_not_write_data_even_if_collection_succeeds(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory); (root/'data').mkdir()
@@ -103,7 +117,7 @@ class HHAnalyticsTests(unittest.TestCase):
 
     def test_http_failure_is_reported_without_response_body_or_partial_success(self):
         class BrowserPage:
-            def goto(self, *args, **kwargs): return types.SimpleNamespace(status=403)
+            def goto(self, *args, **kwargs): return types.SimpleNamespace(status=403, body=lambda: b'{"errors":[{"type":"captcha_required","captcha_url":"https://secret.invalid"}]}')
         browser=types.SimpleNamespace(new_context=lambda **kwargs: types.SimpleNamespace(new_page=lambda: BrowserPage()),close=lambda:None)
         class Playwright:
             def __enter__(self): return types.SimpleNamespace(chromium=types.SimpleNamespace(launch=lambda **kwargs: browser))
@@ -112,7 +126,7 @@ class HHAnalyticsTests(unittest.TestCase):
         with patch.dict(sys.modules, {'playwright':types.ModuleType('playwright'),'playwright.sync_api':module}):
             with self.assertRaises(hh.HHCollectionError) as caught:
                 hh.fetch_hh_data('do not include this text')
-        self.assertEqual(hh.failure_annotation(caught.exception),'::error title=HH analytics::reason=http_error page=1 http=403')
+        self.assertEqual(hh.failure_annotation(caught.exception),'::error title=HH analytics::reason=http_error page=1 http=403 api_error=captcha_required')
 
     def test_workflow_restricts_writes_to_main_and_non_main_is_diagnostic(self):
         workflow=(ROOT/'.github/workflows/hh_analytics.yml').read_text(encoding='utf-8')

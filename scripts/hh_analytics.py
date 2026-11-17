@@ -18,11 +18,12 @@ TRANSPORT_QUERIES = ["доставка", "перевозка грузов"]
 
 class HHCollectionError(RuntimeError):
     """A short, non-sensitive category suitable for a CI annotation."""
-    def __init__(self, reason, page=None, status=None):
+    def __init__(self, reason, page=None, status=None, api_error=None):
         super().__init__('HH collection failed')
         self.reason = reason
         self.page = page
         self.status = status
+        self.api_error = api_error
 
 
 def failure_annotation(exc):
@@ -35,7 +36,32 @@ def failure_annotation(exc):
         parts.append(f'page={exc.page}')
     if isinstance(exc, HHCollectionError) and type(exc.status) is int and 100 <= exc.status <= 599:
         parts.append(f'http={exc.status}')
+    if isinstance(exc, HHCollectionError) and isinstance(exc.api_error, str) and exc.api_error in {'captcha_required', 'bad_authorization', 'token_expired', 'token_revoked', 'application_not_found', 'user_auth_expected', 'api_access_payment'}:
+        parts.append(f'api_error={exc.api_error}')
     return '::error title=HH analytics::' + ' '.join(parts)
+
+
+def classify_api_error(response):
+    """Return only a documented, allowlisted error category, never response text or URLs."""
+    try:
+        body = response.body()
+        if len(body) > 16384:
+            return None
+        payload = json.loads(body)
+        if not isinstance(payload, dict) or not isinstance(payload.get('errors'), list):
+            return None
+        allowed = {'captcha_required', 'bad_authorization', 'token_expired',
+                   'token_revoked', 'application_not_found', 'user_auth_expected',
+                   'api_access_payment'}
+        for item in payload['errors'][:20]:
+            if isinstance(item, dict):
+                for key in ('value', 'type'):
+                    value = item.get(key)
+                    if isinstance(value, str) and value in allowed:
+                        return value
+    except Exception:
+        pass
+    return None
 
 
 # -------------------------------------------------------------------
@@ -70,7 +96,8 @@ def fetch_hh_data(keyword):
                 if response is None:
                     raise HHCollectionError('no_response', page=page + 1)
                 if response.status != 200:
-                    raise HHCollectionError('http_error', page=page + 1, status=response.status)
+                    raise HHCollectionError('http_error', page=page + 1, status=response.status,
+                                            api_error=classify_api_error(response))
                 
                 # Получаем JSON-данные со страницы
                 data = page_browser.evaluate("() => JSON.parse(document.body.innerText)")
