@@ -97,6 +97,23 @@ class SiteTests(unittest.TestCase):
         self.assertIn('package-ecosystem: npm', dependabot)
         self.assertIn('package-ecosystem: github-actions', dependabot)
 
+    def test_unpinned_chart_is_replaced_with_the_verified_local_build(self):
+        for filename, expected in (
+            ('admin.html', 'js/vendor/chart.umd-4.5.1.js'),
+            ('scm-platform/dashboard.html', '../js/vendor/chart.umd-4.5.1.js'),
+            ('scm-platform/kpi-center.html', '../js/vendor/chart.umd-4.5.1.js'),
+        ):
+            page = ROOT / filename
+            text = page.read_text(encoding='utf-8')
+            self.assertIn(f'<script src="{expected}"></script>', text, filename)
+            self.assertEqual((page.parent / expected).resolve(), (ROOT / 'js/vendor/chart.umd-4.5.1.js').resolve())
+            self.assertLess(text.index(expected), text.index('new Chart('), filename)
+        root_kpi = (ROOT / 'kpi-center.html').read_text(encoding='utf-8')
+        self.assertNotIn('chart.js', root_kpi.lower())
+        self.assertNotIn('new Chart(', root_kpi)
+        for page in list(ROOT.glob('*.html')) + list((ROOT / 'scm-platform').rglob('*.html')):
+            self.assertNotIn('https://cdn.jsdelivr.net/npm/chart.js"', page.read_text(encoding='utf-8'), str(page))
+
     def test_news_paused_status_is_visible_and_matches_faq_markup(self):
         text = (ROOT / 'trends.html').read_text(encoding='utf-8')
         self.assertIn('Добавление новых материалов приостановлено до проверки условий источников', text)
