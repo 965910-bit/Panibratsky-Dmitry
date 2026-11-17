@@ -637,6 +637,7 @@
     </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://scm-news.ru/"},{"@type":"ListItem","position":2,"name":"Калькуляторы","item":"https://scm-news.ru/calculators.html"}]}</script>
 <script src="js/executive-theme.js"></script>
+<script src="js/inventory-models.js"></script>
 <link rel="stylesheet" href="css/executive-pages.css">
 <script src="js/executive-pages.js" defer></script>
 </head>
@@ -733,7 +734,7 @@
     <main class="container" id="page-content">
         <nav aria-label="Хлебные крошки" style="margin: 16px 0; font-size: 0.9rem;"><a href="/">Главная</a> / <span>Калькуляторы</span></nav>
         <div class="calculators-intro">
-            <p>Интерактивные калькуляторы для оптимизации ключевых параметров управления цепями поставок. Рассчитайте оптимальные уровни запасов, точки заказа, экономичные размеры заказов и другие важные показатели.</p>
+            <p>Расчётные модели для управления цепями поставок. Результаты зависят от исходных данных и предпосылок, не гарантируют оптимальность или бесперебойные поставки; проверьте применимость к своей задаче.</p>
         </div>
 
         <!-- Calculators Grid -->
@@ -747,7 +748,7 @@
                 </div>
                 <div class="calculator-content">
                     <p class="calculator-description">
-                        Расчет оптимального размера заказа, который минимизирует суммарные затраты на хранение и выполнение заказов.
+                        Классическая модель с постоянным известным спросом, фиксированными затратами на заказ и хранение, полной поставкой одной партией, без дефицита и скидок за объём. Не учитывает упаковку и другие ограничения. <a href="https://www.lokad.com/economic-order-quantity-eoq-definition-and-formula/">Предпосылки и критика модели</a>.
                     </p>
                     <div class="calculator-form">
                         <div class="form-group">
@@ -755,11 +756,11 @@
                             <input type="number" id="eoq-demand" class="form-input" placeholder="Например: 10000" value="10000">
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="eoq-order-cost">Стоимость заказа (руб.)</label>
+                            <label class="form-label" for="eoq-order-cost">Стоимость одного заказа (руб./заказ)</label>
                             <input type="number" id="eoq-order-cost" class="form-input" placeholder="Например: 500" value="500">
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="eoq-holding-cost">Стоимость хранения за единицу (руб.)</label>
+                            <label class="form-label" for="eoq-holding-cost">Стоимость хранения за единицу в год (руб./ед./год)</label>
                             <input type="number" id="eoq-holding-cost" class="form-input" placeholder="Например: 20" value="20">
                         </div>
                         <button class="calculate-btn" onclick="calculateEOQ()">
@@ -770,7 +771,7 @@
                         <div class="result-title">Результат расчета:</div>
                         <div class="result-value" id="eoq-value">707 единиц</div>
                         <div class="result-explanation" id="eoq-explanation">
-                            EOQ - это оптимальный размер заказа, который минимизирует общие затраты на управление запасами. Формула: √(2 × D × S / H), где D - годовой спрос, S - стоимость заказа, H - стоимость хранения.
+                            Расчёт модели EOQ по формуле √(2 × D × S / H), не универсальный оптимум. Результат округляется для отображения до двух знаков (крайние значения — экспоненциально); упаковку и реальные ограничения следует проверить отдельно.
                         </div>
                     </div>
                 </div>
@@ -784,7 +785,7 @@
                 </div>
                 <div class="calculator-content">
                     <p class="calculator-description">
-                        Оценка запаса на случай максимального дневного спроса при фиксированном сроке поставки. Модель не учитывает задержки и не гарантирует уровень обслуживания.
+                        Сценарий: разница максимального и среднего дневного спроса за выбранный период умножается на фиксированный срок до доступности запаса. Это не оценка вероятности дефицита и не гарантия уровня обслуживания. <a href="https://fulfillbot.com/blog/safety-stock-formula/">Ограничения методов</a>.
                     </p>
                     <div class="calculator-form">
                         <div class="form-group">
@@ -854,7 +855,7 @@
                 </div>
                 <div class="calculator-content">
                     <p class="calculator-description">
-                        Расчет точки заказа - уровня запасов, при котором необходимо размещать новый заказ.
+                        Порог для модели непрерывного контроля: средний дневной спрос × срок до доступности запаса + заданный страховой запас. Сопоставляйте с позицией запаса, учитывая подтверждённые поступления и обязательства без двойного счёта; проверяйте сроки их исполнения. Порог не гарантирует наличие и не задаёт размер заказа. <a href="https://www.linenow.co/blog/glossary/reorder-point">Метод и ограничения</a>.
                     </p>
                     <div class="calculator-form">
                         <div class="form-group">
@@ -877,7 +878,7 @@
                         <div class="result-title">Результат расчета:</div>
                         <div class="result-value" id="rop-value">550 единиц</div>
                         <div class="result-explanation" id="rop-explanation">
-                            Точка заказа определяет, когда нужно размещать новый заказ для поддержания бесперебойных поставок. Формула: (Средний дневной спрос × Время выполнения заказа) + Страховой запас.
+                            Оценка порога для непрерывного контроля; учтите приходящие заказы и обязательства. Не гарантирует бесперебойные поставки.
                         </div>
                     </div>
                 </div>
@@ -971,46 +972,37 @@
             }
         }
 
-        // 1. Расчет EOQ (Экономичный размер заказа)
+        function formatInventoryValue(value) {
+            return SCMInventory.format(value);
+        }
+        function hideInventoryResult(id) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        }
+        // Классическая EOQ — непрерывный результат без округления под упаковку.
         function calculateEOQ() {
-            const demand = parseFloat(document.getElementById('eoq-demand').value);
-            const orderCost = parseFloat(document.getElementById('eoq-order-cost').value);
-            const holdingCost = parseFloat(document.getElementById('eoq-holding-cost').value);
-
-            if (![demand, orderCost, holdingCost].every(n => Number.isFinite(n) && n > 0)) {
-                alert('Пожалуйста, заполните все поля');
+            const values = ['eoq-demand', 'eoq-order-cost', 'eoq-holding-cost'].map(id => document.getElementById(id).value);
+            const result = SCMInventory.eoq(values);
+            if (result === null) {
+                hideInventoryResult('eoq-result');
+                alert('Укажите положительные конечные значения спроса, затрат на заказ и годового хранения; результат должен быть конечным.');
                 return;
             }
-
-            const eoq = Math.sqrt((2 * demand * orderCost) / holdingCost);
-            const roundedEOQ = Math.round(eoq);
-
-            document.getElementById('eoq-value').textContent = `${roundedEOQ} единиц`;
-            document.getElementById('eoq-explanation').textContent = 
-                `EOQ - это оптимальный размер заказа, который минимизирует общие затраты на управление запасами. Формула: √(2 × D × S / H) = √(2 × ${demand} × ${orderCost} / ${holdingCost}) ≈ ${roundedEOQ} единиц.`;
-            
+            document.getElementById('eoq-value').textContent = `${formatInventoryValue(result)} единиц`;
+            document.getElementById('eoq-explanation').textContent = 'Непрерывный расчёт классической модели, показан с округлением до двух знаков (для очень малых и больших чисел — экспоненциально). Результат не учитывает упаковку, скидки и реальные ограничения.';
             showResult('eoq-result');
         }
-
-        // 2. Расчет страхового запаса
+        // Сценарный метод, не статистический уровень сервиса.
         function calculateSafetyStock() {
-            const maxDemand = parseFloat(document.getElementById('ss-max-demand').value);
-            const avgDemand = parseFloat(document.getElementById('ss-avg-demand').value);
-            const leadTime = parseFloat(document.getElementById('ss-lead-time').value);
-
-            if (![maxDemand, avgDemand, leadTime].every(n => Number.isFinite(n) && n >= 0) || leadTime === 0 || maxDemand < avgDemand) {
-                alert('Укажите неотрицательный спрос, максимальный не ниже среднего, и положительный срок поставки.');
+            const values = ['ss-max-demand', 'ss-avg-demand', 'ss-lead-time'].map(id => document.getElementById(id).value);
+            const result = SCMInventory.safetyScenario(values);
+            if (result === null) {
+                hideInventoryResult('safety-stock-result');
+                alert('Укажите конечный неотрицательный спрос, максимальный не ниже среднего, и положительный срок поставки; результат должен быть конечным.');
                 return;
             }
-
-            // Упрощенный расчет страхового запаса
-            const demandVariability = maxDemand - avgDemand;
-            const safetyStock = Math.ceil(demandVariability * leadTime);
-
-            document.getElementById('safety-stock-value').textContent = `${safetyStock} единиц`;
-            document.getElementById('safety-stock-explanation').textContent = 
-                `Оценка: (${maxDemand} − ${avgDemand}) × ${leadTime} = ${safetyStock} единиц. Модель предполагает фиксированный срок поставки и не гарантирует определённый уровень обслуживания.`;
-            
+            document.getElementById('safety-stock-value').textContent = `${formatInventoryValue(result)} единиц`;
+            document.getElementById('safety-stock-explanation').textContent = 'Сценарий максимального спроса за фиксированный срок показан с округлением до двух знаков (для очень малых и больших чисел — экспоненциально). Уровень обслуживания не гарантируется.';
             showResult('safety-stock-result');
         }
 
@@ -1037,23 +1029,17 @@
             showResult('turnover-result');
         }
 
-        // 4. Расчет точки заказа
+        // 4. Порог при непрерывном контроле позиции запаса.
         function calculateReorderPoint() {
-            const demand = parseFloat(document.getElementById('rop-demand').value);
-            const leadTime = parseFloat(document.getElementById('rop-lead-time').value);
-            const safetyStock = parseFloat(document.getElementById('rop-safety-stock').value);
-
-            if (![demand, leadTime, safetyStock].every(n => Number.isFinite(n) && n >= 0) || leadTime === 0) {
-                alert('Пожалуйста, заполните все поля');
+            const values = ['rop-demand', 'rop-lead-time', 'rop-safety-stock'].map(id => document.getElementById(id).value);
+            const result = SCMInventory.reorderPoint(values);
+            if (result === null) {
+                hideInventoryResult('rop-result');
+                alert('Укажите конечный неотрицательный спрос и страховой запас, положительный срок поставки; результат должен быть конечным.');
                 return;
             }
-
-            const reorderPoint = Math.round((demand * leadTime) + safetyStock);
-
-            document.getElementById('rop-value').textContent = `${reorderPoint} единиц`;
-            document.getElementById('rop-explanation').textContent = 
-                `Точка заказа составляет ${reorderPoint} единиц. Формула: (${demand} × ${leadTime}) + ${safetyStock} = ${reorderPoint}. При достижении этого уровня запасов необходимо размещать новый заказ.`;
-            
+            document.getElementById('rop-value').textContent = `${formatInventoryValue(result)} единиц`;
+            document.getElementById('rop-explanation').textContent = 'Порог показан с округлением до двух знаков (для очень малых и больших чисел — экспоненциально). Сравните с позицией запаса и проверьте входящие поставки и обязательства; результат не гарантирует наличие.';
             showResult('rop-result');
         }
 
@@ -1105,6 +1091,11 @@
 
         // Анимация появления калькуляторов
         document.addEventListener('DOMContentLoaded', function() {
+            for (const [ids, resultId] of [
+                [['eoq-demand', 'eoq-order-cost', 'eoq-holding-cost'], 'eoq-result'],
+                [['ss-max-demand', 'ss-avg-demand', 'ss-lead-time'], 'safety-stock-result'],
+                [['rop-demand', 'rop-lead-time', 'rop-safety-stock'], 'rop-result']
+            ]) ids.forEach(id => document.getElementById(id).addEventListener('input', () => hideInventoryResult(resultId)));
             const calculatorCards = document.querySelectorAll('.calculator-card');
             
             const observerOptions = {
