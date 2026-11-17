@@ -144,14 +144,14 @@
             <h2><i class="fas fa-chart-line"></i> 2. S&OP и E2E планирование</h2>
             <p><strong>S&OP (Sales and Operations Planning)</strong> – ежемесячный процесс балансировки спроса и предложения, объединяющий продажи, производство, логистику и финансы.</p>
             <p><strong>E2E (End-to-End) планирование</strong> – сквозное планирование всей цепочки от поставщика до клиента с учётом ограничений.</p>
-            <div class="link-list"><a href="processes.html#sop">Подробнее о S&OP</a><a href="calculators.html#forecast">Прогнозирование</a></div>
+            <div class="link-list"><a href="processes.html#sop">Подробнее о S&OP</a><a href="calculators.html">Прогнозирование</a></div>
         </div>
 
         <!-- 3. Lean Six Sigma -->
         <div class="methodology-card">
             <h2><i class="fas fa-chart-simple"></i> 3. Lean Six Sigma</h2>
             <p>Объединяет Lean (устранение потерь) и Six Sigma (снижение вариабельности). Результат зависит от процесса и измеряется для конкретного проекта.</p>
-            <div class="link-list"><a href="standards.html#quality">Нормативы качества</a><a href="checklists.html">Чек-листы аудита</a></div>
+            <div class="link-list"><a href="standards.html#quality">Показатели качества и ограничения</a><a href="checklists.html">Чек-листы аудита</a></div>
         </div>
 
         <!-- 4. Kraljic Matrix -->
@@ -169,23 +169,16 @@
             <p><strong>GMROI</strong> – валовая рентабельность инвестиций в запасы.</p>
             <div class="formula">GMROI = Валовая прибыль / Средний запас</div>
             <p><strong>Глубина остатка (дни до нуля)</strong> = Текущий остаток / Средние продажи в день.</p>
-            <p><strong>Критический срок хранения (КСХ)</strong> – максимальный срок хранения, после которого товар становится неликвидом.</p>
-            <div class="formula">КСХ = (Р + АД×(ОтПост–ОтПок)) / (АД + З)</div>
-            <div class="link-list"><a href="calculators.html#turnover">Калькулятор оборачиваемости</a><a href="calculators.html#gmroi">GMROI</a><a href="calculators.html#depth">Глубина остатка</a><a href="calculators.html#ksh">КСХ</a></div>
+            <p>Критерии неликвидности и допустимого срока хранения определяются организацией с учётом спроса, срока годности и договоров; универсальная формула не подтверждена.</p>
+            <div class="link-list"><a href="calculators.html">Калькуляторы оборачиваемости и GMROI</a></div>
         </div>
 
         <!-- 6. Поиск неликвидов и мотивация закупщиков -->
         <div class="methodology-card">
             <h2><i class="fas fa-search"></i> 6. Поиск неликвидов и мотивация закупщиков</h2>
-            <p><strong>Алгоритм поиска неликвидов:</strong></p>
-            <ol>
-                <li>Удалить товары с нулевым остатком.</li>
-                <li>Оставить товары с днями на складе > норматива (60 дней).</li>
-                <li>Супернеликвиды: продажи = 0.</li>
-                <li>Обычные неликвиды: продажи > 0, глубина остатка > КСХ (или >180 дней), GMROI &lt; 2.</li>
-            </ol>
-            <p><strong>Мотивация закупщиков</strong> (премия от выполнения планов по обнулению остатков, снижению мёртвого запаса и затрат).</p>
-            <div class="link-list"><a href="calculators.html#procurement_bonus">Калькулятор премии</a><a href="kpi-center.html">KPI-центр</a></div>
+            <p>Для анализа запасов определите период без движения, прогноз спроса, остаточный срок годности и доступные варианты реализации. Сегментируйте позиции и согласуйте критерии с владельцами процесса. Само по себе отсутствие продаж в произвольном периоде не доказывает неликвидность; универсальные пороги дней и GMROI не подтверждены.</p>
+            <p>Показатели для премирования и исключения следует согласовывать с учётом рисков нежелательных стимулов и требований организации.</p>
+            <div class="link-list"><a href="kpi-center.html">KPI-центр</a></div>
         </div>
 
         <!-- 7. Модели аутсорсинга (1PL–5PL) -->
@@ -198,20 +191,14 @@
                 <li><strong>4PL</strong> – стратегическое управление всей сетью.</li>
                 <li><strong>5PL</strong> – цифровой интегратор на базе Big Data/AI.</li>
             </ul>
-            <div class="link-list"><a href="library.html#outsourcing">Подробнее</a><a href="standards.html#transport">Транспортные нормативы</a></div>
+            <div class="link-list"><a href="library.html#outsourcing">Подробнее</a><a href="standards.html#transport">Тарифы и объёмный вес</a></div>
         </div>
 
         <!-- 8. SLA (Service Level Agreement) -->
         <div class="methodology-card">
             <h2><i class="fas fa-file-signature"></i> 8. SLA – ключевые KPI для перевозчиков и 3PL</h2>
-            <ul>
-                <li><strong>OTD</strong> – своевременность доставки (≥98%).</li>
-                <li><strong>In-Full</strong> – полнота отгрузки (≥99%).</li>
-                <li><strong>Damage-Free</strong> – сохранность груза (≥99,5%).</li>
-                <li><strong>Pick Accuracy</strong> – точность сборки (≥99,5%).</li>
-                <li><strong>Response Time</strong> – время реакции на претензию (&lt;4 часа).</li>
-            </ul>
-            <div class="link-list"><a href="standards.html#sla">Нормативы SLA</a><a href="library.html#sla">Библиотека SLA</a></div>
+            <p>OTD, In-Full, сохранность, точность сборки и время реакции могут использоваться в SLA, если стороны согласовали определения, период, данные и исключения. Цели и последствия отклонений определяются договором, а не универсальными процентами. <a href="https://casrai.org/guides/service-level-agreements-medical-supply-vendor-contracts">Пример вопросов к SLA в медицинских поставках</a>.</p>
+            <div class="link-list"><a href="standards.html#sla">Определение SLA</a><a href="library.html#sla">Библиотека SLA</a></div>
         </div>
 
         <!-- 9. Цифровая трансформация, RPA, цифровой двойник -->
@@ -220,7 +207,7 @@
             <p><strong>Цифровой двойник</strong> – динамическая модель для what-if анализа, прогнозирования сбоев и оптимизации.</p>
             <p><strong>RPA (Robotic Process Automation)</strong> – роботизация рутинных операций (ввод накладных, сверка).</p>
             <p><strong>ML-прогнозирование</strong> – один из способов прогнозирования спроса. Качество оценивают на тестовых данных с выбранной метрикой; результат зависит от задачи и данных.</p>
-            <div class="link-list"><a href="processes.html#digital">Цифровой двойник в процессах</a><a href="calculators.html#roi">ROI автоматизации</a><a href="kpi-center.html#mape">MAPE</a></div>
+            <div class="link-list"><a href="processes.html#digital">Цифровой двойник в процессах</a><a href="calculators.html">Калькуляторы ROI и APE одной пары</a></div>
         </div>
 
         <!-- 10. ESG в управлении цепями поставок -->
@@ -231,7 +218,7 @@
                 <li><strong>Циркулярная экономика</strong> – доля переработанных материалов, отходов на переработку.</li>
                 <li><strong>Социальные программы</strong> – ДМС, обучение, безопасность труда.</li>
             </ul>
-            <div class="link-list"><a href="standards.html#esg">ESG-бенчмарки</a><a href="auditor.html#esg">Аудит ESG</a></div>
+            <div class="link-list"><a href="standards.html#esg">Границы ESG-показателей</a><a href="auditor.html#esg">Аудит ESG</a></div>
         </div>
 
         <!-- 11. Классификация товаров и запасов -->

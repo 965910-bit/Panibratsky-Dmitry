@@ -249,8 +249,9 @@
             </div>
             <div id="tabStaff" class="tab-content">
                 <h4>Штатное расписание</h4>
+                <p>Автоматический расчёт ФОТ приостановлен: прежняя формула начисляла коэффициент и надбавку друг на друга. Записи штатного расписания сохранены; прежние расчёты нужно проверить отдельно с бухгалтером. <a href="https://xn--80akibcicpdbetz7e2g.xn--p1ai/questions/viewFaq/1159">Разъяснение Роструда</a>.</p>
                 <button id="addStaffBtn">➕ Добавить должность</button>
-                <table class="staff-table" id="staffTable"><thead><tr><th>Должность</th><th>Кол-во ставок</th><th>Оклад (руб)</th><th>Районный коэф</th><th>Северная надбавка (%)</th><th>Эфф. часов/мес</th><th>Итого ФОТ (руб)</th><th></th></tr></thead><tbody></tbody></table>
+                <table class="staff-table" id="staffTable"><thead><tr><th>Должность</th><th>Кол-во ставок</th><th>Оклад (руб)</th><th>Районный коэф</th><th>Северная надбавка (%)</th><th>Эфф. часов/мес</th><th>Расчёт ФОТ</th><th></th></tr></thead><tbody></tbody></table>
                 <button id="saveStaffBtn" style="margin-top:10px;">💾 Сохранить штатное расписание</button>
             </div>
             <div id="tabKPI" class="tab-content">
@@ -451,8 +452,7 @@
             row.insertCell(3).innerHTML = `<input type="number" step="0.01" value="${escapeHtml(pos.region_coef || 1)}" data-field="region_coef" data-id="${escapeHtml(pos.id)}">`;
             row.insertCell(4).innerHTML = `<input type="number" value="${escapeHtml(pos.north_bonus || 0)}" data-field="north_bonus" data-id="${escapeHtml(pos.id)}">`;
             row.insertCell(5).innerHTML = `<input type="number" value="${escapeHtml(pos.effective_hours || 168)}" data-field="effective_hours" data-id="${escapeHtml(pos.id)}">`;
-            const total = (pos.salary_base || 0) * (pos.region_coef || 1) * (1 + (pos.north_bonus || 0)/100) * (pos.count || 0);
-            row.insertCell(6).textContent = Math.round(total);
+            row.insertCell(6).textContent = 'Приостановлен';
             const delBtn = document.createElement('button'); delBtn.textContent = '🗑️'; delBtn.onclick = () => { deleteStaffPosition(currentDetailBranchId, pos.id); loadStaffUI(); };
             row.insertCell(7).appendChild(delBtn);
         });

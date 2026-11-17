@@ -611,14 +611,13 @@
         const currentMonth = months[new Date().getMonth()];
         const monthBudget = budget[currentMonth] || { opex:0, payroll:0, transport:0, capex:0 };
         const staff = getBranchStaff(currentBranchId);
-        const totalPayrollPlan = staff.reduce((sum, pos) => sum + (pos.salary_base||0)*(pos.region_coef||1)*(1+(pos.north_bonus||0)/100)*(pos.count||0), 0);
         container.innerHTML = `
             <div><strong>Бюджет на ${currentMonth}:</strong></div>
             <div>OPEX: ${monthBudget.opex.toLocaleString()} ₽</div>
-            <div>ФОТ (план): ${monthBudget.payroll.toLocaleString()} ₽</div>
+            <div>ФОТ (введённый бюджет): ${monthBudget.payroll.toLocaleString()} ₽</div>
             <div>Транспорт: ${monthBudget.transport.toLocaleString()} ₽</div>
             <div>CAPEX: ${monthBudget.capex.toLocaleString()} ₽</div>
-            <div style="margin-top:12px;"><strong>Штат:</strong> ${staff.length} должностей, плановый ФОТ в месяц ≈ ${Math.round(totalPayrollPlan).toLocaleString()} ₽</div>
+            <div style="margin-top:12px;"><strong>Штат:</strong> ${staff.length} должностей; автоматический расчёт ФОТ приостановлен. Проверьте ранее рассчитанные суммы отдельно.</div>
         `;
     }
 
