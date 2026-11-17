@@ -14,6 +14,8 @@ export function configuration(databaseId, target) {
     main: 'worker.mjs',
     compatibility_date: '2026-11-01',
     keep_vars: true,
+    // Explicitly match the isolated test Worker's intended settings.
+    ...(target === 'staging' ? {preview_urls:false, observability:{enabled:true, logs:{enabled:true}}} : {}),
     secrets: {required:['BOT_TOKEN', 'CHANNEL_ID', 'INTAKE_SECRET', 'REVIEWER_ID', 'WEBHOOK_SECRET']},
     d1_databases: [{binding:'DB', database_name:databaseName, database_id:databaseId}],
   };
