@@ -1,4 +1,8 @@
 import sqlite3
+import concurrent.futures
+import re
+import tempfile
+import threading
 import unittest
 from pathlib import Path
 
@@ -6,6 +10,24 @@ ROOT = Path(__file__).resolve().parents[1] / 'telegram-review'
 
 
 class TelegramSchemaTests(unittest.TestCase):
+    def test_guarded_insert_competing_sqlite_connections(self):
+        worker = (ROOT / 'worker.mjs').read_text(encoding='utf-8')
+        sql = re.search(r'\? "(INSERT INTO drafts .*? WHERE NOT EXISTS .*?)"', worker).group(1)
+        with tempfile.TemporaryDirectory() as temp:
+            database = str(Path(temp) / 'journal.db')
+            with sqlite3.connect(database) as db:
+                db.executescript((ROOT / 'schema.sql').read_text())
+            barrier = threading.Barrier(2)
+            def insert(i):
+                with sqlite3.connect(database, timeout=5) as db:
+                    barrier.wait(timeout=5)
+                    return db.execute(sql, (str(i), f'https://example.org/{i}', 'text', 'date')).rowcount
+            with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+                changes = list(pool.map(insert, (1, 2)))
+            self.assertEqual(sorted(changes), [0, 1])
+            with sqlite3.connect(database) as db:
+                self.assertEqual(db.execute('SELECT count(*) FROM drafts').fetchone()[0], 1)
+
     def test_new_schema_and_existing_database_migration_preserve_records(self):
         new = sqlite3.connect(':memory:')
         new.executescript((ROOT / 'schema.sql').read_text())

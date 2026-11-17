@@ -37,8 +37,8 @@ export async function queueOne(directory, options = {}) {
   if (state.pending) return {status:'pending'};
   const index = state.known.indexOf(false);
   if (index === -1) return {status:'all-known'};
-  // One attempt, no retries. D1 unique URL is authoritative if preflight races.
-  await submit(ready[index].draft, {url,secret,card:ready[index].card,fetcher});
+  // The distinct guarded endpoint performs an atomic check-and-insert. No retries.
+  await submit(ready[index].draft, {url,secret,card:ready[index].card,fetcher,guarded:true});
   return {status:'queued'};
 }
 async function main(args) {

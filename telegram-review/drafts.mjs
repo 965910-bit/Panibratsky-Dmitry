@@ -74,12 +74,13 @@ export function attachCard(payload, bytes, draft) {
   return {...payload, card_base64:png.toString('base64')};
 }
 export async function submit(draft, options = {}) {
-  const url = endpoint(options.url), secret = options.secret;
+  const url = new URL(endpoint(options.url)), secret = options.secret;
+  if (options.guarded === true) url.pathname = '/intake-one';
   if (typeof secret !== 'string' || !/^[A-Za-z0-9_-]{32,256}$/.test(secret)) throw Error('Не задан корректный секрет приёма');
   const plain = buildPayload(draft);
   const payload = options.card ? attachCard(plain, options.card, draft) : plain;
   // No retries: a timeout or error may occur after the Worker received the draft.
-  const response = await (options.fetcher || fetch)(url, {
+  const response = await (options.fetcher || fetch)(url.href, {
     method:'POST', headers:{'content-type':'application/json', 'authorization':`Bearer ${secret}`},
     body:JSON.stringify(payload), redirect:'error', signal:AbortSignal.timeout(15000),
   });

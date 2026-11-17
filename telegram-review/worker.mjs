@@ -59,7 +59,7 @@ async function api(env, method, data, fetcher) {
   if (!json.ok) throw Error('telegram request rejected');
   return json.result;
 }
-async function intake(request, env, fetcher, telegramPhoto = null) {
+async function intake(request, env, fetcher, telegramPhoto = null, guarded = false) {
   if (!equal(request.headers.get('authorization'), `Bearer ${env.INTAKE_SECRET}`)) return result(403, 'Forbidden');
   let draft; try { draft = await body(request); } catch { return result(400, 'Invalid request'); }
   if (!validDraft(draft)) return result(400, 'Invalid draft');
@@ -74,8 +74,11 @@ async function intake(request, env, fetcher, telegramPhoto = null) {
   const id = crypto.randomUUID();
   // Unique source URL deliberately blocks duplicate intake, including failed/uncertain attempts.
   try {
-    const inserted = await env.DB.prepare("INSERT INTO drafts (id, source_url, text, state, created_at) VALUES (?, ?, ?, 'notifying', ?)").bind(id, draft.source_url, draft.text.trim(), new Date().toISOString()).run();
-    if (!inserted.success) throw Error('insert');
+    const sql = guarded
+      ? "INSERT INTO drafts (id, source_url, text, state, created_at) SELECT ?, ?, ?, 'notifying', ? WHERE NOT EXISTS (SELECT 1 FROM drafts WHERE state IN ('notifying', 'ready', 'sending'))"
+      : "INSERT INTO drafts (id, source_url, text, state, created_at) VALUES (?, ?, ?, 'notifying', ?)";
+    const inserted = await env.DB.prepare(sql).bind(id, draft.source_url, draft.text.trim(), new Date().toISOString()).run();
+    if (!inserted.success || changes(inserted) !== 1) throw Error('insert');
   } catch { return result(409, 'Draft not created; check source and storage'); }
   try {
     const markup = {inline_keyboard:[[{text:'✅ Одобрить', callback_data:`approve:${id}`},{text:'✖️ Отклонить', callback_data:`reject:${id}`}]]};
@@ -239,6 +242,7 @@ export async function handle(request, env, fetcher = fetch) {
   try {
     if (url.pathname === '/availability') return await availability(request, env);
     if (url.pathname === '/intake') return await intake(request, env, fetcher);
+    if (url.pathname === '/intake-one') return await intake(request, env, fetcher, null, true);
     if (url.pathname === '/telegram') return await webhook(request, env, fetcher);
     return result(404, 'Not found');
   } catch { return result(503, 'Service unavailable'); }
