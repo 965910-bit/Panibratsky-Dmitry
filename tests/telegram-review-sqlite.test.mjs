@@ -11,6 +11,7 @@ import {prepareDraft, submit, draftFingerprint} from '../telegram-review/drafts.
 import {sendGalleryItem} from '../telegram-review/gallery-submit.mjs';
 import {queueOne} from '../telegram-review/queue-producer.mjs';
 import {smoke} from '../telegram-review/staging-smoke.mjs';
+import {prepareReviewed} from '../telegram-review/prepare-reviewed.mjs';
 
 const bridge = `
 import json, sqlite3, sys
@@ -145,4 +146,13 @@ test('staging read-only smoke uses Worker and real local SQLite without writes o
  await submit(draft(),options(f));const before=(await f.getRow()).results, calls=f.calls.length;
  assert.deepEqual(await smoke({confirm:true,secret:f.env.INTAKE_SECRET,fetcher:f.localIntake}),{pending:1,uncertain:0});
  assert.deepEqual((await f.getRow()).results,before);assert.equal(f.calls.length,calls);
+});
+
+test('offline human-reviewed gallery item reaches private review before explicit approval',async(t)=>{
+ const f=fixture(t);const root=mkdtempSync(join(tmpdir(),'reviewed-flow-'));t.after(()=>rmSync(root,{recursive:true,force:true}));
+ const original={...draft(),ready_for_review:false,comment:''};writeFileSync(join(root,'draft-01.json'),JSON.stringify(original));writeFileSync(join(root,'card-01.png'),png(original));writeFileSync(join(root,'comment.txt'),'Проверенный авторский вывод.');
+ const output=join(root,'reviewed');await prepareReviewed(root,1,join(root,'comment.txt'),output,{confirmChecked:true});assert.equal(f.calls.length,0);
+ const result=await queueOne(output,{send:true,url:'https://test.example.workers.dev/intake',secret:f.env.INTAKE_SECRET,fetcher:f.localIntake});assert.equal(result.status,'queued');
+ const row=(await f.getRow()).results[0];assert.equal(row.state,'ready');assert.match(row.text,/Проверенный авторский вывод/);assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
+ await f.approve(row.id);assert.equal((await f.getRow()).results[0].state,'sent');assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,1);
 });
