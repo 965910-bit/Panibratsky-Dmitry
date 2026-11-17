@@ -9,6 +9,7 @@ import {spawnSync} from 'node:child_process';
 import {handle} from '../telegram-review/worker.mjs';
 import {prepareDraft, submit, draftFingerprint} from '../telegram-review/drafts.mjs';
 import {sendGalleryItem} from '../telegram-review/gallery-submit.mjs';
+import {queueOne} from '../telegram-review/queue-producer.mjs';
 
 const bridge = `
 import json, sqlite3, sys
@@ -108,4 +109,13 @@ test('gallery item reaches SQLite-backed private review before approval',async(t
  await sendGalleryItem(dir,1,{send:true,url:'https://test.example.workers.dev/intake',secret:f.env.INTAKE_SECRET,fetcher:f.localIntake});
  const row=(await f.getRow()).results[0]; assert.equal(row.state,'ready'); assert.equal(row.photo_file_id,'telegram-photo-id'); assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
  await f.approve(row.id); assert.equal((await f.getRow()).results[0].state,'sent'); assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,1);
+});
+
+test('producer uses real SQLite journal to queue at most one reviewed draft and pauses while pending',async(t)=>{
+ const f=fixture(t);const dir=mkdtempSync(join(tmpdir(),'producer-sqlite-')); t.after(()=>rmSync(dir,{recursive:true,force:true}));
+ for(let i=1;i<=2;i++){const d={...draft(),source_url:`https://example.org/news-${i}`};writeFileSync(join(dir,`draft-0${i}.json`),JSON.stringify(d));writeFileSync(join(dir,`card-0${i}.png`),png(d));}
+ const opts={send:true,url:'https://test.example.workers.dev/intake',secret:f.env.INTAKE_SECRET,fetcher:f.localIntake};
+ assert.equal((await queueOne(dir,opts)).status,'queued'); assert.equal((await queueOne(dir,opts)).status,'pending');
+ let rows=(await f.getRow()).results;assert.equal(rows.length,1);assert.equal(rows[0].source_url,'https://example.org/news-1');assert.equal(f.calls.filter(c=>c.body.chat_id===f.env.CHANNEL_ID).length,0);
+ await f.approve(rows[0].id);assert.equal((await queueOne(dir,opts)).status,'queued');rows=(await f.getRow()).results;assert.equal(rows.length,2);assert.equal(rows[1].source_url,'https://example.org/news-2');
 });
