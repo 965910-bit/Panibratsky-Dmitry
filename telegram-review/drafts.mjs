@@ -35,10 +35,19 @@ export function endpoint(value) {
   if (url.protocol !== 'https:' || !url.hostname.endsWith('.workers.dev') || url.hostname === '.workers.dev' || url.username || url.password || url.port || url.search || url.hash || url.pathname !== '/intake') throw Error('Ожидается HTTPS-адрес workers.dev с путём /intake без параметров');
   return url.href;
 }
+export function attachCard(payload, bytes) {
+  if (!(bytes instanceof Uint8Array) || bytes.length < 33 || bytes.length > 180000) throw Error('PNG должен быть не больше 180000 байт');
+  const png = Buffer.from(bytes);
+  const signature = Buffer.from([137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82]);
+  if (!png.subarray(0, 16).equals(signature) || png.readUInt32BE(16) !== 1080 || png.readUInt32BE(20) !== 1080) throw Error('Ожидается карточка PNG 1080×1080');
+  if ((`ЧЕРНОВИК · проверьте источник и текст\n\n${payload.text}\n\nИсточник: ${payload.source_url}`).length > 1024) throw Error('Текст вместе со ссылкой слишком длинный для подписи к изображению; сократите его вручную');
+  return {...payload, card_base64:png.toString('base64')};
+}
 export async function submit(draft, options = {}) {
   const url = endpoint(options.url), secret = options.secret;
   if (typeof secret !== 'string' || !/^[A-Za-z0-9_-]{32,256}$/.test(secret)) throw Error('Не задан корректный секрет приёма');
-  const payload = buildPayload(draft);
+  const plain = buildPayload(draft);
+  const payload = options.card ? attachCard(plain, options.card) : plain;
   // No retries: a timeout or error may occur after the Worker received the draft.
   const response = await (options.fetcher || fetch)(url, {
     method:'POST', headers:{'content-type':'application/json', 'authorization':`Bearer ${secret}`},
@@ -64,9 +73,15 @@ async function main(args) {
     await fs.writeFile(args[2], JSON.stringify(draft, null, 2) + '\n', {encoding:'utf8', flag:'wx', mode:0o600});
     console.log('Черновик создан локально. Проверьте источник, исправьте текст и добавьте комментарий.'); return;
   }
-  if (args[0] === 'submit' && args.length === 2) {
+  if (args[0] === 'submit' && (args.length === 2 || (args.length === 4 && args[2] === '--card'))) {
     const draft = JSON.parse(await fs.readFile(args[1], 'utf8'));
-    try { await submit(draft, {url:process.env.REVIEW_INTAKE_URL, secret:process.env.REVIEW_INTAKE_SECRET}); }
+    let card;
+    if (args.length === 4) {
+      const stat = await fs.stat(args[3]);
+      if (!stat.isFile() || stat.size > 180000) throw Error('PNG должен быть обычным файлом до 180000 байт');
+      card = await fs.readFile(args[3]);
+    }
+    try { await submit(draft, {url:process.env.REVIEW_INTAKE_URL, secret:process.env.REVIEW_INTAKE_SECRET, card}); }
     catch (e) {
       // Do not display raw network errors, which can include request information.
       if (e?.name === 'AbortError' || e?.name === 'TimeoutError' || e instanceof TypeError) throw Error('Сетевой результат неизвестен; проверьте очередь и личный чат, не отправляйте повторно');
@@ -74,7 +89,7 @@ async function main(args) {
     }
     console.log('Черновик передан в очередь. Публикация в канал требует отдельного подтверждения в Telegram.'); return;
   }
-  throw Error('Используйте list, prepare <номер в ленте с нуля> <новый файл> или submit <файл>');
+  throw Error('Используйте list, prepare <номер в ленте с нуля> <новый файл> или submit <файл> [--card <png>]');
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main(process.argv.slice(2)).catch(e => { console.error(`Не выполнено: ${e.message}`); process.exitCode = 1; });
