@@ -192,7 +192,8 @@
         <p>Просмотр, удаление, экспорт, импорт и печать сохранённых аудитов и чек-листов для выбранной бизнес-единицы.</p>
         <div class="btn-group">
             <button id="exportRegistryBtn">📎 Экспорт реестра (JSON)</button>
-            <button id="importRegistryBtn">📂 Импорт реестра (JSON)</button>
+            <button id="importRegistryBtn" disabled>📂 Импорт реестра приостановлен</button>
+            <p>Импорт приостановлен до безопасного восстановления нескольких разделов. Экспорт и сохранённые данные доступны.</p>
             <button id="deleteAllBtn" class="danger">🗑️ Удалить всё</button>
             <button id="printAllBtn" class="warning">🖨️ Печать сводного отчёта</button>
         </div>
@@ -461,39 +462,7 @@
     }
 
     function importRegistry(file) {
-        const importBranchId = currentBranchId;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                if (currentBranchId !== importBranchId) { alert('Бизнес-единица изменилась: импорт отменён.'); return; }
-                const data = JSON.parse(e.target.result);
-                if (!data || typeof data !== 'object' || Array.isArray(data) ||
-                    (data.audits != null && !Array.isArray(data.audits)) ||
-                    (data.checklists != null && (!Array.isArray(data.checklists) || data.checklists.some(cl =>
-                        !cl || typeof cl.name !== 'string' || !cl.name || cl.name.startsWith('last_modified_') || ['current_form', 'custom_items', 'templates', '__proto__', 'constructor', 'prototype'].includes(cl.name) ||
-                        !Array.isArray(cl.items) || !cl.state || typeof cl.state !== 'object' || Array.isArray(cl.state) || typeof cl.date !== 'string')))) {
-                    throw new Error('Неверный формат файла или зарезервированное имя чек-листа');
-                }
-                const existingCategories = JSON.parse(localStorage.getItem(`scm_checklists_${currentBranchId}`) || '{}');
-                if ((data.checklists || []).some(cl => Object.hasOwn(existingCategories, `last_modified_${cl.name}`))) {
-                    throw new Error('Импорт пересекается с ключом другой старой категории');
-                }
-                if (!confirm('Импорт заменит реестр аудитов из файла и совпадающие результаты старых чек-листов в выбранной бизнес-единице. Сначала сохраните резервную копию: запись нескольких разделов не атомарна и при ошибке может измениться частично. Продолжить?')) return;
-                if (data.audits) { saveAuditRegistry(data.audits); }
-                if (data.checklists) {
-                    for (let cl of data.checklists) {
-                        const categories = JSON.parse(localStorage.getItem(`scm_checklists_${currentBranchId}`) || '{}');
-                        if (!categories[cl.name]) categories[cl.name] = cl.items;
-                        localStorage.setItem(`scm_checklists_${currentBranchId}`, JSON.stringify(categories));
-                        localStorage.setItem(`checklist_${cl.name}_${currentBranchId}`, JSON.stringify(cl.state));
-                        localStorage.setItem(`checklist_last_modified_${cl.name}_${currentBranchId}`, cl.date);
-                    }
-                }
-                renderAudits(); renderChecklists();
-                alert('Импорт выполнен');
-            } catch(err) { alert('Ошибка импорта: некоторые данные могли быть записаны частично. Проверьте состояние и резервную копию.'); }
-        };
-        reader.readAsText(file);
+        alert('Импорт реестра приостановлен до безопасного восстановления. Существующие данные не изменены.');
     }
 
     function deleteAll() {

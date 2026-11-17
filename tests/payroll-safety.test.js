@@ -17,7 +17,7 @@ test('dashboard displays explicit input budget, not calculated staff salary',()=
   const html=page('dashboard');
   const match=html.match(/^    function renderBudgetStaff\(\) \{[\s\S]*?\n    \}/m); assert.ok(match);
   const node={innerHTML:''};
-  const context={document:{getElementById:()=>node},getBranchBudget:()=>Object.fromEntries(['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'].map(m=>[m,{opex:1,payroll:1234,transport:2,capex:3}])),getBranchStaff:()=>[{salary_base:50000,region_coef:1.5,north_bonus:80,count:1}],currentBranchId:'default',Date};
+  const context={document:{getElementById:()=>node},getBranchBudget:()=>Object.fromEntries(['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'].map(m=>[m,{opex:1,payroll:1234,transport:2,capex:3}])),getBranchStaff:()=>[{salary_base:50000,region_coef:1.5,north_bonus:80,count:1}],currentBranchId:'default',Date,escapeHtml: value=>String(value??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))};
   vm.createContext(context);vm.runInContext(match[0],context);context.renderBudgetStaff();
   assert.match(node.innerHTML,/ФОТ \(введённый бюджет\)/);
   assert.match(node.innerHTML,/автоматический расчёт ФОТ приостановлен/);

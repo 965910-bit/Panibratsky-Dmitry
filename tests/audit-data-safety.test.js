@@ -44,27 +44,15 @@ test('checklist export includes hidden answers without writing storage', () => {
   assert.deepEqual(localStorage.writes,[]);
 });
 
-test('imports abort if branch changes, user cancels, data is invalid or legacy name collides', () => {
-  for (const [name,fn] of [['checklists','importData'],['audit-registry','importRegistry']]) {
+test('checklist and registry imports fail closed without opening or writing files', () => {
+  for (const [name,fn,button] of [['checklists','importData','importChecklistsBtn'],['audit-registry','importRegistry','importRegistryBtn']]) {
     const src=page(name), localStorage=storage({audit_registry_default:'old',checklist_current_form_default:'form'}), messages=[];
-    let reader, approve=true;
-    const ctx={localStorage,alert:s=>messages.push(s),confirm:()=>approve,FileReader:class {constructor(){reader=this} readAsText(){}}, renderAuditSections:()=>{},renderAudits:()=>{},renderChecklists:()=>{},saveAuditRegistry:a=>localStorage.setItem('audit_registry_default',JSON.stringify(a)),saveCustomItems:()=>{},saveTemplates:()=>{},getAllItems:()=>({})};
-    vm.createContext(ctx); vm.runInContext('let currentBranchId="default",customItems={},templates=[],currentFilterIds=null;\n'+extract(src,fn),ctx);
-    ctx[fn]('file'); vm.runInContext('currentBranchId="other"',ctx); reader.onload({target:{result:'{}'}});
-    assert.match(messages.at(-1),/изменилась/); assert.deepEqual(localStorage.writes,[]);
-    vm.runInContext('currentBranchId="default"',ctx); ctx[fn]('file'); approve=false; reader.onload({target:{result:JSON.stringify(name==='checklists'?{customItems:{}}:{audits:[]})}});
-    assert.deepEqual(localStorage.writes,[]);
-    ctx[fn]('file'); approve=true; reader.onload({target:{result:JSON.stringify(name==='checklists'?{templates:{}}:{audits:{}})}});
-    assert.match(messages.at(-1),/Ошибка импорта/); assert.deepEqual(localStorage.writes,[]);
-    if (name==='checklists') {
-      vm.runInContext('let sectionsOrder=["one"];',ctx);
-      ctx[fn]('file'); reader.onload({target:{result:JSON.stringify({customItems:{a:{section:'one',text:'overwrites built-in',inputType:'none'}}})}});
-      assert.deepEqual(localStorage.writes,[]);
-    }
-    if (name==='audit-registry') {
-      ctx[fn]('file'); reader.onload({target:{result:JSON.stringify({audits:[],checklists:[{name:'current_form',items:[],state:{},date:'2026-01-01'}]})}});
-      assert.deepEqual(localStorage.writes,[]);
-    }
+    const ctx={localStorage,alert:s=>messages.push(s),FileReader:class {constructor(){throw new Error('must not read file');}}};
+    vm.createContext(ctx);vm.runInContext(extract(src,fn),ctx);ctx[fn]('{"audits":[]}');
+    assert.match(messages.at(-1),/приостановлен/);assert.deepEqual(localStorage.writes,[]);
+    assert.equal(localStorage.getItem('audit_registry_default'),'old');
+    assert.equal(localStorage.getItem('checklist_current_form_default'),'form');
+    assert.match(src,new RegExp(`id="${button}" disabled`));
   }
 });
 

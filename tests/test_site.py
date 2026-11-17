@@ -46,7 +46,8 @@ class SiteTests(unittest.TestCase):
             filename = urlsplit(item.text).path.lstrip('/') or 'index.html'
             html = (ROOT / filename).read_text(encoding='utf-8')
             if filename == 'index.html':
-                self.assertIn('css/executive.css', html)
+                css = (ROOT / 'css/executive.css').read_text(encoding='utf-8')
+                self.assertIn('<!-- HOME_STYLES_START -->\n<style>\n' + css + '\n</style>\n<!-- HOME_STYLES_END -->', html)
                 continue
             for required in ('css/executive-pages.css', 'js/executive-theme.js', 'js/executive-pages.js',
                              'class="executive-brand"', 'class="executive-menu"', 'class="executive-theme"',

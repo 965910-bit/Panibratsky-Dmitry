@@ -230,7 +230,8 @@
             <div id="treeContainer"></div>
             <div class="btn-group" style="margin-top:20px;">
                 <button id="exportBranchesBtn">📎 Экспорт (JSON)</button>
-                <button id="importBranchesBtn">📂 Импорт (JSON)</button>
+                <button id="importBranchesBtn" disabled>📂 Импорт приостановлен</button>
+                <p>Импорт структуры приостановлен до проверки совместимости с сохранёнными данными. Экспорт и существующие подразделения доступны.</p>
                 <input type="file" id="importFile" accept=".json" style="display:none;">
             </div>
         </div>
@@ -532,17 +533,7 @@
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `branches_${Date.now()}.json`; a.click();
     }
     function importBranches(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const branches = JSON.parse(e.target.result);
-                BranchManager.importBranches(branches);
-                renderTree();
-                updateParentSelect();
-                alert('Импорт выполнен');
-            } catch(err) { alert('Ошибка импорта'); }
-        };
-        reader.readAsText(file);
+        alert('Импорт структуры приостановлен до проверки совместимости с сохранёнными данными. Существующие подразделения не изменены.');
     }
 
     document.getElementById('saveBranchBtn').addEventListener('click', saveBranch);

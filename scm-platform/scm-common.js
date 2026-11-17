@@ -129,15 +129,10 @@ window.SCMData = (function() {
         keys.forEach(k => { data[k] = localStorage.getItem(k); });
         return JSON.stringify(data, null, 2);
     }
+    // The previous substring-based multi-key import could partially overwrite
+    // another branch. Keep the API fail-closed until a transactional migration exists.
     function importAllData(jsonStr, branchId = null) {
-        const bid = branchId || getCurrentBranch();
-        try {
-            const data = JSON.parse(jsonStr);
-            for (const [key, value] of Object.entries(data)) {
-                if (key.includes(bid)) localStorage.setItem(key, value);
-            }
-            return true;
-        } catch(e) { return false; }
+        return false;
     }
 
     return {
@@ -230,7 +225,8 @@ window.BranchManager = (function() {
         return branches;
     }
     function importBranches(branches) {
-        saveBranches(branches);
+        // Replacing the structure can orphan records belonging to missing IDs.
+        throw new Error('Импорт структуры приостановлен');
     }
     return {
         getBranches, addBranch, updateBranch, deleteBranch, getBranchById, buildTree, ensureDefaultBranch, importBranches

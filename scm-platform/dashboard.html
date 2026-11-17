@@ -473,7 +473,8 @@
         return (latest && latest.nonConformances) ? latest.nonConformances.slice(0, 3) : [];
     }
     function linearRegressionForecast(history, steps = 1) {
-        if (!history || history.length < 2) return null;
+        if (!Array.isArray(history) || history.length < 2 || !Number.isSafeInteger(steps) || steps < 1 ||
+            history.some(entry => !entry || typeof entry.value !== 'number' || !Number.isFinite(entry.value))) return null;
         const n = history.length;
         let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
         for (let i = 0; i < n; i++) {
@@ -486,7 +487,8 @@
         }
         const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
         const intercept = (sumY - slope * sumX) / n;
-        return intercept + slope * (n + steps - 1);
+        const result = intercept + slope * (n + steps - 1);
+        return Number.isFinite(result) ? result : null;
     }
     const benchmarks = {
         otd: { good: 96, target: 98, unit: '%', lowerIsBetter: false },
@@ -539,13 +541,13 @@
         for (let id of kpis) {
             const history = getKPIHistory(id);
             const forecast = linearRegressionForecast(history, 1);
-            const lastValue = history.length ? history[history.length-1].value : null;
-            if (forecast !== null && lastValue !== null) {
+            const lastValue = Array.isArray(history) && history.length ? history[history.length-1]?.value : null;
+            if (forecast !== null && typeof lastValue === 'number' && Number.isFinite(lastValue) && Number.isFinite(forecast - lastValue)) {
                 const diff = forecast - lastValue;
                 const cls = diff >= 0 ? 'trend-up' : 'trend-down';
                 const arrow = diff >= 0 ? '▲' : '▼';
                 html += `<div><strong>${id.toUpperCase()}</strong>: ${lastValue.toFixed(1)} → ${forecast.toFixed(1)} <span class="${cls}">${arrow} ${Math.abs(diff).toFixed(1)}</span></div>`;
-            } else html += `<div><strong>${id.toUpperCase()}</strong>: недостаточно данных</div>`;
+            } else html += `<div><strong>${id.toUpperCase()}</strong>: недостаточно корректных данных</div>`;
         }
         html += '</div>';
         container.innerHTML = html;
@@ -591,10 +593,10 @@
         if (summary.length>3) container.innerHTML += `<div class="badge">и ещё ${summary.length-3} категорий</div>`;
     }
     function renderWarehouseStats() {
-        const prod = getLastKPI('productivity') || '—';
-        const err = getLastKPI('pickErrors') || '—';
-        const otd = getLastKPI('otd') || '—';
-        const space = getLastKPI('spaceUtil') || '—';
+        const prod = getLastKPI('productivity') ?? '—';
+        const err = getLastKPI('pickErrors') ?? '—';
+        const otd = getLastKPI('otd') ?? '—';
+        const space = getLastKPI('spaceUtil') ?? '—';
         document.getElementById('warehouseStats').innerHTML = `
             <div>Производительность: <strong>${escapeHtml(prod)} ${prod!=='—'?'строк/час':''}</strong></div>
             <div>Ошибки сборки: <strong>${escapeHtml(err)} ${err!=='—'?'%':''}</strong></div>
@@ -609,15 +611,18 @@
         const budget = getBranchBudget(currentBranchId, year);
         const months = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
         const currentMonth = months[new Date().getMonth()];
-        const monthBudget = budget[currentMonth] || { opex:0, payroll:0, transport:0, capex:0 };
+        const monthBudget = budget && typeof budget === 'object' && budget[currentMonth] && typeof budget[currentMonth] === 'object' ? budget[currentMonth] : {};
         const staff = getBranchStaff(currentBranchId);
+        // Missing fields are not zero; legacy strings are displayed only as escaped text.
+        const displayBudget = value => escapeHtml(typeof value === 'number' && Number.isFinite(value) ? value.toLocaleString() : (typeof value === 'string' ? value : '—'));
+        const staffCount = Array.isArray(staff) ? staff.length : '—';
         container.innerHTML = `
             <div><strong>Бюджет на ${currentMonth}:</strong></div>
-            <div>OPEX: ${monthBudget.opex.toLocaleString()} ₽</div>
-            <div>ФОТ (введённый бюджет): ${monthBudget.payroll.toLocaleString()} ₽</div>
-            <div>Транспорт: ${monthBudget.transport.toLocaleString()} ₽</div>
-            <div>CAPEX: ${monthBudget.capex.toLocaleString()} ₽</div>
-            <div style="margin-top:12px;"><strong>Штат:</strong> ${staff.length} должностей; автоматический расчёт ФОТ приостановлен. Проверьте ранее рассчитанные суммы отдельно.</div>
+            <div>OPEX: ${displayBudget(monthBudget.opex)} ₽</div>
+            <div>ФОТ (введённый бюджет): ${displayBudget(monthBudget.payroll)} ₽</div>
+            <div>Транспорт: ${displayBudget(monthBudget.transport)} ₽</div>
+            <div>CAPEX: ${displayBudget(monthBudget.capex)} ₽</div>
+            <div style="margin-top:12px;"><strong>Штат:</strong> ${staffCount} должностей; автоматический расчёт ФОТ приостановлен. Проверьте ранее рассчитанные суммы отдельно.</div>
         `;
     }
 
