@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/otif.js"></script>
+    <script src="js/forecast-error.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
@@ -175,9 +176,13 @@
                 </div>
                 <!-- Forecast Accuracy -->
                 <div class="kpi-item" data-kpi="forecast">
-                    <label>Точность прогноза спроса, %</label>
-                    <input type="number" id="forecast_actual" placeholder="Фактический спрос" step="any">
-                    <input type="number" id="forecast_predicted" placeholder="Прогнозируемый спрос" step="any">
+                    <label>Абсолютная процентная ошибка прогноза (APE), %</label>
+                    <p>Ошибка для одной пары «факт и прогноз», а не средняя ошибка за период (MAPE). Чем ниже, тем меньше ошибка; при факте, близком к нулю, показатель нестабилен. <a href="https://otexts.com/fpp3/toolbox.html#sec-accuracy">Методика и ограничения</a>.</p>
+                    <label for="forecast_actual">Фактический спрос (больше нуля)</label>
+                    <input type="number" id="forecast_actual" placeholder="Фактический спрос" min="0" step="any">
+                    <label for="forecast_predicted">Прогнозируемый спрос (не меньше нуля)</label>
+                    <input type="number" id="forecast_predicted" placeholder="Прогнозируемый спрос" min="0" step="any">
+                    <p>Прежние расчёты точности сохранены отдельно и не превращаются автоматически в новую ошибку.</p>
                     <div class="kpi-result" id="forecast_result">—</div>
                     <div class="benchmark" id="forecast_benchmark"></div>
                     <button class="save-kpi" data-kpi="forecast">Сохранить</button>
@@ -222,7 +227,6 @@
     // Условные демонстрационные пороги, не подтверждённые отраслевые данные.
     const benchmarks = {
         turnover: { target: 6, good: 5, warning: 3 },
-        forecast: { target: 85, good: 75, warning: 60 },
         scm_cost: { target: 8, good: 10, warning: 15 },
         c2c: { target: 45, good: 60, warning: 90 }  // чем ниже, тем лучше
     };
@@ -258,23 +262,19 @@
         return value;
     }
 
-    // Точность прогноза
+    // APE для одной пары; MAPE требует усреднения по нескольким парам.
     function calcForecast() {
-        const actual = parseFloat(document.getElementById('forecast_actual').value) || 0;
-        const predicted = parseFloat(document.getElementById('forecast_predicted').value) || 0;
-        let accuracy = 0;
-        if (actual !== 0) {
-            accuracy = 100 - (Math.abs(actual - predicted) / actual) * 100;
+        const result = SCMForecast.ape(document.getElementById('forecast_actual').value, document.getElementById('forecast_predicted').value);
+        const output = document.getElementById('forecast_result');
+        const info = document.getElementById('forecast_benchmark');
+        if (result === null) {
+            output.textContent = '—';
+            info.textContent = 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.';
+            return null;
         }
-        const value = accuracy.toFixed(1);
-        document.getElementById('forecast_result').innerHTML = value + '%';
-        const bench = benchmarks.forecast;
-        let status = '';
-        if (value >= bench.target) status = '✅ Отличная точность';
-        else if (value >= bench.good) status = '⚠️ Приемлемая, но можно улучшить';
-        else status = '🔴 Низкая точность, пересмотрите модель';
-        document.getElementById('forecast_benchmark').innerHTML = `Условный пример цели: ${bench.target}% | Ваш: ${value}% — ${status}`;
-        return value;
+        output.textContent = result.toFixed(1) + '%';
+        info.textContent = 'APE одной пары; показано с округлением до одного знака. Цель и правила оценки определяются пользователем.';
+        return result;
     }
 
     // Затраты на SCM в % от выручки
@@ -330,6 +330,8 @@
                 data.actual = document.getElementById('forecast_actual').value;
                 data.predicted = document.getElementById('forecast_predicted').value;
                 data.result = calcForecast();
+                if (data.result === null) return;
+                data.method = 'single-ape-v1';
                 break;
             case 'scm_cost':
                 data.cost = document.getElementById('scm_cost_value').value;
@@ -344,7 +346,7 @@
                 break;
         }
         data.timestamp = new Date().toISOString();
-        localStorage.setItem(kpiId === 'otif' ? 'kpi_otif_joint_v1' : `kpi_${kpiId}`, JSON.stringify(data));
+        localStorage.setItem(kpiId === 'otif' ? 'kpi_otif_joint_v1' : kpiId === 'forecast' ? 'kpi_forecast_ape_v1' : `kpi_${kpiId}`, JSON.stringify(data));
         alert(`KPI "${kpiId}" сохранён`);
     }
 
@@ -352,7 +354,7 @@
     function loadSavedKPIs() {
         const kpis = ['otif', 'turnover', 'forecast', 'scm_cost', 'c2c'];
         kpis.forEach(kpi => {
-            const saved = localStorage.getItem(kpi === 'otif' ? 'kpi_otif_joint_v1' : `kpi_${kpi}`);
+            const saved = localStorage.getItem(kpi === 'otif' ? 'kpi_otif_joint_v1' : kpi === 'forecast' ? 'kpi_forecast_ape_v1' : `kpi_${kpi}`);
             if (saved) {
                 const data = JSON.parse(saved);
                 switch(kpi) {
@@ -368,8 +370,9 @@
                         calcTurnover();
                         break;
                     case 'forecast':
-                        if (data.actual) document.getElementById('forecast_actual').value = data.actual;
-                        if (data.predicted) document.getElementById('forecast_predicted').value = data.predicted;
+                        if (data.method !== 'single-ape-v1') break;
+                        document.getElementById('forecast_actual').value = data.actual ?? '';
+                        document.getElementById('forecast_predicted').value = data.predicted ?? '';
                         calcForecast();
                         break;
                     case 'scm_cost':
