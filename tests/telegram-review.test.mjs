@@ -24,6 +24,7 @@ class DB {
       if (sql.includes("SET state = 'sent'")) { const r=db.rows.get(v[1]); if (!r || r.state !== 'sending') return {meta:{changes:0}}; r.state='sent'; r.channel_message_id=v[0]; return {meta:{changes:1}}; }
       throw Error('unknown query');
     },
+    async all() { if (sql.startsWith('SELECT source_url FROM drafts WHERE')) return {success:true,results:[...db.rows.values()].filter(r=>v.includes(r.source_url)).map(r=>({source_url:r.source_url}))}; throw Error('unknown query'); },
     async first() { const r=db.rows.get(v[0]); return sql.startsWith('SELECT state, created_at') ? r || null : r?.state === 'sending' ? r : null; }
   }; }}; }
 }
@@ -152,4 +153,17 @@ test('photo albums, invalid photo ID and overly long captions cannot enter the q
  const send=msg=>handle(x.request('/telegram',{message:msg},{'x-telegram-bot-api-secret-token':x.env.WEBHOOK_SECRET}),x.env,x.api);
  await send({...base,media_group_id:'album'}); await send({...base,photo:[{file_id:''}]}); await send({...base,caption:'/draft https://example.org/picture\n'+'x'.repeat(1000)});
  assert.equal(x.db.rows.size,0); assert.equal(x.calls.filter(c=>c.method==='sendPhoto').length,0); assert.equal(x.calls.filter(c=>c.data.chat_id===x.env.CHANNEL_ID).length,0);
+});
+
+test('availability is authenticated, read-only and reports known sources and pending work',async()=>{
+ const x=setup(); await x.add(); const check=(data,secret=x.env.INTAKE_SECRET)=>handle(x.request('/availability',data,{authorization:'Bearer '+secret}),x.env,x.api);
+ assert.equal((await check({source_urls:['https://example.org/news']},'bad')).status,403);
+ for(const v of [[],['javascript:alert(1)'],Array(21).fill('https://example.org/news')]) assert.equal((await check({source_urls:v})).status,400);
+ const before=x.calls.length; const res=await check({source_urls:['https://example.org/news','https://example.org/new']});
+ assert.equal(res.status,200); assert.deepEqual(await res.json(),{known:[true,false],pending:1,uncertain:0}); assert.equal(x.calls.length,before); assert.equal(x.db.rows.size,1);
+ const id=[...x.db.rows.keys()][0]; await x.click(id,'reject'); assert.deepEqual(await (await check({source_urls:['https://example.org/news']})).json(),{known:[true],pending:0,uncertain:0});
+});
+test('availability fails closed on storage errors and exposes no journal content',async()=>{
+ const x=setup(); x.env.DB={prepare(){throw Error('storage');}}; const res=await handle(x.request('/availability',{source_urls:['https://example.org/news']},{authorization:'Bearer '+x.env.INTAKE_SECRET}),x.env,x.api);
+ assert.equal(res.status,503); assert.equal(await res.text(),'Storage unavailable'); assert.equal(x.calls.length,0);
 });

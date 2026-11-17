@@ -95,6 +95,31 @@ async function intake(request, env, fetcher, telegramPhoto = null) {
     return result(503, 'Notification or state uncertain; operator review required');
   }
 }
+// Read-only, authenticated preflight for a future automated producer.
+// This is advisory: unique INSERT and uncertain-state handling remain authoritative.
+async function availability(request, env) {
+  if (!equal(request.headers.get('authorization'), `Bearer ${env.INTAKE_SECRET}`)) return result(403, 'Forbidden');
+  let data; try { data = await body(request); } catch { return result(400, 'Invalid request'); }
+  const urls = data?.source_urls;
+  if (!Array.isArray(urls) || urls.length < 1 || urls.length > 20 || !urls.every(source_url => validDraft({source_url, text:'x'}))) return result(400, 'Invalid sources');
+  try {
+    const counts = await env.DB.prepare("SELECT state, COUNT(*) AS count FROM drafts GROUP BY state").all();
+    const query = `SELECT source_url FROM drafts WHERE source_url IN (${urls.map(() => '?').join(',')})`;
+    const matches = await env.DB.prepare(query).bind(...urls).all();
+    if (!counts.success || !matches.success || !Array.isArray(counts.results) || !Array.isArray(matches.results)) throw Error('storage');
+    const totals = {ready:0, notifying:0, sending:0, sent:0, rejected:0};
+    for (const row of counts.results) {
+      if (!Object.hasOwn(totals, row.state) || !Number.isSafeInteger(row.count) || row.count < 0) throw Error('storage');
+      totals[row.state] = row.count;
+    }
+    const seen = new Set();
+    for (const row of matches.results) {
+      if (typeof row.source_url !== 'string' || !urls.includes(row.source_url)) throw Error('storage');
+      seen.add(row.source_url);
+    }
+    return new Response(JSON.stringify({known:urls.map(url=>seen.has(url)), pending:totals.ready, uncertain:totals.notifying + totals.sending}), {status:200,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'}});
+  } catch { return result(503, 'Storage unavailable'); }
+}
 async function statusReply(message, env, fetcher) {
   if (message?.text !== '/status' || message?.chat?.type !== 'private' || String(message?.from?.id) !== env.REVIEWER_ID || String(message?.chat?.id) !== env.REVIEWER_ID) return false;
   let text;
@@ -212,6 +237,7 @@ export async function handle(request, env, fetcher = fetch) {
   if (request.method !== 'POST') return result(405, 'Method not allowed');
   const url = new URL(request.url);
   try {
+    if (url.pathname === '/availability') return await availability(request, env);
     if (url.pathname === '/intake') return await intake(request, env, fetcher);
     if (url.pathname === '/telegram') return await webhook(request, env, fetcher);
     return result(404, 'Not found');
