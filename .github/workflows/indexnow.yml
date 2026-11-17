@@ -5,6 +5,12 @@ on:
     workflows: ['pages-build-deployment']
     types: [completed]
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      baseline_sha:
+        description: 'Full earlier main commit SHA; changed sitemap pages since it will be submitted'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -31,4 +37,22 @@ jobs:
       - name: Verify deployed pages and notify IndexNow
         env:
           GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/indexnow_submit.py
+  recover:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify current Pages and submit changed pages since baseline
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          INDEXNOW_BASE_SHA: ${{ inputs.baseline_sha }}
         run: python scripts/indexnow_submit.py

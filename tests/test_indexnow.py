@@ -129,6 +129,38 @@ class IndexNowTests(unittest.TestCase):
             validate.assert_called_once()
         self.assertNotIn(indexnow.ENDPOINT, requests)
 
+    def test_explicit_recovery_validates_current_build_before_sending(self):
+        sha, baseline = 'a' * 40, 'b' * 40
+        requests = []
+        def fetch(url, **kwargs):
+            requests.append((url, kwargs))
+            if url.endswith('/git/ref/heads/main'): value = {'object': {'sha': sha}}
+            elif url.endswith('/pages/builds/latest'): value = {'status': 'built', 'commit': sha}
+            elif url == indexnow.ENDPOINT: return 202, {}, b''
+            else: raise AssertionError(url)
+            return 200, {}, json.dumps(value).encode()
+        def git(*args): return sha if args[0] == 'rev-parse' else 'index.html\nprivate.html'
+        with patch.object(indexnow, 'git', side_effect=git), patch.object(indexnow.subprocess, 'run'), patch.object(indexnow, 'validate_live') as validate:
+            self.assertEqual(indexnow.recover('owner/repo', 'token', baseline, fetch=fetch), 202)
+            validate.assert_called_once()
+        self.assertEqual(json.loads(requests[-1][1]['body'])['urlList'], [indexnow.BASE])
+        with self.assertRaisesRegex(ValueError, 'Baseline'):
+            indexnow.recover('owner/repo', 'token', 'not-a-sha', fetch=fetch)
+
+    def test_recovery_refuses_unbuilt_or_stale_deployment(self):
+        sha, baseline = 'a' * 40, 'b' * 40
+        posts = []
+        def fetch(url, **kwargs):
+            if url.endswith('/git/ref/heads/main'): return 200, {}, json.dumps({'object': {'sha': sha}}).encode()
+            if url.endswith('/pages/builds/latest'): return 200, {}, json.dumps({'status': 'built', 'commit': baseline}).encode()
+            posts.append(url)
+            raise AssertionError(url)
+        with patch.object(indexnow, 'git', return_value=sha), patch.object(indexnow, 'validate_live') as validate:
+            with self.assertRaisesRegex(ValueError, 'not the latest successful'):
+                indexnow.recover('owner/repo', 'token', baseline, fetch=fetch)
+            validate.assert_not_called()
+        self.assertEqual(posts, [])
+
     def test_failed_validation_never_posts(self):
         sha, previous = 'a' * 40, 'b' * 40
         event = {'workflow_run': {'id': 10, 'head_sha': sha, 'head_branch': 'main', 'conclusion': 'success', 'created_at': '2026-11-17T12:00:00Z', 'workflow_id': 9}}
