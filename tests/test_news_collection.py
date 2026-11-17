@@ -26,6 +26,11 @@ def load_collector():
 
 
 class NewsCollectionTests(unittest.TestCase):
+    def test_restricted_source_is_not_scheduled_for_collection(self):
+        module = load_collector()
+        self.assertTrue(module.SOURCES)
+        self.assertFalse(any('logistics360.ru' in source['url'].lower() for source in module.SOURCES))
+
     def test_all_sources_unavailable_fails_without_touching_feed(self):
         module = load_collector()
         with tempfile.TemporaryDirectory() as folder:
@@ -44,7 +49,7 @@ class NewsCollectionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             news = Path(folder) / 'news.json'
             news.write_text('[]')
-            with patch.object(module, 'fetch_rss', return_value=[item]), patch.object(module, 'fetch_from_sitemap', return_value=None), patch.object(module, 'load_google_alerts', return_value=[]), patch('builtins.print') as output:
+            with patch.object(module, 'SOURCES', [{'name':'fixture RSS', 'url':'https://example.org/feed', 'type':'rss'}, {'name':'fixture sitemap', 'url':'https://example.org/map', 'type':'sitemap'}]), patch.object(module, 'fetch_rss', return_value=[item]), patch.object(module, 'fetch_from_sitemap', return_value=None), patch.object(module, 'load_google_alerts', return_value=[]), patch('builtins.print') as output:
                 module.main(str(news))
             self.assertEqual(json.loads(news.read_text())[0]['link'], item['link'])
             self.assertTrue(any('::warning::' in str(call) for call in output.call_args_list))
@@ -55,7 +60,7 @@ class NewsCollectionTests(unittest.TestCase):
             news = Path(folder) / 'news.json'
             original = '[{"link":"https://example.com/a","title":"old"}]'
             news.write_text(original)
-            with patch.object(module, 'fetch_rss', return_value=[]), patch.object(module, 'fetch_from_sitemap', return_value=None), patch.object(module, 'load_google_alerts', return_value=[]):
+            with patch.object(module, 'SOURCES', [{'name':'fixture RSS', 'url':'https://example.org/feed', 'type':'rss'}, {'name':'fixture sitemap', 'url':'https://example.org/map', 'type':'sitemap'}]), patch.object(module, 'fetch_rss', return_value=[]), patch.object(module, 'fetch_from_sitemap', return_value=None), patch.object(module, 'load_google_alerts', return_value=[]):
                 module.main(str(news))
             self.assertEqual(news.read_text(), original)
 

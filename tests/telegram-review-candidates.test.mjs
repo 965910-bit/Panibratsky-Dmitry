@@ -14,3 +14,13 @@ test('limits and malformed feed fail closed', () => {
   assert.throws(()=>shortlist({})); assert.throws(()=>shortlist([],0)); assert.throws(()=>shortlist([],21));
   assert.equal(shortlist([item('Склад', 'https://example.org/1'), item('WMS', 'https://example.org/2')],1).length,1);
 });
+
+test('restricted source is excluded without confusing unrelated domains', () => {
+  const drafts = shortlist([
+    item('WMS', 'https://LOGISTICS360.ru/article'),
+    item('WMS', 'https://news.logistics360.ru/article'),
+    {...item('WMS', 'https://example.org/a'), source:'Логистика 360'},
+    item('WMS', 'https://notlogistics360.ru/a'),
+  ]);
+  assert.deepEqual(drafts.map(d=>d.source_url), ['https://notlogistics360.ru/a']);
+});
