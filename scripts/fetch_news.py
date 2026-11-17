@@ -10,13 +10,8 @@ from urllib.parse import urlparse
 from news_utils import merge_news
 
 SOURCES = [
-    {
-        "name": "Логистика 360",
-        "url": "https://logistics360.ru/feed/",
-        "cat": "logistics",
-        "lang": "ru",
-        "type": "rss"
-    },
+    # Paused pending written permission: https://logistics360.ru/copyright-rules/
+    # A public RSS feed alone does not establish permission for automated extraction.
     {
         "name": "АТИ (новости)",
         "url": "https://news.ati.su/sitemap.xml",
