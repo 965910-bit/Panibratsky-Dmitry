@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Калькулятор страхового запаса | SCM News</title>
+<meta name="description" content="Сценарная оценка страхового запаса по максимальному и среднему спросу и фиксированному сроку поставки.">
+<link rel="canonical" href="https://scm-news.ru/safety-stock-calculator.html">
+<link rel="stylesheet" href="css/inventory-tools.css">
+<link rel="stylesheet" href="css/executive-pages.css">
+<script src="js/executive-theme.js"></script>
+<script src="js/executive-pages.js" defer></script>
+<script src="js/inventory-models.js" defer></script><script src="js/inventory-metrics.js" defer></script><script src="js/inventory-tools.js" defer></script>
+</head><body class="executive-page executive-inventory">
+<a class="executive-skip" href="#page-content">Перейти к содержанию</a>
+<div class="executive-bar" role="banner"><div class="executive-bar-inner">
+  <a class="executive-brand" href="/" aria-label="Дмитрий Герасимов — на главную"><span class="executive-brand-mark">G<span>.</span></span><span class="executive-brand-name">ГЕРАСИМОВ<small>ДМИТРИЙ</small></span></a>
+  <button class="executive-menu" type="button" aria-expanded="false" aria-controls="executive-nav">Меню</button>
+  <nav class="executive-nav" id="executive-nav" aria-label="Основная навигация"><a href="about.html">Обо мне</a><a href="/#cases">Результаты</a><a href="/#expertise">Экспертиза</a><a href="/#experience">Опыт</a><a href="career.html">Карьера</a><a href="/#resources">Материалы</a><a class="executive-contact" href="/#contact">Связаться <span>↗</span></a></nav>
+  <button class="executive-theme" type="button" aria-label="Переключить светлую тему" title="Переключить тему">☼</button>
+</div></div>
+<main class="wrap" id="page-content"><nav class="crumb" aria-label="Хлебные крошки"><a href="/">Главная</a> / <a href="calculators.html">Калькуляторы</a> / Калькулятор страхового запаса</nav>
+<p class="eyebrow">Практика управления запасами</p><h1>Калькулятор страхового запаса</h1><p class="lead">Оцените запас для сценария повышенного спроса за фиксированный срок поставки.</p>
+<div class="layout"><section class="panel" aria-labelledby="form-heading"><h2 id="form-heading">Рассчитать</h2><p class="privacy">Расчёт выполняется в браузере. Введённые значения не сохраняются и не отправляются этим инструментом.</p><form data-inventory-tool="safety" novalidate><div class="field"><label for="field-3">Максимальный дневной спрос, единиц</label><input id="field-3" type="number" min="0" step="any" inputmode="decimal" value="120" aria-describedby="hint-3"><div class="note" id="hint-3">Неотрицательное число, не меньше среднего.</div></div><div class="field"><label for="field-4">Средний дневной спрос, единиц</label><input id="field-4" type="number" min="0" step="any" inputmode="decimal" value="100" aria-describedby="hint-4"><div class="note" id="hint-4">Неотрицательное число за сопоставимый период.</div></div><div class="field"><label for="field-5">Срок до доступности запаса, дней</label><input id="field-5" type="number" min="0" step="any" inputmode="decimal" value="7" aria-describedby="hint-5"><div class="note" id="hint-5">Положительное число; в этом сценарии срок считается фиксированным.</div></div><button type="submit" disabled>Рассчитать</button><div id="tool-result" class="result" role="status" aria-live="polite"></div></form><noscript><p>Для расчёта включите JavaScript; формула и пример доступны ниже.</p></noscript></section><div><section class="article"><h2>Сценарная формула</h2><p class="formula">Запас = (максимальный спрос − средний спрос) × срок поставки</p><p>При максимальном спросе 120 единиц в день, среднем 100 и фиксированном сроке 7 дней оценка составит 140 единиц.</p></section><section class="article"><h2>Границы метода</h2><p>Это сценарий по выбранному максимуму, не статистическая оценка вероятности дефицита. Он не учитывает изменчивость срока поставки и не гарантирует заданный уровень обслуживания. Проверьте период наблюдения и выбросы.</p><p><a href="https://fulfillbot.com/blog/safety-stock-formula/">О вариантах методов</a></p></section></div></div>
+<section class="related" aria-labelledby="related-heading"><h2 id="related-heading">Что посмотреть дальше</h2><ul class="related-list"><li><a href="inventory-turnover-calculator.html">Оборачиваемость запасов</a></li><li><a href="reorder-point-calculator.html">Точка заказа</a></li><li><a href="scm-diagnostic.html">Проверка процессов</a></li><li><a href="calculators.html">Все калькуляторы</a></li><li><a href="trends.html#open-data-heading">Открытые показатели</a></li></ul></section>
+<footer class="footer">Инструменты предназначены для ознакомления. Исходные данные и применимость модели проверяйте для своей задачи.</footer>
+</main></body></html>
