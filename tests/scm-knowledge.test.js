@@ -103,3 +103,22 @@ test('academy local links and fragments resolve and its IDs are unique', () => {
   if (fragment) assert(fs.readFileSync(target,'utf8').includes(`id="${fragment}"`),`Missing fragment ${href}`);
  }
 });
+
+test('internal academy connects leadership development with enterprise case work', () => {
+ const page='scm-internal-academy.html';const html=fs.readFileSync(page,'utf8');
+ assert.match(html,/rel="canonical" href="https:\/\/scm-news\.ru\/scm-internal-academy\.html"/);
+ assert(fs.readFileSync('sitemap.xml','utf8').includes('https://scm-news.ru/scm-internal-academy.html'));
+ for(const source of ['scm-academy.html','scm-knowledge.html','wiki.html']) assert(fs.readFileSync(source,'utf8').includes(`href="${page}"`));
+ const ids=['purpose','operating-model','leader-growth','case-process','case-template','case-example','measurement','launch'];
+ assert.equal((html.match(/data-chapter-entry data-keywords=/g)||[]).length,ids.length);
+ for(const id of ids){assert(html.includes(`id="${id}"`));assert(html.includes(`href="#${id}"`));}
+ for(const phrase of ['не описание работающей структуры','не выдаёт сертификаты','Без разрешения рабочий процесс не меняется','не данные реального предприятия','5 процентных пунктов','нельзя приписать весь эффект','не является обещанием срока','закрытой информации во внешние сервисы без разрешения']) assert(html.includes(phrase),phrase);
+ assert.equal(20/100*100-15/100*100,5);
+ const allIds=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(new Set(allIds).size,allIds.length);
+ for(const [,href] of html.matchAll(/\bhref="([^"]+)"/g)){
+  if(/^(?:https?:|\/)/.test(href))continue;
+  const [file,fragment]=href.split('#'),target=file||page;
+  assert(fs.existsSync(target),`Missing target ${href}`);
+  if(fragment)assert(fs.readFileSync(target,'utf8').includes(`id="${fragment}"`),`Missing fragment ${href}`);
+ }
+});
