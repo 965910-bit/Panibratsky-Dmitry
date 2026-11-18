@@ -15,7 +15,7 @@ async function checkAccessibility(page) {
     await page.locator('.executive-theme').click();
   }
 }
-const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js']);
+const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js']);
 
 test('SCM tools work at desktop and mobile sizes without sending user data',async()=>{
  const requests=[];
@@ -47,10 +47,21 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(await page.locator('#checklist-result li').count(),2);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
+   await page.goto(`${base}/scm-knowledge.html`);
+   assert.equal(await page.locator('[data-knowledge-card]:visible').count(),8);
+   await page.getByLabel('Найти тему').fill('поставщик');
+   assert.equal(await page.locator('[data-knowledge-card]:visible').count(),1);
+   await page.getByLabel('Найти тему').fill('несуществующая тема');
+   assert.equal(await page.locator('#topic-empty').isVisible(),true);
+   await page.getByLabel('Найти тему').clear();
+   assert.equal(await page.locator('[data-knowledge-card]:visible').count(),8);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
+   await checkAccessibility(page);
    await context.close();
   }
   const noJs=await browser.newContext({javaScriptEnabled:false});const page=await noJs.newPage();
   await page.goto(`${base}/inventory-turnover-calculator.html`);assert.equal(await page.getByRole('button',{name:'Рассчитать'}).isDisabled(),true);
+  await page.goto(`${base}/scm-knowledge.html`);assert.equal(await page.locator('[data-knowledge-card]:visible').count(),8);assert.equal(await page.locator('#knowledge-search').isVisible(),false);
   await noJs.close();
   assert(requests.every(r=>r.method==='GET'));
  } finally {if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
