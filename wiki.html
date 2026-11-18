@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wiki по SCM и логистике | Дмитрий Герасимов</title>
-<meta name="description" content="Темы будущих материалов по логистике и управлению цепями поставок. Пока статьи готовятся, доступны обзор проблем и калькуляторы.">
+<meta name="description" content="База знаний по цепям поставок: основы SCM, практические примеры, расчёты, инструменты и тематическая карта.">
 <link rel="canonical" href="https://scm-news.ru/wiki.html">
     
     <!-- Стили -->
@@ -374,6 +374,14 @@
             padding: 0 var(--space-md);
         }
 
+        .wiki-featured { border: 1px solid var(--border-light); border-radius: var(--radius-lg); background: var(--card-bg); padding: var(--space-xl); margin-bottom: var(--space-xl); }
+        .wiki-featured h2 { margin: 0 0 var(--space-sm); }
+        .wiki-featured ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px 24px; margin: 20px 0; padding-left: 20px; }
+        .wiki-featured a { font-weight: 650; }
+        @media (max-width: 480px) { .wiki-featured { padding: var(--space-md); } .wiki-featured ul { grid-template-columns: 1fr; } }
+
+        .wiki-planned > summary { cursor: pointer; font-weight: 700; padding: 16px 0; }
+        .wiki-planned > summary:focus-visible { outline: 3px solid #b45b00; outline-offset: 3px; }
         .wiki-categories {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -731,7 +739,7 @@
     <section class="wiki-hero">
         <div class="container">
             <h1>База знаний Wiki</h1>
-            <p>Темы для будущих материалов об управлении цепями поставок</p>
+            <p>Понятия, примеры и расчёты для понимания цепей поставок</p>
         </div>
     </section>
 
@@ -740,11 +748,29 @@
         <nav aria-label="Хлебные крошки" style="margin: 16px 0; font-size: 0.9rem;"><a href="/">Главная</a> / <span>Wiki</span></nav>
         <div class="wiki-intro">
             <h2>Что доступно в базе знаний?</h2>
-            <p>Ниже — перечень тем, а не опубликованные статьи: материалы ещё готовятся. Пока можно изучить <a href="scm-problems.html">обзор операционных проблем</a> и <a href="calculators.html">сценарные калькуляторы</a>.</p>
-            <p><a href="scm-knowledge.html">Карта SCM: задачи, инструменты и практическая справка по запасам</a>.</p>
+            <p>Откройте <a href="scm-encyclopedia.html">основы SCM: объяснения, примеры и расчёты</a> — 13 разделов от планирования и закупок до складов, возвратов, рисков и словаря терминов.</p>
+            <p>Также доступны <a href="scm-knowledge.html">карта SCM и справка по запасам</a>, <a href="scm-problems.html">обзор операционных проблем</a> и <a href="calculators.html">калькуляторы</a>.</p>
+            <p>Перечень ниже — идеи будущих тем, а не опубликованные статьи.</p>
         </div>
 
-        <!-- Wiki Categories -->
+        <section class="wiki-featured" aria-labelledby="wiki-featured-heading">
+            <h2 id="wiki-featured-heading">Читать по темам</h2>
+            <p>Вводный справочник: что это такое, зачем нужно и как применять.</p>
+            <ul>
+                <li><a href="scm-encyclopedia.html#basics">Основы SCM</a></li>
+                <li><a href="scm-encyclopedia.html#planning">Спрос и планирование</a></li>
+                <li><a href="scm-encyclopedia.html#procurement">Закупки и поставщики</a></li>
+                <li><a href="scm-encyclopedia.html#inventory">Запасы и пополнение</a></li>
+                <li><a href="scm-encyclopedia.html#warehouse">Склад и транспорт</a></li>
+                <li><a href="scm-encyclopedia.html#metrics">Показатели и расчёты</a></li>
+                <li><a href="scm-encyclopedia.html#risk">Риски и возвраты</a></li>
+                <li><a href="scm-encyclopedia.html#glossary">Словарь терминов</a></li>
+            </ul>
+            <p><a href="scm-encyclopedia.html#chapters">Все разделы справочника →</a></p>
+        </section>
+
+        <!-- Planned topics are distinct from the published knowledge base. -->
+        <details class="wiki-planned"><summary>Темы для будущих материалов</summary>
         <section class="wiki-categories">
             <!-- Управление закупками -->
             <div class="wiki-category">
@@ -942,6 +968,7 @@
                 </div>
             </div>
         </section>
+        </details>
     </main>
 
     <footer class="footer">
