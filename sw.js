@@ -5,7 +5,7 @@ const PUBLIC_PAGES = new Set([
   '/', '/index.html', '/about.html', '/blog.html', '/scm-problems.html', '/career.html',
   '/contact.html', '/experience.html', '/expertise.html', '/prompts.html', '/trends.html',
   '/calculators.html', '/certificates.html', '/projects.html', '/business-plan.html',
-  '/tools.html', '/wiki.html', '/trends-logistics.html', '/analytics.html'
+  '/tools.html', '/wiki.html', '/trends-logistics.html', '/analytics.html', '/scm-architect.html'
 ]);
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.add(OFFLINE_URL)));

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Архитектор цепи поставок: очаг → узел → как не встроить | Дмитрий Герасимов</title>
+  <meta name="description" content="Рубрика архитектора SCM: от симптома у клиента до узла цепи и решения, которое не ломает соседние процессы. Метод Дмитрия Герасимова.">
+  <link rel="canonical" href="https://scm-news.ru/scm-architect.html">
+  <link rel="icon" href="icons/android/launchericon-192x192.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Архитектор цепи: очаг, узел, как не встроить">
+  <meta property="og:description" content="Разбор сбоев логистики как конструкции, а не как списка жалоб.">
+  <meta property="og:url" content="https://scm-news.ru/scm-architect.html">
+  <meta property="og:image" content="https://scm-news.ru/images/profile.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="css/executive.css">
+  <link rel="stylesheet" href="css/scm-research.css">
+  <link rel="stylesheet" href="css/scm-architect.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Архитектор цепи поставок: очаг → узел → как не встроить","datePublished":"2026-11-18","author":{"@type":"Person","name":"Дмитрий Герасимов"},"mainEntityOfPage":"https://scm-news.ru/scm-architect.html"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://scm-news.ru/"},{"@type":"ListItem","position":2,"name":"Архитектор цепи","item":"https://scm-news.ru/scm-architect.html"}]}</script>
+  <script src="js/executive-theme.js"></script>
+  <link rel="stylesheet" href="css/executive-pages.css">
+  <script src="js/executive-pages.js" defer></script>
+</head>
+<body class="executive-page executive-research">
+<a class="executive-skip" href="#page-content">Перейти к содержанию</a>
+<div class="executive-bar" role="banner"><div class="executive-bar-inner">
+  <a class="executive-brand" href="/" aria-label="Дмитрий Герасимов — на главную"><span class="executive-brand-mark">G<span>.</span></span><span class="executive-brand-name">ГЕРАСИМОВ<small>ДМИТРИЙ</small></span></a>
+  <button class="executive-menu" type="button" aria-expanded="false" aria-controls="executive-nav">Меню</button>
+  <nav class="executive-nav" id="executive-nav" aria-label="Основная навигация"><a href="about.html">Обо мне</a><a href="/#cases">Результаты</a><a href="/#expertise">Экспертиза</a><a href="/#experience">Опыт</a><a href="career.html">Карьера</a><a href="/#resources">Материалы</a><a class="executive-contact" href="/#contact">Связаться <span>↗</span></a></nav>
+  <button class="executive-theme" type="button" aria-label="Переключить светлую тему" title="Переключить тему">☼</button>
+</div></div>
+<main id="page-content">
+  <div class="research-container"><nav aria-label="Хлебные крошки" style="margin:16px 0;font-size:0.9rem"><a href="/">Главная</a> / <span>Архитектор цепи</span></nav></div>
+  <section class="research-hero research-container">
+    <p class="section-number">РУБРИКА / 18 НОЯБРЯ 2026</p>
+    <h1>Сбой виден у клиента.<br>Причина живёт <em>в узле цепи.</em></h1>
+    <p class="research-lead">Архитектор цепи не ставит «систему на всё». Он находит очаг, называет узел и проверяет, что выбранное решение не встроит новый риск рядом.</p>
+    <div class="research-meta"><span>ДМИТРИЙ ГЕРАСИМОВ</span><span>ОПЕРАЦИОННОЕ УПРАВЛЕНИЕ / SCM</span><span>НЕ КАТАЛОГ ВЕНДОРОВ</span></div>
+  </section>
+  <div class="research-container research-layout">
+    <aside class="research-aside" aria-label="Содержание"><p>В ЭТОМ МАТЕРИАЛЕ</p>
+      <nav>
+        <a href="#method">Метод</a>
+        <a href="#map">Карта узлов</a>
+        <a href="#stock">Остаток</a>
+        <a href="#wms">Система</a>
+        <a href="#transport">Транспорт</a>
+        <a href="#source">Поставщик</a>
+        <a href="#kpi">Показатели</a>
+        <a href="#people">Смена</a>
+        <a href="#returns">Возвраты</a>
+        <a href="#forecast">Прогноз</a>
+        <a href="#kit">Полевой набор</a>
+        <a href="#limits">Границы</a>
+      </nav>
+    </aside>
+    <article class="research-content">
+      <section id="method">
+        <p class="section-number">01 / МЕТОД</p>
+        <h2>Три шага, без которых «внедрение» — декорация</h2>
+        <p>Рубрика продолжает <a href="scm-problems.html">обзор операционных проблем</a>: там — что обсуждают специалисты. Здесь — как разбирать конкретный сбой как конструкцию цепи. Это рамка для разговора с командой, не сертификация и не обещание KPI.</p>
+        <div class="architect-chain">
+          <article>
+            <span>01 / ОЧАГ</span>
+            <h3>Где это чувствует клиент или смена</h3>
+            <p>Неполный заказ, простой ворот, «есть в системе — нет на полке», срыв слота. Симптом описывают языком факта: что, когда, сколько, кто уже знает.</p>
+          </article>
+          <article>
+            <span>02 / УЗЕЛ</span>
+            <h3>Какой процесс держит этот симптом</h3>
+            <p>Учёт, приёмка, комплектация, транспорт, закупка, мастер-данные, смена. Узел — место решения, не должность «виноватого».</p>
+          </article>
+          <article>
+            <span>03 / КАК НЕ ВСТРОИТЬ</span>
+            <h3>Что сломается, если чинить только здесь</h3>
+            <p>Новый отчёт, новая WMS, новый KPI часто переносят боль. Перед встройкой спрашивают: какой соседний узел примет удар.</p>
+          </article>
+        </div>
+        <p class="research-quote">Система — инструмент узла. Если узел не назван, система встраивает чужую работу в чужой ритм.</p>
+      </section>
+
+      <section id="map">
+        <p class="section-number">02 / КАРТА</p>
+        <h2>Восемь узлов, которые чаще всего маскируются под «логистику вообще»</h2>
+        <p>Выберите узел — откроется разбор. Это не рейтинг частоты по рынку: выбор по повторяющимся открытым обсуждениям и операционной практике ритейла.</p>
+        <nav class="architect-nodes" aria-label="Узлы цепи">
+          <a href="#stock">Остаток и доступность</a>
+          <a href="#wms">Данные и WMS</a>
+          <a href="#transport">Транспорт</a>
+          <a href="#source">Поставка</a>
+          <a href="#kpi">Сквозной KPI</a>
+          <a href="#people">Люди и смена</a>
+          <a href="#returns">Обратный поток</a>
+          <a href="#forecast">План и прогноз</a>
+        </nav>
+      </section>
+
+      <section class="architect-case" id="stock">
+        <header><span>УЗЕЛ / СКЛАД И УЧЁТ</span><h3>Товар «есть», клиент уходит с пустым заказом</h3></header>
+        <div class="architect-grid3">
+          <div><h4>Очаг</h4><p>Недокомплект, отмена строки, ручной поиск «на всякий случай». Клиент и продавец спорят с экраном, не с полкой.</p></div>
+          <div><h4>Узел</h4><p>Расхождение физического и учётного остатка, резерв под открытые заказы, задержка приёмки, зона «временно не считать».</p></div>
+          <div><h4>Как не встроить</h4><p>Не лечить одним «обнулить минуса» и не ставить жёсткий автозапрет продажи, пока не ясен цикл инвентаризации. Иначе скроете брак учёта и ударите сервис.</p></div>
+        </div>
+        <p>Дальше по цифрам: <a href="inventory-turnover-calculator.html">оборачиваемость</a>, <a href="reorder-point-calculator.html">точка заказа</a>, <a href="safety-stock-calculator.html">страховой запас</a>. Формула не заменяет сверку полки.</p>
+      </section>
+
+      <section class="architect-case" id="wms">
+        <header><span>УЗЕЛ / СИСТЕМА</span><h3>WMS как замена процесса</h3></header>
+        <div class="architect-grid3">
+          <div><h4>Очаг</h4><p>После запуска терминалы «тормозят смену», параллельный Excel живёт месяц, расхождения растут, а не падают.</p></div>
+          <div><h4>Узел</h4><p>Мастер-данные, адресация, правила резерва, обучение смены, совместимость с учётной системой — не «коробка WMS».</p></div>
+          <div><h4>Как не встроить</h4><p>Не выбирать систему до описания задачи и качества данных. Не обещать срок «как у вендора». Пилот на живом потоке, иначе встроите чужой склад в свой ритм.</p></div>
+        </div>
+        <p>Смежный разбор: <a href="scm-problems.html#problems">системы и данные</a>, <a href="scm-encyclopedia.html">энциклопедия SCM</a>.</p>
+      </section>
+
+      <section class="architect-case" id="transport">
+        <header><span>УЗЕЛ / ПЛЕЧО ДОСТАВКИ</span><h3>Самый дешёвый рейс как единственный критерий</h3></header>
+        <div class="architect-grid3">
+          <div><h4>Очаг</h4><p>Срыв окна, простой ворот, претензии по сохранности, авральный «ещё один перевозчик на сегодня».</p></div>
+          <div><h4>Узел</h4><p>Тендер без сервиса, нет владельца слота, несвязанные KPI склада и транспорта, слабый контроль исполнения.</p></div>
+          <div><h4>Как не встроить</h4><p>Не фиксировать только ставку. Иначе встроите экономию в срыв приёмки и переработку смены. Цена, надёжность и окно смотрят вместе.</p></div>
+        </div>
+        <p>По резюме: тендер перевозчиков — пример связки затрат и исполнения, не универсальный рецепт. <a href="experience.html">Контекст опыта ↗</a></p>
+      </section>
+
+      <section class="architect-case" id="source">
+        <header><span>УЗЕЛ / СНАБЖЕНИЕ</span><h3>Два поставщика на бумаге, один завод в жизни</h3></header>
+        <div class="architect-grid3">
+          <div><h4>Очаг</h4><p>Внезапный стоп отгрузки «у всех сразу», рост срока, паника страхового запаса.</p></div>
+          <div><h4>Узел</h4><p>Общее сырьё, один контрактный производитель, географическая концентрация, нет сценария замены.</p></div>
+          <div><h4>Как не встроить</h4><p>Не плодить номенклатуру «для галочки» и не раздувать запас без срока жизни товара. Альтернатива проверяется мощностью и качеством, не названием в справочнике.</p></div>
+        </div>
+        <p>См. <a href="scm-encyclopedia.html#risk">устойчивость и общие зависимости</a>.</p>
+      </section>
+
+      <section class="architect-case" id="kpi">
+        <header><span>УЗЕЛ / УПРАВЛЕНИЕ</span><h3>Каждый отдел зелёный — бизнес красный</h3></header>
+        <div class="architect-grid3">
+          <div><h4>Очаг</h4><p>Закупки закрыли цену, склад закрыл отгрузку «как смогли», коммерция обещала срок. Клиент получил конфликт трёх правд.</p></div>
+          <div><h4>Узел</h4><p>Локальные KPI без общей доступности, срока и маржи. Нет владельца сквозного обещания.</p></div>
+          <div><h4>Как не встроить</h4><p>Не добавлять ещё один дашборд. Сначала одно обещание клиенту и правило эскалации. Иначе встроите отчётность поверх войны функций.</p></div>
+        </div>
+        <p>Практика вопросов: <a href="scm-problems.html#questions">с чего начать разговор</a>, <a href="kpi-center.html">центр KPI</a>.</p>
+      </section>
+
+      <section class="architect-case" id="people">
+        <header><span>УЗЕЛ / СМЕНА</span><h3>Склад едет, пока рядом стоит руководитель</h3></header>
+        <div class="architect-grid3">
+          <div><h4>Очаг</h4><p>Ночная смена «теряет темп», брак комплектации растёт к концу графика, новички не доходят до нормы.</p></div>
+          <div><h4>Узел</h4><p>Нормы без условий, нет сменного лидера, адаптация на ходу, задания недостижимы в пике.</p></div>
+          <div><h4>Как не встроить</h4><p>Не закрывать дыру камерами и штрафами. Не копировать стандарт сети без наставника на площадке. Стандарт без людей — декорация, люди без стандарта — героизм до выгорания.</p></div>
+        </div>
+        <p>Люди — носители процесса: <a href="blog.html">подход</a>, <a href="scm-internal-academy.html">внутренняя академия</a>.</p>
+      </section>
+
+      <section class="architect-case" id="returns">
+        <header><span>УЗЕЛ / ОБРАТНЫЙ ПОТОК</span><h3>Возврат как «потом разберём»</h3></header>
+        <div class="architect-grid3">
+          <div><h4>Очаг</h4><p>Зона возвратов растёт, годный товар заперт, повторные отгрузки клиенту из «карантина».</p></div>
+          <div><h4>Узел</h4><p>Нет такта разбора, нет правила «в запас / в брак / к поставщику», учёт не видит обратный поток.</p></div>
+          <div><h4>Как не встроить</h4><p>Не смешивать возврат с основным остатком «чтобы место освободить». Иначе встроите ошибку доступности в следующий цикл продаж.</p></div>
+        </div>
+        <p>Карта темы: <a href="scm-knowledge.html">справка по запасам и reverse</a>.</p>
+      </section>
+
+      <section class="architect-case" id="forecast">
+        <header><span>УЗЕЛ / ПЛАН</span><h3>Прогноз как приказ, а не как гипотеза</h3></header>
+        <div class="architect-grid3">
+          <div><h4>Очаг</h4><p>Излишек после акции, дыра по хитам, закупки спорят с коммерцией «кто виноват в цифре».</p></div>
+          <div><h4>Узел</h4><p>Нет владельца гипотезы, нет окна пересмотра, страховой запас прячет качество прогноза.</p></div>
+          <div><h4>Как не встроить</h4><p>Не автоматизировать закупку от сырого прогноза. Сначала частота сверки, исключения, ответственность за акцию. Иначе встроите модель в замороженный капитал.</p></div>
+        </div>
+        <p>Инструменты проверки гипотезы: <a href="calculators.html">калькуляторы SCM</a>, <a href="scm-navigator.html">навигатор</a>.</p>
+      </section>
+
+      <section id="kit">
+        <p class="section-number">03 / ПОЛЕВОЙ НАБОР</p>
+        <h2>Что взять на совещание, пока не выбрали систему</h2>
+        <div class="architect-kit">
+          <div>
+            <h3>Шесть вопросов за 20 минут</h3>
+            <ol class="research-list">
+              <li>Какой факт у клиента или смены, не мнение?</li>
+              <li>Какой узел принимает решение сегодня — и кто думает, что принимает он?</li>
+              <li>Какие два отчёта противоречат друг другу?</li>
+              <li>Что сломается у соседа, если мы «просто запретим / просто обнулим»?</li>
+              <li>Какой пилот за одну неделю покажет направление, не презентацию?</li>
+              <li>Как отличим эффект изменения от сезонности и героизма смены?</li>
+            </ol>
+          </div>
+          <div>
+            <h3>Связанные материалы сайта</h3>
+            <ul class="research-list">
+              <li><a href="scm-problems.html">Операционные проблемы и источники</a></li>
+              <li><a href="scm-case-lab.html">Лаборатория кейсов</a></li>
+              <li><a href="scm-practical-guides.html">Практические руководства</a></li>
+              <li><a href="scm-sector-cases.html">Отраслевые сюжеты</a></li>
+              <li><a href="https://t.me/LogisticaandSupplyChain">Канал @LogisticaandSupplyChain</a> — разборы в ленте, не автопостинг этой страницы</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="limits">
+        <p class="section-number">04 / ГРАНИЦЫ</p>
+        <h2>Чего эта рубрика не делает</h2>
+        <p>Не обещает цифру экономии «как в чужом кейсе». Примеры из резюме (склад 4 000 м², 87 000 SKU, команда 79, тендер, точность инвентаризации) относятся к конкретным периодам и командам — методика важнее лозунга. Не подменяет юридическую, ИБ- и тендерную экспертизу. Не является RSS-лентой и не собирает чужие тексты автоматически.</p>
+        <p>Новости компаний читаем вручную и по правам источника. Автосбор в Worker выключен. Сетка и сторонние виджеты лент на эту страницу не подключались.</p>
+      </section>
+
+      <section class="research-cta">
+        <p class="section-number">ОБСУДИТЬ КОНТУР</p>
+        <h2>Нужен руководитель, который сначала называет узел?</h2>
+        <p>Рассматриваю руководящие роли в операциях, логистике и SCM. Командировки и переезд в Санкт-Петербург или ЯНАО.</p>
+        <div><a class="button button-primary" href="contact.html">Связаться ↗</a><a class="button button-secondary" href="experience.html">Опыт ↗</a></div>
+      </section>
+    </article>
+  </div>
+</main>
+<footer><div class="research-container research-footer"><span>© 2026 ДМИТРИЙ ГЕРАСИМОВ</span><a href="/">НА ГЛАВНУЮ ↗</a><a href="#page-content">НАВЕРХ ↑</a></div></footer>
+</body>
+</html>
