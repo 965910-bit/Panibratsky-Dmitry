@@ -122,3 +122,31 @@ test('internal academy connects leadership development with enterprise case work
   if(fragment)assert(fs.readFileSync(target,'utf8').includes(`id="${fragment}"`),`Missing fragment ${href}`);
  }
 });
+
+test('unified SCM navigation and additional guides are indexable and locally connected', () => {
+ const pages={
+  'scm-navigator.html':['strategy','planning','sourcing','operations','inventory','delivery','trade','finance','returns','resilience','data','people','measures'],
+  'scm-advanced-practice.html':['sop','mrp','trade','capital','environment','cyber']
+ };
+ for(const [file,ids] of Object.entries(pages)) {
+  const html=fs.readFileSync(file,'utf8');
+  assert(html.includes(`rel="canonical" href="https://scm-news.ru/${file}"`));
+  assert(fs.readFileSync('sitemap.xml','utf8').includes(`https://scm-news.ru/${file}`));
+  assert.equal((html.match(/data-chapter-entry data-keywords=/g)||[]).length,ids.length);
+  for(const id of ids){assert(html.includes(`id="${id}"`));assert(html.includes(`href="#${id}"`));}
+  const all=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(new Set(all).size,all.length);
+  for(const [,href] of html.matchAll(/\bhref="([^"]+)"/g)) {
+   if(/^(?:https?:|\/)/.test(href)) continue;
+   const [path,fragment]=href.split('#'),target=path||file;assert(fs.existsSync(target),`Missing ${href}`);
+   if(fragment)assert(fs.readFileSync(target,'utf8').includes(`id="${fragment}"`),`Missing ${href}`);
+  }
+ }
+ for(const file of ['wiki.html','scm-encyclopedia.html','scm-practical-guides.html','scm-knowledge.html','scm-academy.html','scm-internal-academy.html']) {
+  const html=fs.readFileSync(file,'utf8');assert(html.includes('href="scm-navigator.html"'));assert(html.includes('href="scm-advanced-practice.html"'));
+ }
+ const html=fs.readFileSync('scm-advanced-practice.html','utf8');
+ for(const phrase of ['не полный MRP','не является нормативом','не доказанная денежная экономия','не подтверждает соответствие','не заменяют весь договор','не делает прогноз']) {
+  assert(html.includes(phrase),phrase);
+ }
+ assert.equal(1000-800-100,100);assert.equal(100*2-50-30,120);assert.equal(100*2-50,150);assert.equal(50+30-40,40);assert.equal(45+30-40,35);assert.equal(10*100*0.1,100);
+});

@@ -20,7 +20,26 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm audit --audit-level=high
       - name: Homepage browser regression
-        run: CHROME_PATH="$(command -v google-chrome)" npm run test:browser
+        run: |
+          set +e
+          CHROME_PATH="$(command -v google-chrome)" npm run test:browser 2>&1 | tee "$RUNNER_TEMP/browser-test.log"
+          result=${PIPESTATUS[0]}
+          set -e
+          if [ "$result" -ne 0 ]; then
+            # Keep the failed test name and diagnostic excerpt visible in check annotations.
+            python - <<'PYLOG'
+          import os
+          import re
+          from pathlib import Path
+
+          text = Path(os.environ['RUNNER_TEMP'], 'browser-test.log').read_text(errors='replace')
+          failures = re.findall(r'(?m)^not ok .*?(?=^# Subtest:|^1\.\.|\Z)', text, re.S)
+          excerpt = '\n'.join(failures) if failures else text[-4000:]
+          excerpt = excerpt[:6000].replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print(f'::error title=Browser regression failed::{excerpt}')
+          PYLOG
+            exit "$result"
+          fi
       - run: cmp node_modules/chart.js/dist/chart.umd.js js/vendor/chart.umd-4.5.1.js && cmp node_modules/chart.js/LICENSE.md js/vendor/chartjs-LICENSE.md
       - run: cmp node_modules/leaflet/dist/leaflet.js js/vendor/leaflet-1.9.4/leaflet.js && cmp node_modules/leaflet/dist/leaflet.js.map js/vendor/leaflet-1.9.4/leaflet.js.map && cmp node_modules/leaflet/dist/leaflet.css js/vendor/leaflet-1.9.4/leaflet.css && cmp node_modules/leaflet/LICENSE js/vendor/leaflet-1.9.4/LICENSE && diff -rq node_modules/leaflet/dist/images js/vendor/leaflet-1.9.4/images
       - run: python -m pip install --require-hashes -r telegram-review/requirements-visuals.lock -r requirements/news.lock
