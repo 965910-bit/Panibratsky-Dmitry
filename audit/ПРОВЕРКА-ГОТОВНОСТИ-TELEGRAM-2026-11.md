@@ -166,10 +166,17 @@
 
 Тест машины на staging закрыт. Рабочий код и миграция 002 на `scm-review` этим не включались.
 
+## Production: бэкап и миграция 002 (18 ноября 2026)
+
+- Actions backup `scm-review`: run 44406501458, artifact `d1-backup-scm-review`; владелец скачал zip.
+- `PRAGMA table_info(drafts)` до ALTER: колонок `resolution_kind` / `resolved_at` не было.
+- Миграция 002 выполнена **один раз** в консоли D1 `scm-review`. Повторный PRAGMA: cid 8 `resolution_kind`, cid 9 `resolved_at`. ALTER больше не запускать.
+- Worker `scm-telegram-review`: Disable builds выключен; Build command `SCM_BUILD_TARGET=production` + UUID базы из кабинета (UUID в Git не копировался); Deploy command `npx --yes wrangler@4.163.0 deploy --config telegram-review/.wrangler-build.json`. Production branch `main`. Preview-сборки выключены.
+- На момент записи активна dashboard-версия `d9f738f5` (секрет). Этот merge в `main` должен запустить Git-сборку и `wrangler deploy` на `scm-telegram-review`. `CHANNEL_ID` канала не менять.
+
 ## Что ещё не закрыто (тот же план, без «либо»)
 
 1. Не путать три Worker: `scm-telegram-review-staging`, `scm-telegram-review`, `scm-telegram-обзор-постановка` (последний в цепочке бота не участвует).
-2. Production: миграция 002 на `scm-review` после свежего бэкапа; затем код как на staging; `CHANNEL_ID` канала — **последним**.
-3. Сборка production: сейчас выключена; когда включите — сразу `deploy`, не `versions upload`.
-4. Сайт: рубрика архитектора (очаг → узел цепи → как не встроить); новости с лент компаний, не RSS как стандарт; `SOURCES` пустой.
-5. Сетка вне работ.
+2. Дождаться Success Git-сборки `scm-telegram-review` после этого merge; сверить имя Worker, D1 `scm-review`, активную версию. `CHANNEL_ID` канала — **последним**.
+3. Сайт: рубрика архитектора (очаг → узел цепи → как не встроить); новости с лент компаний, не RSS как стандарт; `SOURCES` пустой.
+4. Сетка вне работ.
