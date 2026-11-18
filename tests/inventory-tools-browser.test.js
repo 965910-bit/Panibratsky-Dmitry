@@ -15,7 +15,7 @@ async function checkAccessibility(page) {
     await page.locator('.executive-theme').click();
   }
 }
-const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','scm-navigator.html','scm-advanced-practice.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg']);
+const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','scm-navigator.html','scm-advanced-practice.html','scm-case-lab.html','css/scm-case-lab.css','js/scm-case-model.js','js/scm-case-lab.js','scm-leader-map.html','js/scm-leader-map.js','scm-sector-cases.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg']);
 
 test('SCM tools work at desktop and mobile sizes without sending user data',async()=>{
  const requests=[];
@@ -137,6 +137,62 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(await page.locator('#chapter-empty').isVisible(),true);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
+   await page.goto(`${base}/scm-case-lab.html`);
+   const caseRequests=[];page.on('request',request=>caseRequests.push({url:request.url(),method:request.method()}));
+   await page.getByRole('button',{name:'Сравнить сценарии'}).click();
+   assert.equal(await page.locator('#case-rows tr').count(),7);
+   assert.match(await page.locator('#case-summary').innerText(),/неудовлетворённый спрос 80 ед\./);
+   assert.match(await page.locator('#case-summary').innerText(),/С дополнительной поставкой: неудовлетворённый спрос 0 ед\./);
+   await page.getByLabel('День дополнительной поставки').fill('7');
+   assert.equal(await page.locator('#case-result').isVisible(),false);
+   await page.getByRole('button',{name:'Сравнить сценарии'}).click();
+   assert.match(await page.locator('#case-summary').innerText(),/С дополнительной поставкой: неудовлетворённый спрос 40 ед\./);
+   await page.getByLabel('Горизонт, дней').fill('8');
+   await page.getByRole('button',{name:'Сравнить сценарии'}).click();
+   assert.match(await page.locator('#case-summary').innerText(),/остаток 320 ед\./);
+   await page.getByLabel('Горизонт, дней').fill('31');
+   await page.getByRole('button',{name:'Сравнить сценарии'}).click();
+   assert.match(await page.locator('#case-error').innerText(),/Проверьте поля/);
+   assert.equal(await page.locator('#case-result').isVisible(),false);
+   await page.getByLabel('Горизонт, дней').fill('7');
+   await page.getByRole('button',{name:'Сравнить сценарии'}).click();
+   await page.getByText('Показать ответ',{exact:true}).click();
+   assert.equal(await page.locator('#interpret details').evaluate(el=>el.open),true);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
+   await checkAccessibility(page);
+   assert.deepEqual(caseRequests,[],'Scenario interactions must not send requests');
+   page.removeAllListeners('request');
+   await page.goto(`${base}/scm-leader-map.html`);
+   const leaderRequests=[];page.on('request',request=>leaderRequests.push(request.url()));
+   await page.getByRole('button',{name:'Показать учебный маршрут'}).click();
+   assert.match(await page.locator('#leader-error').innerText(),/Выберите роль и направление/);
+   for (const role of ['specialist','team','sponsor']) for (const [skill,anchor] of [['systems','#systems'],['data','#data-skills'],['people','#people-skills'],['change','#change-skills']]) {
+    await page.locator('#leader-role').selectOption(role);await page.locator('#leader-skill').selectOption(skill);
+    assert.equal(await page.locator('#leader-result').isVisible(),false);
+    await page.getByRole('button',{name:'Показать учебный маршрут'}).click();
+    assert.equal(await page.locator('#leader-result').isVisible(),true);
+    assert.equal(await page.locator('#leader-next').getAttribute('href'),anchor);
+    assert((await page.locator('#leader-role-advice').innerText()).length>20);
+    assert((await page.locator('#leader-skill-advice').innerText()).length>20);
+   }
+   await page.locator('#leader-role').selectOption('');
+   assert.equal(await page.locator('#leader-result').isVisible(),false);
+   await page.getByRole('button',{name:'Показать учебный маршрут'}).click();
+   assert.match(await page.locator('#leader-error').innerText(),/Выберите/);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
+   await checkAccessibility(page);
+   assert.deepEqual(leaderRequests,[],'Leader selection must not send requests');
+   page.removeAllListeners('request');
+   await page.goto(`${base}/scm-sector-cases.html`);
+   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),5);
+   await page.getByLabel('Поиск по отраслевым кейсам').fill('опасные грузы');
+   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),1);
+   assert.equal(await page.locator('#food').isVisible(),true);
+   await page.getByLabel('Поиск по отраслевым кейсам').fill('несуществующее');
+   assert.equal(await page.locator('#chapter-empty').isVisible(),true);
+   await page.getByLabel('Поиск по отраслевым кейсам').clear();
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
+   await checkAccessibility(page);
    await context.close();
   }
   const noJs=await browser.newContext({javaScriptEnabled:false});const page=await noJs.newPage();
@@ -148,6 +204,9 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
   await page.goto(`${base}/scm-internal-academy.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),8);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#case-template').isVisible(),true);
   await page.goto(`${base}/scm-navigator.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),13);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);
   await page.goto(`${base}/scm-advanced-practice.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),6);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);await page.getByText('Показать разбор MRP').click();assert.equal(await page.locator('#mrp details').evaluate(el=>el.open),true);
+  await page.goto(`${base}/scm-case-lab.html`);assert.equal(await page.getByRole('button',{name:'Сравнить сценарии'}).isDisabled(),true);assert.equal(await page.locator('#case').isVisible(),true);await page.getByText('Показать ответ',{exact:true}).click();assert.equal(await page.locator('#interpret details').evaluate(el=>el.open),true);
+  await page.goto(`${base}/scm-leader-map.html`);assert.equal(await page.getByRole('button',{name:'Показать учебный маршрут'}).isDisabled(),true);assert.equal(await page.locator('#systems').isVisible(),true);
+  await page.goto(`${base}/scm-sector-cases.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),5);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#dangerous').isVisible(),true);
   await noJs.close();
   assert(requests.every(r=>r.method==='GET'));
  } finally {if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
