@@ -12,7 +12,7 @@ export function configuration(databaseId, target) {
   return {
     name: workerName,
     main: 'worker.mjs',
-    compatibility_date: target === 'staging' ? '2026-11-17' : '2026-11-01',
+    compatibility_date: '2026-11-17',
     keep_vars: true,
     // Explicitly match the isolated test Worker's intended settings.
     ...(target === 'staging' ? {preview_urls:false, observability:{enabled:true, logs:{enabled:true}}} : {}),
