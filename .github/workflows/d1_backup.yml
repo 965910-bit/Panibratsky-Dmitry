@@ -1,0 +1,52 @@
+name: D1 backup (manual only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      database:
+        description: 'D1 database to export remotely'
+        type: choice
+        options:
+          - scm-review
+          - scm-review-staging
+        default: scm-review
+      confirmation:
+        description: 'Type BACKUP to export'
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: d1-backup-${{ inputs.database }}
+  cancel-in-progress: false
+
+jobs:
+  export:
+    if: ${{ inputs.confirmation == 'BACKUP' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+      - name: Export D1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "${CLOUDFLARE_API_TOKEN}"
+          test -n "${CLOUDFLARE_ACCOUNT_ID}"
+          npx --yes wrangler@4.163.0 d1 export "${{ inputs.database }}" --remote --output d1-backup.sql
+          test -s d1-backup.sql
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: d1-backup-${{ inputs.database }}
+          path: d1-backup.sql
+          retention-days: 7
+          if-no-files-found: error
