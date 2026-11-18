@@ -77,3 +77,29 @@ test('practical guides are linked, indexable and preserve the documented model b
  assert.equal(require('../js/otif.js').calculate(18,20),90);
  assert.equal(70+50-20,100);assert.equal(90000+12000+8000,110000);assert.equal(100000+5000+2000,107000);
 });
+
+test('SCM academy has an indexable, linked self-study route without invented services', () => {
+ const html=fs.readFileSync('scm-academy.html','utf8');
+ assert.match(html,/rel="canonical" href="https:\/\/scm-news\.ru\/scm-academy\.html"/);
+ assert(fs.readFileSync('sitemap.xml','utf8').includes('https://scm-news.ru/scm-academy.html'));
+ for (const page of ['wiki.html','scm-encyclopedia.html','scm-knowledge.html']) assert(fs.readFileSync(page,'utf8').includes('href="scm-academy.html"'));
+ const ids=['transformation','data-foundation','digital-twin','scenario','ai','pilot','leadership','program','review'];
+ assert.equal((html.match(/data-chapter-entry data-keywords=/g)||[]).length,ids.length);
+ for(const id of ids) {assert(html.includes(`id="${id}"`));assert(html.includes(`href="#${id}"`));}
+ for(const phrase of ['не действующий корпоративный курс','нет регистрации','не работающий цифровой двойник','не является обязательной частью цифрового двойника','без дисконтирования','не обрабатывает и не сохраняет ответы']) assert(html.includes(phrase),phrase);
+ assert.equal(200/40,5);assert.equal((7-5)*40,80);assert.equal(200-3*40+100-4*40,20);assert.equal(200-5*40+100-2*40,20);
+ assert.equal((180-120)/120*100,50);
+});
+
+test('academy local links and fragments resolve and its IDs are unique', () => {
+ const html=fs.readFileSync('scm-academy.html','utf8');
+ const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]);
+ assert.equal(new Set(ids).size,ids.length,'Duplicate academy IDs');
+ for(const [,href] of html.matchAll(/\bhref="([^"]+)"/g)) {
+  if (/^(?:https?:|\/)/.test(href)) continue;
+  const [file,fragment]=href.split('#');
+  const target=file||'scm-academy.html';
+  assert(fs.existsSync(target),`Missing local target ${href}`);
+  if (fragment) assert(fs.readFileSync(target,'utf8').includes(`id="${fragment}"`),`Missing fragment ${href}`);
+ }
+});
