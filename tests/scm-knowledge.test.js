@@ -60,3 +60,20 @@ test('encyclopedia search filters only the index and restores all topics', () =>
  input.value='OTIF';events.input();assert.equal(entries[0].hidden,true);assert.equal(entries[1].hidden,false);
  input.value='';events.input();assert.equal(empty.hidden,true);assert(entries.every(entry=>!entry.hidden));
 });
+
+test('practical guides are linked, indexable and preserve the documented model boundaries', () => {
+ const html = fs.readFileSync('scm-practical-guides.html','utf8');
+ assert.match(html,/rel="canonical" href="https:\/\/scm-news\.ru\/scm-practical-guides\.html"/);
+ assert(fs.readFileSync('sitemap.xml','utf8').includes('https://scm-news.ru/scm-practical-guides.html'));
+ for(const page of ['wiki.html','scm-encyclopedia.html']) assert(fs.readFileSync(page,'utf8').includes('href="scm-practical-guides.html'));
+ const ids=['supplier','tco','incoterms','lot-size','replenishment','traceability','mapping','reverse','statistics'];
+ assert.equal((html.match(/data-chapter-entry data-keywords=/g)||[]).length,ids.length);
+ for(const id of ids){assert(html.includes(`id="${id}"`));assert(html.includes(`href="#${id}"`));}
+ for(const phrase of ['не юридическая консультация','не всегда совпадает','не скрывает тексты','не универсальное разрешение','версия 2.0, 2017','не измерение срока конкретной доставки']) assert(html.includes(phrase),phrase);
+ assert(html.includes('2 011 руб./год'));assert(html.includes('2 033 руб./год'));
+ const costs=q=>1000/q*200+q/2*10;
+ assert.equal(Math.round(costs(180)),2011);assert.equal(Math.round(costs(240)),2033);
+ assert.equal(require('../js/inventory-models.js').reorderPoint(['20','4','30']),110);
+ assert.equal(require('../js/otif.js').calculate(18,20),90);
+ assert.equal(70+50-20,100);assert.equal(90000+12000+8000,110000);assert.equal(100000+5000+2000,107000);
+});
