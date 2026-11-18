@@ -15,7 +15,7 @@ async function checkAccessibility(page) {
     await page.locator('.executive-theme').click();
   }
 }
-const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','scm-practical-guides.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg']);
+const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','scm-practical-guides.html','scm-academy.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg']);
 
 test('SCM tools work at desktop and mobile sizes without sending user data',async()=>{
  const requests=[];
@@ -58,7 +58,7 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
    await page.goto(`${base}/wiki.html`);
-   assert.equal(await page.locator('.wiki-featured a').count(),10);
+   assert.equal(await page.locator('.wiki-featured a').count(),11);
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),false);
    await page.locator('.wiki-planned summary').click();
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),true);
@@ -87,6 +87,20 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(new URL(page.url()).hash,'#traceability');
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
+   await page.goto(`${base}/scm-academy.html`);
+   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),9);
+   await page.getByLabel('Найти тему в программе').fill('цифровой двойник');
+   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),1);
+   assert.equal(await page.locator('#leadership').isVisible(),true);
+   await page.getByLabel('Найти тему в программе').fill('несуществующее');
+   assert.equal(await page.locator('#chapter-empty').isVisible(),true);
+   await page.getByLabel('Найти тему в программе').clear();
+   await page.getByRole('link',{name:'04 Учебный сценарий'}).click();
+   assert.equal(new URL(page.url()).hash,'#scenario');
+   await page.getByText('Показать разбор').click();
+   assert.equal(await page.locator('#scenario details').evaluate(el=>el.open),true);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
+   await checkAccessibility(page);
    await context.close();
   }
   const noJs=await browser.newContext({javaScriptEnabled:false});const page=await noJs.newPage();
@@ -94,6 +108,7 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
   await page.goto(`${base}/scm-knowledge.html`);assert.equal(await page.locator('[data-knowledge-card]:visible').count(),8);assert.equal(await page.locator('#knowledge-search').isVisible(),false);
   await page.goto(`${base}/scm-encyclopedia.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),13);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#inventory').isVisible(),true);
   await page.goto(`${base}/scm-practical-guides.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),9);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#traceability').isVisible(),true);
+  await page.goto(`${base}/scm-academy.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),9);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);await page.getByText('Показать разбор').click();assert.equal(await page.locator('#scenario details').evaluate(el=>el.open),true);
   await noJs.close();
   assert(requests.every(r=>r.method==='GET'));
  } finally {if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
