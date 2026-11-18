@@ -42,7 +42,7 @@ jobs:
           set -euo pipefail
           test -n "${CLOUDFLARE_API_TOKEN}"
           test -n "${CLOUDFLARE_ACCOUNT_ID}"
-          npx --yes wrangler@4.163.0 d1 export "${{ inputs.database }}" --remote --output d1-backup.sql
+          npx --yes wrangler@4.163.0 d1 export "${{ inputs.database }}" --remote --output d1-backup.sql -y
           test -s d1-backup.sql
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
