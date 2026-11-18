@@ -148,4 +148,28 @@
 
 Даже с разрешением: фильтр SCM + ваш вывод + ссылка; чужой текст и фото не копировать; пресс-релизы в текущем `data/news.json` с vedomosti.ru — не доказательство права, это следы старых сборов.
 
-Пока `SOURCES = []`. Письмо в редакцию — только если владелец сам попросит (шаблон уже в аудите источников). Staging-тест и Deployments это не заменяет.
+Пока `SOURCES = []`. Письмо в редакцию — только если владелец сам попросит (шаблон уже в аудите источников).
+
+## Сквозной staging-тест выполнен (19 ноября 2026)
+
+Владелец отказался от Сетки как рамки работ: канал, сайт и бот — да; setka.ru / Teleport — вне контура.
+
+Факт по экранам и командам (секреты в журнал не заносились):
+
+- Staging Worker `scm-telegram-review-staging`: активна была `14acccd1` (Promote), затем секреты через **Развернуть**.
+- Команда сборки staging: `npx --yes wrangler@4.163.0 deploy --config telegram-review/.wrangler-build.json` (вместо `versions upload`). Следующие merge в `main` сами выходят на 100%.
+- Webhook бота `@scm_gerasimov_review_bot` переключали на `https://scm-telegram-review-staging.965910.workers.dev/telegram` (`Webhook was set`).
+- `/status` на staging: все нули (пустая `scm-review-staging`).
+- `/draft` test-1 → ✅ → пост в личный чат без кнопок; test-2 → ✖️ → без второго поста; повтор кнопки: «Уже обработано или недоступно».
+- `/status` staging после теста: отправлено 1, отклонено 1, очередь 0. Канал `@LogisticaandSupplyChain` не использовался (`CHANNEL_ID` = личный ID).
+- Откат: `setWebhook` на `https://scm-telegram-review.965910.workers.dev/telegram`. Молчание `/status` после отката: секреты несколько раз писали в **другой** Worker `scm-telegram-обзор-постановка`. После **Развернуть** `WEBHOOK_SECRET` на `scm-telegram-review` бот ответил журналом production: отправлено 2, отклонено 2.
+
+Тест машины на staging закрыт. Рабочий код и миграция 002 на `scm-review` этим не включались.
+
+## Что ещё не закрыто (тот же план, без «либо»)
+
+1. Не путать три Worker: `scm-telegram-review-staging`, `scm-telegram-review`, `scm-telegram-обзор-постановка` (последний в цепочке бота не участвует).
+2. Production: миграция 002 на `scm-review` после свежего бэкапа; затем код как на staging; `CHANNEL_ID` канала — **последним**.
+3. Сборка production: сейчас выключена; когда включите — сразу `deploy`, не `versions upload`.
+4. Сайт: рубрика архитектора (очаг → узел цепи → как не встроить); новости с лент компаний, не RSS как стандарт; `SOURCES` пустой.
+5. Сетка вне работ.
