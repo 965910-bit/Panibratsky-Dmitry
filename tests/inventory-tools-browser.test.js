@@ -15,7 +15,7 @@ async function checkAccessibility(page) {
     await page.locator('.executive-theme').click();
   }
 }
-const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg']);
+const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','scm-navigator.html','scm-advanced-practice.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg']);
 
 test('SCM tools work at desktop and mobile sizes without sending user data',async()=>{
  const requests=[];
@@ -114,6 +114,21 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(new URL(page.url()).hash,'#case-template');
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
+   await page.goto(`${base}/scm-navigator.html`);
+   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),13);
+   await page.getByLabel('Поиск по направлениям').fill('лидерство');
+   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),1);
+   assert.equal(await page.locator('#trade').isVisible(),true);
+   await page.getByLabel('Поиск по направлениям').clear();
+   await page.locator('#operations a[href="scm-advanced-practice.html#mrp"]').click();
+   assert.equal(new URL(page.url()).hash,'#mrp');
+   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),6);
+   await page.getByText('Показать разбор MRP').click();
+   assert.equal(await page.locator('#mrp details').evaluate(el=>el.open),true);
+   await page.getByLabel('Поиск по направлениям').fill('несуществующее');
+   assert.equal(await page.locator('#chapter-empty').isVisible(),true);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
+   await checkAccessibility(page);
    await context.close();
   }
   const noJs=await browser.newContext({javaScriptEnabled:false});const page=await noJs.newPage();
@@ -123,6 +138,8 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
   await page.goto(`${base}/scm-practical-guides.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),9);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#traceability').isVisible(),true);
   await page.goto(`${base}/scm-academy.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),9);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);await page.getByText('Показать разбор').click();assert.equal(await page.locator('#scenario details').evaluate(el=>el.open),true);
   await page.goto(`${base}/scm-internal-academy.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),8);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#case-template').isVisible(),true);
+  await page.goto(`${base}/scm-navigator.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),13);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);
+  await page.goto(`${base}/scm-advanced-practice.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),6);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);await page.getByText('Показать разбор MRP').click();assert.equal(await page.locator('#mrp details').evaluate(el=>el.open),true);
   await noJs.close();
   assert(requests.every(r=>r.method==='GET'));
  } finally {if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
