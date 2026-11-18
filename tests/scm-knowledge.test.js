@@ -29,3 +29,34 @@ test('directory search is local, supports ё and multiple words, and restores al
  input.value='несуществующий';events.input();assert.equal(empty.hidden,false);assert.match(status.textContent,/0 из 2/);
  input.value='';events.input();assert.equal(empty.hidden,true);assert(cards.every(c=>!c.hidden));
 });
+
+test('encyclopedia is a linked, canonical static guide with working chapter anchors', () => {
+ const html = fs.readFileSync('scm-encyclopedia.html','utf8');
+ const pages = ['wiki.html','scm-knowledge.html'];
+ assert.match(html,/rel="canonical" href="https:\/\/scm-news\.ru\/scm-encyclopedia\.html"/);
+ assert(fs.readFileSync('sitemap.xml','utf8').includes('https://scm-news.ru/scm-encyclopedia.html'));
+ for (const page of pages) assert(fs.readFileSync(page,'utf8').includes('href="scm-encyclopedia.html"'));
+ const ids=['basics','planning','procurement','inventory','eoq','production','warehouse','transport','metrics','risk','returns','data','glossary'];
+ assert.equal((html.match(/data-chapter-entry data-keywords=/g)||[]).length,ids.length);
+ for(const id of ids){assert(html.includes(`id="${id}"`));assert(html.includes(`href="#${id}"`));}
+ assert.match(html,/не исчерпывающая энциклопедия/);
+ assert.match(html,/без дисконтирования/);assert.match(html,/поздняя поставка может не предотвратить дефицит/);
+ assert.equal((Math.abs(90-100)+Math.abs(120-100))/200*100,15);
+ const models=require('../js/inventory-models.js');
+ assert.equal(models.eoq(['1000','200','10']),200);
+ assert.equal(models.reorderPoint(['40','5','60']),260);
+ assert.equal(require('../js/otif.js').calculate(80,100),80);
+ assert.equal(300*60+3000,21000);
+});
+
+test('encyclopedia search filters only the index and restores all topics', () => {
+ const events={}, box={hidden:true},input={value:'',addEventListener:(type,fn)=>events[type]=fn},status={},empty={};
+ const entries=[{dataset:{keywords:'прогноз спрос'},textContent:'Планирование',hidden:false},{dataset:{keywords:'сервис otif'},textContent:'Показатели',hidden:false}];
+ const document={getElementById:id=>({'chapter-search-box':box,'chapter-search':input,'chapter-search-status':status,'chapter-empty':empty})[id],querySelectorAll:()=>entries};
+ vm.runInNewContext(fs.readFileSync('js/scm-encyclopedia.js','utf8'),{document});
+ assert.equal(box.hidden,false);assert.match(status.textContent,/2 из 2/);
+ input.value='спрос планирование';events.input();assert.equal(entries[0].hidden,false);assert.equal(entries[1].hidden,true);
+ input.value='отсутствует';events.input();assert.equal(empty.hidden,false);assert.match(status.textContent,/0 из 2/);
+ input.value='OTIF';events.input();assert.equal(entries[0].hidden,true);assert.equal(entries[1].hidden,false);
+ input.value='';events.input();assert.equal(empty.hidden,true);assert(entries.every(entry=>!entry.hidden));
+});
