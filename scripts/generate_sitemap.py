@@ -14,7 +14,8 @@ BASE = 'https://scm-news.ru/'
 # Deliberately excludes local-only dashboards, verification files and noindex pages.
 PAGES = ['','about.html','blog.html','scm-problems.html','career.html','contact.html','experience.html',
          'expertise.html','prompts.html','trends.html','calculators.html',
-         'certificates.html','projects.html','business-plan.html','tools.html','wiki.html','trends-logistics.html']
+         'certificates.html','projects.html','business-plan.html','tools.html','wiki.html','trends-logistics.html',
+         'inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html']
 # These directives are checked locally; HTTP X-Robots-Tag and other agents require live inspection.
 ROBOTS_NAMES = {'robots', 'googlebot', 'googlebot-news', 'bingbot', 'yandex', 'yandexbot', 'slurp'}
 

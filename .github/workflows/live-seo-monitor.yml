@@ -25,4 +25,9 @@ jobs:
         with:
           python-version: '3.12'
       - name: Inspect published sitemap, robots and canonical pages
-        run: python scripts/live_seo_check.py
+        run: |
+          set -o pipefail
+          python scripts/live_seo_check.py | tee "$RUNNER_TEMP/live-seo-report.json"
+      - name: Summarise the check
+        if: always()
+        run: python scripts/live_seo_summary.py "$RUNNER_TEMP/live-seo-report.json" >> "$GITHUB_STEP_SUMMARY"
