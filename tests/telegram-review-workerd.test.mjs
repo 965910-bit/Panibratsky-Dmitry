@@ -82,3 +82,66 @@ export default {fetch(request, env) { envForTest=env; return handle(request, env
   state=await (await preflight()).json();assert.deepEqual(state.known,sources.map(url=>url===rows[0].source_url));assert.equal(state.pending,1);assert.equal(state.uncertain,0);
   assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM calls WHERE chat_id = '-100123'").first()).n,2);
 });
+
+test('workerd: rejection, unauthorized callbacks and ambiguous Telegram outcomes stop safely', {skip:!Miniflare && 'Optional miniflare package is not installed'}, async(t)=>{
+  const source=await readFile('telegram-review/worker.mjs','utf8');
+  const entry='export default {fetch(request, env) { return handle(request, env); }};';
+  assert(source.includes(entry));
+  // Every Telegram request is intercepted; the failure happens after recording an
+  // attempted send, modelling an outcome where delivery might have succeeded.
+  const script=source.replace(entry, `
+let testEnv;
+async function fakeTelegram(url, init) {
+  const method = new URL(url).pathname.split('/').at(-1);
+  if (method !== 'sendMessage' && method !== 'answerCallbackQuery') throw Error('unexpected call');
+  const data = JSON.parse(init.body);
+  const chat = String(data.chat_id || '');
+  await testEnv.DB.prepare('INSERT INTO calls (method, chat_id) VALUES (?, ?)').bind(method, chat).run();
+  if (method === 'sendMessage' && ((chat === '123' && data.text.includes('LOSS_REVIEW')) || (chat === '-100123' && data.text.includes('LOSS_CHANNEL')))) throw Error('simulated lost response');
+  return Response.json({ok:true,result:{message_id:chat === '123' ? 37 : 48}});
+}
+export default {fetch(request, env) {testEnv=env; return handle(request, env, fakeTelegram);}};
+`);
+  const mf=new Miniflare({modules:true,script,compatibilityDate:'2026-07-01',d1Databases:['DB'],bindings:{REVIEWER_ID:'123',CHANNEL_ID:'-100123',BOT_TOKEN:'123456:'+'a'.repeat(32),WEBHOOK_SECRET:'w'.repeat(40),INTAKE_SECRET:'i'.repeat(40)}});
+  t.after(()=>mf.dispose());
+  const db=await mf.getD1Database('DB');
+  await db.prepare((await readFile('telegram-review/schema.sql','utf8')).replace(/^--.*$/gm,'').trim()).run();
+  await db.exec('CREATE TABLE calls (method TEXT, chat_id TEXT);');
+  const intakeHeaders={'content-type':'application/json',authorization:'Bearer '+'i'.repeat(40)};
+  const telegramHeaders={'content-type':'application/json','x-telegram-bot-api-secret-token':'w'.repeat(40)};
+  const dispatch=(path,headers,payload)=>mf.dispatchFetch('http://worker.test/'+path,{method:'POST',headers,body:JSON.stringify(payload)});
+  const intake=(text,url)=>dispatch('intake-one',intakeHeaders,{text,source_url:'https://example.invalid/'+url});
+  const row=async url=>db.prepare('SELECT * FROM drafts WHERE source_url = ?').bind('https://example.invalid/'+url).first();
+  const channelCalls=async()=> (await db.prepare("SELECT COUNT(*) AS n FROM calls WHERE chat_id = '-100123'").first()).n;
+  const callback=(id,action,from=123,messageId=37)=>({callback_query:{id:'callback',from:{id:from},message:{message_id:messageId,chat:{id:123,type:'private'}},data:action+':'+id}});
+  const command=text=>({message:{text,from:{id:123},chat:{id:123,type:'private'}}});
+
+  assert.equal((await intake('Test rejection','reject')).status,201);
+  const rejected=await row('reject');
+  assert.equal(await channelCalls(),0);
+  assert.equal((await dispatch('telegram',{'content-type':'application/json'},callback(rejected.id,'approve'))).status,403);
+  await dispatch('telegram',telegramHeaders,callback(rejected.id,'approve',999));
+  await dispatch('telegram',telegramHeaders,callback(rejected.id,'approve',123,999));
+  assert.equal((await row('reject')).state,'ready');assert.equal(await channelCalls(),0);
+  await dispatch('telegram',telegramHeaders,callback(rejected.id,'reject'));
+  await dispatch('telegram',telegramHeaders,callback(rejected.id,'approve'));
+  assert.equal((await row('reject')).state,'rejected');assert.equal(await channelCalls(),0);
+
+  assert.equal((await intake('LOSS_CHANNEL','ambiguous-channel')).status,201);
+  const ambiguous=await row('ambiguous-channel');
+  await dispatch('telegram',telegramHeaders,callback(ambiguous.id,'approve'));
+  assert.equal((await row('ambiguous-channel')).state,'sending');assert.equal(await channelCalls(),1);
+  await dispatch('telegram',telegramHeaders,callback(ambiguous.id,'approve'));
+  assert.equal((await intake('Blocked','blocked-channel')).status,409);assert.equal(await channelCalls(),1);
+  // A human would first independently verify the channel; this is only a simulation.
+  await dispatch('telegram',telegramHeaders,command(`/reconcile ${ambiguous.id} published 48 CONFIRM`));
+  assert.equal((await row('ambiguous-channel')).state,'sent');assert.equal(await channelCalls(),1);
+
+  assert.equal((await intake('LOSS_REVIEW','ambiguous-review')).status,503);
+  const uncertain=await row('ambiguous-review');assert.equal(uncertain.state,'notifying');
+  assert.equal((await intake('Blocked','blocked-review')).status,409);
+  await dispatch('telegram',telegramHeaders,command(`/reconcile ${uncertain.id} discard-review CONFIRM`));
+  assert.equal((await row('ambiguous-review')).state,'rejected');
+  assert.equal((await intake('Duplicate','ambiguous-review')).status,409);
+  assert.equal(await channelCalls(),1);
+});
