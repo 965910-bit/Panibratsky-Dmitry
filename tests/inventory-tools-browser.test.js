@@ -101,7 +101,11 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(await page.locator('#scenario details').evaluate(el=>el.open),true);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
-   await page.getByRole('link',{name:'внутренняя Академия как система развития лидеров и решения собственных кейсов предприятия'}).click();
+   await Promise.all([
+    page.waitForURL('**/scm-internal-academy.html'),
+    page.getByRole('link',{name:'внутренняя Академия как система развития лидеров и решения собственных кейсов предприятия'}).click()
+   ]);
+   await page.waitForLoadState('load');
    assert.equal(new URL(page.url()).pathname,'/scm-internal-academy.html');
    assert.equal(await page.locator('[data-chapter-entry]:visible').count(),8);
    await page.getByLabel('Поиск по модели Академии').fill('стратегия');
@@ -120,7 +124,11 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(await page.locator('[data-chapter-entry]:visible').count(),1);
    assert.equal(await page.locator('#trade').isVisible(),true);
    await page.getByLabel('Поиск по направлениям').clear();
-   await page.locator('#operations a[href="scm-advanced-practice.html#mrp"]').click();
+   await Promise.all([
+    page.waitForURL('**/scm-advanced-practice.html#mrp'),
+    page.locator('#operations a[href="scm-advanced-practice.html#mrp"]').click()
+   ]);
+   await page.waitForLoadState('load');
    assert.equal(new URL(page.url()).hash,'#mrp');
    assert.equal(await page.locator('[data-chapter-entry]:visible').count(),6);
    await page.getByText('Показать разбор MRP').click();
