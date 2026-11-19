@@ -11,7 +11,7 @@ export function selectAutomatic(news, hosts, now = Date.now()) {
   const eligible = news.filter(item => {
     if (typeof item?.pubDate !== 'string' || !item.pubDate.trim() || typeof item.link !== 'string') return false;
     const date = Date.parse(item.pubDate);
-    if (!Number.isFinite(date) || date > now || now - date > 48 * 60 * 60 * 1000) return false;
+    if (!Number.isFinite(date) || date > now || now - date > 14 * 24 * 60 * 60 * 1000) return false;
     try { const u = new URL(item.link); return u.protocol === 'https:' && !u.username && !u.password && !u.port && allowed.has(u.hostname); }
     catch { return false; }
   });

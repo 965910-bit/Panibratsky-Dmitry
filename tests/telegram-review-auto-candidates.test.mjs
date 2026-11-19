@@ -7,11 +7,11 @@ const now=Date.parse('2026-11-17T12:00:00Z');
 const item=(link,date,title='Склад и логистика')=>({title,link,source:'Источник',description:'Текст',pubDate:date});
 test('automatic selection requires explicit exact HTTPS sources and fresh publication dates',()=>{
  const list=[item('https://example.org/recent','2026-11-17T11:00:00Z'),item('https://example.org/older','2026-11-16T12:00:00Z'),
- item('https://example.org/stale','2026-11-15T11:59:59Z'),item('https://example.org/future','2026-11-17T12:01:00Z'),item('https://example.org/bad','no date'),
+ item('https://example.org/stale','2026-10-20T11:59:59Z'),item('https://example.org/future','2026-11-17T12:01:00Z'),item('https://example.org/bad','no date'),
  item('https://sub.example.org/1','2026-11-17T11:30:00Z'),item('http://example.org/http','2026-11-17T11:30:00Z'),item('https://logistics360.ru/a','2026-11-17T11:30:00Z'),
  item('https://example.org/alert','2026-11-17T11:30:00Z','Оповещение Google — логистика')];
  const selected=selectAutomatic(list,['example.org','logistics360.ru'],now);
- assert.deepEqual(selected.map(d=>d.source_url),['https://example.org/recent','https://example.org/older']);
+ assert.deepEqual(selected.map(d=>d.source_url),['https://logistics360.ru/a','https://example.org/recent','https://example.org/older']);
  assert(selected.every(d=>!d.ready_for_review && d.comment===''));
  assert.throws(()=>selectAutomatic(list,[],now));assert.throws(()=>selectAutomatic(list,['https://example.org'],now));
 });

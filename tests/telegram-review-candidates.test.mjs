@@ -15,23 +15,11 @@ test('limits and malformed feed fail closed', () => {
   assert.equal(shortlist([item('Склад', 'https://example.org/1'), item('WMS', 'https://example.org/2')],1).length,1);
 });
 
-test('restricted source is excluded without confusing unrelated domains', () => {
+test('ATI and Logistics 360 remain eligible when the owner re-enabled them', () => {
   const drafts = shortlist([
-    item('WMS', 'https://LOGISTICS360.ru/article'),
-    item('WMS', 'https://news.logistics360.ru/article'),
-    {...item('WMS', 'https://example.org/a'), source:'Логистика 360'},
-    item('WMS', 'https://notlogistics360.ru/a'),
-  ]);
-  assert.deepEqual(drafts.map(d=>d.source_url), ['https://notlogistics360.ru/a']);
-});
-
-test('paused ATI source is excluded from galleries including alerts', () => {
-  const drafts = shortlist([
+    item('WMS', 'https://logistics360.ru/article'),
     item('WMS', 'https://news.ati.su/news/a'),
-    item('WMS', 'https://ati.su./news/a'),
-    {...item('WMS', 'https://example.org/a'), source:'АТИ (новости)'},
-    {...item('WMS', 'https://example.org/b'), source:'ATI.SU'},
     item('WMS', 'https://notati.su/a'),
   ]);
-  assert.deepEqual(drafts.map(d=>d.source_url), ['https://notati.su/a']);
+  assert.deepEqual(drafts.map(d=>d.source_url), ['https://logistics360.ru/article','https://news.ati.su/news/a','https://notati.su/a']);
 });
