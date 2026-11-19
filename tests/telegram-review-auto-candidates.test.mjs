@@ -34,12 +34,12 @@ test('staging workflow is manual, explicitly confirmed and fixed to isolated Wor
  assert.ok(workflow.includes('persist-credentials: false'));
  assert.ok(!/BOT_TOKEN|CHANNEL_ID|contents: write|send_telegram|wrangler/.test(workflow));
 });
-test('production workflow is manual, confirmed and fixed to the live Worker',async()=>{
+test('production workflow is confirmed or scheduled and fixed to the live Worker',async()=>{
  const {readFile}=await import('node:fs/promises');
  const workflow=await readFile('.github/workflows/telegram_review_production.yml','utf8');
  assert.ok(workflow.includes('workflow_dispatch:'));
- assert.ok(!workflow.includes('schedule:'));
- assert.ok(workflow.includes("inputs.confirmation == 'PRODUCTION'"));
+ assert.ok(workflow.includes('schedule:'));
+ assert.ok(workflow.includes("github.event_name == 'schedule' || inputs.confirmation == 'PRODUCTION'"));
  assert.ok(workflow.includes('environment: telegram-review'));
  assert.ok(workflow.includes('REVIEW_INTAKE_URL: https://scm-telegram-review.965910.workers.dev/intake'));
  assert.ok(workflow.includes('secrets.SCM_INTAKE_SECRET'));
