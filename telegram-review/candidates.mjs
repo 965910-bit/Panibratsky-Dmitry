@@ -15,10 +15,6 @@ export function shortlist(news, limit = 8) {
     try { draft = prepareDraft(item); } catch { continue; }
     // Previously collected content remains in the feed; do not automatically reuse it
     // in new galleries while source access and usage conditions are unresolved.
-    const host = new URL(draft.source_url).hostname.toLowerCase().replace(/\.$/, '');
-    if (host === 'logistics360.ru' || host.endsWith('.logistics360.ru') ||
-        host === 'ati.su' || host.endsWith('.ati.su') ||
-        /логистика\s*360|(?:^|[^а-яёa-z])ати(?:[^а-яёa-z]|$)|ati\s*\.?\s*su/iu.test(draft.source_name)) continue;
     if (!OPS.test(`${draft.title} ${draft.description}`) || seen.has(draft.source_url)) continue;
     seen.add(draft.source_url);
     drafts.push(draft);
