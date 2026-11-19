@@ -99,7 +99,7 @@ async function main(args) {
   else report = await queueAutomaticCandidate(args[0],{...options,send:true});
   if (args[1] === '--check' || args[1] === '--check-candidate') console.log(JSON.stringify(report,null,2));
   else console.log('Состояние очереди: '+report.status);
-  if (process.env.GITHUB_ACTIONS === 'true') console.log('::notice::'+queueNotice(report));
+  if (process.env.GITHUB_ACTIONS === 'true') console.error('::notice::'+queueNotice(report));
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
