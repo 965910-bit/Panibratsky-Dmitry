@@ -80,14 +80,28 @@ export async function queueAutomaticCandidate(directory, options = {}) {
   await submitCandidate(check.ready[check.index].draft, {url:check.url,secret:check.secret,card:check.ready[check.index].card,fetcher:check.fetcher,send:true});
   return {status:'queued'};
 }
-async function main(args) {
-  if (args.length !== 2 || !['--check','--check-candidate','--send-one','--send-candidate'].includes(args[1])) throw Error('Нужен каталог и режим --check, --send-one или --send-candidate');
-  const options = {url:process.env.REVIEW_INTAKE_URL,secret:process.env.REVIEW_INTAKE_SECRET};
-  if (args[1] === '--check') console.log(JSON.stringify(await checkQueue(args[0],options),null,2));
-  else if (args[1] === '--check-candidate') console.log(JSON.stringify(await checkAutomaticQueue(args[0],options),null,2));
-  else if (args[1] === '--send-one') console.log('Состояние очереди: '+(await queueOne(args[0],{...options,send:true})).status);
-  else console.log('Состояние очереди: '+(await queueAutomaticCandidate(args[0],{...options,send:true})).status);
+// GitHub annotations expose only bounded status/counts, not URLs or message content.
+// A successful job can still mean no send because the queue is blocked or known.
+export function queueNotice(report) {
+  const labels = {queued:'candidate accepted by queue; delivery must be verified',
+    candidate:'candidate available', pending:'waiting for reviewer', uncertain:'delivery state uncertain; do not retry blindly',
+    'all-known':'all candidates already known', 'none-ready':'no ready candidates; queue was not checked'};
+  if (!report || !Object.hasOwn(labels, report.status)) throw Error('Неизвестное состояние очереди');
+  return `Telegram review: ${labels[report.status]}`;
 }
+async function main(args) {
+  if (args.length !== 2 || !['--check','--check-candidate','--send-one','--send-candidate'].includes(args[1])) throw Error('Нужен каталог и режим --check, --check-candidate, --send-one или --send-candidate');
+  const options = {url:process.env.REVIEW_INTAKE_URL,secret:process.env.REVIEW_INTAKE_SECRET};
+  let report;
+  if (args[1] === '--check') report = await checkQueue(args[0],options);
+  else if (args[1] === '--check-candidate') report = await checkAutomaticQueue(args[0],options);
+  else if (args[1] === '--send-one') report = await queueOne(args[0],{...options,send:true});
+  else report = await queueAutomaticCandidate(args[0],{...options,send:true});
+  if (args[1] === '--check' || args[1] === '--check-candidate') console.log(JSON.stringify(report,null,2));
+  else console.log('Состояние очереди: '+report.status);
+  if (process.env.GITHUB_ACTIONS === 'true') console.log('::notice::'+queueNotice(report));
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main(process.argv.slice(2)).catch(()=>{console.error('Операция не подтверждена: проверьте настройки и /status; после попытки отправки не повторяйте вслепую.');process.exitCode=1;});
 }
