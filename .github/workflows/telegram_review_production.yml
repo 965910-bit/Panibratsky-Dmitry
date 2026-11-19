@@ -2,8 +2,8 @@ name: Telegram review production
 
 on:
   schedule:
-    # Once a day, 06:30 UTC (09:30 Moscow). Actions may skip or delay.
-    - cron: '30 6 * * *'
+    # Hourly 09:00–18:00 Moscow (06:00–15:00 UTC). Queue still accepts at most one draft.
+    - cron: '0 6-15 * * *'
   workflow_dispatch:
     inputs:
       confirmation:
