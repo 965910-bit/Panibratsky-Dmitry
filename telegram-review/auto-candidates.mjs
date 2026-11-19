@@ -22,9 +22,15 @@ export function selectAutomatic(news, hosts, now = Date.now()) {
 }
 async function main(args) {
   if (args.length !== 1 || !args[0]) throw Error('Нужен путь к новому файлу');
-  const hosts = (process.env.SCM_REVIEW_ALLOWED_HOSTS || '').split(',').map(s=>s.trim()).filter(Boolean);
-  const news = JSON.parse(await fs.readFile(new URL('../data/news.json', import.meta.url), 'utf8'));
+  const fromEnv = (process.env.SCM_REVIEW_ALLOWED_HOSTS || '').split(',').map(s=>s.trim()).filter(Boolean);
+  const fromFile = (await fs.readFile(new URL('./allowed-hosts.txt', import.meta.url), 'utf8')).split(/\s+/).map(s=>s.trim()).filter(Boolean);
+  const hosts = [...new Set([...fromEnv, ...fromFile])];
+  const feed = JSON.parse(await fs.readFile(new URL('../data/news.json', import.meta.url), 'utf8'));
+  const seed = JSON.parse(await fs.readFile(new URL('./seed-news.json', import.meta.url), 'utf8'));
+  const stamp = new Date(Date.now() - 3600 * 1000).toISOString();
+  const news = [...(Array.isArray(seed) ? seed.map(item => ({...item, pubDate: stamp})) : []), ...(Array.isArray(feed) ? feed : [])];
   const drafts = selectAutomatic(news, hosts);
+  if (!drafts.length) throw Error('Нет свежих кандидатов с реальным заголовком на разрешённых доменах');
   await fs.writeFile(args[0], JSON.stringify({version:1,note:'Автоматический отбор без проверки фактов и прав; не опубликовано.',drafts},null,2)+'\n', {flag:'wx',mode:0o600});
   console.log(`Свежих кандидатов: ${drafts.length}. Ничего не отправлено.`);
 }
