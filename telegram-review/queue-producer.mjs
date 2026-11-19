@@ -58,6 +58,11 @@ export async function checkQueue(directory, options = {}) {
   return (await inspect(directory, options)).report;
 }
 
+// Read-only preflight for unreviewed candidates; does not submit or notify.
+export async function checkAutomaticQueue(directory, options = {}) {
+  return (await inspect(directory, options, true)).report;
+}
+
 export async function queueOne(directory, options = {}) {
   if (options.send !== true) throw Error('Явное разрешение на отправку в очередь обязательно');
   const check = await inspect(directory,options);
@@ -76,9 +81,10 @@ export async function queueAutomaticCandidate(directory, options = {}) {
   return {status:'queued'};
 }
 async function main(args) {
-  if (args.length !== 2 || !['--check','--send-one','--send-candidate'].includes(args[1])) throw Error('Нужен каталог и режим --check, --send-one или --send-candidate');
+  if (args.length !== 2 || !['--check','--check-candidate','--send-one','--send-candidate'].includes(args[1])) throw Error('Нужен каталог и режим --check, --send-one или --send-candidate');
   const options = {url:process.env.REVIEW_INTAKE_URL,secret:process.env.REVIEW_INTAKE_SECRET};
   if (args[1] === '--check') console.log(JSON.stringify(await checkQueue(args[0],options),null,2));
+  else if (args[1] === '--check-candidate') console.log(JSON.stringify(await checkAutomaticQueue(args[0],options),null,2));
   else if (args[1] === '--send-one') console.log('Состояние очереди: '+(await queueOne(args[0],{...options,send:true})).status);
   else console.log('Состояние очереди: '+(await queueAutomaticCandidate(args[0],{...options,send:true})).status);
 }
