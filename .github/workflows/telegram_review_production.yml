@@ -1,6 +1,9 @@
-name: Telegram review production (manual only)
+name: Telegram review production
 
 on:
+  schedule:
+    # Once a day, 06:30 UTC (09:30 Moscow). Actions may skip or delay.
+    - cron: '30 6 * * *'
   workflow_dispatch:
     inputs:
       confirmation:
@@ -17,7 +20,7 @@ concurrency:
 
 jobs:
   production:
-    if: ${{ inputs.confirmation == 'PRODUCTION' }}
+    if: ${{ github.event_name == 'schedule' || inputs.confirmation == 'PRODUCTION' }}
     environment: telegram-review
     runs-on: ubuntu-latest
     timeout-minutes: 15
