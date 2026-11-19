@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
-import {queueOne,checkQueue,queueAutomaticCandidate,checkAutomaticQueue} from '../telegram-review/queue-producer.mjs';
+import {queueOne,checkQueue,queueAutomaticCandidate,checkAutomaticQueue,queueNotice} from '../telegram-review/queue-producer.mjs';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {draftFingerprint} from '../telegram-review/drafts.mjs';
@@ -70,4 +70,14 @@ test('automatic candidate diagnostic is read-only and reports queue state',async
  const dir=await gallery(t);for(let i=1;i<=2;i++)await writeFile(join(dir,`draft-0${i}.json`),JSON.stringify({...draft(i),comment:'',ready_for_review:false}));
  const calls=[];const result=await checkAutomaticQueue(dir,options(async(url,init)=>{calls.push({url,init});return Response.json({known:[true,false],pending:1,uncertain:0});}));
  assert.equal(result.status,'pending');assert.equal(result.pending,1);assert.equal(calls.length,1);assert.match(calls[0].url,/\/availability$/);assert(!JSON.stringify(result).includes('https://'));
+});
+
+test('job annotations distinguish accepted delivery from blocked and uncertain states without exposing data',()=>{
+ for (const status of ['queued','candidate','pending','uncertain','all-known','none-ready']) {
+   const text=queueNotice({status, secret:'secret-value', source_url:'https://example.com/private'});
+   assert(!text.includes('secret-value'));assert(!text.includes('https://'));
+ }
+ assert.match(queueNotice({status:'queued'}),/delivery must be verified/);
+ assert.match(queueNotice({status:'uncertain'}),/do not retry/);
+ assert.throws(()=>queueNotice({status:'bad\n::error::oops'}));
 });
