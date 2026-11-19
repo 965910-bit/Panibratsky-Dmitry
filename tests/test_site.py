@@ -104,6 +104,17 @@ class SiteTests(unittest.TestCase):
                     target = read_page(path)
                     self.assertIn(unquote(link.fragment), target.ids + target.names, f'{name}: missing anchor {href}')
 
+    def test_corporate_training_offer_is_reachable_and_terms_are_discussed(self):
+        home = (ROOT / 'index.html').read_text(encoding='utf-8')
+        expertise = (ROOT / 'expertise.html').read_text(encoding='utf-8')
+        self.assertIn('href="expertise.html#corporate-training"', home)
+        self.assertIn('id="corporate-training"', expertise)
+        for text in ('Корпоративное обучение команд', 'большой команды',
+                     'Возможны разные форматы обучения', 'количество участников',
+                     'стоимость согласовываются отдельно', 'Обсудить обучение команды',
+                     'mailto:dmitry.gerasimov.2026@yandex.ru?subject='):
+            self.assertIn(text, expertise)
+
     def test_wiki_planned_material_is_not_claimed_as_published(self):
         text = (ROOT / 'wiki.html').read_text(encoding='utf-8')
         self.assertGreater(text.count('class="wiki-article-card"'), 0)
