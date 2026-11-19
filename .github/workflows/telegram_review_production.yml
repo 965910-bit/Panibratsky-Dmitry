@@ -6,6 +6,12 @@ on:
     - cron: '0 6-15 * * *'
   workflow_dispatch:
     inputs:
+      mode:
+        description: 'check — read-only queue diagnostic; send — deliver one candidate for review'
+        type: choice
+        options: [check, send]
+        default: check
+        required: true
       confirmation:
         description: 'Type PRODUCTION to send at most one candidate to the live reviewer (then ✅ publishes to the channel)'
         type: string
@@ -45,7 +51,14 @@ jobs:
           mkdir "$RUNNER_TEMP/scm-production-review"
           node telegram-review/auto-candidates.mjs "$RUNNER_TEMP/scm-production-review/candidates.json"
           python telegram-review/cards_batch.py "$RUNNER_TEMP/scm-production-review/candidates.json" "$RUNNER_TEMP/scm-production-review/gallery"
+      - name: Inspect candidate queue without sending
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'check' }}
+        env:
+          REVIEW_INTAKE_URL: https://scm-telegram-review.965910.workers.dev/intake
+          REVIEW_INTAKE_SECRET: ${{ secrets.SCM_INTAKE_SECRET }}
+        run: node telegram-review/queue-producer.mjs "$RUNNER_TEMP/scm-production-review/gallery" --check-candidate
       - name: Send at most one candidate to live review
+        if: ${{ github.event_name == 'schedule' || inputs.mode == 'send' }}
         env:
           REVIEW_INTAKE_URL: https://scm-telegram-review.965910.workers.dev/intake
           REVIEW_INTAKE_SECRET: ${{ secrets.SCM_INTAKE_SECRET }}

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
-import {queueOne,checkQueue,queueAutomaticCandidate} from '../telegram-review/queue-producer.mjs';
+import {queueOne,checkQueue,queueAutomaticCandidate,checkAutomaticQueue} from '../telegram-review/queue-producer.mjs';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {draftFingerprint} from '../telegram-review/drafts.mjs';
@@ -64,4 +64,10 @@ test('automatic candidate pauses for unresolved or pending work and never retrie
  }
  let n=0;await assert.rejects(()=>queueAutomaticCandidate(dir,options(async()=>{n++;return n===1?Response.json({known:[false,false],pending:0,uncertain:0}):new Response('',{status:503});})));assert.equal(n,2);
  await assert.rejects(()=>queueAutomaticCandidate(dir,{}));
+});
+
+test('automatic candidate diagnostic is read-only and reports queue state',async(t)=>{
+ const dir=await gallery(t);for(let i=1;i<=2;i++)await writeFile(join(dir,`draft-0${i}.json`),JSON.stringify({...draft(i),comment:'',ready_for_review:false}));
+ const calls=[];const result=await checkAutomaticQueue(dir,options(async(url,init)=>{calls.push({url,init});return Response.json({known:[true,false],pending:1,uncertain:0});}));
+ assert.equal(result.status,'pending');assert.equal(result.pending,1);assert.equal(calls.length,1);assert.match(calls[0].url,/\/availability$/);assert(!JSON.stringify(result).includes('https://'));
 });

@@ -20,6 +20,12 @@ export function selectAutomatic(news, hosts, now = Date.now()) {
   eligible.sort((a,b)=>Date.parse(b.pubDate)-Date.parse(a.pubDate));
   return shortlist(eligible, 8).filter(d=>d.source_name);
 }
+// Preserve supplied dates: candidate recency must never be extended by a run.
+// A supplied date is still unverified; the reviewer must check the source.
+export function combineCandidates(seed, feed) {
+  if (!Array.isArray(seed) || !Array.isArray(feed)) throw Error('Ожидаются массивы новостей');
+  return [...seed, ...feed];
+}
 async function main(args) {
   if (args.length !== 1 || !args[0]) throw Error('Нужен путь к новому файлу');
   const fromEnv = (process.env.SCM_REVIEW_ALLOWED_HOSTS || '').split(',').map(s=>s.trim()).filter(Boolean);
@@ -27,8 +33,7 @@ async function main(args) {
   const hosts = [...new Set([...fromEnv, ...fromFile])];
   const feed = JSON.parse(await fs.readFile(new URL('../data/news.json', import.meta.url), 'utf8'));
   const seed = JSON.parse(await fs.readFile(new URL('./seed-news.json', import.meta.url), 'utf8'));
-  const stamp = new Date(Date.now() - 3600 * 1000).toISOString();
-  const news = [...(Array.isArray(seed) ? seed.map(item => ({...item, pubDate: stamp})) : []), ...(Array.isArray(feed) ? feed : [])];
+  const news = combineCandidates(seed, feed);
   const drafts = selectAutomatic(news, hosts);
   if (!drafts.length) throw Error('Нет свежих кандидатов с реальным заголовком на разрешённых доменах');
   await fs.writeFile(args[0], JSON.stringify({version:1,note:'Автоматический отбор без проверки фактов и прав; не опубликовано.',drafts},null,2)+'\n', {flag:'wx',mode:0o600});

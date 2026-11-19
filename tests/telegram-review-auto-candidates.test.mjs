@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {selectAutomatic} from '../telegram-review/auto-candidates.mjs';
+import {selectAutomatic, combineCandidates} from '../telegram-review/auto-candidates.mjs';
 import {buildCandidatePayload, buildPayload} from '../telegram-review/drafts.mjs';
 
 const now=Date.parse('2026-11-17T12:00:00Z');
@@ -14,6 +14,15 @@ test('automatic selection requires explicit exact HTTPS sources and fresh public
  assert.deepEqual(selected.map(d=>d.source_url),['https://logistics360.ru/a','https://example.org/recent','https://example.org/older']);
  assert(selected.every(d=>!d.ready_for_review && d.comment===''));
  assert.throws(()=>selectAutomatic(list,[],now));assert.throws(()=>selectAutomatic(list,['https://example.org'],now));
+});
+test('seed publication dates are preserved and expire rather than refreshed on every run',()=>{
+ const seed=[item('https://example.org/seed','2026-11-16T12:00:00Z')];
+ const feed=[item('https://example.org/feed','2026-11-17T11:00:00Z')];
+ const combined=combineCandidates(seed,feed);
+ assert.equal(combined[0].pubDate,'2026-11-16T12:00:00Z');
+ assert.deepEqual(selectAutomatic(combined,['example.org'],now).map(d=>d.source_url),['https://example.org/feed','https://example.org/seed']);
+ assert.deepEqual(selectAutomatic(combined,['example.org'],now+15*24*60*60*1000),[]);
+ assert.throws(()=>combineCandidates({},feed));
 });
 test('unreviewed payload never pretends to include a human conclusion or changes reviewed-mode checks',()=>{
  const [d]=selectAutomatic([item('https://example.org/a','2026-11-17T11:00:00Z')],['example.org'],now);
@@ -41,6 +50,9 @@ test('production workflow is confirmed or scheduled and fixed to the live Worker
  assert.ok(workflow.includes('schedule:'));
  assert.ok(workflow.includes("github.event_name == 'schedule' || inputs.confirmation == 'PRODUCTION'"));
  assert.ok(workflow.includes('environment: telegram-review'));
+ assert.ok(workflow.includes('--check-candidate'));
+ assert.ok(workflow.includes("github.event_name == 'workflow_dispatch' && inputs.mode == 'check'"));
+ assert.ok(workflow.includes("github.event_name == 'schedule' || inputs.mode == 'send'"));
  assert.ok(workflow.includes('REVIEW_INTAKE_URL: https://scm-telegram-review.965910.workers.dev/intake'));
  assert.ok(workflow.includes('secrets.SCM_INTAKE_SECRET'));
  assert.ok(workflow.includes('vars.SCM_REVIEW_ALLOWED_HOSTS'));
