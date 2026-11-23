@@ -27,7 +27,7 @@ export async function enqueueAudienceRecipient(db, draftId, type, recipientId) {
   const sql = `INSERT OR IGNORE INTO audience_deliveries (draft_id,recipient_type,recipient_id,state,created_at,updated_at)
     SELECT c.draft_id,?,r.chat_id,'pending',?,? FROM audience_campaigns c
     JOIN drafts d ON d.id=c.draft_id AND d.state='sent' AND d.channel_message_id IS NOT NULL
-    JOIN ${table} r ON r.chat_id=? AND r.${enabled}=1 AND r.${field} <= c.created_at
+    JOIN ${table} r ON r.chat_id=? AND r.${enabled}=1 AND r.${field} < c.created_at
     WHERE c.draft_id=?`;
   return changes(await db.prepare(sql).bind(type,now,now,recipientId,draftId).run()) === 1;
 }
@@ -43,7 +43,7 @@ export async function deliverAudienceRecipient(db, draftId, type, recipientId, s
   const now = new Date().toISOString();
   const claim = `UPDATE audience_deliveries SET state='sending',updated_at=?
     WHERE draft_id=? AND recipient_type=? AND recipient_id=? AND state='pending'
-    AND EXISTS (SELECT 1 FROM ${table} r JOIN audience_campaigns c ON c.draft_id=audience_deliveries.draft_id WHERE r.chat_id=audience_deliveries.recipient_id AND r.${enabled}=1 AND r.${joinedAt} <= c.created_at)
+    AND EXISTS (SELECT 1 FROM ${table} r JOIN audience_campaigns c ON c.draft_id=audience_deliveries.draft_id WHERE r.chat_id=audience_deliveries.recipient_id AND r.${enabled}=1 AND r.${joinedAt} < c.created_at)
     AND EXISTS (SELECT 1 FROM drafts d WHERE d.id=audience_deliveries.draft_id AND d.state='sent' AND d.channel_message_id IS NOT NULL)`;
   if (changes(await db.prepare(claim).bind(now,draftId,type,recipientId).run()) !== 1) return {status:'not-claimed'};
   try {
@@ -64,4 +64,25 @@ export async function deliverAudienceRecipient(db, draftId, type, recipientId, s
     try { await db.prepare("UPDATE audience_deliveries SET state='uncertain',updated_at=? WHERE draft_id=? AND recipient_type=? AND recipient_id=? AND state='sending'").bind(new Date().toISOString(),draftId,type,recipientId).run(); } catch {}
     return {status:'uncertain'};
   }
+}
+
+// Bounded, explicitly invoked subscriber enumeration. Cursor and returned IDs are
+// private, internal state; never expose them through a public endpoint or logs.
+// A failed page may be retried with the same cursor: insertion is idempotent.
+export async function enqueueSubscriberPage(db, draftId, cursor = '', limit = 20) {
+  if (typeof draftId !== 'string' || !UUID.test(draftId) || typeof cursor !== 'string' || (cursor !== '' && !/^[1-9]\d{0,19}$/.test(cursor)) || !Number.isSafeInteger(limit) || limit < 1 || limit > 20) throw Error('Invalid page request');
+  const result = await db.prepare(`SELECT s.chat_id FROM audience_subscribers s
+    JOIN audience_campaigns c ON c.draft_id=?
+    JOIN drafts d ON d.id=c.draft_id AND d.state='sent' AND d.channel_message_id IS NOT NULL
+    WHERE s.active=1 AND s.subscribed_at < c.created_at AND s.chat_id > ?
+      AND length(s.chat_id) BETWEEN 1 AND 20 AND s.chat_id NOT GLOB '*[^0-9]*' AND substr(s.chat_id,1,1) BETWEEN '1' AND '9'
+    ORDER BY s.chat_id LIMIT ?`).bind(draftId,cursor,limit).all();
+  if (result?.success !== true || !Array.isArray(result.results) || result.results.length > limit) throw Error('Storage unavailable');
+  let queued = 0, last = cursor;
+  for (const row of result.results) {
+    if (typeof row?.chat_id !== 'string' || !/^[1-9]\d{0,19}$/.test(row.chat_id) || row.chat_id <= last) throw Error('Invalid storage result');
+    if (await enqueueAudienceRecipient(db,draftId,'subscriber',row.chat_id)) queued++;
+    last = row.chat_id;
+  }
+  return {queued, nextCursor: result.results.length === limit ? last : null};
 }
