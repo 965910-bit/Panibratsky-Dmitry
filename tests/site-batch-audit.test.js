@@ -5,7 +5,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const SCMTransportEstimate=require('../js/transport-estimate.js');
 const SCMInventory=require('../js/inventory-models.js');
-const Chart=require('../js/vendor/chart.umd-4.5.1.js');
+const Chart=require('../js/vendor/chart.umd-4.6.1.js');
 function extract(page,name,spaces=4){
   const match=page.match(new RegExp(`^${' '.repeat(spaces)}function ${name}\\([^\\n]*\\) \\{[\\s\\S]*?\\n${' '.repeat(spaces)}\\}`,'m'));
   assert.ok(match,name);return match[0];
@@ -77,7 +77,7 @@ test('cabinet can replace a real locally vendored chart on the same canvas',()=>
   const ctx={Chart,document:{getElementById:()=>canvas}};vm.createContext(ctx);vm.runInContext(extract(page,'drawMarketChart'),ctx);
   const config={type:'bar',data:{labels:['a'],datasets:[{data:[1]}]},options:{responsive:false,animation:false}};
   const first=ctx.drawMarketChart('x',config);const second=ctx.drawMarketChart('x',config);assert.equal(first.canvas,null);assert.equal(second.canvas,canvas);second.destroy();
-  for(const f of ['cabinet.html','promotion.html']){const text=fs.readFileSync(f,'utf8');assert.match(text,/src="js\/vendor\/chart\.umd-4\.5\.1\.js"/);assert.doesNotMatch(text,/chart\.js@4\.4\.0/);}
+  for(const f of ['cabinet.html','promotion.html']){const text=fs.readFileSync(f,'utf8');assert.match(text,/src="js\/vendor\/chart\.umd-4\.6\.1\.js"/);assert.doesNotMatch(text,/chart\.js@4\.4\.0/);}
 });
 test('noindex pages remain outside sitemap and accessible to robots for noindex discovery',()=>{
   const robots=fs.readFileSync('robots.txt','utf8'),sitemap=fs.readFileSync('sitemap.xml','utf8');
