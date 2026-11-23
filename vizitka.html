@@ -6,14 +6,15 @@
   <meta name="robots" content="noindex, nofollow">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'; connect-src 'none'; frame-ancestors 'none'">
   <meta name="referrer" content="no-referrer">
-  <title>Подготовить визитку | Дмитрий Герасимов</title>
+  <title>Панель отправки визитки | Дмитрий Герасимов</title>
   <link rel="stylesheet" href="css/vizitka.css">
   <script src="js/vizitka.js" defer></script>
+  <script src="js/vizitka-contacts.js" defer></script>
 </head>
 <body>
   <main class="shell">
     <a class="back" href="/">← Вернуться на сайт</a>
-    <header><p class="eyebrow">ЛИЧНОЕ ПРЕДСТАВЛЕНИЕ</p><h1>Подготовить <em>визитку.</em></h1><p class="lead">Выберите получателя и отправьте сообщение лично: по почте, в Telegram или MAX.</p></header>
+    <header><p class="eyebrow">РАБОЧАЯ ПАНЕЛЬ · ЛИЧНОЕ ПРЕДСТАВЛЕНИЕ</p><h1>Отправка <em>визитки.</em></h1><p class="lead">Подготовьте сообщение, выберите контакт и отправьте его лично. Список хранится только до закрытия или обновления страницы.</p></header>
     <div class="layout">
       <section class="panel" aria-labelledby="message-title">
         <div class="section-heading"><h2 id="message-title">Текст сообщения</h2><span>МОЖНО ИЗМЕНИТЬ</span></div>
@@ -50,7 +51,16 @@
         <label for="email">Адрес получателя</label><input id="email" type="email" maxlength="254" autocomplete="off" placeholder="name@example.com">
         <button id="email-button" class="secondary" type="button">Открыть письмо</button>
         <p class="hint">Почтовая программа должна быть настроена на устройстве. Веб-почта может не открыться автоматически.</p>
-        <div class="divider"></div><h2>Конфиденциальность</h2><p>Страница не сохраняет введённые адреса и правки и не отправляет их на сервер. После копирования текст находится в буфере обмена; при открытии письма он передаётся вашему почтовому приложению.</p>
+        <div class="divider"></div><h2>Список для точечной отправки</h2>
+        <p>До 100 адресов электронной почты, каждый с новой строки. Добавляйте только контакты, которым уместно написать.</p>
+        <label for="contact-input">Адреса получателей</label>
+        <textarea id="contact-input" rows="5" maxlength="25400" autocomplete="off" placeholder="name@example.com&#10;another@example.com"></textarea>
+        <div class="actions"><button id="contacts-load" class="secondary" type="button">Подготовить список</button><button id="contacts-clear" class="secondary" type="button">Очистить список</button></div>
+        <label for="contact-select">Выберите адресата</label><select id="contact-select"><option value="">Сначала подготовьте список</option></select>
+        <div class="actions"><button id="contact-use" class="secondary" type="button">Выбрать для письма</button><button id="contact-mark" class="secondary" type="button">Отметить вручную</button></div>
+        <p id="contacts-status" class="hint" role="status" aria-live="polite">Список пуст. Ничего не отправлено.</p>
+        <p class="hint">После фактической отправки можно вручную отметить контакт. Это личная отметка, не подтверждение доставки. Автоматическая рассылка пока не подключена.</p>
+        <div class="divider"></div><h2>Конфиденциальность</h2><p>Страница общедоступна, это не защищённая админ-панель. Введённые адреса, список и правки хранятся только в памяти страницы и не отправляются на сервер. При обновлении они исчезнут. После копирования текст находится в буфере обмена; при открытии письма он передаётся вашему почтовому приложению.</p>
         <p>Для теста отправьте сообщение себе. Массовая рассылка здесь не запускается.</p>
       </aside>
     </div>
