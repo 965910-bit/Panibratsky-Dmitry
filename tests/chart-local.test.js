@@ -3,7 +3,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const Chart = require('../js/vendor/chart.umd-4.5.1.js');
+const Chart = require('../js/vendor/chart.umd-4.6.1.js');
 
 // Exercise the actual vendored Chart.js in Node with an in-memory canvas.
 // This does not test browser rendering, fonts, responsive layout, or accessibility.

@@ -174,29 +174,29 @@ class SiteTests(unittest.TestCase):
     def test_trends_chart_is_versioned_local_with_license_and_audit(self):
         page = (ROOT / 'trends.html').read_text(encoding='utf-8')
         package = json.loads((ROOT / 'package.json').read_text(encoding='utf-8'))
-        self.assertEqual(package['dependencies']['chart.js'], '4.5.1')
-        self.assertIn('src="js/vendor/chart.umd-4.5.1.js"', page)
+        self.assertEqual(package['dependencies']['chart.js'], '4.6.1')
+        self.assertIn('src="js/vendor/chart.umd-4.6.1.js"', page)
         self.assertNotIn('cdn.jsdelivr.net/npm/chart.js', page)
-        self.assertIn('Chart.js v4.5.1', (ROOT / 'js/vendor/chart.umd-4.5.1.js').read_text(encoding='utf-8')[:200])
+        self.assertIn('Chart.js v4.6.1', (ROOT / 'js/vendor/chart.umd-4.6.1.js').read_text(encoding='utf-8')[:200])
         self.assertIn('MIT License', (ROOT / 'js/vendor/chartjs-LICENSE.md').read_text(encoding='utf-8'))
         workflow = (ROOT / '.github/workflows/site-tests.yml').read_text(encoding='utf-8')
         self.assertIn('npm ci --ignore-scripts', workflow)
         self.assertIn('npm audit --audit-level=high', workflow)
-        self.assertIn('cmp node_modules/chart.js/dist/chart.umd.js js/vendor/chart.umd-4.5.1.js', workflow)
+        self.assertIn('cmp node_modules/chart.js/dist/chart.umd.js js/vendor/chart.umd-4.6.1.js', workflow)
         dependabot = (ROOT / '.github/dependabot.yml').read_text(encoding='utf-8')
         self.assertIn('package-ecosystem: npm', dependabot)
         self.assertIn('package-ecosystem: github-actions', dependabot)
 
     def test_unpinned_chart_is_replaced_with_the_verified_local_build(self):
         for filename, expected in (
-            ('admin.html', 'js/vendor/chart.umd-4.5.1.js'),
-            ('scm-platform/dashboard.html', '../js/vendor/chart.umd-4.5.1.js'),
-            ('scm-platform/kpi-center.html', '../js/vendor/chart.umd-4.5.1.js'),
+            ('admin.html', 'js/vendor/chart.umd-4.6.1.js'),
+            ('scm-platform/dashboard.html', '../js/vendor/chart.umd-4.6.1.js'),
+            ('scm-platform/kpi-center.html', '../js/vendor/chart.umd-4.6.1.js'),
         ):
             page = ROOT / filename
             text = page.read_text(encoding='utf-8')
             self.assertIn(f'<script src="{expected}"></script>', text, filename)
-            self.assertEqual((page.parent / expected).resolve(), (ROOT / 'js/vendor/chart.umd-4.5.1.js').resolve())
+            self.assertEqual((page.parent / expected).resolve(), (ROOT / 'js/vendor/chart.umd-4.6.1.js').resolve())
             self.assertLess(text.index(expected), text.index('new Chart('), filename)
         root_kpi = (ROOT / 'kpi-center.html').read_text(encoding='utf-8')
         self.assertNotIn('chart.js', root_kpi.lower())
