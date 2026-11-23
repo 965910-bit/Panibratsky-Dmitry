@@ -5,7 +5,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const script=fs.readFileSync('js/vizitka.js','utf8');
 function setup(opts={}){
- const elements={};for(const id of ['message','subject','email','status','copy','reset','email-button']) elements[id]={value:'',textContent:'',validity:{valid:true},addEventListener(_type,fn){this.click=fn},focus(){this.focused=true},select(){this.selected=true}};
+ const elements={};for(const id of ['message','subject','email','status','copy','reset','email-button','short-template']) elements[id]={value:'',textContent:'',validity:{valid:true},addEventListener(_type,fn){this.click=fn},focus(){this.focused=true},select(){this.selected=true}};
  elements.message.value='Визитка и https://scm-news.ru/';elements.subject.value='Тема';let copied=[];
  const navigator={clipboard:opts.noClipboard?undefined:{writeText:async s=>{if(opts.failCopy)throw Error();copied.push(s)}}};
  const window={location:{href:''},confirm:()=>opts.confirm??true};
@@ -32,4 +32,15 @@ test('page has no analytics, storage or remote requests and includes actual link
  for(const url of ['https://scm-news.ru/','https://scm-news.ru/documents/gerasimov-presentation.pdf','https://surgut.hh.ru/resume/33d5f7abff115bad460039ed1f7166544f5263','https://surgut.zarplata.ru/resume/dc1875b3ff115ecddd0039ed1f6c487a655144'])assert.ok(html.includes(url));
  assert.match(html,/connect-src 'none'/);assert.doesNotMatch(html,/googletagmanager|mc\.yandex|<form/i);assert.doesNotMatch(script,/localStorage|sessionStorage|fetch\s*\(|XMLHttpRequest/);
  assert.match(fs.readFileSync('index.html','utf8'),/href="vizitka.html"/);
+});
+
+test('short template is editable, retains key links, and protects edits',()=>{
+ const x=setup();x.elements['short-template'].click();
+ for(const value of ['Академии', 'готовящейся к изданию', 'https://scm-news.ru/', 'gerasimov-presentation.pdf', 'surgut.hh.ru/resume/', 'surgut.zarplata.ru/resume/']) assert.ok(x.elements.message.value.includes(value));
+ const y=setup({confirm:false});y.elements.message.value='Мои правки';y.elements['short-template'].click();assert.equal(y.elements.message.value,'Мои правки');
+});
+test('photo and PDF are available for manual attachment',()=>{
+ const html=fs.readFileSync('vizitka.html','utf8');
+ assert.match(html,/img-src 'self'/);assert.match(html,/images\/profile-hero\.webp/);assert.match(html,/прикрепите нужный файл/);
+ assert.ok(fs.existsSync('images/profile-hero.webp'));assert.ok(fs.existsSync('documents/gerasimov-presentation.pdf'));
 });
