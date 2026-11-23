@@ -115,12 +115,14 @@ class SiteTests(unittest.TestCase):
                      'mailto:dmitry.gerasimov.2026@yandex.ru?subject='):
             self.assertIn(text, expertise)
 
-    def test_book_concept_is_visible_and_uses_local_image(self):
+    def test_written_book_preparing_for_publication_uses_local_image(self):
         home = (ROOT / 'index.html').read_text(encoding='utf-8')
         self.assertIn('id="book"', home)
         self.assertIn('Мост в цифровое будущее', home)
         self.assertIn('Маршрут от задачи к результату', home)
-        self.assertIn('КОНЦЕПТ ОБЛОЖЕК', home)
+        self.assertIn('АВТОРСКАЯ КНИГА · ГОТОВИТСЯ К ИЗДАНИЮ', home)
+        self.assertIn('Книга написана и готовится к изданию.', home)
+        self.assertNotIn('дополнение к концепции книги', home)
         self.assertIn('src="images/book-concept-bridge.webp"', home)
         self.assertTrue((ROOT / 'images/book-concept-bridge.webp').is_file())
 
