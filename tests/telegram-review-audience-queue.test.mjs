@@ -5,6 +5,7 @@ import {mkdtempSync,rmSync} from 'node:fs';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {startAudienceCampaign,enqueueAudienceRecipient,deliverAudienceRecipient} from '../telegram-review/audience-queue.mjs';
+import {createAudienceTransport} from '../telegram-review/audience-transport.mjs';
 const draft='00000000-0000-4000-8000-000000000001',old='2020-01-01T00:00:00.000Z',future='2099-01-01T00:00:00.000Z';
 const bridge=`import json,sqlite3,sys
 p=json.load(sys.stdin); c=sqlite3.connect(p['path']);c.row_factory=sqlite3.Row;c.execute('PRAGMA foreign_keys=ON')
@@ -56,4 +57,15 @@ test('storage failure after transport does not trigger a second send',async t=>{
  const failing={prepare(query){if(query.includes("SET state='sent'"))throw Error('storage outage');return DB.prepare(query)}};
  const result=await deliverAudienceRecipient(failing,draft,'subscriber','10',async()=>{calls++;return {message_id:8}});
  assert.equal(result.status,'uncertain');assert.equal((await deliverAudienceRecipient(DB,draft,'subscriber','10',async()=>{calls++;return {message_id:9}})).status,'not-claimed');assert.equal(calls,1);
+});
+
+test('queue and transport send one approved photo and journal a confirmed mock reply',async t=>{
+ const {DB,sql}=fixture(t);sql("INSERT INTO audience_subscribers VALUES('10',?,?,1,-1)",[old,old]);await startAudienceCampaign(DB,draft);await enqueueAudienceRecipient(DB,draft,'subscriber','10');
+ const calls=[];const send=createAudienceTransport('123456:'+ 'a'.repeat(32),async(url,init)=>{calls.push({url,body:JSON.parse(init.body)});return Response.json({ok:true,result:{message_id:55}})});
+ assert.equal((await deliverAudienceRecipient(DB,draft,'subscriber','10',send)).status,'sent');assert.equal(calls.length,1);assert.match(calls[0].url,/\/sendPhoto$/);assert.equal(calls[0].body.chat_id,'10');assert.equal(calls[0].body.photo,'photo-id');assert.equal(sql('SELECT message_id FROM audience_deliveries').rows[0].message_id,55);
+});
+test('queue and transport stop on mocked Telegram 429 without retry',async t=>{
+ const {DB,sql}=fixture(t);sql("INSERT INTO audience_subscribers VALUES('10',?,?,1,-1)",[old,old]);await startAudienceCampaign(DB,draft);await enqueueAudienceRecipient(DB,draft,'subscriber','10');let calls=0;
+ const send=createAudienceTransport('123456:'+ 'a'.repeat(32),async()=>{calls++;return new Response('',{status:429})});
+ assert.equal((await deliverAudienceRecipient(DB,draft,'subscriber','10',send)).status,'uncertain');assert.equal((await deliverAudienceRecipient(DB,draft,'subscriber','10',send)).status,'not-claimed');assert.equal(calls,1);
 });
