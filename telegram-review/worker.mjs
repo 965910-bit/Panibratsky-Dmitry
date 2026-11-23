@@ -1,3 +1,4 @@
+import {subscriptionIntent} from './audience-policy.mjs';
 // Cloudflare Worker: editorial approval only; no scheduled publishing.
 const MAX_BODY = 270000;
 const MAX_PNG = 180000;
@@ -225,9 +226,41 @@ async function draftReply(message, env, fetcher) {
   }
   return true;
 }
+// Disabled unless explicitly configured after migration and isolated testing.
+// The webhook secret must already have been verified before entering this function.
+async function audienceReply(update, env, fetcher) {
+  if (env.AUDIENCE_ENABLED !== 'true') return false;
+  const intent = subscriptionIntent(update);
+  if (!intent || !Number.isSafeInteger(update.update_id) || update.update_id < 0) return false;
+  let text;
+  if (intent.action === 'info') {
+    text = 'Рассылка Дмитрия Герасимова: материалы о логистике, SCM и управлении. Для добровольной подписки отправьте /subscribe. Остановить рассылку: /stop. Для работы хранится идентификатор чата и статус подписки.';
+  } else {
+    const active = intent.action === 'subscribe' ? 1 : 0;
+    const now = new Date().toISOString();
+    // Telegram may randomize update_id after a week without updates. An old
+    // per-chat watermark expires after seven days; Telegram does not retain
+    // undelivered updates indefinitely.
+    const resetBefore = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    // Atomically ignore duplicates and older updates, including delayed unsubscribe/subscribe retries.
+    const sql = `INSERT INTO audience_subscribers (chat_id, subscribed_at, updated_at, active, last_update_id)
+      VALUES (?, ?, ?, ?, ?) ON CONFLICT(chat_id) DO UPDATE SET
+      subscribed_at = CASE WHEN excluded.active = 1 AND audience_subscribers.active = 0 THEN excluded.subscribed_at ELSE audience_subscribers.subscribed_at END,
+      updated_at = excluded.updated_at, active = excluded.active, last_update_id = excluded.last_update_id
+      WHERE excluded.last_update_id > audience_subscribers.last_update_id OR audience_subscribers.updated_at < ?`;
+    const saved = await env.DB.prepare(sql).bind(intent.chatId,now,now,active,update.update_id,resetBefore).run();
+    if (!saved.success) throw Error('subscription storage unavailable');
+    if (!changes(saved)) return true;
+    text = active ? 'Вы подписались на материалы о логистике и SCM. Остановить рассылку можно командой /stop.' : 'Подписка отключена. Новые рассылки получать не будете. Включить снова: /subscribe.';
+  }
+  // A failed acknowledgement does not roll back consent or justify a blind retry.
+  try { await api(env,'sendMessage',{chat_id:intent.chatId,text,disable_web_page_preview:true},fetcher); } catch {}
+  return true;
+}
 async function webhook(request, env, fetcher) {
   if (!equal(request.headers.get('x-telegram-bot-api-secret-token'), env.WEBHOOK_SECRET)) return result(403, 'Forbidden');
   let update; try { update = await body(request); } catch { return result(400, 'Invalid request'); }
+  if (await audienceReply(update, env, fetcher)) return result(200, 'Subscription processed');
   if (await statusReply(update?.message, env, fetcher)) return result(200, 'Status processed');
   if (await inspectReply(update?.message, env, fetcher)) return result(200, 'Inspection processed');
   if (await reconcileReply(update?.message, env, fetcher)) return result(200, 'Reconciliation processed');
