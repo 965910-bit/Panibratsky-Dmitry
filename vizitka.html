@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'; connect-src 'none'; frame-ancestors 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Подготовить визитку | Дмитрий Герасимов</title>
+  <link rel="stylesheet" href="css/vizitka.css">
+  <script src="js/vizitka.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <a class="back" href="/">← Вернуться на сайт</a>
+    <header><p class="eyebrow">ЛИЧНОЕ ПРЕДСТАВЛЕНИЕ</p><h1>Подготовить <em>визитку.</em></h1><p class="lead">Выберите получателя и отправьте сообщение лично: по почте, в Telegram или MAX.</p></header>
+    <div class="layout">
+      <section class="panel" aria-labelledby="message-title">
+        <div class="section-heading"><h2 id="message-title">Текст сообщения</h2><span>МОЖНО ИЗМЕНИТЬ</span></div>
+        <label for="subject">Тема письма</label>
+        <input id="subject" maxlength="160" value="Герасимов Дмитрий — операционный руководитель / логистика и SCM">
+        <label for="message">Визитка</label>
+        <textarea id="message" rows="24" maxlength="6000">Здравствуйте!
+
+Меня зовут Дмитрий Сергеевич Герасимов. Я операционный руководитель в сфере логистики и управления цепями поставок. Рассматриваю предложения о постоянной работе на руководящих позициях в операционном управлении, логистике и SCM.
+
+Мой подход — выстраивать устойчивую систему, в которой люди, клиент и процессы работают на общий результат: эффективность операций и рентабельность бизнеса.
+
+Направления моей работы: управление складскими и логистическими операциями, развитие команд и руководителей, стандартизация и цифровизация процессов.
+
+Я основатель Академии цепи поставок и автор книги «Мост в цифровое будущее: лидерство в цифровой цепи поставок». Книга написана и готовится к изданию; практический блокнот дополняет её.
+
+Буду рад обсудить, какие задачи стоят перед вашей компанией и чем мой опыт может быть полезен.
+
+Портфолио: https://scm-news.ru/
+Мини-презентация (PDF): https://scm-news.ru/documents/gerasimov-presentation.pdf
+Резюме на hh.ru: https://surgut.hh.ru/resume/33d5f7abff115bad460039ed1f7166544f5263
+Резюме на Зарплата.ру: https://surgut.zarplata.ru/resume/dc1875b3ff115ecddd0039ed1f6c487a655144
+Телефон: +7 (982) 581-07-87
+Почта: dmitry.gerasimov.2026@yandex.ru
+
+С уважением,
+Дмитрий Герасимов</textarea>
+        <div class="actions"><button id="copy" class="primary" type="button">Скопировать визитку</button><button id="reset" class="secondary" type="button">Вернуть исходный текст</button></div>
+        <p class="hint">Для Telegram или MAX скопируйте текст, откройте нужный чат и вставьте сообщение. Ссылка на презентацию включена; файл автоматически не прикрепляется.</p>
+      </section>
+      <aside class="panel side" aria-labelledby="mail-title">
+        <p class="eyebrow">ТОЧЕЧНАЯ ОТПРАВКА</p><h2 id="mail-title">Черновик письма</h2>
+        <p>Укажите один адрес. Откроется ваше почтовое приложение с подготовленным письмом — отправку подтверждаете вы.</p>
+        <label for="email">Адрес получателя</label><input id="email" type="email" maxlength="254" autocomplete="off" placeholder="name@example.com">
+        <button id="email-button" class="secondary" type="button">Открыть письмо</button>
+        <p class="hint">Почтовая программа должна быть настроена на устройстве. Веб-почта может не открыться автоматически.</p>
+        <div class="divider"></div><h2>Конфиденциальность</h2><p>Страница не сохраняет введённые адреса и правки и не отправляет их на сервер. После копирования текст находится в буфере обмена; при открытии письма он передаётся вашему почтовому приложению.</p>
+        <p>Для теста отправьте сообщение себе. Массовая рассылка здесь не запускается.</p>
+      </aside>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <noscript><p class="status">Для кнопок нужен JavaScript. Можно выделить текст и скопировать вручную.</p></noscript>
+  </main>
+</body>
+</html>
