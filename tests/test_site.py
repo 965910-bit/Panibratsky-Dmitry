@@ -115,6 +115,15 @@ class SiteTests(unittest.TestCase):
                      'mailto:dmitry.gerasimov.2026@yandex.ru?subject='):
             self.assertIn(text, expertise)
 
+    def test_book_concept_is_visible_and_uses_local_image(self):
+        home = (ROOT / 'index.html').read_text(encoding='utf-8')
+        self.assertIn('id="book"', home)
+        self.assertIn('Мост в цифровое будущее', home)
+        self.assertIn('Маршрут от задачи к результату', home)
+        self.assertIn('КОНЦЕПТ ОБЛОЖЕК', home)
+        self.assertIn('src="images/book-concept-bridge.webp"', home)
+        self.assertTrue((ROOT / 'images/book-concept-bridge.webp').is_file())
+
     def test_wiki_planned_material_is_not_claimed_as_published(self):
         text = (ROOT / 'wiki.html').read_text(encoding='utf-8')
         self.assertGreater(text.count('class="wiki-article-card"'), 0)
