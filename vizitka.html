@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'; connect-src 'none'; frame-ancestors 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; connect-src 'none'; frame-ancestors 'none'">
   <meta name="referrer" content="no-referrer">
   <title>Панель отправки визитки | Дмитрий Герасимов</title>
   <link rel="stylesheet" href="css/vizitka.css">
@@ -42,8 +42,8 @@
 
 С уважением,
 Дмитрий Герасимов</textarea>
-        <div class="actions"><button id="copy" class="primary" type="button">Скопировать визитку</button><button id="reset" class="secondary" type="button">Вернуть исходный текст</button></div>
-        <p class="hint">Для Telegram или MAX скопируйте текст, откройте нужный чат и вставьте сообщение. Ссылка на презентацию включена; файл автоматически не прикрепляется.</p>
+        <div class="actions"><button id="short-template" class="secondary" type="button">Короткое письмо работодателю</button><button id="copy" class="primary" type="button">Скопировать визитку</button><button id="reset" class="secondary" type="button">Вернуть исходный текст</button></div>
+        <p class="hint">Короткий вариант удобно персонализировать: укажите имя и конкретную вакансию или задачу компании. Для Telegram или MAX скопируйте текст и вставьте его в нужный чат.</p>
       </section>
       <aside class="panel side" aria-labelledby="mail-title">
         <p class="eyebrow">ТОЧЕЧНАЯ ОТПРАВКА</p><h2 id="mail-title">Черновик письма</h2>
@@ -51,6 +51,11 @@
         <label for="email">Адрес получателя</label><input id="email" type="email" maxlength="254" autocomplete="off" placeholder="name@example.com">
         <button id="email-button" class="secondary" type="button">Открыть письмо</button>
         <p class="hint">Почтовая программа должна быть настроена на устройстве. Веб-почта может не открыться автоматически.</p>
+        <div class="divider"></div><h2>Фото и презентация</h2>
+        <img class="portrait" src="images/profile-hero.webp" alt="Дмитрий Герасимов" width="240" height="240">
+        <p>Письмо открывается без вложений: сохраните фото или презентацию и прикрепите нужный файл в почтовом приложении перед отправкой.</p>
+        <div class="actions"><a class="file-link" href="images/profile-hero.webp" download="Dmitry-Gerasimov-photo.webp">Сохранить фото ↓</a><a class="file-link" href="documents/gerasimov-presentation.pdf" download>Сохранить презентацию ↓</a></div>
+        <p class="hint">Если браузер открыл файл вместо сохранения, используйте его меню сохранения. Получатель сможет увидеть фото и в PDF.</p>
         <div class="divider"></div><h2>Список для точечной отправки</h2>
         <p>До 100 адресов электронной почты, каждый с новой строки. Добавляйте только контакты, которым уместно написать.</p>
         <label for="contact-input">Адреса получателей</label>

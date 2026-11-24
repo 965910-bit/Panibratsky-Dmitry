@@ -15,6 +15,26 @@
       announce('Текст скопирован. Откройте нужный чат и вставьте сообщение.');
     } catch { message.focus(); message.select(); announce('Не удалось скопировать автоматически. Выделенный текст можно скопировать вручную.'); }
   });
+  document.getElementById('short-template').addEventListener('click', () => {
+    if ((message.value !== originalMessage || subject.value !== originalSubject) && !window.confirm('Заменить текущие тему и текст коротким письмом? Ваши правки будут потеряны.')) return;
+    subject.value = 'Дмитрий Герасимов — операционное управление и логистика';
+    message.value = `Здравствуйте!
+
+Меня зовут Дмитрий Герасимов. Я операционный руководитель в логистике и SCM, рассматриваю постоянные руководящие роли. Буду рад обсудить, какие задачи стоят перед вашей компанией и чем мой опыт может быть полезен.
+
+Мой подход — люди, клиент и процессы как единая система. Я основатель Академии цепи поставок и автор книги «Мост в цифровое будущее», написанной и готовящейся к изданию.
+
+Портфолио: https://scm-news.ru/
+Презентация с фото: https://scm-news.ru/documents/gerasimov-presentation.pdf
+Резюме на hh.ru: https://surgut.hh.ru/resume/33d5f7abff115bad460039ed1f7166544f5263
+Резюме на Зарплата.ру: https://surgut.zarplata.ru/resume/dc1875b3ff115ecddd0039ed1f6c487a655144
+Телефон: +7 (982) 581-07-87
+Почта: dmitry.gerasimov.2026@yandex.ru
+
+С уважением,
+Дмитрий Герасимов`;
+    announce('Короткое письмо готово. Добавьте имя и причину обращения перед отправкой.');
+  });
   document.getElementById('reset').addEventListener('click', () => {
     // Confirm before overwriting a personalised message.
     if ((message.value !== originalMessage || subject.value !== originalSubject) && !window.confirm('Вернуть исходные тему и текст? Ваши правки будут потеряны.')) return;

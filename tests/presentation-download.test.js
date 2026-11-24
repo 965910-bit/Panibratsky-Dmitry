@@ -18,3 +18,13 @@ test('home links a public PDF and loads the event handler',()=>{
  assert.match(html,/<script src="js\/presentation-download\.js" defer><\/script>/);
  const pdf=fs.readFileSync('documents/gerasimov-presentation.pdf');assert.equal(pdf.subarray(0,5).toString(),'%PDF-');
 });
+
+test('career page provides the presentation and a photographic sharing preview',()=>{
+ const html=fs.readFileSync('career.html','utf8');
+ assert.match(html,/<a\b[^>]*href="documents\/gerasimov-presentation\.pdf"[^>]*download[^>]*data-presentation-download/);
+ assert.match(html,/<script src="js\/presentation-download\.js" defer><\/script>/);
+ assert.match(html,/<meta property="og:url" content="https:\/\/scm-news\.ru\/career\.html">/);
+ assert.match(html,/<meta property="og:image" content="https:\/\/scm-news\.ru\/images\/gerasimov-career-share\.jpg">/);
+ assert.equal(fs.readFileSync('images/gerasimov-career-share.jpg').subarray(0,3).toString('hex'),'ffd8ff');
+ assert.doesNotMatch(html,/fonts\.googleapis\.com|fonts\.gstatic\.com/);
+});
