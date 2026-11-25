@@ -25,10 +25,14 @@
     if (url.protocol === 'tel:') return 'contact_phone_click';
     if (url.protocol === 'mailto:') return 'contact_email_click';
     if (url.protocol !== 'https:') return null;
-    if (url.hostname === location.hostname) {
+    if (url.origin === location.origin) {
+      if (url.pathname === '/documents/gerasimov-presentation.pdf') return null; // existing handler
+      // Future excerpt links can opt in without sending their path or content.
+      // Only the two explicitly named goal IDs are accepted; no file is published here.
+      const excerptGoal = link.getAttribute('data-excerpt-goal');
+      if (excerptGoal === 'book_excerpt_click' || excerptGoal === 'workbook_excerpt_click') return excerptGoal;
       if (url.pathname === '/expertise.html' && url.hash === '#corporate-training') return 'corporate_training_click';
       if (url.hash && url.pathname === new URL(location.href).pathname && url.hash !== '#book') return null;
-      if (url.pathname === '/documents/gerasimov-presentation.pdf') return null; // existing handler
       if (url.pathname === '/index.html' || url.pathname === '/') {
         if (url.hash === '#book') return 'interest_book';
         return null;

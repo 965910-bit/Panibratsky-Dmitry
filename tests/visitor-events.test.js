@@ -7,7 +7,7 @@ const install = require('../js/visitor-events.js');
 function setup() {
   const callbacks = {}; const calls = [];
   const doc = {addEventListener: (type, fn) => callbacks[type] = fn};
-  install(doc, {ym: (...x) => calls.push(['ym', ...x]), gtag: (...x) => calls.push(['gtag', ...x])}, {href:'https://scm-news.ru/career.html', hostname:'scm-news.ru'});
+  install(doc, {ym: (...x) => calls.push(['ym', ...x]), gtag: (...x) => calls.push(['gtag', ...x])}, {href:'https://scm-news.ru/career.html', hostname:'scm-news.ru', origin:'https://scm-news.ru'});
   function click(href, options={}) {
     const link = href ? {getAttribute: () => href} : null;
     callbacks.click({button: options.button ?? 0, defaultPrevented: !!options.prevented, target: {closest: selector => selector === '#print-checklist' ? (options.print ? {} : null) : link}});
@@ -49,7 +49,7 @@ test('invalid, unrelated and deceptive links never become events', () => {
 });
 test('counter failure is isolated; event handlers never cancel navigation', () => {
   let handler, calls=[];
-  install({addEventListener: (type, fn) => { if (type === 'click') handler=fn; }}, {ym() {throw new Error('blocked');}, gtag: (...x) => calls.push(x)}, {href:'https://scm-news.ru/',hostname:'scm-news.ru'});
+  install({addEventListener: (type, fn) => { if (type === 'click') handler=fn; }}, {ym() {throw new Error('blocked');}, gtag: (...x) => calls.push(x)}, {href:'https://scm-news.ru/',hostname:'scm-news.ru',origin:'https://scm-news.ru'});
   const link = {getAttribute: () => '/career.html'};
   const event = {button:0,target:{closest: q => q==='a[href]' ? link : null},preventDefault(){throw new Error('must not cancel navigation');}};
   assert.doesNotThrow(() => handler(event));
@@ -91,3 +91,18 @@ test('home provides distinct user channels used by the tracker', () => {
     assert.equal(html.split('href="'+url+'"').length - 1, 1, url);
   }
 });
+
+ test('future excerpt links send only the two fixed identifiers for same-origin URLs', () => {
+  let handler; const calls=[];
+  install({addEventListener:(type,fn)=>{if(type==='click') handler=fn;}},{ym:(...args)=>calls.push(args)}, {href:'https://scm-news.ru/',hostname:'scm-news.ru',origin:'https://scm-news.ru'});
+  function click(href,goal) {
+    const link={getAttribute:name=>name==='href'?href:name==='data-excerpt-goal'?goal:null};
+    handler({button:0,target:{closest:selector=>selector==='a[href]'?link:null}});
+  }
+  click('/documents/future-book.pdf','book_excerpt_click');
+  click('/documents/future-workbook.pdf','workbook_excerpt_click');
+  click('https://evil.example/file','book_excerpt_click');
+  click('/unrelated.pdf','not_an_approved_goal');
+  click('/documents/gerasimov-presentation.pdf','book_excerpt_click');
+  assert.deepEqual(calls,[[108401876,'reachGoal','book_excerpt_click'],[108401876,'reachGoal','workbook_excerpt_click']]);
+ });
