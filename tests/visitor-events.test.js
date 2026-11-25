@@ -55,13 +55,15 @@ test('counter failure is isolated; event handlers never cancel navigation', () =
   assert.doesNotThrow(() => handler(event));
   assert.deepEqual(calls,[['event','interest_career']]);
 });
-test('tracker loads once only on nine pages with existing counters', () => {
-  const pages = new Set(['index.html','about.html','blog.html','career.html','contact.html','experience.html','expertise.html','prompts.html','trends.html']);
+test('every sitemap page has one consent loader and tracker; private pages have neither', () => {
+  const urls=[...fs.readFileSync('sitemap.xml','utf8').matchAll(/<loc>([^<]+)<\/loc>/g)];
+  const pages=new Set(urls.map(m=>new URL(m[1]).pathname.slice(1) || 'index.html'));
   for (const filename of fs.readdirSync('.').filter(f => f.endsWith('.html'))) {
     const html=fs.readFileSync(filename,'utf8');
-    const scripts=html.match(/<script\b[^>]*\bsrc\s*=\s*["'][^"']*visitor-events\.js/gi) || [];
-    assert.equal(scripts.length, pages.has(filename) ? 1 : 0, filename);
-    if (pages.has(filename)) assert.match(html, /mc\.yandex\.ru\/metrika\/tag\.js/);
+    const count=(name)=>html.split('src="js/'+name+'.js"').length - 1;
+    assert.equal(count('analytics-consent'),pages.has(filename) ? 1 : 0,filename);
+    assert.equal(count('visitor-events'),pages.has(filename) ? 1 : 0,filename);
+    if (pages.has(filename)) assert.doesNotMatch(html,/mc\.yandex\.ru\/metrika\/tag\.js|googletagmanager\.com\/gtag\/js|mc\.yandex\.ru\/watch\//);
   }
 });
 

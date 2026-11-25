@@ -15,9 +15,10 @@ test('CI runs the shared Node test suite and all test files are covered', () => 
   assert.match(workflow, /npm run test:browser/);
   assert.match(pkg.scripts['test:browser'], /tests\/homepage-browser\.test\.js/);
   assert.match(pkg.scripts['test:browser'], /tests\/inventory-tools-browser\.test\.js/);
+  assert.match(pkg.scripts['test:browser'], /tests\/analytics-browser\.test\.js/);
   assert.match(workflow, /node tests\/calculators\.test\.js/);
   for (const file of fs.readdirSync('tests').filter(name => /\.test\.(js|mjs)$/.test(name))) {
-    if (['homepage-browser.test.js', 'inventory-tools-browser.test.js', 'calculators.test.js'].includes(file)) continue;
+    if (['homepage-browser.test.js', 'inventory-tools-browser.test.js', 'analytics-browser.test.js', 'calculators.test.js'].includes(file)) continue;
     assert(suite.split(/\s+/).includes(`tests/${file}`), `${file} is missing from test:node`);
   }
 });

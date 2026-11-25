@@ -1,4 +1,4 @@
-/* Public click tracking on pages already running analytics; fixed event identifiers only. */
+/* Only fixed event identifiers; the analytics loader requires visitor choice. */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory;
   else {
@@ -73,6 +73,7 @@
   document.addEventListener('change', function (event) {
     if (diagnosticStarted || new URL(location.href).pathname !== '/scm-diagnostic.html') return;
     if (!event.target || typeof event.target.closest !== 'function' || !event.target.closest('#scm-checklist select')) return;
+    if (typeof analytics.ym !== 'function' && typeof analytics.gtag !== 'function') return;
     diagnosticStarted = true;
     send('diagnostic_start');
   });
