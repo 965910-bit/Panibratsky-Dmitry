@@ -55,7 +55,7 @@ test('consent, events and withdrawal in real Chromium with mocked analytics vend
   assert.equal(events.filter(x=>x[2]==='diagnostic_start').length,1);
   assert.doesNotMatch(JSON.stringify(events),/review|unknown/);
   await page.locator('.analytics-settings').click();
-  const nav=page.waitForEvent('load'); await page.locator('[data-choice="no"]').click(); await nav;
+  await Promise.all([page.waitForNavigation({waitUntil:'domcontentloaded',timeout:45000}), page.locator('[data-choice="no"]').dispatchEvent('click')]);
   assert.equal(await page.evaluate(()=>typeof window.ym),'undefined');
   assert.equal(await page.evaluate(()=>localStorage.getItem('scm_analytics_choice_v1')),'no');
  } finally {await browser.close();}
