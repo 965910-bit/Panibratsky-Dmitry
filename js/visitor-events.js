@@ -42,6 +42,8 @@
     if (url.hostname === 'max.ru' && url.pathname === '/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0') return 'channel_max_click';
     if (url.hostname === 'dzen.ru' && url.pathname === '/id/6b053062ab2c62327a016bcd') return 'channel_dzen_click';
     if (url.hostname === 'set.ki' && url.pathname === '/EYUBwz5') return 'setka_profile_click';
+    if (url.hostname === 'setka.ru' && url.pathname.replace(/\/$/, '') === '/communities/01a15b2e-dfa8-7b4d-9059-6b74529f0ac3') return 'setka_community_click';
+    if (url.hostname === 'setka.ru' && url.pathname.replace(/\/$/, '') === '/communities/01a19c5c-b9c8-7a87-b08c-60a87d8f6049') return 'setka_channel_click';
     return null;
   }
   document.addEventListener('click', function (event) {
