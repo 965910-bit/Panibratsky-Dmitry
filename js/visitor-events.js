@@ -1,10 +1,8 @@
-/* Prepared for review only. Not loaded by the site; the switch is not consent management.
- * Before integration review privacy, counter setup, consent and existing goals. */
+/* Public click tracking on pages already running analytics; fixed event identifiers only. */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory;
   else {
-    const DEPLOYMENT_APPROVED = false;
-    if (DEPLOYMENT_APPROVED) factory(root.document, root, root.location);
+    factory(root.document, root, root.location);
   }
 })(typeof window !== 'undefined' ? window : globalThis, function installVisitorEvents(document, analytics, location) {
   'use strict';

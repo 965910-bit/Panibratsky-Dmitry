@@ -34,10 +34,10 @@ test('ignored events do not block clicks or fire goals', () => {
   const {click, calls} = setup(); click('/career.html',{button:2}); click('/career.html',{prevented:true});
   assert.equal(calls.length,0);
 });
-test('browser deployment is disabled by default', () => {
-  let listeners=0; const window={document:{addEventListener(){listeners++;}},location:{href:'https://scm-news.ru/'}};
+test('browser deployment registers one set of handlers', () => {
+  const listeners=[]; const window={document:{addEventListener(type){listeners.push(type);}},location:{href:'https://scm-news.ru/'}};
   vm.runInNewContext(fs.readFileSync('js/visitor-events.js','utf8'),{window,URL});
-  assert.equal(listeners,0);
+  assert.deepEqual(listeners,['click','submit','change']);
 });
 
 test('invalid, unrelated and deceptive links never become events', () => {
@@ -55,9 +55,13 @@ test('counter failure is isolated; event handlers never cancel navigation', () =
   assert.doesNotThrow(() => handler(event));
   assert.deepEqual(calls,[['event','interest_career']]);
 });
-test('prepared tracker is not included in any current HTML page', () => {
+test('tracker loads once only on nine pages with existing counters', () => {
+  const pages = new Set(['index.html','about.html','blog.html','career.html','contact.html','experience.html','expertise.html','prompts.html','trends.html']);
   for (const filename of fs.readdirSync('.').filter(f => f.endsWith('.html'))) {
-    assert.doesNotMatch(fs.readFileSync(filename, 'utf8'), /<script\b[^>]*\bsrc\s*=\s*["'][^"']*visitor-events\.js/i, filename);
+    const html=fs.readFileSync(filename,'utf8');
+    const scripts=html.match(/<script\b[^>]*\bsrc\s*=\s*["'][^"']*visitor-events\.js/gi) || [];
+    assert.equal(scripts.length, pages.has(filename) ? 1 : 0, filename);
+    if (pages.has(filename)) assert.match(html, /mc\.yandex\.ru\/metrika\/tag\.js/);
   }
 });
 
@@ -78,3 +82,10 @@ test('prepared tracker is not included in any current HTML page', () => {
   handler({button:0,target:{closest:s=>s==='button.calculate-btn'?{}:null}});
   assert.deepEqual(calls,[[108401876,'reachGoal','calculator_calculate']]);
  });
+
+test('home provides distinct user channels used by the tracker', () => {
+  const html=fs.readFileSync('index.html','utf8');
+  for (const url of ['https://m.tenchat.ru/u/3CguEuQy','https://setka.ru/communities/01a15b2e-dfa8-7b4d-9059-6b74529f0ac3','https://setka.ru/communities/01a19c5c-b9c8-7a87-b08c-60a87d8f6049']) {
+    assert.equal(html.split('href="'+url+'"').length - 1, 1, url);
+  }
+});
