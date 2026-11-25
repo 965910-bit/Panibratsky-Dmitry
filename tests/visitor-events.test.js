@@ -23,7 +23,7 @@ test('fixed allowlisted events are sent without input or url', () => {
 });
 test('classifies approved actions while avoiding existing PDF handler', () => {
   const {click, calls} = setup();
-  for (const [href, expected] of [['tel:+79825810787','contact_phone_click'],['https://surgut.hh.ru/resume/33d5f7abff115bad460039ed1f7166544f5263','resume_click_hh'],['https://t.me/LogisticaandSupplyChain','channel_telegram_click'],['https://set.ki/EYUBwz5','setka_profile_click'],['https://setka.ru/communities/01a15b2e-dfa8-7b4d-9059-6b74529f0ac3','setka_community_click'],['https://setka.ru/communities/01a19c5c-b9c8-7a87-b08c-60a87d8f6049/','setka_channel_click'],['/scm-academy.html','interest_academy'],['/#book','interest_book']]) {
+  for (const [href, expected] of [['tel:+79825810787','contact_phone_click'],['https://surgut.hh.ru/resume/33d5f7abff115bad460039ed1f7166544f5263','resume_click_hh'],['https://t.me/LogisticaandSupplyChain','channel_telegram_click'],['https://set.ki/EYUBwz5','setka_profile_click'],['https://setka.ru/communities/01a15b2e-dfa8-7b4d-9059-6b74529f0ac3','setka_community_click'],['https://setka.ru/communities/01a19c5c-b9c8-7a87-b08c-60a87d8f6049/','setka_channel_click'],['/scm-academy.html','interest_academy'],['/expertise.html#corporate-training','corporate_training_click'],['/#book','interest_book']]) {
     calls.length=0; click(href); assert.equal(calls[0][3], expected);
   }
   calls.length=0; click('/documents/gerasimov-presentation.pdf'); click('https://other.example/'); click('#contact');

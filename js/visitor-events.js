@@ -28,6 +28,7 @@
     if (url.protocol === 'mailto:') return 'contact_email_click';
     if (url.protocol !== 'https:') return null;
     if (url.hostname === location.hostname) {
+      if (url.pathname === '/expertise.html' && url.hash === '#corporate-training') return 'corporate_training_click';
       if (url.hash && url.pathname === new URL(location.href).pathname && url.hash !== '#book') return null;
       if (url.pathname === '/documents/gerasimov-presentation.pdf') return null; // existing handler
       if (url.pathname === '/index.html' || url.pathname === '/') {
