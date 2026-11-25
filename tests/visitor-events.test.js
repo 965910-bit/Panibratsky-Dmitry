@@ -39,3 +39,24 @@ test('browser deployment is disabled by default', () => {
   vm.runInNewContext(fs.readFileSync('js/visitor-events.js','utf8'),{window,URL});
   assert.equal(listeners,0);
 });
+
+test('invalid, unrelated and deceptive links never become events', () => {
+  const {click, calls} = setup();
+  for (const href of ['https://surgut.hh.ru.evil.example/resume/33d5f7abff115bad460039ed1f7166544f5263',
+    'https://t.me/another_channel', 'https://dzen.ru/id/other', 'javascript:alert(1)',
+    '/vizitka.html', '/scm-review-questions.html.evil', 'https://elsewhere.example/career.html']) click(href);
+  assert.deepEqual(calls, []);
+});
+test('counter failure is isolated; event handlers never cancel navigation', () => {
+  let handler, calls=[];
+  install({addEventListener: (_, fn) => handler=fn}, {ym() {throw new Error('blocked');}, gtag: (...x) => calls.push(x)}, {href:'https://scm-news.ru/',hostname:'scm-news.ru'});
+  const link = {getAttribute: () => '/career.html'};
+  const event = {button:0,target:{closest: q => q==='a[href]' ? link : null},preventDefault(){throw new Error('must not cancel navigation');}};
+  assert.doesNotThrow(() => handler(event));
+  assert.deepEqual(calls,[['event','interest_career']]);
+});
+test('prepared tracker is not included in any current HTML page', () => {
+  for (const filename of fs.readdirSync('.').filter(f => f.endsWith('.html'))) {
+    assert.doesNotMatch(fs.readFileSync(filename, 'utf8'), /<script\b[^>]*\bsrc\s*=\s*["'][^"']*visitor-events\.js/i, filename);
+  }
+});
