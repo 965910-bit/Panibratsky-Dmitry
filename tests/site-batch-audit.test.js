@@ -110,3 +110,33 @@ test('promotion initialises empty analytics for new users without replacing exis
   assert.equal(map.get('traffic'),'[{"visits":42}]');assert.deepEqual(JSON.parse(map.get('keywords')),[]);
   assert.match(page,/Старые записи могли быть демонстрационными/);
 });
+
+test('site copy states current geography and relocation conditions without changing resumes',()=>{
+ for (const name of ['index.html','career.html','scm-problems.html','scm-architect.html','server/assistant.js']) {
+  const text=fs.readFileSync(name,'utf8');
+  assert.match(text,/Сургут и ХМАО/,name);assert.match(text,/частым командировкам/,name);assert.match(text,/предоставлении релокационного пакета/,name);
+  assert.doesNotMatch(text,/переезду в Санкт-Петербург или ЯНАО/,name);
+ }
+});
+test('manual news seed is valid empty array and compatible with the local importer',()=>{
+ assert.deepEqual(JSON.parse(fs.readFileSync('data/manual_news.json','utf8')),[]);
+ assert.match(fs.readFileSync('cabinet.html','utf8'),/if \(!Array\.isArray\(imported\)\)/);
+});
+test('hidden legacy portraits have local responsive variants and lazy loading',()=>{
+ for(const name of ['wiki.html','tools.html','calculators.html','projects.html','certificates.html']) {
+  const html=fs.readFileSync(name,'utf8');
+  for(const side of ['left','right']) {
+   for(const size of [320,480,640]) {
+    const file=`images/photo-${side}-${size}.webp`;assert.ok(fs.existsSync(file),file);assert.ok(fs.statSync(file).size<100000,file);assert.ok(html.includes(file),name);
+   }
+   const img=html.match(new RegExp(`<img src="images/photo-${side}\\.jpg"[^>]*>`));assert.ok(img,name);assert.match(img[0],/loading="lazy"/);assert.match(img[0],/alt="[^"]+"/);
+  }
+ }
+});
+
+test('local cabinet does not promise automatic collection or publishing',()=>{
+ const text=fs.readFileSync('cabinet.html','utf8');
+ assert.match(text,/Автоматическая загрузка подписчиков сайта не настроена/);
+ assert.match(text,/Автоматическое получение заявок с сайта не настроено/);
+ assert.match(text,/Автоматическое добавление экспортированного файла в новостную ленту не настроено/);
+});

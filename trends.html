@@ -960,7 +960,7 @@
             const previousPagination = [...pagination.childNodes];
             const previousNews = allNews, previousFiltered = filteredNews, previousPage = currentPage;
             try {
-                const response = await fetch('data/news.json?_=' + Date.now());
+                const response = await fetch('data/news.json', { cache: 'no-cache' });
                 if (!response.ok) throw new Error('Network error');
                 const data = await response.json();
                 const seen = new Set();
