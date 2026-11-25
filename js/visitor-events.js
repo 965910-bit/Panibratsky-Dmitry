@@ -41,7 +41,7 @@
     if (url.hostname === 't.me' && url.pathname === '/LogisticaandSupplyChain') return 'channel_telegram_click';
     if (url.hostname === 'max.ru' && url.pathname === '/join/hiHnbqRI5mxvakFeqTpBq3gjXiWuYPN45VeiuJmhOR0') return 'channel_max_click';
     if (url.hostname === 'dzen.ru' && url.pathname === '/id/6b053062ab2c62327a016bcd') return 'channel_dzen_click';
-    if (url.hostname === 'set.ki' && url.pathname === '/EYUBwz5') return 'contact_profile_click';
+    if (url.hostname === 'set.ki' && url.pathname === '/EYUBwz5') return 'setka_profile_click';
     return null;
   }
   document.addEventListener('click', function (event) {
