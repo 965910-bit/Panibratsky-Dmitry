@@ -49,7 +49,7 @@ test('invalid, unrelated and deceptive links never become events', () => {
 });
 test('counter failure is isolated; event handlers never cancel navigation', () => {
   let handler, calls=[];
-  install({addEventListener: (_, fn) => handler=fn}, {ym() {throw new Error('blocked');}, gtag: (...x) => calls.push(x)}, {href:'https://scm-news.ru/',hostname:'scm-news.ru'});
+  install({addEventListener: (type, fn) => { if (type === 'click') handler=fn; }}, {ym() {throw new Error('blocked');}, gtag: (...x) => calls.push(x)}, {href:'https://scm-news.ru/',hostname:'scm-news.ru'});
   const link = {getAttribute: () => '/career.html'};
   const event = {button:0,target:{closest: q => q==='a[href]' ? link : null},preventDefault(){throw new Error('must not cancel navigation');}};
   assert.doesNotThrow(() => handler(event));
@@ -60,3 +60,21 @@ test('prepared tracker is not included in any current HTML page', () => {
     assert.doesNotMatch(fs.readFileSync(filename, 'utf8'), /<script\b[^>]*\bsrc\s*=\s*["'][^"']*visitor-events\.js/i, filename);
   }
 });
+
+ test('tool attempts and diagnostic start send fixed events without inputs', () => {
+  const callbacks={}, calls=[]; const doc={addEventListener:(type,fn)=>callbacks[type]=fn};
+  install(doc,{ym:(...args)=>calls.push(args)}, {href:'https://scm-news.ru/inventory-turnover-calculator.html',hostname:'scm-news.ru'});
+  callbacks.submit({target:{matches:s=>s==='form[data-inventory-tool]'}});
+  assert.deepEqual(calls, [[108401876,'reachGoal','calculator_calculate']]);
+  const diagnostic={}, events=[];
+  install({addEventListener:(type,fn)=>diagnostic[type]=fn},{ym:(...args)=>events.push(args)}, {href:'https://scm-news.ru/scm-diagnostic.html',hostname:'scm-news.ru'});
+  const target={closest:s=>s==='#scm-checklist select' ? {} : null, get value(){throw Error('must not read answer')}};
+  diagnostic.change({target}); diagnostic.change({target});
+  assert.deepEqual(events, [[108401876,'reachGoal','diagnostic_start']]);
+ });
+ test('calculator button records only an attempt', () => {
+  let handler; const calls=[];
+  install({addEventListener:(type,fn)=>{if(type==='click') handler=fn;}},{ym:(...args)=>calls.push(args)}, {href:'https://scm-news.ru/calculators.html',hostname:'scm-news.ru'});
+  handler({button:0,target:{closest:s=>s==='button.calculate-btn'?{}:null}});
+  assert.deepEqual(calls,[[108401876,'reachGoal','calculator_calculate']]);
+ });

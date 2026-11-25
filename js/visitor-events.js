@@ -47,16 +47,34 @@
     if (url.hostname === 'setka.ru' && url.pathname.replace(/\/$/, '') === '/communities/01a19c5c-b9c8-7a87-b08c-60a87d8f6049') return 'setka_channel_click';
     return null;
   }
+  function send(name) {
+    // Only constant identifiers; never read or transmit user input or results.
+    try { if (typeof analytics.ym === 'function') analytics.ym(108401876, 'reachGoal', name); } catch (_) {}
+    try { if (typeof analytics.gtag === 'function') analytics.gtag('event', name); } catch (_) {}
+  }
   document.addEventListener('click', function (event) {
     if (event.defaultPrevented || (typeof event.button === 'number' && event.button !== 0)) return;
     const target = event.target;
     if (!target || typeof target.closest !== 'function') return;
     const print = target.closest('#print-checklist');
     const link = target.closest('a[href]');
-    const name = print ? 'checklist_print_click' : link ? classifyLink(link) : null;
+    const calculator = new URL(location.href).pathname === '/calculators.html' && target.closest('button.calculate-btn');
+    const name = print ? 'checklist_print_click' : calculator ? 'calculator_calculate' : link ? classifyLink(link) : null;
     if (!name) return;
-    // Fixed identifiers only. Never send href, text, form values or visitor input.
-    try { if (typeof analytics.ym === 'function') analytics.ym(108401876, 'reachGoal', name); } catch (_) {}
-    try { if (typeof analytics.gtag === 'function') analytics.gtag('event', name); } catch (_) {}
+    send(name);
+  });
+  // Submission is an attempt, not proof of a valid result. Capture supports Enter too.
+  document.addEventListener('submit', function (event) {
+    const path = new URL(location.href).pathname;
+    if (['/inventory-turnover-calculator.html', '/safety-stock-calculator.html', '/reorder-point-calculator.html'].includes(path) &&
+        event.target && typeof event.target.matches === 'function' && event.target.matches('form[data-inventory-tool]')) send('calculator_calculate');
+  }, true);
+  // First changed answer signals a start; no answer or field name is collected.
+  let diagnosticStarted = false;
+  document.addEventListener('change', function (event) {
+    if (diagnosticStarted || new URL(location.href).pathname !== '/scm-diagnostic.html') return;
+    if (!event.target || typeof event.target.closest !== 'function' || !event.target.closest('#scm-checklist select')) return;
+    diagnosticStarted = true;
+    send('diagnostic_start');
   });
 });
