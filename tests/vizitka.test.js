@@ -31,7 +31,7 @@ test('page has no analytics, storage or remote requests and includes actual link
  const html=fs.readFileSync('vizitka.html','utf8');
  for(const url of ['https://scm-news.ru/','https://scm-news.ru/documents/gerasimov-presentation.pdf','https://surgut.hh.ru/resume/33d5f7abff115bad460039ed1f7166544f5263','https://surgut.zarplata.ru/resume/dc1875b3ff115ecddd0039ed1f6c487a655144'])assert.ok(html.includes(url));
  assert.match(html,/connect-src 'none'/);assert.doesNotMatch(html,/googletagmanager|mc\.yandex|<form/i);assert.doesNotMatch(script,/localStorage|sessionStorage|fetch\s*\(|XMLHttpRequest/);
- assert.match(fs.readFileSync('index.html','utf8'),/href="vizitka.html"/);
+ assert.doesNotMatch(fs.readFileSync('index.html','utf8'),/href="vizitka.html"/);
 });
 
 test('short template is editable, retains key links, and protects edits',()=>{
