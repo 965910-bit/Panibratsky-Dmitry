@@ -177,6 +177,21 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(min(120, 105, 110), 105)
         self.assertEqual(min(120, 115, 110), 110)
 
+    def test_procurement_category_and_supplier_correction(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        for anchor in ('category-strategy', 'supplier-corrective-action'):
+            self.assertIn(f'href="scm-practical-guides.html#{anchor}"', wiki)
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+        for phrase in ('60%, 30% и 10%', 'при нулевой сумме',
+                       '300 уже отгружены, 700 физически находятся на складе',
+                       '2 / 100 × 100% = 2%', 'не доказывают долю дефектов во всей партии',
+                       'отсутствие дефектов в небольшой проверке не доказывает полного отсутствия риска'):
+            self.assertIn(phrase, html)
+        self.assertEqual([n / 10 * 100 for n in (6, 3, 1)], [60, 30, 10])
+        self.assertEqual(300 + 700, 1000)
+        self.assertEqual(2 / 100 * 100, 2)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',

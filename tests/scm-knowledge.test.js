@@ -66,7 +66,7 @@ test('practical guides are linked, indexable and preserve the documented model b
  assert.match(html,/rel="canonical" href="https:\/\/scm-news\.ru\/scm-practical-guides\.html"/);
  assert(fs.readFileSync('sitemap.xml','utf8').includes('https://scm-news.ru/scm-practical-guides.html'));
  for(const page of ['wiki.html','scm-encyclopedia.html']) assert(fs.readFileSync(page,'utf8').includes('href="scm-practical-guides.html'));
- const ids=['supplier','tco','incoterms','lot-size','replenishment','traceability','mapping','reverse','statistics','inventory-balance','working-hours','supply-chain-roles','abc-xyz','warehouse-review','capacity','kpi-application','service-and-stockouts','inventory-accuracy','receiving-to-availability','warehouse-slotting','supplier-lead-time'];
+ const ids=['supplier','tco','incoterms','lot-size','replenishment','traceability','mapping','reverse','statistics','inventory-balance','working-hours','supply-chain-roles','abc-xyz','warehouse-review','capacity','kpi-application','service-and-stockouts','inventory-accuracy','receiving-to-availability','warehouse-slotting','supplier-lead-time','category-strategy','supplier-corrective-action'];
  assert.equal((html.match(/data-chapter-entry data-keywords=/g)||[]).length,ids.length);
  for(const id of ids){assert(html.includes(`id="${id}"`));assert(html.includes(`href="#${id}"`));}
  for(const phrase of ['не юридическая консультация','не всегда совпадает','не скрывает тексты','не универсальное разрешение','версия 2.0, 2017','не измерение срока конкретной доставки']) assert(html.includes(phrase),phrase);
