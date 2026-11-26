@@ -236,6 +236,20 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(20 - 12, 8)
         self.assertEqual(30 / 5, 6)
 
+    def test_supplier_selection_and_three_way_match(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        for anchor in ('supplier-selection', 'three-way-match'):
+            self.assertIn(f'href="scm-practical-guides.html#{anchor}"', wiki)
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+        for phrase in ('4 × 0,4 + 3 × 0,3 + 5 × 0,3', '3 × 0,4 + 5 × 0,3 + 4 × 0,3',
+                       '20 + 60 =', 'расхождение =', 'не путая физическое получение',
+                       'не является инструкцией для конкретной процедуры'):
+            self.assertIn(phrase.casefold(), html.casefold())
+        self.assertAlmostEqual(4 * .4 + 3 * .3 + 5 * .3, 4.0)
+        self.assertAlmostEqual(3 * .4 + 5 * .3 + 4 * .3, 3.9)
+        self.assertEqual(20 + 60 - 70, 10)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
