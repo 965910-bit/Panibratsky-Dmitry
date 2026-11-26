@@ -1,0 +1,36 @@
+name: Merge eligible dependency patches
+on:
+  workflow_run:
+    workflows: ['Site checks']
+    types: [completed]
+  schedule:
+    - cron: '41 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dependabot-safe-merge
+  cancel-in-progress: false
+jobs:
+  merge:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Always use trusted main; never check out or run code from the PR.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Generate scoped app token
+        id: app_token
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3
+        with:
+          app-id: ${{ vars.SCM_PUBLICATION_APP_ID }}
+          private-key: ${{ secrets.SCM_PUBLICATION_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Merge only verified, permitted Dependabot patches
+        env:
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
+        run: python scripts/dependabot_safe_merge.py
