@@ -62,6 +62,20 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(1 / 2 * 100, 50)
         self.assertEqual(3 / 4 * 100, 75)
 
+    def test_inventory_accuracy_example_and_wiki_navigation(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        self.assertIn('href="scm-practical-guides.html#inventory-accuracy"', wiki)
+        self.assertEqual(html.count('id="inventory-accuracy"'), 1)
+        for text in ('90 − 100 = −10', '60 − 50 = +10', '40 − 40 = 0',
+                     '10 + 10 + 0', '1 / 3 × 100% ≈ 33,3%',
+                     'не доказанные потери', 'не автоматически заменяет',
+                     'При нуле проверенных записей доля не рассчитывается'):
+            self.assertIn(text, html)
+        self.assertEqual(sum((90 - 100, 60 - 50, 40 - 40)), 0)
+        self.assertEqual(sum(abs(n) for n in (90 - 100, 60 - 50, 40 - 40)), 20)
+        self.assertAlmostEqual(1 / 3 * 100, 33.333333, places=5)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
