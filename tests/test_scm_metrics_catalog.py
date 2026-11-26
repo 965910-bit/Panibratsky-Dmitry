@@ -94,6 +94,20 @@ class MetricsCatalogTests(unittest.TestCase):
         self.assertAlmostEqual(-100000 + 60000/1.1 + 60000/1.1**2, 4132.23140495867)
         self.assertEqual(18 / 20 * 100, 90)
 
+    def test_service_quality_digital_method_review(self):
+        html = (ROOT / 'scm-metrics.html').read_text(encoding='utf-8')
+        for anchor in ('service-quality-digital', 'ecommerce-method', 'procurement-method', 'quality-method', 'digital-method', 'esg-method', 'jurisdiction-method'):
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+            self.assertIn(f'href="#{anchor}"', html)
+        for phrase in ('открытая просроченная строка', 'не требует RFID', 'передача не доказывает', 'не заменяют национальную классификацию'):
+            self.assertIn(phrase.lower(), html.lower())
+        self.assertEqual(85 / 100 * 100, 85)
+        self.assertEqual(20 / 200 * 100, 10)
+        self.assertEqual(3 / 10000 * 1000000, 300)
+        self.assertEqual(.5 * 80 + .3 * 90 + .2 * 70, 81)
+        self.assertEqual((100 - 95) * 1000, 5000)
+        self.assertEqual(2000 * 3, 6000)
+
     def test_no_unsupported_benchmark_and_sources_are_present(self):
         html = (ROOT / 'scm-metrics.html').read_text(encoding='utf-8')
         for source in ('apqc.org/', 'mckinsey.com/', 'ilo.org/'):
