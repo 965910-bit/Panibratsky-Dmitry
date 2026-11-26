@@ -49,6 +49,19 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(120000 / 400, 300)
         self.assertEqual(400 / 2, 200)
 
+    def test_service_stockout_guide_is_linked_and_distinguishes_bases(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        self.assertIn('href="scm-practical-guides.html#service-and-stockouts"', wiki)
+        self.assertEqual(html.count('id="service-and-stockouts"'), 1)
+        for text in ('(80 + 10) / (80 + 20)', '1 / 2 × 100% = 50%',
+                     '3 / 4 × 100% = 75%', 'данных о границах',
+                     'показатель не рассчитывается', 'может отличаться от выбранного временного окна'):
+            self.assertIn(text, html)
+        self.assertEqual((80 + 10) / (80 + 20) * 100, 90)
+        self.assertEqual(1 / 2 * 100, 50)
+        self.assertEqual(3 / 4 * 100, 75)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
