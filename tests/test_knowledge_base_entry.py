@@ -162,6 +162,21 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(1200 / 100, 12)
         self.assertEqual(15 - 12, 3)
 
+    def test_production_oee_and_flow(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-advanced-practice.html').read_text(encoding='utf-8')
+        for anchor in ('production-oee', 'production-bottleneck'):
+            self.assertIn(f'href="scm-advanced-practice.html#{anchor}"', wiki)
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+        for phrase in ('420 / 480 = 87,5%', '760 / 800 = 95%', '79,17%',
+                       'при нулевом плановом времени OEE не определена',
+                       '90 изделий за смену', 'ограничением станет третья операция'):
+            self.assertIn(phrase.casefold(), html.casefold())
+        self.assertAlmostEqual((420 / 480) * (400 / 420) * (760 / 800) * 100, 79.1666667)
+        self.assertEqual(min(120, 90, 110), 90)
+        self.assertEqual(min(120, 105, 110), 105)
+        self.assertEqual(min(120, 115, 110), 110)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
