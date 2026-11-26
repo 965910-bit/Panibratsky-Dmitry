@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
 
-test('catalog exposes all 80 unique topics and links to forty-six prepared articles', () => {
+test('catalog exposes all 80 unique topics and links to fifty-four prepared articles', () => {
   const page = read('scm-topic-catalog.html');
   const wiki = read('wiki.html');
   const guide = read('scm-network-operations.html');
@@ -17,9 +17,15 @@ test('catalog exposes all 80 unique topics and links to forty-six prepared artic
   assert.equal(new Set(ids).size, 80);
   for (let n = 1; n <= 80; n++) assert.ok(ids.includes(`topic-${n}`));
   const ready = [...page.matchAll(/href="scm-network-operations\.html#([^"]+)"/g)].map(m => m[1]);
-  assert.equal(ready.length, 46);
+  assert.equal(ready.length, 54);
   for (const id of ready) assert.ok(guide.includes(`id="${id}"`), id);
-  assert.equal((page.match(/class="catalog-status">В плане/g) || []).length, 34);
+  const newTopics = {6: 'process-raci', 62: 'control-tower', 75: 'investment-business-case', 76: 'sla-kpi-data-quality', 77: 'measurement-improvement', 78: 'shift-skills-matrix', 79: 'shift-handover', 80: 'change-implementation-project'};
+  for (const [number, anchor] of Object.entries(newTopics)) {
+    const card = page.match(new RegExp(`<article class="catalog-card" id="topic-${number}"[\\s\\S]*?</article>`));
+    assert.ok(card && card[0].includes(`scm-network-operations.html#${anchor}`), number);
+    assert.ok(guide.includes(`href="#${anchor}"`), anchor);
+  }
+  assert.equal((page.match(/class="catalog-status">В плане/g) || []).length, 26);
 });
 
 test('search handles ё, multiple words, empty results and reset', () => {
