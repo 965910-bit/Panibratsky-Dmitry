@@ -281,6 +281,24 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(12 + 25 + 15 + 8, 60)
         self.assertEqual(25 + 15 + 8, 48)
 
+    def test_mock_recall_and_temperature_records(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        pages = {'scm-practical-guides.html': 'mock-recall',
+                 'scm-sector-cases.html': 'temperature-excursion-record'}
+        for page, anchor in pages.items():
+            self.assertIn(f'href="{page}#{anchor}"', wiki)
+            self.assertEqual((ROOT / page).read_text(encoding='utf-8').count(f'id="{anchor}"'), 1)
+        recall = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        for phrase in ('300 на складе + 100 в пути + 250 + 350',
+                       '500 единиц', 'не означает, что 500 единиц возвращены'):
+            self.assertIn(phrase, recall)
+        temp = (ROOT / 'scm-sector-cases.html').read_text(encoding='utf-8')
+        self.assertIn('нельзя точно установить ни момент начала', temp)
+        self.assertIn('нельзя считать, что отклонение длилось ровно 10 или 20 минут', temp)
+        self.assertEqual(300 + 100 + 250 + 350, 1000)
+        self.assertEqual(200 + 300, 500)
+        self.assertEqual(600 - 500, 100)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
