@@ -70,7 +70,10 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data/news.json trends.html sitemap.xml rss.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей, sitemap, RSS, метатегов" && git push)
+          if ! git diff --cached --quiet; then
+            git commit -m "Обновление новостей, sitemap, RSS, метатегов"
+            git push
+          fi
 
       # Keep only the exact validated public outputs when publication fails. The job remains failed.
       - name: Preserve public news outputs after publication failure
