@@ -221,6 +221,21 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(18 / 20 * 100, 90)
         self.assertEqual(100000 / 20, 5000)
 
+    def test_expiry_rotation_and_little_law(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        for anchor in ('fifo-fefo', 'little-law'):
+            self.assertIn(f'href="scm-practical-guides.html#{anchor}"', wiki)
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+        for phrase in ('40 из B и 30 из A', 'A — 18 дней, B — 8 дней',
+                       'B не подходит', '30 / 5 =', '6 часов на заказ',
+                       'не трудозатраты сотрудника', 'при нулевой интенсивности деление не определено'):
+            self.assertIn(phrase.casefold(), html.casefold())
+        self.assertEqual(40 + 30, 70)
+        self.assertEqual(30 - 12, 18)
+        self.assertEqual(20 - 12, 8)
+        self.assertEqual(30 / 5, 6)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
