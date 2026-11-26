@@ -168,4 +168,21 @@ jobs:
               print('::error title=Bypass count unavailable::GraphQL did not expose a count.')
               raise SystemExit(1)
           print(f'::notice title=App GraphQL visibility::bypass_actor_count={count}')
+          root = Path(os.environ['RUNNER_TEMP'])
+          ruleset = json.loads((root / 'publication-ruleset.json').read_text())
+          rule_list = ruleset.get('rules', [])
+          pr = [r.get('parameters', {}) for r in rule_list if r.get('type') == 'pull_request']
+          checks = [r.get('parameters', {}) for r in rule_list if r.get('type') == 'required_status_checks']
+          valid_pr = any(p.get('required_approving_review_count') == 0
+                         and not p.get('require_code_owner_review')
+                         and not p.get('require_last_push_approval')
+                         and not p.get('required_review_thread_resolution') for p in pr)
+          valid_check = any(p.get('strict_required_status_checks_policy') is True
+                            and any(c.get('context') == 'validate' and c.get('integration_id') == 15368
+                                    for c in p.get('required_status_checks', [])) for p in checks)
+          if (ruleset.get('enforcement') != 'disabled' or ruleset.get('current_user_can_bypass') != 'never'
+                  or type(count) is not int or count != 0 or not valid_pr or not valid_check):
+              print('::error title=Saved ruleset preflight failed::The disabled draft does not meet the expected protected PR requirements.')
+              raise SystemExit(1)
+          print('::notice title=Saved ruleset preflight passed::The draft has no app bypass, strict validate and a PR requirement. It remains disabled.')
           PY
