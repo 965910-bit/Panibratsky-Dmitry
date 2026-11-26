@@ -207,6 +207,20 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(48 + 24 + 96, 168)
         self.assertEqual(10 * 12 - 10 * 10, 20)
 
+    def test_cross_dock_and_carrier_performance(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        for anchor in ('cross-docking', 'carrier-performance'):
+            self.assertIn(f'href="scm-practical-guides.html#{anchor}"', wiki)
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+        for phrase in ('180 минут', 'готова в 12:30', 'точное время следующей отправки',
+                       '18 / 20 × 100% = 90%', '100 000 / 20 = 5 000',
+                       'не относите причину к перевозчику без доказательств'):
+            self.assertIn(phrase.casefold(), html.casefold())
+        self.assertEqual(90 + 90, 180)
+        self.assertEqual(18 / 20 * 100, 90)
+        self.assertEqual(100000 / 20, 5000)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
