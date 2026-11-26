@@ -56,7 +56,7 @@ async function scenario({ width, dpr, javascriptEnabled = true }) {
     assert.equal(await page.locator('.resource-card-knowledge').getAttribute('href'), 'wiki.html');
     if (width > 820) {
       assert.equal(await nav.getByRole('link', {name: 'База знаний'}).isVisible(), true);
-      const brandBox = await page.locator('.brand').boundingBox();
+      const brandBox = await page.locator('.site-header .brand').boundingBox();
       const navBox = await nav.boundingBox();
       const themeBox = await page.locator('.theme-toggle').boundingBox();
       assert.ok(brandBox.x + brandBox.width <= navBox.x && navBox.x + navBox.width <= themeBox.x, 'Desktop navigation must not overlap brand or theme control');
