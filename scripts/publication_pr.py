@@ -13,6 +13,7 @@ import subprocess
 import sys
 
 from check_publication_candidate import check as check_candidate
+from run_summary import report
 
 APP_LOGIN = 'scm-news-publication-965910[bot]'
 PATHS = {
@@ -109,7 +110,7 @@ def main():
         command('git', 'add', '--', *PATHS[args.kind])
         result = subprocess.run(['git', 'diff', '--cached', '--quiet'])
         if result.returncode == 0:
-            print('No publication changes.')
+            report('ℹ️ Публикация: изменений нет, PR не создан; автоматическое слияние и развёртывание этим запуском не проверялись.')
             return 0
         if result.returncode != 1:
             raise ValueError('Unable to inspect staged changes')
@@ -139,10 +140,12 @@ def main():
                        '-f', 'id=' + pull['node_id'], '-f', 'head=' + head)
         if response.get('errors') or not response.get('data', {}).get('enablePullRequestAutoMerge', {}).get('pullRequest', {}).get('autoMergeRequest'):
             raise ValueError('Auto-merge was not enabled; manual review required')
+        report('⏳ Публикация: PR создан, автослияние запрошено; проверки, слияние и развёртывание ещё не подтверждены.')
         print('Publication PR created; waiting for required GitHub checks:', pull['html_url'])
         return 0
     except (KeyError, ValueError, TypeError, AttributeError, UnicodeError, OSError, subprocess.CalledProcessError, json.JSONDecodeError) as error:
         # Never print command stderr or credentials. Failure must remain visible.
+        report('❌ Публикация: выполнение прервано; создание PR или слияние не подтверждены. Проверьте журнал и открытые PR.')
         print(f'Publication PR failed: {error}', file=sys.stderr)
         return 1
 

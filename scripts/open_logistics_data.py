@@ -10,6 +10,7 @@ import tempfile
 from datetime import datetime, timezone
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, build_opener, HTTPRedirectHandler
+from run_summary import report
 
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / 'data' / 'open-logistics.json'
@@ -203,17 +204,20 @@ def main():
         captured = {}
         results = collect(lambda url: fetch_json(url, captured)) if args.archive_dir else collect()
         if args.check:
-            print('Both sources validated; no files written.')
+            report('✅ Открытые данные: оба источника проверены; режим проверки без записи.')
         else:
             if args.archive_dir:
-                print('Raw capture archived.' if archive_capture(captured, results, args.archive_dir) else 'Raw capture already archived.')
+                archived = archive_capture(captured, results, args.archive_dir)
+                report('Открытые данные: новый исходный ответ сохранён в архив.' if archived else 'Открытые данные: такой исходный ответ уже есть в архиве.')
                 if args.review_history_dir:
-                    from open_history_review import report
-                    comparison = report(args.archive_dir / archive_bundle_id(captured), args.review_history_dir)
+                    from open_history_review import report as history_report
+                    comparison = history_report(args.archive_dir / archive_bundle_id(captured), args.review_history_dir)
                     print(json.dumps(comparison, ensure_ascii=False))
-            print('Snapshot updated.' if save(results) else 'Snapshot unchanged.')
+            changed = save(results)
+            report('Открытые данные: снимок изменён; это ещё не подтверждение публикации.' if changed else 'Открытые данные: наблюдения снимка не изменились; новый архив при этом возможен.')
         return 0
     except (OSError, HTTPError, URLError, ValueError, TypeError, KeyError, AttributeError, OverflowError):
+        report('❌ Открытые данные: сбор или проверка завершились ошибкой; успешная публикация не подтверждена.')
         print('Collection failed; existing snapshot was not changed.')
         return 1
 

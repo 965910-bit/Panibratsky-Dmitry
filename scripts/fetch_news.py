@@ -8,6 +8,7 @@ from datetime import datetime, timedelta, timezone
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from news_utils import merge_news
+from run_summary import report
 
 # Direct primary sources are paused pending clarification of access rights.
 # Keep the existing feed unchanged rather than treating a paused feed as fresh data.
@@ -315,6 +316,7 @@ def load_existing_links(news_file):
 def main(news_file=None):
     if not SOURCES:
         print('::warning::Основные источники приостановлены; лента не обновлялась')
+        report('⚠️ Новости: основные источники приостановлены; новые новости не собирались. Успех задачи не означает свежую ленту.')
         return
     news_file = news_file or os.path.join(os.path.dirname(__file__), "..", "data", "news.json")
     if os.path.exists(news_file):
