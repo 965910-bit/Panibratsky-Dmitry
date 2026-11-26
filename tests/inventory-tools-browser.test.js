@@ -61,7 +61,10 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    await checkAccessibility(page);
    await page.goto(`${base}/wiki.html`);
    assert.equal(await page.locator('.wiki-featured a').count(),26);
-   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),46);
+   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),49);
+   await page.getByLabel('Поиск по указателю тем').fill('allocation');
+   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),1);
+   assert.equal(await page.locator('[data-wiki-topic]:visible a').getAttribute('href'),'scm-advanced-practice.html#supply-allocation');
    await page.getByLabel('Поиск по указателю тем').fill('lead time разброс');
    assert.equal(await page.locator('[data-wiki-topic]:visible').count(),1);
    assert.equal(await page.locator('[data-wiki-topic]:visible a').getAttribute('href'),'scm-practical-guides.html#supplier-lead-time');
@@ -82,7 +85,7 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    await page.getByLabel('Поиск по указателю тем').fill('несуществующая тема');
    assert.equal(await page.locator('#wiki-search-empty').isVisible(),true);
    await page.getByLabel('Поиск по указателю тем').clear();
-   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),46);
+   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),49);
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),false);
    await page.locator('.wiki-planned summary').click();
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),true);
