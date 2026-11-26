@@ -23,6 +23,18 @@ class PublicationRecoveryTests(unittest.TestCase):
                 self.assertIn('permission-pull-requests: write', text)
                 self.assertIn(f'run: python scripts/publication_pr.py --kind {kind}', text)
 
+    def test_app_diagnostic_is_manual_non_main_and_read_only(self):
+        text = (ROOT / '.github/workflows/site-tests.yml').read_text()
+        job = text.split('  publication-app-read-only:', 1)[1]
+        self.assertIn("github.event_name == 'workflow_dispatch'", job)
+        self.assertIn("github.ref != 'refs/heads/main'", job)
+        self.assertIn('inputs.test_publication_app == true', job)
+        self.assertIn('permissions: {}', job)
+        self.assertIn('permission-contents: read', job)
+        self.assertIn('permission-pull-requests: read', job)
+        self.assertNotIn('actions/checkout', job)
+        self.assertNotIn('permission-contents: write', job)
+
     def test_recovery_is_only_after_failed_publication_and_does_not_expose_private_scratch(self):
         paths = [
             ('update_news.yml', 'publish_news', 'news-publication-failed',

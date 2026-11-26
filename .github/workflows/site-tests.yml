@@ -3,6 +3,12 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      test_publication_app:
+        description: 'Read-only GitHub App installation diagnostic'
+        required: false
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -85,3 +91,26 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Check published homepage in Chromium without analytics
         run: CHROME_PATH="$(command -v google-chrome)" node scripts/live_home_browser.cjs
+
+  publication-app-read-only:
+    if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' && inputs.test_publication_app == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Generate read-only token for this repository
+        id: app_token
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3
+        with:
+          app-id: ${{ vars.SCM_PUBLICATION_APP_ID }}
+          private-key: ${{ secrets.SCM_PUBLICATION_APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-pull-requests: read
+      - name: Verify token accesses only the intended repository
+        env:
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
+        run: |
+          gh api installation/repositories --jq '.repositories[].full_name' > "$RUNNER_TEMP/app-repositories.txt"
+          test "$(wc -l < "$RUNNER_TEMP/app-repositories.txt")" -eq 1
+          grep -Fx "$GITHUB_REPOSITORY" "$RUNNER_TEMP/app-repositories.txt" > /dev/null
+          echo "Scoped app token can read the expected repository; no writes performed."
