@@ -60,7 +60,7 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
    await page.goto(`${base}/wiki.html`);
-   assert.equal(await page.locator('.wiki-featured a').count(),11);
+   assert.equal(await page.locator('.wiki-featured a').count(),20);
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),false);
    await page.locator('.wiki-planned summary').click();
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),true);
@@ -84,7 +84,7 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
    await page.goto(`${base}/scm-practical-guides.html`);
-   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),9);
+   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),12);
    await page.getByLabel('Поиск по задачам').fill('incoterms');
    assert.equal(await page.locator('[data-chapter-entry]:visible').count(),1);
    assert.equal(await page.locator('#traceability').isVisible(),true);
@@ -207,7 +207,7 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
   await page.goto(`${base}/inventory-turnover-calculator.html`);assert.equal(await page.getByRole('button',{name:'Рассчитать'}).isDisabled(),true);
   await page.goto(`${base}/scm-knowledge.html`);assert.equal(await page.locator('[data-knowledge-card]:visible').count(),8);assert.equal(await page.locator('#knowledge-search').isVisible(),false);
   await page.goto(`${base}/scm-encyclopedia.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),13);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#inventory').isVisible(),true);
-  await page.goto(`${base}/scm-practical-guides.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),9);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#traceability').isVisible(),true);
+  await page.goto(`${base}/scm-practical-guides.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),12);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#traceability').isVisible(),true);
   await page.goto(`${base}/scm-academy.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),9);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);await page.getByText('Показать разбор').click();assert.equal(await page.locator('#scenario details').evaluate(el=>el.open),true);
   await page.goto(`${base}/scm-internal-academy.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),8);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#case-template').isVisible(),true);
   await page.goto(`${base}/scm-navigator.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),13);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);
