@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
 
-test('catalog exposes all 80 unique topics and links to twenty-two prepared articles', () => {
+test('catalog exposes all 80 unique topics and links to thirty prepared articles', () => {
   const page = read('scm-topic-catalog.html');
   const wiki = read('wiki.html');
   const guide = read('scm-network-operations.html');
@@ -17,9 +17,9 @@ test('catalog exposes all 80 unique topics and links to twenty-two prepared arti
   assert.equal(new Set(ids).size, 80);
   for (let n = 1; n <= 80; n++) assert.ok(ids.includes(`topic-${n}`));
   const ready = [...page.matchAll(/href="scm-network-operations\.html#([^"]+)"/g)].map(m => m[1]);
-  assert.equal(ready.length, 22);
+  assert.equal(ready.length, 30);
   for (const id of ready) assert.ok(guide.includes(`id="${id}"`), id);
-  assert.equal((page.match(/class="catalog-status">В плане/g) || []).length, 58);
+  assert.equal((page.match(/class="catalog-status">В плане/g) || []).length, 50);
 });
 
 test('search handles ё, multiple words, empty results and reset', () => {
