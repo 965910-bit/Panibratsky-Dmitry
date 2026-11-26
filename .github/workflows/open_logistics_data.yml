@@ -72,6 +72,9 @@ jobs:
       - name: Review saved observations before committing
         if: github.ref == 'refs/heads/main'
         run: python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression
+      - name: Verify archived captures and snapshot before publication
+        if: github.ref == 'refs/heads/main'
+        run: python scripts/check_open_data_archives.py
       - name: Commit and push only the snapshot
         id: publish_indicators
         if: github.ref == 'refs/heads/main'
