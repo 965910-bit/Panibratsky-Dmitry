@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          persist-credentials: ${{ github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.persist_diagnostic == true) }}
+          persist-credentials: ${{ (github.ref == 'refs/heads/main' && vars.SCM_PUBLICATION_MODE != 'pr') || (github.ref != 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.persist_diagnostic == true) }}
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
@@ -72,8 +72,12 @@ jobs:
       - name: Review saved observations before committing
         if: github.ref == 'refs/heads/main'
         run: python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression
-      - name: Commit and push only the snapshot
+      - name: Verify archived captures and snapshot before publication
         if: github.ref == 'refs/heads/main'
+        run: python scripts/check_open_data_archives.py
+      - name: Commit and push only the snapshot
+        id: publish_indicators
+        if: github.ref == 'refs/heads/main' && vars.SCM_PUBLICATION_MODE != 'pr'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -82,3 +86,31 @@ jobs:
             git commit -m "Update open logistics indicators"
             git push
           fi
+
+      - name: Create scoped publication app token
+        id: publication_token
+        if: github.ref == 'refs/heads/main' && vars.SCM_PUBLICATION_MODE == 'pr'
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3
+        with:
+          app-id: ${{ vars.SCM_PUBLICATION_APP_ID }}
+          private-key: ${{ secrets.SCM_PUBLICATION_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Propose verified indicators through protected PR
+        id: publish_indicators_pr
+        if: github.ref == 'refs/heads/main' && vars.SCM_PUBLICATION_MODE == 'pr'
+        env:
+          GH_TOKEN: ${{ steps.publication_token.outputs.token }}
+        run: python scripts/publication_pr.py --kind open-data
+
+      # The public, reviewed snapshot is preserved for inspection; it is not published here.
+      - name: Preserve public indicators after publication failure
+        if: ${{ failure() && (steps.publish_indicators.outcome == 'failure' || steps.publication_token.outcome == 'failure' || steps.publish_indicators_pr.outcome == 'failure') }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: open-data-publication-failed
+          path: |
+            data/open-logistics.json
+            data/open-logistics-archives/
+          if-no-files-found: warn
+          retention-days: 7
