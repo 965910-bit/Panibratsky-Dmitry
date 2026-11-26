@@ -122,6 +122,25 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(20 * 7 + 30, 170)
         self.assertEqual(20 * 10 + 30, 230)
 
+    def test_cross_functional_wiki_examples(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-advanced-practice.html').read_text(encoding='utf-8')
+        for anchor in ('forecast-review', 'supply-allocation', 'cash-cycle-example'):
+            self.assertIn(f'href="scm-advanced-practice.html#{anchor}"', wiki)
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+        for phrase in ('(20 + 20) / (100 + 100) × 100% = 20%',
+                       '90 / 120 = 75%', '45, 30 и 15',
+                       '800 000 / (3 600 000 / 90) = 20',
+                       '500 000 / (4 500 000 / 90) = 10',
+                       '300 000 / (2 700 000 / 90) = 10',
+                       'нулевой оборот делает соответствующий показатель дней неопределённым'):
+            self.assertIn(phrase, html)
+        self.assertEqual((20 + 20) / 200 * 100, 20)
+        self.assertEqual(sum((45, 30, 15)), 90)
+        self.assertEqual(800000 / (3600000 / 90), 20)
+        self.assertEqual(500000 / (4500000 / 90), 10)
+        self.assertEqual(300000 / (2700000 / 90), 10)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
