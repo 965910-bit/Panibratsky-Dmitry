@@ -17,7 +17,7 @@ test('local search normalises text, filters all words, resets and never interpre
 });
 test('every curated index target is an existing canonical sitemap page with a valid anchor',()=>{
  const wiki=fs.readFileSync('wiki.html','utf8'); const sitemap=fs.readFileSync('sitemap.xml','utf8');
- const items=[...wiki.matchAll(/<li data-wiki-topic data-keywords="[^"]*"><a href="([^"]+)">/g)];assert.equal(items.length,59);
+ const items=[...wiki.matchAll(/<li data-wiki-topic data-keywords="[^"]*"><a href="([^"]+)">/g)];assert.equal(items.length,61);
  assert.equal(new Set(items.map(x=>x[1])).size,items.length);
  for(const [,url] of items){const [file,anchor]=url.split('#');assert(fs.existsSync(file),url);assert(sitemap.includes(`https://scm-news.ru/${file}`),url);
  if(anchor) assert.match(fs.readFileSync(file,'utf8'),new RegExp(`(?:id|name)=["']${anchor}["']`),url);}
