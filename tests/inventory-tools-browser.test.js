@@ -3,6 +3,8 @@ const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('node:http');
 const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
 const {chromium} = require('playwright-core');
 const chrome = process.env.CHROME_PATH;
 if (!chrome) throw new Error('Set CHROME_PATH to an installed Chrome/Chromium');
@@ -15,7 +17,7 @@ async function checkAccessibility(page) {
     await page.locator('.executive-theme').click();
   }
 }
-const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','scm-navigator.html','scm-advanced-practice.html','scm-case-lab.html','css/scm-case-lab.css','js/scm-case-model.js','js/scm-case-lab.js','scm-leader-map.html','js/scm-leader-map.js','scm-sector-cases.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg','images/photo-left-320.webp','images/photo-left-480.webp','images/photo-left-640.webp','images/photo-right-320.webp','images/photo-right-480.webp','images/photo-right-640.webp']);
+const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/calculator-directory.css','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','scm-navigator.html','scm-advanced-practice.html','scm-case-lab.html','css/scm-case-lab.css','js/scm-case-model.js','js/scm-case-lab.js','scm-leader-map.html','js/scm-leader-map.js','scm-sector-cases.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg','images/photo-left-320.webp','images/photo-left-480.webp','images/photo-left-640.webp','images/photo-right-320.webp','images/photo-right-480.webp','images/photo-right-640.webp']);
 
 test('SCM tools work at desktop and mobile sizes without sending user data',async()=>{
  const requests=[];
@@ -210,4 +212,26 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
   await noJs.close();
   assert(requests.every(r=>r.method==='GET'));
  } finally {if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
+});
+
+test('calculator directory is usable on desktop and mobile with working methods and anchors',async()=>{
+ const browser=await chromium.launch({executablePath:chrome,headless:true,args});
+ try {for (const width of [375,1280]) {
+  const ctx=await browser.newContext({viewport:{width,height:900},colorScheme:'light'});const page=await ctx.newPage();
+  await page.route('**/*',async route=>{
+   const url=new URL(route.request().url());if(url.hostname!=='scm-news.ru')return route.abort();
+   const file=path.resolve(root,'.'+url.pathname);if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile())return route.fulfill({status:404,body:''});
+   const type=file.endsWith('.html')?'text/html; charset=utf-8':file.endsWith('.css')?'text/css':file.endsWith('.js')?'application/javascript':'application/octet-stream';
+   return route.fulfill({status:200,contentType:type,body:fs.readFileSync(file)});
+  });
+  await page.goto('https://scm-news.ru/calculators.html');await page.locator('[data-choice="no"]').click();
+  assert.equal(await page.locator('.directory-grid a').count(),6);assert.equal(await page.locator('.method-list details').count(),6);
+  await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});
+  for(let i=0;i<2;i++){const violations=await page.evaluate(async()=>(await window.axe.run(document.querySelector('.method-guide'),{runOnly:['color-contrast','label','aria-allowed-attr']})).violations);assert.deepEqual(violations,[]);await page.locator('.executive-theme').click();await page.waitForTimeout(400);}
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true,`overflow at ${width}`);
+  await page.locator('.method-list summary').first().click();assert.equal(await page.locator('.method-list details').first().evaluate(e=>e.open),true);
+  await page.locator('.directory-grid a[href="#eoq-calculator"]').click();assert.equal(await page.evaluate(()=>location.hash),'#eoq-calculator');
+  await page.locator('#eoq-calculator button.calculate-btn').click();assert.match(await page.locator('#eoq-value').textContent(),/707/);
+  await ctx.close();
+ }}finally{await browser.close();}
 });
