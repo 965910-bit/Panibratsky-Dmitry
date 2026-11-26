@@ -10,13 +10,13 @@ function extract(page,name) {
 }
 const dashboard=fs.readFileSync('scm-platform/dashboard.html','utf8');
 const escapeHtml=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-test('homepage inline CSS matches canonical source; analytics remains present and CSS precedes it',()=>{
+test('homepage inline CSS matches canonical source; analytics is consent-gated',()=>{
   const html=fs.readFileSync('index.html','utf8'), css=fs.readFileSync('css/executive.css','utf8');
   const marker=html.match(/<!-- HOME_STYLES_START -->\n<style>\n([\s\S]*?)\n<\/style>\n<!-- HOME_STYLES_END -->/);
   assert.ok(marker);assert.equal(marker[1],css);assert.ok(!css.toLowerCase().includes('</style'));
   assert.doesNotMatch(html,/<link rel="stylesheet" href="css\/executive.css"/);
-  assert.ok(html.indexOf('HOME_STYLES_START')<html.indexOf('googletagmanager.com/gtag/js'));
-  assert.match(html,/googletagmanager\.com\/gtag\/js/);assert.match(html,/mc\.yandex\.ru\/metrika\/tag\.js/);
+  assert.ok(html.indexOf('HOME_STYLES_START')<html.indexOf('js/analytics-consent.js'));
+  assert.match(html,/js\/analytics-consent\.js/);assert.doesNotMatch(html,/googletagmanager\.com\/gtag\/js|mc\.yandex\.ru\/metrika\/tag\.js/);
   const check=cp.spawnSync('python3',['scripts/sync_home_styles.py','--check'],{encoding:'utf8'});assert.equal(check.status,0,check.stderr);
 });
 test('paused shared imports preserve every legacy key and never parse payload',()=>{

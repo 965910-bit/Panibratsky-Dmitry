@@ -7,7 +7,7 @@
   const goals = Object.freeze({
     phone: 'contact_phone_click',
     email: 'contact_email_click',
-    profile: 'contact_profile_click'
+    profile: 'setka_profile_click'
   });
   document.addEventListener('click', event => {
     if (event.defaultPrevented || (typeof event.button === 'number' && event.button !== 0)) return;

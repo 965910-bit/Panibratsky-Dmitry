@@ -52,3 +52,13 @@ test('diagnostic requires all answers, does not assign a score and builds links 
  fields.supply.value='';events.change();submit(events.submit);assert(output.classList.contains('error'));assert.match(output.textContent,/Ответьте/);
  for(const value of Object.values(fields))value.value='yes';submit(events.submit);assert.match(output.children[0].textContent,/не подтверждает/);assert.equal(output.children.length,1);
 });
+
+test('calculator directory lists every public model and links to existing sections and methods',()=>{
+ const html=fs.readFileSync('calculators.html','utf8');
+ const links=['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','#eoq-calculator','#fill-rate-calculator','#transport-calculator'];
+ const nav=html.match(/<nav class="directory-grid"[\s\S]*?<\/nav>/);assert.ok(nav);
+ for(const link of links){assert.ok(nav[0].includes(`href="${link}"`),link);if(link.startsWith('#'))assert.ok(html.includes(`id="${link.slice(1)}"`));else assert.ok(fs.existsSync(link));}
+ assert.equal((html.match(/<details><summary>/g)||[]).length,6);
+ assert.ok(fs.existsSync('css/calculator-directory.css'));assert.match(fs.readFileSync('tools.html','utf8'),/href="calculators\.html">Открыть каталог/);
+ assert.match(html,/не равен OTIF/);assert.match(html,/не статистическая вероятность/);
+});

@@ -26,27 +26,6 @@
     <link rel="stylesheet" href="css/vendor/font-awesome-6.4.0/css/all.min.css">
     <script src="js/vendor/chart.umd-4.6.1.js"></script>
 
-    <!-- Google tag (gtag.js) - GA4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-DM41FJYWX0');
-    </script>
-
-    <!-- Яндекс.Метрика -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108401876', 'ym');
-        ym(108401876, 'init', {ssr:true, webvisor:false, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/108401876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-
     <!-- Микроразметка FAQ -->
     <script type="application/ld+json">
     {
@@ -981,7 +960,7 @@
             const previousPagination = [...pagination.childNodes];
             const previousNews = allNews, previousFiltered = filteredNews, previousPage = currentPage;
             try {
-                const response = await fetch('data/news.json?_=' + Date.now());
+                const response = await fetch('data/news.json', { cache: 'no-cache' });
                 if (!response.ok) throw new Error('Network error');
                 const data = await response.json();
                 const seen = new Set();
@@ -1417,5 +1396,8 @@
     </script>
     <script src="js/register-sw.js"></script>
     <script src="js/install-prompt.js"></script>
+
+<script src="js/analytics-consent.js" defer></script>
+<script src="js/visitor-events.js" defer></script>
 </body>
 </html>

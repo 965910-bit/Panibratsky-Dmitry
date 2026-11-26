@@ -37,7 +37,7 @@ test('prepared goals, when explicitly enabled for testing, send only fixed ident
   assert.deepEqual(sent, [
     [108401876, 'reachGoal', 'contact_phone_click'],
     [108401876, 'reachGoal', 'contact_email_click'],
-    [108401876, 'reachGoal', 'contact_profile_click']
+    [108401876, 'reachGoal', 'setka_profile_click']
   ]);
   assert.doesNotMatch(JSON.stringify(sent), /private@example|mailto:|tel:/);
   click({target:null}); click({target:{closest:()=>null}});

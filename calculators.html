@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Профессиональные калькуляторы для управления цепями поставок - EOQ, страховой запас, оборачиваемость запасов">
+    <meta name="description" content="Калькуляторы и методики логистики: оборачиваемость, страховой запас, точка заказа, EOQ, Fill Rate и стоимость перевозки.">
     <title>Калькуляторы логистики и SCM | Дмитрий Герасимов</title>
 <link rel="canonical" href="https://scm-news.ru/calculators.html">
     
     <!-- Стили -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/calculator-directory.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/vendor/font-awesome-6.4.0/css/all.min.css">
     
@@ -659,7 +660,7 @@
                     <!-- Левое фото -->
                     <div class="header-photo-left">
                         <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" width="2688" height="3456" alt="Дмитрий Герасимов - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                            <picture><source type="image/webp" srcset="images/photo-left-320.webp 320w, images/photo-left-480.webp 480w, images/photo-left-640.webp 640w" sizes="(max-width: 1024px) 160px, 200px"><img src="images/photo-left.jpg" width="2688" height="3456" loading="lazy" decoding="async" alt="Дмитрий Герасимов - профессиональная деятельность"></picture>
                         </div>
                     </div>
                     
@@ -679,7 +680,7 @@
                     <!-- Правое фото -->
                     <div class="header-photo-right">
                         <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" width="2688" height="3456" alt="Дмитрий Герасимов - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                            <picture><source type="image/webp" srcset="images/photo-right-320.webp 320w, images/photo-right-480.webp 480w, images/photo-right-640.webp 640w" sizes="(max-width: 1024px) 160px, 200px"><img src="images/photo-right.jpg" width="2688" height="3456" loading="lazy" decoding="async" alt="Дмитрий Герасимов - эксперт по управлению цепями поставок"></picture>
                         </div>
                     </div>
                 </div>
@@ -709,8 +710,8 @@
     <!-- Hero Section -->
     <section class="calculators-hero">
         <div class="container">
-            <h1>Профессиональные калькуляторы</h1>
-            <p>Расчеты и аналитика для эффективного управления цепями поставок</p>
+            <h1>Калькуляторы и методики логистики</h1>
+            <p>Выберите задачу, изучите формулу и выполните расчёт для своей цепи поставок.</p>
         </div>
     </section>
 
@@ -723,11 +724,37 @@
             <p><a href="scm-knowledge.html">Карта SCM и материалы по темам</a> · <a href="scm-diagnostic.html">Пройти самопроверку управления запасами</a> · Отдельные инструменты: <a href="inventory-turnover-calculator.html">оборачиваемость</a>, <a href="safety-stock-calculator.html">страховой запас</a>, <a href="reorder-point-calculator.html">точка заказа</a>.</p>
         </div>
 
+        <section class="tool-directory" aria-labelledby="directory-heading">
+            <div class="directory-heading"><p class="directory-kicker">ПРАКТИЧЕСКИЕ ИНСТРУМЕНТЫ / SCM</p><h2 id="directory-heading">Какой расчёт вам нужен?</h2><p>Шесть моделей на этой странице и подробные версии трёх расчётов — с формулами, примерами и ограничениями.</p></div>
+            <nav class="directory-grid" aria-label="Каталог расчётов">
+                <a href="inventory-turnover-calculator.html"><span>01 / ЗАПАСЫ</span><strong>Оборачиваемость запасов</strong><small>Сколько оборотов за период и какова оценка в днях →</small></a>
+                <a href="safety-stock-calculator.html"><span>02 / ЗАПАСЫ</span><strong>Страховой запас</strong><small>Сценарный буфер при колебаниях спроса →</small></a>
+                <a href="reorder-point-calculator.html"><span>03 / ПОПОЛНЕНИЕ</span><strong>Точка заказа</strong><small>Когда запускать пополнение запасов →</small></a>
+                <a href="#eoq-calculator"><span>04 / ЗАКУПКИ</span><strong>Экономичный размер заказа</strong><small>EOQ в рамках классической модели →</small></a>
+                <a href="#fill-rate-calculator"><span>05 / КЛИЕНТСКИЙ СЕРВИС</span><strong>Unit Fill Rate</strong><small>Доля спроса, удовлетворённая сразу из запаса →</small></a>
+                <a href="#transport-calculator"><span>06 / ТРАНСПОРТ</span><strong>Стоимость перевозки</strong><small>Оценка по расстоянию, тарифу и расходам →</small></a>
+            </nav>
+            <p class="directory-note">Подробные страницы трёх инструментов используют те же сценарии, что и формы ниже. На этой странице их можно рассчитать без перехода. Результаты не заменяют проверку данных и применимости модели.</p>
+        </section>
+        <section class="method-guide" aria-labelledby="method-heading">
+            <p class="directory-kicker">МЕТОДИКИ / ПЕРЕД РАСЧЁТОМ</p><h2 id="method-heading">Формулы и границы применения</h2>
+            <p>Начните с вопроса, затем проверьте единицы измерения, период и исходные данные. В формулах ниже показано именно то, что считают инструменты на этой странице.</p>
+            <div class="method-list">
+                <details><summary>Оборачиваемость: как сравнить запас и продажи?</summary><div><p><strong>Формула:</strong> себестоимость продаж / средний запас; дни = дни периода / коэффициент.</p><p>Числитель и знаменатель должны относиться к одинаковым товарам и оцениваться по себестоимости. При нулевой себестоимости дни не определены; высокий оборот сам по себе не означает отсутствие дефицита.</p><a href="inventory-turnover-calculator.html">Формула, пример и отдельный расчёт →</a></div></details>
+                <details><summary>Страховой запас: как оценить сценарный буфер?</summary><div><p><strong>Формула этого инструмента:</strong> (максимальный дневной спрос − средний дневной спрос) × срок до доступности запаса.</p><p>Это сценарная оценка при фиксированном сроке, а не статистическая вероятность или гарантия наличия товара. Максимальный спрос не должен быть меньше среднего.</p><a href="safety-stock-calculator.html">Формула, пример и отдельный расчёт →</a></div></details>
+                <details><summary>Точка заказа: когда запускать пополнение?</summary><div><p><strong>Формула:</strong> средний дневной спрос × срок до доступности запаса + заданный страховой запас.</p><p>Порог относится к модели непрерывного контроля. Сопоставляйте его с позицией запаса, учитывая подтверждённые поступления и обязательства без двойного счёта. Размер заказа и гарантия наличия не рассчитываются.</p><a href="reorder-point-calculator.html">Формула, пример и отдельный расчёт →</a></div></details>
+                <details><summary>EOQ: какой размер заказа даёт классическая модель?</summary><div><p><strong>Формула:</strong> √(2 × годовой спрос × стоимость заказа / годовую стоимость хранения единицы).</p><p>Модель предполагает постоянный спрос, фиксированные затраты, поступление одной партией, отсутствие дефицита и скидок. Реальные ограничения и кратность упаковки нужно проверить отдельно.</p><a href="#eoq-calculator">Перейти к расчёту EOQ →</a></div></details>
+                <details><summary>Unit Fill Rate: какую долю спроса закрыли сразу?</summary><div><p><strong>Формула:</strong> (общий спрос − спрос, не удовлетворённый сразу из наличного запаса) / общий спрос × 100%.</p><p>Согласуйте учёт частичных поставок, замен и потерянного спроса. Показатель не равен OTIF, доле полностью выполненных заказов или вероятности отсутствия дефицита.</p><a href="#fill-rate-calculator">Перейти к расчёту Unit Fill Rate →</a></div></details>
+                <details><summary>Перевозка: как оценить стоимость рейса?</summary><div><p><strong>Формула:</strong> расстояние × ставка за километр + дополнительные расходы.</p><p>Включены только введённые расходы; отдельно проверьте НДС, сборы, ожидание, погрузку и условия договора. Это не ставка за тонно-километр.</p><a href="#transport-calculator">Перейти к расчёту перевозки →</a></div></details>
+            </div>
+            <p class="directory-note">Дополнительно: <a href="scm-encyclopedia.html#otif-calculator">Калькулятор OTIF по заказам</a>. Нужна оценка процессов, а не расчёт? <a href="scm-diagnostic.html">Самопроверка управления запасами</a> · <a href="scm-review-questions.html">Чек-лист цепи поставок</a> · <a href="scm-practical-guides.html">Практические руководства SCM</a>.</p>
+        </section>
+
         <!-- Calculators Grid -->
         <section class="calculators-grid">
             
             <!-- EOQ Calculator -->
-            <div class="calculator-card">
+            <div class="calculator-card" id="eoq-calculator">
                 <div class="calculator-header">
                     <div class="calculator-icon">📦</div>
                     <h2 class="calculator-title">Экономичный размер заказа (EOQ)</h2>
@@ -764,7 +791,7 @@
             </div>
 
             <!-- Safety Stock Calculator -->
-            <div class="calculator-card">
+            <div class="calculator-card" id="safety-stock-calculator">
                 <div class="calculator-header">
                     <div class="calculator-icon">🛡️</div>
                     <h2 class="calculator-title">Страховой запас</h2>
@@ -801,7 +828,7 @@
             </div>
 
             <!-- Inventory Turnover Calculator -->
-            <div class="calculator-card">
+            <div class="calculator-card" id="turnover-calculator">
                 <div class="calculator-header">
                     <div class="calculator-icon">🔄</div>
                     <h2 class="calculator-title">Оборачиваемость запасов</h2>
@@ -838,7 +865,7 @@
             </div>
 
             <!-- Reorder Point Calculator -->
-            <div class="calculator-card">
+            <div class="calculator-card" id="reorder-calculator">
                 <div class="calculator-header">
                     <div class="calculator-icon">📍</div>
                     <h2 class="calculator-title">Точка заказа</h2>
@@ -875,7 +902,7 @@
             </div>
 
             <!-- Fill Rate Calculator -->
-            <div class="calculator-card">
+            <div class="calculator-card" id="fill-rate-calculator">
                 <div class="calculator-header">
                     <div class="calculator-icon">📊</div>
                     <h2 class="calculator-title">Unit Fill Rate: спрос из наличного запаса</h2>
@@ -908,7 +935,7 @@
             </div>
 
             <!-- Transportation Cost Calculator -->
-            <div class="calculator-card">
+            <div class="calculator-card" id="transport-calculator">
                 <div class="calculator-header">
                     <div class="calculator-icon">🚚</div>
                     <h2 class="calculator-title">Стоимость перевозки</h2>
@@ -1088,6 +1115,8 @@
             
             anchorLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
+                    // Keep native URLs, history and keyboard navigation for the tool directory.
+                    if (this.closest('.tool-directory, .method-guide')) return;
                     if (this.getAttribute('href').startsWith('#') && this.getAttribute('href') !== '#') {
                         e.preventDefault();
                         
@@ -1115,5 +1144,7 @@
             calculateTransportCost();
         });
     </script>
+<script src="js/analytics-consent.js" defer></script>
+<script src="js/visitor-events.js" defer></script>
 </body>
 </html>

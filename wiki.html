@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wiki по SCM и логистике | Дмитрий Герасимов</title>
-<meta name="description" content="База знаний по цепям поставок: основы SCM, практические примеры, расчёты, инструменты и тематическая карта.">
+    <title>База знаний по логистике и цепям поставок | SCM News</title>
+<meta name="description" content="Понятия логистики и SCM, методологии, формулы и примеры расчётов, роли специалистов, практические руководства и калькуляторы.">
 <link rel="canonical" href="https://scm-news.ru/wiki.html">
     
     <!-- Стили -->
@@ -374,6 +374,15 @@
             padding: 0 var(--space-md);
         }
 
+        .wiki-search { border:1px solid var(--shell-line); border-radius:12px; background:var(--shell-panel); color:var(--shell-text); padding:clamp(20px,3vw,32px); margin-bottom:var(--space-xl); }
+        .wiki-search h2 { margin:0 0 12px; } .wiki-search p { margin:0 0 14px; }
+        .wiki-search label { display:block; font-weight:700; margin:12px 0 6px; }
+        .wiki-search input { width:100%; padding:12px; border:1px solid var(--shell-muted); border-radius:6px; background:var(--shell-bg); color:var(--shell-text); font:inherit; }
+        .wiki-search input:focus-visible { outline:3px solid var(--shell-accent); outline-offset:2px; }
+        .wiki-topic-list { padding-left:20px; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)); gap:10px 24px; }
+        .wiki-topic-list li[hidden], #wiki-search-control[hidden], #wiki-search-empty[hidden] { display:none!important; }
+        .wiki-search a { color:var(--shell-text); text-decoration:underline; text-underline-offset:3px; }
+        .wiki-search a:focus-visible { outline:3px solid var(--shell-accent); outline-offset:2px; }
         .wiki-featured { border: 1px solid var(--border-light); border-radius: var(--radius-lg); background: var(--card-bg); padding: var(--space-xl); margin-bottom: var(--space-xl); }
         .wiki-featured h2 { margin: 0 0 var(--space-sm); }
         .wiki-featured ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px 24px; margin: 20px 0; padding-left: 20px; }
@@ -665,10 +674,11 @@
             }
         }
     </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://scm-news.ru/"},{"@type":"ListItem","position":2,"name":"Wiki","item":"https://scm-news.ru/wiki.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://scm-news.ru/"},{"@type":"ListItem","position":2,"name":"База знаний","item":"https://scm-news.ru/wiki.html"}]}</script>
 <script src="js/executive-theme.js"></script>
 <link rel="stylesheet" href="css/executive-pages.css">
 <script src="js/executive-pages.js" defer></script>
+<script src="js/wiki-topic-search.js" defer></script>
 </head>
 <body class="executive-page executive-classic">
 <a class="executive-skip" href="#page-content">Перейти к содержанию</a>
@@ -686,7 +696,7 @@
                     <!-- Левое фото -->
                     <div class="header-photo-left">
                         <div class="photo-left-container">
-                            <img src="images/photo-left.jpg" width="2688" height="3456" alt="Дмитрий Герасимов - профессиональная деятельность" onerror="this.src='https://images.unsplash.com/photo-1589156280159-27698a70f29e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                            <picture><source type="image/webp" srcset="images/photo-left-320.webp 320w, images/photo-left-480.webp 480w, images/photo-left-640.webp 640w" sizes="(max-width: 1024px) 160px, 200px"><img src="images/photo-left.jpg" width="2688" height="3456" loading="lazy" decoding="async" alt="Дмитрий Герасимов - профессиональная деятельность"></picture>
                         </div>
                     </div>
                     
@@ -708,7 +718,7 @@
                     <!-- Правое фото -->
                     <div class="header-photo-right">
                         <div class="photo-right-container">
-                            <img src="images/photo-right.jpg" width="2688" height="3456" alt="Дмитрий Герасимов - эксперт по управлению цепями поставок" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'">
+                            <picture><source type="image/webp" srcset="images/photo-right-320.webp 320w, images/photo-right-480.webp 480w, images/photo-right-640.webp 640w" sizes="(max-width: 1024px) 160px, 200px"><img src="images/photo-right.jpg" width="2688" height="3456" loading="lazy" decoding="async" alt="Дмитрий Герасимов - эксперт по управлению цепями поставок"></picture>
                         </div>
                     </div>
                 </div>
@@ -738,39 +748,107 @@
     <!-- Hero Section -->
     <section class="wiki-hero">
         <div class="container">
-            <h1>База знаний Wiki</h1>
-            <p>Понятия, примеры и расчёты для понимания цепей поставок</p>
+            <h1>База знаний по логистике и цепям поставок</h1>
+            <p>Понятия, методологии, формулы и практические инструменты для руководителей и специалистов SCM.</p>
         </div>
     </section>
 
     <!-- Main Content -->
     <main class="container" id="page-content">
-        <nav aria-label="Хлебные крошки" style="margin: 16px 0; font-size: 0.9rem;"><a href="/">Главная</a> / <span>Wiki</span></nav>
+        <nav aria-label="Хлебные крошки" style="margin: 16px 0; font-size: 0.9rem;"><a href="/">Главная</a> / <span>База знаний</span></nav>
         <div class="wiki-intro">
-            <p><strong><a href="scm-leader-map.html">Карта развития лидера</a></strong> — учебные задания по роли и навыку; <strong><a href="scm-sector-cases.html">отраслевые кейсы</a></strong> — холодовая цепь, опасные грузы и внешняя торговля.</p>
-            <p><strong><a href="scm-case-lab.html">Лаборатория кейсов SCM</a></strong> — учебный разбор задержки поставки, локальное сравнение сценариев и шаблон для команды.</p>
-            <p><strong><a href="scm-navigator.html">Единая структура знаний SCM и логистики</a></strong> — все основные направления, источники и маршруты к практике и внутренней Академии. Новые темы: <a href="scm-advanced-practice.html">планирование, торговля, финансы и риски</a>.</p>
-            <h2>Что доступно в базе знаний?</h2>
-            <p>Откройте <a href="scm-encyclopedia.html">основы SCM: объяснения, примеры и расчёты</a> — 13 разделов от планирования и закупок до складов, возвратов, рисков и словаря терминов.</p>
-            <p>Также доступны <a href="scm-academy.html">Академия SCM: трансформация, цифровые двойники, ИИ и лидерство</a>, <a href="scm-practical-guides.html">практические руководства с примерами и источниками</a>, <a href="scm-knowledge.html">карта SCM и справка по запасам</a>, <a href="scm-problems.html">обзор операционных проблем</a>, <a href="scm-architect.html">архитектор цепи</a> и <a href="calculators.html">калькуляторы</a>.</p>
-            <p><a href="scm-internal-academy.html">Внутренняя Академия цепей поставок</a>: как развивать лидеров под задачи предприятия и решать собственные кейсы.</p>
-            <p>Перечень ниже — идеи будущих тем, а не опубликованные статьи.</p>
+            <h2>Единый вход в профессиональную базу знаний</h2>
+            <p>Выберите тему, чтобы перейти к определению, методике, примеру или работающему инструменту. Логистика и управление цепями поставок связаны, но не тождественны: <a href="scm-encyclopedia.html#basics">разобраться в различиях →</a></p>
+            <p>База развивается: опубликованные материалы доступны по ссылкам ниже. Примеры учебные, если не указано иное; проверяйте применимость формул, исходные данные и действующие требования к своей задаче.</p>
         </div>
-
-        <section class="wiki-featured" aria-labelledby="wiki-featured-heading">
-            <h2 id="wiki-featured-heading">Читать по темам</h2>
-            <p>Вводный справочник: что это такое, зачем нужно и как применять.</p>
-            <ul>
-                <li><a href="scm-encyclopedia.html#basics">Основы SCM</a></li>
-                <li><a href="scm-encyclopedia.html#planning">Спрос и планирование</a></li>
-                <li><a href="scm-encyclopedia.html#procurement">Закупки и поставщики</a></li>
-                <li><a href="scm-encyclopedia.html#inventory">Запасы и пополнение</a></li>
-                <li><a href="scm-encyclopedia.html#warehouse">Склад и транспорт</a></li>
-                <li><a href="scm-encyclopedia.html#metrics">Показатели и расчёты</a></li>
-                <li><a href="scm-encyclopedia.html#risk">Риски и возвраты</a></li>
-                <li><a href="scm-encyclopedia.html#glossary">Словарь терминов</a></li>
+        <section class="wiki-search" aria-labelledby="wiki-search-heading">
+            <h2 id="wiki-search-heading">Найти тему в базе знаний</h2>
+            <p>Поиск по названиям и ключевым словам подготовленного указателя, не по полному тексту всех страниц. Поиск работает на устройстве; сам указатель не отправляет введённый текст.</p>
+            <div id="wiki-search-control" hidden><label for="wiki-search-input">Поиск по указателю тем</label><input id="wiki-search-input" type="search" maxlength="100" autocomplete="off" placeholder="Например: остаток, часы, OTIF"><p id="wiki-search-status" role="status" aria-live="polite"></p></div>
+            <p id="wiki-search-empty" hidden>В указателе ничего не найдено. Попробуйте другое слово или откройте разделы ниже.</p>
+            <ul class="wiki-topic-list" aria-label="Указатель тем базы знаний">
+                <li data-wiki-topic data-keywords="scm supply chain различие отличие понятие определение логистика"><a href="scm-encyclopedia.html#basics">Логистика и управление цепями поставок</a></li>
+                <li data-wiki-topic data-keywords="словарь понятия термины sku lead time"><a href="scm-encyclopedia.html#glossary">Словарь терминов SCM</a></li>
+                <li data-wiki-topic data-keywords="планирование прогнозирование спрос ошибка вейп"><a href="scm-encyclopedia.html#planning">Прогноз спроса и ошибка WAPE</a></li>
+                <li data-wiki-topic data-keywords="снабжение srm закупочная стратегия"><a href="scm-encyclopedia.html#procurement">Закупки и поставщики</a></li>
+                <li data-wiki-topic data-keywords="kpi качество надежность срок"><a href="scm-practical-guides.html#supplier">Оценка поставщика и OTIF</a></li>
+                <li data-wiki-topic data-keywords="затраты владения цена сравнение"><a href="scm-practical-guides.html#tco">Полная стоимость закупки TCO</a></li>
+                <li data-wiki-topic data-keywords="инкотермс договор перевозка риск"><a href="scm-practical-guides.html#incoterms">Условия поставки Incoterms</a></li>
+                <li data-wiki-topic data-keywords="abc xyz абц хуз изменчивость вариация группировка"><a href="scm-practical-guides.html#abc-xyz">ABC–XYZ-анализ запасов</a></li>
+                <li data-wiki-topic data-keywords="физический расчет остатков остатки резерв позиция"><a href="scm-practical-guides.html#inventory-balance">Учётный и доступный остаток</a></li>
+                <li data-wiki-topic data-keywords="порог rop расчет спрос срок поставки"><a href="reorder-point-calculator.html">Точка заказа и пополнение</a></li>
+                <li data-wiki-topic data-keywords="минимум максимум мин макс медленно оборачиваемые"><a href="scm-practical-guides.html#replenishment">Размер запаса min–max и неликвиды</a></li>
+                <li data-wiki-topic data-keywords="резерв буфер запас формула"><a href="safety-stock-calculator.html">Сценарный страховой запас</a></li>
+                <li data-wiki-topic data-keywords="товарооборачиваемость дни средний запас"><a href="inventory-turnover-calculator.html">Оборачиваемость запасов</a></li>
+                <li data-wiki-topic data-keywords="партия заказа модель уилсона"><a href="calculators.html#eoq-calculator">Экономичный размер заказа EOQ</a></li>
+                <li data-wiki-topic data-keywords="управление запасами abc"><a href="scm-knowledge.html#inventory-guide">Запасы и пополнение: обзор</a></li>
+                <li data-wiki-topic data-keywords="адресный склад учет количество производительность"><a href="scm-encyclopedia.html#warehouse">Приёмка, хранение и инвентаризация</a></li>
+                <li data-wiki-topic data-keywords="сотрудники смена часы перерыв трудозатраты"><a href="scm-practical-guides.html#working-hours">Рабочее время и человеко-часы</a></li>
+                <li data-wiki-topic data-keywords="человеко часы трудоёмкость выработка смена"><a href="scm-practical-guides.html#capacity">Нагрузка и мощность склада</a></li>
+                <li data-wiki-topic data-keywords="аудит чек лист эффективность диагностика"><a href="scm-practical-guides.html#warehouse-review">Проверка склада и логистики</a></li>
+                <li data-wiki-topic data-keywords="проверка вопросы запас пополнение"><a href="scm-diagnostic.html">Диагностика управления запасами</a></li>
+                <li data-wiki-topic data-keywords="аудит проверка вопросы"><a href="scm-review-questions.html">Чек-лист цепи поставок</a></li>
+                <li data-wiki-topic data-keywords="калькулятор вовремя полностью сервис"><a href="scm-encyclopedia.html#otif-calculator">Числовой OTIF по заказам</a></li>
+                <li data-wiki-topic data-keywords="доля удовлетворенного спроса уровень сервиса"><a href="calculators.html#fill-rate-calculator">Unit Fill Rate</a></li>
+                <li data-wiki-topic data-keywords="kpi показатели эффективность сервис цена склад"><a href="scm-encyclopedia.html#metrics">Показатели SCM и точность комплектации</a></li>
+                <li data-wiki-topic data-keywords="kpi показатели метрики склад транспорт закупки безопасность формулы scm логистика"><a href="scm-metrics.html">Справочник показателей логистики и SCM</a></li>
+                <li data-wiki-topic data-keywords="рейс тариф км цена расходы"><a href="calculators.html#transport-calculator">Стоимость перевозки</a></li>
+                <li data-wiki-topic data-keywords="перевозка себестоимость тоннокилометр транспорт"><a href="scm-encyclopedia.html#transport">Доставка на заказ и тонно-километры</a></li>
+                <li data-wiki-topic data-keywords="товар партия склад gs1"><a href="scm-practical-guides.html#traceability">Прослеживаемость партий</a></li>
+                <li data-wiki-topic data-keywords="маркетплейс e-commerce обратная логистика"><a href="scm-practical-guides.html#reverse">Возвраты интернет-заказов</a></li>
+                <li data-wiki-topic data-keywords="сбой зависимость поставщики карта"><a href="scm-practical-guides.html#mapping">Риски и надёжность цепи поставок</a></li>
+                <li data-wiki-topic data-keywords="sop планирование продаж операций"><a href="scm-advanced-practice.html#sop">S&amp;OP: согласование спроса и возможностей</a></li>
+                <li data-wiki-topic data-keywords="материалы производство спрос компоненты"><a href="scm-advanced-practice.html#mrp">MRP: потребности в компонентах</a></li>
+                <li data-wiki-topic data-keywords="автоматизация склад цифровизация erp tms"><a href="scm-encyclopedia.html#data">Внедрение WMS и данные</a></li>
+                <li data-wiki-topic data-keywords="искусственный интеллект цепь цифровизация"><a href="scm-academy.html#ai">ИИ и контроль применения</a></li>
+                <li data-wiki-topic data-keywords="симуляция модель данные"><a href="scm-academy.html#digital-twin">Цифровой двойник</a></li>
+                <li data-wiki-topic data-keywords="roi автоматизация сравнение эффект"><a href="scm-academy.html#pilot">Оценка эффекта пилота</a></li>
+                <li data-wiki-topic data-keywords="руководитель директор специалист логист склад"><a href="scm-practical-guides.html#supply-chain-roles">Профессии и роли SCM</a></li>
+                <li data-wiki-topic data-keywords="управление команда сотрудники навыки обучение"><a href="scm-leader-map.html">Развитие лидера цепи поставок</a></li>
+                <li data-wiki-topic data-keywords="обучение руководителей логистики scm"><a href="expertise.html#corporate-training">Корпоративное обучение и команды</a></li>
+                <li data-wiki-topic data-keywords="сценарии задержка поставки команда"><a href="scm-case-lab.html">Учебная лаборатория кейсов</a></li>
+                <li data-wiki-topic data-keywords="отрасли температура опасные грузы"><a href="scm-sector-cases.html">Транспорт и холодовая цепь</a></li>
             </ul>
-            <p><a href="scm-encyclopedia.html#chapters">Все разделы справочника →</a> · <a href="scm-practical-guides.html#chapters">Практические руководства и источники →</a> · <a href="scm-academy.html#chapters">Академия SCM: учебный маршрут →</a></p>
+        </section>
+        <section class="wiki-featured" aria-labelledby="wiki-featured-heading">
+            <h2 id="wiki-featured-heading">Выберите, что вам нужно</h2>
+            <h3>Понятия и основы</h3>
+            <ul>
+                <li><a href="scm-encyclopedia.html#basics">Понятия: логистика и SCM</a> — определения, потоки и различия.</li>
+                <li><a href="scm-encyclopedia.html#glossary">Словарь терминов</a> — SKU, сроки, запас, EOQ и другие понятия.</li>
+            </ul>
+            <h3>Методологии и процессы</h3>
+            <ul>
+                <li><a href="scm-navigator.html">Методологии и процессы</a> — тематический навигатор от спроса до возвратов.</li>
+            </ul>
+            <h3>Расчёты, запасы и показатели</h3>
+            <ul>
+                <li><a href="scm-practical-guides.html#inventory-balance">Расчёт остатков</a> — физический, доступный и позиция запаса.</li>
+                <li><a href="scm-practical-guides.html#working-hours">Рабочее время и трудозатраты</a> — пример расчёта часов и ограничения.</li>
+                <li><a href="scm-knowledge.html#inventory-guide">Запасы и пополнение</a> — ABC, оборачиваемость, резерв и точка заказа.</li>
+                <li><a href="scm-encyclopedia.html#metrics">Показатели логистики и OTIF</a> — определения и пример расчёта.</li>
+                <li><a href="scm-metrics.html">Справочник показателей SCM</a> — формулы, единицы и ограничения.</li>
+                <li><a href="calculators.html">Калькуляторы и формулы</a> — существующие инструменты и их ограничения.</li>
+            </ul>
+            <h3>Профессии и развитие</h3>
+            <ul>
+                <li><a href="scm-practical-guides.html#supply-chain-roles">Профессии и роли SCM</a> — различия задач и ответственности.</li>
+            </ul>
+            <h3>Руководства и учебная практика</h3>
+            <ul>
+                <li><a href="scm-practical-guides.html#chapters">Практические руководства</a> — решения, примеры и источники.</li>
+                <li><a href="scm-case-lab.html">Учебная лаборатория кейсов</a> — сценарии и вопросы для команды.</li>
+                <li><a href="scm-leader-map.html">Развитие лидера SCM</a> — навыки и учебные задания.</li>
+                <li><a href="scm-sector-cases.html">Отраслевые учебные примеры</a> — холодовая цепь и опасные грузы.</li>
+                <li><a href="scm-advanced-practice.html">Дополнительная практика</a> — S&amp;OP, торговля, финансы и риски.</li>
+                <li><a href="scm-academy.html">Академия SCM</a> — цифровизация, ИИ и лидерство.</li>
+                <li><a href="scm-internal-academy.html">Внутренняя Академия</a> — развитие команды под задачи предприятия.</li>
+                <li><a href="scm-problems.html">Операционные задачи</a> — склад, команда, запасы и доставка.</li>
+                <li><a href="scm-architect.html">Архитектура цепи поставок</a> — взаимосвязь проблем и процессов.</li>
+                <li><a href="scm-knowledge.html">Карта процессов SCM</a> — путь от спроса до возвратов.</li>
+                <li><a href="scm-encyclopedia.html">Основы SCM</a> — вводный справочник и примеры.</li>
+            </ul>
+            <p>Перечень ниже — идеи будущих тем, а не опубликованные статьи.</p>
         </section>
 
         <!-- Planned topics are distinct from the published knowledge base. -->
@@ -1040,5 +1118,7 @@
             });
         });
     </script>
+<script src="js/analytics-consent.js" defer></script>
+<script src="js/visitor-events.js" defer></script>
 </body>
 </html>

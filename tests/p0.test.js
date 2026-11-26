@@ -28,6 +28,13 @@ test('news retains static snapshot on fetch error, empty data, or render failure
     assert.match(status.textContent, /Не удалось обновить/);
   }
 });
+test('news uses stable URL and revalidation instead of cache-busting every refresh', async () => {
+  let call;
+  const {context} = setup(async (...args) => { call=args; return {ok:true,json:async()=>[{link:'https://example.com/'}]}; }, () => {});
+  assert.equal(await context.loadNews(), true);
+  assert.equal(call[0], 'data/news.json');
+  assert.equal(call[1].cache, 'no-cache');
+});
 test('news success clears warning', async () => {
   const { context, status } = setup(async () => ({ ok: true, json: async () => [{ link: 'https://example.com/' }] }), () => {});
   status.textContent = 'old warning';
