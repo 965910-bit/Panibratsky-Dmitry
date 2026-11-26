@@ -250,6 +250,22 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertAlmostEqual(3 * .4 + 5 * .3 + 4 * .3, 3.9)
         self.assertEqual(20 + 60 - 70, 10)
 
+    def test_intermittent_demand_and_inventory_transfer(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        for anchor in ('intermittent-demand', 'inventory-transfer'):
+            self.assertIn(f'href="scm-practical-guides.html#{anchor}"', wiki)
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+        for phrase in ('6 / 6 =', '6 / 2 =', 'не является расчётом Кростона',
+                       '100 − 40 − 40 =', '45 − 15 =', '80 + 15 + 20 в пути',
+                       'не равен доступному остатку получателя'):
+            self.assertIn(phrase.casefold(), html.casefold())
+        self.assertEqual(6 / 6, 1)
+        self.assertEqual(6 / 2, 3)
+        self.assertEqual(100 - 40 - 40, 20)
+        self.assertEqual(45 - (15 + 20), 10)
+        self.assertEqual(80 + 15 + 20, 80 + 35)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
