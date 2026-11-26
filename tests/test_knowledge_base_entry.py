@@ -141,6 +141,27 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(500000 / (4500000 / 90), 10)
         self.assertEqual(300000 / (2700000 / 90), 10)
 
+    def test_transport_risk_and_safety_examples(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        pages = {'scm-encyclopedia.html': 'freight-utilisation', 'scm-practical-guides.html': 'supply-recovery',
+                 'scm-internal-academy.html': 'shift-safety-dialogue'}
+        for page, anchor in pages.items():
+            self.assertIn(f'href="{page}#{anchor}"', wiki)
+            self.assertEqual((ROOT / page).read_text(encoding='utf-8').count(f'id="{anchor}"'), 1)
+        transport = (ROOT / 'scm-encyclopedia.html').read_text(encoding='utf-8')
+        for phrase in ('10 × 100 + 0 × 80 = 1 000', '80 / (100 + 80) × 100% ≈ 44,4%',
+                       '1 000 / 180 ≈ 5,56', 'не процент загрузки грузоподъёмности'):
+            self.assertIn(phrase, transport)
+        risk = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        self.assertIn('1 200 / 100 = 12 дней', risk)
+        self.assertIn('15 − 12 = 3 дня', risk)
+        safety = (ROOT / 'scm-internal-academy.html').read_text(encoding='utf-8')
+        self.assertIn('Ноль зарегистрированных случаев не доказывает отсутствия опасности', safety)
+        self.assertEqual(10 * 100 + 0 * 80, 1000)
+        self.assertAlmostEqual(80 / 180 * 100, 44.4444444, places=4)
+        self.assertEqual(1200 / 100, 12)
+        self.assertEqual(15 - 12, 3)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
