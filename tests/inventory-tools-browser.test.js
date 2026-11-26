@@ -73,13 +73,13 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),true);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await page.goto(`${base}/scm-metrics.html`);
-   assert.equal(await page.locator('.metric-entry').count(),114);
+   assert.equal(await page.locator('.metric-entry').count(),154);
    await page.getByLabel('Поиск по показателям').fill('DART OSHA');
    assert.equal(await page.locator('.metric-entry:visible').count(),1);
    await page.getByLabel('Поиск по показателям').fill('показателькоторогонет');
    assert.equal(await page.locator('#metric-search-empty').isVisible(),true);
    await page.getByLabel('Поиск по показателям').clear();
-   assert.equal(await page.locator('.metric-entry:visible').count(),114);
+   assert.equal(await page.locator('.metric-entry:visible').count(),154);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
    await page.goto(`${base}/scm-encyclopedia.html`);
