@@ -81,6 +81,19 @@ class MetricsCatalogTests(unittest.TestCase):
         self.assertEqual(2 * 200_000 / 500_000, 0.8)
         self.assertEqual(4 * 200 * 0.15, 120)
 
+    def test_operations_deepening_and_arithmetic(self):
+        html = (ROOT / 'scm-metrics.html').read_text(encoding='utf-8')
+        for anchor in ('operations-methods', 'capacity-detail', 'transport-detail', 'trade-detail', 'finance-detail', 'academy-detail', 'control-detail'):
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+            self.assertIn(f'href="#{anchor}"', html)
+        for phrase in ('не каждая паллета имеет одинаковый размер', 'возмещаемый НДС', 'действующим подтверждённым допуском', 'не является средним без выбранных весов'):
+            self.assertIn(phrase, html)
+        self.assertEqual(20 * 3 * 2 - 8 - 12, 100)
+        self.assertEqual(4 * 100 + 2 * 50, 500)
+        self.assertEqual(24000 / 80, 300)
+        self.assertAlmostEqual(-100000 + 60000/1.1 + 60000/1.1**2, 4132.23140495867)
+        self.assertEqual(18 / 20 * 100, 90)
+
     def test_no_unsupported_benchmark_and_sources_are_present(self):
         html = (ROOT / 'scm-metrics.html').read_text(encoding='utf-8')
         for source in ('apqc.org/', 'mckinsey.com/', 'ilo.org/'):
