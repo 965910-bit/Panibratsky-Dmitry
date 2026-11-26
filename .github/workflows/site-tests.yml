@@ -133,8 +133,14 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app_token.outputs.token }}
         run: |
-          gh api "repos/$GITHUB_REPOSITORY/rulesets/28158455" > "$RUNNER_TEMP/publication-ruleset.json"
-          gh api "repos/$GITHUB_REPOSITORY/rules/branches/main" > "$RUNNER_TEMP/publication-effective-rules.json"
+          if ! gh api "repos/$GITHUB_REPOSITORY/rulesets/28158455" > "$RUNNER_TEMP/publication-ruleset.json"; then
+            echo '::error title=Ruleset details inaccessible::The app token could not read the ruleset details.'
+            exit 1
+          fi
+          if ! gh api "repos/$GITHUB_REPOSITORY/rules/branches/main" > "$RUNNER_TEMP/publication-effective-rules.json"; then
+            echo '::error title=Effective branch rules inaccessible::The app token could not read active branch rules.'
+            exit 1
+          fi
           python3 - <<'PY'
           import json, os
           from pathlib import Path
@@ -142,6 +148,7 @@ jobs:
           ruleset = json.loads((root / 'publication-ruleset.json').read_text())
           rules = json.loads((root / 'publication-effective-rules.json').read_text())
           if 'bypass_actors' not in ruleset or not isinstance(ruleset['bypass_actors'], list) or not isinstance(rules, list):
-              raise SystemExit('Ruleset API does not expose the fields needed by the publisher.')
+              print('::error title=Ruleset fields unavailable::The app cannot verify bypass actors or effective rules.')
+              raise SystemExit(1)
           print('Publication-scope token can inspect rules and bypass actors; no writes performed.')
           PY
