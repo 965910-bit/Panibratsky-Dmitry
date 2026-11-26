@@ -12,6 +12,17 @@ class PublicationRecoveryTests(unittest.TestCase):
         self.assertNotIn('steps:', job)
         self.assertIn("format('news-non-main-{0}', github.ref)", text)
 
+    def test_app_publication_is_opt_in_and_uses_pinned_scoped_token(self):
+        for filename, kind in [('update_news.yml', 'news'), ('open_logistics_data.yml', 'open-data')]:
+            with self.subTest(filename=filename):
+                text = (ROOT / '.github/workflows' / filename).read_text()
+                self.assertIn("vars.SCM_PUBLICATION_MODE == 'pr'", text)
+                self.assertIn("vars.SCM_PUBLICATION_MODE != 'pr'", text)
+                self.assertIn('actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc', text)
+                self.assertIn('permission-contents: write', text)
+                self.assertIn('permission-pull-requests: write', text)
+                self.assertIn(f'run: python scripts/publication_pr.py --kind {kind}', text)
+
     def test_recovery_is_only_after_failed_publication_and_does_not_expose_private_scratch(self):
         paths = [
             ('update_news.yml', 'publish_news', 'news-publication-failed',
@@ -23,7 +34,9 @@ class PublicationRecoveryTests(unittest.TestCase):
             with self.subTest(file=file):
                 text = (ROOT / '.github/workflows' / file).read_text()
                 self.assertIn(f'id: {step}', text)
-                self.assertIn(f"if: ${{{{ failure() && steps.{step}.outcome == 'failure' }}}}", text)
+                self.assertIn(f"steps.{step}.outcome == 'failure'", text)
+                self.assertIn("steps.publication_token.outcome == 'failure'", text)
+                self.assertIn(f"steps.{step}_pr.outcome == 'failure'", text)
                 part = text[text.index(f'name: {name}'):]
                 self.assertIn('retention-days: 7', part)
                 self.assertIn('if-no-files-found: warn', part)

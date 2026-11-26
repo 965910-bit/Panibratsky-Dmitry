@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: ${{ vars.SCM_PUBLICATION_MODE != 'pr' }}
 
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -69,6 +71,7 @@ jobs:
 
       - name: Commit and push if changed
         id: publish_news
+        if: vars.SCM_PUBLICATION_MODE != 'pr'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -78,9 +81,26 @@ jobs:
             git push
           fi
 
+      # Opt-in only. App credentials are not used by the legacy path.
+      - name: Create scoped publication app token
+        id: publication_token
+        if: vars.SCM_PUBLICATION_MODE == 'pr'
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3
+        with:
+          app-id: ${{ vars.SCM_PUBLICATION_APP_ID }}
+          private-key: ${{ secrets.SCM_PUBLICATION_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Propose verified news through protected PR
+        id: publish_news_pr
+        if: vars.SCM_PUBLICATION_MODE == 'pr'
+        env:
+          GH_TOKEN: ${{ steps.publication_token.outputs.token }}
+        run: python scripts/publication_pr.py --kind news
+
       # Keep only the exact validated public outputs when publication fails. The job remains failed.
       - name: Preserve public news outputs after publication failure
-        if: ${{ failure() && steps.publish_news.outcome == 'failure' }}
+        if: ${{ failure() && (steps.publish_news.outcome == 'failure' || steps.publication_token.outcome == 'failure' || steps.publish_news_pr.outcome == 'failure') }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: news-publication-failed

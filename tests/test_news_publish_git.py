@@ -18,7 +18,7 @@ class NewsPublishGitTests(unittest.TestCase):
     def test_only_staged_public_outputs_trigger_commit(self):
         workflow = (ROOT / '.github/workflows/update_news.yml').read_text()
         start = workflow.index('      - name: Commit and push if changed')
-        end = workflow.index('\n      # Keep only', start)
+        end = workflow.index('\n      # Opt-in only.', start)
         step = workflow[start:end].split('        run: |\n', 1)[1]
         script = textwrap.dedent(step)
         with tempfile.TemporaryDirectory() as tmp:
