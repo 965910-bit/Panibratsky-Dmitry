@@ -266,6 +266,21 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(45 - (15 + 20), 10)
         self.assertEqual(80 + 15 + 20, 80 + 35)
 
+    def test_schedule_adherence_and_changeover(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-advanced-practice.html').read_text(encoding='utf-8')
+        for anchor in ('schedule-adherence', 'changeover-smed'):
+            self.assertIn(f'href="scm-advanced-practice.html#{anchor}"', wiki)
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+        for phrase in ('200 / 200 × 100%', 'min(80, 100) + min(120, 100)',
+                       'не универсальная формула APQC', '12 + 25 + 15 + 8 = 60',
+                       '25 + 15 + 8 = 48', 'не измеренная экономия',
+                       'не переносите опасные действия'):
+            self.assertIn(phrase.casefold(), html.casefold())
+        self.assertEqual((min(80, 100) + min(120, 100)) / 200 * 100, 90)
+        self.assertEqual(12 + 25 + 15 + 8, 60)
+        self.assertEqual(25 + 15 + 8, 48)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
