@@ -114,3 +114,34 @@ jobs:
           test "$(wc -l < "$RUNNER_TEMP/app-repositories.txt")" -eq 1
           grep -Fx "$GITHUB_REPOSITORY" "$RUNNER_TEMP/app-repositories.txt" > /dev/null
           echo "Scoped app token can read the expected repository; no writes performed."
+  publication-app-policy-read-only:
+    # The token has the permissions needed by the future publisher, but this job only reads GitHub APIs.
+    if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' && inputs.test_publication_app == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Generate publication-scope token for API diagnostic
+        id: app_token
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3
+        with:
+          app-id: ${{ vars.SCM_PUBLICATION_APP_ID }}
+          private-key: ${{ secrets.SCM_PUBLICATION_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Check ruleset API visibility without writes
+        env:
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/rulesets/28158455" > "$RUNNER_TEMP/publication-ruleset.json"
+          gh api "repos/$GITHUB_REPOSITORY/rules/branches/main" > "$RUNNER_TEMP/publication-effective-rules.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          ruleset = json.loads((root / 'publication-ruleset.json').read_text())
+          rules = json.loads((root / 'publication-effective-rules.json').read_text())
+          if 'bypass_actors' not in ruleset or not isinstance(ruleset['bypass_actors'], list) or not isinstance(rules, list):
+              raise SystemExit('Ruleset API does not expose the fields needed by the publisher.')
+          print('Publication-scope token can inspect rules and bypass actors; no writes performed.')
+          PY

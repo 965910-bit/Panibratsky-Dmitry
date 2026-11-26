@@ -25,7 +25,7 @@ class PublicationRecoveryTests(unittest.TestCase):
 
     def test_app_diagnostic_is_manual_non_main_and_read_only(self):
         text = (ROOT / '.github/workflows/site-tests.yml').read_text()
-        job = text.split('  publication-app-read-only:', 1)[1]
+        job = text.split('  publication-app-read-only:', 1)[1].split('  publication-app-policy-read-only:', 1)[0]
         self.assertIn("github.event_name == 'workflow_dispatch'", job)
         self.assertIn("github.ref != 'refs/heads/main'", job)
         self.assertIn('inputs.test_publication_app == true', job)
@@ -34,6 +34,14 @@ class PublicationRecoveryTests(unittest.TestCase):
         self.assertIn('permission-pull-requests: read', job)
         self.assertNotIn('actions/checkout', job)
         self.assertNotIn('permission-contents: write', job)
+        policy_job = text.split('  publication-app-policy-read-only:', 1)[1]
+        self.assertIn("github.ref != 'refs/heads/main'", policy_job)
+        self.assertIn('inputs.test_publication_app == true', policy_job)
+        self.assertIn('permission-contents: write', policy_job)
+        self.assertIn('permission-pull-requests: write', policy_job)
+        self.assertIn('rulesets/28158455', policy_job)
+        self.assertNotIn('actions/checkout', policy_job)
+        self.assertNotIn('git push', policy_job)
 
     def test_recovery_is_only_after_failed_publication_and_does_not_expose_private_scratch(self):
         paths = [
