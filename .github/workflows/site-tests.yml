@@ -147,8 +147,25 @@ jobs:
           root = Path(os.environ['RUNNER_TEMP'])
           ruleset = json.loads((root / 'publication-ruleset.json').read_text())
           rules = json.loads((root / 'publication-effective-rules.json').read_text())
-          if 'bypass_actors' not in ruleset or not isinstance(ruleset['bypass_actors'], list) or not isinstance(rules, list):
-              print('::error title=Ruleset fields unavailable::The app cannot verify bypass actors or effective rules.')
+          bypass = ruleset.get('current_user_can_bypass', '<missing>')
+          print(f'::notice title=App ruleset visibility::current_user_can_bypass={bypass}; bypass_list_visible={"bypass_actors" in ruleset}')
+          if not isinstance(rules, list):
+              raise SystemExit('Effective rules are not a list')
+          PY
+          node_id="$(python3 -c 'import json,os; print(json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "publication-ruleset.json")))["node_id"])')"
+          query='query($id: ID!) { node(id: $id) { ... on RepositoryRuleset { bypassActors { totalCount } } } }'
+          if ! gh api graphql -f query="$query" -f id="$node_id" > "$RUNNER_TEMP/publication-bypass-count.json"; then
+            echo '::error title=Bypass count inaccessible::GraphQL did not return the ruleset bypass count.'
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          result = json.loads((Path(os.environ['RUNNER_TEMP']) / 'publication-bypass-count.json').read_text())
+          try:
+              count = result['data']['node']['bypassActors']['totalCount']
+          except (KeyError, TypeError):
+              print('::error title=Bypass count unavailable::GraphQL did not expose a count.')
               raise SystemExit(1)
-          print('Publication-scope token can inspect rules and bypass actors; no writes performed.')
+          print(f'::notice title=App GraphQL visibility::bypass_actor_count={count}')
           PY
