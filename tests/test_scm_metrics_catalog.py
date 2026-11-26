@@ -12,10 +12,10 @@ class MetricsCatalogTests(unittest.TestCase):
         self.assertIn('https://scm-news.ru/scm-metrics.html', sitemap)
         self.assertIn('<link rel="canonical" href="https://scm-news.ru/scm-metrics.html">', html)
         sections = re.findall(r'<section class="metric-group" id="([^"]+)">', html)
-        self.assertEqual(len(sections), 10)
-        self.assertEqual(len(set(sections)), 10)
+        self.assertEqual(len(sections), 13)
+        self.assertEqual(len(set(sections)), 13)
         cards = re.findall(r'<article class="metric-entry">(.*?)</article>', html, re.S)
-        self.assertEqual(len(cards), 67)
+        self.assertEqual(len(cards), 114)
         for card in cards:
             for text in ('<h3>', '<strong>Формула:</strong>', '<strong>Единица:</strong>', '<strong>Оговорки:</strong>'):
                 self.assertIn(text, card)
@@ -28,9 +28,9 @@ class MetricsCatalogTests(unittest.TestCase):
         for script in ('analytics-consent', 'visitor-events'):
             self.assertEqual(html.count(f'src="js/{script}.js"'), 1)
 
-    def test_ten_category_examples_are_present_and_arithmetically_consistent(self):
+    def test_category_examples_are_present_and_arithmetically_consistent(self):
         html = (ROOT / 'scm-metrics.html').read_text(encoding='utf-8')
-        self.assertEqual(html.count('class="metric-example"'), 10)
+        self.assertEqual(html.count('class="metric-example"'), 13)
         self.assertEqual(80 / 100 * 100, 80)
         self.assertEqual((abs(90 - 100) + abs(120 - 100)) / 200 * 100, 15)
         self.assertEqual(1_200_000 / 300_000, 4)
@@ -41,6 +41,28 @@ class MetricsCatalogTests(unittest.TestCase):
         self.assertEqual(30 + 25 - 40, 15)
         self.assertEqual(2 / 500_000 * 1_000_000, 4)
         self.assertEqual(20 / 1000 * 100, 2)
+        self.assertEqual(80 / 100 * 100, 80)
+        self.assertEqual(90 / 100 * 100, 90)
+        self.assertEqual(4 * 200 * .15, 120)
+
+    def test_new_working_variants_link_to_sources_and_nav_counts_match(self):
+        html = (ROOT / 'scm-metrics.html').read_text(encoding='utf-8')
+        cards = re.findall(r'<article class="metric-entry">(.*?)</article>', html, re.S)
+        titles = [re.search(r'<h3>(.*?)</h3>', card).group(1) for card in cards]
+        self.assertEqual(len(titles), len(set(titles)))
+        sourced = [card for card in cards if '<strong>Тематический источник:</strong>' in card]
+        self.assertEqual(len(sourced), 47)
+        for card in sourced:
+            self.assertIn('формула выше — рабочий вариант сайта', card)
+            self.assertRegex(card, r'<a href="https://[^"]+"')
+        nav = dict(re.findall(r'<a href="#([^"]+)">[^<]*<span>\((\d+)\)</span></a>', html))
+        groups = re.findall(r'<section class="metric-group" id="([^"]+)">(.*?)</section>', html, re.S)
+        self.assertEqual(len(nav), len(groups))
+        for slug, body in groups:
+            self.assertEqual(int(nav[slug]), body.count('class="metric-entry"'), slug)
+        self.assertIn('× 200 000', html)
+        self.assertIn('на миллион часов', html)
+        self.assertIn('не является автоматически обязательной нормой РФ', html)
 
     def test_no_unsupported_benchmark_and_sources_are_present(self):
         html = (ROOT / 'scm-metrics.html').read_text(encoding='utf-8')
