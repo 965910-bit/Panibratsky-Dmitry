@@ -374,6 +374,15 @@
             padding: 0 var(--space-md);
         }
 
+        .wiki-search { border:1px solid var(--shell-line); border-radius:12px; background:var(--shell-panel); color:var(--shell-text); padding:clamp(20px,3vw,32px); margin-bottom:var(--space-xl); }
+        .wiki-search h2 { margin:0 0 12px; } .wiki-search p { margin:0 0 14px; }
+        .wiki-search label { display:block; font-weight:700; margin:12px 0 6px; }
+        .wiki-search input { width:100%; padding:12px; border:1px solid var(--shell-muted); border-radius:6px; background:var(--shell-bg); color:var(--shell-text); font:inherit; }
+        .wiki-search input:focus-visible { outline:3px solid var(--shell-accent); outline-offset:2px; }
+        .wiki-topic-list { padding-left:20px; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)); gap:10px 24px; }
+        .wiki-topic-list li[hidden], #wiki-search-control[hidden], #wiki-search-empty[hidden] { display:none!important; }
+        .wiki-search a { color:var(--shell-text); text-decoration:underline; text-underline-offset:3px; }
+        .wiki-search a:focus-visible { outline:3px solid var(--shell-accent); outline-offset:2px; }
         .wiki-featured { border: 1px solid var(--border-light); border-radius: var(--radius-lg); background: var(--card-bg); padding: var(--space-xl); margin-bottom: var(--space-xl); }
         .wiki-featured h2 { margin: 0 0 var(--space-sm); }
         .wiki-featured ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px 24px; margin: 20px 0; padding-left: 20px; }
@@ -669,6 +678,7 @@
 <script src="js/executive-theme.js"></script>
 <link rel="stylesheet" href="css/executive-pages.css">
 <script src="js/executive-pages.js" defer></script>
+<script src="js/wiki-topic-search.js" defer></script>
 </head>
 <body class="executive-page executive-classic">
 <a class="executive-skip" href="#page-content">Перейти к содержанию</a>
@@ -751,6 +761,54 @@
             <p>Выберите тему, чтобы перейти к определению, методике, примеру или работающему инструменту. Логистика и управление цепями поставок связаны, но не тождественны: <a href="scm-encyclopedia.html#basics">разобраться в различиях →</a></p>
             <p>База развивается: опубликованные материалы доступны по ссылкам ниже. Примеры учебные, если не указано иное; проверяйте применимость формул, исходные данные и действующие требования к своей задаче.</p>
         </div>
+        <section class="wiki-search" aria-labelledby="wiki-search-heading">
+            <h2 id="wiki-search-heading">Найти тему в базе знаний</h2>
+            <p>Поиск по названиям и ключевым словам подготовленного указателя, не по полному тексту всех страниц. Поиск работает на устройстве; сам указатель не отправляет введённый текст.</p>
+            <div id="wiki-search-control" hidden><label for="wiki-search-input">Поиск по указателю тем</label><input id="wiki-search-input" type="search" maxlength="100" autocomplete="off" placeholder="Например: остаток, часы, OTIF"><p id="wiki-search-status" role="status" aria-live="polite"></p></div>
+            <p id="wiki-search-empty" hidden>В указателе ничего не найдено. Попробуйте другое слово или откройте разделы ниже.</p>
+            <ul class="wiki-topic-list" aria-label="Указатель тем базы знаний">
+                <li data-wiki-topic data-keywords="scm supply chain различие отличие понятие определение логистика"><a href="scm-encyclopedia.html#basics">Логистика и управление цепями поставок</a></li>
+                <li data-wiki-topic data-keywords="словарь понятия термины sku lead time"><a href="scm-encyclopedia.html#glossary">Словарь терминов SCM</a></li>
+                <li data-wiki-topic data-keywords="планирование прогнозирование спрос ошибка вейп"><a href="scm-encyclopedia.html#planning">Прогноз спроса и ошибка WAPE</a></li>
+                <li data-wiki-topic data-keywords="снабжение srm закупочная стратегия"><a href="scm-encyclopedia.html#procurement">Закупки и поставщики</a></li>
+                <li data-wiki-topic data-keywords="kpi качество надежность срок"><a href="scm-practical-guides.html#supplier">Оценка поставщика и OTIF</a></li>
+                <li data-wiki-topic data-keywords="затраты владения цена сравнение"><a href="scm-practical-guides.html#tco">Полная стоимость закупки TCO</a></li>
+                <li data-wiki-topic data-keywords="инкотермс договор перевозка риск"><a href="scm-practical-guides.html#incoterms">Условия поставки Incoterms</a></li>
+                <li data-wiki-topic data-keywords="abc xyz абц хуз изменчивость вариация группировка"><a href="scm-practical-guides.html#abc-xyz">ABC–XYZ-анализ запасов</a></li>
+                <li data-wiki-topic data-keywords="физический расчет остатков остатки резерв позиция"><a href="scm-practical-guides.html#inventory-balance">Учётный и доступный остаток</a></li>
+                <li data-wiki-topic data-keywords="порог rop расчет спрос срок поставки"><a href="reorder-point-calculator.html">Точка заказа и пополнение</a></li>
+                <li data-wiki-topic data-keywords="минимум максимум мин макс медленно оборачиваемые"><a href="scm-practical-guides.html#replenishment">Размер запаса min–max и неликвиды</a></li>
+                <li data-wiki-topic data-keywords="резерв буфер запас формула"><a href="safety-stock-calculator.html">Сценарный страховой запас</a></li>
+                <li data-wiki-topic data-keywords="товарооборачиваемость дни средний запас"><a href="inventory-turnover-calculator.html">Оборачиваемость запасов</a></li>
+                <li data-wiki-topic data-keywords="партия заказа модель уилсона"><a href="calculators.html#eoq-calculator">Экономичный размер заказа EOQ</a></li>
+                <li data-wiki-topic data-keywords="управление запасами abc"><a href="scm-knowledge.html#inventory-guide">Запасы и пополнение: обзор</a></li>
+                <li data-wiki-topic data-keywords="адресный склад учет количество производительность"><a href="scm-encyclopedia.html#warehouse">Приёмка, хранение и инвентаризация</a></li>
+                <li data-wiki-topic data-keywords="сотрудники смена часы перерыв трудозатраты"><a href="scm-practical-guides.html#working-hours">Рабочее время и человеко-часы</a></li>
+                <li data-wiki-topic data-keywords="человеко часы трудоёмкость выработка смена"><a href="scm-practical-guides.html#capacity">Нагрузка и мощность склада</a></li>
+                <li data-wiki-topic data-keywords="аудит чек лист эффективность диагностика"><a href="scm-practical-guides.html#warehouse-review">Проверка склада и логистики</a></li>
+                <li data-wiki-topic data-keywords="проверка вопросы запас пополнение"><a href="scm-diagnostic.html">Диагностика управления запасами</a></li>
+                <li data-wiki-topic data-keywords="аудит проверка вопросы"><a href="scm-review-questions.html">Чек-лист цепи поставок</a></li>
+                <li data-wiki-topic data-keywords="калькулятор вовремя полностью сервис"><a href="scm-encyclopedia.html#otif-calculator">Числовой OTIF по заказам</a></li>
+                <li data-wiki-topic data-keywords="доля удовлетворенного спроса уровень сервиса"><a href="calculators.html#fill-rate-calculator">Unit Fill Rate</a></li>
+                <li data-wiki-topic data-keywords="kpi показатели эффективность сервис цена склад"><a href="scm-encyclopedia.html#metrics">Показатели SCM и точность комплектации</a></li>
+                <li data-wiki-topic data-keywords="рейс тариф км цена расходы"><a href="calculators.html#transport-calculator">Стоимость перевозки</a></li>
+                <li data-wiki-topic data-keywords="перевозка себестоимость тоннокилометр транспорт"><a href="scm-encyclopedia.html#transport">Доставка на заказ и тонно-километры</a></li>
+                <li data-wiki-topic data-keywords="товар партия склад gs1"><a href="scm-practical-guides.html#traceability">Прослеживаемость партий</a></li>
+                <li data-wiki-topic data-keywords="маркетплейс e-commerce обратная логистика"><a href="scm-practical-guides.html#reverse">Возвраты интернет-заказов</a></li>
+                <li data-wiki-topic data-keywords="сбой зависимость поставщики карта"><a href="scm-practical-guides.html#mapping">Риски и надёжность цепи поставок</a></li>
+                <li data-wiki-topic data-keywords="sop планирование продаж операций"><a href="scm-advanced-practice.html#sop">S&amp;OP: согласование спроса и возможностей</a></li>
+                <li data-wiki-topic data-keywords="материалы производство спрос компоненты"><a href="scm-advanced-practice.html#mrp">MRP: потребности в компонентах</a></li>
+                <li data-wiki-topic data-keywords="автоматизация склад цифровизация erp tms"><a href="scm-encyclopedia.html#data">Внедрение WMS и данные</a></li>
+                <li data-wiki-topic data-keywords="искусственный интеллект цепь цифровизация"><a href="scm-academy.html#ai">ИИ и контроль применения</a></li>
+                <li data-wiki-topic data-keywords="симуляция модель данные"><a href="scm-academy.html#digital-twin">Цифровой двойник</a></li>
+                <li data-wiki-topic data-keywords="roi автоматизация сравнение эффект"><a href="scm-academy.html#pilot">Оценка эффекта пилота</a></li>
+                <li data-wiki-topic data-keywords="руководитель директор специалист логист склад"><a href="scm-practical-guides.html#supply-chain-roles">Профессии и роли SCM</a></li>
+                <li data-wiki-topic data-keywords="управление команда сотрудники навыки обучение"><a href="scm-leader-map.html">Развитие лидера цепи поставок</a></li>
+                <li data-wiki-topic data-keywords="обучение руководителей логистики scm"><a href="expertise.html#corporate-training">Корпоративное обучение и команды</a></li>
+                <li data-wiki-topic data-keywords="сценарии задержка поставки команда"><a href="scm-case-lab.html">Учебная лаборатория кейсов</a></li>
+                <li data-wiki-topic data-keywords="отрасли температура опасные грузы"><a href="scm-sector-cases.html">Транспорт и холодовая цепь</a></li>
+            </ul>
+        </section>
         <section class="wiki-featured" aria-labelledby="wiki-featured-heading">
             <h2 id="wiki-featured-heading">Выберите, что вам нужно</h2>
             <h3>Понятия и основы</h3>

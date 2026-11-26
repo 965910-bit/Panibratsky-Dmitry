@@ -35,5 +35,21 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(400 / 8, 50)
 
 
+    def test_abc_capacity_and_diagnostic_examples(self):
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
+                     'при нулевом среднем коэффициент не определён',
+                     'универсальных границ X, Y и Z нет',
+                     '300 строк', '6 человеко-часов', '10 человеко-часов',
+                     '12 человеко-часов', 'не норматив для другого склада'):
+            self.assertIn(term.casefold(), html.casefold(), term)
+        self.assertEqual(300 * 1.2 / 60, 6)
+        self.assertEqual(6 + 4, 10)
+        self.assertEqual(2 * 6, 12)
+        self.assertEqual(12 - 10, 2)
+        self.assertEqual(sum([600, 300, 100]), 1000)
+        self.assertEqual(600 / 1000 * 100, 60)
+
+
 if __name__ == '__main__':
     unittest.main()

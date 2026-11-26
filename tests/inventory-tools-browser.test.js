@@ -17,7 +17,7 @@ async function checkAccessibility(page) {
     await page.locator('.executive-theme').click();
   }
 }
-const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/calculator-directory.css','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','js/otif.js','js/public-otif.js','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','scm-navigator.html','scm-advanced-practice.html','scm-case-lab.html','css/scm-case-lab.css','js/scm-case-model.js','js/scm-case-lab.js','scm-leader-map.html','js/scm-leader-map.js','scm-sector-cases.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg','images/photo-left-320.webp','images/photo-left-480.webp','images/photo-left-640.webp','images/photo-right-320.webp','images/photo-right-480.webp','images/photo-right-640.webp']);
+const files = new Set(['inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','css/calculator-directory.css','css/inventory-tools.css','css/executive-pages.css','js/executive-theme.js','js/executive-pages.js','js/inventory-models.js','js/inventory-metrics.js','js/inventory-tools.js','js/scm-diagnostic.js','scm-knowledge.html','css/scm-knowledge.css','js/scm-knowledge.js','scm-encyclopedia.html','css/scm-encyclopedia.css','js/scm-encyclopedia.js','js/otif.js','js/public-otif.js','js/wiki-topic-search.js','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','scm-navigator.html','scm-advanced-practice.html','scm-case-lab.html','css/scm-case-lab.css','js/scm-case-model.js','js/scm-case-lab.js','scm-leader-map.html','js/scm-leader-map.js','scm-sector-cases.html','wiki.html','css/style.css','css/vendor/font-awesome-6.4.0/css/all.min.css','images/photo-left.jpg','images/photo-right.jpg','images/photo-left-320.webp','images/photo-left-480.webp','images/photo-left-640.webp','images/photo-right-320.webp','images/photo-right-480.webp','images/photo-right-640.webp']);
 
 test('SCM tools work at desktop and mobile sizes without sending user data',async()=>{
  const requests=[];
@@ -61,6 +61,13 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    await checkAccessibility(page);
    await page.goto(`${base}/wiki.html`);
    assert.equal(await page.locator('.wiki-featured a').count(),20);
+   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),40);
+   await page.getByLabel('Поиск по указателю тем').fill('часы');
+   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),2);
+   await page.getByLabel('Поиск по указателю тем').fill('несуществующая тема');
+   assert.equal(await page.locator('#wiki-search-empty').isVisible(),true);
+   await page.getByLabel('Поиск по указателю тем').clear();
+   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),40);
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),false);
    await page.locator('.wiki-planned summary').click();
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),true);
@@ -84,7 +91,7 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
    await checkAccessibility(page);
    await page.goto(`${base}/scm-practical-guides.html`);
-   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),12);
+   assert.equal(await page.locator('[data-chapter-entry]:visible').count(),15);
    await page.getByLabel('Поиск по задачам').fill('incoterms');
    assert.equal(await page.locator('[data-chapter-entry]:visible').count(),1);
    assert.equal(await page.locator('#traceability').isVisible(),true);
@@ -207,7 +214,7 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
   await page.goto(`${base}/inventory-turnover-calculator.html`);assert.equal(await page.getByRole('button',{name:'Рассчитать'}).isDisabled(),true);
   await page.goto(`${base}/scm-knowledge.html`);assert.equal(await page.locator('[data-knowledge-card]:visible').count(),8);assert.equal(await page.locator('#knowledge-search').isVisible(),false);
   await page.goto(`${base}/scm-encyclopedia.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),13);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#inventory').isVisible(),true);
-  await page.goto(`${base}/scm-practical-guides.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),12);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#traceability').isVisible(),true);
+  await page.goto(`${base}/scm-practical-guides.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),15);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#traceability').isVisible(),true);
   await page.goto(`${base}/scm-academy.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),9);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);await page.getByText('Показать разбор').click();assert.equal(await page.locator('#scenario details').evaluate(el=>el.open),true);
   await page.goto(`${base}/scm-internal-academy.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),8);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);assert.equal(await page.locator('#case-template').isVisible(),true);
   await page.goto(`${base}/scm-navigator.html`);assert.equal(await page.locator('[data-chapter-entry]:visible').count(),13);assert.equal(await page.locator('#chapter-search-box').isVisible(),false);
