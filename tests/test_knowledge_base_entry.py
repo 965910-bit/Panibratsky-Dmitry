@@ -76,6 +76,18 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(sum(abs(n) for n in (90 - 100, 60 - 50, 40 - 40)), 20)
         self.assertAlmostEqual(1 / 3 * 100, 33.333333, places=5)
 
+    def test_receiving_time_example_and_navigation(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        self.assertIn('href="scm-practical-guides.html#receiving-to-availability"', wiki)
+        self.assertEqual(html.count('id="receiving-to-availability"'), 1)
+        for phrase in ('(3,5 + 5,5) / 2 = 4,5', '(4,5 + 5,5) / 2 = 5',
+                       'незавершённые поставки', 'их длительности нельзя просто сложить',
+                       'среднее не рассчитывается', 'не обходите проверки качества'):
+            self.assertIn(phrase, html)
+        self.assertEqual((3.5 + 5.5) / 2, 4.5)
+        self.assertEqual((4.5 + 5.5) / 2, 5)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
