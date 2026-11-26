@@ -11,7 +11,11 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         home = (ROOT / 'index.html').read_text(encoding='utf-8')
         self.assertIn('<h1>База знаний по логистике и цепям поставок</h1>', wiki)
         self.assertIn('не опубликованные статьи', wiki)
-        self.assertIn('href="wiki.html">База знаний по логистике и SCM', home)
+        self.assertIn('<a href="wiki.html">База знаний</a>', home)
+        self.assertIn('class="button button-secondary hero-knowledge-link" href="wiki.html"', home)
+        self.assertIn('href="wiki.html" class="resource-card resource-card-knowledge"', home)
+        self.assertIn('<details class="resource-directory">', home)
+        self.assertLess(home.index('<details class="resource-directory">'), home.index('<section class="book-feature"'))
         for href in re.findall(r'href="([^"#?]+\.html)(?:#[^"]*)?"', wiki):
             if not href.startswith(('http:', 'https:')):
                 self.assertTrue((ROOT / href).is_file(), href)

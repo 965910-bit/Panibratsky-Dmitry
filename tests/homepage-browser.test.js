@@ -46,6 +46,22 @@ async function scenario({ width, dpr, javascriptEnabled = true }) {
     const menu = page.getByRole('checkbox', { name: 'Показать меню' });
     assert.equal(await page.locator('.site-header').evaluate(el => Math.round(el.getBoundingClientRect().height)), width <= 820 ? 68 : 83);
     assert.equal(await nav.isVisible(), width > 820);
+    const heroKnowledge = page.locator('.hero-knowledge-link');
+    assert.equal(await heroKnowledge.getAttribute('href'), 'wiki.html');
+    assert.equal(await heroKnowledge.isVisible(), true);
+    const heroBox = await heroKnowledge.boundingBox();
+    assert.ok(heroBox.y + heroBox.height <= 823, `Knowledge link should be visible in the first viewport: ${JSON.stringify(heroBox)}`);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    assert.equal(await page.locator('.resource-directory').evaluate(el => el.open), false);
+    assert.equal(await page.locator('.resource-card-knowledge').getAttribute('href'), 'wiki.html');
+    if (width > 820) {
+      assert.equal(await nav.getByRole('link', {name: 'База знаний'}).isVisible(), true);
+      const brandBox = await page.locator('.brand').boundingBox();
+      const navBox = await nav.boundingBox();
+      const themeBox = await page.locator('.theme-toggle').boundingBox();
+      assert.ok(brandBox.x + brandBox.width <= navBox.x && navBox.x + navBox.width <= themeBox.x, 'Desktop navigation must not overlap brand or theme control');
+    }
+
     if (javascriptEnabled) {
       const shifts = await page.evaluate(() => window.__layoutShifts);
       const cls = shifts.reduce((sum, value) => sum + value, 0);
@@ -64,6 +80,7 @@ async function scenario({ width, dpr, javascriptEnabled = true }) {
       await page.keyboard.press('Space');
       assert.equal(await menu.isChecked(), true);
       assert.equal(await nav.isVisible(), true);
+      assert.equal(await nav.getByRole('link', {name: 'База знаний'}).getAttribute('href'), 'wiki.html');
       assert.equal(await page.locator('.hero').evaluate(el => Math.round(el.getBoundingClientRect().top)), 68);
       if (javascriptEnabled) {
         await page.keyboard.press('Escape');
@@ -99,3 +116,5 @@ async function scenario({ width, dpr, javascriptEnabled = true }) {
 test('mobile: delayed JavaScript cannot shift header; keyboard menu works', async () => scenario({ width: 412, dpr: 1.75 }));
 test('mobile: menu stays usable without JavaScript', async () => scenario({ width: 412, dpr: 1.75, javascriptEnabled: false }));
 test('desktop: layout and responsive image stay stable', async () => scenario({ width: 1350, dpr: 1 }));
+
+test('tablet desktop navigation does not overlap', async () => scenario({ width: 900, dpr: 1 }));
