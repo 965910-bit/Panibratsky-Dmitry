@@ -9,11 +9,14 @@ permissions:
   contents: write
 
 concurrency:
-  group: site-data-updates
+  group: ${{ github.ref == 'refs/heads/main' && 'site-data-updates' || format('news-non-main-{0}', github.ref) }}
   cancel-in-progress: false
 
 jobs:
   fetch:
+    # Scheduled publication and manual production runs must use the default branch.
+    # A dispatch against a feature branch must not collect private mail or push changes.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

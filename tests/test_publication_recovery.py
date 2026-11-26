@@ -5,6 +5,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 class PublicationRecoveryTests(unittest.TestCase):
+    def test_news_job_refuses_non_main_dispatch_before_checkout_and_secrets(self):
+        text = (ROOT / '.github/workflows/update_news.yml').read_text()
+        job = text.split('jobs:\n', 1)[1].split('    runs-on:', 1)[0]
+        self.assertRegex(job, r"(?m)^    if: github\.ref == 'refs/heads/main'$")
+        self.assertNotIn('steps:', job)
+        self.assertIn("format('news-non-main-{0}', github.ref)", text)
+
     def test_recovery_is_only_after_failed_publication_and_does_not_expose_private_scratch(self):
         paths = [
             ('update_news.yml', 'publish_news', 'news-publication-failed',
