@@ -88,6 +88,21 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual((3.5 + 5.5) / 2, 4.5)
         self.assertEqual((4.5 + 5.5) / 2, 5)
 
+    def test_warehouse_slotting_example_and_navigation(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        self.assertIn('href="scm-practical-guides.html#warehouse-slotting"', wiki)
+        self.assertEqual(html.count('id="warehouse-slotting"'), 1)
+        for phrase in ('100 × 80 + 20 × 30 = 8 600', '100 × 30 + 20 × 80 = 4 600',
+                       '4 000 м в день', 'не прогноз экономии времени',
+                       'при нулевом времени показатель не определяется',
+                       'Не уменьшайте перерывы', 'незавершённые заказы отдельно'):
+            self.assertIn(phrase.casefold(), html.casefold())
+        self.assertEqual(100 * 80 + 20 * 30, 8600)
+        self.assertEqual(100 * 30 + 20 * 80, 4600)
+        self.assertEqual(8600 - 4600, 4000)
+        self.assertEqual(300 / 6, 50)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
