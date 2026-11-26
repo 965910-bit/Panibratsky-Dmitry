@@ -15,7 +15,7 @@ BASE = 'https://scm-news.ru/'
 PAGES = ['','about.html','blog.html','scm-problems.html','career.html','contact.html','experience.html',
          'expertise.html','prompts.html','trends.html','calculators.html',
          'certificates.html','projects.html','business-plan.html','tools.html','wiki.html','trends-logistics.html',
-         'scm-review-questions.html','scm-metrics.html','inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','scm-knowledge.html','scm-encyclopedia.html','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','scm-navigator.html','scm-advanced-practice.html','scm-case-lab.html','scm-leader-map.html','scm-sector-cases.html','scm-architect.html']
+         'scm-review-questions.html','scm-metrics.html','inventory-turnover-calculator.html','safety-stock-calculator.html','reorder-point-calculator.html','scm-diagnostic.html','scm-knowledge.html','scm-encyclopedia.html','scm-practical-guides.html','scm-academy.html','scm-internal-academy.html','scm-navigator.html','scm-advanced-practice.html','scm-case-lab.html','scm-leader-map.html','scm-sector-cases.html','scm-architect.html','scm-topic-catalog.html','scm-network-operations.html']
 # These directives are checked locally; HTTP X-Robots-Tag and other agents require live inspection.
 ROBOTS_NAMES = {'robots', 'googlebot', 'googlebot-news', 'bingbot', 'yandex', 'yandexbot', 'slurp'}
 
