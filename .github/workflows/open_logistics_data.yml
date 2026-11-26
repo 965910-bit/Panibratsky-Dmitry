@@ -73,6 +73,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: python scripts/open_data_review.py data/open-logistics.json --previous "$RUNNER_TEMP/open-logistics-before.json" --require-complete --reject-regression
       - name: Commit and push only the snapshot
+        id: publish_indicators
         if: github.ref == 'refs/heads/main'
         run: |
           git config --local user.email "action@github.com"
@@ -82,3 +83,15 @@ jobs:
             git commit -m "Update open logistics indicators"
             git push
           fi
+
+      # The public, reviewed snapshot is preserved for inspection; it is not published here.
+      - name: Preserve public indicators after publication failure
+        if: ${{ failure() && steps.publish_indicators.outcome == 'failure' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: open-data-publication-failed
+          path: |
+            data/open-logistics.json
+            data/open-logistics-archives/
+          if-no-files-found: warn
+          retention-days: 7

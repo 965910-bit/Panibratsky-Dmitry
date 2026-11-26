@@ -62,8 +62,23 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Commit and push if changed
+        id: publish_news
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data/news.json trends.html sitemap.xml rss.xml
           git diff --quiet && git diff --staged --quiet || (git commit -m "Обновление новостей, sitemap, RSS, метатегов" && git push)
+
+      # Keep only the exact validated public outputs when publication fails. The job remains failed.
+      - name: Preserve public news outputs after publication failure
+        if: ${{ failure() && steps.publish_news.outcome == 'failure' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: news-publication-failed
+          path: |
+            data/news.json
+            trends.html
+            sitemap.xml
+            rss.xml
+          if-no-files-found: warn
+          retention-days: 7
