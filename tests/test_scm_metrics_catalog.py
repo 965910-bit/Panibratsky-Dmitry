@@ -67,6 +67,20 @@ class MetricsCatalogTests(unittest.TestCase):
         self.assertIn('на миллион часов', html)
         self.assertIn('не является автоматически обязательной нормой РФ', html)
 
+    def test_deep_method_review_and_examples(self):
+        html = (ROOT / 'scm-metrics.html').read_text(encoding='utf-8')
+        for anchor in ('method-audit', 'method-demand', 'method-cycle', 'method-stock', 'method-labour', 'method-cold', 'method-carbon', 'method-terms'):
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+            self.assertIn(f'href="#{anchor}"', html)
+        self.assertIn('MAPE не ограничена 100%', html)
+        self.assertIn('не являются независимыми от масштаба', html)
+        self.assertIn('не являются универсальными требованиями', html)
+        self.assertAlmostEqual((20 / 100 + 20 / 200) / 2 * 100, 15)
+        self.assertAlmostEqual(40 / 300 * 100, 13.333333333333334)
+        self.assertEqual((2 + 4) / 2, 3)
+        self.assertEqual(2 * 200_000 / 500_000, 0.8)
+        self.assertEqual(4 * 200 * 0.15, 120)
+
     def test_no_unsupported_benchmark_and_sources_are_present(self):
         html = (ROOT / 'scm-metrics.html').read_text(encoding='utf-8')
         for source in ('apqc.org/', 'mckinsey.com/', 'ilo.org/'):
