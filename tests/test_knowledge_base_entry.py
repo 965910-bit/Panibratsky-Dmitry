@@ -103,6 +103,21 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(8600 - 4600, 4000)
         self.assertEqual(300 / 6, 50)
 
+    def test_supplier_lead_time_examples_and_navigation(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        self.assertIn('href="scm-practical-guides.html#supplier-lead-time"', wiki)
+        self.assertEqual(html.count('id="supplier-lead-time"'), 1)
+        for phrase in ('(4 + 6 + 8) / 3 = 6', '(5 + 7 + 10) / 3 ≈ 7,33',
+                       '20 × 7 + 30 = 170', '20 × 10 + 30 = 230',
+                       'не расчёт страхового запаса', 'Открытые и просроченные заказы',
+                       'средний срок не рассчитывается'):
+            self.assertIn(phrase.casefold(), html.casefold())
+        self.assertEqual((4 + 6 + 8) / 3, 6)
+        self.assertAlmostEqual((5 + 7 + 10) / 3, 7.333333, places=5)
+        self.assertEqual(20 * 7 + 30, 170)
+        self.assertEqual(20 * 10 + 30, 230)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
