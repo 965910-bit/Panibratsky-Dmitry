@@ -35,6 +35,20 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(400 / 8, 50)
 
 
+    def test_kpi_application_examples_and_navigation(self):
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        self.assertIn('id="kpi-application"', html)
+        for text in ('80 / 100', '76,5%', '25%', '4,55%', '22,5 дня', '300 ₽', '200 счетов'):
+            self.assertIn(text, html)
+        self.assertIn('href="scm-practical-guides.html#kpi-application"', (ROOT / 'scm-metrics.html').read_text(encoding='utf-8'))
+        self.assertEqual(80 / 100 * 100, 80)
+        self.assertAlmostEqual(.90 * .85 * 100, 76.5)
+        self.assertEqual((5 / 10 + 0 / 100) / 2 * 100, 25)
+        self.assertAlmostEqual(5 / 110 * 100, 4.5454545, places=5)
+        self.assertEqual(90 / (400000 / 100000), 22.5)
+        self.assertEqual(120000 / 400, 300)
+        self.assertEqual(400 / 2, 200)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
