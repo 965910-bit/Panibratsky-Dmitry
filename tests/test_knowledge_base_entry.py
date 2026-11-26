@@ -192,6 +192,21 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         self.assertEqual(300 + 700, 1000)
         self.assertEqual(2 / 100 * 100, 2)
 
+    def test_order_promising_cash_and_master_data(self):
+        wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
+        html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
+        for anchor in ('available-to-promise', 'order-to-cash', 'product-master-data'):
+            self.assertIn(f'href="scm-practical-guides.html#{anchor}"', wiki)
+            self.assertEqual(html.count(f'id="{anchor}"'), 1)
+        for phrase in ('100 − 30 = 70', '70 + 40 = 110', 'ещё 110',
+                       'от счёта до оплаты = 96 часов', 'от заказа до оплаты = 168 часов',
+                       'не 168 часов трудозатрат', '10 × 12 = 120', 'расхождение составляет 20'):
+            self.assertIn(phrase, html)
+        self.assertEqual(100 - 30, 70)
+        self.assertEqual(70 + 40 - 90, 20)
+        self.assertEqual(48 + 24 + 96, 168)
+        self.assertEqual(10 * 12 - 10 * 10, 20)
+
     def test_abc_capacity_and_diagnostic_examples(self):
         html = (ROOT / 'scm-practical-guides.html').read_text(encoding='utf-8')
         for term in ('id="abc-xyz"', 'id="warehouse-review"', 'id="capacity"',
