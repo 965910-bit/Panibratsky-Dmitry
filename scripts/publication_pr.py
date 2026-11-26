@@ -39,7 +39,9 @@ def validate_policy(repo, rules, details):
     ids = {r.get('ruleset_id') for r in rules if r.get('ruleset_id') is not None}
     for rule_id in ids:
         d = details.get(rule_id, {})
-        if d.get('enforcement') != 'active' or d.get('bypass_actors') != []:
+        if (d.get('enforcement') != 'active' or d.get('current_user_can_bypass') != 'never'
+                or type(d.get('bypass_count')) is not int or d['bypass_count'] != 0
+                or ('bypass_actors' in d and d['bypass_actors'] != [])):
             continue
         effective = [r for r in rules if r.get('ruleset_id') == rule_id]
         pr_rules = [r.get('parameters') or {} for r in effective if r.get('type') == 'pull_request']
@@ -64,7 +66,15 @@ def policy(repository):
     repo = api('repos/' + repository)
     rules = api('repos/' + repository + '/rules/branches/main')
     ids = {r.get('ruleset_id') for r in rules if r.get('ruleset_id') is not None}
-    details = {i: api(f'repos/{repository}/rulesets/{i}') for i in ids}
+    details = {}
+    query = 'query($id: ID!) { node(id: $id) { ... on RepositoryRuleset { bypassActors { totalCount } } } }'
+    for i in ids:
+        detail = api(f'repos/{repository}/rulesets/{i}')
+        data = api('graphql', '-f', 'query=' + query, '-f', 'id=' + detail['node_id'])
+        if data.get('errors'):
+            raise ValueError('Unable to verify ruleset bypass count')
+        detail['bypass_count'] = data['data']['node']['bypassActors']['totalCount']
+        details[i] = detail
     validate_policy(repo, rules, details)
 
 

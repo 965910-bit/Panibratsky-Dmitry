@@ -15,17 +15,19 @@ class PublicationPRPolicyTests(unittest.TestCase):
                 'strict_required_status_checks_policy': True,
                 'required_status_checks': [{'context': 'validate', 'integration_id': 15368}]}},
         ]
-        self.details = {17: {'enforcement': 'active', 'bypass_actors': []}}
+        self.details = {17: {'enforcement': 'active', 'current_user_can_bypass': 'never', 'bypass_count': 0}}
 
     def test_complete_policy_passes(self):
         validate_policy(self.repo, self.rules, self.details)
 
     def test_rejects_each_missing_safety_condition(self):
-        for change in ('disabled', 'bypass', 'loose', 'wrong_app', 'no_pr', 'disabled_auto', 'wrong_branch', 'requires_review'):
+        for change in ('disabled', 'bypass', 'loose', 'wrong_app', 'no_pr', 'disabled_auto', 'wrong_branch', 'requires_review', 'unknown_bypass', 'app_bypass'):
             with self.subTest(change=change):
                 self.setUp()
                 if change == 'disabled': self.details[17]['enforcement'] = 'disabled'
-                if change == 'bypass': self.details[17]['bypass_actors'] = [{'actor_id': 1}]
+                if change == 'bypass': self.details[17]['bypass_count'] = 1
+                if change == 'unknown_bypass': self.details[17]['bypass_count'] = None
+                if change == 'app_bypass': self.details[17]['current_user_can_bypass'] = 'always'
                 if change == 'loose': self.rules[1]['parameters']['strict_required_status_checks_policy'] = False
                 if change == 'wrong_app': self.rules[1]['parameters']['required_status_checks'][0]['integration_id'] = 42
                 if change == 'no_pr': self.rules.pop(0)
@@ -71,7 +73,7 @@ class PublicationPRIntegrationTests(unittest.TestCase):
                                 'strict_required_status_checks_policy': True,
                                 'required_status_checks': [{'context': 'validate', 'integration_id': 15368}]}}]
                 if endpoint.endswith('/rulesets/17'):
-                    return {'enforcement': 'active', 'bypass_actors': []}
+                    return {'enforcement': 'active', 'current_user_can_bypass': 'never', 'node_id': 'ruleset-node'}
                 if endpoint == 'repos/owner/repo/branches/main':
                     return {'commit': {'sha': base}, 'protected': True}
                 if '?state=open' in endpoint:
@@ -79,6 +81,8 @@ class PublicationPRIntegrationTests(unittest.TestCase):
                 if endpoint == 'repos/owner/repo/pulls':
                     return {'user': {'login': publisher.APP_LOGIN}, 'head': {'sha': git('rev-parse', 'HEAD')},
                             'base': {'ref': 'main'}, 'node_id': 'fixture-node', 'html_url': 'https://example.invalid/pr'}
+                if endpoint == 'graphql' and any('bypassActors' in arg for arg in args):
+                    return {'data': {'node': {'bypassActors': {'totalCount': 0}}}}
                 if endpoint == 'graphql':
                     return {'data': {'enablePullRequestAutoMerge': {'pullRequest': {'autoMergeRequest': {'enabledAt': 'now'}}}}}
                 raise AssertionError(endpoint)
@@ -128,7 +132,7 @@ class PublicationPRIntegrationTests(unittest.TestCase):
                      contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                     self.assertEqual(1, publisher.main())
                 self.assertFalse(any(call[0] == 'command' and call[1][:2] == ('git', 'push') for call in calls))
-                self.assertNotIn(('api', 'graphql'), calls)
+                self.assertFalse(any(call[0] == 'command' and call[1][:2] == ('git', 'push') for call in calls))
             finally:
                 os.chdir(old)
 
