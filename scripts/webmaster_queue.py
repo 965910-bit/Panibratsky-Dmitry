@@ -30,6 +30,8 @@ class Queue:
                 task_id TEXT PRIMARY KEY, url TEXT NOT NULL, revision TEXT NOT NULL,
                 observed_state TEXT CHECK(observed_state IN ('IN_PROGRESS','DONE','FAILED')),
                 last_checked TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
+            self.db.execute('''CREATE TABLE IF NOT EXISTS deployment_cursor (
+                singleton INTEGER PRIMARY KEY CHECK(singleton=1), revision TEXT NOT NULL)''')
             # Older queue databases retained only the latest task per URL.
             self.db.execute('''INSERT OR IGNORE INTO recrawl_receipts(task_id,url,revision)
                 SELECT task_id,url,sent_revision FROM recrawl
@@ -56,13 +58,48 @@ class Queue:
         for url in urls:
             allowed_urls([url])
         with self.transaction():
+            self._enqueue_validated(urls, revision)
+
+    def _enqueue_validated(self, urls, revision):
+        for url in urls:
+            self.db.execute('''INSERT INTO recrawl(url,revision,state) VALUES (?,?,'pending')
+                ON CONFLICT(url) DO UPDATE SET revision=excluded.revision,
+                state=CASE WHEN recrawl.revision=excluded.revision THEN recrawl.state
+                  WHEN recrawl.state IN ('in_flight','uncertain') THEN recrawl.state
+                  ELSE 'pending' END,
+                updated_at=CURRENT_TIMESTAMP''', (url, revision))
+
+    def enqueue_deployment(self, target, baseline, *, ancestor, changed):
+        """Advance a caller-verified deployment cursor and enqueue its diff atomically.
+
+        Initial baseline must be explicitly selected by the caller. The caller
+        must verify target was successfully deployed and is still current main.
+        Callbacks must inspect immutable git SHAs and raise on operational errors.
+        """
+        if not isinstance(target,str) or not re.fullmatch(r'[a-f0-9]{40}',target):
+            raise QueueError('invalid target')
+        with self.transaction():
+            row = self.db.execute('SELECT revision FROM deployment_cursor WHERE singleton=1').fetchone()
+            previous = row[0] if row else baseline
+            if not isinstance(previous,str) or not re.fullmatch(r'[a-f0-9]{40}',previous):
+                raise QueueError('explicit initial baseline required')
+            if previous != target and not ancestor(previous,target):
+                if row and ancestor(target,previous):
+                    return {'status':'stale', 'previous':previous, 'target':target, 'count':0}
+                raise QueueError('deployment history diverged')
+            urls = list(changed(previous,target)) if previous != target else []
+            if len(urls) != len(set(urls)):
+                raise QueueError('duplicate URLs')
             for url in urls:
-                self.db.execute('''INSERT INTO recrawl(url,revision,state) VALUES (?,?,'pending')
-                    ON CONFLICT(url) DO UPDATE SET revision=excluded.revision,
-                    state=CASE WHEN recrawl.revision=excluded.revision THEN recrawl.state
-                      WHEN recrawl.state IN ('in_flight','uncertain') THEN recrawl.state
-                      ELSE 'pending' END,
-                    updated_at=CURRENT_TIMESTAMP''', (url, revision))
+                allowed_urls([url])
+            self._enqueue_validated(urls,target)
+            self.db.execute('''INSERT INTO deployment_cursor(singleton,revision) VALUES(1,?)
+                ON CONFLICT(singleton) DO UPDATE SET revision=excluded.revision''',(target,))
+            return {'status':'recorded', 'previous':previous, 'target':target, 'count':len(urls)}
+
+    def cursor(self):
+        row = self.db.execute('SELECT revision FROM deployment_cursor WHERE singleton=1').fetchone()
+        return row[0] if row else None
 
     def claim(self):
         """Atomically reserve one item before a network call; return URL and revision."""
