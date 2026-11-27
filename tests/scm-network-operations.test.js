@@ -79,3 +79,17 @@ test('digital and change topics contain deepening and consistent examples', () =
   assert.equal(1300 - 1000 - 100, 200);
   assert.equal(450 * 8, 3600);
 });
+
+test('people, service and return topics have detailed operational cases', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-network-operations.html'), 'utf8');
+  for (const id of ['root-cause-five-whys', 'return-to-supplier', 'omnichannel-fulfilment', 'last-mile-delivery', 'repair-refurbishment', 'warranty-returns', 'returns-cost-availability', 'customer-complaint-sla', 'process-raci', 'investment-business-case', 'measurement-improvement', 'shift-skills-matrix', 'shift-handover', 'service-segmentation', 'driver-safety']) {
+    const section = page.match(new RegExp(`<section class="encyclopedia-start" id="${id}">([\\s\\S]*?)</section>`));
+    assert.ok(section, id);
+    assert.match(section[1], /<h3>Углубление:/, id);
+  }
+  assert.equal(20 - 7 + 3, 16);
+  assert.equal(18 / 20 * 100, 90);
+  assert.equal((8 - 10) - (9 - 10), -1);
+  assert.ok(Math.abs((-1000000 + 400000/1.1 + 400000/1.1**2 + 400000/1.1**3) + 5259.20) < 1);
+  assert.equal(12000 / 20, 600);
+});
