@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: daily-public-seo
@@ -25,9 +26,16 @@ jobs:
         with:
           python-version: '3.12'
       - name: Inspect published sitemap, robots and canonical pages
+        id: seo_check
         run: |
           set -o pipefail
           python scripts/live_seo_check.py | tee "$RUNNER_TEMP/live-seo-report.json"
       - name: Summarise the check
         if: always()
         run: python scripts/live_seo_summary.py "$RUNNER_TEMP/live-seo-report.json" >> "$GITHUB_STEP_SUMMARY"
+      - name: Open or resolve public SEO alert in GitHub Issues
+        if: always() && !cancelled() && (steps.seo_check.outcome == 'success' || steps.seo_check.outcome == 'failure')
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SEO_CHECK_OUTCOME: ${{ steps.seo_check.outcome }}
+        run: python scripts/live_seo_issue.py

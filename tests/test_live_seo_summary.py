@@ -35,6 +35,9 @@ class SummaryTests(unittest.TestCase):
         self.assertIn('python scripts/live_seo_check.py | tee',workflow)
         self.assertIn('if: always()',workflow)
         self.assertIn('python scripts/live_seo_summary.py',workflow)
+        self.assertIn('issues: write',workflow)
+        self.assertIn("steps.seo_check.outcome == 'success' || steps.seo_check.outcome == 'failure'",workflow)
+        self.assertIn('python scripts/live_seo_issue.py',workflow)
         self.assertNotIn('continue-on-error: true',workflow)
 
 if __name__ == '__main__': unittest.main()
