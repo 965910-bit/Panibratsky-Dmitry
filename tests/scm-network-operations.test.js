@@ -223,3 +223,21 @@ test('equipment lifecycle methods distinguish actual availability, financial sco
   assert.ok(Math.abs(1000000 + 220000 / 1.1 + 242000 / 1.1 ** 2 - 121000 / 1.1 ** 2 - 1300000) < 1e-6);
   assert.equal(18 / 20 * 100, 90);
 });
+
+test('peak capacity, yard balance, staffing and project sections include constrained examples', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-warehouse-equipment.html'), 'utf8');
+  const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ['peak-capacity', 'yard-queue', 'peak-people', 'peak-project']) {
+    assert.ok(ids.includes(id), id);
+    assert.ok(page.includes(`href="#${id}"`), id);
+  }
+  assert.match(page, /повторно эти потери не вычитают/);
+  assert.match(page, /не достигает устойчивого равновесия/);
+  assert.match(page, /не направлять неподготовленных людей на технику/);
+  assert.match(page, /При нулевом прогнозе процент не определён/);
+  assert.equal(Math.ceil((960 / 12) / 7), 12);
+  assert.equal(3 + 3 * 36 - 3 * 30, 21);
+  assert.ok(Math.abs(10 / 12 * 100 - 83.3) < .04);
+  assert.equal((1050 - 1000) / 1000 * 100, 5);
+});
