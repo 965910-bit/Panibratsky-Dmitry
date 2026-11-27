@@ -64,3 +64,18 @@ test('supplier and continuity topics include practical methods and verified exam
   assert.equal(4000000 + 40*100000, 2000000 + 60*100000);
   assert.equal(50 * 100, 5000);
 });
+
+test('digital and change topics contain deepening and consistent examples', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-network-operations.html'), 'utf8');
+  for (const id of ['scm-systems-boundaries', 'integration-events', 'edi-asn', 'wms-cutover', 'bom-engineering-change', 'control-tower', 'sla-kpi-data-quality', 'change-implementation-project', 'promotion-new-product-forecast', 'warehouse-automation', 'epcis-traceability', 'supply-chain-access', 'ai-forecast-documents']) {
+    const section = page.match(new RegExp(`<section class="encyclopedia-start" id="${id}">([\\s\\S]*?)</section>`));
+    assert.ok(section, id);
+    assert.match(section[1], /<h3>Углубление:/, id);
+  }
+  assert.equal(115 + 80, 195);
+  assert.equal(1000 + 50 - 30, 1020);
+  assert.equal(Math.ceil(100 * 2 / .9), 223);
+  assert.equal(180 / 192 * 100, 93.75);
+  assert.equal(1300 - 1000 - 100, 200);
+  assert.equal(450 * 8, 3600);
+});
