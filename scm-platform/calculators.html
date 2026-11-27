@@ -258,7 +258,7 @@
         { id: "turnover", name: "Оборачиваемость запасов за период", fields: [
             { label: "Себестоимость проданных товаров за период (руб.):", id: "turn_cogs", type: "number", default: "", step: "any", help: "Себестоимость и средний запас должны относиться к одному периоду, составу товаров и методу оценки. Учитывайте сезонность. Значение за период не обязательно является годовым; высокая оборачиваемость не всегда означает эффективность." },
             { label: "Средняя стоимость запаса за тот же период (руб.):", id: "turn_avg", type: "number", default: "", step: "any" },
-            { label: "Длительность периода (целых календарных дней):", id: "turn_days", type: "number", default: "", step: 1, help: "Период фиксируется с расчётом. Передача в KPI отключена: там указан годовой показатель. При нулевой себестоимости коэффициент равен нулю." }
+            { label: "Длительность периода (целых календарных дней):", id: "turn_days", type: "number", default: "", step: 1, help: "Период фиксируется с расчётом. Передача в KPI отключена: период и состав запаса нужно согласовать отдельно. При нулевой себестоимости коэффициент равен нулю." }
         ], formula: "Оборачиваемость за период = COGS / Средний запас", unit: "раз за период", calc: (vals) => SCMInventoryMetrics.turnover(vals), kpiId: null },
         { id: "gmroi", name: "GMROI за период", fields: [
             { label: "Валовая прибыль за период (руб.):", id: "gmroi_profit", default: "", step: "any", help: "Показатель = валовая прибыль за период / средняя себестоимость запасов за тот же период и номенклатуру. Не ROI на все инвестиции; результат за период не обязательно годовой. Отрицательная прибыль допускается." },
@@ -274,10 +274,10 @@
             { label: "Ширина упаковки (см):", id: "dim_w", type: "number", default: "", step: "any" },
             { label: "Высота упаковки (см):", id: "dim_h", type: "number", default: "", step: "any" },
             { label: "Фактический вес (кг):", id: "dim_actual", type: "number", default: "", step: "any" },
-            { label: "Делитель (см³/кг) по условиям перевозчика:", id: "dim_coef", type: "number", default: "", step: "any", help: "Для одной упаковки. Показывается большее из фактического и расчётного объёмного веса; на экране округление до двух знаков. Не учитываются правила округления, минимумы и надбавки перевозчика. Проверьте договор и правила выбранного сервиса; прежние расчёты сохранены отдельно." }
+            { label: "Делитель (см³/кг) по условиям перевозчика:", id: "dim_coef", type: "number", default: "", step: "any", help: "Для одной упаковки. Показывается большее из фактического и расчётного объёмного веса; на экране обычно округление до двух знаков, малые ненулевые значения показаны точнее. Не учитываются правила округления, минимумы и надбавки перевозчика. Проверьте договор и правила выбранного сервиса; прежние расчёты сохранены отдельно." }
         ], formula: "Максимум фактического веса и (Д×Ш×В)/делитель", unit: "кг", calc: (vals) => SCMDimensionalWeight.compare(vals), kpiId: null },
         { id: "mape", name: "Ошибка прогноза для одной пары (APE)", fields: [
-            { label: "Фактический спрос (больше нуля):", id: "mape_actual", type: "number", default: "", step: "any", help: "Результат относится к одной паре, а не средней MAPE за период. На экране округление до двух знаков; при факте близком к нулю ошибка нестабильна." },
+            { label: "Фактический спрос (больше нуля):", id: "mape_actual", type: "number", default: "", step: "any", help: "Результат относится к одной паре, а не средней MAPE за период. На экране обычно округление до двух знаков, малые ненулевые значения показаны точнее; при факте близком к нулю ошибка нестабильна." },
             { label: "Прогнозируемый спрос (не меньше нуля):", id: "mape_forecast", type: "number", default: "", step: "any", help: "Цель зависит от задачи. Прежние расчёты сохранены отдельно без пересчёта." }
         ], formula: "APE = |Факт - Прогноз| / Факт × 100%", unit: "%", calc: (vals) => SCMForecast.ape(vals[0], vals[1]), kpiId: null },
         { id: "otif", name: "OTIF (On-Time In-Full)", fields: [
@@ -338,7 +338,7 @@
             for (let f of calc.fields) {
                 fieldsHtml += `
                     <div class="input-group">
-                        <label>${f.label}</label>
+                        <label for="${f.id}">${f.label}</label>
                         <input type="number" id="${f.id}" value="${f.default}" step="${f.step || 'any'}">
                         ${f.help ? `<small>${f.help}</small>` : ''}
                     </div>
@@ -389,7 +389,7 @@
             const dimWeight = calc.calc(values);
             result = calc.additional(values, dimWeight);
         }
-        result = typeof result === 'number' ? (calc.id === 'mape' || calc.id === 'dim_weight' || ['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id) ? result : Math.round(result * 100) / 100) : result;
+        // Сохраняем исходный результат, а не округлённое отображение.
         saveCalculation(calcId, values, result);
     }
 
@@ -421,7 +421,7 @@
                 result = calc.additional(values, dimWeight);
             }
             const resultUnit = result === null ? '' : calc.unit;
-            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа; объём и результат должны быть конечными' : calc.id === 'otif' ? 'Введите корректные целые числа заказов' : 'Проверьте ввод и ограничения модели; результат должен быть конечным') : typeof result === 'number' ? (['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id) ? SCMInventory.format(result) : result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '')) : result;
+            result = result === null ? (calc.id === 'mape' ? 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным' : calc.id === 'dim_weight' ? 'Введите положительные конечные числа; объём и результат должны быть конечными' : calc.id === 'otif' ? 'Введите корректные целые числа заказов' : 'Проверьте ввод и ограничения модели; результат должен быть конечным') : typeof result === 'number' ? (['safety_stock', 'eoq', 'rop', 'turnover', 'fill_rate', 'ftl_cost', 'staff_driver', 'gmroi', 'ccc', 'roi_automation', 'space_util', 'pallet_needs', 'productivity', 'courier_cost', 'order_cycle', 'bep_warehouse'].includes(calc.id) ? SCMInventory.format(result) : (result !== 0 && Number(result.toFixed(2)) === 0 ? String(Number(result.toPrecision(12))) : calc.id === 'otif' && result < 100 && Number(result.toFixed(2)) === 100 ? String(result) : result.toFixed(2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''))) : result;
             const resultDiv = document.getElementById(`result_${calc.id}`);
             if (resultDiv) {
                 resultDiv.innerHTML = `Результат: <strong>${result}</strong> ${resultUnit}`;

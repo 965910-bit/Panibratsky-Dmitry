@@ -168,7 +168,9 @@
                 <!-- Inventory Turnover -->
                 <div class="kpi-item" data-kpi="turnover">
                     <label>Оборачиваемость запасов (раз за период)</label><p>Себестоимость продаж за период / средний запас по себестоимости за тот же период. Не годовой показатель, если период не год. При нулевом среднем запасе расчёт не определён. <a href="scm-metrics.html#method-stock">Методика и пример</a>.</p>
+                    <label for="turnover_cogs">Себестоимость продаж за период</label>
                     <input type="number" id="turnover_cogs" placeholder="COGS (себестоимость продаж)" step="any">
+                    <label for="turnover_avg_inv">Средний запас по себестоимости</label>
                     <input type="number" id="turnover_avg_inv" placeholder="Средний запас" step="any">
                     <div class="kpi-result" id="turnover_result">—</div>
                     <div class="benchmark" id="turnover_benchmark"></div>
@@ -190,7 +192,9 @@
                 <!-- Total SCM Cost as % of Sales -->
                 <div class="kpi-item" data-kpi="scm_cost">
                     <label>Затраты на SCM (% от выручки)</label><p>Согласуйте состав затрат, период и базу выручки; сокращение расходов само по себе не доказывает эффективности. <a href="https://www.apqc.org/resources/benchmarking/open-standards-benchmarking/measures/supply-chain-management-costs">APQC: пример границ показателя</a>.</p>
+                    <label for="scm_cost_value">Затраты на SCM за период</label>
                     <input type="number" id="scm_cost_value" placeholder="Затраты на SCM" step="any">
+                    <label for="scm_sales">Выручка за период</label>
                     <input type="number" id="scm_sales" placeholder="Выручка" step="any">
                     <div class="kpi-result" id="scm_cost_result">—</div>
                     <div class="benchmark" id="scm_cost_benchmark"></div>
@@ -199,8 +203,11 @@
                 <!-- Cash-to-Cash Cycle -->
                 <div class="kpi-item" data-kpi="c2c">
                     <label>Cash-to-Cash цикл (дни)</label><p>DIO + DSO − DPO. Данные должны относиться к сопоставимым периодам и определениям; отрицательный результат возможен. <a href="scm-metrics.html#method-stock">Границы метода</a>.</p>
+                    <label for="c2c_dio">Дни запаса DIO</label>
                     <input type="number" id="c2c_dio" placeholder="DIO (дни запаса)" step="any">
+                    <label for="c2c_dso">Дни дебиторской задолженности DSO</label>
                     <input type="number" id="c2c_dso" placeholder="DSO (дни дебиторки)" step="any">
+                    <label for="c2c_dpo">Дни кредиторской задолженности DPO</label>
                     <input type="number" id="c2c_dpo" placeholder="DPO (дни кредиторки)" step="any">
                     <div class="kpi-result" id="c2c_result">—</div>
                     <div class="benchmark" id="c2c_benchmark"></div>
@@ -247,7 +254,7 @@
             info.textContent = 'Введите целое число выполненных заказов от 0 до общего числа; общее число должно быть больше нуля.';
             return null;
         }
-        output.textContent = result.toFixed(1) + '%';
+        output.textContent = (result !== 0 && Number(result.toFixed(1)) === 0 ? String(Number(result.toPrecision(12))) : result < 100 && Number(result.toFixed(1)) === 100 ? String(result) : result.toFixed(1)) + '%';
         info.textContent = 'Цель и правила учёта определяются по вашим данным и договорённостям.';
         return result;
     }
@@ -279,8 +286,8 @@
             info.textContent = 'Введите конечные числа: факт больше нуля, прогноз не меньше нуля; результат должен быть конечным.';
             return null;
         }
-        output.textContent = result.toFixed(1) + '%';
-        info.textContent = 'APE одной пары; показано с округлением до одного знака. Цель и правила оценки определяются пользователем.';
+        output.textContent = (result !== 0 && Number(result.toFixed(1)) === 0 ? String(Number(result.toPrecision(12))) : result < 100 && Number(result.toFixed(1)) === 100 ? String(result) : result.toFixed(1)) + '%';
+        info.textContent = 'APE одной пары; обычно округлено до одного знака, малые ненулевые результаты показаны точнее. Цель и правила оценки определяются пользователем.';
         return result;
     }
 

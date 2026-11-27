@@ -91,3 +91,16 @@ test('audit and checklist identify MAPE as an error and disclose unverified scor
   assert.match(checklists,/Средняя абсолютная процентная ошибка прогноза спроса \(MAPE\)/);
   for (const page of [checklists,auditor]) assert.match(page,/пороги не подтверждены как отраслевые нормы/);
 });
+
+test('small nonzero APE remains visible in root and platform calculators', () => {
+  const rootPage=fs.readFileSync('kpi-center.html','utf8'), platform=fs.readFileSync('scm-platform/calculators.html','utf8');
+  const rootElements=elements(), rootCtx={SCMForecast,document:{getElementById:rootElements}};
+  vm.createContext(rootCtx);vm.runInContext(extract(rootPage,'calcForecast'),rootCtx);
+  rootElements('forecast_actual').value='100';rootElements('forecast_predicted').value='99.999';rootCtx.calcForecast();
+  assert.notEqual(rootElements('forecast_result').textContent,'0.0%');
+  const definition=platform.match(/        \{ id: "mape",[\s\S]*?kpiId: null \},/);
+  const getElementById=elements(), ctx={SCMForecast,document:{getElementById}};
+  vm.createContext(ctx);vm.runInContext(`let currentBranchId='default';const calculators=[${definition[0]}];\n${extract(platform,'updateAllCalculators')}`,ctx);
+  getElementById('mape_actual').value='100';getElementById('mape_forecast').value='99.999';ctx.updateAllCalculators();
+  assert.doesNotMatch(getElementById('result_mape').innerHTML,/<strong>0<\/strong>/);
+});
