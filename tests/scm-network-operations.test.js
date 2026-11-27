@@ -148,3 +148,23 @@ test('equipment, mechanic and safety guide is discoverable and preserves KPI bou
   assert.equal(6 / 4, 1.5);
   assert.equal(120 / 10, 12);
 });
+
+test('equipment guide includes lifecycle scenarios, maintenance timeline and bounded calculations', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-warehouse-equipment.html'), 'utf8');
+  const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ['fleet-acceptance', 'fleet-inspection', 'dock-yard-scenarios', 'battery-planning', 'mechanic-work-order', 'fire-controls', 'equipment-kpi-methods', 'equipment-academy-practice']) {
+    assert.ok(ids.includes(id), id);
+    assert.ok(page.includes(`href="#${id}"`), id);
+  }
+  assert.match(page, /индикатор сам по себе не доказывает безопасное состояние/i);
+  assert.match(page, /не является нормативной методикой расчёта пожарного риска/);
+  assert.equal(20 / .8, 25);
+  assert.equal(25 / 5, 5);
+  assert.ok(Math.abs((420 / 480) * (2 * 180 / 420) * (171 / 180) * 100 - 71.25) < 1e-10);
+  assert.equal(18 / 20 * 100, 90);
+  assert.equal((20 - 18) / 20 * 100, 10);
+  assert.equal(1200000 + 240000 + 360000 - 150000, 1650000);
+  assert.equal(1650000 / 3, 550000);
+  assert.equal(.5 + .5 + 2 + 1 + .5, 4.5);
+});
