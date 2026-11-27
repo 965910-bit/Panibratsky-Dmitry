@@ -60,7 +60,7 @@ def oauth_request(endpoint, fields):
 
 
 def request_device(cid, request=oauth_request):
-    data = request(DEVICE, {'client_id':cid, 'scope':','.join(SCOPES.split())})
+    data = request(DEVICE, {'client_id':cid, 'scope':SCOPES})
     device, user = data.get('device_code'), data.get('user_code')
     interval, expires = data.get('interval'), data.get('expires_in')
     if (not isinstance(device,str) or not 1 <= len(device) <= 2048 or
