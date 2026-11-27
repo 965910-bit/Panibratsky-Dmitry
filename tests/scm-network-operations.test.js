@@ -258,3 +258,27 @@ test('warehouse digital continuity sections distinguish safe operation, scanning
   assert.equal(100 + 20 - 15, 105);
   assert.equal(103 - 105, -2);
 });
+
+test('quality and traceability exercises are linked and their published examples balance', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-network-operations.html'), 'utf8');
+  const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ['receipt-discrepancy-workflow', 'packaging-cost-trial', 'inventory-valuation-discrepancy', 'traceability-exercise']) {
+    assert.ok(ids.includes(id), id);
+    assert.ok(page.includes(`href="#${id}"`), id);
+  }
+  assert.match(page, /96 − 100 = −4/);
+  assert.match(page, /90 \+ 6 = 96/);
+  assert.match(page, /1 000 × 40 \+ 20 × 1 000 = 60 000/);
+  assert.match(page, /1 000 × 50 \+ 8 × 1 000 = 58 000/);
+  assert.match(page, /не равна автоматически сумме компенсации/);
+  assert.match(page, /1 000 − 600 − 300 − 50 = 50/);
+  assert.equal(96 - 100, -4);
+  assert.equal(90 + 6, 96);
+  assert.equal(1000 * 40 + 20 * 1000, 60000);
+  assert.equal(1000 * 50 + 8 * 1000, 58000);
+  assert.equal(2 * 250, 500);
+  assert.equal(230 - 20, 210);
+  assert.equal(1000 - 600 - 300 - 50, 50);
+  assert.equal((600 + 300 + 50) / 1000 * 100, 95);
+});
