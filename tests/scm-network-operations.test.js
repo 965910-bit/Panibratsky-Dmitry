@@ -10,7 +10,7 @@ test('network operations guide is discoverable and its local fragments resolve',
   const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
   assert.equal(new Set(ids).size, ids.length);
   const links = [...wiki.matchAll(/href="scm-network-operations\.html#([^"]+)"/g)].map(m => m[1]);
-  assert.equal(links.length, 6);
+  assert.ok(links.length >= 6, "expected wiki links to the operations guide");
   for (const id of links) assert.ok(ids.includes(id), id);
   assert.match(page, /rel="canonical" href="https:\/\/scm-news\.ru\/scm-network-operations\.html"/);
   assert.match(page, /Все числовые примеры условные/);
@@ -296,4 +296,20 @@ test('forecast MASE and hazard reporting methods state their assumptions and exa
   assert.match(equipment, /href="#safe-reporting"/);
   assert.match(equipment, /Ответ не означает устранения риска/);
   assert.equal(18 / 20 * 100, 90);
+});
+
+test('vehicle technical control topics are linked and distinguish legal scope from fleet examples', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-network-operations.html'), 'utf8');
+  const wiki = fs.readFileSync(path.join(root, 'wiki.html'), 'utf8');
+  const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ['vehicle-legal-scope', 'vehicle-inspection-practice', 'vehicle-maintenance-safety', 'vehicle-fleet-economics', 'vehicle-records']) {
+    assert.ok(ids.includes(id), id);
+    assert.ok(wiki.includes(`href="scm-network-operations.html#${id}"`), id);
+  }
+  assert.match(page, /Предыдущий приказ № 296 от 08\.08\.2018 утратил силу/);
+  assert.match(page, /не переносите сроки зарубежных правил в РФ/);
+  assert.match(page, /показатель не гарантирует наличие подготовленных водителей/);
+  assert.equal(18 / 20 * 100, 90);
+  assert.equal(15000 / 300, 50);
 });
