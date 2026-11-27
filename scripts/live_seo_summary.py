@@ -27,7 +27,7 @@ def render(path):
         # HTML escaping plus code elements prevent report strings from injecting markdown/HTML.
         lines.extend(f'- <code>{html.escape(item, quote=True)}</code>' for item in findings)
         lines.append('')
-    lines.append('Проверяются только фиксированные URL, sitemap, robots, canonical, noindex и синтаксис JSON-LD. Это не проверка индексации, позиций, доставки IndexNow или всего сайта.')
+    lines.append('Проверяются только фиксированные URL, sitemap, директиву sitemap и явную общую блокировку в robots, canonical, noindex и синтаксис JSON-LD. Это не проверка индексации, позиций, доставки IndexNow или всего сайта.')
     return '\n'.join(lines) + '\n'
 
 
