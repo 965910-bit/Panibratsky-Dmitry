@@ -32,6 +32,10 @@
 
 В Wiki обнаружены пять карточек технического контроля без раскрытия. Добавлены практические разборы в `scm-network-operations.html#vehicle-legal-scope`, `#vehicle-inspection-practice`, `#vehicle-maintenance-safety`, `#vehicle-fleet-economics`, `#vehicle-records` и ссылки из карточек. Выборочно проверены официальное опубликование приказа Минтранса № 9 https://publication.pravo.gov.ru/Document/View/0001202105270007, текст и границы https://base.garant.ru/400818357/ и исторический статус приказа № 296 https://www.consultant.ru/law/podborki/296_predrejsovyj/. Применимость и актуальность норм нужно перепроверять для конкретного субъекта, ТС и даты; список не является исчерпывающим.
 
+## Продолжение: цифровизация, практика и навигация Wiki
+
+Выявлены 21 карточка будущих материалов без перехода к уже опубликованным смежным разборам. Добавлены ссылки; карточки по-прежнему честно отмечены как готовящиеся самостоятельные материалы. Добавлены новые практические разборы RPA, BI, Python и Agile в `scm-network-operations.html`. Проверены источники https://docs.python.org/3/library/csv.html, https://owasp.org/www-community/attacks/CSV_Injection, https://scrumguides.org/docs/scrumguide/v2020/2020-Scrum-Guide-US.pdf и https://www.apqc.org/resource-library/resource-listing/robotic-process-automation-supply-chain-2022-current-state-0. Учебные примеры не являются универсальными нормативами. Остальная база требует дальнейшего аудита.
+
 ## Дальнейшая проверка
 
 - Постранично сверить формулы, числовые примеры и ссылки с первоисточниками, отдельно фиксируя проверку и статус каждого утверждения.
