@@ -205,3 +205,21 @@ test('equipment change, traffic, maintenance backlog and control checks have bou
   assert.equal(60 / 30, 2);
   assert.equal(8 / 10 * 100, 80);
 });
+
+test('equipment lifecycle methods distinguish actual availability, financial scope and learning', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-warehouse-equipment.html'), 'utf8');
+  const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ['reliability-events', 'fleet-investment', 'service-contract', 'incident-learning']) {
+    assert.ok(ids.includes(id), id);
+    assert.ok(page.includes(`href="#${id}"`), id);
+  }
+  assert.match(page, /параллельные интервалы одной машины объединяют/);
+  assert.match(page, /при нуле отказов деление не определено/);
+  assert.match(page, /номинальные потоки с номинальной ставкой/);
+  assert.match(page, /Отсутствие сообщений о near miss не доказывает отсутствие опасности/);
+  assert.equal((480 - 10 - 30 - 20) / 480 * 100, 87.5);
+  assert.equal(400 / 4, 100);
+  assert.ok(Math.abs(1000000 + 220000 / 1.1 + 242000 / 1.1 ** 2 - 121000 / 1.1 ** 2 - 1300000) < 1e-6);
+  assert.equal(18 / 20 * 100, 90);
+});
