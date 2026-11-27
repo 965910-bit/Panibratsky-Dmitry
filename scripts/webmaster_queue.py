@@ -57,6 +57,9 @@ class Queue:
     def claim(self):
         """Atomically reserve one item before a network call; return URL and revision."""
         with self.transaction():
+            # Pause the entire queue until the outstanding write is resolved.
+            if self.db.execute("SELECT 1 FROM recrawl WHERE state IN ('in_flight','uncertain') LIMIT 1").fetchone():
+                return None
             row = self.db.execute("SELECT url,revision FROM recrawl WHERE state='pending' ORDER BY updated_at,url LIMIT 1").fetchone()
             if row:
                 self.db.execute("UPDATE recrawl SET state='in_flight',sent_revision=revision,task_id=NULL,updated_at=CURRENT_TIMESTAMP WHERE url=?", (row[0],))
@@ -77,6 +80,14 @@ class Queue:
             state = ('uncertain' if outcome == 'uncertain' else
                      'pending' if outcome == 'quota_exhausted' or row[0] != revision else 'done')
             self.db.execute('UPDATE recrawl SET state=?,task_id=?,updated_at=CURRENT_TIMESTAMP WHERE url=?', (state,task_id,url))
+
+    def release_unattempted(self, url, revision):
+        """Return a claim to pending only if no provider write was attempted."""
+        with self.transaction():
+            row = self.db.execute('SELECT sent_revision,state FROM recrawl WHERE url=?',(url,)).fetchone()
+            if not row or row != (revision, 'in_flight'):
+                raise QueueError('claim mismatch')
+            self.db.execute("UPDATE recrawl SET state='pending',updated_at=CURRENT_TIMESTAMP WHERE url=?",(url,))
 
     def recover_after_stop(self):
         """Call only when the single worker is known to have stopped."""
