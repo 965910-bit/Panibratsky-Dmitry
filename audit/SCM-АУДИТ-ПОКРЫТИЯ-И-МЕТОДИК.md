@@ -40,6 +40,10 @@
 
 Добавлены практические сценарии `scm-network-operations.html#service-cycle-fill`, `#reorder-overshoot`, `#rolling-forecast-validation` и `scm-practical-guides.html#lead-time-open-orders`: границы показателей, переход порога заказа, временная проверка и открытые заказы. Сверены источники https://otexts.com/fpp3/tscv.html, https://ocw.mit.edu/courses/esd-260j-logistics-systems-fall-2006/8b53c45fd26ffff706d815131e8d177e_lect11.pdf и исследование https://arxiv.org/html/2607.18530. Последнее не является универсальной рекомендацией модели. Проверка оставшихся страниц продолжается.
 
+## Продолжение: карточки показателей библиотеки
+
+Выборочно проверены и исправлены карточки `library.html`: срок поставки, fill rate, дни запаса, доля дефектных единиц, финансовые показатели, EOQ, страховой запас, углеродные выбросы, возвраты и длительность операций. Прежние определения местами смешивали разные единицы, события и финансовые базы; даны формулы, примеры и ограничения. Источники: https://www.apqc.org/what-we-do/benchmarking/open-standards-benchmarking/measures/inventory-days-supply, https://asq.org/quality-progress/articles/use-simple-models-for-incoming-defects?id=ec74cb2ec81c434f9bf7aacad636f600, https://ghgprotocol.org/sites/default/files/2022-12/Chapter4.pdf. Остальные карточки ещё требуют отдельной проверки.
+
 ## Дальнейшая проверка
 
 - Постранично сверить формулы, числовые примеры и ссылки с первоисточниками, отдельно фиксируя проверку и статус каждого утверждения.
