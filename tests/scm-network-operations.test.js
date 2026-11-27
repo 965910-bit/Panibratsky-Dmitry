@@ -188,3 +188,20 @@ test('warehouse infrastructure, ergonomics and emergency sections expose methods
   assert.equal(8 / 10 * 100, 80);
   assert.equal(38 / 40 * 100, 95);
 });
+
+test('equipment change, traffic, maintenance backlog and control checks have bounded examples', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-warehouse-equipment.html'), 'utf8');
+  const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ['change-control', 'traffic-verification', 'maintenance-backlog', 'control-verification']) {
+    assert.ok(ids.includes(id), id);
+    assert.ok(page.includes(`href="#${id}"`), id);
+  }
+  assert.match(page, /не означает, что 75% переходов безопасны/);
+  assert.match(page, /Это оценка ёмкости, не срок конкретного ремонта/);
+  assert.match(page, /не вероятность предотвращения травмы/);
+  assert.match(page, /Присутствие на занятии не равно подтверждённой компетентности/);
+  assert.equal(9 / 12 * 100, 75);
+  assert.equal(60 / 30, 2);
+  assert.equal(8 / 10 * 100, 80);
+});
