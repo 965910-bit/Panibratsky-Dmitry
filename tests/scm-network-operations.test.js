@@ -313,3 +313,22 @@ test('vehicle technical control topics are linked and distinguish legal scope fr
   assert.equal(18 / 20 * 100, 90);
   assert.equal(15000 / 300, 50);
 });
+
+test('digital practices and planned wiki cards link to available material with executable examples', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-network-operations.html'), 'utf8');
+  const wiki = fs.readFileSync(path.join(root, 'wiki.html'), 'utf8');
+  for (const id of ['rpa-controls','bi-dashboard-governance','python-scm-example','agile-scm-delivery']) {
+    assert.ok(page.includes(`id="${id}"`), id);
+    assert.ok(wiki.includes(`href="scm-network-operations.html#${id}"`), id);
+  }
+  assert.equal((wiki.match(/Связанный практический разбор/g) || []).length, 21);
+  assert.match(page, /ноль и отсутствие данных различаются/i);
+  assert.match(page, /обычное CSV-кавычение не является универсальной защитой/);
+  assert.equal((9 + 10) / (10 + 90) * 100, 19);
+  assert.equal(80 / 100 * 100, 80);
+  const code = page.match(/<h3 id="python-scm-example">[\s\S]*?<pre><code>([\s\S]*?)<\/code><\/pre>/)[1];
+  const run = require('node:child_process').spawnSync('python3', ['-c', code], {encoding:'utf8'});
+  assert.equal(run.status, 0, run.stderr);
+  assert.match(run.stdout, /учтено: 3 пропущено: 1/);
+  assert.match(run.stdout, /среднее, мин: 40\.0/);
+});
