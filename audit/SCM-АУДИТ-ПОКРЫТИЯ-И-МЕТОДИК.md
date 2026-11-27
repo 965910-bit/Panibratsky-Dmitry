@@ -36,6 +36,10 @@
 
 Выявлены 21 карточка будущих материалов без перехода к уже опубликованным смежным разборам. Добавлены ссылки; карточки по-прежнему честно отмечены как готовящиеся самостоятельные материалы. Добавлены новые практические разборы RPA, BI, Python и Agile в `scm-network-operations.html`. Проверены источники https://docs.python.org/3/library/csv.html, https://owasp.org/www-community/attacks/CSV_Injection, https://scrumguides.org/docs/scrumguide/v2020/2020-Scrum-Guide-US.pdf и https://www.apqc.org/resource-library/resource-listing/robotic-process-automation-supply-chain-2022-current-state-0. Учебные примеры не являются универсальными нормативами. Остальная база требует дальнейшего аудита.
 
+## Продолжение: сервис, пополнение и прогноз
+
+Добавлены практические сценарии `scm-network-operations.html#service-cycle-fill`, `#reorder-overshoot`, `#rolling-forecast-validation` и `scm-practical-guides.html#lead-time-open-orders`: границы показателей, переход порога заказа, временная проверка и открытые заказы. Сверены источники https://otexts.com/fpp3/tscv.html, https://ocw.mit.edu/courses/esd-260j-logistics-systems-fall-2006/8b53c45fd26ffff706d815131e8d177e_lect11.pdf и исследование https://arxiv.org/html/2607.18530. Последнее не является универсальной рекомендацией модели. Проверка оставшихся страниц продолжается.
+
 ## Дальнейшая проверка
 
 - Постранично сверить формулы, числовые примеры и ссылки с первоисточниками, отдельно фиксируя проверку и статус каждого утверждения.

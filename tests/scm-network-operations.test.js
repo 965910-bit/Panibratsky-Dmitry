@@ -332,3 +332,19 @@ test('digital practices and planned wiki cards link to available material with e
   assert.match(run.stdout, /учтено: 3 пропущено: 1/);
   assert.match(run.stdout, /среднее, мин: 40\.0/);
 });
+
+test('replenishment and forecast evaluation examples respect boundaries and open orders', () => {
+  const page = fs.readFileSync(path.join(root,'scm-network-operations.html'),'utf8');
+  const practical = fs.readFileSync(path.join(root,'scm-practical-guides.html'),'utf8');
+  const metrics = fs.readFileSync(path.join(root,'scm-metrics.html'),'utf8');
+  for (const id of ['reorder-overshoot','service-cycle-fill','rolling-forecast-validation']) assert.ok(page.includes(`id="${id}"`), id);
+  assert.match(practical,/id="lead-time-open-orders"/);
+  assert.match(metrics,/scm-network-operations\.html#service-cycle-fill/);
+  assert.match(page,/нет универсального правила, что один показатель всегда выше другого/i);
+  assert.match(practical,/нельзя подставить 10 как окончательный срок/);
+  assert.equal(70 + 2 * 20, 110);
+  assert.equal(4 / 5 * 100, 80);
+  assert.equal(96 / 100 * 100, 96);
+  assert.equal((Math.abs(16 - 14) + Math.abs(20 - 16)) / 2, 3);
+  assert.equal((4 + 6) / 2, 5);
+});
