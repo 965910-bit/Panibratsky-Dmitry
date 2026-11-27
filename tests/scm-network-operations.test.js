@@ -241,3 +241,20 @@ test('peak capacity, yard balance, staffing and project sections include constra
   assert.ok(Math.abs(10 / 12 * 100 - 83.3) < .04);
   assert.equal((1050 - 1000) / 1000 * 100, 5);
 });
+
+test('warehouse digital continuity sections distinguish safe operation, scanning and reconciliation', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-warehouse-equipment.html'), 'utf8');
+  const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ['warehouse-ot-security', 'barcode-controls', 'warehouse-offline', 'restore-reconciliation']) {
+    assert.ok(ids.includes(id), id);
+    assert.ok(page.includes(`href="#${id}"`), id);
+  }
+  assert.match(page, /Сетевое отключение не заменяет процедуру изоляции опасной энергии/);
+  assert.match(page, /не равно формальной верификации качества кода/);
+  assert.match(page, /бумажный список не делает неизвестный товар доступным/);
+  assert.match(page, /успешное создание копии не подтверждает успешное восстановление/);
+  assert.equal(950 / 1000 * 100, 95);
+  assert.equal(100 + 20 - 15, 105);
+  assert.equal(103 - 105, -2);
+});
