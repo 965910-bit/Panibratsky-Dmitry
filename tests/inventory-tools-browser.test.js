@@ -61,10 +61,13 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    await checkAccessibility(page);
    await page.goto(`${base}/wiki.html`);
    assert.equal(await page.locator('.wiki-featured a').count(),26);
-   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),71);
+   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),72);
    await page.getByLabel('Поиск по указателю тем').fill('погрузчик безопасность');
-   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),1);
-   assert.equal(await page.locator('[data-wiki-topic]:visible a').getAttribute('href'),'scm-internal-academy.html#shift-safety-dialogue');
+   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),2);
+   assert.equal(await page.locator('[data-wiki-topic]:visible a[href="scm-internal-academy.html#shift-safety-dialogue"]').count(),1);
+   assert.equal(await page.locator('[data-wiki-topic]:visible a[href="scm-warehouse-equipment.html"]').count(),1);
+   await page.getByLabel('Поиск по указателю тем').fill('механик пожарная');
+   assert.equal(await page.locator('[data-wiki-topic]:visible a').getAttribute('href'),'scm-warehouse-equipment.html');
    await page.getByLabel('Поиск по указателю тем').fill('кральич матрица');
    assert.equal(await page.locator('[data-wiki-topic]:visible').count(),1);
    assert.equal(await page.locator('[data-wiki-topic]:visible a').getAttribute('href'),'scm-practical-guides.html#category-strategy');
@@ -136,7 +139,7 @@ test('SCM tools work at desktop and mobile sizes without sending user data',asyn
    await page.getByLabel('Поиск по указателю тем').fill('несуществующая тема');
    assert.equal(await page.locator('#wiki-search-empty').isVisible(),true);
    await page.getByLabel('Поиск по указателю тем').clear();
-   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),71);
+   assert.equal(await page.locator('[data-wiki-topic]:visible').count(),72);
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),false);
    await page.locator('.wiki-planned summary').click();
    assert.equal(await page.locator('.wiki-planned').evaluate(el=>el.open),true);
