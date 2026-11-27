@@ -168,3 +168,23 @@ test('equipment guide includes lifecycle scenarios, maintenance timeline and bou
   assert.equal(1650000 / 3, 550000);
   assert.equal(.5 + .5 + 2 + 1 + .5, 4.5);
 });
+
+test('warehouse infrastructure, ergonomics and emergency sections expose methods and limits', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-warehouse-equipment.html'), 'utf8');
+  const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ['racking-management', 'conveyor-equipment', 'dock-equipment', 'manual-ergonomics', 'hazard-controls', 'spares-stock', 'emergency-readiness']) {
+    assert.ok(ids.includes(id), id);
+    assert.ok(page.includes(`href="#${id}"`), id);
+  }
+  assert.match(page, /Аварийная остановка не равна изоляции всех видов энергии/);
+  assert.match(page, /не универсальный законный лимит/);
+  assert.match(page, /повторно вычитать их нельзя/);
+  assert.match(page, /статус неизвестен/);
+  const rwl = 23 * .8 * .9 * .9 * .9 * .8 * .9;
+  assert.ok(Math.abs(rwl - 9.657792) < 1e-9);
+  assert.ok(Math.abs(12 / rwl - 1.24) < .01);
+  assert.equal(4 + 3 - 2, 5);
+  assert.equal(8 / 10 * 100, 80);
+  assert.equal(38 / 40 * 100, 95);
+});
