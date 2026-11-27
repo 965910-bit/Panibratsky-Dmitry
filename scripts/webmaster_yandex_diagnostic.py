@@ -32,6 +32,7 @@ def main():
     token=os.environ.pop('SCM_WM_YANDEX_ACCESS_TOKEN','')
     try:
         result=inspect(token)
+        print('::notice title=Yandex diagnostic::sitemap='+result['sitemap']+'; quota_remaining='+str(result['quota_remaining']))
         print('Подтверждённый сайт scm-news.ru: найден.')
         print('Sitemap: '+('уже добавлен' if result['sitemap']=='already_present' else 'не найден в полном списке добавленных карт.'))
         print('Остаток суточной квоты переобхода: '+str(result['quota_remaining'])+'.')
