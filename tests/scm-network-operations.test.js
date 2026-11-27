@@ -117,3 +117,34 @@ test('all 80 catalog topics include deepening and the final 18 contain worked ca
   assert.equal(600 + 100 - 150 - 50, 500);
   assert.equal(10 * 100 * .1, 100);
 });
+
+test('equipment, mechanic and safety guide is discoverable and preserves KPI boundaries', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-warehouse-equipment.html'), 'utf8');
+  const wiki = fs.readFileSync(path.join(root, 'wiki.html'), 'utf8');
+  const metrics = fs.readFileSync(path.join(root, 'scm-metrics.html'), 'utf8');
+  assert.match(wiki, /href="scm-warehouse-equipment\.html"/);
+  assert.match(metrics, /href="scm-warehouse-equipment\.html#fleet-kpi"/);
+  assert.match(page, /rel="canonical" href="https:\/\/scm-news\.ru\/scm-warehouse-equipment\.html"/);
+  const ids = [...page.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ['fleet-types', 'fleet-selection', 'traffic-safety', 'power-sources', 'fire-safety', 'mechanic', 'fleet-kpi', 'safety-kpi', 'warehouse-kpi', 'academy']) assert.ok(ids.includes(id), id);
+  for (const [, fragment] of page.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.includes(fragment), fragment);
+  assert.match(page, /классификация беспилотной техники не установлена/);
+  assert.match(page, /микротравма и оказание первой помощи учитываются отдельно/);
+  assert.match(page, /200 000 часов/);
+  assert.match(page, /не является нормативной методикой расчёта пожарного риска/);
+  assert.equal(36 / 40 * 100, 90);
+  assert.ok(Math.abs(24 / 36 * 100 - 66.7) < 0.04);
+  assert.equal(180 / 6, 30);
+  assert.equal((2 + 4) / 2, 3);
+  assert.equal(600 / 3, 200);
+  assert.equal(18 / 20 * 100, 90);
+  assert.equal(16 / 20 * 100, 80);
+  assert.equal(2 * 200000 / 100000, 4);
+  assert.equal(9 / 12 * 100, 75);
+  assert.equal(12 - 9, 3);
+  assert.equal(2 * 7 * 60, 840);
+  assert.equal(630 / 840 * 100, 75);
+  assert.equal(6 / 4, 1.5);
+  assert.equal(120 / 10, 12);
+});
