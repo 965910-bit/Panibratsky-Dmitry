@@ -34,3 +34,18 @@ test('planning topics include detailed formulas, assumptions and worked examples
   assert.equal(120/30, 4);
   assert.ok(Math.abs(81/100 - .9*.9) < 1e-12);
 });
+
+test('warehouse and freight topics include operational deepening and checked examples', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-network-operations.html'), 'utf8');
+  for (const id of ['cost-to-serve', 'dock-scheduling', 'picking-methods', 'warehouse-capacity-design', 'packaging-protection', 'loading-dock-safety', 'freight-modes', 'multimodal-handoffs', 'freight-documents', 'cargo-claims', 'vehicle-route-planning', 'returnable-packaging']) {
+    const section = page.match(new RegExp(`<section class="encyclopedia-start" id="${id}">([\\s\\S]*?)</section>`));
+    assert.ok(section, id);
+    assert.match(section[1], /<h3>Углубление:/, id);
+  }
+  assert.equal(300000 / 15000 * 1000, 20000);
+  assert.equal(8*60 + 4*90, 2*420);
+  assert.equal(12*4*2 - 6 - 10, 80);
+  assert.equal(40*8 + 25 + 3, 348);
+  assert.equal((600000 - 300000)*.2, 60000);
+  assert.equal(500 + 300 + 130 + 70 + 30, 1030);
+});
