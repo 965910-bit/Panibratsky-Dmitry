@@ -49,3 +49,18 @@ test('warehouse and freight topics include operational deepening and checked exa
   assert.equal((600000 - 300000)*.2, 60000);
   assert.equal(500 + 300 + 130 + 70 + 30, 1030);
 });
+
+test('supplier and continuity topics include practical methods and verified examples', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-network-operations.html'), 'utf8');
+  for (const id of ['continuity', 'supplier-qualification', 'supplier-development', 'supplier-material-change', 'supplier-concentration', 'indirect-procurement', 'procurement-commercial-terms', 'contract-obligations', 'make-or-buy-3pl', 'logistics-operator-contract', 'third-party-inventory', 'subtier-supplier-risk']) {
+    const section = page.match(new RegExp(`<section class="encyclopedia-start" id="${id}">([\\s\\S]*?)</section>`));
+    assert.ok(section, id);
+    assert.match(section[1], /<h3>Углубление:/, id);
+  }
+  assert.equal(18 / 20 * 100, 90);
+  assert.equal(50**2 + 30**2 + 20**2, 3800);
+  assert.equal(500 - 320 - 80, 100);
+  assert.ok(Math.abs(1000000 * .12 * 30 / 365 - 9863.0137) < .01);
+  assert.equal(4000000 + 40*100000, 2000000 + 60*100000);
+  assert.equal(50 * 100, 5000);
+});
