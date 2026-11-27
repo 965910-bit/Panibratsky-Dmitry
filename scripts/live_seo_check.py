@@ -2,6 +2,7 @@
 """Read-only smoke check of fixed production URLs; not an indexing or crawler audit."""
 import json
 import re
+import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -19,13 +20,49 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def fetch(url):
-    # All URLs are hard-coded from the repository's sitemap allowlist. No redirects.
-    request = urllib.request.Request(url, headers={'User-Agent': 'SCM-News-SEO-Monitor/1.0', 'Accept': 'text/html,application/xml,text/plain'})
-    with urllib.request.build_opener(NoRedirect).open(request, timeout=20) as response:
-        body = response.read(MAX_BYTES + 1)
-        if len(body) > MAX_BYTES:
-            raise ValueError('response too large')
-        return response.status, response.headers, body
+    # Fixed allowlisted URLs only. Retry one transient read, never a redirect or rate-limit.
+    req = urllib.request.Request(url, headers={'User-Agent': 'SCM-News-SEO-Monitor/1.0', 'Accept': 'text/html,application/xml,text/plain'})
+    for attempt in range(2):
+        try:
+            with urllib.request.build_opener(NoRedirect).open(req, timeout=20) as response:
+                body = response.read(MAX_BYTES + 1)
+                if len(body) > MAX_BYTES:
+                    raise ValueError('response too large')
+                return response.status, response.headers, body
+        except urllib.error.HTTPError as exc:
+            # Do not retry if the server specifies any delay; never follow redirects.
+            if attempt or exc.code not in (500, 502, 503, 504) or (exc.headers and exc.headers.get('Retry-After') is not None):
+                raise
+        except (urllib.error.URLError, TimeoutError, OSError):
+            if attempt:
+                raise
+        time.sleep(2)
+
+
+def generic_root_disallow(lines):
+    """Detect only a clear wildcard group with Disallow: / and no Allow rule.
+
+    Does not attempt full robots matching or determine what specific bots see.
+    """
+    groups = []
+    agents, rules = [], []
+    for line in lines:
+        line = line.split('#',1)[0].strip()
+        if ':' not in line:
+            continue
+        key, value = (part.strip() for part in line.split(':',1))
+        key = key.lower()
+        if key == 'user-agent':
+            if rules:
+                groups.append((agents,rules));agents,rules = [],[]
+            agents.append(value.lower())
+        elif key in ('allow','disallow') and agents:
+            rules.append((key,value))
+    if agents:
+        groups.append((agents,rules))
+    return any('*' in group and ('disallow','/') in rules and
+               not any(key == 'allow' and value for key,value in rules)
+               for group,rules in groups)
 
 
 def has_noindex(value):
@@ -69,6 +106,8 @@ def check(fetcher=fetch, pages=None):
             sitemap = [line.split(':', 1)[1].strip() for line in lines if re.match(r'^\s*sitemap\s*:', line, re.I)]
             if BASE + 'sitemap.xml' not in sitemap:
                 findings.append('robots.txt: expected sitemap directive missing')
+            if generic_root_disallow(lines):
+                findings.append('robots.txt: wildcard user-agent group disallows / without an allow rule; review crawler access')
         except UnicodeError:
             findings.append('robots.txt: invalid UTF-8')
 

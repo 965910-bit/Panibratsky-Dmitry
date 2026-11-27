@@ -1,4 +1,6 @@
 import json
+import io
+from unittest import mock
 from pathlib import Path
 import sys
 import unittest
@@ -51,6 +53,33 @@ class LiveSEOTests(unittest.TestCase):
         self.assertIn('invalid or unsupported XML', monitor.check(lambda url: items[url], self.pages)['findings'][0])
         items = self.responses(); items[monitor.BASE] = (200, {}, b'a' * (monitor.MAX_BYTES + 1))
         self.assertTrue(any('too large' in x for x in monitor.check(lambda url: items[url], self.pages)['findings']))
+
+    def test_generic_robots_block_and_groups(self):
+        self.assertTrue(monitor.generic_root_disallow(['User-agent: *','Disallow: /']))
+        self.assertTrue(monitor.generic_root_disallow(['User-agent: A','User-agent: *','Disallow: /','User-agent: B','Allow: /']))
+        self.assertFalse(monitor.generic_root_disallow(['User-agent: specific','Disallow: /','User-agent: *','Allow: /']))
+        self.assertFalse(monitor.generic_root_disallow(['User-agent: *','Disallow: /','Allow: /allowed']))
+        items=self.responses();items[monitor.BASE+'robots.txt']=(200,{},f'Sitemap: {monitor.BASE}sitemap.xml\nUser-agent: *\nDisallow: /\n'.encode())
+        self.assertTrue(any('wildcard user-agent' in f for f in monitor.check(lambda u:items[u],self.pages)['findings']))
+    def test_transient_get_retried_once(self):
+        response=mock.MagicMock();response.__enter__.return_value.status=200;response.__enter__.return_value.headers={};response.__enter__.return_value.read.return_value=b'ok'
+        for error in (urllib.error.URLError('network'),urllib.error.HTTPError(monitor.BASE,503,'down',{},io.BytesIO(b''))):
+            with self.subTest(error=error),mock.patch.object(monitor.urllib.request,'build_opener') as opener,mock.patch.object(monitor.time,'sleep') as sleep:
+                opener.return_value.open.side_effect=[error,response]
+                self.assertEqual(monitor.fetch(monitor.BASE)[2],b'ok');self.assertEqual(opener.return_value.open.call_count,2)
+                sleep.assert_called_once_with(2)
+    def test_unsafe_retries_are_never_attempted(self):
+        for status,headers in ((302,{}),(403,{}),(429,{}),(503,{'Retry-After':'30'})):
+            error=urllib.error.HTTPError(monitor.BASE,status,'failure',headers,io.BytesIO(b''))
+            with self.subTest(status=status,headers=headers),mock.patch.object(monitor.urllib.request,'build_opener') as opener,mock.patch.object(monitor.time,'sleep') as sleep:
+                opener.return_value.open.side_effect=error
+                with self.assertRaises(urllib.error.HTTPError):monitor.fetch(monitor.BASE)
+                self.assertEqual(opener.return_value.open.call_count,1);sleep.assert_not_called()
+    def test_no_more_than_two_attempts(self):
+        with mock.patch.object(monitor.urllib.request,'build_opener') as opener,mock.patch.object(monitor.time,'sleep') as sleep:
+            opener.return_value.open.side_effect=urllib.error.URLError('offline')
+            with self.assertRaises(urllib.error.URLError):monitor.fetch(monitor.BASE)
+            self.assertEqual(opener.return_value.open.call_count,2);sleep.assert_called_once_with(2)
 
     def test_redirect_handler_refuses_redirect(self):
         self.assertIsNone(monitor.NoRedirect().redirect_request(None, None, 302, '', {}, 'https://example.com'))
