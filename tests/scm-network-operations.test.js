@@ -93,3 +93,27 @@ test('people, service and return topics have detailed operational cases', () => 
   assert.ok(Math.abs((-1000000 + 400000/1.1 + 400000/1.1**2 + 400000/1.1**3) + 5259.20) < 1);
   assert.equal(12000 / 20, 600);
 });
+
+test('all 80 catalog topics include deepening and the final 18 contain worked cases', () => {
+  const page = fs.readFileSync(path.join(root, 'scm-network-operations.html'), 'utf8');
+  const sections = [...page.matchAll(/<section class="encyclopedia-start" id="([^"]+)">([\s\S]*?)<\/section>/g)]
+    .filter(([, id]) => id !== 'topics');
+  assert.equal(sections.length, 80);
+  for (const [, id, body] of sections) {
+    assert.match(body, /<h3>Углубление:/, id);
+  }
+  for (const id of ['takt-cycle-lead', 'fmea', 'bullwhip-effect', 'collaborative-replenishment', 'consignment-inventory', 'mro-spare-parts', 'inventory-carrying-cost', 'inventory-centralization', 'cargo-insurance-liability', 'freight-forwarder-selection', 'container-terminal-operations', 'customs-classification-origin-value', 'tir-cmr-ecmr', 'dangerous-perishable-goods', 'northern-seasonal-supply', 'transport-emissions-scopes', 'waste-circularity', 'labour-due-diligence']) {
+    const found = sections.find(([, sectionId]) => sectionId === id);
+    assert.ok(found, id);
+    assert.match(found[2].slice(found[2].indexOf('<h3>Углубление:')), /<strong>Пример:<\/strong>/, id);
+  }
+  assert.equal(450 / 225, 2);
+  assert.equal(10 * 2 * 3, 5 * 4 * 3);
+  assert.equal(400 / 100, 4);
+  assert.equal(100 + 40 - 30 - 10, 100);
+  assert.equal(2000000 * (.12 + .03), 300000);
+  assert.ok(Math.abs(Math.sqrt(100 + 100) - 14.1421) < .001);
+  assert.equal(18000 + 500 + 2500, 21000);
+  assert.equal(600 + 100 - 150 - 50, 500);
+  assert.equal(10 * 100 * .1, 100);
+});
