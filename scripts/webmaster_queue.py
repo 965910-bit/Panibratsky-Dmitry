@@ -25,6 +25,16 @@ class Queue:
               CHECK(state IN ('pending','in_flight','done','uncertain')),
             task_id TEXT, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
 
+        with self.transaction():
+            self.db.execute('''CREATE TABLE IF NOT EXISTS recrawl_receipts (
+                task_id TEXT PRIMARY KEY, url TEXT NOT NULL, revision TEXT NOT NULL,
+                observed_state TEXT CHECK(observed_state IN ('IN_PROGRESS','DONE','FAILED')),
+                last_checked TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
+            # Older queue databases retained only the latest task per URL.
+            self.db.execute('''INSERT OR IGNORE INTO recrawl_receipts(task_id,url,revision)
+                SELECT task_id,url,sent_revision FROM recrawl
+                WHERE task_id IS NOT NULL AND sent_revision IS NOT NULL''')
+
     def close(self):
         self.db.close()
 
@@ -77,6 +87,11 @@ class Queue:
             row = self.db.execute('SELECT revision,sent_revision,state FROM recrawl WHERE url=?',(url,)).fetchone()
             if not row or row[1] != revision or row[2] != 'in_flight':
                 raise QueueError('claim mismatch')
+            if outcome == 'accepted':
+                existing = self.db.execute('SELECT url,revision FROM recrawl_receipts WHERE task_id=?',(task_id,)).fetchone()
+                if existing and existing != (url, revision):
+                    raise QueueError('task id already associated with another submission')
+                self.db.execute('INSERT OR IGNORE INTO recrawl_receipts(task_id,url,revision) VALUES (?,?,?)',(task_id,url,revision))
             state = ('uncertain' if outcome == 'uncertain' else
                      'pending' if outcome == 'quota_exhausted' or row[0] != revision else 'done')
             self.db.execute('UPDATE recrawl SET state=?,task_id=?,updated_at=CURRENT_TIMESTAMP WHERE url=?', (state,task_id,url))
@@ -104,6 +119,29 @@ class Queue:
                 raise QueueError('claim mismatch')
             state = 'done' if accepted and row[0] == revision else 'pending'
             self.db.execute('UPDATE recrawl SET state=?,updated_at=CURRENT_TIMESTAMP WHERE url=?',(state,url))
+
+    def unchecked_receipts(self, limit):
+        if type(limit) is not int or not 1 <= limit <= 50:
+            raise QueueError('invalid receipt limit')
+        return self.db.execute('''SELECT task_id,url,revision FROM recrawl_receipts
+            WHERE observed_state IS NULL OR observed_state='IN_PROGRESS'
+            ORDER BY last_checked IS NOT NULL, last_checked, task_id LIMIT ?''',(limit,)).fetchall()
+
+    def record_observation(self, task_id, url, revision, state):
+        # None denotes a failed check, never evidence of remote state.
+        if state not in (None, 'IN_PROGRESS', 'DONE', 'FAILED'):
+            raise QueueError('invalid observation')
+        with self.transaction():
+            current = self.db.execute('SELECT url,revision,observed_state FROM recrawl_receipts WHERE task_id=?',(task_id,)).fetchone()
+            if not current or current[:2] != (url,revision):
+                raise QueueError('receipt mismatch')
+            if current[2] in ('DONE','FAILED'):
+                raise QueueError('terminal observation already recorded')
+            self.db.execute('''UPDATE recrawl_receipts SET observed_state=COALESCE(?,observed_state),
+                last_checked=STRFTIME('%Y-%m-%dT%H:%M:%fZ','now') WHERE task_id=?''',(state,task_id))
+
+    def receipts(self):
+        return self.db.execute('SELECT task_id,url,revision,observed_state,last_checked FROM recrawl_receipts ORDER BY task_id').fetchall()
 
     def items(self):
         return self.db.execute('SELECT url,revision,sent_revision,state,task_id FROM recrawl ORDER BY url').fetchall()
