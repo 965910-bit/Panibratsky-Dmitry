@@ -39,7 +39,7 @@ class Tests(unittest.TestCase):
         google.assert_not_called();yandex.assert_not_called()
     def test_provider_failure_does_not_suppress_other(self):
         def fail(*args):raise RuntimeError('secret error')
-        r=w.run(EVENT,'org/repo','gh',{'id':'a','secret':'b','refresh':'c'},'y',fetch=Fake(),git=fake_git,ancestry=ancestry,validate=lambda urls:None,refresh=lambda *x:'g',google_call=fail,yandex_call=lambda t,u,a:{'recrawl':[{'url':u[0],'status':'accepted'}]})
+        r=w.run(EVENT,'org/repo','gh',{'id':'a','secret':'b','refresh':'c'},'y',fetch=Fake(),git=fake_git,ancestry=ancestry,validate=lambda urls:None,refresh=lambda *x:'g',google_call=fail,yandex_call=lambda t,u,a:{'sitemap':'already_present','recrawl':[{'url':u[0],'status':'accepted','task_id':'c7fe80c0-36e3-11e6-8b2d-df96aa592c0a'}]})
         self.assertEqual(r['sources']['google']['status'],'error')
         self.assertEqual(r['sources']['yandex']['status'],'ok')
         self.assertNotIn('secret',json.dumps(r))
@@ -51,10 +51,45 @@ class Tests(unittest.TestCase):
         submitted=[]
         def yandex(t, urls, apply):
             submitted.extend(urls)
-            return {'recrawl': []}
+            return {'sitemap':'already_present','recrawl':[{'url':urls[0],'status':'already_added'}]}
         r=w.run(EVENT,'org/repo','gh',{},'y',fetch=Fake(),git=git,ancestry=ancestry,validate=lambda urls:None,yandex_call=yandex)
         self.assertEqual(len(submitted),5)
         self.assertEqual(len(r['sources']['yandex']['deferred_urls']),2)
+
+    def test_partial_failure_keeps_receipt_unknown_and_deferred(self):
+        urls=[actions.BASE + p for p in list(actions.PAGES)[:4]]
+        plan={'urls':urls,'sha':SHA,'github_api':'https://api.github.com/repos/org/repo'}
+        calls=[]
+        def action(token,batch,apply):
+            calls.append(batch[0])
+            if len(calls)==2:raise TimeoutError('secret')
+            return {'sitemap':'already_present','recrawl':[{'url':batch[0],'status':'accepted','task_id':'c7fe80c0-36e3-11e6-8b2d-df96aa592c0a'}]}
+        r=w.run_yandex_batch(plan,'gh','token',Fake(),action)
+        self.assertEqual(r['status'],'error');self.assertEqual(r['result']['recrawl'][0]['status'],'accepted')
+        self.assertEqual(r['result']['recrawl'][1],{'url':urls[1],'status':'unknown'})
+        self.assertEqual(r['deferred_urls'],urls[2:]);self.assertEqual(len(calls),2)
+        self.assertNotIn('secret',json.dumps(r))
+    def test_quota_exhaustion_stops_remaining(self):
+        urls=[actions.BASE+p for p in list(actions.PAGES)[:3]]
+        plan={'urls':urls,'sha':SHA,'github_api':'https://api.github.com/repos/org/repo'}
+        action=mock.Mock(side_effect=lambda t,u,a:{'sitemap':'already_present','recrawl':[{'url':u[0],'status':'quota_exhausted'}]})
+        r=w.run_yandex_batch(plan,'gh','token',Fake(),action)
+        self.assertEqual(r['result']['recrawl'][0]['status'],'quota_exhausted');self.assertEqual(r['deferred_urls'],urls[1:]);self.assertEqual(action.call_count,1)
+    def test_new_main_stops_before_next_write(self):
+        urls=[actions.BASE+p for p in list(actions.PAGES)[:3]]
+        plan={'urls':urls,'sha':SHA,'github_api':'https://api.github.com/repos/org/repo'}
+        action=mock.Mock(side_effect=lambda t,u,a:{'sitemap':'already_present','recrawl':[{'url':u[0],'status':'already_added'}]})
+        r=w.run_yandex_batch(plan,'gh','token',Fake(True),action)
+        self.assertEqual(action.call_count,1);self.assertEqual(r['deferred_urls'],urls[1:]);self.assertEqual(r['status'],'error')
+    def test_no_changes_still_checks_sitemap(self):
+        plan={'urls':[],'sha':SHA,'github_api':'https://api.github.com/repos/org/repo'}
+        action=mock.Mock(return_value={'sitemap':'submitted','recrawl':[]})
+        r=w.run_yandex_batch(plan,'gh','token',Fake(),action)
+        action.assert_called_once_with('token',[],True);self.assertEqual(r['status'],'ok')
+    def test_bad_result_does_not_expose_provider_fields(self):
+        url=actions.BASE+'wiki.html';plan={'urls':[url],'sha':SHA,'github_api':'https://api.github.com/repos/org/repo'}
+        r=w.run_yandex_batch(plan,'gh','token',Fake(),lambda *a:{'sitemap':'already_present','recrawl':[{'url':url,'status':'accepted','task_id':'secret'}]})
+        self.assertEqual(r['result']['recrawl'][0]['status'],'unknown');self.assertNotIn('secret',str(r))
 
     def test_preflight_failure_blocks_provider_calls(self):
         g=mock.Mock(); y=mock.Mock()
