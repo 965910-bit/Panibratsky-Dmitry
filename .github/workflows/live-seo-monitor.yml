@@ -1,22 +1,22 @@
-name: Weekly public SEO smoke check
+name: Daily public SEO smoke check
 
 on:
   schedule:
-    - cron: '41 8 * * 2'
+    - cron: '41 8 * * *'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: weekly-public-seo
+  group: daily-public-seo
   cancel-in-progress: false
 
 jobs:
   check:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

@@ -29,6 +29,8 @@ class SummaryTests(unittest.TestCase):
                 self.assertIn('результат проверки не подтверждён',live_seo_summary.render(report))
     def test_scheduled_workflow_preserves_failure_and_adds_summary(self):
         workflow=(ROOT/'.github/workflows/live-seo-monitor.yml').read_text(encoding='utf-8')
+        self.assertIn("cron: '41 8 * * *'",workflow)
+        self.assertIn('name: Daily public SEO smoke check',workflow)
         self.assertIn('set -o pipefail',workflow)
         self.assertIn('python scripts/live_seo_check.py | tee',workflow)
         self.assertIn('if: always()',workflow)
