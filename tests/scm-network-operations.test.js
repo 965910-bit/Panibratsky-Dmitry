@@ -282,3 +282,18 @@ test('quality and traceability exercises are linked and their published examples
   assert.equal(1000 - 600 - 300 - 50, 50);
   assert.equal((600 + 300 + 50) / 1000 * 100, 95);
 });
+
+test('forecast MASE and hazard reporting methods state their assumptions and examples', () => {
+  const metrics = fs.readFileSync(path.join(root, 'scm-metrics.html'), 'utf8');
+  const equipment = fs.readFileSync(path.join(root, 'scm-warehouse-equipment.html'), 'utf8');
+  assert.match(metrics, /href="#method-mase"/);
+  assert.match(metrics, /id="method-mase"/);
+  assert.match(metrics, /не обязательно победу над наивным прогнозом на том же тестовом горизонте/);
+  assert.match(metrics, /\(4 \+ 2 \+ 6\) \/ 3 = 4 шт\./);
+  assert.match(metrics, /2,5 \/ 4 = 0,625/);
+  assert.equal((4 + 2 + 6) / 3, 4);
+  assert.equal(((2 + 3) / 2) / 4, 0.625);
+  assert.match(equipment, /href="#safe-reporting"/);
+  assert.match(equipment, /Ответ не означает устранения риска/);
+  assert.equal(18 / 20 * 100, 90);
+});
