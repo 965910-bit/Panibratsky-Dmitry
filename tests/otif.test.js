@@ -84,3 +84,21 @@ test('platform calculator validates, displays and stores new results separately 
   assert.equal(JSON.parse(localStorage.getItem('calc_otif_joint_v1_default')).length, 1);
   assert.match(page, /src="\.\.\/js\/otif.js"/);
 });
+
+test('OTIF display and saved results do not turn tiny or near-perfect results into endpoints', () => {
+  const page = fs.readFileSync('scm-platform/calculators.html','utf8');
+  const definition = page.match(/        \{ id: "otif",[\s\S]*?kpiId: null \},/);
+  const localStorage = storage(), getElementById = elements();
+  const ctx = {SCMOTIF, localStorage, document:{getElementById}, alert:()=>{}};
+  vm.createContext(ctx);
+  vm.runInContext(`let currentBranchId='default'; const calculators=[${definition[0]}];\n`+['saveCalculation','handleSave','updateAllCalculators'].map(n=>extract(page,n)).join('\n'),ctx);
+  const event={currentTarget:{getAttribute:()=> 'otif'}};
+  getElementById('otif_completed').value='1';getElementById('otif_total').value='1000000';
+  ctx.updateAllCalculators();ctx.handleSave(event);
+  assert.match(getElementById('result_otif').innerHTML, /<strong>0\.0001<\/strong>/);
+  assert.ok(Math.abs(JSON.parse(localStorage.getItem('calc_otif_joint_v1_default'))[0].result - 0.0001) < 1e-15);
+  getElementById('otif_completed').value='999999';ctx.updateAllCalculators();ctx.handleSave(event);
+  assert.match(getElementById('result_otif').innerHTML, /<strong>99\.9999<\/strong>/);
+  assert.ok(JSON.parse(localStorage.getItem('calc_otif_joint_v1_default'))[1].result < 100);
+  assert.match(page,/<label for="\$\{f\.id\}">/);
+});
