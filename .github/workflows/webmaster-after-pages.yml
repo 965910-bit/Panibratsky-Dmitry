@@ -1,0 +1,39 @@
+name: Webmaster actions after Pages
+
+on:
+  workflow_run:
+    workflows: ['pages-build-deployment']
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: webmaster-after-pages
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Verify deployment and apply configured webmaster actions
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SCM_WEBMASTER_AUTOMATION: ${{ vars.SCM_WEBMASTER_AUTOMATION }}
+          SCM_WM_GOOGLE_CLIENT_ID: ${{ secrets.SCM_WM_GOOGLE_CLIENT_ID }}
+          SCM_WM_GOOGLE_CLIENT_SECRET: ${{ secrets.SCM_WM_GOOGLE_CLIENT_SECRET }}
+          SCM_WM_GOOGLE_REFRESH_TOKEN: ${{ secrets.SCM_WM_GOOGLE_REFRESH_TOKEN }}
+          SCM_WM_YANDEX_ACCESS_TOKEN: ${{ secrets.SCM_WM_YANDEX_ACCESS_TOKEN }}
+        run: python scripts/webmaster_after_deploy.py
