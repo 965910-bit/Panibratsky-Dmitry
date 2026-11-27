@@ -78,3 +78,26 @@ test('library versions SCOR accurately and avoids prescriptive 5PL technology cl
   }
   assert.doesNotMatch(fs.readFileSync('library.html','utf8'),/Экосистема, AI, Big Data, автономизация/);
 });
+
+test('library KPI cards retain consistent units, endpoints and model assumptions', () => {
+  const page = fs.readFileSync('library.html','utf8');
+  function card(title) {
+    const start = page.indexOf(`<h3>${title}</h3>`);
+    assert.notEqual(start, -1, title);
+    return page.slice(start, page.indexOf('</div>', start));
+  }
+  assert.match(card('Fill Rate'), /немедленно удовлетворённые из доступного запаса/);
+  assert.doesNotMatch(card('Fill Rate'), /доставленных единиц с первой попытки/);
+  assert.match(card('Supplier Lead Time (Время выполнения заказа)'), /до доступности принятого товара/);
+  assert.match(card('Supplier Lead Time (Время выполнения заказа)'), /отгрузка поставщика и доступность на складе — разные/i);
+  assert.match(card('Safety Stock (Страховой запас)'), /фиксированный срок/);
+  assert.match(card('Safety Stock (Страховой запас)'), /z не равен проценту сервиса/i);
+  assert.match(card('Доля логистических расходов в выручке'), /не является прибылью/);
+  assert.match(card('Supplier Quality Rating'), /несколько дефектов одной единицы/i);
+  assert.match(card('Выбросы от топлива: компонент углеродного следа'), /не обязательно все выбросы организации/);
+  assert.match(card('Inventory Days of Supply'), /не прогноз срока исчерпания/);
+  assert.equal(300000 / 1200000 * 365, 91.25);
+  assert.equal(80000 / 1000000 * 100, 8);
+  assert.ok(Math.abs(1.645 * 5 * Math.sqrt(4) - 16.45) < 1e-10);
+  assert.ok(Math.abs(Math.sqrt(2 * 10000 * 200 / 5) - 894) < 1);
+});
