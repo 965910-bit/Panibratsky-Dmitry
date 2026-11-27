@@ -18,7 +18,9 @@ class Tests(unittest.TestCase):
         return f
     def test_success_only_sitemap_no_recrawl(self):
         action=mock.Mock(return_value={'sitemap':'submitted','recrawl':[]});validate=mock.Mock()
-        result=w.run('a/b','g','t',git=lambda *a:SHA,fetch=self.fetch(),validate=validate,action=action)
+        stages=[]
+        result=w.run('a/b','g','t',git=lambda *a:SHA,fetch=self.fetch(),validate=validate,action=action,emit=stages.append)
+        self.assertEqual(stages,['checkout','pages_check','live_preflight','provider_action'])
         self.assertEqual(result,'submitted');validate.assert_called_once_with([]);action.assert_called_once_with('t',[],True)
     def test_blocks_stale_or_bad_deployment(self):
         for fetch in (self.fetch(build=False),self.fetch(advance=True)):
@@ -35,6 +37,10 @@ class Tests(unittest.TestCase):
         for event,attempt in [('workflow_dispatch','2'),('push','1')]:
             with mock.patch.dict('os.environ',{'GITHUB_EVENT_NAME':event,'GITHUB_REF':'refs/heads/main','GITHUB_RUN_ATTEMPT':attempt},clear=True),mock.patch('builtins.print'),mock.patch.object(w,'run') as run:
                 self.assertEqual(w.main(),1);run.assert_not_called()
+    def test_provider_error_safe_annotation(self):
+        env={'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_REF':'refs/heads/main','GITHUB_RUN_ATTEMPT':'1','GITHUB_TOKEN':'secret','SCM_WM_YANDEX_ACCESS_TOKEN':'secret','GITHUB_REPOSITORY':'a/b'}
+        with mock.patch.dict('os.environ',env,clear=True),mock.patch.object(w,'run',side_effect=w.ApiError(403,'unsafe private data')),mock.patch('builtins.print') as p:
+            self.assertEqual(w.main(),1);self.assertIn('http=403; code=unclassified',str(p.call_args_list));self.assertNotIn('private',str(p.call_args_list));self.assertNotIn('secret',str(p.call_args_list))
     def test_sanitized_notice(self):
         env={'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_REF':'refs/heads/main','GITHUB_RUN_ATTEMPT':'1','GITHUB_TOKEN':'secret','SCM_WM_YANDEX_ACCESS_TOKEN':'secret','GITHUB_REPOSITORY':'a/b'}
         with mock.patch.dict('os.environ',env,clear=True),mock.patch.object(w,'run',return_value='already_present'),mock.patch('builtins.print') as p:
