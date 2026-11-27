@@ -8,7 +8,7 @@ import webmaster_yandex_connect as w
 class YandexConnectTests(unittest.TestCase):
     def test_device_only_opens_official_url(self):
         def req(endpoint, fields):
-            self.assertEqual(endpoint,w.DEVICE);self.assertEqual(fields['scope'],','.join(w.SCOPES.split()))
+            self.assertEqual(endpoint,w.DEVICE);self.assertEqual(fields['scope'],w.SCOPES)
             return {'device_code':'device','user_code':'abc12345','verification_url':w.VERIFY,'interval':5,'expires_in':300}
         self.assertEqual(w.request_device('cid',req),('device','abc12345',5,300))
         def bad(endpoint,fields):return {'device_code':'d','user_code':'abc12345','verification_url':'https://evil.test/','interval':5,'expires_in':300}
