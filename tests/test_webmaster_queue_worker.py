@@ -18,7 +18,7 @@ class WorkerTests(unittest.TestCase):
     def test_individual_claims_and_batch_cap(self):
         called=[]
         def action(token,urls,apply):
-            called.append((token,urls,apply));return {'recrawl':[{'url':urls[0],'status':'accepted','task_id':'t'}]}
+            called.append((token,urls,apply));return {'recrawl':[{'url':urls[0],'status':'accepted','task_id':'t'+str(len(called))}]}
         result=drain(self.q,'SECRET',limit=2,validate=lambda u:None,action=action)
         self.assertEqual(result['status'],'ok');self.assertEqual(len(called),2)
         self.assertTrue(all(len(item[1]) == 1 and item[2] for item in called))
