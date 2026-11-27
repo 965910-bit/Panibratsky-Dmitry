@@ -20,9 +20,9 @@ def render(path):
                 or any(not isinstance(item, str) or len(item) > 500 for item in findings)):
             raise ValueError('invalid report')
     except (OSError, UnicodeError, ValueError, TypeError, KeyError, json.JSONDecodeError):
-        return '## Еженедельная SEO-проверка\n\nОтчёт недоступен или повреждён; результат проверки не подтверждён.\n'
+        return '## Ежедневная публичная SEO-проверка\n\nОтчёт недоступен или повреждён; результат проверки не подтверждён.\n'
     status = 'Найдены замечания' if findings else 'Замечаний в проверенном наборе нет'
-    lines = ['## Еженедельная SEO-проверка', '', f'**{status}**. Страниц: {pages}; ожидаемых запросов: {requests}.', '']
+    lines = ['## Ежедневная публичная SEO-проверка', '', f'**{status}**. Страниц: {pages}; ожидаемых запросов: {requests}.', '']
     if findings:
         # HTML escaping plus code elements prevent report strings from injecting markdown/HTML.
         lines.extend(f'- <code>{html.escape(item, quote=True)}</code>' for item in findings)
