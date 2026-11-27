@@ -8,6 +8,7 @@ import argparse
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -25,9 +26,13 @@ class ActionError(Exception):
 
 
 class ApiError(ActionError):
-    def __init__(self, status, code=None):
+    def __init__(self, status, code=None, retry_after=None):
         super().__init__('API HTTP ' + str(status))
-        self.status, self.code = status, code
+        self.status, self.code, self.retry_after = status, code, retry_after
+
+
+class NetworkError(ActionError):
+    pass
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -35,7 +40,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
-def api(url, token, scheme, method='GET', body=None):
+def _api_once(url, token, scheme, method='GET', body=None):
     if not (url.startswith(GOOGLE_API + '/') or url.startswith(YANDEX_API + '/')):
         raise ActionError('invalid endpoint')
     if not token or '\r' in token or '\n' in token or method not in ('GET', 'POST', 'PUT'):
@@ -63,9 +68,38 @@ def api(url, token, scheme, method='GET', body=None):
                 code = body['error_code']
         except (ValueError, OSError):
             pass
-        raise ApiError(exc.code, code) from None
-    except (urllib.error.URLError, TimeoutError, OSError, UnicodeError, json.JSONDecodeError):
-        raise ActionError('network or response error; outcome may be unknown') from None
+        # A server-provided delay that is invalid or too long must not be ignored.
+        value = exc.headers.get('Retry-After') if exc.headers else None
+        if value is None:
+            retry_after = None
+        elif value.isascii() and value.isdigit() and len(value) <= 6:
+            retry_after = int(value)
+        else:
+            retry_after = -1
+        raise ApiError(exc.code, code, retry_after) from None
+    except (urllib.error.URLError, TimeoutError, OSError):
+        raise NetworkError('network error; outcome may be unknown') from None
+    except (UnicodeError, json.JSONDecodeError):
+        raise ActionError('invalid response; outcome may be unknown') from None
+
+
+def api(url, token, scheme, method='GET', body=None):
+    """Bounded retries for GET only; never repeat an ambiguous write."""
+    for attempt in range(3):
+        try:
+            return _api_once(url, token, scheme, method, body)
+        except (ApiError, NetworkError) as exc:
+            if method != 'GET' or body is not None or attempt == 2:
+                raise
+            delay = attempt + 1
+            if isinstance(exc, ApiError):
+                if exc.status not in (429, 500, 502, 503, 504):
+                    raise
+                if exc.retry_after is not None:
+                    if exc.retry_after < 0 or exc.retry_after > 5:
+                        raise
+                    delay = max(delay, exc.retry_after)
+            time.sleep(delay)
 
 
 def allowed_urls(urls):
