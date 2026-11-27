@@ -348,3 +348,13 @@ test('replenishment and forecast evaluation examples respect boundaries and open
   assert.equal((Math.abs(16 - 14) + Math.abs(20 - 16)) / 2, 3);
   assert.equal((4 + 6) / 2, 5);
 });
+
+
+test('heat stress guidance links prevention, emergency response and limited readiness metric', () => {
+  const html = fs.readFileSync(path.join(root, 'scm-warehouse-equipment.html'), 'utf8');
+  const section = html.match(/<section class="encyclopedia-start" id="heat-stress">([\s\S]*?)<\/section>/);
+  assert.ok(section);
+  assert.match(html, /href="#heat-stress"/);
+  for (const pattern of [/влажност/i, /защитную одежду/i, /экстренную медицинскую помощь/i, /не давайте пить/i, /9 из 12 зон = 75%/, /не измеряет фактическое использование/i, /не нормы РФ/i, /cdc\.gov\/niosh/, /osha\.gov/]) assert.match(section[1], pattern);
+  assert.equal(9 / 12 * 100, 75);
+});
