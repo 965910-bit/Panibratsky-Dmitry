@@ -72,6 +72,60 @@ def build_plan(event, repo, github_token, *, fetch=ix.request, git=ix.git, ances
     return {'sha': sha, 'github_api': github_api, 'urls': urls}
 
 
+def run_yandex_batch(plan, github_token, token, fetch, yandex_call):
+    """Keep known results if a later URL fails; never blindly retry a write."""
+    urls = plan['urls']
+    batch, deferred = urls[:5], list(urls[5:])
+    recrawl = []
+    sitemap = None
+    # Even with no changed pages, the missing sitemap may need submission.
+    operations = batch if batch else [None]
+    for index, url in enumerate(operations):
+        remaining = batch[index:] if url is not None else []
+        try:
+            _, _, body = fetch(plan['github_api'] + '/git/ref/heads/main', token=github_token)
+            if json.loads(body)['object']['sha'] != plan['sha']:
+                raise ActionError('main advanced')
+        except Exception:
+            return {'status':'error', 'message':'Публикация изменилась или не проверена; оставшиеся URL не отправлены.',
+                    'result':{'sitemap':sitemap,'recrawl':recrawl}, 'deferred_urls':remaining + deferred}
+        try:
+            response = yandex_call(token, [url] if url is not None else [], True)
+            sm = response.get('sitemap')
+            entries = response.get('recrawl')
+            if sm not in ('already_present','submitted') or not isinstance(entries, list):
+                raise ActionError('invalid provider result')
+            if url is None:
+                if entries:
+                    raise ActionError('unexpected provider result')
+            else:
+                if len(entries) != 1 or not isinstance(entries[0], dict) or entries[0].get('url') != url:
+                    raise ActionError('invalid provider result')
+                entry = entries[0]
+                state = entry.get('status')
+                if state not in ('accepted','already_added','quota_exhausted'):
+                    raise ActionError('invalid provider result')
+                clean = {'url':url, 'status':state}
+                if state == 'accepted':
+                    task = entry.get('task_id')
+                    if not isinstance(task,str) or not re.fullmatch(r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}',task):
+                        raise ActionError('invalid task id')
+                    clean['task_id'] = task
+                recrawl.append(clean)
+            sitemap = 'submitted' if sitemap == 'submitted' or sm == 'submitted' else sm
+        except Exception:
+            # Even a failed response can follow a successful remote operation.
+            if url is not None:
+                recrawl.append({'url':url, 'status':'unknown'})
+            return {'status':'error', 'message':'Результат действия неизвестен; проверьте кабинет перед повтором.',
+                    'result':{'sitemap':sitemap,'recrawl':recrawl},
+                    'deferred_urls':batch[index+1:] + deferred}
+        if url is not None and state == 'quota_exhausted':
+            return {'status':'ok', 'result':{'sitemap':sitemap,'recrawl':recrawl},
+                    'deferred_urls':batch[index+1:] + deferred}
+    return {'status':'ok', 'result':{'sitemap':sitemap,'recrawl':recrawl}, 'deferred_urls':deferred}
+
+
 def run(event, repo, github_token, google, yandex_token, *, fetch=ix.request,
         git=ix.git, ancestry=subprocess.run, validate=ix.validate_live,
         refresh=refresh_google, google_call=google_action, yandex_call=yandex_action):
@@ -91,15 +145,9 @@ def run(event, repo, github_token, google, yandex_token, *, fetch=ix.request,
     else:
         result['sources']['google'] = {'status': 'not_connected'}
     if yandex_token:
-        try:
-            # A bounded batch. The remainder is explicitly surfaced, not silently submitted.
-            batch = plan['urls'][:5]
-            result['sources']['yandex'] = {'status': 'ok', 'result': yandex_call(yandex_token, batch, True),
-                                            'deferred_urls': plan['urls'][5:]}
-        except Exception:
-            result['sources']['yandex'] = {'status': 'error', 'message': 'Яндекс: ошибка доступа или действия; проверьте состояние перед повтором.'}
+        result['sources']['yandex'] = run_yandex_batch(plan, github_token, yandex_token, fetch, yandex_call)
     else:
-        result['sources']['yandex'] = {'status': 'not_connected'}
+        result['sources']['yandex'] = {'status': 'not_connected', 'deferred_urls': plan['urls']}
     return result
 
 
