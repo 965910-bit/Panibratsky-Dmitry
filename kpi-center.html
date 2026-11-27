@@ -146,7 +146,7 @@
             </ul>
         </nav></details>
         <h1>📈 KPI-центр</h1>
-        <p>Рассчитайте ключевые показатели эффективности. Пороговые значения для остальных KPI являются условными примерами и не подтверждены как отраслевые бенчмарки; устанавливайте цели по своим данным.</p>
+        <p>Рассчитайте ключевые показатели эффективности. Согласуйте период, единицы, источники и границы расчёта; цели устанавливайте по своим данным, учитывая сервис, качество и риски.</p>
 
         <!-- Калькулятор KPI -->
         <div class="card">
@@ -167,7 +167,7 @@
                 </div>
                 <!-- Inventory Turnover -->
                 <div class="kpi-item" data-kpi="turnover">
-                    <label>Оборачиваемость запасов (раз в год)</label>
+                    <label>Оборачиваемость запасов (раз за период)</label><p>Себестоимость продаж за период / средний запас по себестоимости за тот же период. Не годовой показатель, если период не год. При нулевом среднем запасе расчёт не определён. <a href="scm-metrics.html#method-stock">Методика и пример</a>.</p>
                     <input type="number" id="turnover_cogs" placeholder="COGS (себестоимость продаж)" step="any">
                     <input type="number" id="turnover_avg_inv" placeholder="Средний запас" step="any">
                     <div class="kpi-result" id="turnover_result">—</div>
@@ -189,7 +189,7 @@
                 </div>
                 <!-- Total SCM Cost as % of Sales -->
                 <div class="kpi-item" data-kpi="scm_cost">
-                    <label>Затраты на SCM (% от выручки)</label>
+                    <label>Затраты на SCM (% от выручки)</label><p>Согласуйте состав затрат, период и базу выручки; сокращение расходов само по себе не доказывает эффективности. <a href="https://www.apqc.org/resources/benchmarking/open-standards-benchmarking/measures/supply-chain-management-costs">APQC: пример границ показателя</a>.</p>
                     <input type="number" id="scm_cost_value" placeholder="Затраты на SCM" step="any">
                     <input type="number" id="scm_sales" placeholder="Выручка" step="any">
                     <div class="kpi-result" id="scm_cost_result">—</div>
@@ -198,7 +198,7 @@
                 </div>
                 <!-- Cash-to-Cash Cycle -->
                 <div class="kpi-item" data-kpi="c2c">
-                    <label>Cash-to-Cash цикл (дни)</label>
+                    <label>Cash-to-Cash цикл (дни)</label><p>DIO + DSO − DPO. Данные должны относиться к сопоставимым периодам и определениям; отрицательный результат возможен. <a href="scm-metrics.html#method-stock">Границы метода</a>.</p>
                     <input type="number" id="c2c_dio" placeholder="DIO (дни запаса)" step="any">
                     <input type="number" id="c2c_dso" placeholder="DSO (дни дебиторки)" step="any">
                     <input type="number" id="c2c_dpo" placeholder="DPO (дни кредиторки)" step="any">
@@ -224,12 +224,18 @@
 </div>
 
 <script>
-    // Условные демонстрационные пороги, не подтверждённые отраслевые данные.
-    const benchmarks = {
-        turnover: { target: 6, good: 5, warning: 3 },
-        scm_cost: { target: 8, good: 10, warning: 15 },
-        c2c: { target: 45, good: 60, warning: 90 }  // чем ниже, тем лучше
-    };
+    // Пустая или некорректная строка не равна нулю; недопустимо переполнение и потеря значащей величины.
+    function readNumber(id) {
+        const raw = document.getElementById(id).value.trim();
+        if (!/^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(raw)) return null;
+        const value = Number(raw);
+        if (!Number.isFinite(value) || (value === 0 && /[1-9]/.test(raw.split(/[eE]/)[0]))) return null;
+        return value;
+    }
+    function displayNumber(value, digits) {
+        const rounded = value.toFixed(digits);
+        return value !== 0 && Number(rounded) === 0 ? value.toExponential(2) : rounded;
+    }
 
     // Реальный OTIF по заказам, удовлетворяющим обоим условиям одновременно.
     function calcOTIF() {
@@ -248,18 +254,19 @@
 
     // Оборачиваемость запасов
     function calcTurnover() {
-        const cogs = parseFloat(document.getElementById('turnover_cogs').value) || 0;
-        const avgInv = parseFloat(document.getElementById('turnover_avg_inv').value) || 0;
-        const result = avgInv === 0 ? 0 : cogs / avgInv;
-        const value = result.toFixed(1);
-        document.getElementById('turnover_result').innerHTML = value;
-        const bench = benchmarks.turnover;
-        let status = '';
-        if (value >= bench.target) status = '✅ Высокая оборачиваемость';
-        else if (value >= bench.good) status = '⚠️ Средняя';
-        else status = '🔴 Низкая, запасы замораживают капитал';
-        document.getElementById('turnover_benchmark').innerHTML = `Условный пример цели: ${bench.target} | Ваш: ${value} — ${status}`;
-        return value;
+        const cogs = readNumber('turnover_cogs');
+        const avgInv = readNumber('turnover_avg_inv');
+        const output = document.getElementById('turnover_result');
+        const info = document.getElementById('turnover_benchmark');
+        const result = cogs === null || avgInv === null || cogs < 0 || avgInv <= 0 ? null : cogs / avgInv;
+        if (result === null || !Number.isFinite(result) || (cogs > 0 && result === 0)) {
+            output.textContent = '—';
+            info.textContent = 'Введите неотрицательную себестоимость и положительный средний запас; результат должен быть конечным.';
+            return null;
+        }
+        output.textContent = displayNumber(result, 1);
+        info.textContent = 'Обороты за выбранный период; цель зависит от контекста.';
+        return result;
     }
 
     // APE для одной пары; MAPE требует усреднения по нескольким парам.
@@ -279,35 +286,37 @@
 
     // Затраты на SCM в % от выручки
     function calcSCMCost() {
-        const cost = parseFloat(document.getElementById('scm_cost_value').value) || 0;
-        const sales = parseFloat(document.getElementById('scm_sales').value) || 0;
-        const percent = sales === 0 ? 0 : (cost / sales) * 100;
-        const value = percent.toFixed(1);
-        document.getElementById('scm_cost_result').innerHTML = value + '%';
-        const bench = benchmarks.scm_cost;
-        let status = '';
-        if (value <= bench.target) status = '✅ Низкие затраты (эффективно)';
-        else if (value <= bench.good) status = '⚠️ Средние затраты';
-        else status = '🔴 Высокие затраты, нужна оптимизация';
-        document.getElementById('scm_cost_benchmark').innerHTML = `Условный пример цели: ≤ ${bench.target}% | Ваш: ${value}% — ${status}`;
-        return value;
+        const cost = readNumber('scm_cost_value');
+        const sales = readNumber('scm_sales');
+        const output = document.getElementById('scm_cost_result');
+        const info = document.getElementById('scm_cost_benchmark');
+        const result = cost === null || sales === null || cost < 0 || sales <= 0 ? null : (cost / sales) * 100;
+        if (result === null || !Number.isFinite(result) || (cost > 0 && result === 0)) {
+            output.textContent = '—';
+            info.textContent = 'Введите неотрицательные затраты и положительную выручку; результат должен быть конечным.';
+            return null;
+        }
+        output.textContent = displayNumber(result, 1) + '%';
+        info.textContent = 'Интерпретируйте вместе с уровнем сервиса и согласованными границами затрат.';
+        return result;
     }
 
-    // Cash-to-Cash цикл
+    // Cash-to-Cash: составляющие неотрицательные, сумма может быть отрицательной.
     function calcC2C() {
-        const dio = parseFloat(document.getElementById('c2c_dio').value) || 0;
-        const dso = parseFloat(document.getElementById('c2c_dso').value) || 0;
-        const dpo = parseFloat(document.getElementById('c2c_dpo').value) || 0;
-        const result = dio + dso - dpo;
-        const value = result.toFixed(0);
-        document.getElementById('c2c_result').innerHTML = value + ' дней';
-        const bench = benchmarks.c2c;
-        let status = '';
-        if (value <= bench.target) status = '✅ Отличный цикл (быстрая конвертация)';
-        else if (value <= bench.good) status = '⚠️ Приемлемый цикл';
-        else status = '🔴 Длинный цикл, капитал заморожен';
-        document.getElementById('c2c_benchmark').innerHTML = `Условный пример цели: ≤ ${bench.target} дней | Ваш: ${value} — ${status}`;
-        return value;
+        const dio = readNumber('c2c_dio');
+        const dso = readNumber('c2c_dso');
+        const dpo = readNumber('c2c_dpo');
+        const output = document.getElementById('c2c_result');
+        const info = document.getElementById('c2c_benchmark');
+        const result = [dio, dso, dpo].some(x => x === null || x < 0) ? null : dio + dso - dpo;
+        if (result === null || !Number.isFinite(result)) {
+            output.textContent = '—';
+            info.textContent = 'Введите все три неотрицательные конечные составляющие в днях.';
+            return null;
+        }
+        output.textContent = displayNumber(result, 1) + ' дней';
+        info.textContent = 'Результат — приближение для согласованных данных; отрицательное значение возможно.';
+        return result;
     }
 
     // Сохранение данных в localStorage
@@ -325,6 +334,7 @@
                 data.cogs = document.getElementById('turnover_cogs').value;
                 data.avg_inv = document.getElementById('turnover_avg_inv').value;
                 data.result = calcTurnover();
+                if (data.result === null) return;
                 break;
             case 'forecast':
                 data.actual = document.getElementById('forecast_actual').value;
@@ -337,12 +347,14 @@
                 data.cost = document.getElementById('scm_cost_value').value;
                 data.sales = document.getElementById('scm_sales').value;
                 data.result = calcSCMCost();
+                if (data.result === null) return;
                 break;
             case 'c2c':
                 data.dio = document.getElementById('c2c_dio').value;
                 data.dso = document.getElementById('c2c_dso').value;
                 data.dpo = document.getElementById('c2c_dpo').value;
                 data.result = calcC2C();
+                if (data.result === null) return;
                 break;
         }
         data.timestamp = new Date().toISOString();

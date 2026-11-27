@@ -35,3 +35,46 @@ test('inventory calculators do not classify thresholds and reject invalid inputs
   assert.match(get('mot_result').textContent, /Введите/);
   get('mot_obn').value='0.2'; get('calc_motivation').click(); assert.match(get('mot_result').innerHTML, /Учебный результат/);
 });
+
+test('KPI center rejects missing and invalid values, never saves them, and permits negative cash cycle', () => {
+  const page = fs.readFileSync('kpi-center.html','utf8');
+  const script = [...page.matchAll(/<script>([\s\S]*?)<\/script>/g)].at(-1)[1];
+  const nodes = new Map(), stored = new Map();
+  const get = id => { if (!nodes.has(id)) nodes.set(id, {value:'',textContent:'',innerHTML:'',addEventListener(){}}); return nodes.get(id); };
+  const document = {getElementById:get, querySelectorAll:()=>[]};
+  const localStorage = {getItem:()=>null,setItem:(k,v)=>stored.set(k,v)};
+  const context = {document,localStorage,alert:()=>{},SCMOTIF:{calculate:()=>null},SCMForecast:{ape:()=>null},Number,Date};
+  vm.createContext(context); vm.runInContext(script,context);
+  assert.equal(context.calcTurnover(),null);
+  get('turnover_cogs').value='100';get('turnover_avg_inv').value='0';assert.equal(context.calcTurnover(),null);
+  context.saveKPI('turnover');assert.equal(stored.size,0);
+  get('turnover_avg_inv').value='25';assert.equal(context.calcTurnover(),4);
+  get('turnover_cogs').value='0';assert.equal(context.calcTurnover(),0);
+  get('scm_cost_value').value='10';get('scm_sales').value='0';assert.equal(context.calcSCMCost(),null);
+  context.saveKPI('scm_cost');assert.equal(stored.size,0);
+  get('scm_sales').value='100';assert.equal(context.calcSCMCost(),10);
+  get('scm_cost_value').value='-1';assert.equal(context.calcSCMCost(),null);
+  get('c2c_dio').value='10';get('c2c_dso').value='20';get('c2c_dpo').value='40';assert.equal(context.calcC2C(),-10);
+  get('c2c_dso').value='';assert.equal(context.calcC2C(),null);context.saveKPI('c2c');assert.equal(stored.size,0);
+  get('c2c_dso').value='Infinity';assert.equal(context.calcC2C(),null);
+  get('turnover_cogs').value='1e-300'; get('turnover_avg_inv').value='1';context.calcTurnover();assert.match(get('turnover_result').textContent,/e-300/);
+  assert.doesNotMatch(page, /условный пример цели|Отличный цикл|запасы замораживают капитал/i);
+});
+
+test('platform inventory guide distinguishes SCOR versions and stock classification axes', () => {
+  const page=fs.readFileSync('scm-platform/inventory-methodology.html','utf8');
+  assert.match(page,/SCOR DS 14\.0/);
+  assert.match(page,/В более ранних версиях/);
+  assert.match(page,/не являются взаимно исключающей классификацией/);
+  assert.match(page,/При нулевых продажах отношение не определено/);
+});
+
+
+test('library versions SCOR accurately and avoids prescriptive 5PL technology claims', () => {
+  for (const file of ['library.html','scm-platform/library.html']) {
+    const page = fs.readFileSync(file,'utf8');
+    assert.match(page,/SCOR DS 14\.0/);
+    assert.match(page,/Orchestrate/);
+  }
+  assert.doesNotMatch(fs.readFileSync('library.html','utf8'),/Экосистема, AI, Big Data, автономизация/);
+});

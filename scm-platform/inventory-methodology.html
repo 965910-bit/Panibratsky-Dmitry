@@ -133,7 +133,7 @@
         <!-- 1. SCOR и производные -->
         <div class="methodology-card">
             <h2><i class="fas fa-diagram-project"></i> 1. SCOR, DCOR, CCOR</h2>
-            <p><strong>SCOR (Supply Chain Operations Reference)</strong> – эталонная модель для описания, измерения и улучшения цепей поставок. Включает 6 процессов: Plan, Source, Make, Deliver, Return, Enable.</p>
+            <p><strong>SCOR (Supply Chain Operations Reference)</strong> – эталонная модель для описания, измерения и улучшения цепей поставок. В версии SCOR DS 14.0 выделяются Orchestrate (уровень 0) и Plan, Order, Source, Transform, Fulfill, Return (уровень 1). В более ранних версиях использовались Plan, Source, Make, Deliver, Return, Enable. <a href="https://www.ascm.org/globalassets/ascm_website_assets/docs/intro-and-front-matter-scor-digital-standard2.pdf">ASCM: SCOR Version 14.0</a>.</p>
             <p><strong>DCOR (Design Chain Operations Reference)</strong> – расширение SCOR для управления жизненным циклом продукта (Research, Design, Integrate, Amplify).</p>
             <p><strong>CCOR (Customer Chain Operations Reference)</strong> – модель для взаимодействия с клиентами (маркетинг, продажи, обслуживание).</p>
             <div class="link-list"><a href="processes.html">Процессы SCM</a><a href="library.html">Библиотека</a></div>
@@ -165,10 +165,10 @@
         <div class="methodology-card">
             <h2><i class="fas fa-boxes"></i> 5. Управление запасами</h2>
             <p><strong>Оборачиваемость запасов</strong> (разы, дни) – скорость оборота товаров.</p>
-            <div class="formula">Оборачиваемость (разы) = COGS / Средний запас</div>
+            <div class="formula">Оборачиваемость (разы за период) = себестоимость продаж за период / средний сопоставимый запас по себестоимости</div>
             <p><strong>GMROI</strong> – валовая рентабельность инвестиций в запасы.</p>
-            <div class="formula">GMROI = Валовая прибыль / Средний запас</div>
-            <p><strong>Глубина остатка (дни до нуля)</strong> = Текущий остаток / Средние продажи в день.</p>
+            <div class="formula">GMROI = валовая прибыль за период / средний сопоставимый запас по себестоимости</div>
+            <p><strong>Условное покрытие, дни</strong> = доступный остаток / средние продажи в день при постоянном темпе и без поступлений. При нулевых продажах отношение не определено; это не гарантированная дата исчерпания. Для оборачиваемости и GMROI при нулевом среднем запасе деление также не определено.</p>
             <p>Критерии неликвидности и допустимого срока хранения определяются организацией с учётом спроса, срока годности и договоров; универсальная формула не подтверждена.</p>
             <div class="link-list"><a href="calculators.html">Калькуляторы оборачиваемости и GMROI</a></div>
         </div>
@@ -189,7 +189,7 @@
                 <li><strong>2PL</strong> – базовые услуги (транспорт или склад).</li>
                 <li><strong>3PL</strong> – комплексные операционные услуги.</li>
                 <li><strong>4PL</strong> – стратегическое управление всей сетью.</li>
-                <li><strong>5PL</strong> – цифровой интегратор на базе Big Data/AI.</li>
+                <li><strong>5PL</strong> – термин для расширенной интеграции логистических сетей, трактовки различаются; использование Big Data или ИИ не является универсальным обязательным признаком.</li>
             </ul>
             <div class="link-list"><a href="library.html#outsourcing">Подробнее</a><a href="standards.html#transport">Тарифы и объёмный вес</a></div>
         </div>
@@ -225,7 +225,7 @@
         <div class="methodology-card">
             <h2><i class="fas fa-tags"></i> 11. Классификация товаров и запасов</h2>
             <p><strong>По закупочным характеристикам:</strong> закрытые, складской запас, нерегуляры, под заказ, новинка, акция, сезон.</p>
-            <p><strong>По экономической роли:</strong> рабочий (оперативный, страховой, под заказ, в пути), рыночный (сверхнормативный, сезонный, промо, ошибочный), мёртвый (неликвид, брак, рекламации).</p>
+            <p><strong>Разные признаки запаса:</strong> назначение (циклический, страховой, сезонный), местонахождение (на складе, в пути), состояние и доступность (доступный, карантин, повреждённый). Они могут пересекаться и не являются взаимно исключающей классификацией. <a href="../inventory-methodology.html#classification">Разбор</a>.</p>
         </div>
 
         <!-- Связанные разделы -->

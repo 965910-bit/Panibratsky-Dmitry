@@ -18,6 +18,12 @@
 
 Для GMROI сопоставлена формула с https://www.shopify.com/blog/gmroi; оборачиваемость и её ограничения согласованы с `scm-metrics.html#method-stock` и https://www.apqc.org/resources/benchmarking/open-standards-benchmarking/measures/total-inventory-turns. Учебные значения не являются универсальными нормативами. Это не означает проверку всех остальных страниц и калькуляторов.
 
+## Продолжение: KPI-центр и справочник платформы
+
+В `kpi-center.html` выявлено, что пустые значения и нулевые знаменатели в трёх расчётах давали результат 0, а демонстрационные пороги сопровождались категоричными оценками. Исправлены проверка входов и недопущение сохранения некорректного результата; отрицательный итог cash-to-cash допускается. Границы и период расчётов уточнены, произвольные оценки удалены. Ранее сохранённые значения не изменяются автоматически.
+
+В `scm-platform/inventory-methodology.html`, `library.html` и `scm-platform/library.html` уточнены версии SCOR, сопоставимость стоимости и признаки классификации запасов; определение 5PL отмечено как неоднозначное. Выборочно сверены источники: https://www.ascm.org/globalassets/ascm_website_assets/docs/intro-and-front-matter-scor-digital-standard2.pdf и https://www.apqc.org/resources/benchmarking/open-standards-benchmarking/measures/supply-chain-management-costs. Это не полная проверка всех остальных страниц.
+
 ## Дальнейшая проверка
 
 - Постранично сверить формулы, числовые примеры и ссылки с первоисточниками, отдельно фиксируя проверку и статус каждого утверждения.
