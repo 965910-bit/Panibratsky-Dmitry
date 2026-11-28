@@ -319,11 +319,12 @@ test('vehicle technical control topics are linked and distinguish legal scope fr
 test('digital practices and planned wiki cards link to available material with executable examples', () => {
   const page = fs.readFileSync(path.join(root, 'scm-network-operations.html'), 'utf8');
   const wiki = fs.readFileSync(path.join(root, 'wiki.html'), 'utf8');
+  const dataGuide = fs.readFileSync(path.join(root, 'scm-data-practice.html'), 'utf8');
   for (const id of ['rpa-controls','bi-dashboard-governance','python-scm-example','agile-scm-delivery']) {
     assert.ok(page.includes(`id="${id}"`), id);
-    assert.ok(wiki.includes(`href="scm-network-operations.html#${id}"`), id);
+    assert.ok((wiki + dataGuide).includes(`href="scm-network-operations.html#${id}"`), id);
   }
-  assert.equal((wiki.match(/Связанный практический разбор/g) || []).length, 8);
+  assert.equal((wiki.match(/Связанный практический разбор/g) || []).length, 4);
   assert.match(page, /ноль и отсутствие данных различаются/i);
   assert.match(page, /обычное CSV-кавычение не является универсальной защитой/);
   assert.equal((9 + 10) / (10 + 90) * 100, 19);
