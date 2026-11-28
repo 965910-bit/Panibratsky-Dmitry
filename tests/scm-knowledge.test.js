@@ -150,3 +150,9 @@ test('unified SCM navigation and additional guides are indexable and locally con
  }
  assert.equal(1000-800-100,100);assert.equal(100*2-50-30,120);assert.equal(100*2-50,150);assert.equal(50+30-40,40);assert.equal(45+30-40,35);assert.equal(10*100*0.1,100);
 });
+
+ test('internal academy measurement describes denominators and bounded examples', () => {
+ const html=fs.readFileSync('scm-internal-academy.html','utf8');
+ for(const part of ['id="academy-measurement-practice"','href="#academy-measurement-practice"','нулевой знаменатель','7 / 10 × 100% = 70%','3 из 4 завершённых — 75%','60 000 ₽','не доказательство']) assert(html.includes(part),part);
+ assert.equal(7/10*100,70); assert.equal(3/4*100,75); assert.equal((180000-120000)/120000*100,50);
+ });
