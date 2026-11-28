@@ -82,7 +82,7 @@ def publish(doc,repo,token,*,seal=encrypt,call=gh_request):
     return result['id']
 
 def main():
-    if os.environ.get('GITHUB_EVENT_NAME')!='workflow_dispatch' or os.environ.get('GITHUB_REF')!='refs/heads/main' or os.environ.get('GITHUB_REPOSITORY_ID')!='1102759388':return 1
+    if os.environ.get('GITHUB_EVENT_NAME') not in ('workflow_dispatch','schedule') or os.environ.get('GITHUB_REF')!='refs/heads/main' or os.environ.get('GITHUB_REPOSITORY_ID')!='1102759388':return 1
     def creds(prefix):return [os.environ.pop(prefix+x,'') for x in ('CLIENT_ID','CLIENT_SECRET','REFRESH_TOKEN')]
     admin=creds('SCM_GA4_');report=creds('SCM_GA4_REPORT_');webmaster=creds('SCM_WM_GOOGLE_');token=os.environ.pop('GITHUB_TOKEN','')
     try:
