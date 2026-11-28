@@ -19,6 +19,6 @@ class Tests(unittest.TestCase):
   calls=[]
   def call(url,token,**kw):
    calls.append(kw);return {'id':77} if kw.get('method')=='POST' else {'id':1102759388}
-  self.assertEqual(s.publish({'private':123},'owner/repo','token',seal=lambda data:{'encrypted':'opaque'},call=call),77)
+  self.assertEqual(s.publish({'private':123},'owner/repo','token',seal=lambda data:{'encrypted':'opaque'},call=call,workbook=lambda doc:b'PKprivate'),77)
   self.assertNotIn('123',str(calls));self.assertNotIn('private\":',str(calls))
 if __name__=='__main__':unittest.main()

@@ -8,6 +8,7 @@ from analytics_ga4_diagnostic import GOALS, PROPERTY, inventory
 from analytics_ga4_reports_diagnostic import request as ga_request
 from analytics_ga4_encrypted_backup import encrypt
 from live_seo_issue import request as gh_request
+from analytics_private_workbook import build as build_workbook
 from webmaster_after_deploy import refresh_google
 from webmaster_google_diagnostic import inspect as gsc_identity
 from webmaster_google_performance import periods
@@ -68,15 +69,20 @@ def collect(admin,report,webmaster,*,identify=inventory,refresh=refresh_google,g
         search.append({'start':start.isoformat(),'end':end.isoformat(),'metrics':metrics})
     return {'schema':1,'created_at':datetime.now(timezone.utc).isoformat(),'ga4':{'period':'28daysAgo_to_yesterday','totals':totals,'totals_metadata':metadata_flags(metadata),'events':counts,'events_metadata':metadata_flags(event_meta)},'search_console':search}
 
-def publish(doc,repo,token,*,seal=encrypt,call=gh_request):
+def publish(doc,repo,token,*,seal=encrypt,call=gh_request,workbook=build_workbook):
     if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+',repo or '') or not token or '\n' in token or '\r' in token:raise SnapshotError('target')
     base='https://api.github.com/repos/'+repo
     meta=call(base,token)
     if not isinstance(meta,dict) or meta.get('id')!=1102759388:raise SnapshotError('target identity')
     raw=json.dumps(doc,ensure_ascii=False,separators=(',',':')).encode()
     if len(raw)>20000:raise SnapshotError('size')
-    encrypted=seal(raw)
-    body=MARKER+'\n\nEncrypted aggregate report; private recovery key required.\n\n```json\n'+json.dumps(encrypted,separators=(',',':'))+'\n```'
+    xlsx=workbook(doc)
+    if not isinstance(xlsx,bytes) or not xlsx.startswith(b'PK') or len(xlsx)>32000:raise SnapshotError('workbook')
+    encrypted=seal(raw);encrypted_xlsx=seal(xlsx)
+    body=(MARKER+'\n\nEncrypted aggregate snapshot and Excel workbook; private recovery key required.\n'
+          +'\nJSON snapshot:\n```json\n'+json.dumps(encrypted,separators=(',',':'))+'\n```'
+          +'\n\nExcel workbook:\n```json\n'+json.dumps(encrypted_xlsx,separators=(',',':'))+'\n```')
+    if len(body)>60000:raise SnapshotError('encrypted output too large')
     result=call(base+'/issues/244/comments',token,method='POST',body={'body':body})
     if not isinstance(result,dict) or type(result.get('id')) is not int or result['id']<1:raise SnapshotError('unconfirmed')
     return result['id']
@@ -87,7 +93,7 @@ def main():
     admin=creds('SCM_GA4_');report=creds('SCM_GA4_REPORT_');webmaster=creds('SCM_WM_GOOGLE_');token=os.environ.pop('GITHUB_TOKEN','')
     try:
         data=collect(admin,report,webmaster);identifier=publish(data,os.environ.get('GITHUB_REPOSITORY',''),token)
-        print('::notice title=Private snapshot::encrypted_comment_id='+str(identifier)+'; no_google_writes; restore_verification_required');return 0
+        print('::notice title=Private snapshot::encrypted_snapshot_and_excel_comment_id='+str(identifier)+'; no_google_writes; restore_verification_required');return 0
     except Exception:
         print('::error title=Private snapshot::report_or_storage_failed; no_google_writes; reconcile_before_retry',file=sys.stderr);return 1
 if __name__=='__main__':sys.exit(main())
