@@ -47,16 +47,16 @@ def inspect(admin_creds,report_creds,*,identify=inventory,refresh=refresh_google
     prop=info['property'];token=refresh(*report_creds)
     body={'dateRanges':[{'startDate':'28daysAgo','endDate':'yesterday'}],
           'dimensions':[{'name':'eventName'}],'metrics':[{'name':'eventCount'}],
-          'dimensionFilter':{'filter':{'fieldName':'eventName','inListFilter':{'values':list(GOALS)}}},'limit':'100'}
+          'dimensionFilter':{'filter':{'fieldName':'eventName','inListFilter':{'values':list(GOALS)+['page_view']}}},'limit':'100'}
     result=fetch(prop,token,'runReport',body)
     rows=result.get('rows',[])
-    if not isinstance(rows,list) or len(rows)>len(GOALS):raise ReportError('invalid_rows')
+    if not isinstance(rows,list) or len(rows)>len(GOALS)+1:raise ReportError('invalid_rows')
     names=[]
     for row in rows:
         if not isinstance(row,dict) or not isinstance(row.get('dimensionValues'),list) or len(row['dimensionValues'])!=1:raise ReportError('invalid_rows')
         name=row['dimensionValues'][0].get('value') if isinstance(row['dimensionValues'][0],dict) else None
         values=row.get('metricValues')
-        if name not in GOALS or name in names or not isinstance(values,list) or len(values)!=1 or not isinstance(values[0],dict):raise ReportError('invalid_rows')
+        if name not in (*GOALS,'page_view') or name in names or not isinstance(values,list) or len(values)!=1 or not isinstance(values[0],dict):raise ReportError('invalid_rows')
         count=values[0].get('value')
         if not isinstance(count,str) or not count.isascii() or not count.isdigit() or len(count)>20:raise ReportError('invalid_count')
         if int(count)>0:names.append(name)
@@ -67,7 +67,7 @@ def inspect(admin_creds,report_creds,*,identify=inventory,refresh=refresh_google
     if type(threshold) is not bool:raise ReportError('invalid_metadata')
     sampling=metadata.get('samplingMetadatas',[])
     if not isinstance(sampling,list):raise ReportError('invalid_metadata')
-    return {'observed':[n for n in GOALS if n in names],'thresholded':threshold,'sampled':bool(sampling)}
+    return {'observed':[n for n in GOALS if n in names],'page_view_observed':'page_view' in names,'thresholded':threshold,'sampled':bool(sampling)}
 
 def main():
     if (os.environ.get('GITHUB_EVENT_NAME')!='workflow_dispatch' or os.environ.get('GITHUB_REF')!='refs/heads/main' or os.environ.get('GITHUB_REPOSITORY_ID')!='1102759388'):
@@ -76,7 +76,7 @@ def main():
     report=[os.environ.pop(k,'') for k in ('SCM_GA4_REPORT_CLIENT_ID','SCM_GA4_REPORT_CLIENT_SECRET','SCM_GA4_REPORT_REFRESH_TOKEN')]
     try:
         result=inspect(admin,report)
-        print('::notice title=GA4 report diagnostic::connected; known_events_observed='+str(len(result['observed']))+'; thresholded='+str(result['thresholded']).lower()+'; sampled='+str(result['sampled']).lower()+'; period=28daysAgo_to_yesterday; writes=0')
+        print('::notice title=GA4 report diagnostic::connected; known_events_observed='+str(len(result['observed']))+'; page_view_observed='+str(result['page_view_observed']).lower()+'; thresholded='+str(result['thresholded']).lower()+'; sampled='+str(result['sampled']).lower()+'; period=28daysAgo_to_yesterday; writes=0')
         print('::notice title=GA4 observed project events::'+(','.join(result['observed']) or 'none'))
         return 0
     except ReportError as exc:
