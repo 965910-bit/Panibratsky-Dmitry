@@ -61,7 +61,12 @@ def main():
     creds=[os.environ.pop(k,'') for k in ('SCM_WM_GOOGLE_CLIENT_ID','SCM_WM_GOOGLE_CLIENT_SECRET','SCM_WM_GOOGLE_REFRESH_TOKEN')]
     try:
         pages=inspect_pages(creds)
-        for item in pages:print(json.dumps(item,ensure_ascii=True))
+        for item in pages:
+            print(json.dumps(item,ensure_ascii=True))
+            # Coverage is already ASCII/control-checked. Escape percent for the
+            # Actions command parser so provider text cannot create commands.
+            coverage=item['coverage'].replace('%','%25')
+            print('::notice title=Google indexed page::'+item['url']+'; verdict='+item['verdict']+'; coverage='+coverage)
         print('::notice title=Google URL inspection::checked='+str(len(pages))+'; unknown='+str(sum(x['verdict']=='UNKNOWN' for x in pages))+'; indexing_requests=0')
         return 0 if len(pages)==len(URLS) and all(x['verdict']!='UNKNOWN' for x in pages) else 1
     except Exception:
