@@ -17,7 +17,7 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci --ignore-scripts
-      - name: Simulate tag on tool pages without sending analytics
+      - name: Check live tool page tag without sending analytics
         env:
           CHROME_PATH: /usr/bin/google-chrome
         run: node scripts/analytics_ga4_sensitive_probe.cjs

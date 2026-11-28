@@ -1,7 +1,7 @@
 'use strict';
-// Simulation only: run live tag on instrument pages while every collection is blocked.
+// Check live consent-based tag on instrument pages while every collection is blocked.
 const {chromium}=require('playwright-core');
-const cases=[['/scm-review-questions.html','print','checklist_print_click'],['/calculators.html','button','calculator_calculate'],['/inventory-turnover-calculator.html','form','calculator_calculate'],['/scm-diagnostic.html','select','diagnostic_start']];
+const cases=[['/scm-review-questions.html','print','checklist_print_click'],['/calculators.html','button','calculator_calculate'],['/inventory-turnover-calculator.html','form','calculator_calculate'],['/safety-stock-calculator.html','safety_form','calculator_calculate'],['/reorder-point-calculator.html','reorder_form','calculator_calculate'],['/scm-diagnostic.html','select','diagnostic_start']];
 const markers=['scmprivateqzy751309','987654321.123'];
 async function run(){
  if(process.env.GITHUB_EVENT_NAME!=='workflow_dispatch'||process.env.GITHUB_REF!=='refs/heads/main'||process.env.GITHUB_REPOSITORY_ID!=='1102759388')throw Error('blocked');
@@ -31,13 +31,6 @@ async function run(){
    });
    const response=await page.goto('https://scm-news.ru'+path+'?scm_probe=scmprivateqzy751309#scmprivateqzy751309',{waitUntil:'domcontentloaded',timeout:45000});
    if(!response||response.status()!==200)throw Error('page');
-   if(await page.evaluate(()=>typeof window.gtag==='function'))throw Error('GA already present');
-   // Same sanitized config as existing loader; it is injected only in this isolated test.
-   await page.evaluate(()=>{
-    window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments);};
-    window.gtag('js',new Date());window.gtag('config','G-DM41FJYWX0',{page_location:location.origin+location.pathname,page_referrer:''});
-    const script=document.createElement('script');script.async=true;script.src='https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0';document.head.appendChild(script);
-   });
    await page.waitForFunction(()=>!!window.google_tag_data,{timeout:20000});
    const activated=await page.evaluate(kind=>{
     const field=document.querySelector('input:not([type=hidden])');if(field){field.value='987654321.123';field.dispatchEvent(new Event('input',{bubbles:true}));field.dispatchEvent(new Event('change',{bubbles:true}));}
@@ -45,7 +38,7 @@ async function run(){
     document.addEventListener('submit',e=>e.preventDefault());
     if(kind==='print'){const e=document.querySelector('#print-checklist');if(!e)return false;e.click();return true;}
     if(kind==='button'){const e=document.querySelector('button.calculate-btn');if(!e)return false;e.click();return true;}
-    if(kind==='form'){const e=document.querySelector('form[data-inventory-tool]');if(!e)return false;e.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));return true;}
+    if(['form','safety_form','reorder_form'].includes(kind)){const e=document.querySelector('form[data-inventory-tool]');if(!e)return false;e.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));return true;}
     const e=document.querySelector('#scm-checklist select');if(!e)return false;const o=document.createElement('option');o.value='scmprivateqzy751309';o.textContent='test';e.appendChild(o);e.value=o.value;e.dispatchEvent(new Event('change',{bubbles:true}));return true;
    },kind);
    await page.waitForTimeout(15000);
