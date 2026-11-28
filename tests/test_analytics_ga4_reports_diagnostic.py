@@ -15,6 +15,9 @@ class Tests(unittest.TestCase):
     def test_find_only_observed_and_no_counts(self):
         res=r.inspect(('a','b','c'),('d','e','f'),identify=self.find,refresh=lambda *a:'report-token',fetch=self.fetch)
         self.assertEqual(res['observed'],['presentation_download']);self.assertNotIn('12',str(res))
+    def test_page_view_is_separate_from_goal_events(self):
+        res=r.inspect(('a','b','c'),('d','e','f'),identify=self.find,refresh=lambda *a:'t',fetch=lambda *a:{'rows':[{'dimensionValues':[{'value':'page_view'}],'metricValues':[{'value':'1'}]}]})
+        self.assertTrue(res['page_view_observed']);self.assertEqual(res['observed'],[])
     def test_absence_is_not_zero(self):
         res=r.inspect(('a','b','c'),('d','e','f'),identify=self.find,refresh=lambda *a:'t',fetch=lambda *a:{})
         self.assertEqual(res['observed'],[])

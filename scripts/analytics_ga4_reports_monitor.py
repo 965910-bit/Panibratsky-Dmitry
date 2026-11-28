@@ -31,7 +31,7 @@ def main():
     try:
         status,result,alert=monitor(admin,report,os.environ.get('GITHUB_REPOSITORY',''),os.environ.get('GITHUB_RUN_ID',''),token)
         if result is not None:
-            print('::notice title=GA4 weekly report::status=success; observed_agreed_events='+str(len(result['observed']))+'; thresholded='+str(result['thresholded']).lower()+'; sampled='+str(result['sampled']).lower()+'; missing_is_not_zero; ga4_writes=0; alert='+alert)
+            print('::notice title=GA4 weekly report::status=success; observed_agreed_events='+str(len(result['observed']))+'; page_view_observed='+str(result['page_view_observed']).lower()+'; thresholded='+str(result['thresholded']).lower()+'; sampled='+str(result['sampled']).lower()+'; missing_is_not_zero; ga4_writes=0; alert='+alert)
         else:print('::error title=GA4 weekly report::status=failure; ga4_writes=0; alert='+alert,file=sys.stderr)
         return 0 if status=='success' else 1
     except Exception:
