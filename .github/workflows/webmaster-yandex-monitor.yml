@@ -30,3 +30,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           SCM_WM_YANDEX_ACCESS_TOKEN: ${{ secrets.SCM_WM_YANDEX_ACCESS_TOKEN }}
         run: python scripts/webmaster_yandex_monitor.py
+      - name: Read robot-discovered sitemap information
+        env:
+          SCM_WM_YANDEX_ACCESS_TOKEN: ${{ secrets.SCM_WM_YANDEX_ACCESS_TOKEN }}
+        run: python scripts/webmaster_yandex_discovered.py
