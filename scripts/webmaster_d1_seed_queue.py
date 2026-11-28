@@ -15,6 +15,10 @@ from webmaster_d1_initialize import (request_json,locate,result_rows,EXPECTED,CO
                                      OBJECT_SQL,META_READ,MARKER,CLOUDFLARE_INTERNAL)
 from webmaster_queue_prepare import REPOSITORY_ID
 
+# The REST batch endpoint's atomicity and isolation have not yet been verified.
+# Keep the production entry point disabled until the exact integration is proven.
+REST_BATCH_VERIFIED = False
+
 class SeedError(Exception):pass
 class UnknownOutcome(SeedError):pass
 
@@ -89,6 +93,8 @@ def seed(account,token,repo,github_token,baseline,*,git=ix.git,gh_fetch=ix.reque
 
 
 def main():
+    if not REST_BATCH_VERIFIED:
+        print('::error title=D1 queue seed::rest_batch_unverified_no_seed');return 1
     if (os.environ.get('GITHUB_EVENT_NAME')!='workflow_dispatch' or os.environ.get('GITHUB_REF')!='refs/heads/main' or
         os.environ.get('GITHUB_RUN_ATTEMPT')!='1' or os.environ.get('GITHUB_REPOSITORY_ID')!='1102759388' or
         os.environ.get('CONFIRMATION')!='SEED_VERIFIED_QUEUE'):
