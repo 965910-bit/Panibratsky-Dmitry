@@ -27,8 +27,8 @@ test('sitemap pages fit mobile, tablet and desktop viewport without document ove
      const response=await page.goto(`${base}/${file}`,{waitUntil:'domcontentloaded',timeout:30000});
      if(!response||response.status()!==200){errors.push(`${file}@${width}: unavailable`);continue;}
      await page.evaluate(()=>{for(const d of document.querySelectorAll('details'))d.open=true;});
-     const result=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth, offenders:[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0 && r.right>innerWidth+1 }).slice(-12).map(e=>e.tagName+'.'+String(e.className).slice(0,80)+' '+Math.round(e.getBoundingClientRect().right))}));
-     if(result.scroll>result.width+1)errors.push(`${file}@${width}: ${result.scroll}px ${result.offenders.join(' | ')}`);
+     const result=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth, offenders:[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0 && r.right>innerWidth+1 }).slice(-12).map(e=>e.tagName+'.'+String(e.className).slice(0,80)+' '+Math.round(e.getBoundingClientRect().right)), inner:[...document.querySelectorAll('body *')].filter(e=>e.clientWidth>0 && e.scrollWidth>e.clientWidth+3 && getComputedStyle(e).overflowX==='visible').slice(-12).map(e=>e.tagName+'.'+String(e.className).slice(0,80)+' '+e.clientWidth+'/'+e.scrollWidth)}));
+     if(result.scroll>result.width+1)errors.push(`${file}@${width}: ${result.scroll}px ${result.offenders.join(' | ')} inner=${result.inner.join(' | ')}`);
     }catch(e){errors.push(`${file}@${width}: load failed`);}
    }
    await ctx.close();
