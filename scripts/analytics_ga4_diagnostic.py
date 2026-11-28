@@ -88,9 +88,18 @@ def inventory(client_id,secret,refresh_token,*,refresh=refresh_google,fetch=requ
         if not isinstance(name,str) or not name or len(name)>128:raise AnalyticsError('invalid event')
         names.append(name)
     if len(names)!=len(set(names)):raise AnalyticsError('duplicate event')
+    # Absence of protobuf boolean fields is equivalent to false. Reject unexpected types.
+    for event in events:
+        if any(type(event.get(k,False)) is not bool for k in ('custom','deletable')):raise AnalyticsError('invalid event flags')
+    old=[event for event in events if event['eventName'] not in GOALS]
+    counts={'old_custom_deletable':sum(e.get('custom',False) and e.get('deletable',False) for e in old),
+            'old_default_deletable':sum(not e.get('custom',False) and e.get('deletable',False) for e in old),
+            'old_nondeletable':sum(not e.get('deletable',False) for e in old),
+            'custom_total':sum(e.get('custom',False) for e in events)}
     result={'status':'connected','can_edit':can_edit,'domain_matches':domain_ok,
             'key_event_count':len(names),'present':[name for name in GOALS if name in names],
             'missing':[name for name in GOALS if name not in names]}
+    result.update(counts)
     if include_private: result.update(property=prop,token=token)
     return result
 
@@ -103,6 +112,7 @@ def main():
     try:
         data=inventory(*creds)
         print('::notice title=GA4 inventory::status=connected; editable='+str(data['can_edit']).lower()+'; domain_matches='+str(data['domain_matches']).lower()+'; key_events='+str(data['key_event_count'])+'; known_present='+str(len(data['present']))+'; known_missing='+str(len(data['missing']))+'; writes=0')
+        print('::notice title=GA4 old event classification::custom_deletable='+str(data['old_custom_deletable'])+'; default_deletable='+str(data['old_default_deletable'])+'; nondeletable='+str(data['old_nondeletable'])+'; custom_total='+str(data['custom_total']))
         print('::notice title=GA4 known events::present='+(','.join(data['present']) or 'none'))
         return 0
     except Exception:
