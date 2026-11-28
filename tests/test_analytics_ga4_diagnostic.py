@@ -19,6 +19,25 @@ class Tests(unittest.TestCase):
         data=self.run_inventory();self.assertTrue(data['can_edit']);self.assertTrue(data['domain_matches'])
         self.assertEqual(data['key_event_count'],2);self.assertEqual(data['present'],['contact_phone_click'])
         self.assertNotIn('unrelated_private_event',str(data));self.assertEqual(len(self.calls),3)
+    def test_counts_flags_without_exposing_other_names(self):
+        def fetch(path,token,params):
+            data=self.fetch(path,token,params)
+            if path.endswith('keyEvents'):
+                data['keyEvents']=[{'eventName':'contact_phone_click','custom':True,'deletable':True},
+                                   {'eventName':'other','custom':True,'deletable':True},
+                                   {'eventName':'default','deletable':False}]
+            return data
+        result=self.run_inventory(fetch)
+        self.assertEqual(result['old_custom_deletable'],1)
+        self.assertEqual(result['old_nondeletable'],1)
+        self.assertEqual(result['custom_total'],2)
+        self.assertNotIn('other',str(result))
+    def test_invalid_event_flags_fail_closed(self):
+        def fetch(path,token,params):
+            data=self.fetch(path,token,params)
+            if path.endswith('keyEvents'):data['keyEvents'][0]['custom']='true'
+            return data
+        with self.assertRaises(a.AnalyticsError):self.run_inventory(fetch)
     def test_pagination_all_pages_and_repeated_token_fails(self):
         def two(path,token,params):
             if 'pageToken' not in params:return {'keyEvents':[{'eventName':'a'}],'nextPageToken':'n'}
