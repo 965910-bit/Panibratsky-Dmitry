@@ -16,8 +16,8 @@ class Tests(unittest.TestCase):
         g=a.google
         with mock.patch.object(g,'SCOPE'),mock.patch.object(g,'SECRET_NAMES'),mock.patch('builtins.input',return_value='да'),mock.patch.object(g,'load_desktop_client',return_value=('id','secret')),mock.patch.object(g,'gh_check',return_value='a/b'),mock.patch.object(g,'pkce',return_value=('verifier','challenge')),mock.patch.object(g,'receive_code',return_value=('code','redirect')),mock.patch.object(g,'exchange',return_value='refresh'),mock.patch.object(g,'gh_store') as store:
             self.assertEqual(a.main(['file']),0)
-            self.assertEqual(g.SCOPE,a.SCOPE);self.assertEqual(g.SECRET_NAMES,a.SECRET_NAMES)
             store.assert_called_once_with('a/b','id','secret','refresh')
+            self.assertNotEqual(g.SCOPE,a.SCOPE);self.assertNotEqual(g.SECRET_NAMES,a.SECRET_NAMES)
     def test_no_secret_in_error_message(self):
         with mock.patch('builtins.input',return_value='да'),mock.patch.object(a.google,'load_desktop_client',side_effect=a.google.SetupError('secret-value')),mock.patch('builtins.print') as out:
             self.assertEqual(a.main(['file']),1);self.assertNotIn('secret-value',str(out.call_args_list))

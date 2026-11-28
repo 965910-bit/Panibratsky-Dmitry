@@ -18,6 +18,7 @@ def main(argv=None):
     print('Подключение Google Analytics для scm-news.ru.')
     print('Права analytics.edit позволяют читать и изменять настройки Analytics, включая ключевые события.')
     print('Доступ Search Console не заменяется. Эта программа не меняет настройки Analytics.')
+    old_scope,old_names=google.SCOPE,google.SECRET_NAMES
     try:
         if input('Продолжить? Введите ДА: ').strip().upper()!='ДА':
             print('Отменено. Изменений не выполняли.');return 0
@@ -36,4 +37,6 @@ def main(argv=None):
     except (google.SetupError,OSError,EOFError,KeyboardInterrupt):
         print('Не удалось завершить подключение. Возможно, часть новых секретов уже создана; не повторяйте вслепую.')
         return 1
+    finally:
+        google.SCOPE,google.SECRET_NAMES=old_scope,old_names
 if __name__=='__main__':sys.exit(main())
