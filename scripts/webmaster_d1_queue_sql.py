@@ -87,3 +87,26 @@ def observe_receipt(task_id, url, revision, state):
       WHERE task_id=? AND url=? AND revision=?
       AND (observed_state IS NULL OR observed_state='IN_PROGRESS')
       RETURNING task_id,url,revision,observed_state''', [state,task_id,url,revision])
+
+
+def release_unattempted(url, revision):
+    """Release the exact claim only when no provider request has been attempted.
+
+    Caller must know whether a request was attempted; a timeout or crash is
+    never evidence that no request happened. Zero returned rows are a conflict.
+    """
+    allowed_urls([url])
+    if not isinstance(revision,str) or not SHA.fullmatch(revision):
+        raise D1QueueError('invalid revision')
+    return ('''UPDATE wm_queue SET state='pending',task_id=NULL
+      WHERE url=? AND sent_revision=? AND state='in_flight'
+      RETURNING url,revision,state''', [url,revision])
+
+
+def recover_stopped_worker():
+    """Mark abandoned claims uncertain; caller must prove the worker has stopped.
+
+    Never use a timeout or lease expiry as proof that a provider request did not
+    happen. Requires external serialization with all claimers and publishers.
+    """
+    return ("UPDATE wm_queue SET state='uncertain' WHERE state='in_flight' RETURNING url,sent_revision", [])
