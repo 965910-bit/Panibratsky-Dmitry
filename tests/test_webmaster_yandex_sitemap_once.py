@@ -33,6 +33,7 @@ class Tests(unittest.TestCase):
         action.assert_not_called()
     def test_invalid_response_is_error_not_success(self):
         with self.assertRaises(w.ActionError):w.run('a/b','g','t',git=lambda *a:SHA,fetch=self.fetch(),validate=lambda u:None,action=lambda *a:{'sitemap':'secret','recrawl':[]})
+    @mock.patch("webmaster_actions.SITEMAP_WRITES_PAUSED", False)
     def test_observed_action_stages_and_ambiguous_post(self):
         stages=[]; calls=[]
         def request(url, credential, scheme, method='GET', body=None):
@@ -49,10 +50,16 @@ class Tests(unittest.TestCase):
         for event,attempt in [('workflow_dispatch','2'),('push','1')]:
             with mock.patch.dict('os.environ',{'GITHUB_EVENT_NAME':event,'GITHUB_REF':'refs/heads/main','GITHUB_RUN_ATTEMPT':attempt},clear=True),mock.patch('builtins.print'),mock.patch.object(w,'run') as run:
                 self.assertEqual(w.main(),1);run.assert_not_called()
+    def test_main_paused_no_provider_requests(self):
+        env={'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_REF':'refs/heads/main','GITHUB_RUN_ATTEMPT':'1'}
+        with mock.patch.dict('os.environ',env,clear=True),mock.patch.object(w.webmaster_actions,'SITEMAP_WRITES_PAUSED',True),mock.patch('builtins.print'),mock.patch.object(w,'run') as run:
+            self.assertEqual(w.main(),0);run.assert_not_called()
+    @mock.patch("webmaster_actions.SITEMAP_WRITES_PAUSED", False)
     def test_provider_error_safe_annotation(self):
         env={'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_REF':'refs/heads/main','GITHUB_RUN_ATTEMPT':'1','GITHUB_TOKEN':'secret','SCM_WM_YANDEX_ACCESS_TOKEN':'secret','GITHUB_REPOSITORY':'a/b'}
         with mock.patch.dict('os.environ',env,clear=True),mock.patch.object(w,'run',side_effect=w.ApiError(403,'unsafe private data')),mock.patch('builtins.print') as p:
             self.assertEqual(w.main(),1);self.assertIn('http=403; code=unclassified',str(p.call_args_list));self.assertNotIn('private',str(p.call_args_list));self.assertNotIn('secret',str(p.call_args_list))
+    @mock.patch("webmaster_actions.SITEMAP_WRITES_PAUSED", False)
     def test_sanitized_notice(self):
         env={'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_REF':'refs/heads/main','GITHUB_RUN_ATTEMPT':'1','GITHUB_TOKEN':'secret','SCM_WM_YANDEX_ACCESS_TOKEN':'secret','GITHUB_REPOSITORY':'a/b'}
         with mock.patch.dict('os.environ',env,clear=True),mock.patch.object(w,'run',return_value='already_present'),mock.patch('builtins.print') as p:

@@ -35,10 +35,12 @@ class Tests(unittest.TestCase):
         self.assertTrue(all(method=='GET' for _,method,_ in f.calls))
         f=Fake();self.assertEqual(w.google_action('x',True,f)['status'],'submitted')
         self.assertEqual([x[1] for x in f.calls],['GET','GET','PUT'])
+    @mock.patch.object(w, "SITEMAP_WRITES_PAUSED", False)
     def test_yandex_write_and_quota(self):
         f=Fake(quota=0);r=w.yandex_action('x',[PAGE],True,f)
         self.assertEqual(r['sitemap'],'submitted');self.assertEqual(r['recrawl'][0]['status'],'quota_exhausted')
         self.assertFalse(any(u.endswith('/recrawl/queue') for u,_,_ in f.calls))
+    @mock.patch.object(w, "SITEMAP_WRITES_PAUSED", False)
     def test_yandex_sitemap_missing_id_is_unknown_not_success(self):
         f=Fake()
         def req(url,*a,**kw):
@@ -47,6 +49,11 @@ class Tests(unittest.TestCase):
             return f(url,*a,**kw)
         with self.assertRaises(w.ActionError): w.yandex_action('x',[],True,req)
 
+    def test_sitemap_provider_read_only_stops_before_any_post(self):
+        f=Fake()
+        with mock.patch.object(w,'SITEMAP_WRITES_PAUSED',True):
+            with self.assertRaises(w.ActionError): w.yandex_action('x',[PAGE],True,f)
+        self.assertTrue(all(method=='GET' for _,method,_ in f.calls))
     def test_already_added_and_quota_errors(self):
         for code,status,expected in [('URL_ALREADY_ADDED',409,'already_added'),('QUOTA_EXCEEDED',429,'quota_exhausted')]:
             f=Fake(sitemap=True,recrawl_error=w.ApiError(status,code));r=w.yandex_action('x',[PAGE],True,f)
