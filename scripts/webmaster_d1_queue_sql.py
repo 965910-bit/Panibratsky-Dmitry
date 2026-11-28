@@ -66,3 +66,24 @@ def finish_batch(url,revision,outcome,task_id=None):
       WHERE url=? AND sent_revision=? AND state='in_flight' RETURNING url,state''',
       [state,revision,state,task_id,url,revision]))
     return batch
+
+
+def observe_receipt(task_id, url, revision, state):
+    """Build one guarded observation update; prototype only, no network.
+
+    Unknown reads never call this function and must not change stored state.
+    Terminal states cannot be overwritten, including by a late concurrent poll.
+    A zero-row result is ambiguous (missing, mismatch or already terminal) and
+    callers must inspect the exact receipt rather than assume success.
+    """
+    allowed_urls([url])
+    if not isinstance(revision,str) or not SHA.fullmatch(revision):
+        raise D1QueueError('invalid revision')
+    if not isinstance(task_id,str) or not re.fullmatch(r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}',task_id):
+        raise D1QueueError('invalid task id')
+    if state not in ('IN_PROGRESS','DONE','FAILED'):
+        raise D1QueueError('invalid observation')
+    return ('''UPDATE wm_receipts SET observed_state=?
+      WHERE task_id=? AND url=? AND revision=?
+      AND (observed_state IS NULL OR observed_state='IN_PROGRESS')
+      RETURNING task_id,url,revision,observed_state''', [state,task_id,url,revision])

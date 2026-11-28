@@ -68,4 +68,36 @@ class Tests(unittest.TestCase):
         execute(self.db,d.deployment_batch(A,B,[U]));self.db.execute(d.CLAIM).fetchall();self.db.execute('INSERT INTO wm_receipts(task_id,url,revision) VALUES(?,?,?)',(TASK,V,A));self.db.commit()
         with self.assertRaises(sqlite3.IntegrityError):execute(self.db,d.finish_batch(U,B,'accepted',TASK))
         self.assertEqual(self.db.execute('SELECT state FROM wm_queue').fetchone()[0],'in_flight')
+    def test_concurrent_deployment_cas_local_sqlite(self):
+        barrier=threading.Barrier(2); results=[]; errors=[]
+        def run(target,url):
+            db=sqlite3.connect(self.path,timeout=10)
+            try:
+                barrier.wait(timeout=5)
+                results.append((target,url,execute(db,d.deployment_batch(A,target,[url]))[-1]))
+            except Exception as exc:errors.append(exc)
+            finally:db.close()
+        threads=[threading.Thread(target=run,args=(B,U)),threading.Thread(target=run,args=(C,V))]
+        for thread in threads:thread.start()
+        for thread in threads:thread.join(timeout=15)
+        self.assertFalse(any(thread.is_alive() for thread in threads));self.assertEqual(errors,[])
+        self.assertEqual(len(results),2)
+        winner=[(revision,url) for revision,url,rows in results if rows==[(revision,)]]
+        self.assertEqual(len(winner),1)
+        self.assertEqual(self.db.execute('SELECT revision FROM wm_cursor').fetchone()[0],winner[0][0])
+        self.assertEqual(self.db.execute('SELECT url,revision FROM wm_queue').fetchall(),[(winner[0][1],winner[0][0])])
+    def test_receipt_observation_exact_and_terminal(self):
+        self.db.execute('INSERT INTO wm_receipts(task_id,url,revision) VALUES(?,?,?)',(TASK,U,B));self.db.commit()
+        def observe(url,revision,state):
+            sql,args=d.observe_receipt(TASK,url,revision,state)
+            return execute(self.db,[(sql,args)])[0]
+        self.assertEqual(observe(V,B,'DONE'),[])
+        self.assertEqual(observe(U,C,'DONE'),[])
+        self.assertEqual(observe(U,B,'IN_PROGRESS'),[(TASK,U,B,'IN_PROGRESS')])
+        self.assertEqual(observe(U,B,'DONE'),[(TASK,U,B,'DONE')])
+        self.assertEqual(observe(U,B,'FAILED'),[])
+        self.assertEqual(self.db.execute('SELECT observed_state FROM wm_receipts').fetchone()[0],'DONE')
+    def test_receipt_observation_rejects_unknown_or_invalid(self):
+        for task,url,revision,state in ((TASK,U,B,None),(TASK,U,B,'UNKNOWN'),('bad',U,B,'DONE'),(TASK,'https://evil/',B,'DONE'),(TASK,U,'bad','DONE')):
+            with self.assertRaises(Exception):d.observe_receipt(task,url,revision,state)
 if __name__=='__main__':unittest.main()
