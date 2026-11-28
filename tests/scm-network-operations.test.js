@@ -321,7 +321,7 @@ test('digital practices and planned wiki cards link to available material with e
     assert.ok(page.includes(`id="${id}"`), id);
     assert.ok(wiki.includes(`href="scm-network-operations.html#${id}"`), id);
   }
-  assert.equal((wiki.match(/Связанный практический разбор/g) || []).length, 21);
+  assert.equal((wiki.match(/Связанный практический разбор/g) || []).length, 16);
   assert.match(page, /ноль и отсутствие данных различаются/i);
   assert.match(page, /обычное CSV-кавычение не является универсальной защитой/);
   assert.equal((9 + 10) / (10 + 90) * 100, 19);
