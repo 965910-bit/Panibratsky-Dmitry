@@ -8,7 +8,7 @@ async function run(){
  const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
  try {
   for(const [path,kind,goal] of cases){
-   let collection=false,goalBlocked=false,markerBlocked=false,tagOk=false;
+   let collection=false,goalBlocked=false,markerBlocked=false,queryMarker=false,numberMarker=false,tagOk=false; const markerEvents=new Set(),markerFields=new Set();
    const ctx=await browser.newContext({serviceWorkers:'block'}),page=await ctx.newPage();
    await ctx.addInitScript(()=>localStorage.setItem('scm_analytics_choice_v1','yes'));
    page.on('response',r=>{const u=new URL(r.url());if(u.hostname==='www.googletagmanager.com'&&u.pathname==='/gtag/js'&&r.status()===200)tagOk=true;});
@@ -17,7 +17,12 @@ async function run(){
     if(u.pathname==='/g/collect'||u.pathname==='/ccm/collect'){
      collection=true;let text=req.url()+'\n'+(req.postData()||'');
      for(let i=0;i<3;i++){try{text=decodeURIComponent(text.replace(/\+/g,'%20'));}catch(_){break;}}
-     if(markers.some(m=>text.includes(m)))markerBlocked=true;
+     if(markers.some(m=>text.includes(m))){
+      markerBlocked=true;queryMarker||=text.includes(markers[0]);numberMarker||=text.includes(markers[1]);
+      for(const event of ['page_view','form_start','form_submit','scroll','calculator_calculate','diagnostic_start','checklist_print_click'])if(new RegExp('(?:^|[&\\n])en='+event+'(?:&|\\n|$)').test(text))markerEvents.add(event);
+      // Log only a fixed field category, never the value or arbitrary field names.
+      for(const part of text.split(/[&\n?]/)){const idx=part.indexOf('=');if(idx<0||!markers.some(m=>part.slice(idx+1).includes(m)))continue;const key=part.slice(0,idx);markerFields.add(['dl','dr','ep.form_destination','ep.form_id'].includes(key)?key:'other');}
+     }
      if(new RegExp('(?:^|[&\\n])en='+goal+'(?:&|\\n|$)').test(text))goalBlocked=true;
      return route.abort();
     }
@@ -45,7 +50,7 @@ async function run(){
    },kind);
    await page.waitForTimeout(15000);
    const queued=await page.evaluate(goal=>window.dataLayer.some(v=>v&&v[0]==='event'&&v[1]===goal),goal);
-   console.log(`::notice title=Isolated GA4 privacy probe::case=${kind}; action_found=${activated}; tag_loaded=${tagOk}; event_queued=${queued}; goal_in_blocked_collection=${goalBlocked}; collection_blocked=${collection}; test_marker_in_blocked_collection=${markerBlocked}; no_collection_sent; limited_test_not_privacy_guarantee`);
+   console.log(`::notice title=Isolated GA4 privacy probe::case=${kind}; action_found=${activated}; tag_loaded=${tagOk}; event_queued=${queued}; goal_in_blocked_collection=${goalBlocked}; collection_blocked=${collection}; test_marker_in_blocked_collection=${markerBlocked}; query_marker=${queryMarker}; number_marker=${numberMarker}; marker_events=${[...markerEvents].sort().join(',')||'none'}; marker_fields=${[...markerFields].sort().join(',')||'none'}; no_collection_sent; limited_test_not_privacy_guarantee`);
    await ctx.close();
   }
  }finally{await browser.close();}
