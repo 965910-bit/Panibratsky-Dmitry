@@ -100,4 +100,24 @@ class Tests(unittest.TestCase):
     def test_receipt_observation_rejects_unknown_or_invalid(self):
         for task,url,revision,state in ((TASK,U,B,None),(TASK,U,B,'UNKNOWN'),('bad',U,B,'DONE'),(TASK,'https://evil/',B,'DONE'),(TASK,U,'bad','DONE')):
             with self.assertRaises(Exception):d.observe_receipt(task,url,revision,state)
+    def test_release_only_matching_unattempted_claim(self):
+        execute(self.db,d.deployment_batch(A,B,[U,V]));url,revision=self.db.execute(d.CLAIM).fetchone();self.db.commit()
+        self.assertEqual(execute(self.db,[d.release_unattempted(url,C)]),[[]])
+        self.assertEqual(self.db.execute('SELECT state FROM wm_queue WHERE url=?',(url,)).fetchone()[0],'in_flight')
+        self.assertEqual(execute(self.db,[d.release_unattempted(url,revision)]),[[(url,B,'pending')]])
+        self.assertEqual(execute(self.db,[d.release_unattempted(url,revision)]),[[]])
+    def test_release_preserves_newer_revision(self):
+        execute(self.db,d.deployment_batch(A,B,[U]));self.db.execute(d.CLAIM).fetchall();self.db.commit()
+        execute(self.db,d.deployment_batch(B,C,[U]))
+        self.assertEqual(execute(self.db,[d.release_unattempted(U,B)]),[[(U,C,'pending')]])
+        self.assertEqual(self.db.execute(d.CLAIM).fetchall(),[(U,C)])
+    def test_stopped_worker_recovery_blocks_further_claims(self):
+        execute(self.db,d.deployment_batch(A,B,[U,V]));claimed=self.db.execute(d.CLAIM).fetchone();self.db.commit()
+        self.assertEqual(execute(self.db,[d.recover_stopped_worker()]),[[claimed]])
+        self.assertEqual(execute(self.db,[d.recover_stopped_worker()]),[[]])
+        self.assertEqual(self.db.execute(d.CLAIM).fetchall(),[])
+        self.assertEqual(self.db.execute('SELECT state FROM wm_queue WHERE url=?',(claimed[0],)).fetchone()[0],'uncertain')
+    def test_invalid_release_is_rejected(self):
+        for url,revision in ((U,'bad'),('https://evil/',B)):
+            with self.assertRaises(Exception):d.release_unattempted(url,revision)
 if __name__=='__main__':unittest.main()
