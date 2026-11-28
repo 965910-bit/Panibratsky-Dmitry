@@ -21,3 +21,7 @@ jobs:
         env:
           CHROME_PATH: /usr/bin/google-chrome
         run: node scripts/analytics_ga4_sensitive_probe.cjs
+      - name: Check synthetic search and outbound query markers with collection blocked
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node scripts/analytics_ga4_automatic_privacy_probe.cjs
