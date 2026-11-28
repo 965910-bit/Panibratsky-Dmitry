@@ -33,6 +33,18 @@ class Tests(unittest.TestCase):
         action.assert_not_called()
     def test_invalid_response_is_error_not_success(self):
         with self.assertRaises(w.ActionError):w.run('a/b','g','t',git=lambda *a:SHA,fetch=self.fetch(),validate=lambda u:None,action=lambda *a:{'sitemap':'secret','recrawl':[]})
+    def test_observed_action_stages_and_ambiguous_post(self):
+        stages=[]; calls=[]
+        def request(url, credential, scheme, method='GET', body=None):
+            calls.append(method)
+            if url.endswith('/user'): return {'user_id':1}
+            if url.endswith('/hosts'): return {'hosts':[{'ascii_host_url':'https://scm-news.ru/','host_id':'https:scm-news.ru:443','verified':True}]}
+            if method=='GET': return {'count':0,'sitemaps':[]}
+            raise w.ApiError(504)
+        with self.assertRaises(w.ApiError): w.observed_action('private',[],True,emit=stages.append,request=request)
+        self.assertEqual(stages,['read_user','read_hosts','read_sitemaps','submit_sitemap'])
+        self.assertEqual(calls,['GET','GET','GET','POST'])
+        self.assertNotIn('private',str(stages))
     def test_reruns_and_other_events_blocked(self):
         for event,attempt in [('workflow_dispatch','2'),('push','1')]:
             with mock.patch.dict('os.environ',{'GITHUB_EVENT_NAME':event,'GITHUB_REF':'refs/heads/main','GITHUB_RUN_ATTEMPT':attempt},clear=True),mock.patch('builtins.print'),mock.patch.object(w,'run') as run:

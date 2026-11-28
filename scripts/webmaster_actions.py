@@ -148,7 +148,9 @@ def yandex_action(token, urls, apply, request=api):
     sitemap = 'already_present' if present else 'would_submit'
     if not present and apply:
         try:
-            request(base + '/user-added-sitemaps', token, 'OAuth', method='POST', body={'url': MAP})
+            response = request(base + '/user-added-sitemaps', token, 'OAuth', method='POST', body={'url': MAP})
+            if not isinstance(response, dict) or not isinstance(response.get('sitemap_id'), str) or not response['sitemap_id']:
+                raise ActionError('invalid response; submission outcome unknown')
             sitemap = 'submitted'
         except ApiError as exc:
             if exc.status == 409 and exc.code == 'SITEMAP_ALREADY_ADDED':
