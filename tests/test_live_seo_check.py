@@ -21,7 +21,7 @@ class LiveSEOTests(unittest.TestCase):
                   monitor.BASE + 'robots.txt': (200, {}, f'Sitemap: {monitor.BASE}sitemap.xml\n'.encode())}
         for p in self.pages:
             result[monitor.BASE + p] = (200, {},
-                f'<html><head><link rel="canonical" href="{monitor.BASE}{p}"><script type="application/ld+json">{{"@type":"WebPage"}}</script></head></html>'.encode())
+                f'<html><head><meta name="description" content="Unique description {p or "home"}"><link rel="canonical" href="{monitor.BASE}{p}"><script type="application/ld+json">{{"@type":"WebPage"}}</script></head></html>'.encode())
         return result
 
     def test_valid_fixed_urls(self):
@@ -47,6 +47,17 @@ class LiveSEOTests(unittest.TestCase):
         self.assertTrue(any('HTTP 302' in x for x in monitor.check(lambda url: items[url], self.pages)['findings']))
         def failed(url): raise urllib.error.URLError('test')
         self.assertEqual(len(monitor.check(failed, self.pages)['findings']), 4)
+
+    def test_missing_or_duplicated_live_descriptions(self):
+        items=self.responses()
+        items[monitor.BASE] = (200, {}, f'<html><head><link rel="canonical" href="{monitor.BASE}"></head></html>'.encode())
+        findings=monitor.check(lambda u:items[u],self.pages)['findings']
+        self.assertTrue(any('missing or duplicate meta description' in line for line in findings))
+        items=self.responses()
+        for p in self.pages:
+            items[monitor.BASE+p] = (200, {}, f'<html><head><meta name="description" content="same"><link rel="canonical" href="{monitor.BASE}{p}"></head></html>'.encode())
+        findings=monitor.check(lambda u:items[u],self.pages)['findings']
+        self.assertTrue(any('meta description duplicates' in line for line in findings))
 
     def test_xml_dtd_and_oversized_content_rejected(self):
         items = self.responses(); items[monitor.BASE + 'sitemap.xml'] = (200, {}, b'<!DOCTYPE foo><foo/>')

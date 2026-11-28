@@ -6,12 +6,31 @@ import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
+from html.parser import HTMLParser
 
 from generate_sitemap import BASE, PAGES, PageMetadata
 from seo_guard import Page, reject_constant
 
 MAX_BYTES = 1024 * 1024
 SITEMAP_NS = '{http://www.sitemaps.org/schemas/sitemap/0.9}'
+
+
+class Descriptions(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.in_head = False
+        self.values = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'head':
+            self.in_head = True
+        attributes = dict(attrs)
+        if self.in_head and tag == 'meta' and (attributes.get('name') or '').lower() == 'description':
+            self.values.append((attributes.get('content') or '').strip())
+
+    def handle_endtag(self, tag):
+        if tag == 'head':
+            self.in_head = False
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -111,6 +130,7 @@ def check(fetcher=fetch, pages=None):
         except UnicodeError:
             findings.append('robots.txt: invalid UTF-8')
 
+    descriptions = {}
     for url in sorted(expected):
         result = get(url)
         if not result:
@@ -120,6 +140,14 @@ def check(fetcher=fetch, pages=None):
             html = body.decode('utf-8-sig')
             meta, page = PageMetadata(), Page()
             meta.feed(html); page.feed(html)
+            description = Descriptions()
+            description.feed(html)
+            if len(description.values) != 1 or not description.values[0]:
+                findings.append(f'{url}: missing or duplicate meta description')
+            elif description.values[0] in descriptions:
+                findings.append(f'{url}: meta description duplicates {descriptions[description.values[0]]}')
+            else:
+                descriptions[description.values[0]] = url
             if meta.canonicals != [url] or meta.canonical_has_variant_attributes:
                 findings.append(f'{url}: canonical mismatch')
             if any(has_noindex(value) for value in meta.robots):
