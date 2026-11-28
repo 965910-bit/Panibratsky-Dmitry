@@ -1,0 +1,53 @@
+'use strict';
+// Simulation only: run live tag on instrument pages while every collection is blocked.
+const {chromium}=require('playwright-core');
+const cases=[['/scm-review-questions.html','print','checklist_print_click'],['/calculators.html','button','calculator_calculate'],['/inventory-turnover-calculator.html','form','calculator_calculate'],['/scm-diagnostic.html','select','diagnostic_start']];
+const markers=['scmprivateqzy751309','987654321.123'];
+async function run(){
+ if(process.env.GITHUB_EVENT_NAME!=='workflow_dispatch'||process.env.GITHUB_REF!=='refs/heads/main'||process.env.GITHUB_REPOSITORY_ID!=='1102759388')throw Error('blocked');
+ const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+ try {
+  for(const [path,kind,goal] of cases){
+   let collection=false,goalBlocked=false,markerBlocked=false,tagOk=false;
+   const ctx=await browser.newContext({serviceWorkers:'block'}),page=await ctx.newPage();
+   await ctx.addInitScript(()=>localStorage.setItem('scm_analytics_choice_v1','yes'));
+   page.on('response',r=>{const u=new URL(r.url());if(u.hostname==='www.googletagmanager.com'&&u.pathname==='/gtag/js'&&r.status()===200)tagOk=true;});
+   await page.route('**/*',route=>{
+    const req=route.request(),u=new URL(req.url());
+    if(u.pathname==='/g/collect'||u.pathname==='/ccm/collect'){
+     collection=true;let text=req.url()+'\n'+(req.postData()||'');
+     for(let i=0;i<3;i++){try{text=decodeURIComponent(text.replace(/\+/g,'%20'));}catch(_){break;}}
+     if(markers.some(m=>text.includes(m)))markerBlocked=true;
+     if(new RegExp('(?:^|[&\\n])en='+goal+'(?:&|\\n|$)').test(text))goalBlocked=true;
+     return route.abort();
+    }
+    if(req.method()==='GET'&&u.protocol==='https:'&&(u.hostname==='scm-news.ru'||(u.hostname==='www.googletagmanager.com'&&u.pathname==='/gtag/js')))return route.continue();
+    return route.abort();
+   });
+   const response=await page.goto('https://scm-news.ru'+path+'?scm_probe=scmprivateqzy751309#scmprivateqzy751309',{waitUntil:'domcontentloaded',timeout:45000});
+   if(!response||response.status()!==200)throw Error('page');
+   if(await page.evaluate(()=>typeof window.gtag==='function'))throw Error('GA already present');
+   // Same sanitized config as existing loader; it is injected only in this isolated test.
+   await page.evaluate(()=>{
+    window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments);};
+    window.gtag('js',new Date());window.gtag('config','G-DM41FJYWX0',{page_location:location.origin+location.pathname,page_referrer:''});
+    const script=document.createElement('script');script.async=true;script.src='https://www.googletagmanager.com/gtag/js?id=G-DM41FJYWX0';document.head.appendChild(script);
+   });
+   await page.waitForFunction(()=>!!window.google_tag_data,{timeout:20000});
+   const activated=await page.evaluate(kind=>{
+    const field=document.querySelector('input:not([type=hidden])');if(field){field.value='987654321.123';field.dispatchEvent(new Event('input',{bubbles:true}));field.dispatchEvent(new Event('change',{bubbles:true}));}
+    window.print=()=>{};
+    document.addEventListener('submit',e=>e.preventDefault());
+    if(kind==='print'){const e=document.querySelector('#print-checklist');if(!e)return false;e.click();return true;}
+    if(kind==='button'){const e=document.querySelector('button.calculate-btn');if(!e)return false;e.click();return true;}
+    if(kind==='form'){const e=document.querySelector('form[data-inventory-tool]');if(!e)return false;e.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));return true;}
+    const e=document.querySelector('#scm-checklist select');if(!e)return false;const o=document.createElement('option');o.value='scmprivateqzy751309';o.textContent='test';e.appendChild(o);e.value=o.value;e.dispatchEvent(new Event('change',{bubbles:true}));return true;
+   },kind);
+   await page.waitForTimeout(15000);
+   const queued=await page.evaluate(goal=>window.dataLayer.some(v=>v&&v[0]==='event'&&v[1]===goal),goal);
+   console.log(`::notice title=Isolated GA4 privacy probe::case=${kind}; action_found=${activated}; tag_loaded=${tagOk}; event_queued=${queued}; goal_in_blocked_collection=${goalBlocked}; collection_blocked=${collection}; test_marker_in_blocked_collection=${markerBlocked}; no_collection_sent; limited_test_not_privacy_guarantee`);
+   await ctx.close();
+  }
+ }finally{await browser.close();}
+}
+run().catch(()=>{console.error('::error title=Isolated GA4 privacy probe::incomplete; no_collection_sent');process.exitCode=1;});
