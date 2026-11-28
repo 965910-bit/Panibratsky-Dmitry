@@ -49,10 +49,10 @@ def inspect(account,token,*,read=request):
         if any(not isinstance(x,dict) or not isinstance(x.get('name'),str) for x in entries):
             raise DiagnosticError('invalid database entry')
         if any(x['name']==NAME for x in entries):return 'separate_queue_exists'
-        pages=info.get('total_pages')
-        if type(pages) is not int or pages < 0 or pages < page and pages != 0:
+        response_page, per_page, count = info.get('page'), info.get('per_page'), info.get('count')
+        if type(response_page) is not int or response_page != page or type(per_page) is not int or not 1 <= per_page <= 100 or type(count) is not int or count != len(entries) or len(entries) > per_page:
             raise DiagnosticError('invalid pagination')
-        if page>=pages:return 'separate_queue_not_found'
+        if len(entries) < per_page:return 'separate_queue_not_found'
     raise DiagnosticError('pagination limit exceeded')
 
 
