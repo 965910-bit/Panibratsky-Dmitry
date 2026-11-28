@@ -21,8 +21,10 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
-      - run: python -m pip install 'cryptography==44.0.3'
-      - name: Create encrypted aggregate snapshot
+      - run: python -m pip install 'cryptography==44.0.3' 'openpyxl==3.1.5' 'et-xmlfile==2.0.0'
+      - name: Test private report generation
+        run: python -m unittest discover -s tests -p 'test_analytics_private*.py'
+      - name: Create encrypted aggregate snapshot and Excel workbook
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SCM_GA4_CLIENT_ID: ${{ secrets.SCM_GA4_CLIENT_ID }}
