@@ -13,7 +13,12 @@ class WorkerError(Exception):
     pass
 
 
-def drain(queue, token, *, limit=5, validate=validate_live, action=yandex_action):
+def recrawl_only(token, urls, apply):
+    """Do not call the separate Sitemap-management endpoint when draining."""
+    return yandex_action(token, urls, apply, manage_sitemap=False)
+
+
+def drain(queue, token, *, limit=5, validate=validate_live, action=recrawl_only):
     """Submit at most five individual URLs; stop on exhausted quota or ambiguity.
 
     The caller must confirm the checkout is current main and a successful Pages

@@ -49,6 +49,23 @@ class Tests(unittest.TestCase):
             return f(url,*a,**kw)
         with self.assertRaises(w.ActionError): w.yandex_action('x',[],True,req)
 
+    def test_recrawl_mode_avoids_sitemap_even_if_paused(self):
+        f=Fake(sitemap=False,quota=2)
+        with mock.patch.object(w,'SITEMAP_WRITES_PAUSED',True):
+            result=w.yandex_action('x',[PAGE],True,f,manage_sitemap=False)
+        self.assertEqual(result['sitemap'],'not_checked')
+        self.assertEqual(result['recrawl'][0]['status'],'accepted')
+        self.assertFalse(any('user-added-sitemaps' in url for url,_,_ in f.calls))
+        self.assertEqual(sum(method=='POST' for _,method,_ in f.calls),1)
+    def test_recrawl_only_dry_run_and_allowlist(self):
+        f=Fake()
+        result=w.yandex_action('x',[PAGE],False,f,manage_sitemap=False)
+        self.assertEqual(result['recrawl'][0]['status'],'would_submit')
+        self.assertTrue(all(method=='GET' for _,method,_ in f.calls))
+        f=Fake()
+        with self.assertRaises(w.ActionError):w.yandex_action('x',['https://evil.test/'],True,f,manage_sitemap=False)
+        self.assertEqual(f.calls,[])
+        with self.assertRaises(w.ActionError):w.yandex_action('x',[],True,f,manage_sitemap='false')
     def test_sitemap_provider_read_only_stops_before_any_post(self):
         f=Fake()
         with mock.patch.object(w,'SITEMAP_WRITES_PAUSED',True):

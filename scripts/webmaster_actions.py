@@ -130,7 +130,10 @@ def google_action(token, apply, request=api):
     return {'status': 'submitted', 'property': prop}
 
 
-def yandex_action(token, urls, apply, request=api):
+def yandex_action(token, urls, apply, request=api, *, manage_sitemap=True):
+    if type(manage_sitemap) is not bool:
+        raise ActionError('invalid sitemap mode')
+    allowed_urls(urls)
     uid = request(YANDEX_API + '/user', token, 'OAuth').get('user_id')
     if type(uid) is not int or uid < 1:
         raise ActionError('invalid user')
@@ -140,28 +143,30 @@ def yandex_action(token, urls, apply, request=api):
     if len(hosts) != 1 or hosts[0].get('verified') is not True:
         raise ActionError('verified exact host unavailable')
     base = root + '/' + urllib.parse.quote(hosts[0]['host_id'], safe='')
-    maps = request(base + '/user-added-sitemaps?limit=100', token, 'OAuth')
-    listed = maps.get('sitemaps')
-    count = maps.get('count')
-    if not isinstance(listed, list) or type(count) is not int or count < 0:
-        raise ActionError('invalid sitemap list')
-    present = any(isinstance(item, dict) and item.get('sitemap_url') == MAP for item in listed)
-    if not present and count > len(listed):
-        raise ActionError('sitemap list incomplete; no write')
-    sitemap = 'already_present' if present else 'would_submit'
-    if not present and apply:
-        if SITEMAP_WRITES_PAUSED:
-            raise ActionError('Yandex sitemap writes paused; no submission attempted')
-        try:
-            response = request(base + '/user-added-sitemaps', token, 'OAuth', method='POST', body={'url': MAP})
-            if not isinstance(response, dict) or not isinstance(response.get('sitemap_id'), str) or not response['sitemap_id']:
-                raise ActionError('invalid response; submission outcome unknown')
-            sitemap = 'submitted'
-        except ApiError as exc:
-            if exc.status == 409 and exc.code == 'SITEMAP_ALREADY_ADDED':
-                sitemap = 'already_present'
-            else:
-                raise
+    sitemap = 'not_checked'
+    if manage_sitemap:
+        maps = request(base + '/user-added-sitemaps?limit=100', token, 'OAuth')
+        listed = maps.get('sitemaps')
+        count = maps.get('count')
+        if not isinstance(listed, list) or type(count) is not int or count < 0:
+            raise ActionError('invalid sitemap list')
+        present = any(isinstance(item, dict) and item.get('sitemap_url') == MAP for item in listed)
+        if not present and count > len(listed):
+            raise ActionError('sitemap list incomplete; no write')
+        sitemap = 'already_present' if present else 'would_submit'
+        if not present and apply:
+            if SITEMAP_WRITES_PAUSED:
+                raise ActionError('Yandex sitemap writes paused; no submission attempted')
+            try:
+                response = request(base + '/user-added-sitemaps', token, 'OAuth', method='POST', body={'url': MAP})
+                if not isinstance(response, dict) or not isinstance(response.get('sitemap_id'), str) or not response['sitemap_id']:
+                    raise ActionError('invalid response; submission outcome unknown')
+                sitemap = 'submitted'
+            except ApiError as exc:
+                if exc.status == 409 and exc.code == 'SITEMAP_ALREADY_ADDED':
+                    sitemap = 'already_present'
+                else:
+                    raise
     results = []
     if urls:
         quota = request(base + '/recrawl/quota', token, 'OAuth').get('quota_remainder')
