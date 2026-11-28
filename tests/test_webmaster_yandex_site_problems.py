@@ -25,6 +25,9 @@ class Tests(unittest.TestCase):
         for problems,verified in (({},False),({'ERRORS_IN_SITEMAPS':{'state':'private'}},True),([],True)):
             req,_=self.fake(problems,verified)
             with self.assertRaises(ActionError):d.inspect('x',request=req)
+    def test_sanitized_http_error(self):
+        with mock.patch.dict('os.environ',{'SCM_WM_YANDEX_ACCESS_TOKEN':'secret'},clear=True),mock.patch.object(d,'inspect',side_effect=d.ApiError(504,'secret')),mock.patch('builtins.print') as p:
+            self.assertEqual(d.main(),1);self.assertIn('http=504',str(p.call_args_list));self.assertNotIn('secret',str(p.call_args_list))
     def test_no_leaks(self):
         with mock.patch.dict('os.environ',{'SCM_WM_YANDEX_ACCESS_TOKEN':'secret'},clear=True),mock.patch.object(d,'inspect',side_effect=ValueError('secret')),mock.patch('builtins.print') as p:
             self.assertEqual(d.main(),1);self.assertNotIn('secret',str(p.call_args_list))
