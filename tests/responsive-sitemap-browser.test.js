@@ -31,6 +31,17 @@ test('sitemap pages fit mobile, tablet and desktop viewport without document ove
      if(result.scroll>result.width+1)errors.push(`${file}@${width}: ${result.scroll}px ${result.offenders.join(' | ')} inner=${result.inner.join(' | ')}`);
     }catch(e){errors.push(`${file}@${width}: load failed`);}
    }
+   if(width===320 || width===1440){
+    await page.goto(`${base}/scm-toolkit-guide.html`);
+    assert.equal(await page.locator('[data-wiki-topic]:visible').count(),118);
+    await page.getByLabel('Найти инструмент или задачу').fill('срок окупаемости');
+    assert((await page.locator('[data-wiki-topic]:visible').count())>0);
+    assert.match(await page.locator('#wiki-search-status').innerText(),/Показано тем/);
+    await page.getByLabel('Найти инструмент или задачу').fill('<img src=x>');
+    assert.equal(await page.locator('#wiki-search-empty').isVisible(),true);
+    await page.getByLabel('Найти инструмент или задачу').clear();
+    assert.equal(await page.locator('[data-wiki-topic]:visible').count(),118);
+   }
    await ctx.close();
   }
  }finally{await browser.close();await new Promise(r=>server.close(r));}
