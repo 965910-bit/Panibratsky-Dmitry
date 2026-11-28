@@ -8,7 +8,7 @@ class Response:
  def read(self,*a):return json.dumps({'datasetReference':{'datasetId':'analytics_123'}}).encode()
 class Tests(unittest.TestCase):
  def run_probe(self,project='projects/456',opener=lambda req,timeout:Response()):
-  return p.probe(('a','b','c'),identify=lambda *a,**k:{'property':'properties/123','domain_matches':True,'token':'safe'},read_pages=lambda *a,**k:[{'project':project}],open_url=opener)
+  return p.probe(('a','b','c'),('d','e','f'),refresh=lambda *a:'bq-token',identify=lambda *a,**k:{'property':'properties/123','domain_matches':True,'token':'safe'},read_pages=lambda *a,**k:[{'project':project}],open_url=opener)
  def test_get_target(self):
   def get(req,timeout):
    self.assertEqual(req.get_method(),'GET');self.assertEqual(req.full_url,'https://bigquery.googleapis.com/bigquery/v2/projects/456/datasets/analytics_123');return Response()
