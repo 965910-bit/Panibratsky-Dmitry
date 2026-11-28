@@ -2,11 +2,31 @@
 """Manual Google Search Console connection check. No Search Console writes."""
 import os
 import sys
+from datetime import datetime, timezone
 from urllib.parse import quote
 from webmaster_actions import api, GOOGLE_API, SITE, DOMAIN_PROPERTY, MAP
 from webmaster_after_deploy import refresh_google
 
 class GoogleDiagnosticError(Exception): pass
+
+
+def sitemap_health(item):
+    """Classify conservatively; absent or malformed metadata is not success."""
+    errors=item.get('errors')
+    if isinstance(errors,str) and errors.isascii() and errors.isdigit() and len(errors)<=18:
+        errors=int(errors)
+    if type(errors) is not int or errors<0:return 'unknown'
+    if errors>0:return 'error'
+    pending=item.get('isPending')
+    if pending is True:return 'pending'
+    if pending is not False:return 'unknown'
+    date=item.get('lastDownloaded')
+    try:
+        if not isinstance(date,str):raise ValueError()
+        parsed=datetime.fromisoformat(date.replace('Z','+00:00'))
+        if parsed.tzinfo is None or parsed>datetime.now(timezone.utc):raise ValueError()
+    except ValueError:return 'unknown'
+    return 'healthy'
 
 
 def inspect(client_id, client_secret, refresh_token, *, refresh=refresh_google, request=api):
@@ -36,7 +56,8 @@ def inspect(client_id, client_secret, refresh_token, *, refresh=refresh_google, 
     found=[x for x in maps if x['path']==MAP]
     if len(found)>1:raise GoogleDiagnosticError('ambiguous sitemap')
     return {'status':'connected','property_type':'url_prefix' if prop==SITE else 'domain',
-            'permission':permission,'sitemap':'present' if found else 'not_listed'}
+            'permission':permission,'sitemap':'present' if found else 'not_listed',
+            'sitemap_health':sitemap_health(found[0]) if found else 'missing'}
 
 
 def main():
@@ -46,7 +67,7 @@ def main():
         # Deliberately expose only known classifications, never API data or credentials.
         status=result['status']
         parts=['status='+status]
-        for key in ('property_type','permission','sitemap'):
+        for key in ('property_type','permission','sitemap','sitemap_health'):
             if key in result:parts.append(key+'='+result[key])
         print('::notice title=Google Search Console::'+'; '.join(parts)+'; writes=0')
         return 0 if status=='connected' else 1

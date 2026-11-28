@@ -28,7 +28,7 @@ class Tests(unittest.TestCase):
         request.assert_not_called();refresh.assert_not_called()
     def test_select_exact_prefix_and_present_sitemap(self):
         sites={'siteEntry':[{'siteUrl':g.DOMAIN_PROPERTY,'permissionLevel':'siteOwner'},{'siteUrl':g.SITE,'permissionLevel':'siteFullUser'}]}
-        self.assertEqual(self.run_inspect(sites,{'sitemap':[{'path':g.MAP}]}),{'status':'connected','property_type':'url_prefix','permission':'siteFullUser','sitemap':'present'})
+        self.assertEqual(self.run_inspect(sites,{'sitemap':[{'path':g.MAP}]}),{'status':'connected','property_type':'url_prefix','permission':'siteFullUser','sitemap':'present','sitemap_health':'unknown'})
         self.assertTrue(self.calls[-1][0].endswith('/sites/'+quote(g.SITE,safe='')+'/sitemaps'))
     def test_missing_property_does_not_query_sitemaps(self):
         self.assertEqual(self.run_inspect({'siteEntry':[{'siteUrl':'https://other.example/'}]},{}),{'status':'property_missing'})
@@ -42,6 +42,12 @@ class Tests(unittest.TestCase):
     def test_invalid_data_fails_closed(self):
         for sites,maps in [({'siteEntry':'wrong'},{}),({'siteEntry':[{'siteUrl':g.SITE,'permissionLevel':'mystery'}]},{}),({'siteEntry':[{'siteUrl':g.SITE,'permissionLevel':'siteOwner'}]},{'sitemap':'wrong'}),({'siteEntry':[{'siteUrl':g.SITE,'permissionLevel':'siteOwner'}]*2},{})]:
             with self.assertRaises(g.GoogleDiagnosticError):self.run_inspect(sites,maps)
+    def test_sitemap_health_conservative(self):
+        self.assertEqual(g.sitemap_health({'errors':'2'}),'error')
+        self.assertEqual(g.sitemap_health({'errors':'0','isPending':True}),'pending')
+        self.assertEqual(g.sitemap_health({'errors':'0','isPending':False,'lastDownloaded':'2020-01-01T00:00:00Z'}),'healthy')
+        for item in ({},{'errors':0,'isPending':False},{'errors':'bad'},{'errors':True},{'errors':0,'isPending':False,'lastDownloaded':'2999-01-01T00:00:00Z'}):
+            self.assertEqual(g.sitemap_health(item),'unknown')
     def test_redacts_error(self):
         with mock.patch.dict(os.environ,{'SCM_WM_GOOGLE_CLIENT_ID':'secret'},clear=True),mock.patch.object(g,'inspect',side_effect=ValueError('secret')),mock.patch('builtins.print') as output:
             self.assertEqual(g.main(),1);self.assertNotIn('secret',str(output.call_args_list))
