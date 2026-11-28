@@ -8,6 +8,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 import analytics_private_snapshot_alert as alert
 
 class Tests(unittest.TestCase):
+    def setUp(self):
+        self.print_patch = patch('builtins.print')
+        self.print_patch.start()
+        self.addCleanup(self.print_patch.stop)
+
     def env(self, status='success'):
         return {'GITHUB_EVENT_NAME': 'schedule', 'GITHUB_REF': 'refs/heads/main',
                 'GITHUB_REPOSITORY_ID': '1102759388', 'GITHUB_REPOSITORY': 'a/b',
