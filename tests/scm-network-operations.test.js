@@ -307,6 +307,8 @@ test('vehicle technical control topics are linked and distinguish legal scope fr
     assert.ok(ids.includes(id), id);
     assert.ok(wiki.includes(`href="scm-network-operations.html#${id}"`), id);
   }
+  const planned = wiki.split('<details class="wiki-planned">')[1].split('</details>')[0];
+  for (const id of ['vehicle-legal-scope', 'vehicle-inspection-practice', 'vehicle-maintenance-safety', 'vehicle-fleet-economics', 'vehicle-records']) assert.ok(!planned.includes(`href="scm-network-operations.html#${id}"`), id);
   assert.match(page, /Предыдущий приказ № 296 от 08\.08\.2018 утратил силу/);
   assert.match(page, /не переносите сроки зарубежных правил в РФ/);
   assert.match(page, /показатель не гарантирует наличие подготовленных водителей/);
