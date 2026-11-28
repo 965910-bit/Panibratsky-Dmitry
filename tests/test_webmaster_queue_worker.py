@@ -11,6 +11,7 @@ from webmaster_actions import BASE, PAGES
 
 URLS = [BASE + p for p in list(PAGES)[:3]]
 REV = 'a'*40
+TASK = 'c7fe80c0-36e3-11e6-8b2d-df96aa592c0a'
 
 class WorkerTests(unittest.TestCase):
     def setUp(self):
@@ -23,7 +24,7 @@ class WorkerTests(unittest.TestCase):
     def test_individual_claims_and_batch_cap(self):
         called=[]
         def action(token,urls,apply):
-            called.append((token,urls,apply));return {'recrawl':[{'url':urls[0],'status':'accepted','task_id':'t'+str(len(called))}]}
+            called.append((token,urls,apply));return {'recrawl':[{'url':urls[0],'status':'accepted','task_id':f'00000000-0000-0000-0000-{len(called):012d}'}]}
         result=drain(self.q,'SECRET',limit=2,validate=lambda u:None,action=action)
         self.assertEqual(result['status'],'ok');self.assertEqual(len(called),2)
         self.assertTrue(all(len(item[1]) == 1 and item[2] for item in called))
@@ -55,6 +56,22 @@ class WorkerTests(unittest.TestCase):
     def test_invalid_response_unknown(self):
         result=drain(self.q,'t',validate=lambda u:None,action=lambda *a:{'recrawl':[{'url':'wrong','status':'accepted','task_id':'t'}]})
         self.assertEqual(result['status'],'uncertain')
+    def test_duplicate_response_is_uncertain_and_blocks(self):
+        calls=[]
+        def action(t,u,a):
+            calls.append(u[0]);return {'recrawl':[{'url':u[0],'status':'already_added'}]}
+        result=drain(self.q,'t',validate=lambda u:None,action=action)
+        self.assertEqual(result['status'],'uncertain')
+        self.assertEqual(result['results'][0]['status'],'already_added_unresolved')
+        self.assertEqual(len(calls),1)
+        self.assertEqual(sum(row[3]=='uncertain' for row in self.q.items()),1)
+        self.assertEqual(drain(self.q,'t',validate=lambda u:None,action=action)['status'],'blocked')
+        self.assertEqual(len(calls),1)
+    def test_invalid_task_id_is_uncertain_before_persistence(self):
+        result=drain(self.q,'t',validate=lambda u:None,action=lambda t,u,a:{'recrawl':[{'url':u[0],'status':'accepted','task_id':'not-a-uuid'}]})
+        self.assertEqual(result['status'],'uncertain')
+        self.assertEqual(sum(row[3]=='uncertain' for row in self.q.items()),1)
+        self.assertEqual(self.q.receipts(),[])
     def test_bad_token_or_limit_before_claim(self):
         for token,limit in [('',5),('x\ny',5),('x',6),('x',True)]:
             with self.assertRaises(WorkerError):drain(self.q,token,limit=limit)
@@ -62,7 +79,7 @@ class WorkerTests(unittest.TestCase):
     def test_persistence_failure_propagates_without_retry(self):
         def fail(*args):raise OSError('disk unavailable')
         self.q.finish=fail
-        with self.assertRaises(OSError):drain(self.q,'t',validate=lambda u:None,action=lambda t,u,a:{'recrawl':[{'url':u[0],'status':'accepted','task_id':'t'}]})
+        with self.assertRaises(OSError):drain(self.q,'t',validate=lambda u:None,action=lambda t,u,a:{'recrawl':[{'url':u[0],'status':'accepted','task_id':TASK}]})
         self.assertEqual(sum(row[3]=='in_flight' for row in self.q.items()),1)
 
 if __name__=='__main__':unittest.main()

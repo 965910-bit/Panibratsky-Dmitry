@@ -21,7 +21,7 @@ class Fake:
         if url.endswith('/recrawl/quota'): return {'quota_remainder':self.quota}
         if url.endswith('/recrawl/queue'):
             if self.recrawl_error: raise self.recrawl_error
-            return {'task_id':'task-1','quota_remainder':self.quota-1}
+            return {'task_id':'c7fe80c0-36e3-11e6-8b2d-df96aa592c0a','quota_remainder':self.quota-1}
         return {}
 
 class Tests(unittest.TestCase):
@@ -56,6 +56,15 @@ class Tests(unittest.TestCase):
         self.assertEqual(result['sitemap'],'not_checked')
         self.assertEqual(result['recrawl'][0]['status'],'accepted')
         self.assertFalse(any('user-added-sitemaps' in url for url,_,_ in f.calls))
+        self.assertEqual(sum(method=='POST' for _,method,_ in f.calls),1)
+    def test_recrawl_malformed_task_id_is_ambiguous(self):
+        f=Fake()
+        def req(url,*args,**kwargs):
+            if url.endswith('/recrawl/queue'):
+                f.calls.append((url,kwargs.get('method','GET'),kwargs.get('body')))
+                return {'task_id':'not-a-uuid','quota_remainder':1}
+            return f(url,*args,**kwargs)
+        with self.assertRaises(w.ActionError):w.yandex_action('x',[PAGE],True,req,manage_sitemap=False)
         self.assertEqual(sum(method=='POST' for _,method,_ in f.calls),1)
     def test_recrawl_only_dry_run_and_allowlist(self):
         f=Fake()
