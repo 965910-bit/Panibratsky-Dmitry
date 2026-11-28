@@ -1,0 +1,27 @@
+name: Encrypted GA4 configuration backup
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  backup:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Install encryption library
+        run: python -m pip install 'cryptography==44.0.3'
+      - name: Encrypt old configuration to project issue
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SCM_GA4_CLIENT_ID: ${{ secrets.SCM_GA4_CLIENT_ID }}
+          SCM_GA4_CLIENT_SECRET: ${{ secrets.SCM_GA4_CLIENT_SECRET }}
+          SCM_GA4_REFRESH_TOKEN: ${{ secrets.SCM_GA4_REFRESH_TOKEN }}
+        run: python scripts/analytics_ga4_encrypted_backup.py
