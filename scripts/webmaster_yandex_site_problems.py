@@ -29,7 +29,7 @@ def inspect(token, *, request=api):
         entry=problems.get(code)
         if entry is None: result[code]='NOT_REPORTED'
         elif isinstance(entry,dict) and entry.get('state') in STATES: result[code]=entry['state']
-        else: raise ActionError('invalid state')
+        else: result[code]='UNKNOWN_STATE'
     return result
 
 
@@ -38,8 +38,9 @@ def main():
     try:
         result=inspect(token)
         present=[name for name in CODES if result[name]=='PRESENT']
-        unknown=sum(result[name] in ('UNDEFINED','NOT_REPORTED') for name in CODES)
-        print('::notice title=Yandex site diagnostics::present='+(','.join(present) or 'none')+'; unknown_or_not_reported='+str(unknown))
+        unknown=sum(result[name] in ('UNDEFINED','NOT_REPORTED','UNKNOWN_STATE') for name in CODES)
+        unknown_states=[name for name in CODES if result[name]=='UNKNOWN_STATE']
+        print('::notice title=Yandex site diagnostics::present='+(','.join(present) or 'none')+'; unknown_or_not_reported='+str(unknown)+'; unrecognized_state='+(','.join(unknown_states) or 'none'))
         print('Статусы диагностики не доказывают индексацию.')
         return 0
     except ApiError as exc:
