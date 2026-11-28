@@ -13,7 +13,7 @@ class Fake:
         self.calls.append((url, method, body))
         if url.endswith('/user'): return {'user_id': 12}
         if url.endswith('/hosts'): return {'hosts':[{'ascii_host_url':w.SITE,'host_id':'https:scm-news.ru:443','verified':True}]}
-        if url.endswith('/sites'): return {'siteEntry':[{'siteUrl':w.SITE}]}
+        if url.endswith('/sites'): return {'siteEntry':[{'siteUrl':w.SITE,'permissionLevel':'siteOwner'}]}
         if url.endswith('/sitemaps') and method=='GET': return {'sitemap':[{'path':w.MAP}] if self.sitemap else []}
         if 'user-added-sitemaps?limit=100' in url:
             return {'count':1 if self.sitemap else 0,'sitemaps':[{'sitemap_url':w.MAP}] if self.sitemap else []}
@@ -35,6 +35,14 @@ class Tests(unittest.TestCase):
         self.assertTrue(all(method=='GET' for _,method,_ in f.calls))
         f=Fake();self.assertEqual(w.google_action('x',True,f)['status'],'submitted')
         self.assertEqual([x[1] for x in f.calls],['GET','GET','PUT'])
+    def test_google_invalid_properties_permissions_and_map_do_not_write(self):
+        for sites,maps in (({'siteEntry':'bad'},{}),({'siteEntry':[{'siteUrl':w.SITE,'permissionLevel':'siteRestrictedUser'}]},{}),({'siteEntry':[{'siteUrl':w.SITE,'permissionLevel':'siteOwner'}]},{'sitemap':'bad'}),({'siteEntry':[{'siteUrl':w.SITE,'permissionLevel':'siteOwner'}]*2},{})):
+            calls=[]
+            def req(url,token,scheme,method='GET',body=None):
+                calls.append(method)
+                return sites if url.endswith('/sites') else maps
+            with self.assertRaises(w.ActionError):w.google_action('secret',True,req)
+            self.assertNotIn('PUT',calls)
     @mock.patch.object(w, "SITEMAP_WRITES_PAUSED", False)
     def test_yandex_write_and_quota(self):
         f=Fake(quota=0);r=w.yandex_action('x',[PAGE],True,f)
