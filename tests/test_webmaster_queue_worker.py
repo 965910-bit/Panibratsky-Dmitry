@@ -3,9 +3,10 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from webmaster_queue import Queue
-from webmaster_queue_worker import drain, WorkerError
+from webmaster_queue_worker import drain, WorkerError, recrawl_only
 from webmaster_actions import BASE, PAGES
 
 URLS = [BASE + p for p in list(PAGES)[:3]]
@@ -15,6 +16,10 @@ class WorkerTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.q=Queue(os.path.join(self.temp.name,'q.sqlite'));self.q.enqueue(URLS,REV)
     def tearDown(self):self.q.close();self.temp.cleanup()
+    def test_default_adapter_skips_sitemap_management(self):
+        with mock.patch('webmaster_queue_worker.yandex_action',return_value={'recrawl':[]}) as action:
+            recrawl_only('private',[URLS[0]],True)
+            action.assert_called_once_with('private',[URLS[0]],True,manage_sitemap=False)
     def test_individual_claims_and_batch_cap(self):
         called=[]
         def action(token,urls,apply):
