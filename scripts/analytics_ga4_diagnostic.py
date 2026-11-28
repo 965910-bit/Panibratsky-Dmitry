@@ -57,7 +57,7 @@ def pages(path,field,token,*,fetch=request):
     raise AnalyticsError('pagination limit')
 
 
-def inventory(client_id,secret,refresh_token,*,refresh=refresh_google,fetch=request):
+def inventory(client_id,secret,refresh_token,*,refresh=refresh_google,fetch=request,include_private=False):
     creds=(client_id,secret,refresh_token)
     if not all(isinstance(x,str) and x and '\n' not in x and '\r' not in x for x in creds):raise AnalyticsError('missing credentials')
     token=refresh(*creds)
@@ -88,9 +88,11 @@ def inventory(client_id,secret,refresh_token,*,refresh=refresh_google,fetch=requ
         if not isinstance(name,str) or not name or len(name)>128:raise AnalyticsError('invalid event')
         names.append(name)
     if len(names)!=len(set(names)):raise AnalyticsError('duplicate event')
-    return {'status':'connected','can_edit':can_edit,'domain_matches':domain_ok,
+    result={'status':'connected','can_edit':can_edit,'domain_matches':domain_ok,
             'key_event_count':len(names),'present':[name for name in GOALS if name in names],
             'missing':[name for name in GOALS if name not in names]}
+    if include_private: result.update(property=prop,token=token)
+    return result
 
 
 def main():
