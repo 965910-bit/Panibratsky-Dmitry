@@ -16,6 +16,13 @@ class Tests(unittest.TestCase):
             with self.assertRaises(p.PageSpeedError):p.parse(d)
         d=self.data();d['lighthouseResult']['categories']['performance']['score']=float('nan')
         with self.assertRaises(p.PageSpeedError):p.parse(d)
+    def test_quota_falls_back_to_local_lab_without_field(self):
+        def quota():raise p.PageSpeedError('http_429')
+        local=self.data();local.pop('loadingExperience')
+        result,source=p.measure(remote=quota,local=lambda:local)
+        self.assertEqual(source,'local_lighthouse');self.assertEqual(result['field_lcp'],'unknown')
+        def failure():raise p.PageSpeedError('network_or_response')
+        with self.assertRaises(p.PageSpeedError):p.measure(remote=failure,local=lambda:self.fail('unexpected fallback'))
     def test_guard_before_network(self):
         with patch.dict('os.environ',{'GITHUB_EVENT_NAME':'pull_request'},clear=True),patch.object(p,'request') as req:
             self.assertEqual(p.main(),1);req.assert_not_called()
