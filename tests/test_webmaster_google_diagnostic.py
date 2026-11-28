@@ -48,6 +48,14 @@ class Tests(unittest.TestCase):
         self.assertEqual(g.sitemap_health({'errors':'0','isPending':False,'lastDownloaded':'2020-01-01T00:00:00Z'}),'healthy')
         for item in ({},{'errors':0,'isPending':False},{'errors':'bad'},{'errors':True},{'errors':0,'isPending':False,'lastDownloaded':'2999-01-01T00:00:00Z'}):
             self.assertEqual(g.sitemap_health(item),'unknown')
+    def test_safe_sitemap_metadata(self):
+        from datetime import datetime, timezone
+        now=datetime(2026,11,16,tzinfo=timezone.utc)
+        result=g.sitemap_metadata({'errors':'2','warnings':'3','isPending':False,'lastDownloaded':'2026-11-01T00:00:00Z','private':'secret'},now=now)
+        self.assertEqual(result,{'errors':2,'warnings':3,'pending':'false','download_age':'7_to_30_days'})
+        self.assertNotIn('secret',str(result))
+        invalid=g.sitemap_metadata({'errors':True,'warnings':'-1','isPending':'yes','lastDownloaded':'2999-01-01T00:00:00Z'},now=now)
+        self.assertEqual(invalid,{'errors':None,'warnings':None,'pending':'unknown','download_age':'unknown'})
     def test_redacts_error(self):
         with mock.patch.dict(os.environ,{'SCM_WM_GOOGLE_CLIENT_ID':'secret'},clear=True),mock.patch.object(g,'inspect',side_effect=ValueError('secret')),mock.patch('builtins.print') as output:
             self.assertEqual(g.main(),1);self.assertNotIn('secret',str(output.call_args_list))
