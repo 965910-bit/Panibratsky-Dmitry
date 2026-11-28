@@ -9,16 +9,16 @@ class Tests(unittest.TestCase):
     def test_no_config_no_network(self):
         read=mock.Mock();self.assertEqual(d.inspect('','',read=read),'not_configured');read.assert_not_called()
     def test_present_and_absent(self):
-        def read(entries,pages=1):return lambda *a:{'success':True,'result':entries,'result_info':{'total_pages':pages}}
+        def read(entries):return lambda a,t,p:{'success':True,'result':entries,'result_info':{'page':p,'per_page':100,'count':len(entries)}}
         self.assertEqual(d.inspect(A,'secret',read=read([{'name':'scm-webmaster-queue'}])),'separate_queue_exists')
         self.assertEqual(d.inspect(A,'secret',read=read([{'name':'scm-review'}])),'separate_queue_not_found')
     def test_pagination_and_exact_match(self):
         calls=[]
         def read(a,t,page):
-            calls.append(page);return {'success':True,'result':[{'name':'scm-webmaster-queue-staging' if page==1 else d.NAME}],'result_info':{'total_pages':2}}
+            calls.append(page);entries=[{'name':'scm-webmaster-queue-staging'}]*100 if page==1 else [{'name':d.NAME}];return {'success':True,'result':entries,'result_info':{'page':page,'per_page':100,'count':len(entries)}}
         self.assertEqual(d.inspect(A,'secret',read=read),'separate_queue_exists');self.assertEqual(calls,[1,2])
     def test_invalid_or_incomplete_never_means_absent(self):
-        for data in ({'success':False,'result':[],'result_info':{'total_pages':1}}, {'success':True,'result':[]}, {'success':True,'result':[{}],'result_info':{'total_pages':1}}, {'success':True,'result':[],'result_info':{'total_pages':11}}):
+        for data in ({'success':False,'result':[],'result_info':{'page':1,'per_page':100,'count':0}}, {'success':True,'result':[]}, {'success':True,'result':[{}],'result_info':{'page':1,'per_page':100,'count':1}}, {'success':True,'result':[],'result_info':{'page':2,'per_page':100,'count':0}}):
             with self.assertRaises(d.DiagnosticError):d.inspect(A,'secret',read=lambda *a:data)
     def test_incomplete_credentials_no_network(self):
         read=mock.Mock()
