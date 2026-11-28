@@ -52,6 +52,16 @@ class Tests(unittest.TestCase):
             return f(url,token,**kw)
         with self.assertRaises(TimeoutError):a.sync(REPO,RUN,TOKEN,'failure',call=call)
         self.assertEqual(sum(method=='POST' for _,method in calls),1)
+    def test_separate_templates_never_close_each_others_issue(self):
+        import webmaster_yandex_monitor as m
+        user_issue=bot_issue()
+        f=Fake([user_issue]);self.assertEqual(a.sync(REPO,RUN,TOKEN,'success',call=f,title=m.TITLE,body_template=m.BODY),'clear')
+        self.assertTrue(all(c[1]=='GET' for c in f.calls))
+        f=Fake([user_issue]);self.assertEqual(a.sync(REPO,RUN,TOKEN,'failure',call=f,title=m.TITLE,body_template=m.BODY),'created')
+        created=f.calls[-1][2]
+        bot={'number':45,'title':created['title'],'body':created['body'],'user':{'login':'github-actions[bot]','type':'Bot'}}
+        f=Fake([user_issue,bot]);self.assertEqual(a.sync(REPO,RUN,TOKEN,'success',call=f,title=m.TITLE,body_template=m.BODY),'closed')
+        self.assertEqual(f.calls[-1][0],BASE+'/issues/45')
     def test_bad_credentials_never_printed(self):
         with mock.patch.dict('os.environ',{'GITHUB_TOKEN':TOKEN},clear=True),mock.patch('builtins.print') as p:
             self.assertEqual(a.main(),1);self.assertNotIn(TOKEN,str(p.call_args))

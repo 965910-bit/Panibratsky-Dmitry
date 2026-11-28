@@ -45,7 +45,7 @@ def request(url, token, *, method='GET', body=None):
         raise AlertError('GitHub alert request failed; outcome may be unknown') from None
 
 
-def sync(repo, run_id, token, outcome, *, call=request):
+def sync(repo, run_id, token, outcome, *, call=request, title=TITLE, body_template=BODY):
     if (not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+',repo or '') or
         not re.fullmatch(r'[1-9][0-9]{0,19}',run_id or '') or
         not isinstance(token,str) or not token or '\n' in token or '\r' in token or
@@ -56,7 +56,7 @@ def sync(repo, run_id, token, outcome, *, call=request):
     if not isinstance(metadata,dict) or metadata.get('id') != REPOSITORY_ID or metadata.get('has_issues') is not True:
         raise AlertError('repository identity or issue support not confirmed')
     found=[]
-    body_pattern = re.escape(BODY.format(run='RUN_URL')).replace('RUN_URL',re.escape('https://github.com/'+repo+'/actions/runs/') + r'[1-9][0-9]{0,19}')
+    body_pattern = re.escape(body_template.format(run='RUN_URL')).replace('RUN_URL',re.escape('https://github.com/'+repo+'/actions/runs/') + r'[1-9][0-9]{0,19}')
     for page in range(1,11):
         page_data=call(base+'/issues?state=open&per_page=100&page='+str(page),token)
         if not isinstance(page_data,list) or len(page_data)>100:
@@ -66,7 +66,7 @@ def sync(repo, run_id, token, outcome, *, call=request):
                 continue
             user=issue.get('user')
             body=issue.get('body')
-            if (issue.get('title') == TITLE and isinstance(user,dict) and
+            if (issue.get('title') == title and isinstance(user,dict) and
                 user.get('login') == 'github-actions[bot]' and user.get('type') == 'Bot' and
                 isinstance(body,str) and re.fullmatch(body_pattern,body)):
                 number=issue.get('number')
@@ -81,7 +81,7 @@ def sync(repo, run_id, token, outcome, *, call=request):
         raise AlertError('multiple matching alert issues; no mutation')
     if outcome=='failure' and not found:
         run='https://github.com/'+repo+'/actions/runs/'+run_id
-        call(base+'/issues',token,method='POST',body={'title':TITLE,'body':BODY.format(run=run)})
+        call(base+'/issues',token,method='POST',body={'title':title,'body':body_template.format(run=run)})
         return 'created'
     if outcome=='success' and found:
         call(base+'/issues/'+str(found[0]),token,method='PATCH',body={'state':'closed','state_reason':'completed'})
