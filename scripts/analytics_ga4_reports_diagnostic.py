@@ -25,9 +25,19 @@ def request(prop,token,method,body):
         if not isinstance(data,dict):raise ReportError('invalid_response')
         return data
     except urllib.error.HTTPError as error:
-        # Classify status only. Never log server error bodies, account data or URL.
+        # Expose only documented reason enums; discard descriptions, IDs and URLs.
+        reason='unknown'
+        if error.code==403:
+            try:
+                payload=json.loads(error.read(65537))
+                details=payload.get('error',{}).get('details',[])
+                allowed={'SERVICE_DISABLED','ACCESS_TOKEN_SCOPE_INSUFFICIENT','PERMISSION_DENIED','RATE_LIMIT_EXCEEDED','QUOTA_EXCEEDED','CONSUMER_INVALID'}
+                candidates=[x.get('reason') for x in details if isinstance(x,dict) and x.get('reason') in allowed]
+                if len(set(candidates))==1:reason=candidates[0].lower()
+            except (ValueError,TypeError,AttributeError,OSError):pass
         code=error.code
-        raise ReportError('http_'+str(code) if code in (400,401,403,404,429,500,503) else 'http_other') from None
+        status='http_'+str(code) if code in (400,401,403,404,429,500,503) else 'http_other'
+        raise ReportError(status+'_'+reason if code==403 else status) from None
     except (urllib.error.URLError,TimeoutError,OSError,ValueError):raise ReportError('network_or_response') from None
 
 def inspect(admin_creds,report_creds,*,identify=inventory,refresh=refresh_google,fetch=request):

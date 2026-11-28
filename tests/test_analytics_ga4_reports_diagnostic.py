@@ -1,5 +1,7 @@
 import sys
 import unittest
+import io
+import urllib.error
 from pathlib import Path
 from unittest import mock
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
@@ -22,6 +24,14 @@ class Tests(unittest.TestCase):
     def test_property_and_endpoint_allowlist(self):
         for prop,method in [('https://evil','runReport'),('properties/1','other')]:
             with self.assertRaises(r.ReportError):r.request(prop,'token',method,{})
+    def test_http_reason_allowlisted_and_raw_body_not_exposed(self):
+        payload=b'{"error":{"details":[{"reason":"SERVICE_DISABLED","metadata":{"secret":"private"}}]}}'
+        error=urllib.error.HTTPError('https://private',403,'private',{},io.BytesIO(payload))
+        with mock.patch('urllib.request.build_opener') as opener:
+            opener.return_value.open.side_effect=error
+            with self.assertRaises(r.ReportError) as raised:r.request('properties/123','token','runReport',{})
+        self.assertEqual(raised.exception.stage,'http_403_service_disabled')
+        self.assertNotIn('private',str(raised.exception))
     def test_domain_mismatch_stops_before_report(self):
         def wrong(*a,**kw):return {'property':'properties/123','domain_matches':False}
         fetch=mock.Mock()
