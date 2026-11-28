@@ -4,13 +4,14 @@ const {chromium}=require('playwright-core');
 (async()=>{
  if(process.env.GITHUB_EVENT_NAME!=='workflow_dispatch'||process.env.GITHUB_REF!=='refs/heads/main'||process.env.GITHUB_REPOSITORY_ID!=='1102759388')throw Error('blocked');
  const b=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
- const facts={tag_requested:false,tag_response:'none',tag_request_failed:false,analytics_collection_blocked:false,other_google_request_blocked:false,other_vendor_blocked:false, google_com:false, google_ru:false, google_doubleclick:false, google_ads:false, gtm_other:false, google_other:false, blocked_collect_path:false};
+ const facts={tag_requested:false,tag_response:'none',tag_request_failed:false,analytics_collection_blocked:false,other_google_request_blocked:false,other_vendor_blocked:false, google_com:false, google_ru:false, google_doubleclick:false, google_ads:false, gtm_other:false, google_other:false, blocked_collect_path:false, synthetic_in_blocked_request:false};
  try{
   const ctx=await b.newContext({serviceWorkers:'block'});const page=await ctx.newPage();
   page.on('requestfailed',req=>{const u=new URL(req.url());if(u.hostname==='www.googletagmanager.com'&&u.pathname==='/gtag/js')facts.tag_request_failed=true;});
   page.on('response',response=>{const u=new URL(response.url());if(u.hostname==='www.googletagmanager.com'&&u.pathname==='/gtag/js')facts.tag_response=response.status()===200?'ok':'non_200';});
   await page.route('**/*',route=>{
    const req=route.request(),u=new URL(req.url());
+   if ((u.pathname==='/g/collect'||u.pathname==='/ccm/collect') && (u.searchParams.get('en')==='scm_delivery_test'||/(?:^|[&\n])en=scm_delivery_test(?:&|\n|$)/.test(req.postData()||''))) facts.synthetic_in_blocked_request=true;
    if(u.protocol==='https:'&&u.hostname==='scm-news.ru'&&req.method()==='GET')return route.continue();
    if(u.protocol==='https:'&&u.hostname==='www.googletagmanager.com'&&u.pathname==='/gtag/js'&&req.method()==='GET'){facts.tag_requested=true;return route.continue();}
    if(u.hostname==='google-analytics.com'||u.hostname.endsWith('.google-analytics.com'))facts.analytics_collection_blocked=true;
@@ -29,9 +30,11 @@ const {chromium}=require('playwright-core');
   });
   await page.goto('https://scm-news.ru/',{waitUntil:'domcontentloaded',timeout:45000});
   await page.locator('[data-choice="yes"]').click();
-  await page.waitForTimeout(18000);
+  await page.waitForTimeout(6000);
+  await page.evaluate(()=>window.gtag('event','scm_delivery_test',{debug_mode:true}));
+  await page.waitForTimeout(15000);
   const state=await page.evaluate(()=>({gtag:typeof window.gtag==='function',tag_data:!!window.google_tag_data,queued:Array.isArray(window.dataLayer),choice:localStorage.getItem('scm_analytics_choice_v1')==='yes'}));
   const result={...facts,...state};
-  console.log('::notice title=GA4 tag diagnosis::'+Object.entries(result).map(([k,v])=>k+'='+v).join('; ')+'; no_collection_sent; no_event_tested');
+  console.log('::notice title=GA4 tag diagnosis::'+Object.entries(result).map(([k,v])=>k+'='+v).join('; ')+'; no_collection_sent; synthetic_event_locally_blocked');
  }finally{await b.close();}
 })().catch(()=>{console.error('::error title=GA4 tag diagnosis::browser_or_network_failed; no_collection_sent');process.exitCode=1;});
