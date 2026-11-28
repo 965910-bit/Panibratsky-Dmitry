@@ -6,7 +6,7 @@
   let choice = null;
   try { choice = localStorage.getItem(key); } catch (_) { /* session-only choice */ }
   let started = false;
-  const gaPages = new Set(['/', '/index.html', '/about.html', '/blog.html', '/career.html', '/contact.html', '/experience.html', '/expertise.html', '/prompts.html', '/trends.html']);
+  const gaPages = new Set(['/', '/index.html', '/about.html', '/blog.html', '/career.html', '/contact.html', '/experience.html', '/expertise.html', '/prompts.html', '/trends.html', '/scm-review-questions.html', '/calculators.html', '/inventory-turnover-calculator.html', '/safety-stock-calculator.html', '/reorder-point-calculator.html', '/scm-diagnostic.html']);
   function addScript(url) {
     const script = document.createElement('script');
     script.async = true; script.src = url; document.head.appendChild(script);
@@ -21,8 +21,8 @@
     window.ym.l = Date.now();
     window.ym(108401876, 'init', {webvisor:false, clickmap:false, trackLinks:false, accurateTrackBounce:true, url:pageUrl, referrer:referrer});
     addScript('https://mc.yandex.ru/metrika/tag.js?id=108401876');
-    // GA4 remains limited to pages where it was installed before this change.
-    // Enhanced measurement must still be reviewed in the GA4 property.
+    // GA4 also covers the checklist, calculators and diagnostic after visitor choice.
+    // Stream-wide automatic form interaction collection must remain disabled.
     if (gaPages.has(location.pathname)) {
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
