@@ -106,3 +106,12 @@ test('home provides distinct user channels used by the tracker', () => {
   click('/documents/gerasimov-presentation.pdf','book_excerpt_click');
   assert.deepEqual(calls,[[108401876,'reachGoal','book_excerpt_click'],[108401876,'reachGoal','workbook_excerpt_click']]);
  });
+
+test('book interest has a working link to the existing book section', () => {
+  const html=fs.readFileSync('index.html','utf8');
+  assert.match(html, /<a href="\/#book">Об авторской книге/);
+  assert.match(html, /id="book"/);
+  const {click,calls}=setup();
+  click('/#book');
+  assert.equal(calls[0][3], 'interest_book');
+});
