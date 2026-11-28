@@ -20,6 +20,13 @@ class Tests(unittest.TestCase):
             result=s.run('x/y','private',root,git=lambda *a:A,prepare_queue=prepare)
             self.assertEqual(result['yandex_requests'],0);self.assertFalse(result['persistent'])
             self.assertFalse(os.path.exists(paths[0]));self.assertNotIn('private',str(result))
+    def test_explicit_baseline_only_sha_and_git_not_used(self):
+        with tempfile.TemporaryDirectory() as root:
+            def prepare(queue,repo,token,baseline):
+                self.assertEqual(baseline,A)
+                return {'mode':'prepare_only','blocked':0,'deployment':{'count':0},'pending':[]}
+            s.run('x/y','private',root,baseline=A,git=lambda *a:self.fail('unexpected git'),prepare_queue=prepare)
+            with self.assertRaises(ValueError):s.run('x/y','private',root,baseline='--not-a-sha',prepare_queue=prepare)
     def test_no_run_for_nonmanual_or_nonmain(self):
         for event,ref in [('push','refs/heads/main'),('workflow_dispatch','refs/heads/other')]:
             with mock.patch.dict(os.environ,{'GITHUB_EVENT_NAME':event,'GITHUB_REF':ref},clear=True),mock.patch.object(s,'run') as run,mock.patch('builtins.print'):

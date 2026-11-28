@@ -2,6 +2,11 @@ name: Webmaster queue production preflight simulation
 
 on:
   workflow_dispatch:
+    inputs:
+      baseline:
+        description: 'Optional full ancestor SHA for simulation (default first parent)'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -27,4 +32,5 @@ jobs:
       - name: Simulate queue preparation without Yandex or persistence
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          SIMULATION_BASELINE: ${{ inputs.baseline }}
         run: python scripts/webmaster_queue_simulate.py
