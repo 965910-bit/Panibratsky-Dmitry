@@ -61,7 +61,7 @@ def finish_batch(url,revision,outcome,task_id=None):
         batch.append(('''INSERT INTO wm_receipts(task_id,url,revision)
            SELECT ?,url,sent_revision FROM wm_queue WHERE url=? AND sent_revision=? AND state='in_flight' ''',
            [task_id,url,revision]))
-    state='uncertain' if outcome=='uncertain' else 'pending' if outcome=='quota_exhausted' else 'done'
+    state='uncertain' if outcome in ('uncertain','already_added') else 'pending' if outcome=='quota_exhausted' else 'done'
     batch.append(('''UPDATE wm_queue SET state=CASE WHEN ?='done' AND revision<>? THEN 'pending' ELSE ? END, task_id=?
       WHERE url=? AND sent_revision=? AND state='in_flight' RETURNING url,state''',
       [state,revision,state,task_id,url,revision]))

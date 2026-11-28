@@ -7,6 +7,7 @@ There is no blind retry on ambiguous network errors and no guarantee of indexing
 import argparse
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -18,6 +19,7 @@ from webmaster_readonly import GOOGLE_API, YANDEX_API, SITE, DOMAIN_PROPERTY
 
 MAP = SITE + 'sitemap.xml'
 MAX_URLS = 5
+TASK_ID = re.compile(r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\Z')
 MAX_RESPONSE = 2 * 1024 * 1024
 # The provider currently reports its Sitemap tool as read-only (owner screenshot).
 # Change only after independently confirming recovery and reconciling unknown writes.
@@ -183,7 +185,7 @@ def yandex_action(token, urls, apply, request=api, *, manage_sitemap=True):
             try:
                 response = request(base + '/recrawl/queue', token, 'OAuth', method='POST', body={'url': url})
                 task, remaining = response.get('task_id'), response.get('quota_remainder')
-                if not isinstance(task, str) or not task or type(remaining) is not int or remaining < 0:
+                if not isinstance(task, str) or not TASK_ID.fullmatch(task) or type(remaining) is not int or remaining < 0:
                     raise ActionError('invalid response; submission outcome unknown')
                 results.append({'url': url, 'status': 'accepted', 'task_id': task})
                 quota = remaining

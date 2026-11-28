@@ -6,7 +6,7 @@ storage and select a verified current deployment checkout. This module does not
 provide these guarantees. Do not connect it to ephemeral GitHub runners.
 """
 from indexnow_submit import validate_live
-from webmaster_actions import yandex_action
+from webmaster_actions import yandex_action, TASK_ID
 
 
 class WorkerError(Exception):
@@ -54,11 +54,17 @@ def drain(queue, token, *, limit=5, validate=validate_live, action=recrawl_only)
             if entry.get('url') != url or status not in ('accepted','already_added','quota_exhausted'):
                 raise WorkerError('invalid provider response')
             task = entry.get('task_id') if status == 'accepted' else None
-            if status == 'accepted' and (not isinstance(task,str) or not task or len(task) > 512):
+            if status == 'accepted' and (not isinstance(task,str) or not TASK_ID.fullmatch(task)):
                 raise WorkerError('invalid provider response')
         except Exception:
             queue.finish(url, revision, 'uncertain')
             results.append({'url':url, 'status':'uncertain'})
+            return {'status':'uncertain', 'results':results}
+        # A duplicate only proves some submission exists, not that it covers
+        # this revision. Do not report this generation as done or retry blindly.
+        if status == 'already_added':
+            queue.finish(url, revision, 'uncertain')
+            results.append({'url':url, 'status':'already_added_unresolved'})
             return {'status':'uncertain', 'results':results}
         # Do not catch a persistence failure here: an in-flight claim is safer
         # than reporting success without recording it durably.

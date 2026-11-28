@@ -29,8 +29,11 @@ class QueueTests(unittest.TestCase):
         self.q.enqueue([URL],A);self.q.claim();self.q.finish(URL,A,'uncertain');self.q.enqueue([URL],B)
         self.assertIsNone(self.q.claim());self.q.reconcile(URL,A,True);self.assertEqual(self.q.claim(),(URL,B))
     def test_same_revision_does_not_resubmit_done(self):
-        self.q.enqueue([URL],A);self.q.claim();self.q.finish(URL,A,'already_added');self.q.enqueue([URL],A)
+        self.q.enqueue([URL],A);self.q.claim();self.q.finish(URL,A,'accepted','task');self.q.enqueue([URL],A)
         self.assertIsNone(self.q.claim());self.q.enqueue([URL],B);self.assertEqual(self.q.claim(),(URL,B))
+    def test_duplicate_already_added_is_not_confirmation_of_revision(self):
+        self.q.enqueue([URL],A);self.q.claim();self.q.finish(URL,A,'already_added')
+        self.assertEqual(self.q.items()[0][3],'uncertain');self.assertIsNone(self.q.claim())
     def test_two_connections_cannot_claim_same(self):
         self.q.enqueue([URL],A);other=Queue(self.path)
         try:self.assertEqual(self.q.claim(),(URL,A));self.assertIsNone(other.claim())

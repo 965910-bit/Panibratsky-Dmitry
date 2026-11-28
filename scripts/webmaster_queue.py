@@ -129,7 +129,7 @@ class Queue:
                 if existing and existing != (url, revision):
                     raise QueueError('task id already associated with another submission')
                 self.db.execute('INSERT OR IGNORE INTO recrawl_receipts(task_id,url,revision) VALUES (?,?,?)',(task_id,url,revision))
-            state = ('uncertain' if outcome == 'uncertain' else
+            state = ('uncertain' if outcome in ('uncertain','already_added') else
                      'pending' if outcome == 'quota_exhausted' or row[0] != revision else 'done')
             self.db.execute('UPDATE recrawl SET state=?,task_id=?,updated_at=CURRENT_TIMESTAMP WHERE url=?', (state,task_id,url))
 

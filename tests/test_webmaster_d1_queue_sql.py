@@ -52,6 +52,11 @@ class Tests(unittest.TestCase):
         execute(self.db,d.finish_batch(U,B,'accepted',TASK))
         self.assertEqual(self.db.execute('SELECT state FROM wm_queue').fetchone()[0],'done')
         self.assertEqual(self.db.execute('SELECT task_id,url,revision FROM wm_receipts').fetchone(),(TASK,U,B))
+    def test_already_added_is_unresolved_and_blocks(self):
+        execute(self.db,d.deployment_batch(A,B,[U,V]));url,revision=self.db.execute(d.CLAIM).fetchone();self.db.commit()
+        execute(self.db,d.finish_batch(url,revision,'already_added'))
+        self.assertEqual(self.db.execute('SELECT state FROM wm_queue WHERE url=?',(url,)).fetchone()[0],'uncertain')
+        self.assertEqual(self.db.execute(d.CLAIM).fetchall(),[])
     def test_quota_exhaustion_keeps_pending(self):
         execute(self.db,d.deployment_batch(A,B,[U]));self.db.execute(d.CLAIM).fetchall();self.db.commit()
         execute(self.db,d.finish_batch(U,B,'quota_exhausted'))

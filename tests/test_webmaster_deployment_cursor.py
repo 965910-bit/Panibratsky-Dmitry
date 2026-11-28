@@ -24,7 +24,7 @@ class Tests(unittest.TestCase):
     def test_stale_event_does_not_overwrite(self):
         self.advance(C);r=self.advance(B);self.assertEqual(r['status'],'stale');self.assertEqual(self.q.cursor(),C);self.assertEqual(self.q.items()[0][1],C)
     def test_duplicate_event_does_not_enqueue_again(self):
-        self.advance(B);self.q.claim();self.q.finish(URL,B,'already_added')
+        self.advance(B);self.q.claim();self.q.finish(URL,B,'accepted','task')
         r=self.advance(B,changed=lambda a,b:self.fail('unexpected diff'))
         self.assertEqual(r['count'],0);self.assertEqual(self.q.items()[0][3],'done')
     def test_diverged_or_bad_baseline_fails_without_state(self):
