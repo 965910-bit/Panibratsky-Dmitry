@@ -77,9 +77,9 @@ def inventory(client_id,secret,refresh_token,*,refresh=refresh_google,fetch=requ
             if web.get('measurementId')==MEASUREMENT:
                 parsed=urllib.parse.urlsplit(web.get('defaultUri',''))
                 domain_ok=(parsed.scheme in ('http','https') and parsed.hostname=='scm-news.ru' and not parsed.username and not parsed.password and parsed.port in (None,80,443) and parsed.path in ('','/') and not parsed.query and not parsed.fragment)
-                matches.append((prop,item.get('canEdit'),domain_ok))
+                matches.append((prop,item.get('canEdit'),domain_ok,stream.get('name')))
     if len(matches)!=1:raise AnalyticsError('target stream not uniquely found')
-    prop,can_edit,domain_ok=matches[0]
+    prop,can_edit,domain_ok,stream_name=matches[0]
     if type(can_edit) is not bool:raise AnalyticsError('unknown permission')
     events=pages(prop+'/keyEvents','keyEvents',token,fetch=fetch)
     names=[]
@@ -100,7 +100,9 @@ def inventory(client_id,secret,refresh_token,*,refresh=refresh_google,fetch=requ
             'key_event_count':len(names),'present':[name for name in GOALS if name in names],
             'missing':[name for name in GOALS if name not in names]}
     result.update(counts)
-    if include_private: result.update(property=prop,token=token)
+    if include_private:
+        if not isinstance(stream_name,str) or not re.fullmatch(re.escape(prop)+r'/dataStreams/[1-9][0-9]{0,19}',stream_name):raise AnalyticsError('invalid stream name')
+        result.update(property=prop,token=token,stream=stream_name)
     return result
 
 

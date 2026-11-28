@@ -1,0 +1,28 @@
+name: Weekly Google search performance
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '19 11 * * 1'
+permissions:
+  contents: read
+concurrency:
+  group: google-search-performance
+  cancel-in-progress: false
+jobs:
+  report:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Compare finalized search performance without exposing counts
+        env:
+          SCM_WM_GOOGLE_CLIENT_ID: ${{ secrets.SCM_WM_GOOGLE_CLIENT_ID }}
+          SCM_WM_GOOGLE_CLIENT_SECRET: ${{ secrets.SCM_WM_GOOGLE_CLIENT_SECRET }}
+          SCM_WM_GOOGLE_REFRESH_TOKEN: ${{ secrets.SCM_WM_GOOGLE_REFRESH_TOKEN }}
+        run: python scripts/webmaster_google_performance.py
