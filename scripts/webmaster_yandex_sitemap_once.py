@@ -6,6 +6,7 @@ import re
 import sys
 import indexnow_submit as ix
 from webmaster_actions import ActionError, ApiError, api, yandex_action
+import webmaster_actions
 
 
 def run(repo, gh_token, token, *, git=ix.git, fetch=ix.request, validate=ix.validate_live, action=yandex_action, emit=lambda stage: None):
@@ -58,6 +59,10 @@ def main():
     if (os.environ.get('GITHUB_EVENT_NAME')!='workflow_dispatch' or os.environ.get('GITHUB_REF')!='refs/heads/main'
         or os.environ.get('GITHUB_RUN_ATTEMPT','')!='1'):
         print('Повторный или неподходящий запуск заблокирован.',file=sys.stderr);return 1
+    if webmaster_actions.SITEMAP_WRITES_PAUSED:
+        print('::notice title=Yandex sitemap::paused_provider_read_only')
+        print('Сервис сообщает о режиме чтения. Добавление карты приостановлено; запросов не отправлено.')
+        return 0
     token=os.environ.pop('SCM_WM_YANDEX_ACCESS_TOKEN','')
     try:
         emit=lambda stage: print('::notice title=Yandex sitemap stage::'+stage,flush=True)

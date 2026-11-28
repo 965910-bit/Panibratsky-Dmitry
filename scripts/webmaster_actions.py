@@ -19,6 +19,9 @@ from webmaster_readonly import GOOGLE_API, YANDEX_API, SITE, DOMAIN_PROPERTY
 MAP = SITE + 'sitemap.xml'
 MAX_URLS = 5
 MAX_RESPONSE = 2 * 1024 * 1024
+# The provider currently reports its Sitemap tool as read-only (owner screenshot).
+# Change only after independently confirming recovery and reconciling unknown writes.
+SITEMAP_WRITES_PAUSED = True
 
 
 class ActionError(Exception):
@@ -147,6 +150,8 @@ def yandex_action(token, urls, apply, request=api):
         raise ActionError('sitemap list incomplete; no write')
     sitemap = 'already_present' if present else 'would_submit'
     if not present and apply:
+        if SITEMAP_WRITES_PAUSED:
+            raise ActionError('Yandex sitemap writes paused; no submission attempted')
         try:
             response = request(base + '/user-added-sitemaps', token, 'OAuth', method='POST', body={'url': MAP})
             if not isinstance(response, dict) or not isinstance(response.get('sitemap_id'), str) or not response['sitemap_id']:
