@@ -1,0 +1,41 @@
+name: One-off GA4 synthetic delivery check
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: analytics-ga4-delivery-test
+  cancel-in-progress: false
+jobs:
+  delivery:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Baseline and ensure test event is not a key event
+        env: &credentials
+          SCM_GA4_CLIENT_ID: ${{ secrets.SCM_GA4_CLIENT_ID }}
+          SCM_GA4_CLIENT_SECRET: ${{ secrets.SCM_GA4_CLIENT_SECRET }}
+          SCM_GA4_REFRESH_TOKEN: ${{ secrets.SCM_GA4_REFRESH_TOKEN }}
+          SCM_GA4_REPORT_CLIENT_ID: ${{ secrets.SCM_GA4_REPORT_CLIENT_ID }}
+          SCM_GA4_REPORT_CLIENT_SECRET: ${{ secrets.SCM_GA4_REPORT_CLIENT_SECRET }}
+          SCM_GA4_REPORT_REFRESH_TOKEN: ${{ secrets.SCM_GA4_REPORT_REFRESH_TOKEN }}
+        run: python scripts/analytics_ga4_delivery_report.py before
+      - name: Send one synthetic event from the published site
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node scripts/analytics_ga4_delivery_browser.cjs
+      - name: Check realtime report without exposing counts
+        env: *credentials
+        run: python scripts/analytics_ga4_delivery_report.py after
