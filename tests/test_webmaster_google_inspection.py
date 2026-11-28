@@ -28,6 +28,20 @@ class Tests(unittest.TestCase):
         call.assert_not_called()
     def test_rejects_untrusted_inputs_before_network(self):
         with self.assertRaises(g.InspectionError):g.request('secret','https://other/','anything')
+    def test_sample_alert_failure_healthy_unknown_and_order(self):
+        def pages(verdict='PASS',coverage='Submitted and indexed'):
+            return [{'url':u,'verdict':verdict,'coverage':coverage} for u in g.URLS]
+        alert=mock.Mock(return_value='created')
+        bad=pages();bad[1]['verdict']='NEUTRAL';bad[1]['coverage']='URL is unknown to Google'
+        self.assertEqual(g.sync_sample_alert(bad,'a/b','1','token',alert=alert),'created')
+        self.assertEqual(alert.call_args.args[3],'failure');alert.reset_mock()
+        g.sync_sample_alert(pages(),'a/b','1','token',alert=alert)
+        self.assertEqual(alert.call_args.args[3],'success');alert.reset_mock()
+        self.assertEqual(g.sync_sample_alert(pages()[:3],'a/b','1','token',alert=alert),'unknown')
+        alert.assert_not_called()
+        mixed=pages();mixed[1]['verdict']='UNKNOWN'
+        self.assertEqual(g.sync_sample_alert(mixed,'a/b','1','token',alert=alert),'unknown');alert.assert_not_called()
+        with self.assertRaises(g.InspectionError):g.sync_sample_alert(list(reversed(pages())),'a/b','1','token',alert=alert)
     def test_entrypoint_guards(self):
         with mock.patch.dict(os.environ,{},clear=True),mock.patch.object(g,'inspect_pages') as check:
             self.assertEqual(g.main(),1);check.assert_not_called()

@@ -1,8 +1,11 @@
 name: Google indexed-page inspection
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '37 10 * * 1'
 permissions:
   contents: read
+  issues: write
 concurrency:
   group: google-indexed-page-inspection
   cancel-in-progress: false
@@ -20,6 +23,7 @@ jobs:
           python-version: '3.12'
       - name: Inspect five indexed versions without requesting indexing
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           SCM_WM_GOOGLE_CLIENT_ID: ${{ secrets.SCM_WM_GOOGLE_CLIENT_ID }}
           SCM_WM_GOOGLE_CLIENT_SECRET: ${{ secrets.SCM_WM_GOOGLE_CLIENT_SECRET }}
           SCM_WM_GOOGLE_REFRESH_TOKEN: ${{ secrets.SCM_WM_GOOGLE_REFRESH_TOKEN }}
