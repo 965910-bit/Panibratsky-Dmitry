@@ -10,7 +10,7 @@ def inspect(admin,report,*,identify=inventory,refresh=refresh_google,fetch=reque
  info=identify(*admin,include_private=True);prop=info.get('property','')
  if not info.get('domain_matches') or not isinstance(prop,str) or not PROPERTY.fullmatch(prop):raise Error('identity')
  if not all(isinstance(x,str) and x and '\n' not in x and '\r' not in x for x in report):raise Error('credentials')
- body={'dateRanges':[{'startDate':'28daysAgo','endDate':'yesterday'}],'dimensions':[{'name':'eventName'}],'metrics':[{'name':'eventCount'}], 'dimensionFilter':{'filter':{'fieldName':'eventName','stringFilter':{'matchType':'EXACT','value':'scm_delivery_test'}}},'limit':'2'}
+ body={'dateRanges':[{'startDate':'28daysAgo','endDate':'today'}],'dimensions':[{'name':'eventName'}],'metrics':[{'name':'eventCount'}], 'dimensionFilter':{'filter':{'fieldName':'eventName','stringFilter':{'matchType':'EXACT','value':'scm_delivery_test'}}},'limit':'2'}
  result=fetch(prop,refresh(*report),'runReport',body);rows=result.get('rows',[]);metadata=result.get('metadata',{})
  if not isinstance(rows,list) or len(rows)>1 or not isinstance(metadata,dict):raise Error('rows')
  threshold=metadata.get('subjectToThresholding',False);sampling=metadata.get('samplingMetadatas',[])
@@ -29,7 +29,7 @@ def main():
  def credentials(prefix):return [os.environ.pop(prefix+n,'') for n in ('CLIENT_ID','CLIENT_SECRET','REFRESH_TOKEN')]
  try:
   seen,threshold,sampled=inspect(credentials('SCM_GA4_'),credentials('SCM_GA4_REPORT_'))
-  print(f'::notice title=GA4 synthetic historical report::synthetic_observed={str(seen).lower()}; thresholded={str(threshold).lower()}; sampled={str(sampled).lower()}; missing_is_not_zero; no_event_sent; actual_goals_unverified');return 0
+  print(f'::notice title=GA4 synthetic historical report::synthetic_observed={str(seen).lower()}; thresholded={str(threshold).lower()}; sampled={str(sampled).lower()}; includes_today_partial; missing_is_not_zero; no_event_sent; actual_goals_unverified');return 0
  except Exception:
   print('::error title=GA4 synthetic historical report::read_failed; no_event_sent',file=sys.stderr);return 1
 if __name__=='__main__':sys.exit(main())
