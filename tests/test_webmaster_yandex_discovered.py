@@ -17,8 +17,8 @@ class Tests(unittest.TestCase):
             raise AssertionError('unexpected')
         return request,calls
     def test_found_and_read_only(self):
-        req,calls=self.fake([{'sitemap_url':MAP,'errors_count':0,'urls_count':37,'sources':['ROBOTS_TXT','untrusted'], 'last_access_date':'date'}])
-        self.assertEqual(d.inspect('secret',request=req),{'state':'found','errors':0,'urls':37,'sources':['ROBOTS_TXT'],'accessed':True})
+        req,calls=self.fake([{'sitemap_url':MAP,'errors_count':0,'urls_count':37,'sources':['ROBOTS_TXT','untrusted'], 'last_access_date':'2025-01-02T00:00:00,000+0300'}])
+        self.assertEqual(d.inspect('secret',request=req),{'state':'found','errors':0,'urls':37,'sources':['ROBOTS_TXT'],'access_date':'2025-01-02'})
         self.assertEqual(calls,['GET']*3)
     def test_missing_first_page_not_global_absence(self):
         req,_=self.fake([]);self.assertEqual(d.inspect('x',request=req),{'state':'not_found_in_first_page'})
