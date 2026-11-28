@@ -39,6 +39,14 @@ class Tests(unittest.TestCase):
         f=Fake(quota=0);r=w.yandex_action('x',[PAGE],True,f)
         self.assertEqual(r['sitemap'],'submitted');self.assertEqual(r['recrawl'][0]['status'],'quota_exhausted')
         self.assertFalse(any(u.endswith('/recrawl/queue') for u,_,_ in f.calls))
+    def test_yandex_sitemap_missing_id_is_unknown_not_success(self):
+        f=Fake()
+        def req(url,*a,**kw):
+            if url.endswith('/user-added-sitemaps') and kw.get('method') == 'POST':
+                return {}
+            return f(url,*a,**kw)
+        with self.assertRaises(w.ActionError): w.yandex_action('x',[],True,req)
+
     def test_already_added_and_quota_errors(self):
         for code,status,expected in [('URL_ALREADY_ADDED',409,'already_added'),('QUOTA_EXCEEDED',429,'quota_exhausted')]:
             f=Fake(sitemap=True,recrawl_error=w.ApiError(status,code));r=w.yandex_action('x',[PAGE],True,f)

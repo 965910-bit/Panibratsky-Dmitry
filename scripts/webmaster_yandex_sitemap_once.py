@@ -5,7 +5,7 @@ import os
 import re
 import sys
 import indexnow_submit as ix
-from webmaster_actions import ActionError, ApiError, yandex_action
+from webmaster_actions import ActionError, ApiError, api, yandex_action
 
 
 def run(repo, gh_token, token, *, git=ix.git, fetch=ix.request, validate=ix.validate_live, action=yandex_action, emit=lambda stage: None):
@@ -36,13 +36,33 @@ def run(repo, gh_token, token, *, git=ix.git, fetch=ix.request, validate=ix.vali
     return result['sitemap']
 
 
+def observed_action(token, urls, apply, *, emit, request=api):
+    """Emit fixed operation names, never endpoint URLs, response bodies or credentials."""
+    def observed(url, credential, scheme, method='GET', body=None):
+        if method == 'GET' and url.endswith('/user'):
+            stage = 'read_user'
+        elif method == 'GET' and url.endswith('/hosts'):
+            stage = 'read_hosts'
+        elif method == 'GET' and url.endswith('/user-added-sitemaps?limit=100'):
+            stage = 'read_sitemaps'
+        elif method == 'POST' and url.endswith('/user-added-sitemaps'):
+            stage = 'submit_sitemap'
+        else:
+            raise ActionError('unexpected provider operation')
+        emit(stage)
+        return request(url, credential, scheme, method=method, body=body)
+    return yandex_action(token, urls, apply, request=observed)
+
+
 def main():
     if (os.environ.get('GITHUB_EVENT_NAME')!='workflow_dispatch' or os.environ.get('GITHUB_REF')!='refs/heads/main'
         or os.environ.get('GITHUB_RUN_ATTEMPT','')!='1'):
         print('Повторный или неподходящий запуск заблокирован.',file=sys.stderr);return 1
     token=os.environ.pop('SCM_WM_YANDEX_ACCESS_TOKEN','')
     try:
-        outcome=run(os.environ.get('GITHUB_REPOSITORY',''),os.environ.get('GITHUB_TOKEN',''),token, emit=lambda stage: print('::notice title=Yandex sitemap stage::'+stage,flush=True))
+        emit=lambda stage: print('::notice title=Yandex sitemap stage::'+stage,flush=True)
+        action=lambda t, urls, apply: observed_action(t, urls, apply, emit=emit)
+        outcome=run(os.environ.get('GITHUB_REPOSITORY',''),os.environ.get('GITHUB_TOKEN',''),token, action=action, emit=emit)
         print('::notice title=Yandex sitemap::'+outcome)
         print('Заявка на обработку карты не гарантирует индексацию.')
         return 0
