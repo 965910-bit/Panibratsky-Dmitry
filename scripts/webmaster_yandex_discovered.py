@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Read whether Yandex robots detected the fixed sitemap; never write."""
 import os
+import re
 import sys
 import urllib.parse
 from webmaster_actions import ActionError, YANDEX_API, SITE, MAP, api
@@ -35,7 +36,9 @@ def inspect(token, *, request=api):
         not isinstance(sources, list) or not all(isinstance(s, str) for s in sources)):
         raise ActionError('invalid sitemap information')
     known = sorted(set(s for s in sources if s in ('ROBOTS_TXT', 'WEBMASTER', 'INDEX_SITEMAP')))
-    return {'state': 'found', 'errors': errors, 'urls': urls, 'sources': known, 'accessed': bool(item.get('last_access_date'))}
+    raw_date = item.get('last_access_date')
+    date = raw_date[:10] if isinstance(raw_date, str) and re.match(r'^[0-9]{4}-[0-9]{2}-[0-9]{2}T', raw_date) else 'unknown'
+    return {'state': 'found', 'errors': errors, 'urls': urls, 'sources': known, 'access_date': date}
 
 
 def main():
@@ -43,7 +46,7 @@ def main():
     try:
         result = inspect(token)
         if result['state'] == 'found':
-            print('::notice title=Yandex robot sitemap::found; errors='+str(result['errors'])+'; urls='+str(result['urls'])+'; sources='+(','.join(result['sources']) or 'unknown')+'; accessed='+str(result['accessed']).lower())
+            print('::notice title=Yandex robot sitemap::found; errors='+str(result['errors'])+'; urls='+str(result['urls'])+'; sources='+(','.join(result['sources']) or 'unknown')+'; access_date='+result['access_date'])
         else:
             print('::notice title=Yandex robot sitemap::not_found_in_first_page')
         print('Наличие карты у робота не гарантирует индексацию страниц.')
