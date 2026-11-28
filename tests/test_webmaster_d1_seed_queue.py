@@ -71,8 +71,13 @@ class Tests(unittest.TestCase):
         cf=mock.Mock()
         with self.assertRaises(s.SeedError):self.run_seed(cf=cf,locate_db=lambda a,t,fetch:'https://evil.test/query')
         cf.assert_not_called()
+    def test_production_entrypoint_blocked_before_credentials_or_network(self):
+        with mock.patch.object(s, 'seed') as seed, mock.patch('builtins.print') as output:
+            self.assertEqual(s.main(), 1)
+            seed.assert_not_called()
+            self.assertIn('rest_batch_unverified_no_seed', str(output.call_args_list))
     def test_error_redacted(self):
         env={'GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_REF':'refs/heads/main','GITHUB_RUN_ATTEMPT':'1','GITHUB_REPOSITORY_ID':'1102759388','CONFIRMATION':'SEED_VERIFIED_QUEUE','CLOUDFLARE_ACCOUNT_ID':A,'CLOUDFLARE_API_TOKEN':'secret','GITHUB_TOKEN':'github-secret'}
-        with mock.patch.dict(os.environ,env,clear=True),mock.patch.object(s,'seed',side_effect=s.UnknownOutcome('secret')),mock.patch('builtins.print') as p:
+        with mock.patch.object(s,'REST_BATCH_VERIFIED',True),mock.patch.dict(os.environ,env,clear=True),mock.patch.object(s,'seed',side_effect=s.UnknownOutcome('secret')),mock.patch('builtins.print') as p:
             self.assertEqual(s.main(),1);self.assertNotIn('secret',str(p.call_args_list));self.assertNotIn(A,str(p.call_args_list))
 if __name__=='__main__':unittest.main()
