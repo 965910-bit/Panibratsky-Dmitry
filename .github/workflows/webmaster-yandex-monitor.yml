@@ -26,20 +26,33 @@ jobs:
         with:
           python-version: '3.12'
       - name: Check connection, sitemap and quota without Yandex writes
+        id: access
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SCM_WM_YANDEX_ACCESS_TOKEN: ${{ secrets.SCM_WM_YANDEX_ACCESS_TOKEN }}
         run: python scripts/webmaster_yandex_monitor.py
       - name: Read robot-discovered sitemap information
+        id: sitemap
         env:
           SCM_WM_YANDEX_ACCESS_TOKEN: ${{ secrets.SCM_WM_YANDEX_ACCESS_TOKEN }}
         run: python scripts/webmaster_yandex_discovered.py
       - name: Read Yandex site diagnostic statuses
+        id: diagnostics
         env:
           SCM_WM_YANDEX_ACCESS_TOKEN: ${{ secrets.SCM_WM_YANDEX_ACCESS_TOKEN }}
         run: python scripts/webmaster_yandex_site_problems.py
       - name: Track confirmed Yandex sitemap and description problems
+        id: issues
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SCM_WM_YANDEX_ACCESS_TOKEN: ${{ secrets.SCM_WM_YANDEX_ACCESS_TOKEN }}
         run: python scripts/webmaster_yandex_issue_health.py
+      - name: Alert if any monitoring stage failed
+        if: ${{ always() && !cancelled() }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ACCESS_OUTCOME: ${{ steps.access.outcome }}
+          SITEMAP_OUTCOME: ${{ steps.sitemap.outcome }}
+          DIAGNOSTICS_OUTCOME: ${{ steps.diagnostics.outcome }}
+          ISSUES_OUTCOME: ${{ steps.issues.outcome }}
+        run: python scripts/webmaster_yandex_pipeline_alert.py
