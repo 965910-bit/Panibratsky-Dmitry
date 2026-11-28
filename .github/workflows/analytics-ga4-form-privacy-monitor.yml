@@ -28,3 +28,11 @@ jobs:
           SCM_GA4_CLIENT_SECRET: ${{ secrets.SCM_GA4_CLIENT_SECRET }}
           SCM_GA4_REFRESH_TOKEN: ${{ secrets.SCM_GA4_REFRESH_TOKEN }}
         run: python scripts/analytics_ga4_form_privacy_monitor.py
+      - name: Check automatic search and outbound settings without changes
+        if: ${{ always() && !cancelled() }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SCM_GA4_CLIENT_ID: ${{ secrets.SCM_GA4_CLIENT_ID }}
+          SCM_GA4_CLIENT_SECRET: ${{ secrets.SCM_GA4_CLIENT_SECRET }}
+          SCM_GA4_REFRESH_TOKEN: ${{ secrets.SCM_GA4_REFRESH_TOKEN }}
+        run: python scripts/analytics_ga4_search_outbound_monitor.py
