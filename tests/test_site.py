@@ -128,8 +128,7 @@ class SiteTests(unittest.TestCase):
 
     def test_wiki_planned_material_is_not_claimed_as_published(self):
         text = (ROOT / 'wiki.html').read_text(encoding='utf-8')
-        self.assertGreater(text.count('class="wiki-article-card"'), 0)
-        self.assertIn('не опубликованные статьи', text)
+        self.assertIn('Сейчас запланированных тем нет.', text)
         self.assertIn('<details class="wiki-planned">', text)
         self.assertIn('href="scm-encyclopedia.html"', text)
         self.assertEqual(text.count('class="wiki-article-card"'), text.count('Материал готовится к публикации.'))
