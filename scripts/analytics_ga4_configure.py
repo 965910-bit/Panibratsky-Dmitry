@@ -35,13 +35,15 @@ def create(prop, token, name):
     data=json.loads(raw)
     if not isinstance(data,dict) or data.get('eventName') != name: raise AnalyticsError('unconfirmed response')
 
-def configure(creds, *, inspect=inventory, post=create):
+def configure(creds, *, inspect=inventory, post=create, targets=PRIORITY):
+    if not isinstance(targets,tuple) or len(set(targets))!=len(targets) or any(n not in GOALS for n in targets):
+        raise AnalyticsError('invalid target list')
     initial=inspect(*creds, include_private=True)
     if not initial['can_edit'] or not initial['domain_matches']:
         raise AnalyticsError('identity or permissions not verified')
     prop=initial['property']; created=[]
     # Recheck state before each write: never overwrite or remove other goals.
-    for name in PRIORITY:
+    for name in targets:
         state=inspect(*creds, include_private=True)
         if state['property']!=prop or not state['can_edit'] or not state['domain_matches']:
             raise AnalyticsError('identity or permissions changed')

@@ -18,6 +18,15 @@ class ConfigureTests(unittest.TestCase):
         self.assertEqual(len(r['created']),21);self.assertEqual(len(r['present']),23);self.assertEqual(len(r['missing']),7)
         self.assertEqual(c.configure(('a','b','c'),inspect=self.inspect,post=self.post)['created'],[])
         self.assertEqual(len(self.posts),21)
+    def test_subset_only_and_no_unknown_previous_goal(self):
+        targets=('interest_checklist','interest_guides','interest_articles')
+        result=c.configure(('a','b','c'),inspect=self.inspect,post=self.post,targets=targets)
+        self.assertEqual(result['created'],list(targets))
+        self.assertNotIn('interest_book',self.posts)
+    def test_invalid_or_duplicate_target_list_fails_closed(self):
+        for targets in (('other',),('interest_book','interest_book'),['interest_book']):
+            with self.assertRaises(d.AnalyticsError):c.configure(('a','b','c'),inspect=self.inspect,post=self.post,targets=targets)
+        self.assertEqual(self.posts,[])
     def test_wrong_domain_or_rights_stops(self):
         for field in ('domain_matches','can_edit'):
             def bad(*a,**kw):
