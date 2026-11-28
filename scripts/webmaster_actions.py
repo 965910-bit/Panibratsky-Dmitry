@@ -117,14 +117,27 @@ def allowed_urls(urls):
 
 
 def google_action(token, apply, request=api):
-    entries = request(GOOGLE_API + '/sites', token, 'Bearer').get('siteEntry', [])
-    properties = [x.get('siteUrl') for x in entries if isinstance(x, dict)]
-    prop = next((s for s in (SITE, DOMAIN_PROPERTY) if s in properties), None)
-    if prop is None:
+    response = request(GOOGLE_API + '/sites', token, 'Bearer')
+    entries = response.get('siteEntry', []) if isinstance(response,dict) else None
+    if not isinstance(entries,list) or any(not isinstance(x,dict) or not isinstance(x.get('siteUrl'),str) for x in entries):
+        raise ActionError('invalid Google properties')
+    matching = [x for x in entries if x['siteUrl'] in (SITE,DOMAIN_PROPERTY)]
+    if len({x['siteUrl'] for x in matching}) != len(matching):
+        raise ActionError('ambiguous Google properties')
+    selected = next((x for x in matching if x['siteUrl']==SITE),None)
+    if selected is None:
+        selected = next((x for x in matching if x['siteUrl']==DOMAIN_PROPERTY),None)
+    if selected is None:
         raise ActionError('Google property missing')
+    if selected.get('permissionLevel') not in ('siteOwner','siteFullUser'):
+        raise ActionError('Google property lacks full permission')
+    prop = selected['siteUrl']
     base = GOOGLE_API + '/sites/' + urllib.parse.quote(prop, safe='')
-    maps = request(base + '/sitemaps', token, 'Bearer').get('sitemap', [])
-    if any(isinstance(item, dict) and item.get('path') == MAP for item in maps):
+    response = request(base + '/sitemaps', token, 'Bearer')
+    maps = response.get('sitemap', []) if isinstance(response,dict) else None
+    if not isinstance(maps,list) or any(not isinstance(x,dict) or not isinstance(x.get('path'),str) for x in maps):
+        raise ActionError('invalid Google sitemap list')
+    if any(item['path'] == MAP for item in maps):
         return {'status': 'already_present', 'property': prop}
     if not apply:
         return {'status': 'would_submit', 'property': prop}
