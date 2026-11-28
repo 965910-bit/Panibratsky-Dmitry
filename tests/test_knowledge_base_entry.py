@@ -10,7 +10,7 @@ class KnowledgeBaseEntryTests(unittest.TestCase):
         wiki = (ROOT / 'wiki.html').read_text(encoding='utf-8')
         home = (ROOT / 'index.html').read_text(encoding='utf-8')
         self.assertIn('<h1>База знаний по логистике и цепям поставок</h1>', wiki)
-        self.assertIn('не опубликованные статьи', wiki)
+        self.assertIn('Сейчас запланированных тем нет.', wiki)
         self.assertIn('<a href="wiki.html">База знаний</a>', home)
         self.assertIn('class="button button-secondary hero-knowledge-link" href="wiki.html"', home)
         self.assertIn('href="wiki.html" class="resource-card resource-card-knowledge"', home)
