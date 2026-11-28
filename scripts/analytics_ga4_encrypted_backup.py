@@ -3,6 +3,7 @@
 import base64
 import json
 import os
+import re
 import sys
 from pathlib import Path
 from datetime import datetime, timezone
@@ -28,7 +29,9 @@ def encrypt(data, public_key=PUBLIC_KEY):
 
 
 def backup(creds, repo, token, *, find=inventory, list_pages=pages, seal=encrypt, post=request):
-    if repo!='965910-bit/Panibratsky-Dmitry' or not token or '\n' in token or '\r' in token:raise AnalyticsError('invalid target')
+    if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+',repo or '') or not token or '\n' in token or '\r' in token:raise AnalyticsError('invalid target')
+    metadata=post('https://api.github.com/repos/'+repo,token)
+    if not isinstance(metadata,dict) or metadata.get('id')!=1102759388:raise AnalyticsError('repository identity mismatch')
     info=find(*creds,include_private=True)
     prop=info.get('property')
     if not info.get('domain_matches') or not info.get('can_edit') or not isinstance(prop,str) or not PROPERTY.fullmatch(prop):raise AnalyticsError('identity mismatch')
