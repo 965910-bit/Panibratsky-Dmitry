@@ -20,4 +20,7 @@ jobs:
           SCM_GA4_CLIENT_ID: ${{ secrets.SCM_GA4_CLIENT_ID }}
           SCM_GA4_CLIENT_SECRET: ${{ secrets.SCM_GA4_CLIENT_SECRET }}
           SCM_GA4_REFRESH_TOKEN: ${{ secrets.SCM_GA4_REFRESH_TOKEN }}
+          SCM_BQ_READ_CLIENT_ID: ${{ secrets.SCM_BQ_READ_CLIENT_ID }}
+          SCM_BQ_READ_CLIENT_SECRET: ${{ secrets.SCM_BQ_READ_CLIENT_SECRET }}
+          SCM_BQ_READ_REFRESH_TOKEN: ${{ secrets.SCM_BQ_READ_REFRESH_TOKEN }}
         run: python scripts/analytics_bigquery_dataset_probe.py
