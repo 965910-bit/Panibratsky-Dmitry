@@ -37,3 +37,9 @@ jobs:
           SCM_WM_GOOGLE_CLIENT_SECRET: ${{ secrets.SCM_WM_GOOGLE_CLIENT_SECRET }}
           SCM_WM_GOOGLE_REFRESH_TOKEN: ${{ secrets.SCM_WM_GOOGLE_REFRESH_TOKEN }}
         run: python scripts/analytics_private_snapshot.py
+      - name: Alert on failed report generation or publication
+        if: ${{ always() && !cancelled() }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SNAPSHOT_JOB_STATUS: ${{ job.status }}
+        run: python scripts/analytics_private_snapshot_alert.py
