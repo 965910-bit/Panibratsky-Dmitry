@@ -1,9 +1,14 @@
 name: Private promotion snapshot
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '23 10 * * 1'
 permissions:
   contents: read
   issues: write
+concurrency:
+  group: analytics-private-snapshot
+  cancel-in-progress: false
 jobs:
   snapshot:
     if: github.ref == 'refs/heads/main'
