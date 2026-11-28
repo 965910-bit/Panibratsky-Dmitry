@@ -25,6 +25,9 @@ class Tests(unittest.TestCase):
         for account,token in ((A,''),('','x'),('bad','x'),(A,'x\ny')):
             with self.assertRaises(d.DiagnosticError):d.inspect(account,token,read=read)
         read.assert_not_called()
+    def test_http_status_sanitized(self):
+        with mock.patch.dict('os.environ',{'CLOUDFLARE_ACCOUNT_ID':A,'CLOUDFLARE_API_TOKEN':'secret'},clear=True),mock.patch.object(d,'inspect',side_effect=d.HttpStatus(403)),mock.patch('builtins.print') as p:
+            self.assertEqual(d.main(),1);self.assertIn('http=403',str(p.call_args_list));self.assertNotIn('secret',str(p.call_args_list));self.assertNotIn(A,str(p.call_args_list))
     def test_safe_error_output(self):
         with mock.patch.dict('os.environ',{'CLOUDFLARE_ACCOUNT_ID':A,'CLOUDFLARE_API_TOKEN':'secret'},clear=True),mock.patch.object(d,'inspect',side_effect=Exception('secret')),mock.patch('builtins.print') as p:
             self.assertEqual(d.main(),1);self.assertNotIn('secret',str(p.call_args_list));self.assertNotIn(A,str(p.call_args_list))
