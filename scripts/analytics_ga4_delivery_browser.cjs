@@ -10,12 +10,12 @@ const {chromium}=require('playwright-core');
   const page=await ctx.newPage();
   await page.route('**/*',route=>{
    const u=new URL(route.request().url());
-   if (u.protocol==='https:' && ['scm-news.ru','www.googletagmanager.com','www.google-analytics.com','region1.google-analytics.com'].includes(u.hostname))return route.continue();
+   if (u.protocol==='https:' && (['scm-news.ru','www.googletagmanager.com','www.google-analytics.com','region1.google-analytics.com'].includes(u.hostname) || (['www.google.com','region1.google.com'].includes(u.hostname) && ['/g/collect','/ccm/collect'].includes(u.pathname))))return route.continue();
    return route.abort();
   });
   page.on('response',response=>{
    const u=new URL(response.url());
-   if ((u.hostname==='www.google-analytics.com'||u.hostname==='region1.google-analytics.com') && u.pathname==='/g/collect' && response.status()>=200 && response.status()<300)collect=true;
+   if ((['www.google-analytics.com','region1.google-analytics.com','www.google.com','region1.google.com'].includes(u.hostname)) && u.pathname==='/g/collect' && response.status()>=200 && response.status()<300)collect=true;
   });
   await page.goto('https://scm-news.ru/',{waitUntil:'domcontentloaded',timeout:45000});
   await page.locator('[data-choice="yes"]').click();
