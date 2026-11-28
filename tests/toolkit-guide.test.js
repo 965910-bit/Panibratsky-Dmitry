@@ -11,3 +11,11 @@ test('toolkit is a traceable independent index with practical examples',()=>{
  for(const s of ['не оригинальные шаблоны','Полнота по всем четырём изданиям не подтверждена','2013','2016','2020','2024','https://www.koganpage.com/register','id="wiki-search-control" hidden','js/wiki-topic-search.js'])assert(page.includes(s),s);
  assert.equal(400/8,50);assert.equal(4/400*100,1);assert.equal(40*5+100,300);assert.equal(4*.4+3*.35+5*.25,3.9);assert.equal(600000/200000,3);
 });
+test('three tool deep dives are discoverable and define assumptions and decision controls',()=>{
+ const page=fs.readFileSync('scm-toolkit-guide.html','utf8'),wiki=fs.readFileSync('wiki.html','utf8');
+ for(const id of ['warehouse-audit','fuel-surcharge','provider-evaluation']){
+  assert(page.includes(`id="${id}"`),id);assert(wiki.includes(`href="scm-toolkit-guide.html#${id}"`),id);
+ }
+ for(const phrase of ['48 / 60 = 80%','это не рыночная рекомендация','Несоответствие обязательному требованию нельзя компенсировать','предположение как установленную причину','договор прямо предусматривает'])assert(page.includes(phrase),phrase);
+ assert.equal(48/60*100,80);assert.equal((70-60)*30/100*500,1500);assert.equal(4*.4+3*.35+5*.25,3.9);
+});
