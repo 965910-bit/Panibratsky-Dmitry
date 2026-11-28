@@ -1,0 +1,38 @@
+name: Seed dedicated Webmaster D1 queue
+on:
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: 'Full verified ancestor commit SHA'
+        required: true
+        type: string
+      confirmation:
+        description: 'Type SEED_VERIFIED_QUEUE'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: webmaster-d1-provision
+  cancel-in-progress: false
+jobs:
+  seed:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Seed verified changes without Yandex calls
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GITHUB_TOKEN: ${{ github.token }}
+          BASELINE: ${{ inputs.baseline }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: python scripts/webmaster_d1_seed_queue.py
