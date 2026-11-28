@@ -35,6 +35,10 @@ class Tests(unittest.TestCase):
         bad=pages();bad[1]['verdict']='NEUTRAL';bad[1]['coverage']='URL is unknown to Google'
         self.assertEqual(g.sync_sample_alert(bad,'a/b','1','token',alert=alert),'created')
         self.assertEqual(alert.call_args.args[3],'failure');alert.reset_mock()
+        for coverage in ('Discovered - currently not indexed','Crawled - currently not indexed'):
+            sample=pages();sample[1].update(verdict='NEUTRAL',coverage=coverage)
+            self.assertEqual(g.sync_sample_alert(sample,'a/b','1','token',alert=alert),'created')
+            self.assertEqual(alert.call_args.args[3],'failure');alert.reset_mock()
         g.sync_sample_alert(pages(),'a/b','1','token',alert=alert)
         self.assertEqual(alert.call_args.args[3],'success');alert.reset_mock()
         self.assertEqual(g.sync_sample_alert(pages()[:3],'a/b','1','token',alert=alert),'unknown')

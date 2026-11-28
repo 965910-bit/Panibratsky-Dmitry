@@ -14,6 +14,7 @@ from live_seo_issue import sync
 ENDPOINT='https://searchconsole.googleapis.com/v1/urlInspection/index:inspect'
 URLS=(SITE, SITE+'wiki.html', SITE+'scm-metrics.html', SITE+'scm-knowledge.html', SITE+'scm-academy.html')
 TITLE='Google Search Console: страницы из контрольной выборки не в индексе'
+NOT_INDEXED_COVERAGE=frozenset({'URL is unknown to Google','Discovered - currently not indexed','Crawled - currently not indexed'})
 BODY=('<!-- scm-google-index-sample-alert:v1 -->\n\n'
       'Google сообщает, что одна или несколько страниц контрольной выборки не индексируются '
       'или ему неизвестны. Это данные об индексированной версии, не live-проверка; '
@@ -66,7 +67,7 @@ def sync_sample_alert(pages,repo,run_id,github_token,*,alert=sync):
     if (not isinstance(pages,list) or len(pages)>len(URLS) or
         any(not isinstance(x,dict) or x.get('url')!=URLS[i] for i,x in enumerate(pages))):
         raise InspectionError('invalid sample')
-    if any(x.get('verdict')=='FAIL' or x.get('coverage')=='URL is unknown to Google' for x in pages):
+    if any(x.get('verdict')=='FAIL' or x.get('coverage') in NOT_INDEXED_COVERAGE for x in pages):
         outcome='failure'
     elif len(pages)==len(URLS) and all(x.get('verdict')=='PASS' for x in pages):
         outcome='success'
