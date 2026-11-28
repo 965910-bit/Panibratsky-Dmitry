@@ -11,6 +11,10 @@ import urllib.request
 NAME='scm-webmaster-queue'
 
 class DiagnosticError(Exception):pass
+class HttpStatus(DiagnosticError):
+    def __init__(self,status):
+        super().__init__('http failure')
+        self.status=status
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):return None
 
@@ -27,6 +31,8 @@ def request(account, token, page):
         obj=json.loads(raw)
         if not isinstance(obj,dict):raise DiagnosticError('invalid response')
         return obj
+    except urllib.error.HTTPError as exc:
+        raise HttpStatus(exc.code) from None
     except (urllib.error.URLError,TimeoutError,OSError,UnicodeError,ValueError):
         raise DiagnosticError('Cloudflare read failed') from None
 
@@ -57,6 +63,15 @@ def main():
         print('::notice title=D1 queue storage preflight::'+result)
         print('Проверка только читает метаданные; не создаёт базы и не включает очередь.')
         return 0
+    except HttpStatus as exc:
+        status=str(exc.status) if type(exc.status) is int and 100<=exc.status<=599 else 'unknown'
+        print('::error title=D1 queue storage preflight::http='+status)
+        return 1
+    except DiagnosticError as exc:
+        known=('incomplete configuration','Cloudflare read failed','invalid response','invalid database entry','invalid pagination','pagination limit exceeded')
+        reason=str(exc) if str(exc) in known else 'unavailable_or_unverified'
+        print('::error title=D1 queue storage preflight::'+reason)
+        return 1
     except Exception:
         print('::error title=D1 queue storage preflight::unavailable_or_unverified')
         print('Не удалось проверить хранилище; существующие базы не изменены.',file=sys.stderr)
