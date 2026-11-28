@@ -13,6 +13,11 @@ class Tests(unittest.TestCase):
     def test_rejects_bad_values(self):
         for x in [{'dailyExportEnabled':'true'},{'exportStreams':'bad'},{'excludedEvents':[None]}]:
             with self.assertRaises(p.AnalyticsError):self.run_info([x],[])
+    def test_real_response_field_spelling(self):
+        def fetch(path,token,params):
+            return {'bigqueryLinks':[]} if path.endswith('/bigQueryLinks') else {'adsenseLinks':[{'adClientCode':'private'}]}
+        r=p.inspect(('a','b','c'),find=self.info,fetch=fetch)
+        self.assertEqual(r['adsense_links'],1)
     def test_rejects_arbitrary_destination(self):
         with self.assertRaises(p.AnalyticsError):p.get('https://example.com','token',{})
 if __name__=='__main__':unittest.main()

@@ -19,7 +19,7 @@ def inspect(creds,*,find=inventory,read_pages=pages,fetch=get):
     info=find(*creds,include_private=True);prop=info.get('property','')
     if not isinstance(prop,str) or not PROPERTY.fullmatch(prop) or not info.get('domain_matches'):raise AnalyticsError('identity mismatch')
     bq=read_pages('v1alpha/'+prop+'/bigQueryLinks','bigqueryLinks',info['token'],fetch=fetch)
-    adsense=read_pages('v1alpha/'+prop+'/adSenseLinks','adSenseLinks',info['token'],fetch=fetch)
+    adsense=read_pages('v1alpha/'+prop+'/adSenseLinks','adsenseLinks',info['token'],fetch=fetch)
     if len(bq)>10 or len(adsense)>10:raise AnalyticsError('unexpected number')
     flags=[]
     for link in bq:
